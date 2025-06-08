@@ -240,23 +240,3 @@ infrastructure-automation/
 │   └── test_ssh_manager.py
 └── inventories/           # Generated inventory files
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-### Development Guidelines
-
-- Follow PEP 8 style guide
-- Write unit tests for new features
-- Update documentation
-- Use type hints
-- Add logging for important operations
-
-## License
-
-MIT License 
