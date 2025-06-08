@@ -1,0 +1,91 @@
+---
+# Web Server Configuration Playbook
+- name: Configure Web Server
+  hosts: webservers
+  become: true
+  vars:
+    nginx_version: "1.18.0"
+    nginx_user: "www-data"
+    nginx_group: "www-data"
+    nginx_root: "/var/www/html"
+    nginx_conf_dir: "/etc/nginx"
+    nginx_log_dir: "/var/log/nginx"
+    nginx_pid_file: "/var/run/nginx.pid"
+    nginx_worker_processes: "auto"
+    nginx_worker_connections: 1024
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Install required packages
+      package:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - nginx
+          - python3
+          - python3-pip
+          - ufw
+
+    - name: Create web root directory
+      file:
+        path: "{{ nginx_root }}"
+        state: directory
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_group }}"
+        mode: '0755'
+
+    - name: Configure Nginx
+      template:
+        src: templates/nginx.conf.j2
+        dest: "{{ nginx_conf_dir }}/nginx.conf"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart nginx
+
+    - name: Create default site configuration
+      template:
+        src: templates/default.conf.j2
+        dest: "{{ nginx_conf_dir }}/sites-available/default"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart nginx
+
+    - name: Create index.html
+      template:
+        src: templates/index.html.j2
+        dest: "{{ nginx_root }}/index.html"
+        owner: "{{ nginx_user }}"
+        group: "{{ nginx_group }}"
+        mode: '0644'
+
+    - name: Configure firewall
+      ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+
+    - name: Configure firewall for HTTPS
+      ufw:
+        rule: allow
+        port: '443'
+        proto: tcp
+
+    - name: Enable and start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted 
