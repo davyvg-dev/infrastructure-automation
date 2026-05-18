@@ -51,10 +51,10 @@
 - [x] `compliance-kill-list.md`
 
 ### 07-finance
-- [ ] `unit-economics.md`
-- [ ] `mrr-projections.md`
-- [ ] `cogs-per-tier.md`
-- [ ] `first-hire-triggers.md`
+- [x] `unit-economics.md`
+- [x] `mrr-projections.md`
+- [x] `cogs-per-tier.md`
+- [x] `first-hire-triggers.md`
 
 ### 08-tech
 - [ ] `stack-decisions.md`
