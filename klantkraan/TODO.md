@@ -40,9 +40,9 @@
 
 ### 05-content
 - [x] `channel-strategy.md`
-- [ ] `first-30-days-calendar.md`
-- [ ] `seo-keywords.md`
-- [ ] `content-stack.md`
+- [x] `first-30-days-calendar.md`
+- [x] `seo-keywords.md`
+- [x] `content-stack.md`
 
 ### 06-outbound
 - [ ] `gdpr-compliance.md`
