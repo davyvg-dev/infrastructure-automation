@@ -57,10 +57,10 @@
 - [x] `first-hire-triggers.md`
 
 ### 08-tech
-- [ ] `stack-decisions.md`
-- [ ] `repo-architecture.md`
-- [ ] `infra-setup.md`
-- [ ] `observability.md`
+- [x] `stack-decisions.md`
+- [x] `repo-architecture.md`
+- [x] `infra-setup.md`
+- [x] `observability.md`
 
 ### 09-brand
 - [ ] `naming-and-domain.md`
