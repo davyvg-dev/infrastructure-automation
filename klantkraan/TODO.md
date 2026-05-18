@@ -45,10 +45,10 @@
 - [x] `content-stack.md`
 
 ### 06-outbound
-- [ ] `gdpr-compliance.md`
-- [ ] `data-sources.md`
-- [ ] `deliverability-stack.md`
-- [ ] `compliance-kill-list.md`
+- [x] `gdpr-compliance.md`
+- [x] `data-sources.md`
+- [x] `deliverability-stack.md`
+- [x] `compliance-kill-list.md`
 
 ### 07-finance
 - [ ] `unit-economics.md`
