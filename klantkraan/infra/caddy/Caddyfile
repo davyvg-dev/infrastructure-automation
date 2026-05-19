@@ -1,0 +1,48 @@
+# context7: Caddy v2 (caddy:2-alpine, Caddyfile syntax)
+# Auto-HTTPS via Let's Encrypt; ports 80/443 published by the caddy service.
+
+{
+	email ops@klantkraan.nl
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+(security_headers) {
+	header {
+		# HSTS — one year, include subdomains. Preload deliberately omitted until DNS root is final.
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Disable FLoC + tighten powerful-feature surface (no camera/mic/geolocation needed for ops UIs).
+		Permissions-Policy "interest-cohort=(), camera=(), microphone=(), geolocation=(), payment=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		-Server
+	}
+}
+
+n8n.klantkraan.nl {
+	import security_headers
+	encode zstd gzip
+	reverse_proxy n8n:5678 {
+		# Server-Sent Events from the editor break with default buffering.
+		flush_interval -1
+	}
+}
+
+status.klantkraan.nl {
+	import security_headers
+	encode zstd gzip
+	reverse_proxy uptime-kuma:3001
+}
+
+# api.klantkraan.nl is served by Cloudflare Workers in production (Worker route on the proxied
+# DNS record). This vhost is intentionally NOT enabled in production. Uncomment for local-dev only,
+# when the Worker is being run against a local n8n webhook router instead of the deployed Worker.
+#
+# api.klantkraan.nl {
+#   import security_headers
+#   encode zstd gzip
+#   reverse_proxy n8n:5678
+# }

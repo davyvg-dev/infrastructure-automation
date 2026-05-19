@@ -1,0 +1,271 @@
+{
+  "name": "call-summary-router",
+  "nodes": [
+    {
+      "id": "33333333-3333-4333-8333-333333333331",
+      "name": "Webhook - Synthflow Call End",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "synthflow/call-end",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333332",
+      "name": "Parse + Validate AI Act Flag",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Expected Synthflow payload\n// { call_id, client_id, agent_id, model_version, prompt_hash, voice_id,\n//   caller_e164, caller_name, started_at, ended_at, duration_s,\n//   transcript, summary, intent, escalation_required, escalation_number,\n//   recording_url, ai_disclosure_played: true|false }\nconst body = items[0].json.body || items[0].json;\nif (body.ai_disclosure_played !== true) {\n  // EU AI Act art. 50 — non-waivable. Fail loud.\n  throw new Error('AI Act art. 50 disclosure flag not true for call ' + body.call_id + '. Routing blocked.');\n}\nconst required = ['call_id','client_id','agent_id','model_version','prompt_hash','caller_e164','started_at','ended_at'];\nfor (const k of required) {\n  if (!body[k]) throw new Error('Missing required field: ' + k);\n}\nreturn [{ json: body }];"
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "name": "Insert Calls Row",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [640, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO calls (call_id, client_id, agent_id, model_version, prompt_hash, voice_id, caller_e164, caller_name, started_at, ended_at, duration_s, transcript, summary, intent, escalation_required, recording_url, ai_disclosure_played) VALUES ($1, $2::uuid, $3, $4, $5, $6, $7, $8, $9, $10, $11::int, $12, $13, $14, $15::bool, $16, true) ON CONFLICT (call_id) DO UPDATE SET ended_at = EXCLUDED.ended_at, duration_s = EXCLUDED.duration_s, transcript = EXCLUDED.transcript, summary = EXCLUDED.summary RETURNING id;",
+        "options": {
+          "queryReplacement": "={{ $json.call_id }},={{ $json.client_id }},={{ $json.agent_id }},={{ $json.model_version }},={{ $json.prompt_hash }},={{ $json.voice_id }},={{ $json.caller_e164 }},={{ $json.caller_name }},={{ $json.started_at }},={{ $json.ended_at }},={{ $json.duration_s }},={{ $json.transcript }},={{ $json.summary }},={{ $json.intent }},={{ $json.escalation_required }},={{ $json.recording_url }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333334",
+      "name": "If Escalation Required",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [860, 300],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $('Parse + Validate AI Act Flag').item.json.escalation_required }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333335",
+      "name": "Escalation Suppression Check",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1080, 200],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT EXISTS(SELECT 1 FROM suppression_list WHERE e164_hash = encode(digest($1, 'sha256'), 'hex')) AS suppressed;",
+        "options": {
+          "queryReplacement": "={{ $('Parse + Validate AI Act Flag').item.json.escalation_number }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333336",
+      "name": "If Owner Not Suppressed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1300, 200],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.suppressed }}",
+              "rightValue": false,
+              "operator": { "type": "boolean", "operation": "false", "singleValue": true }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333337",
+      "name": "CM.com WhatsApp Escalation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1520, 200],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cm.com/business-messaging/v1.0/send",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": [{\n    \"to\": \"={{ $('Parse + Validate AI Act Flag').item.json.escalation_number }}\",\n    \"from\": \"klantkraan\",\n    \"channels\": [\"WhatsApp\"],\n    \"body\": {\n      \"type\": \"TEXT\",\n      \"text\": \"SPOED-CALL: {{ $('Parse + Validate AI Act Flag').item.json.caller_name }} ({{ $('Parse + Validate AI Act Flag').item.json.caller_e164 }})\\nIntent: {{ $('Parse + Validate AI Act Flag').item.json.intent }}\\nSamenvatting: {{ $('Parse + Validate AI Act Flag').item.json.summary }}\\nOpname: {{ $('Parse + Validate AI Act Flag').item.json.recording_url }}\"\n    }\n  }]\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333338",
+      "name": "Attio - Upsert Person",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1080, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.attio.com/v2/objects/people/records",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"values\": {\n      \"name\": [{ \"full_name\": \"{{ $('Parse + Validate AI Act Flag').item.json.caller_name || 'Onbekend' }}\" }],\n      \"phone_numbers\": [{ \"original_phone_number\": \"{{ $('Parse + Validate AI Act Flag').item.json.caller_e164 }}\" }]\n    }\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Attio - API Key"
+        }
+      }
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333339",
+      "name": "Attio - Create Activity",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.attio.com/v2/objects/notes/records",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"parent_object\": \"people\",\n    \"parent_record_id\": \"{{ $json.data.id.record_id }}\",\n    \"title\": \"AI Call - {{ $('Parse + Validate AI Act Flag').item.json.intent }}\",\n    \"content\": \"{{ $('Parse + Validate AI Act Flag').item.json.summary }}\\n\\nPrompt hash: {{ $('Parse + Validate AI Act Flag').item.json.prompt_hash }}\\nModel: {{ $('Parse + Validate AI Act Flag').item.json.model_version }}\\nDuration: {{ $('Parse + Validate AI Act Flag').item.json.duration_s }}s\\nRecording: {{ $('Parse + Validate AI Act Flag').item.json.recording_url }}\"\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Attio - API Key"
+        }
+      }
+    },
+    {
+      "id": "3333333a-3333-4333-8333-33333333333a",
+      "name": "Healthchecks Ping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1740, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_CALL_SUMMARY_ROUTER }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "3333333b-3333-4333-8333-33333333333b",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1960, 420],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"ok\" }"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Synthflow Call End": {
+      "main": [[{ "node": "Parse + Validate AI Act Flag", "type": "main", "index": 0 }]]
+    },
+    "Parse + Validate AI Act Flag": {
+      "main": [[{ "node": "Insert Calls Row", "type": "main", "index": 0 }]]
+    },
+    "Insert Calls Row": {
+      "main": [[
+        { "node": "If Escalation Required", "type": "main", "index": 0 },
+        { "node": "Attio - Upsert Person", "type": "main", "index": 0 }
+      ]]
+    },
+    "If Escalation Required": {
+      "main": [
+        [{ "node": "Escalation Suppression Check", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Escalation Suppression Check": {
+      "main": [[{ "node": "If Owner Not Suppressed", "type": "main", "index": 0 }]]
+    },
+    "If Owner Not Suppressed": {
+      "main": [
+        [],
+        [{ "node": "CM.com WhatsApp Escalation", "type": "main", "index": 0 }]
+      ]
+    },
+    "Attio - Upsert Person": {
+      "main": [[{ "node": "Attio - Create Activity", "type": "main", "index": 0 }]]
+    },
+    "Attio - Create Activity": {
+      "main": [[{ "node": "Healthchecks Ping", "type": "main", "index": 0 }]]
+    },
+    "Healthchecks Ping": {
+      "main": [[{ "node": "Respond OK", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20"
+  }
+}
