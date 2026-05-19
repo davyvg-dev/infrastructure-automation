@@ -100,7 +100,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] `apps/marketing-site` scaffold (Astro 5 + Tailwind 4 + Cloudflare adapter + brand tokens)
 - [x] Home + `/loodgieters` + `/dakdekkers` (home complete; /loodgieters + /dakdekkers stubs to expand)
 - [x] `/prijzen`, `/rekentool` (ROI calc), `/demo`, `/over`
-- [ ] `/legal/{voorwaarden,dpa,sla,privacy,ai-disclosure,subprocessors}`
+- [x] `/legal/{voorwaarden,dpa,sla,privacy,ai-disclosure,subprocessors}`
 - [ ] Lead form → Cloudflare Worker → Attio API (Worker scaffolded with /api/lead + /api/intake-form; form UI pending)
 
 ### Automation infra
