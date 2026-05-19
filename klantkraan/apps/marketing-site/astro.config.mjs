@@ -1,0 +1,22 @@
+// context7: Astro 5 (/llmstxt/astro_build_llms-full_txt, 2026-05-20)
+//           Tailwind v4 via @tailwindcss/vite (/tailwindlabs/tailwindcss.com)
+import { defineConfig } from 'astro/config'
+import cloudflare from '@astrojs/cloudflare'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  site: 'https://klantkraan.nl',
+  output: 'static',
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  i18n: {
+    locales: ['nl'],
+    defaultLocale: 'nl',
+  },
+})

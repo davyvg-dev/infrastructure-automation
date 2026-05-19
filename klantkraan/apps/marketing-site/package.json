@@ -1,0 +1,28 @@
+{
+  "name": "@kk/marketing-site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "_ctx7": {
+    "astro": "6.x via /llmstxt/astro_build_llms-full_txt (2026-05-20)",
+    "tailwindcss": "v4 via /tailwindlabs/tailwindcss.com (2026-05-20)"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "echo 'lint: see prettier:check at the workspace root'"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.1.0",
+    "@kk/domain": "workspace:*",
+    "@tailwindcss/vite": "^4.0.0",
+    "astro": "^5.1.0",
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
+  }
+}

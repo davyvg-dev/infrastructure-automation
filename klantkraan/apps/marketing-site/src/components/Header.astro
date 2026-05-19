@@ -1,0 +1,31 @@
+---
+const nav = [
+  { href: '/loodgieters', label: 'Loodgieters' },
+  { href: '/dakdekkers', label: 'Dakdekkers' },
+  { href: '/prijzen', label: 'Prijzen' },
+  { href: '/rekentool', label: 'Rekentool' },
+  { href: '/demo', label: 'Demo' },
+  { href: '/over', label: 'Over' },
+]
+---
+
+<header class="border-b border-(--color-kraan-stone-300) bg-(--color-kraan-cream)">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+    <a href="/" class="font-display text-h3 text-(--color-kraan-blue) no-underline">
+      klantkraan
+    </a>
+    <nav aria-label="Hoofdnavigatie">
+      <ul class="flex items-center gap-6 text-small">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class="text-(--color-kraan-ink) no-underline hover:underline">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

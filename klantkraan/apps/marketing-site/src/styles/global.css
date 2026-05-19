@@ -1,0 +1,82 @@
+@import 'tailwindcss';
+
+/*
+ * Brand tokens — see klantkraan/docs/09-brand/visual-identity-brief.md § 3-4
+ * Palette: kraan-blue primary, cream background, rust accent, leaf success.
+ * Type: Inter + Inter Tight (display) + JetBrains Mono. Self-hosted, no Google CDN.
+ */
+@theme {
+  --color-kraan-blue: #0f4c81;
+  --color-kraan-blue-700: #0a3960;
+  --color-kraan-blue-300: #4d80ad;
+  --color-kraan-cream: #faf6ee;
+  --color-kraan-ink: #1a1a1a;
+  --color-kraan-rust: #c75a2b;
+  --color-kraan-leaf: #3f7f4a;
+  --color-kraan-stone-100: #f1ecdf;
+  --color-kraan-stone-300: #d9d2c0;
+  --color-kraan-stone-500: #8c8474;
+  --color-kraan-stone-700: #4a463d;
+
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Inter Tight', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+
+  --text-hero: 3.5rem;
+  --text-hero--line-height: 1.05;
+  --text-hero--font-weight: 700;
+
+  --text-h1: 2.25rem;
+  --text-h1--line-height: 1.15;
+  --text-h1--font-weight: 700;
+
+  --text-h2: 1.75rem;
+  --text-h2--line-height: 1.2;
+  --text-h2--font-weight: 600;
+
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--font-weight: 600;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.55;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
+
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1.4;
+  --text-micro--font-weight: 500;
+
+  --radius-card: 0.75rem;
+  --radius-button: 0.5rem;
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: var(--color-kraan-cream);
+  color: var(--color-kraan-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--color-kraan-blue);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--color-kraan-rust);
+}
