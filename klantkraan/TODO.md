@@ -63,9 +63,9 @@
 - [x] `observability.md`
 
 ### 09-brand
-- [ ] `naming-and-domain.md`
-- [ ] `voice-and-tone.md`
-- [ ] `visual-identity-brief.md`
+- [x] `naming-and-domain.md`
+- [x] `voice-and-tone.md`
+- [x] `visual-identity-brief.md`
 
 ### 10-ops
 - [ ] `weekly-kpi-review.md`
