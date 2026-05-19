@@ -76,10 +76,10 @@
 
 See `docs/00-MASTER-PLAN.md § 5`.
 
-- [ ] Verify `klantkraan.nl` available — https://www.sidn.nl/en/whois
-- [ ] Verify `klantkraan.com` available — https://lookup.icann.org/en/lookup
-- [ ] KvK handelsnaam search "Klantkraan" — https://www.kvk.nl/zoeken/
-- [ ] BOIP trademark search class 35 + 42 — https://www.boip.int/en/trademarks-register
+- [x] Verify `klantkraan.nl` available — https://www.sidn.nl/en/whois (verified 2026-05-20)
+- [x] Verify `klantkraan.com` available — https://lookup.icann.org/en/lookup (verified 2026-05-20)
+- [x] KvK handelsnaam search "Klantkraan" — https://www.kvk.nl/zoeken/ (no conflict, 2026-05-20)
+- [x] BOIP trademark search class 35 + 42 — https://www.boip.int/en/trademarks-register (no conflict, 2026-05-20)
 - [ ] Register `klantkraan.nl` + `klantkraan.com` (TransIP / Namecheap)
 - [ ] File `handelsnaamwijziging` "Klantkraan" under T4 at KvK
 - [ ] Hiscox PI quote ICT — https://www.hiscox.nl/beroepsaansprakelijkheidsverzekering-ICT

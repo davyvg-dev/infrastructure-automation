@@ -54,13 +54,15 @@
 
 ## 4. Domain status — actions required (founder, see `00-MASTER-PLAN.md § 5`)
 
-| # | Domain | Where to check | Action if free | Action if taken |
-|---|---|---|---|---|
-| 1 | `klantkraan.nl` | https://www.sidn.nl/en/whois | Register at TransIP, €5/yr | Skip to Vakflow / Afspraakmotor checks |
-| 2 | `klantkraan.com` | https://lookup.icann.org/en/lookup | Register at Namecheap, €10/yr (defensive) | Acceptable to skip — `.nl` is the canonical |
-| 3 | `klantkraan.eu` | https://eurid.eu/en/find-a-domain/ | Register, €5/yr (defensive) | Acceptable to skip |
-| 4 | `klantkraan.io` / `.app` | Namecheap | Skip — not needed | n/a |
-| 5 | `klantkraan.co.uk` | https://www.nominet.uk/lookup/ | Skip until UK month 6+ | n/a |
+**Status 2026-05-20:** `klantkraan.nl`, `klantkraan.com`, KvK handelsnaam search, and BOIP class 35+42 trademark search all confirmed clear. Brand name **Klantkraan** is locked. Fallback names in §§ 2–3 stay documented for posterity only.
+
+| # | Domain | Where to check | Status / next action |
+|---|---|---|---|
+| 1 | `klantkraan.nl` | https://www.sidn.nl/en/whois | Available — **register at TransIP (~€5/yr)** |
+| 2 | `klantkraan.com` | https://lookup.icann.org/en/lookup | Available — **register at Namecheap (~€10/yr, defensive)** |
+| 3 | `klantkraan.eu` | https://eurid.eu/en/find-a-domain/ | Not yet checked — recheck at registration time; register if free (~€5/yr, defensive) |
+| 4 | `klantkraan.io` / `.app` | Namecheap | Skip — not needed |
+| 5 | `klantkraan.co.uk` | https://www.nominet.uk/lookup/ | Skip until UK month 6+ |
 
 ### Subdomain plan
 
