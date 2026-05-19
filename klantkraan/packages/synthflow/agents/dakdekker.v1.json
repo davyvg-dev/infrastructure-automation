@@ -1,0 +1,107 @@
+{
+  "_comment_schema": "Synthflow agent export — schema is best-effort: Synthflow not available in context7 as of 2026-05-20; structure based on the public docs at docs.synthflow.ai and our internal prompt source (klantkraan/docs/03-delivery/synthflow-system-prompt.md). Verify against current Synthflow console export before first prod deploy.",
+  "_comment_source_prompt": "System prompt master copy lives at klantkraan/packages/prompts/nl/dakdekker.v1.md — content below is a verbatim paste at render time; the .rendered.md (after mustache fill) is what gets deployed, and its SHA-256 is logged per call.",
+
+  "name": "klantkraan-dakdekker-nl-v1",
+  "vertical": "dakdekker",
+  "version": "1.0.0",
+  "language": "nl-NL",
+
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "TODO_ELEVENLABS_VOICE_ID",
+    "_comment_voice": "TODO: replace with the ElevenLabs voice id for the chosen Dutch voice. Default options: 'Daan' (mannelijk neutraal ABN) or 'Sanne' (vrouwelijk neutraal ABN). Resolve via intake Q32 in client-onboarding.json. No Vlaams, no Engels accent, no zachte G.",
+    "stability": 0.6,
+    "similarity_boost": 0.75,
+    "style": 0.2,
+    "use_speaker_boost": true,
+    "model": "eleven_multilingual_v2"
+  },
+
+  "model": {
+    "provider": "anthropic",
+    "name": "claude-sonnet-4-6",
+    "_comment_model": "Synthflow's currently-supported list as of 2026-05; founder may switch to claude-haiku-4-x later for cost. Prompt is model-agnostic.",
+    "temperature": 0.3,
+    "max_tokens": 600
+  },
+
+  "first_message": "Goedendag, u spreekt met {{agent_naam}}, de digitale assistent van {{client_name}}. Dit gesprek wordt gevoerd door een AI-systeem en kan worden opgenomen voor kwaliteits- en trainingsdoeleinden. Wilt u liever een mens spreken? Zeg dan 'medewerker'. Waarmee kan ik u helpen?",
+  "_comment_first_message": "Verbatim from klantkraan/docs/04-legal/ai-act-disclosure.md. Non-waivable per MSA. CI rejects any drift.",
+
+  "system_prompt_source": "klantkraan/packages/prompts/nl/dakdekker.v1.md",
+  "system_prompt": "PLACEHOLDER — at deploy time, the n8n client-onboarding.json workflow reads packages/prompts/nl/dakdekker.v1.md, runs mustache substitution with the per-client variables resolved from Attio, writes the result to packages/prompts/nl/dakdekker.{client_id}.rendered.md, computes SHA-256, then PUTs the rendered content into this field via the Synthflow API.",
+
+  "tools": [
+    {
+      "name": "schedule_callback",
+      "description": "Log a callback request for the owner. Use when the caller is NIEUW_WERK or BESTAANDE_KLANT. Never schedule an actual calendar appointment without explicit caller confirmation of date + time. For dakdekker inspecties, the slot is via {{calcom_eventtype_url}}.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caller_name":   { "type": "string",  "description": "Voor- en achternaam van de beller." },
+          "caller_phone":  { "type": "string",  "description": "Telefoonnummer in E.164 (+316...)." },
+          "address":       { "type": "string",  "description": "Adres + postcode + huisnummer (volledig — dakdekker moet locatie kunnen googlen voor satellietbeeld)." },
+          "roof_type":     { "type": "string",  "enum": ["plat", "hellend", "pannen", "leien", "EPDM", "bitumen", "onbekend"] },
+          "job_summary":   { "type": "string",  "description": "Korte omschrijving, max 200 tekens." },
+          "intent":        { "type": "string",  "enum": ["NIEUW_WERK", "BESTAANDE_KLANT", "LEVERANCIER"] },
+          "urgency":       { "type": "string",  "enum": ["LOW", "MED", "HIGH"] },
+          "preferred_window": { "type": "string", "description": "Bijv. 'binnen 4 uur', 'morgenochtend', 'deze week'." },
+          "insurance_claim": { "type": "boolean", "description": "Geeft beller aan dat er een verzekeringskwestie speelt?" }
+        },
+        "required": ["caller_name", "caller_phone", "intent", "urgency"]
+      }
+    },
+    {
+      "name": "transfer_emergency",
+      "description": "Direct doorverbinden naar de eigenaar bij SPOED (storm-schade actief, lek tijdens regen, losse dakpannen tijdens storm, brand/blikseminslag, instortingsgevaar). Verbind eerst door; vraag pas extra gegevens als doorverbinden mislukt.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transfer_to":   { "type": "string", "description": "Doorverbind-nummer ({{escalation_number}})." },
+          "spoed_type":    { "type": "string", "enum": ["STORM_SCHADE", "LEK_TIJDENS_REGEN", "LOSSE_PANNEN_STORM", "BRAND_BLIKSEM", "INSTORTINGSGEVAAR", "OVERIG_SPOED"] },
+          "caller_phone":  { "type": "string" },
+          "address":       { "type": "string" },
+          "summary":       { "type": "string", "description": "Eén zin samenvatting voor de eigenaar." }
+        },
+        "required": ["transfer_to", "spoed_type", "caller_phone"]
+      }
+    },
+    {
+      "name": "lookup_tariff",
+      "description": "Haal de tariefcontext van de client op (voorrijkosten, inspectie-tarief, noodreparatie-toeslag, dakpannenslag-prijs indicatief). Mag alleen worden aangeroepen als may_quote_prices = true.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tariff_kind": { "type": "string", "enum": ["voorrijkosten", "inspectie_tarief", "noodreparatie_toeslag", "dakpannenslag_prijs_indicatief", "alles"] }
+        },
+        "required": ["tariff_kind"]
+      }
+    }
+  ],
+
+  "webhooks": {
+    "call_end": "https://api.klantkraan.nl/api/webhook/synthflow/call-end",
+    "_comment_webhook": "POST JSON: {intent, caller_name, caller_phone, address, roof_type, summary, vervolgactie, priority, audio_url, transcript, duration_s, prompt_hash, model, voice_id, disclosure_played_at_ms, insurance_claim}. See apps/api route in klantkraan/docs/08-tech/repo-architecture.md."
+  },
+
+  "transfer_phone_number": "{{escalation_number}}",
+
+  "compliance": {
+    "ai_act_disclosure_required": true,
+    "disclosure_position": "before_first_user_input",
+    "disclosure_verbatim_source": "klantkraan/docs/04-legal/ai-act-disclosure.md",
+    "call_recording_consent_required": true,
+    "human_handoff_keyword_nl": "medewerker",
+    "max_call_duration_seconds": 360,
+    "_comment_compliance": "AI Act art. 50 in werking 2 aug 2026; disclosure is non-waivable per MSA; logged via compliance_audits table; founder spot-checks 10 random calls/maand per 04-legal/ai-act-disclosure.md § Compliance checks."
+  },
+
+  "fallback": {
+    "on_no_input_seconds": 8,
+    "on_no_input_prompt_nl": "Bent u er nog?",
+    "on_unintelligible_max_attempts": 2,
+    "on_unintelligible_prompt_nl": "Ik versta u helaas niet goed. Ik vraag of {{owner_naam}} u terugbelt.",
+    "on_call_duration_exceeded_prompt_nl": "Voor de zorgvuldigheid laat ik {{owner_naam}} u persoonlijk terugbellen. Hij heeft uw gegevens binnen 4 uur."
+  }
+}
