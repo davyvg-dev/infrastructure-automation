@@ -1,0 +1,200 @@
+---
+import Base from '../layouts/Base.astro'
+---
+
+<Base
+  title="ROI-rekentool — Klantkraan"
+  description="Bereken in 10 seconden hoeveel omzet u laat liggen aan gemiste oproepen en hoe snel Klantkraan zichzelf terugverdient."
+>
+  <section class="py-8">
+    <h1 class="font-display text-hero text-(--color-kraan-ink)">Wat kost u een gemiste oproep?</h1>
+    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+      Vul uw cijfers in. De rekentool laat direct zien hoeveel klussen u jaarlijks misloopt en hoe
+      snel elk Klantkraan-abonnement zichzelf terugverdient.
+    </p>
+  </section>
+
+  <section class="grid gap-8 py-8 md:grid-cols-2">
+    <form
+      id="roi-form"
+      class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100) p-6"
+      onsubmit="return false"
+    >
+      <div class="space-y-6">
+        <div>
+          <label for="calls" class="block text-body font-medium text-(--color-kraan-ink)">
+            Hoeveel oproepen krijgt u per week?
+          </label>
+          <input
+            id="calls"
+            name="calls"
+            type="number"
+            min="0"
+            step="1"
+            value="40"
+            class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-2 text-body"
+          />
+        </div>
+        <div>
+          <label for="missed" class="block text-body font-medium text-(--color-kraan-ink)">
+            % oproepen dat u nu mist
+          </label>
+          <input
+            id="missed"
+            name="missed"
+            type="number"
+            min="0"
+            max="100"
+            step="1"
+            value="28"
+            class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-2 text-body"
+          />
+          <p class="mt-1 text-small text-(--color-kraan-stone-500)">
+            Brancheschatting: 28% — installatie- en dak-vakmensen.
+          </p>
+        </div>
+        <div>
+          <label for="value" class="block text-body font-medium text-(--color-kraan-ink)">
+            Gemiddelde klantwaarde per klus (€)
+          </label>
+          <input
+            id="value"
+            name="value"
+            type="number"
+            min="0"
+            step="10"
+            value="450"
+            class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-2 text-body"
+          />
+          <p class="mt-1 text-small text-(--color-kraan-stone-500)">
+            Default €450 — gemiddelde loodgietersklus in Nederland.
+          </p>
+        </div>
+      </div>
+    </form>
+
+    <aside
+      class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-(--color-kraan-cream) p-6"
+    >
+      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Uw verlies in cijfers</h2>
+      <dl class="mt-4 space-y-4">
+        <div>
+          <dt class="text-small text-(--color-kraan-stone-500)">Gemiste oproepen per jaar</dt>
+          <dd
+            id="out-missed-year"
+            class="font-display text-h1 text-(--color-kraan-blue)"
+          >
+            0
+          </dd>
+        </div>
+        <div>
+          <dt class="text-small text-(--color-kraan-stone-500)">Verloren omzet per jaar</dt>
+          <dd id="out-lost-revenue" class="font-display text-h1 text-(--color-kraan-rust)">
+            €0
+          </dd>
+          <p class="mt-1 text-small text-(--color-kraan-stone-500)">
+            Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
+          </p>
+        </div>
+      </dl>
+
+      <hr class="my-6 border-(--color-kraan-stone-300)" />
+
+      <h3 class="font-display text-h3 text-(--color-kraan-ink)">Terugverdientijd Klantkraan</h3>
+      <ul class="mt-3 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <li>
+          Lite (€299/mnd): <span id="out-payback-lite" class="font-mono">–</span>
+        </li>
+        <li>
+          Pro (€599/mnd): <span id="out-payback-pro" class="font-mono">–</span>
+        </li>
+        <li>
+          Max (€999/mnd): <span id="out-payback-max" class="font-mono">–</span>
+        </li>
+      </ul>
+      <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+        "Terugverdientijd" = aantal maanden tot het abonnement betaald is door teruggewonnen omzet.
+      </p>
+    </aside>
+  </section>
+
+  <section class="border-t border-(--color-kraan-stone-300) py-12">
+    <h2 class="font-display text-h2 text-(--color-kraan-ink)">Hoe wij rekenen</h2>
+    <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
+      <li>Gemiste oproepen per jaar = oproepen per week × 52 × (% gemist / 100).</li>
+      <li>
+        Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans (zonder
+        terugbel-automatisering haakt het gros af).
+      </li>
+      <li>
+        Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12). Hoe groter de bak
+        gemiste klussen, hoe sneller Klantkraan zichzelf terugverdient.
+      </li>
+    </ul>
+    <a
+      href="/demo"
+      class="mt-8 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+    >
+      Laat het ons live op uw cijfers nakijken
+    </a>
+  </section>
+
+  <script>
+  // Client-side ROI calculator. No framework — vanilla DOM, reactive on every input.
+  const callsEl = document.getElementById('calls') as HTMLInputElement | null
+  const missedEl = document.getElementById('missed') as HTMLInputElement | null
+  const valueEl = document.getElementById('value') as HTMLInputElement | null
+
+  const outMissed = document.getElementById('out-missed-year')
+  const outLost = document.getElementById('out-lost-revenue')
+  const outPaybackLite = document.getElementById('out-payback-lite')
+  const outPaybackPro = document.getElementById('out-payback-pro')
+  const outPaybackMax = document.getElementById('out-payback-max')
+
+  const TIERS = { lite: 299, pro: 599, max: 999 } as const
+  const CONVERSION = 0.33 // share of missed calls that would have become a paying job
+
+  const eurFmt = new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  })
+  const numFmt = new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 0 })
+
+  function readNumber(el: HTMLInputElement | null, fallback: number): number {
+    if (!el) return fallback
+    const n = Number(el.value)
+    return Number.isFinite(n) && n >= 0 ? n : fallback
+  }
+
+  function formatPayback(monthly: number, lostRevenuePerYear: number): string {
+    if (lostRevenuePerYear <= 0) return 'n.v.t.'
+    const lostPerMonth = lostRevenuePerYear / 12
+    if (lostPerMonth <= 0) return 'n.v.t.'
+    const months = monthly / lostPerMonth
+    if (months < 1) return '< 1 maand'
+    if (months > 60) return '> 5 jaar'
+    return `${months.toFixed(1)} maand`
+  }
+
+  function recompute(): void {
+    const calls = readNumber(callsEl, 0)
+    const missedPct = Math.min(100, readNumber(missedEl, 0))
+    const value = readNumber(valueEl, 0)
+
+    const missedPerYear = Math.round(calls * 52 * (missedPct / 100))
+    const lostRevenue = Math.round(missedPerYear * value * CONVERSION)
+
+    if (outMissed) outMissed.textContent = numFmt.format(missedPerYear)
+    if (outLost) outLost.textContent = eurFmt.format(lostRevenue)
+    if (outPaybackLite) outPaybackLite.textContent = formatPayback(TIERS.lite, lostRevenue)
+    if (outPaybackPro) outPaybackPro.textContent = formatPayback(TIERS.pro, lostRevenue)
+    if (outPaybackMax) outPaybackMax.textContent = formatPayback(TIERS.max, lostRevenue)
+  }
+
+    for (const el of [callsEl, missedEl, valueEl]) {
+      if (el) el.addEventListener('input', recompute)
+    }
+    recompute()
+  </script>
+</Base>

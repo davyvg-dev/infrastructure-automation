@@ -1,0 +1,159 @@
+---
+import Base from '../layouts/Base.astro'
+
+interface Tier {
+  id: 'lite' | 'pro' | 'max'
+  name: string
+  price: number
+  blurb: string
+  highlight: boolean
+}
+
+const tiers: Tier[] = [
+  {
+    id: 'lite',
+    name: 'Lite',
+    price: 299,
+    blurb: 'SMS-laag voor wie eerst de terugbel-automatisering wil testen.',
+    highlight: false,
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    price: 599,
+    blurb: 'AI-receptionist 24/7 met Cal.com-koppeling. Onze aanrader.',
+    highlight: true,
+  },
+  {
+    id: 'max',
+    name: 'Max',
+    price: 999,
+    blurb: '500 min voice, eigen integraties, maandelijkse strategie-call.',
+    highlight: false,
+  },
+]
+
+interface FeatureRow {
+  feature: string
+  lite: string
+  pro: string
+  max: string
+}
+
+const features: FeatureRow[] = [
+  { feature: 'Missed-call SMS binnen 60 sec', lite: 'ja', pro: 'ja', max: 'ja' },
+  { feature: 'Review-automatisering (Google + Trustpilot)', lite: 'ja', pro: 'ja', max: 'ja' },
+  { feature: 'Maandelijkse statistieken per e-mail', lite: 'ja', pro: 'ja', max: 'ja' },
+  { feature: 'Dashboard op klantkraan.nl', lite: 'ja', pro: 'ja', max: 'ja' },
+  { feature: 'AI-receptionist (Nederlands, 24/7)', lite: '–', pro: '200 min/mnd', max: '500 min/mnd' },
+  { feature: 'Cal.com afsprakenflow', lite: '–', pro: 'ja', max: 'ja' },
+  { feature: 'Eigen integraties (Snelstart, Werkbon, Skoon)', lite: '–', pro: '–', max: 'ja' },
+  { feature: 'Maandelijkse strategie-call', lite: '–', pro: '–', max: 'ja' },
+  { feature: 'Priority support via WhatsApp Business', lite: '–', pro: '–', max: 'ja' },
+  { feature: 'Extra voice-minuten', lite: 'n.v.t.', pro: '€0,50/min', max: '€0,50/min' },
+]
+---
+
+<Base
+  title="Prijzen — Klantkraan"
+  description="Drie heldere abonnementen: Lite €299, Pro €599, Max €999 per maand. Geen setup, maandelijks opzegbaar, eerste maand 50% korting."
+>
+  <section class="py-8">
+    <h1 class="font-display text-hero text-(--color-kraan-ink)">Prijzen</h1>
+    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+      Geen setup, maandelijks opzegbaar, eerste maand 50% korting. Alle bedragen excl. 21% BTW.
+    </p>
+  </section>
+
+  <section class="grid gap-6 py-8 md:grid-cols-3">
+    {
+      tiers.map((tier) => (
+        <article
+          class={`rounded-(--radius-card) border p-6 ${tier.highlight ? 'border-(--color-kraan-blue) bg-(--color-kraan-stone-100)' : 'border-(--color-kraan-stone-300) bg-(--color-kraan-cream)'}`}
+        >
+          <header class="flex items-baseline justify-between">
+            <h2 class="font-display text-h2 text-(--color-kraan-ink)">{tier.name}</h2>
+            {tier.highlight && (
+              <span class="rounded-(--radius-button) bg-(--color-kraan-blue) px-2 py-1 text-micro text-white">
+                aanrader
+              </span>
+            )}
+          </header>
+          <p class="mt-4 font-display text-h1 text-(--color-kraan-blue)">
+            €{tier.price}
+            <span class="text-body text-(--color-kraan-stone-500)"> / mnd</span>
+          </p>
+          <p class="mt-3 text-body text-(--color-kraan-stone-700)">{tier.blurb}</p>
+          <a
+            href="/demo"
+            class={`mt-6 inline-block rounded-(--radius-button) px-5 py-2 text-body font-medium no-underline ${tier.highlight ? 'bg-(--color-kraan-blue) text-white hover:bg-(--color-kraan-blue-700)' : 'border border-(--color-kraan-blue) text-(--color-kraan-blue) hover:bg-(--color-kraan-stone-100)'}`}
+          >
+            Plan een demo
+          </a>
+        </article>
+      ))
+    }
+  </section>
+
+  <section class="py-12">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">Wat zit erin per abonnement</h2>
+    <div class="mt-6 overflow-x-auto">
+      <table class="w-full border-collapse text-body">
+        <thead>
+          <tr class="border-b border-(--color-kraan-stone-300) text-left">
+            <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Onderdeel</th>
+            <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Lite</th>
+            <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Pro</th>
+            <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Max</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            features.map((row) => (
+              <tr class="border-b border-(--color-kraan-stone-300)">
+                <td class="py-3 pr-4 text-(--color-kraan-stone-700)">{row.feature}</td>
+                <td class="py-3 pr-4">{row.lite}</td>
+                <td class="py-3 pr-4">{row.pro}</td>
+                <td class="py-3 pr-4">{row.max}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="grid gap-6 border-t border-(--color-kraan-stone-300) py-12 sm:grid-cols-2">
+    <div>
+      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Alle abonnementen bevatten</h2>
+      <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <li>Geen setup-kosten.</li>
+        <li>Maandelijks opzegbaar (30 dagen opzegtermijn).</li>
+        <li>Eerste maand 50% korting.</li>
+        <li>30 dagen tevredenheidsgarantie — niet tevreden, geld terug.</li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Korting bij vooruitbetaling</h2>
+      <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <li>6 maanden vooruit: 15% korting.</li>
+        <li>12 maanden vooruit: 20% korting, prijs voor het hele jaar vastgezet.</li>
+        <li>BTW-tarief 21% (verlegd voor klanten buiten Nederland).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="border-t border-(--color-kraan-stone-300) py-12">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">Klaar om te starten?</h2>
+    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+      In een demo van 20 minuten laten wij precies zien hoe Klantkraan in uw situatie werkt. Geen
+      verkooppraatje, wel een rekensom op uw cijfers.
+    </p>
+    <a
+      href="/demo"
+      class="mt-6 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+    >
+      Plan een demo
+    </a>
+  </section>
+</Base>
