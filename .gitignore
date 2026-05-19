@@ -6,12 +6,9 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -19,6 +16,10 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Node / build outputs
+dist/
+node_modules/
 
 # Virtual Environment
 venv/
@@ -41,4 +42,4 @@ infra_automation.log
 credentials.json
 
 # Ansible
-*.retry 
+*.retry .DS_Store
