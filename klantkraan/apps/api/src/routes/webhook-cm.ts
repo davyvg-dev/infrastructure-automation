@@ -1,13 +1,17 @@
 import { Hono } from "hono";
+import { CmComAdapter } from "@kk/telephony";
 import type { Bindings } from "../env.js";
-import { verifyHmac } from "../lib/signing.js";
 
 export const webhookCmRouter = new Hono<{ Bindings: Bindings }>();
 
 /**
  * CM.com webhooks: missed call + inbound SMS.
  *
- * HMAC verification against CM_WEBHOOK_SECRET on the raw request body.
+ * Signature verification is delegated to @kk/telephony's CmComAdapter so the
+ * HMAC scheme stays co-located with the rest of the CM integration. Other
+ * vendor webhooks (Synthflow/Mollie/etc.) keep using ../lib/signing.ts until
+ * they get their own adapters.
+ *
  * Forwarding is delegated to n8n (`WEBHOOK_N8N_URL`) so business logic stays
  * out of the edge Worker. ACK 200 fast; n8n handles retries internally.
  */
@@ -22,12 +26,17 @@ async function forwardToN8n(env: Bindings, kind: "call" | "sms", payload: unknow
   });
 }
 
+function cmAdapter(env: Bindings): CmComAdapter {
+  return new CmComAdapter({ apiKey: env.CM_API_KEY });
+}
+
 webhookCmRouter.post("/webhook/cm/call", async (c) => {
   const body = await c.req.text();
-  const ok = await verifyHmac(
-    c.env.CM_WEBHOOK_SECRET,
+  const sigHeader = c.req.header("x-cm-signature") ?? "";
+  const ok = await cmAdapter(c.env).verifyWebhookSignature(
     body,
-    c.req.header("x-cm-signature"),
+    sigHeader,
+    c.env.CM_WEBHOOK_SECRET,
   );
   if (!ok) return c.json({ error: "invalid_signature" }, 401);
 
@@ -46,10 +55,11 @@ webhookCmRouter.post("/webhook/cm/call", async (c) => {
 
 webhookCmRouter.post("/webhook/cm/sms", async (c) => {
   const body = await c.req.text();
-  const ok = await verifyHmac(
-    c.env.CM_WEBHOOK_SECRET,
+  const sigHeader = c.req.header("x-cm-signature") ?? "";
+  const ok = await cmAdapter(c.env).verifyWebhookSignature(
     body,
-    c.req.header("x-cm-signature"),
+    sigHeader,
+    c.env.CM_WEBHOOK_SECRET,
   );
   if (!ok) return c.json({ error: "invalid_signature" }, 401);
 

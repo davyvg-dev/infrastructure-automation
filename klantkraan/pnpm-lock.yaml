@@ -26,6 +26,9 @@ importers:
       '@kk/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@kk/telephony':
+        specifier: workspace:*
+        version: link:../../packages/telephony
       hono:
         specifier: ^4.6.14
         version: 4.12.19
