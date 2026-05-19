@@ -68,9 +68,9 @@
 - [x] `visual-identity-brief.md`
 
 ### 10-ops
-- [ ] `weekly-kpi-review.md`
-- [ ] `risk-register.md`
-- [ ] `founder-tooling.md`
+- [x] `weekly-kpi-review.md`
+- [x] `risk-register.md`
+- [x] `founder-tooling.md`
 
 ## Phase 0.5 — Founder real-world actions (BLOCKING)
 
