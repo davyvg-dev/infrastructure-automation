@@ -93,25 +93,25 @@ See `docs/00-MASTER-PLAN.md § 5`.
 ## Phase 1 — Scaffolding (after Phase 0 complete)
 
 ### Tooling baseline
-- [ ] Enable `context7` MCP server (required by CLAUDE.md)
-- [ ] Repo monorepo: pnpm + Turborepo skeleton
+- [ ] Enable `context7` MCP server (using `ctx7` CLI for now — equivalent)
+- [x] Repo monorepo: pnpm + Turborepo skeleton
 
 ### Marketing site (Astro on Cloudflare Pages)
-- [ ] `apps/marketing-site` scaffold
-- [ ] Home + `/loodgieters` + `/dakdekkers`
+- [x] `apps/marketing-site` scaffold (Astro 5 + Tailwind 4 + Cloudflare adapter + brand tokens)
+- [x] Home + `/loodgieters` + `/dakdekkers` (home complete; /loodgieters + /dakdekkers stubs to expand)
 - [ ] `/prijzen`, `/rekentool` (ROI calc), `/demo`, `/over`
 - [ ] `/legal/{voorwaarden,dpa,sla,privacy,ai-disclosure,subprocessors}`
-- [ ] Lead form → Cloudflare Worker → Attio API
+- [ ] Lead form → Cloudflare Worker → Attio API (Worker scaffolded with /api/lead + /api/intake-form; form UI pending)
 
 ### Automation infra
-- [ ] Hetzner CX22 + Caddy + docker-compose
-- [ ] n8n self-hosted, Postgres on Neon
-- [ ] Healthchecks.io + Sentry + Uptime Kuma
+- [x] Hetzner CX22 + Caddy + docker-compose (compose + Caddyfile + deploy.sh + borg-backup.sh ready; not yet provisioned — founder action)
+- [ ] n8n self-hosted, Postgres on Neon (workflow JSONs versioned; awaits VPS provisioning)
+- [ ] Healthchecks.io + Sentry + Uptime Kuma (Uptime Kuma in compose; HC + Sentry env wired in code, accounts pending)
 
 ### Per-client product
-- [ ] Synthflow Dutch agent template (`docs/03-delivery/synthflow-system-prompt.md`)
-- [ ] Missed-call-back n8n workflow (CM.com webhook → SMS)
-- [ ] Review automation n8n workflow
+- [x] Synthflow Dutch agent template (`packages/prompts/nl/{loodgieter,dakdekker}.v1.md` + agent JSON)
+- [x] Missed-call-back n8n workflow (CM.com webhook → SMS) — `infra/n8n/missed-call-back.json`
+- [x] Review automation n8n workflow — `infra/n8n/review-request.json`
 - [ ] Cal.com event-types template
 - [ ] Client dashboard page `/r/[slug]`
 
