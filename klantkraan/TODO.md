@@ -113,7 +113,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] Missed-call-back n8n workflow (CM.com webhook → SMS) — `infra/n8n/missed-call-back.json`
 - [x] Review automation n8n workflow — `infra/n8n/review-request.json`
 - [ ] Cal.com event-types template
-- [ ] Client dashboard page `/r/[slug]`
+- [x] Client dashboard page `/r/[slug]`
 
 ### Tooling integrations
 - [ ] Attio workspace + pipeline + automation hooks
