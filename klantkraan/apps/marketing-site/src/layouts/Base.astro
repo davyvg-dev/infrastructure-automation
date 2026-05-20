@@ -7,9 +7,15 @@ interface Props {
   title: string
   description: string
   canonical?: string
+  /**
+   * When true (default): wrap <slot /> in a centered max-w-5xl main.
+   * When false: emit a bare <main id="main"> so individual sections can
+   * own their own bg + width (used by pages with full-bleed alt-bg sections).
+   */
+  centered?: boolean
 }
 
-const { title, description, canonical } = Astro.props
+const { title, description, canonical, centered = true } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
 ---
@@ -48,9 +54,17 @@ const ogImage = new URL('/og-default.png', Astro.site).toString()
       Ga naar hoofdinhoud
     </a>
     <Header />
-    <main id="main" class="mx-auto max-w-5xl px-6 py-10 md:py-16">
-      <slot />
-    </main>
+    {
+      centered ? (
+        <main id="main" class="mx-auto max-w-5xl px-6 py-10 md:py-16">
+          <slot />
+        </main>
+      ) : (
+        <main id="main">
+          <slot />
+        </main>
+      )
+    }
     <Footer />
   </body>
 </html>
