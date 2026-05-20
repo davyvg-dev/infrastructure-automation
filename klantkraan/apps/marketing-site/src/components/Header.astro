@@ -15,7 +15,8 @@ const nav = [
     <a href="/" class="font-display text-h3 text-(--color-kraan-blue) no-underline">
       klantkraan
     </a>
-    <nav aria-label="Hoofdnavigatie">
+
+    <nav class="hidden md:block" aria-label="Hoofdnavigatie">
       <ul class="flex items-center gap-6 text-small">
         {
           nav.map((item) => (
@@ -28,5 +29,88 @@ const nav = [
         }
       </ul>
     </nav>
+
+    <button
+      id="mobile-menu-toggle"
+      type="button"
+      class="flex h-11 w-11 items-center justify-center rounded-(--radius-button) text-(--color-kraan-ink) md:hidden"
+      aria-label="Menu openen"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg
+        class="h-6 w-6"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line data-icon-open x1="3" y1="6" x2="21" y2="6"></line>
+        <line data-icon-open x1="3" y1="12" x2="21" y2="12"></line>
+        <line data-icon-open x1="3" y1="18" x2="21" y2="18"></line>
+        <line data-icon-close class="hidden" x1="6" y1="6" x2="18" y2="18"></line>
+        <line data-icon-close class="hidden" x1="6" y1="18" x2="18" y2="6"></line>
+      </svg>
+    </button>
   </div>
+
+  <nav
+    id="mobile-menu"
+    class="hidden border-t border-(--color-kraan-stone-300) md:hidden"
+    aria-label="Mobiele hoofdnavigatie"
+    hidden
+  >
+    <ul class="mx-auto flex max-w-5xl flex-col">
+      {
+        nav.map((item) => (
+          <li class="border-b border-(--color-kraan-stone-300) last:border-b-0">
+            <a
+              href={item.href}
+              class="block px-6 py-4 text-body text-(--color-kraan-ink) no-underline"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
 </header>
+
+<script>
+  const toggle = document.getElementById('mobile-menu-toggle')
+  const menu = document.getElementById('mobile-menu')
+
+  if (toggle && menu) {
+    const openIcons = toggle.querySelectorAll('[data-icon-open]')
+    const closeIcons = toggle.querySelectorAll('[data-icon-close]')
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
+      toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen')
+      menu.hidden = !open
+      menu.classList.toggle('hidden', !open)
+      openIcons.forEach((el) => el.classList.toggle('hidden', open))
+      closeIcons.forEach((el) => el.classList.toggle('hidden', !open))
+    }
+
+    toggle.addEventListener('click', () => {
+      const isOpen = toggle.getAttribute('aria-expanded') === 'true'
+      setOpen(!isOpen)
+    })
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false)
+        ;(toggle as HTMLElement).focus()
+      }
+    })
+
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).tagName === 'A') setOpen(false)
+    })
+  }
+</script>
