@@ -1,26 +1,22 @@
 ---
+import Stat from '../Stat.astro'
+
 // Pijn-stats trio voor dakdekkers — storm-context.
 ---
 
 <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
   <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
-    <div>
-      <p class="font-display text-h1 text-(--color-kraan-blue)">35%</p>
-      <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-        van uw storm-oproepen komt na piek-uren binnen en wordt gemist.
-      </p>
-    </div>
-    <div>
-      <p class="font-display text-h1 text-(--color-kraan-blue)">€650</p>
-      <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-        gemiddelde waarde van één noodreparatie na een storm.
-      </p>
-    </div>
-    <div>
-      <p class="font-display text-h1 text-(--color-kraan-blue)">4–6 weken</p>
-      <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-        wachttijd-omzet die verdampt wanneer een inspectie-aanvraag blijft liggen.
-      </p>
-    </div>
+    <Stat
+      value="35%"
+      label="van uw storm-oproepen komt na piek-uren binnen en wordt gemist."
+    />
+    <Stat
+      value="€650"
+      label="gemiddelde waarde van één noodreparatie na een storm."
+    />
+    <Stat
+      value="4–6 weken"
+      label="wachttijd-omzet die verdampt wanneer een inspectie-aanvraag blijft liggen."
+    />
   </div>
 </section>

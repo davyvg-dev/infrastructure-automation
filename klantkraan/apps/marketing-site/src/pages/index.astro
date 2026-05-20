@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import LeadForm from '../components/LeadForm.astro'
+import Stat from '../components/Stat.astro'
 ---
 
 <Base
@@ -38,18 +39,9 @@ import LeadForm from '../components/LeadForm.astro'
   <!-- 2. Stat band (stone-100) -->
   <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="Klantenmotor in cijfers">
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
-      <div>
-        <p class="font-display text-h1 text-(--color-kraan-blue)">28%</p>
-        <p class="mt-2 text-body text-(--color-kraan-stone-700)">van uw oproepen wordt gemist.</p>
-      </div>
-      <div>
-        <p class="font-display text-h1 text-(--color-kraan-blue)">&lt; 60 sec</p>
-        <p class="mt-2 text-body text-(--color-kraan-stone-700)">terugbel-SMS na elke gemiste oproep.</p>
-      </div>
-      <div>
-        <p class="font-display text-h1 text-(--color-kraan-blue)">€450</p>
-        <p class="mt-2 text-body text-(--color-kraan-stone-700)">gemiddelde waarde per gemiste klus.</p>
-      </div>
+      <Stat value="28%" label="van uw oproepen wordt gemist." />
+      <Stat value="< 60 sec" label="terugbel-SMS na elke gemiste oproep." />
+      <Stat value="€450" label="gemiddelde waarde per gemiste klus." />
     </div>
   </section>
 

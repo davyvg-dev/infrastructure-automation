@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
+import Stat from '../components/Stat.astro'
 
 // Loodgieters landing page.
 // Copy follows klantkraan/docs/09-brand/voice-and-tone.md (u-form, no fluff,
@@ -124,14 +125,7 @@ const faqs: Faq[] = [
     aria-label="Wat een gemiste oproep kost"
   >
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
-      {
-        painStats.map((stat) => (
-          <div>
-            <p class="font-display text-h1 text-(--color-kraan-blue)">{stat.value}</p>
-            <p class="mt-2 text-body text-(--color-kraan-stone-700)">{stat.caption}</p>
-          </div>
-        ))
-      }
+      {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
     </div>
   </section>
 

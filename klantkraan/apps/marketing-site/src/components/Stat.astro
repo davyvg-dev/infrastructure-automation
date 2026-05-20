@@ -1,0 +1,20 @@
+---
+/*
+ * Stat — single numeric callout for the stat band pattern.
+ * Brief 09-brand/visual-identity-brief.md § 7: "Numeric statistics get their
+ * own visual block — large weight, accent colour." Small rust marker bar
+ * above each value is the "single accent block per page" allowance from § 3.
+ */
+interface Props {
+  value: string
+  label: string
+}
+
+const { value, label } = Astro.props
+---
+
+<div>
+  <div class="h-1 w-10 bg-(--color-kraan-rust)" aria-hidden="true"></div>
+  <p class="mt-4 font-display text-h1 text-(--color-kraan-blue)">{value}</p>
+  <p class="mt-2 text-body text-(--color-kraan-stone-700)">{label}</p>
+</div>
