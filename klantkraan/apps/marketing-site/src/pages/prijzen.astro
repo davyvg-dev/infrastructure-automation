@@ -5,6 +5,8 @@ interface Tier {
   id: 'lite' | 'pro' | 'max'
   name: string
   price: number
+  /** Day-price equivalent in Dutch decimal-comma format (price / 30, rounded to cents). */
+  dayPrice: string
   blurb: string
   highlight: boolean
 }
@@ -14,6 +16,7 @@ const tiers: Tier[] = [
     id: 'lite',
     name: 'Lite',
     price: 299,
+    dayPrice: '9,97',
     blurb: 'SMS-laag voor wie eerst de terugbel-automatisering wil testen.',
     highlight: false,
   },
@@ -21,6 +24,7 @@ const tiers: Tier[] = [
     id: 'pro',
     name: 'Pro',
     price: 599,
+    dayPrice: '19,97',
     blurb: 'AI-receptionist 24/7 met Cal.com-koppeling. Onze aanrader.',
     highlight: true,
   },
@@ -28,6 +32,7 @@ const tiers: Tier[] = [
     id: 'max',
     name: 'Max',
     price: 999,
+    dayPrice: '33,30',
     blurb: '500 min voice, eigen integraties, maandelijkse strategie-call.',
     highlight: false,
   },
@@ -88,6 +93,9 @@ const features: FeatureRow[] = [
             <p class="mt-4 font-display text-h1 text-(--color-kraan-blue)">
               €{tier.price}
               <span class="text-body text-(--color-kraan-stone-500)"> / mnd</span>
+            </p>
+            <p class="mt-1 font-mono text-small text-(--color-kraan-stone-500)">
+              ≈ €{tier.dayPrice} per dag
             </p>
             <p class="mt-3 text-body text-(--color-kraan-stone-700)">{tier.blurb}</p>
             <a
