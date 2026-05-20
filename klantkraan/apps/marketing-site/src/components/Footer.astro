@@ -1,4 +1,6 @@
 ---
+import Icon from './Icon.astro'
+
 const year = new Date().getFullYear()
 const legal = [
   { href: '/legal/voorwaarden', label: 'Algemene voorwaarden' },
@@ -36,10 +38,16 @@ const legal = [
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Contact</p>
         <p>
-          <a href="mailto:hallo@klantkraan.nl" class="block py-2">hallo@klantkraan.nl</a>
+          <a href="mailto:hallo@klantkraan.nl" class="flex items-center gap-2 py-2">
+            <Icon name="mail" class="h-4 w-4 shrink-0" />
+            <span>hallo@klantkraan.nl</span>
+          </a>
         </p>
         <p>
-          <a href="tel:+31000000000" class="block py-2">+31 (0) TODO</a>
+          <a href="tel:+31000000000" class="flex items-center gap-2 py-2">
+            <Icon name="phone" class="h-4 w-4 shrink-0" />
+            <span>+31 (0) TODO</span>
+          </a>
         </p>
       </div>
     </div>

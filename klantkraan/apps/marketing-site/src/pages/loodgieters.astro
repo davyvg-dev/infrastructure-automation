@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
 
 // Loodgieters landing page.
 // Copy follows klantkraan/docs/09-brand/voice-and-tone.md (u-form, no fluff,
@@ -17,20 +18,24 @@ const painStats: PainStat[] = [
 ]
 
 interface Feature {
+  icon: 'phone-call' | 'message-square' | 'star'
   title: string
   body: string
 }
 
 const features: Feature[] = [
   {
+    icon: 'phone-call',
     title: 'AI-receptionist die uw vak spreekt',
     body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag — en noemt alleen tarieven die u zelf heeft ingesteld.',
   },
   {
+    icon: 'message-square',
     title: 'Missed-call SMS binnen 60 seconden',
     body: 'Mist u een oproep, dan krijgt de beller binnen een minuut een Nederlandstalig bericht met een directe terugbel-link via Cal.com. Geen klant raakt verloren in een voicemail.',
   },
   {
+    icon: 'star',
     title: 'Google-reviews na elke klus',
     body: 'De volgende ochtend om 10:00 stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk.',
   },
@@ -137,7 +142,8 @@ const faqs: Faq[] = [
       {
         features.map((feature) => (
           <article class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5 md:p-6">
-            <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
+            <Icon name={feature.icon} class="h-8 w-8 text-(--color-kraan-blue)" />
+            <h3 class="mt-4 font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
             <p class="mt-3 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
           </article>
         ))
@@ -244,12 +250,10 @@ const faqs: Faq[] = [
             <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-(--color-kraan-ink) marker:hidden">
               <span class="flex items-start justify-between gap-4">
                 <span>{faq.q}</span>
-                <span
-                  aria-hidden="true"
-                  class="mt-1 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-45"
-                >
-                  +
-                </span>
+                <Icon
+                  name="chevron-down"
+                  class="mt-1 h-5 w-5 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-180"
+                />
               </span>
             </summary>
             <p class="mt-3 text-body text-(--color-kraan-stone-700)">{faq.a}</p>
