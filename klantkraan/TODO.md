@@ -66,6 +66,7 @@
 - [x] `naming-and-domain.md`
 - [x] `voice-and-tone.md`
 - [x] `visual-identity-brief.md`
+- [x] `logo-designer-brief.md` (Fiverr Pro brief + v0/Recraft prompts)
 
 ### 10-ops
 - [x] `weekly-kpi-review.md`
@@ -102,7 +103,11 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] `/prijzen`, `/rekentool` (ROI calc), `/demo`, `/over`
 - [x] `/legal/{voorwaarden,dpa,sla,privacy,ai-disclosure,subprocessors}`
 - [x] Lead form → Cloudflare Worker → Attio API (UI on / posts to /api/lead; CORS allow-list set)
-- [x] Deploy to Cloudflare Pages (live at `https://klantkraan-marketing.pages.dev`, 17 routes 200, 2026-05-20)
+- [x] Deploy to Cloudflare Pages (live at `https://klantkraan-marketing.pages.dev`, 17+ routes 200, 2026-05-20)
+- [x] Mobile optimization pass (9 commits, 2026-05-20): typography scale, hamburger + disclosure menu, 44px touch targets, responsive padding, prijzen cards on mobile, skip-to-main link, blank-button + hamburger-click iOS fixes
+- [x] Aesthetic pass per brand brief (6 commits, 2026-05-20): Lucide icons site-wide, rust hero accents, full-bleed cream/stone-100 alt-bg sections, Stat component with rust marker, mono section kickers, hairline-divided feature rows, link underline reveal
+- [x] Competitor-research polish (5 commits, 2026-05-20): three-icon trust badge strip (AVG + EU + Dutch voice), Article 50 transparency callout, day-price framing on /prijzen
+- [x] `/elektricien`, `/installateur`, `/aannemer` profession landings (template clone, trade-specific copy)
 - [ ] Attach `klantkraan.nl` + `www.klantkraan.nl` custom domains (blocked on NS-swap propagation; TransIP NS still resolving)
 
 ### Automation infra
