@@ -82,10 +82,14 @@
   a {
     color: var(--color-kraan-blue);
     text-underline-offset: 0.2em;
+    text-decoration-color: color-mix(in oklab, currentColor 35%, transparent);
+    text-decoration-thickness: 1px;
+    transition: text-decoration-color 150ms ease, color 150ms ease;
   }
 
   a:hover {
     color: var(--color-kraan-rust);
+    text-decoration-color: currentColor;
   }
 }
 
