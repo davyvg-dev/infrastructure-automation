@@ -5,17 +5,35 @@ founder's personal LinkedIn profile. No auto-posting — copy-paste only.
 
 ## Files
 
-| File | Week | Topic |
-|---|---|---|
-| `001-launch-story.md` | 1 | Intro: "Vandaag launch ik Klantkraan" — wat ik bouw en waarom |
-| `002-stat-hook.md` | 1 | Probleem-statement: loodgieters missen 28% van inkomende calls |
-| `003-contrarian-take.md` | 1 | Listicle/carousel: 5 redenen dat installateurs offertes verliezen |
-| `004-customer-pain.md` | 2 | Teardown: hoe een loodgieter 12 calls/week beantwoordt zonder receptionist |
+| File | Week | Topic | Status |
+|---|---|---|---|
+| `001-launch-story.md` | 1 | Intro: "Vandaag launch ik Klantkraan" — wat ik bouw en waarom | draft |
+| `002-stat-hook.md` | 1 | Probleem-statement: loodgieters missen 28% van inkomende calls | draft |
+| `003-contrarian-take.md` | 1 | Listicle/carousel: 5 redenen dat installateurs offertes verliezen | draft |
+| `004-customer-pain.md` | 2 | Teardown: hoe een loodgieter 12 calls/week beantwoordt zonder receptionist | draft |
+| `005-call-transcript.md` | 2 | Demo-transcript: wat een AI-call écht klinkt (90s gesprek) | draft |
+| `006-no-aaa-agency.md` | 2 | Contrarian: waarom je geen AAA-agency moet inhuren | draft |
+| `007-poll-missed-calls.md` | 2 | Native LI-poll: welk % van calls mis je echt? | draft |
+| `008-case-study-1.md` | 3 | Case study #1 reveal (loodgieter-pilot, geanonimiseerd) | **holdback** |
+| `009-lessons-pilot-1.md` | 3 | 3 lessons learned uit pilot #1 — wat fout ging | **holdback** |
+| `010-ten-questions-ai.md` | 3 | Listicle: 10 vragen die je AI-receptionist moet beantwoorden | draft |
+| `011-myth-ai-replace.md` | 3 | Hot take: AI vervangt geen vakmensen, wel receptionisten | draft |
+| `012-may-pilots-dm.md` | 3 | Soft CTA: 3 loodgieter-pilot-plekken open voor mei | draft |
+| `013-emergency-call-voiceover.md` | 4 | Voice-over clip: spoed-call afgehandeld door AI (22:47) | **holdback** |
+| `014-dashboard-before-after.md` | 4 | Dashboard screenshot: before/after pilot #1, 30 dagen data | **holdback** |
+| `015-dakdekker-pilot.md` | 4 | Case study #2: dakdekker-pilot — andere flow dan loodgieter | **holdback** |
+| `016-month-1-lessons.md` | 4 | Build-in-public: 5 lessons learned uit maand 1 | **holdback** |
+| `017-dakdekkers-pilot-cta.md` | 4 | Soft CTA: 2 dakdekker-pilot-plekken open voor juni | draft |
 
 Topics follow `klantkraan/docs/05-content/first-30-days-calendar.md`
-(Week 1 LinkedIn posts 1–3, Week 2 LinkedIn post 4). The filename
-suffixes (`launch-story`, `stat-hook`, etc.) are the originally requested
-template names; the actual post content tracks the calendar.
+(LinkedIn posts 1–17, weeks 1–4). The filename suffixes track the actual
+post content/topic, not the original template names.
+
+**Status legend:**
+- `draft` — ship-ready, founder reviews + publishes
+- `holdback` — skeleton with `[PLACEHOLDER]` slots; do not publish until
+  the pilot data referenced in the frontmatter `holdback_reason` exists.
+  Faking pilot numbers on LinkedIn = brand suicide. Always wait.
 
 ## Each draft file contains
 
@@ -33,13 +51,15 @@ template names; the actual post content tracks the calendar.
 
 ## Publish cadence
 
-- 1 post per week from this batch (4 weeks total).
+- Full 30-day batch covered (17 posts, weeks 1–4).
 - Cadence target per `docs/05-content/first-30-days-calendar.md`:
-  5 LinkedIn personal posts/week from Week 2 onward. This folder
-  covers the highest-stakes 4. Follow-up drafts arrive per the calendar
-  (Week 1 posts 4–7, Week 2 posts 8–12, etc.).
+  3 posts/week in week 1, 5/week in weeks 2–4.
 - Best Dutch B2B publish windows: Tuesday or Thursday, 07:30–09:00
   or 17:00–18:30. Owner-operators check LinkedIn on commute or post-work.
+- Holdback posts (008, 009, 013, 014, 015, 016) ship only after the
+  pilot data referenced in their `holdback_reason` frontmatter exists.
+  If pilot timing slips, push these posts later in the calendar — do
+  not backfill with fake numbers.
 
 ## Style rules (enforced — see `docs/09-brand/voice-and-tone.md`)
 

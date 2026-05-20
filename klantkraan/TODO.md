@@ -119,7 +119,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 
 ### Content (wave 3)
 - [x] `/blog` Astro Content Collection + 2 Dutch SEO cornerstone posts
-- [x] First 4 LinkedIn personal-profile post drafts (`marketing/linkedin/drafts/`)
+- [x] First 17 LinkedIn personal-profile post drafts (`marketing/linkedin/drafts/`, weeks 1–4; 11 ship-ready, 6 holdback awaiting pilot data)
 
 ### Tooling integrations
 - [ ] Attio workspace + pipeline + automation hooks
