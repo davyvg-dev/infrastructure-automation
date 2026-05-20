@@ -1,19 +1,293 @@
 ---
 import Base from '../layouts/Base.astro'
+
+// Loodgieters landing page.
+// Copy follows klantkraan/docs/09-brand/voice-and-tone.md (u-form, no fluff,
+// concrete cijfers, no emojis). Visual rhythm mirrors index.astro.
+
+interface PainStat {
+  value: string
+  caption: string
+}
+
+const painStats: PainStat[] = [
+  { value: '28%', caption: 'van uw oproepen wordt gemist.' },
+  { value: '€450', caption: 'gemiddelde waarde per gemiste klus.' },
+  { value: '0', caption: 'reviews per klus die u niet oppikt.' },
+]
+
+interface Feature {
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    title: 'AI-receptionist die uw vak spreekt',
+    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag — en noemt alleen tarieven die u zelf heeft ingesteld.',
+  },
+  {
+    title: 'Missed-call SMS binnen 60 seconden',
+    body: 'Mist u een oproep, dan krijgt de beller binnen een minuut een Nederlandstalig bericht met een directe terugbel-link via Cal.com. Geen klant raakt verloren in een voicemail.',
+  },
+  {
+    title: 'Google-reviews na elke klus',
+    body: 'De volgende ochtend om 10:00 stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk.',
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+  href?: string
+  linkLabel?: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'Werkt het ook met mijn huidige telefoonnummer?',
+    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw visitekaartjes, busbestickering en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor — u bepaalt.',
+  },
+  {
+    q: 'En wat als ik op locatie zit en niet kan opnemen?',
+    a: 'Precies waar dit voor gemaakt is. De AI-receptionist neemt op, classificeert de oproep (spoed, nieuwe klus, bestaande klant, leverancier), boekt indien gewenst een terugbel-afspraak in Cal.com en stuurt u een samenvatting per WhatsApp of e-mail. U belt terug wanneer het uitkomt.',
+  },
+  {
+    q: 'Hoort de klant dat het AI is?',
+    a: 'Ja. Direct na de begroeting meldt de assistent dat het gesprek door een AI gevoerd wordt, namens uw bedrijf. Dat is geen marketing-keuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
+    href: '/legal/ai-disclosure',
+    linkLabel: 'Lees de volledige AI-disclosure',
+  },
+  {
+    q: 'Wat als de AI iets verkeerd zegt over mijn prijzen?',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet — voorrijkosten, uurtarief, spoedtoeslag, materiaalopslag. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+  },
+  {
+    q: 'Wat gebeurt er met de klantgegevens?',
+    a: 'Alles draait in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren gespreksopnamen 30 dagen, tenzij u korter wenst. Geen data naar VS-leveranciers.',
+    href: '/legal/dpa',
+    linkLabel: 'Bekijk DPA en privacyverklaring',
+  },
+  {
+    q: 'Per maand opzegbaar — echt waar?',
+    a: 'Ja. Geen jaarcontract, geen setup-kosten, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
+    href: '/legal/voorwaarden',
+    linkLabel: 'Lees de algemene voorwaarden',
+  },
+]
 ---
 
 <Base
   title="Klantkraan voor loodgieters — gemiste oproepen teruggebeld binnen 60 seconden"
-  description="Nederlandstalige AI-receptionist die voorrijkosten en spoedtoeslagen kent. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar."
+  description="Nederlandstalige AI-receptionist die voorrijkosten en spoedtoeslagen kent. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar, geen setup, EU-gehost."
 >
-  <h1 class="font-display text-hero text-(--color-kraan-ink)">
-    De Klantenmotor voor loodgieters.
-  </h1>
-  <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-    Een AI-receptionist die <em>voorrijkosten</em>, <em>spoedtoeslag</em> en
-    <em>materiaalopslag</em> kent. Werkt 24/7 in vlot Nederlands. Per maand opzegbaar.
-  </p>
-  <p class="mt-10 text-small text-(--color-kraan-stone-500)">
-    Stub-pagina. Volledige copy + audio-demo + ROI-tool worden in de volgende iteratie toegevoegd.
-  </p>
+  <!-- 1. Hero -->
+  <section class="py-16">
+    <h1 class="font-display text-hero text-(--color-kraan-ink)">
+      De Klantenmotor voor loodgieters.
+    </h1>
+    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+      Een AI-receptionist die <em>voorrijkosten</em>, <em>spoedtoeslag</em> en
+      <em>materiaalopslag</em> kent. Neemt op in vlot Nederlands, ook
+      's avonds en in het weekend. Reviews en terugbel-afspraken erbij, in één pakket.
+    </p>
+    <div class="mt-10 flex flex-wrap gap-4">
+      <a
+        href="/demo"
+        class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+      >
+        Probeer de demo
+      </a>
+      <a
+        href="/rekentool"
+        class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+      >
+        Bereken uw ROI
+      </a>
+    </div>
+    <p class="mt-6 text-small text-(--color-kraan-stone-500)">
+      Per maand opzegbaar · Geen setup · AVG + EU AI Act conform
+    </p>
+  </section>
+
+  <!-- 2. Pijn-stats trio -->
+  <section
+    class="grid gap-6 border-t border-(--color-kraan-stone-300) py-12 sm:grid-cols-3"
+    aria-label="Wat een gemiste oproep kost"
+  >
+    {
+      painStats.map((stat) => (
+        <div>
+          <p class="font-display text-h2 text-(--color-kraan-blue)">{stat.value}</p>
+          <p class="mt-2 text-body">{stat.caption}</p>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- 3. Wat Klantkraan doet voor loodgieters -->
+  <section class="border-t border-(--color-kraan-stone-300) py-16">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">
+      Wat Klantkraan doet voor loodgieters.
+    </h2>
+    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+      Drie modules in één maandprijs. Eén werkwijze, getest in de praktijk.
+    </p>
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      {
+        features.map((feature) => (
+          <article class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6">
+            <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
+            <p class="mt-3 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 4. Live audio-demo placeholder -->
+  <section class="border-t border-(--color-kraan-stone-300) py-16">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">
+      Hoor het zelf.
+    </h2>
+    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+      Een opname van de AI-receptionist die een spoed-oproep afhandelt — inclusief
+      voorrijkosten, spoedtoeslag en terugbel-afspraak.
+    </p>
+    <div
+      class="mt-8 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6"
+    >
+      <audio controls preload="none" class="w-full">
+        <source src="/audio/demo-loodgieter.mp3" type="audio/mpeg" />
+        Uw browser ondersteunt geen audio-element. Bel het demo-nummer op
+        <a href="/demo">/demo</a>.
+      </audio>
+      <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+        Audio-demo komt binnenkort online — bel zelf het demo-nummer op
+        <a href="/demo" class="underline">/demo</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. ROI snippet -->
+  <section class="border-t border-(--color-kraan-stone-300) py-16">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">
+      Reken het even na.
+    </h2>
+    <div class="mt-8 rounded-(--radius-card) bg-(--color-kraan-stone-100) p-8">
+      <p class="text-h3 text-(--color-kraan-ink)">
+        Mist u 10 oproepen per week à €450? Dat is <strong>€234.000 verloren omzet per jaar</strong>.
+      </p>
+      <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+        Klantkraan Pro is €599 per maand. Terugverdiend zodra u één extra klus per maand
+        herwint. De rest is winst.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-4">
+        <a
+          href="/rekentool"
+          class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+        >
+          Open de rekentool
+        </a>
+        <a
+          href="/prijzen"
+          class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
+        >
+          Bekijk de tarieven
+        </a>
+      </div>
+      <p class="mt-6 text-micro text-(--color-kraan-stone-500)">
+        Bedragen excl. 21% BTW. Voorbeeld op basis van branche-gemiddelde €450 per oproep
+        (bron: Aira / Invoca missed-call benchmarks).
+      </p>
+    </div>
+  </section>
+
+  <!-- 6. Social proof placeholder -->
+  <section class="border-t border-(--color-kraan-stone-300) py-16">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">
+      Pilots in voorbereiding.
+    </h2>
+    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+      Wij selecteren in het tweede kwartaal van 2026 drie loodgieters voor een
+      pilot van twee maanden. Plaatsen die hier vrijkomen worden ingevuld met
+      echte cases zodra die afgerond zijn.
+    </p>
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      {
+        [1, 2, 3].map(() => (
+          <article class="rounded-(--radius-card) border border-dashed border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100) p-6">
+            <p class="text-small text-(--color-kraan-stone-500)">
+              [Pilot loodgieter · regio Randstad · komt binnenkort]
+            </p>
+            <p class="mt-4 text-body text-(--color-kraan-stone-500)">
+              Case en cijfers volgen na afronding van de pilot.
+            </p>
+          </article>
+        ))
+      }
+    </div>
+    <p class="mt-6 text-small italic text-(--color-kraan-stone-500)">
+      Eerste pilots starten Q2 2026.
+    </p>
+  </section>
+
+  <!-- 7. FAQ -->
+  <section class="border-t border-(--color-kraan-stone-300) py-16">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">
+      Veelgestelde vragen.
+    </h2>
+    <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+      {
+        faqs.map((faq) => (
+          <details class="group py-4">
+            <summary class="cursor-pointer list-none font-display text-h3 text-(--color-kraan-ink) marker:hidden">
+              <span class="flex items-start justify-between gap-4">
+                <span>{faq.q}</span>
+                <span
+                  aria-hidden="true"
+                  class="mt-1 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-45"
+                >
+                  +
+                </span>
+              </span>
+            </summary>
+            <p class="mt-3 text-body text-(--color-kraan-stone-700)">{faq.a}</p>
+            {faq.href && faq.linkLabel && (
+              <p class="mt-3 text-small">
+                <a href={faq.href} class="underline">
+                  {faq.linkLabel}
+                </a>
+              </p>
+            )}
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 8. Eind-CTA band -->
+  <section class="my-16 rounded-(--radius-card) bg-(--color-kraan-blue) px-8 py-12 text-white">
+    <h2 class="font-display text-h1 text-white">
+      Klaar om geen klus meer te missen?
+    </h2>
+    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
+      Een demo van acht minuten op uw eigen nummer is de snelste manier om te horen
+      wat Klantkraan voor uw bedrijf doet.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-4">
+      <a
+        href="/demo"
+        class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+      >
+        Probeer de demo
+      </a>
+      <a
+        href="/prijzen"
+        class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+      >
+        Bekijk prijzen
+      </a>
+    </div>
+  </section>
 </Base>
