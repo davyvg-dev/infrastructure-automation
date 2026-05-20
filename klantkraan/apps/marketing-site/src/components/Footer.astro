@@ -2,6 +2,15 @@
 import Icon from './Icon.astro'
 
 const year = new Date().getFullYear()
+
+const branches = [
+  { href: '/loodgieters', label: 'Loodgieters' },
+  { href: '/dakdekkers', label: 'Dakdekkers' },
+  { href: '/elektricien', label: 'Elektriciens' },
+  { href: '/installateur', label: 'Installateurs' },
+  { href: '/aannemer', label: 'Aannemers' },
+]
+
 const legal = [
   { href: '/legal/voorwaarden', label: 'Algemene voorwaarden' },
   { href: '/legal/dpa', label: 'Verwerkersovereenkomst' },
@@ -14,7 +23,7 @@ const legal = [
 
 <footer class="border-t border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100)">
   <div class="mx-auto max-w-5xl px-6 py-8 md:py-12 text-small text-(--color-kraan-stone-700)">
-    <div class="grid gap-6 md:gap-8 sm:grid-cols-3">
+    <div class="grid gap-6 md:gap-8 sm:grid-cols-2 md:grid-cols-4">
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Klantkraan</p>
         <p class="mt-2">De Klantenmotor voor Nederlandse vakmensen.</p>
@@ -22,6 +31,18 @@ const legal = [
           Klantkraan is een handelsnaam van T4 Software Consulting BV.<br />
           KvK: <span class="font-mono">TODO</span> · BTW: <span class="font-mono">TODO</span>
         </p>
+      </div>
+      <div>
+        <p class="font-display text-h3 text-(--color-kraan-ink)">Branches</p>
+        <ul class="mt-2">
+          {
+            branches.map((item) => (
+              <li>
+                <a href={item.href} class="block py-2">{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
       </div>
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Juridisch</p>
