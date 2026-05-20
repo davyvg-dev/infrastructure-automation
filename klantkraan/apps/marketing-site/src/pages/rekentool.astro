@@ -5,138 +5,148 @@ import Base from '../layouts/Base.astro'
 <Base
   title="ROI-rekentool — Klantkraan"
   description="Bereken in 10 seconden hoeveel omzet u laat liggen aan gemiste oproepen en hoe snel Klantkraan zichzelf terugverdient."
+  centered={false}
 >
-  <section class="py-8">
-    <h1 class="font-display text-hero text-(--color-kraan-ink)">Wat kost u een <span class="text-(--color-kraan-rust)">gemiste oproep</span>?</h1>
-    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-      Vul uw cijfers in. De rekentool laat direct zien hoeveel klussen u jaarlijks misloopt en hoe
-      snel elk Klantkraan-abonnement zichzelf terugverdient.
-    </p>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-kraan-ink)">Wat kost u een <span class="text-(--color-kraan-rust)">gemiste oproep</span>?</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+        Vul uw cijfers in. De rekentool laat direct zien hoeveel klussen u jaarlijks misloopt en hoe
+        snel elk Klantkraan-abonnement zichzelf terugverdient.
+      </p>
+    </div>
   </section>
 
-  <section class="grid gap-6 md:gap-8 py-8 md:grid-cols-2">
-    <form
-      id="roi-form"
-      class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100) p-5 md:p-6"
-      onsubmit="return false"
-    >
-      <div class="space-y-6">
-        <div>
-          <label for="calls" class="block text-body font-medium text-(--color-kraan-ink)">
-            Hoeveel oproepen krijgt u per week?
-          </label>
-          <input
-            id="calls"
-            name="calls"
-            type="number"
-            min="0"
-            step="1"
-            value="40"
-            class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-3 text-body"
-          />
+  <!-- 2. Form + results (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
+      <form
+        id="roi-form"
+        class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5 md:p-6"
+        onsubmit="return false"
+      >
+        <div class="space-y-6">
+          <div>
+            <label for="calls" class="block text-body font-medium text-(--color-kraan-ink)">
+              Hoeveel oproepen krijgt u per week?
+            </label>
+            <input
+              id="calls"
+              name="calls"
+              type="number"
+              min="0"
+              step="1"
+              value="40"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-3 text-body"
+            />
+          </div>
+          <div>
+            <label for="missed" class="block text-body font-medium text-(--color-kraan-ink)">
+              % oproepen dat u nu mist
+            </label>
+            <input
+              id="missed"
+              name="missed"
+              type="number"
+              min="0"
+              max="100"
+              step="1"
+              value="28"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-3 text-body"
+            />
+            <p class="mt-1 text-small text-(--color-kraan-stone-500)">
+              Brancheschatting: 28% — installatie- en dak-vakmensen.
+            </p>
+          </div>
+          <div>
+            <label for="value" class="block text-body font-medium text-(--color-kraan-ink)">
+              Gemiddelde klantwaarde per klus (€)
+            </label>
+            <input
+              id="value"
+              name="value"
+              type="number"
+              min="0"
+              step="10"
+              value="450"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-3 text-body"
+            />
+            <p class="mt-1 text-small text-(--color-kraan-stone-500)">
+              Default €450 — gemiddelde loodgietersklus in Nederland.
+            </p>
+          </div>
         </div>
-        <div>
-          <label for="missed" class="block text-body font-medium text-(--color-kraan-ink)">
-            % oproepen dat u nu mist
-          </label>
-          <input
-            id="missed"
-            name="missed"
-            type="number"
-            min="0"
-            max="100"
-            step="1"
-            value="28"
-            class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-3 text-body"
-          />
-          <p class="mt-1 text-small text-(--color-kraan-stone-500)">
-            Brancheschatting: 28% — installatie- en dak-vakmensen.
-          </p>
-        </div>
-        <div>
-          <label for="value" class="block text-body font-medium text-(--color-kraan-ink)">
-            Gemiddelde klantwaarde per klus (€)
-          </label>
-          <input
-            id="value"
-            name="value"
-            type="number"
-            min="0"
-            step="10"
-            value="450"
-            class="mt-2 w-full rounded-(--radius-button) border border-(--color-kraan-stone-300) bg-white px-3 py-3 text-body"
-          />
-          <p class="mt-1 text-small text-(--color-kraan-stone-500)">
-            Default €450 — gemiddelde loodgietersklus in Nederland.
-          </p>
-        </div>
-      </div>
-    </form>
+      </form>
 
-    <aside
-      class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-(--color-kraan-cream) p-5 md:p-6"
-    >
-      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Uw verlies in cijfers</h2>
-      <dl class="mt-4 space-y-4">
-        <div>
-          <dt class="text-small text-(--color-kraan-stone-500)">Gemiste oproepen per jaar</dt>
-          <dd
-            id="out-missed-year"
-            class="font-display text-h1 text-(--color-kraan-blue)"
-          >
-            0
-          </dd>
-        </div>
-        <div>
-          <dt class="text-small text-(--color-kraan-stone-500)">Verloren omzet per jaar</dt>
-          <dd id="out-lost-revenue" class="font-display text-h1 text-(--color-kraan-rust)">
-            €0
-          </dd>
-          <p class="mt-1 text-small text-(--color-kraan-stone-500)">
-            Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
-          </p>
-        </div>
-      </dl>
+      <aside
+        class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-white p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Uw verlies in cijfers</h2>
+        <dl class="mt-4 space-y-4">
+          <div>
+            <dt class="text-small text-(--color-kraan-stone-500)">Gemiste oproepen per jaar</dt>
+            <dd
+              id="out-missed-year"
+              class="font-display text-h1 text-(--color-kraan-blue)"
+            >
+              0
+            </dd>
+          </div>
+          <div>
+            <dt class="text-small text-(--color-kraan-stone-500)">Verloren omzet per jaar</dt>
+            <dd id="out-lost-revenue" class="font-display text-h1 text-(--color-kraan-rust)">
+              €0
+            </dd>
+            <p class="mt-1 text-small text-(--color-kraan-stone-500)">
+              Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
+            </p>
+          </div>
+        </dl>
 
-      <hr class="my-6 border-(--color-kraan-stone-300)" />
+        <hr class="my-6 border-(--color-kraan-stone-300)" />
 
-      <h3 class="font-display text-h3 text-(--color-kraan-ink)">Terugverdientijd Klantkraan</h3>
-      <ul class="mt-3 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <h3 class="font-display text-h3 text-(--color-kraan-ink)">Terugverdientijd Klantkraan</h3>
+        <ul class="mt-3 space-y-2 text-body text-(--color-kraan-stone-700)">
+          <li>
+            Lite (€299/mnd): <span id="out-payback-lite" class="font-mono">–</span>
+          </li>
+          <li>
+            Pro (€599/mnd): <span id="out-payback-pro" class="font-mono">–</span>
+          </li>
+          <li>
+            Max (€999/mnd): <span id="out-payback-max" class="font-mono">–</span>
+          </li>
+        </ul>
+        <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+          "Terugverdientijd" = aantal maanden tot het abonnement betaald is door teruggewonnen omzet.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 3. Hoe wij rekenen (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Hoe wij rekenen</h2>
+      <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <li>Gemiste oproepen per jaar = oproepen per week × 52 × (% gemist / 100).</li>
         <li>
-          Lite (€299/mnd): <span id="out-payback-lite" class="font-mono">–</span>
+          Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans (zonder
+          terugbel-automatisering haakt het gros af).
         </li>
         <li>
-          Pro (€599/mnd): <span id="out-payback-pro" class="font-mono">–</span>
-        </li>
-        <li>
-          Max (€999/mnd): <span id="out-payback-max" class="font-mono">–</span>
+          Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12). Hoe groter de bak
+          gemiste klussen, hoe sneller Klantkraan zichzelf terugverdient.
         </li>
       </ul>
-      <p class="mt-4 text-small text-(--color-kraan-stone-500)">
-        "Terugverdientijd" = aantal maanden tot het abonnement betaald is door teruggewonnen omzet.
-      </p>
-    </aside>
-  </section>
-
-  <section class="border-t border-(--color-kraan-stone-300) py-8 md:py-12">
-    <h2 class="font-display text-h2 text-(--color-kraan-ink)">Hoe wij rekenen</h2>
-    <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
-      <li>Gemiste oproepen per jaar = oproepen per week × 52 × (% gemist / 100).</li>
-      <li>
-        Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans (zonder
-        terugbel-automatisering haakt het gros af).
-      </li>
-      <li>
-        Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12). Hoe groter de bak
-        gemiste klussen, hoe sneller Klantkraan zichzelf terugverdient.
-      </li>
-    </ul>
-    <a
-      href="/demo"
-      class="mt-8 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-    >
-      Laat het ons live op uw cijfers nakijken
-    </a>
+      <a
+        href="/demo"
+        class="mt-8 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+      >
+        Laat het ons live op uw cijfers nakijken
+      </a>
+    </div>
   </section>
 
   <script>

@@ -6,54 +6,64 @@ import LeadForm from '../components/LeadForm.astro'
 <Base
   title="Klantkraan — De Klantenmotor voor Nederlandse vakmensen"
   description="Elke gemiste oproep teruggebeld binnen 60 seconden. AI-receptionist die uw vak spreekt, automatische Google-reviews, geen setup, per maand opzegbaar."
+  centered={false}
 >
+  <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
-    <h1 class="font-display text-hero text-(--color-kraan-ink)">
-      De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor Nederlandse vakmensen.
-    </h1>
-    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-      Elke gemiste oproep teruggebeld binnen 60 seconden. AI-receptionist die uw vak spreekt,
-      automatische reviews, geen setup, per maand opzegbaar.
-    </p>
-    <div class="mt-10 flex flex-wrap gap-4">
-      <a
-        href="/demo"
-        class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-      >
-        Probeer de AI-receptionist
-      </a>
-      <a
-        href="/rekentool"
-        class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
-      >
-        Bereken uw ROI
-      </a>
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-kraan-ink)">
+        De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor Nederlandse vakmensen.
+      </h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+        Elke gemiste oproep teruggebeld binnen 60 seconden. AI-receptionist die uw vak spreekt,
+        automatische reviews, geen setup, per maand opzegbaar.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a
+          href="/demo"
+          class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+        >
+          Probeer de AI-receptionist
+        </a>
+        <a
+          href="/rekentool"
+          class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+        >
+          Bereken uw ROI
+        </a>
+      </div>
     </div>
   </section>
 
-  <section class="grid gap-4 md:gap-6 border-t border-(--color-kraan-stone-300) py-8 md:py-12 sm:grid-cols-3">
-    <div>
-      <p class="font-display text-h2 text-(--color-kraan-blue)">28%</p>
-      <p class="mt-2 text-body">van uw oproepen wordt gemist.</p>
-    </div>
-    <div>
-      <p class="font-display text-h2 text-(--color-kraan-blue)">&lt; 60 sec</p>
-      <p class="mt-2 text-body">terugbel-SMS na elke gemiste oproep.</p>
-    </div>
-    <div>
-      <p class="font-display text-h2 text-(--color-kraan-blue)">€450</p>
-      <p class="mt-2 text-body">gemiddelde waarde per gemiste klus.</p>
+  <!-- 2. Stat band (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="Klantenmotor in cijfers">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      <div>
+        <p class="font-display text-h1 text-(--color-kraan-blue)">28%</p>
+        <p class="mt-2 text-body text-(--color-kraan-stone-700)">van uw oproepen wordt gemist.</p>
+      </div>
+      <div>
+        <p class="font-display text-h1 text-(--color-kraan-blue)">&lt; 60 sec</p>
+        <p class="mt-2 text-body text-(--color-kraan-stone-700)">terugbel-SMS na elke gemiste oproep.</p>
+      </div>
+      <div>
+        <p class="font-display text-h1 text-(--color-kraan-blue)">€450</p>
+        <p class="mt-2 text-body text-(--color-kraan-stone-700)">gemiddelde waarde per gemiste klus.</p>
+      </div>
     </div>
   </section>
 
-  <section id="contact" class="border-t border-(--color-kraan-stone-300) py-10 md:py-16">
-    <h2 class="font-display text-h1 text-(--color-kraan-ink)">Laat ons u terugbellen.</h2>
-    <p class="mt-4 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-      Vul het formulier in — wij nemen binnen 1 werkdag contact op om uw situatie door te nemen
-      en een demo op uw eigen cijfers in te plannen.
-    </p>
-    <div class="mt-8 max-w-2xl">
-      <LeadForm />
+  <!-- 3. Lead form (cream) -->
+  <section id="contact" class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-(--color-kraan-ink)">Laat ons u terugbellen.</h2>
+      <p class="mt-4 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+        Vul het formulier in — wij nemen binnen 1 werkdag contact op om uw situatie door te nemen
+        en een demo op uw eigen cijfers in te plannen.
+      </p>
+      <div class="mt-8 max-w-2xl">
+        <LeadForm />
+      </div>
     </div>
   </section>
 </Base>

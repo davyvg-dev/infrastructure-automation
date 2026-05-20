@@ -9,103 +9,115 @@ const demoTel = 'tel:+31000000000'
 <Base
   title="Probeer de AI-receptionist — Klantkraan demo"
   description="Bel ons demo-nummer en hoor in 60 seconden hoe de Nederlandse AI-receptionist een lekkage afhandelt. Zonder afspraak, gratis, 24/7 bereikbaar."
+  centered={false}
 >
-  <section class="py-8">
-    <h1 class="font-display text-hero text-(--color-kraan-ink)">Probeer de <span class="text-(--color-kraan-rust)">AI-receptionist</span>.</h1>
-    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-      Bel het nummer hieronder. U hoort exact dezelfde stem die straks uw klanten te woord staat.
-      Geen formulier, geen afspraak — direct bellen kan.
-    </p>
-  </section>
+  <!-- 1. Hero + demo number (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-kraan-ink)">Probeer de <span class="text-(--color-kraan-rust)">AI-receptionist</span>.</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+        Bel het nummer hieronder. U hoort exact dezelfde stem die straks uw klanten te woord staat.
+        Geen formulier, geen afspraak — direct bellen kan.
+      </p>
 
-  <section
-    class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-(--color-kraan-stone-100) p-8"
-  >
-    <p class="text-small text-(--color-kraan-stone-500)">Demo-nummer (Nederlandstalig, 24/7)</p>
-    <p class="mt-2 font-display text-h1 text-(--color-kraan-blue)">
-      <a href={demoTel} class="font-mono no-underline">{demoNumber}</a>
-    </p>
-    <p class="mt-4 text-small text-(--color-kraan-stone-500)">
-      Het definitieve nummer wordt geactiveerd zodra onze Nederlandse vaste-lijn bij CM.com
-      gereserveerd is.
-    </p>
-  </section>
-
-  <section class="grid gap-4 md:gap-6 py-8 md:py-12 md:grid-cols-2">
-    <div>
-      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Wat te zeggen tijdens de demo</h2>
-      <ol class="mt-4 list-decimal space-y-2 pl-5 text-body text-(--color-kraan-stone-700)">
-        <li>Bel het nummer en luister naar de begroeting.</li>
-        <li>
-          Vraag naar een <strong>lekkage in de keuken</strong>. Geef een postcode en huisnummer.
-        </li>
-        <li>Vraag naar de <em>voorrijkosten</em> en het <em>spoedtarief</em>.</li>
-        <li>Vraag om een afspraak <em>morgenochtend</em>.</li>
-        <li>Hang op en wacht binnen 60 seconden op de bevestigings-SMS.</li>
-      </ol>
-      <p class="mt-4 text-small text-(--color-kraan-stone-500)">
-        Tip: probeer ook eens "Bent u echt een mens?" — u krijgt het eerlijke antwoord conform de
-        AI Act-disclosure hieronder.
-      </p>
-    </div>
-    <div>
-      <h2 class="font-display text-h2 text-(--color-kraan-ink)">Voorbeeldopname</h2>
-      <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-        Liever eerst luisteren? Hieronder een opgenomen voorbeeldgesprek (loodgieter, spoed,
-        avonduur).
-      </p>
-      <p class="mt-4 text-small text-(--color-kraan-stone-500)">
-        Audio-opname: <a href="#" aria-disabled="true">voorbeeldgesprek.mp3 (binnenkort)</a>
-      </p>
+      <div
+        class="mt-10 rounded-(--radius-card) border border-(--color-kraan-blue) bg-white p-6 md:p-8"
+      >
+        <p class="text-small text-(--color-kraan-stone-500)">Demo-nummer (Nederlandstalig, 24/7)</p>
+        <p class="mt-2 font-display text-h1 text-(--color-kraan-blue)">
+          <a href={demoTel} class="font-mono no-underline">{demoNumber}</a>
+        </p>
+        <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+          Het definitieve nummer wordt geactiveerd zodra onze Nederlandse vaste-lijn bij CM.com
+          gereserveerd is.
+        </p>
+      </div>
     </div>
   </section>
 
-  <section
-    class="rounded-(--radius-card) border-2 border-(--color-kraan-rust) bg-(--color-kraan-cream) p-5 md:p-6"
-    aria-labelledby="ai-act"
-  >
-    <h2 id="ai-act" class="font-display text-h2 text-(--color-kraan-rust)">
-      AI-disclosure (EU AI Act, art. 50)
-    </h2>
-    <p class="mt-3 text-body text-(--color-kraan-stone-700)">
-      Het systeem aan de andere kant van de lijn is een AI. Dat is wettelijk verplicht om te
-      vermelden — en dat doen wij in de eerste zin van elk gesprek, woord voor woord:
-    </p>
-    <blockquote
-      class="mt-4 border-l-4 border-(--color-kraan-rust) bg-(--color-kraan-stone-100) p-3 md:p-4 text-body italic text-(--color-kraan-ink)"
-    >
-      "Goedendag, u spreekt met {`{{agent_naam}}`}, de digitale assistent van {`{{bedrijfsnaam}}`}.
-      Dit gesprek wordt gevoerd door een AI-systeem en kan worden opgenomen voor kwaliteits- en
-      trainingsdoeleinden. Wilt u liever een mens spreken? Zeg dan 'medewerker'. Waarmee kan ik u
-      helpen?"
-    </blockquote>
-    <ul class="mt-4 space-y-2 text-small text-(--color-kraan-stone-700)">
-      <li>De disclosure wordt nooit uitgeschakeld — ook niet op klantverzoek.</li>
-      <li>
-        Elke oproep wordt opgenomen, getranscribeerd en bewaard voor de duur van het contract +
-        minimaal 6 maanden.
-      </li>
-      <li>
-        Vraagt u "Bent u echt?" dan antwoordt de AI eerlijk dat zij een digitale assistent is en
-        uw bericht direct bij de eigenaar terechtkomt.
-      </li>
-    </ul>
-    <p class="mt-4 text-small">
-      Lees de volledige toelichting in onze <a href="/legal/ai-disclosure">AI-disclosure</a>.
-    </p>
+  <!-- 2. Wat te zeggen + voorbeeldopname (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 md:grid-cols-2">
+      <div>
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Wat te zeggen tijdens de demo</h2>
+        <ol class="mt-4 list-decimal space-y-2 pl-5 text-body text-(--color-kraan-stone-700)">
+          <li>Bel het nummer en luister naar de begroeting.</li>
+          <li>
+            Vraag naar een <strong>lekkage in de keuken</strong>. Geef een postcode en huisnummer.
+          </li>
+          <li>Vraag naar de voorrijkosten en het spoedtarief.</li>
+          <li>Vraag om een afspraak morgenochtend.</li>
+          <li>Hang op en wacht binnen 60 seconden op de bevestigings-SMS.</li>
+        </ol>
+        <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+          Tip: probeer ook eens "Bent u echt een mens?" — u krijgt het eerlijke antwoord conform de
+          AI Act-disclosure hieronder.
+        </p>
+      </div>
+      <div>
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Voorbeeldopname</h2>
+        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+          Liever eerst luisteren? Hieronder een opgenomen voorbeeldgesprek (loodgieter, spoed,
+          avonduur).
+        </p>
+        <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+          Audio-opname: <a href="#" aria-disabled="true">voorbeeldgesprek.mp3 (binnenkort)</a>
+        </p>
+      </div>
+    </div>
   </section>
 
-  <section class="border-t border-(--color-kraan-stone-300) py-8 md:py-12">
-    <h2 class="font-display text-h1 text-(--color-kraan-ink)">Liever een live demo?</h2>
-    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-      In 20 minuten lopen wij samen door uw eigen situatie: gemiddeld aantal oproepen, openingstijd,
-      bekende klant-typen. U ziet het dashboard en de SMS-templates in actie.
-    </p>
-    <a
-      href="mailto:hallo@klantkraan.nl?subject=Live%20demo%20Klantkraan"
-      class="mt-6 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-    >
-      Mail ons voor een afspraak
-    </a>
+  <!-- 3. AI-disclosure (cream, with rust-bordered card) -->
+  <section class="py-10 md:py-16" aria-labelledby="ai-act">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="rounded-(--radius-card) border-2 border-(--color-kraan-rust) bg-(--color-kraan-cream) p-6 md:p-8">
+        <h2 id="ai-act" class="font-display text-h2 text-(--color-kraan-rust)">
+          AI-disclosure (EU AI Act, art. 50)
+        </h2>
+        <p class="mt-3 text-body text-(--color-kraan-stone-700)">
+          Het systeem aan de andere kant van de lijn is een AI. Dat is wettelijk verplicht om te
+          vermelden — en dat doen wij in de eerste zin van elk gesprek, woord voor woord:
+        </p>
+        <blockquote
+          class="mt-4 border-l-4 border-(--color-kraan-rust) bg-(--color-kraan-stone-100) p-3 md:p-4 text-body text-(--color-kraan-ink)"
+        >
+          "Goedendag, u spreekt met {`{{agent_naam}}`}, de digitale assistent van {`{{bedrijfsnaam}}`}.
+          Dit gesprek wordt gevoerd door een AI-systeem en kan worden opgenomen voor kwaliteits- en
+          trainingsdoeleinden. Wilt u liever een mens spreken? Zeg dan 'medewerker'. Waarmee kan ik u
+          helpen?"
+        </blockquote>
+        <ul class="mt-4 space-y-2 text-small text-(--color-kraan-stone-700)">
+          <li>De disclosure wordt nooit uitgeschakeld — ook niet op klantverzoek.</li>
+          <li>
+            Elke oproep wordt opgenomen, getranscribeerd en bewaard voor de duur van het contract +
+            minimaal 6 maanden.
+          </li>
+          <li>
+            Vraagt u "Bent u echt?" dan antwoordt de AI eerlijk dat zij een digitale assistent is en
+            uw bericht direct bij de eigenaar terechtkomt.
+          </li>
+        </ul>
+        <p class="mt-4 text-small">
+          Lees de volledige toelichting in onze <a href="/legal/ai-disclosure">AI-disclosure</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Live demo CTA (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-(--color-kraan-ink)">Liever een live demo?</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+        In 20 minuten lopen wij samen door uw eigen situatie: gemiddeld aantal oproepen, openingstijd,
+        bekende klant-typen. U ziet het dashboard en de SMS-templates in actie.
+      </p>
+      <a
+        href="mailto:hallo@klantkraan.nl?subject=Live%20demo%20Klantkraan"
+        class="mt-6 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+      >
+        Mail ons voor een afspraak
+      </a>
+    </div>
   </section>
 </Base>
