@@ -80,37 +80,5 @@ const nav = [
   </nav>
 </header>
 
-<script>
-  const toggle = document.getElementById('mobile-menu-toggle')
-  const menu = document.getElementById('mobile-menu')
-
-  if (toggle && menu) {
-    const openIcons = toggle.querySelectorAll('[data-icon-open]')
-    const closeIcons = toggle.querySelectorAll('[data-icon-close]')
-
-    const setOpen = (open: boolean) => {
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
-      toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen')
-      menu.hidden = !open
-      menu.classList.toggle('hidden', !open)
-      openIcons.forEach((el) => el.classList.toggle('hidden', open))
-      closeIcons.forEach((el) => el.classList.toggle('hidden', !open))
-    }
-
-    toggle.addEventListener('click', () => {
-      const isOpen = toggle.getAttribute('aria-expanded') === 'true'
-      setOpen(!isOpen)
-    })
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        setOpen(false)
-        ;(toggle as HTMLElement).focus()
-      }
-    })
-
-    menu.addEventListener('click', (e) => {
-      if ((e.target as HTMLElement).tagName === 'A') setOpen(false)
-    })
-  }
-</script>
+<!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+<script src="/js/header-menu.js" type="module" is:inline></script>
