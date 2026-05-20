@@ -52,33 +52,41 @@
   --radius-button: 0.5rem;
 }
 
-html {
-  font-family: var(--font-sans);
-  background-color: var(--color-kraan-cream);
-  color: var(--color-kraan-ink);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
+/* All base styling lives inside @layer base so Tailwind utilities
+ * (text-white, text-(--color-*), etc) can override the defaults on a
+ * per-element basis. An unlayered `a {...}` rule outranks every
+ * @layer utilities rule in cascade precedence — that's what made
+ * `<a class="text-white">` render as kraan-blue on kraan-blue
+ * buttons (invisible). Don't move these back outside the layer. */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-kraan-cream);
+    color: var(--color-kraan-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-body {
-  margin: 0;
-  min-height: 100dvh;
-}
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
-  letter-spacing: -0.01em;
-}
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
 
-a {
-  color: var(--color-kraan-blue);
-  text-underline-offset: 0.2em;
-}
+  a {
+    color: var(--color-kraan-blue);
+    text-underline-offset: 0.2em;
+  }
 
-a:hover {
-  color: var(--color-kraan-rust);
+  a:hover {
+    color: var(--color-kraan-rust);
+  }
 }
 
 /* Mobile typography scale — drop oversized display sizes on <640px so hero
