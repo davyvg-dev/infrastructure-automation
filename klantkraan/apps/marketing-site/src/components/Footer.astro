@@ -23,11 +23,11 @@ const legal = [
       </div>
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Juridisch</p>
-        <ul class="mt-2 space-y-1">
+        <ul class="mt-2">
           {
             legal.map((item) => (
               <li>
-                <a href={item.href}>{item.label}</a>
+                <a href={item.href} class="block py-2">{item.label}</a>
               </li>
             ))
           }
@@ -35,11 +35,11 @@ const legal = [
       </div>
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Contact</p>
-        <p class="mt-2">
-          <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a>
+        <p>
+          <a href="mailto:hallo@klantkraan.nl" class="block py-2">hallo@klantkraan.nl</a>
         </p>
-        <p class="mt-1">
-          <a href="tel:+31000000000">+31 (0) TODO</a>
+        <p>
+          <a href="tel:+31000000000" class="block py-2">+31 (0) TODO</a>
         </p>
       </div>
     </div>
