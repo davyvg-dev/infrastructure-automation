@@ -65,11 +65,11 @@ const features: FeatureRow[] = [
     </p>
   </section>
 
-  <section class="grid gap-6 py-8 md:grid-cols-3">
+  <section class="grid gap-4 md:gap-6 py-8 md:grid-cols-3">
     {
       tiers.map((tier) => (
         <article
-          class={`rounded-(--radius-card) border p-6 ${tier.highlight ? 'border-(--color-kraan-blue) bg-(--color-kraan-stone-100)' : 'border-(--color-kraan-stone-300) bg-(--color-kraan-cream)'}`}
+          class={`rounded-(--radius-card) border p-5 md:p-6 ${tier.highlight ? 'border-(--color-kraan-blue) bg-(--color-kraan-stone-100)' : 'border-(--color-kraan-stone-300) bg-(--color-kraan-cream)'}`}
         >
           <header class="flex items-baseline justify-between">
             <h2 class="font-display text-h2 text-(--color-kraan-ink)">{tier.name}</h2>
@@ -95,7 +95,7 @@ const features: FeatureRow[] = [
     }
   </section>
 
-  <section class="py-12">
+  <section class="py-8 md:py-12">
     <h2 class="font-display text-h1 text-(--color-kraan-ink)">Wat zit erin per abonnement</h2>
     <div class="mt-6 overflow-x-auto">
       <table class="w-full border-collapse text-body">
@@ -123,7 +123,7 @@ const features: FeatureRow[] = [
     </div>
   </section>
 
-  <section class="grid gap-6 border-t border-(--color-kraan-stone-300) py-12 sm:grid-cols-2">
+  <section class="grid gap-4 md:gap-6 border-t border-(--color-kraan-stone-300) py-8 md:py-12 sm:grid-cols-2">
     <div>
       <h2 class="font-display text-h2 text-(--color-kraan-ink)">Alle abonnementen bevatten</h2>
       <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
@@ -143,7 +143,7 @@ const features: FeatureRow[] = [
     </div>
   </section>
 
-  <section class="border-t border-(--color-kraan-stone-300) py-12">
+  <section class="border-t border-(--color-kraan-stone-300) py-8 md:py-12">
     <h2 class="font-display text-h1 text-(--color-kraan-ink)">Klaar om te starten?</h2>
     <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
       In een demo van 20 minuten laten wij precies zien hoe Klantkraan in uw situatie werkt. Geen
