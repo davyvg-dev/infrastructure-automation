@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import LeadForm from '../components/LeadForm.astro'
 ---
 
 <Base
@@ -42,6 +43,17 @@ import Base from '../layouts/Base.astro'
     <div>
       <p class="font-display text-h2 text-(--color-kraan-blue)">€450</p>
       <p class="mt-2 text-body">gemiddelde waarde per gemiste klus.</p>
+    </div>
+  </section>
+
+  <section id="contact" class="border-t border-(--color-kraan-stone-300) py-16">
+    <h2 class="font-display text-h1 text-(--color-kraan-ink)">Laat ons u terugbellen.</h2>
+    <p class="mt-4 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+      Vul het formulier in — wij nemen binnen 1 werkdag contact op om uw situatie door te nemen
+      en een demo op uw eigen cijfers in te plannen.
+    </p>
+    <div class="mt-8 max-w-2xl">
+      <LeadForm />
     </div>
   </section>
 </Base>
