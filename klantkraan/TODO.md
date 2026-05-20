@@ -80,9 +80,9 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] Verify `klantkraan.com` available — https://lookup.icann.org/en/lookup (verified 2026-05-20)
 - [x] KvK handelsnaam search "Klantkraan" — https://www.kvk.nl/zoeken/ (no conflict, 2026-05-20)
 - [x] BOIP trademark search class 35 + 42 — https://www.boip.int/en/trademarks-register (no conflict, 2026-05-20)
-- [ ] Register `klantkraan.nl` (TransIP) — canonical apex, blocks Workspace + DNS + LinkedIn page
+- [x] Register `klantkraan.nl` (TransIP, 2026-05-20)
 - [x] Register `klantkraan.com` (TransIP, 2026-05-20)
-- [ ] File `handelsnaamwijziging` "Klantkraan" under T4 at KvK
+- [x] File `handelsnaamwijziging` "Klantkraan" under T4 at KvK (2026-05-20)
 - [ ] Hiscox PI quote ICT — https://www.hiscox.nl/beroepsaansprakelijkheidsverzekering-ICT
 - [ ] Synthflow trial: test 30 min Dutch voice quality
 - [ ] CM.com signup + reserve 1 Dutch landline
@@ -101,7 +101,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] Home + `/loodgieters` + `/dakdekkers` (home complete; /loodgieters + /dakdekkers stubs to expand)
 - [x] `/prijzen`, `/rekentool` (ROI calc), `/demo`, `/over`
 - [x] `/legal/{voorwaarden,dpa,sla,privacy,ai-disclosure,subprocessors}`
-- [ ] Lead form → Cloudflare Worker → Attio API (Worker scaffolded with /api/lead + /api/intake-form; form UI pending)
+- [x] Lead form → Cloudflare Worker → Attio API (UI on / posts to /api/lead; CORS allow-list set)
 
 ### Automation infra
 - [x] Hetzner CX22 + Caddy + docker-compose (compose + Caddyfile + deploy.sh + borg-backup.sh ready; not yet provisioned — founder action)
@@ -115,6 +115,10 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [ ] Cal.com event-types template
 - [x] Client dashboard page `/r/[slug]`
 
+### Content (wave 3)
+- [x] `/blog` Astro Content Collection + 2 Dutch SEO cornerstone posts
+- [x] First 4 LinkedIn personal-profile post drafts (`marketing/linkedin/drafts/`)
+
 ### Tooling integrations
 - [ ] Attio workspace + pipeline + automation hooks
 - [ ] PandaDoc / SignWell templates
@@ -123,7 +127,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 
 ### Demo assets
 - [ ] Public AI demo number (+31 ...) live
-- [ ] ROI calculator live
+- [x] ROI calculator live (page built; goes live with Pages deploy)
 - [ ] Founder bio page with KVK + DPA download
 
 ## Phase 2 — Pilots + outbound (after Phase 1)
