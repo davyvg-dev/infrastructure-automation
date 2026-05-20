@@ -11,6 +11,7 @@ interface Props {
 
 const { title, description, canonical } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
+const ogImage = new URL('/og-default.png', Astro.site).toString()
 ---
 
 <!doctype html>
@@ -23,11 +24,21 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toStri
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:site_name" content="Klantkraan" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#0F4C81" />
   </head>
   <body>
     <Header />

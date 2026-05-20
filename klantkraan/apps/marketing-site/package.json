@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.1.0",
+    "@astrojs/sitemap": "^3.7.2",
     "@kk/domain": "workspace:*",
     "@tailwindcss/vite": "^4.0.0",
     "astro": "^5.1.0",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
+    "sharp": "^0.34.5",
     "typescript": "^5.7.2"
   }
 }
