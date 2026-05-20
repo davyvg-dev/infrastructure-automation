@@ -1,0 +1,113 @@
+---
+// context7: Astro Content Collections dynamic routes — getStaticPaths + render()
+// (/llmstxt/astro_build_llms-full_txt, 2026-05-20)
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+
+type BlogPost = CollectionEntry<'blog'>
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog')
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, '') as string },
+    props: { post },
+  }))
+}
+
+interface Props {
+  post: BlogPost
+}
+
+const { post } = Astro.props as Props
+const { Content } = await render(post)
+
+const verticalLabel: Record<'loodgieter' | 'dakdekker' | 'algemeen', string> = {
+  loodgieter: 'Loodgieters',
+  dakdekker: 'Dakdekkers',
+  algemeen: 'Algemeen',
+}
+
+const dateFmt = new Intl.DateTimeFormat('nl-NL', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+})
+---
+
+<Base title={`${post.data.title} — Klantkraan`} description={post.data.description}>
+  <article class="py-8">
+    <p class="text-micro uppercase tracking-wide text-(--color-kraan-stone-500)">
+      <a href="/blog" class="no-underline hover:underline">Blog</a> · {
+        verticalLabel[post.data.vertical]
+      } · {dateFmt.format(post.data.pubDate)}
+    </p>
+    <h1 class="mt-4 font-display text-hero text-(--color-kraan-ink)">{post.data.title}</h1>
+    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">{post.data.description}</p>
+
+    <div class="prose-blog mt-10 max-w-2xl text-body text-(--color-kraan-ink)">
+      <Content />
+    </div>
+
+    <footer
+      class="mt-12 border-t border-(--color-kraan-stone-300) pt-8 text-small text-(--color-kraan-stone-500)"
+    >
+      Geschreven door {post.data.author}. Vragen of feedback?
+      <a href="/demo" class="no-underline hover:underline">Plan een demo</a> of bekijk de
+      <a href="/prijzen" class="no-underline hover:underline">prijzen</a>.
+    </footer>
+  </article>
+</Base>
+
+<style is:global>
+  .prose-blog h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: var(--text-h2--font-weight);
+    color: var(--color-kraan-ink);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .prose-blog h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: var(--text-h3--font-weight);
+    color: var(--color-kraan-ink);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose-blog p {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    color: var(--color-kraan-stone-700);
+  }
+  .prose-blog ul,
+  .prose-blog ol {
+    margin: 1rem 0 1.5rem 1.25rem;
+    padding: 0;
+    color: var(--color-kraan-stone-700);
+  }
+  .prose-blog li {
+    margin-bottom: 0.5rem;
+  }
+  .prose-blog strong {
+    color: var(--color-kraan-ink);
+    font-weight: 600;
+  }
+  .prose-blog blockquote {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--color-kraan-blue);
+    background: var(--color-kraan-stone-100);
+    color: var(--color-kraan-stone-700);
+    font-style: italic;
+  }
+  .prose-blog a {
+    color: var(--color-kraan-blue);
+    text-underline-offset: 0.2em;
+  }
+  .prose-blog a:hover {
+    color: var(--color-kraan-rust);
+  }
+</style>
