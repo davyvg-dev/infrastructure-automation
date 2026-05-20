@@ -102,6 +102,8 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] `/prijzen`, `/rekentool` (ROI calc), `/demo`, `/over`
 - [x] `/legal/{voorwaarden,dpa,sla,privacy,ai-disclosure,subprocessors}`
 - [x] Lead form → Cloudflare Worker → Attio API (UI on / posts to /api/lead; CORS allow-list set)
+- [x] Deploy to Cloudflare Pages (live at `https://klantkraan-marketing.pages.dev`, 17 routes 200, 2026-05-20)
+- [ ] Attach `klantkraan.nl` + `www.klantkraan.nl` custom domains (blocked on NS-swap propagation; TransIP NS still resolving)
 
 ### Automation infra
 - [x] Hetzner CX22 + Caddy + docker-compose (compose + Caddyfile + deploy.sh + borg-backup.sh ready; not yet provisioned — founder action)
