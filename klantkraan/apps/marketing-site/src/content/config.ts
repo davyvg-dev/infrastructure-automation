@@ -10,7 +10,7 @@ const blog = defineCollection({
     description: z.string().max(160),
     pubDate: z.coerce.date(),
     author: z.string().default('Klantkraan'),
-    vertical: z.enum(['loodgieter', 'dakdekker', 'algemeen']),
+    vertical: z.enum(['loodgieter', 'dakdekker', 'elektricien', 'installateur', 'aannemer', 'algemeen']),
     keywords: z.array(z.string()).default([]),
   }),
 })
