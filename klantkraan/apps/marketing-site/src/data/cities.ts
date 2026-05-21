@@ -3,7 +3,13 @@
 // a city-unique intro paragraph (≥100 words), neighbourhood list, price tier
 // descriptor and lateral-link list. Niche-specific framing lives in wave1.ts.
 
-export type CitySlug = 'amsterdam' | 'rotterdam' | 'den-haag' | 'utrecht'
+export type CitySlug =
+  | 'amsterdam'
+  | 'rotterdam'
+  | 'den-haag'
+  | 'utrecht'
+  | 'eindhoven'
+  | 'haarlem'
 
 export interface City {
   slug: CitySlug
@@ -43,7 +49,7 @@ export const cities: Record<CitySlug, City> = {
     priceTier: 'hoog',
     priceContext:
       'Voorrijkosten in Amsterdam liggen doorgaans tussen €85–120 en het uurtarief 20–30% boven het landelijke gemiddelde door parkeerdruk en de slechte bereikbaarheid binnen de Ring A10.',
-    lateralCitySlugs: ['rotterdam', 'den-haag', 'utrecht'],
+    lateralCitySlugs: ['rotterdam', 'den-haag', 'utrecht', 'haarlem'],
   },
   rotterdam: {
     slug: 'rotterdam',
@@ -87,7 +93,7 @@ export const cities: Record<CitySlug, City> = {
     priceTier: 'hoog',
     priceContext:
       'In Den Haag liggen voorrijkosten op €75–110 en het uurtarief 15–25% boven het landelijke gemiddelde, met een opslag voor monumentenwerk in het centrum en Statenkwartier.',
-    lateralCitySlugs: ['amsterdam', 'rotterdam', 'utrecht'],
+    lateralCitySlugs: ['amsterdam', 'rotterdam', 'utrecht', 'eindhoven'],
   },
   utrecht: {
     slug: 'utrecht',
@@ -109,6 +115,50 @@ export const cities: Record<CitySlug, City> = {
     priceTier: 'gemiddeld-hoog',
     priceContext:
       'In Utrecht liggen voorrijkosten op €65–95 en het uurtarief 10–15% boven het landelijke gemiddelde; in Leidsche Rijn worden veel werkzaamheden via aannemerscontracten gefactureerd.',
-    lateralCitySlugs: ['amsterdam', 'rotterdam', 'den-haag'],
+    lateralCitySlugs: ['amsterdam', 'rotterdam', 'den-haag', 'eindhoven'],
+  },
+  eindhoven: {
+    slug: 'eindhoven',
+    name: 'Eindhoven',
+    province: 'Noord-Brabant',
+    population: 249900,
+    intro:
+      'Eindhoven groeit harder dan welke andere stad buiten de Randstad ook, gedreven door het ASML-ecosysteem, de High Tech Campus en de Brainport-regio met Brainport Industries Campus aan de westflank. De woningvoorraad is uitzonderlijk gemengd: vooroorlogse arbeiderswoningen in het Philipsdorp en Drents Dorp, grote naoorlogse rijwoningen in Woensel en Achtse Barrier, omgebouwde fabriekspanden tot lofts in Strijp-S en Strijp-T, en grootschalige nieuwbouw in Meerhoven en Acht. Voor vakmensen betekent dat een breed werkpalet: monumentaal pannenwerk, vlakke bitumendaken op naoorlogse rijwoningen, industriële afbouwklussen in voormalige Philips-panden en bedrijfsmatig onderhoud rond de High Tech Campus. Veel werk loopt via de corporatie Woonbedrijf onder meerjarige raamovereenkomsten. De hoge expat-instroom zorgt voor tenant-turnover die reactief werk — lekkende kranen, defecte boilers, schilderbeurten bij oplevering — domineert. Tarieven liggen rond het landelijke gemiddelde, met opslag voor industriële opdrachten en bedrijfspanden.',
+    neighbourhoods: [
+      'Centrum',
+      'Strijp',
+      'Woensel',
+      'Tongelre',
+      'Stratum',
+      'Gestel',
+      'Meerhoven',
+      'Philipsdorp',
+    ],
+    priceTier: 'gemiddeld',
+    priceContext:
+      'In Eindhoven liggen voorrijkosten op €55–85 en het uurtarief rond het landelijke gemiddelde; industriële opdrachten op de High Tech Campus en Brainport Industries Campus vragen om aparte calculaties met certificeringseisen.',
+    lateralCitySlugs: ['den-haag', 'rotterdam', 'utrecht'],
+  },
+  haarlem: {
+    slug: 'haarlem',
+    name: 'Haarlem',
+    province: 'Noord-Holland',
+    population: 169000,
+    intro:
+      'Haarlem heeft een uitzonderlijk oude woningvoorraad: de Vijfhoek en de grachten langs het Spaarne tellen honderden 17e- en 18e-eeuwse panden met houten kozijnen, gemetselde topgevels en historische lood- en koperleidingen. Daaromheen liggen 19e-eeuwse uitbreidingen in de Bomenbuurt en Leidsebuurt, en grote naoorlogse blokken in Schalkwijk en de Slachthuisbuurt. De stad fungeert als welvarende commuter-stad voor Amsterdam, met hoge bereidheid tot kwalitatief schilder- en aannemerswerk. Voor vakmensen betekent dat: monumentenwerk onder strikt welstandstoezicht, krappe leidingschachten in oude panden langs het Spaarne, collectieve standleidingen in Schalkwijkse galerijflats die nu aan vervanging toe zijn, en een actieve VvE-markt. Veel werk loopt via de woningcorporaties Ymere, Pré Wonen en Elan Wonen. Tarieven liggen iets boven het landelijke gemiddelde door nabijheid van Amsterdam, parkeerdruk in de Vijfhoek en de gemiddeld hoger gewaardeerde woningvoorraad.',
+    neighbourhoods: [
+      'Centrum',
+      'Vijfhoek',
+      'Spaarndamse- en Zaanenbuurt',
+      'Bomenbuurt',
+      'Leidsebuurt',
+      'Schalkwijk',
+      'Slachthuisbuurt',
+      'Haarlem-Noord',
+    ],
+    priceTier: 'gemiddeld-hoog',
+    priceContext:
+      'In Haarlem liggen voorrijkosten op €70–100 en het uurtarief 5–15% boven het landelijke gemiddelde door nabijheid van Amsterdam, parkeerdruk in de Vijfhoek en een opslag voor monumentenwerk langs het Spaarne.',
+    lateralCitySlugs: ['amsterdam', 'utrecht', 'den-haag'],
   },
 }

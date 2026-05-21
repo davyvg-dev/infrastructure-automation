@@ -97,7 +97,9 @@ console.log(`\n=== Desktop dropdown @ ${BASE} ===`)
   await summary.click()
   await page.waitForTimeout(100)
   await ul.locator('a[href="/loodgieters"]').first().click()
-  await page.waitForLoadState('networkidle')
+  // ClientRouter does SPA pushState — waitForURL polls instead of relying on
+  // networkidle / waitForNavigation which assume a full document load.
+  await page.waitForURL(/\/loodgieters\/?$/, { timeout: 5000 }).catch(() => {})
   check(
     'clicking Loodgieters navigates to /loodgieters',
     page.url().endsWith('/loodgieters') || page.url().endsWith('/loodgieters/'),
@@ -158,9 +160,10 @@ console.log(`\n=== Mobile menu @ ${BASE} ===`)
   const mobileAlleLink = mobileDropdown.locator('a[href="/voor-wie"]')
   check('mobile "Alle branches →" link present', (await mobileAlleLink.count()) === 1)
 
-  // Tap Loodgieters -> navigates AND hamburger closes (existing behaviour)
+  // Tap Loodgieters -> navigates AND hamburger closes (existing behaviour).
+  // ClientRouter does SPA pushState; waitForURL is needed.
   await mobileDropdown.locator('a[href="/loodgieters"]').first().click()
-  await page.waitForLoadState('networkidle')
+  await page.waitForURL(/\/loodgieters\/?$/, { timeout: 5000 }).catch(() => {})
   check(
     'mobile tap navigates to /loodgieters',
     page.url().endsWith('/loodgieters') || page.url().endsWith('/loodgieters/'),

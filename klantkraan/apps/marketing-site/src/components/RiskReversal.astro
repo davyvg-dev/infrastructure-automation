@@ -1,0 +1,59 @@
+---
+/*
+ * Risk-reversal callout — the three "we make it safe to try" promises.
+ * Sits below the hero on cornerstones + index. Per research/website-aesthetics.md
+ * §3 (social proof when you have zero customers): risk-reversal converts
+ * higher than a missing testimonial wall.
+ *
+ * Voice: u-form, declarative, no fluff. No emojis.
+ */
+import Icon from './Icon.astro'
+
+interface Promise {
+  icon: 'check' | 'clock' | 'shield-check'
+  title: string
+  body: string
+}
+
+const promises: Promise[] = [
+  {
+    icon: 'check',
+    title: 'Eerste maand 50% korting',
+    body: 'Pakket Lite vanaf €174,50 in maand 1. Werkt het niet voor u, zegt u op zonder uitleg.',
+  },
+  {
+    icon: 'clock',
+    title: 'Opzegbaar per direct',
+    body: 'Geen jaarcontract, geen verborgen verlenging. Eén e-mail naar hallo@klantkraan.nl en u bent vrij.',
+  },
+  {
+    icon: 'shield-check',
+    title: 'Geen wurgcontract, geen setup',
+    body: 'Geen setup-fee, geen migratiekosten. Wij koppelen Klantkraan aan uw bestaande nummer.',
+  },
+]
+---
+
+<section
+  class="border-y border-(--color-kraan-rust)/30 bg-(--color-kraan-cream) py-8 md:py-10"
+  aria-label="Risico-reductie"
+>
+  <div class="mx-auto max-w-5xl px-6">
+    <dl class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">
+      {
+        promises.map((p) => (
+          <div class="flex items-start gap-3">
+            <Icon
+              name={p.icon}
+              class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-rust)"
+            />
+            <div>
+              <dt class="text-body font-medium text-(--color-kraan-ink)">{p.title}</dt>
+              <dd class="mt-1 text-small text-(--color-kraan-stone-700)">{p.body}</dd>
+            </div>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

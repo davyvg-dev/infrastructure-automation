@@ -1,59 +1,76 @@
 // Hamburger menu + Voor-wie? dropdown — vanilla JS, ES module.
 // Externalised so it loads under CSP `script-src 'self'` (no inline allowed).
 // See klantkraan/apps/marketing-site/public/_headers for the policy.
+//
+// astro:page-load aware: Astro 5 ClientRouter swaps the document body on
+// client-side navigation, so init must run on every page transition, not
+// just once at DOMContentLoaded.
 
-const toggle = document.getElementById('mobile-menu-toggle')
-const menu = document.getElementById('mobile-menu')
+function initHeaderMenu() {
+  const toggle = document.getElementById('mobile-menu-toggle')
+  const menu = document.getElementById('mobile-menu')
 
-if (toggle && menu) {
-  const openIcons = toggle.querySelectorAll('[data-icon-open]')
-  const closeIcons = toggle.querySelectorAll('[data-icon-close]')
+  if (toggle && menu && !toggle.dataset.kkInit) {
+    toggle.dataset.kkInit = '1'
 
-  function setOpen(open) {
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
-    toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen')
-    menu.hidden = !open
-    menu.classList.toggle('hidden', !open)
-    openIcons.forEach((el) => el.classList.toggle('hidden', open))
-    closeIcons.forEach((el) => el.classList.toggle('hidden', !open))
+    const openIcons = toggle.querySelectorAll('[data-icon-open]')
+    const closeIcons = toggle.querySelectorAll('[data-icon-close]')
+
+    function setOpen(open) {
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
+      toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen')
+      menu.hidden = !open
+      menu.classList.toggle('hidden', !open)
+      openIcons.forEach((el) => el.classList.toggle('hidden', open))
+      closeIcons.forEach((el) => el.classList.toggle('hidden', !open))
+    }
+
+    toggle.addEventListener('click', () => {
+      const isOpen = toggle.getAttribute('aria-expanded') === 'true'
+      setOpen(!isOpen)
+    })
+
+    menu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') setOpen(false)
+    })
   }
 
-  toggle.addEventListener('click', () => {
-    const isOpen = toggle.getAttribute('aria-expanded') === 'true'
-    setOpen(!isOpen)
-  })
+  // Desktop dropdown: outside-click + Escape close. Idempotent — guarded by
+  // the dropdown's own dataset flag so it doesn't double-listen.
+  const desktopDropdown = document.querySelector('[data-branches-dropdown="desktop"]')
+  if (desktopDropdown && !desktopDropdown.dataset.kkInit) {
+    desktopDropdown.dataset.kkInit = '1'
 
+    document.addEventListener('click', (e) => {
+      if (!desktopDropdown.open) return
+      if (!desktopDropdown.contains(e.target)) {
+        desktopDropdown.open = false
+      }
+    })
+  }
+}
+
+// Document-level Escape handler — attaches once for the page lifetime even
+// across view transitions (because the document object survives).
+if (!window.__kkEscapeAttached) {
+  window.__kkEscapeAttached = true
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-      setOpen(false)
+    if (e.key !== 'Escape') return
+
+    const toggle = document.getElementById('mobile-menu-toggle')
+    if (toggle && toggle.getAttribute('aria-expanded') === 'true') {
+      toggle.click()
       toggle.focus()
+      return
     }
-  })
 
-  menu.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') setOpen(false)
-  })
-}
-
-// Voor-wie? dropdown polish — close the desktop <details> when the user
-// clicks outside or presses Escape. The dropdown still works without this
-// JS (native <details> handles open/close on summary click) but the polish
-// matches user expectations for a header dropdown.
-const desktopDropdown = document.querySelector('[data-branches-dropdown="desktop"]')
-
-if (desktopDropdown) {
-  document.addEventListener('click', (e) => {
-    if (!desktopDropdown.open) return
-    if (!desktopDropdown.contains(e.target)) {
-      desktopDropdown.open = false
-    }
-  })
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && desktopDropdown.open) {
-      desktopDropdown.open = false
-      const summary = desktopDropdown.querySelector('summary')
-      if (summary) summary.focus()
+    const dd = document.querySelector('[data-branches-dropdown="desktop"]')
+    if (dd && dd.open) {
+      dd.open = false
+      dd.querySelector('summary')?.focus()
     }
   })
 }
+
+initHeaderMenu()
+document.addEventListener('astro:page-load', initHeaderMenu)

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import { ClientRouter } from 'astro:transitions'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
@@ -46,6 +47,7 @@ const ogImage = new URL('/og-default.png', Astro.site).toString()
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0F4C81" />
+    <ClientRouter />
   </head>
   <body class="pb-[5.5rem] md:pb-0">
     <a

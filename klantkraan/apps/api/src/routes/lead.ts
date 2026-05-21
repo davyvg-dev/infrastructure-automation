@@ -25,6 +25,26 @@ leadRouter.post(
   async (c) => {
     const data = c.req.valid("json");
 
+    // Fallback path: when ATTIO + NEON secrets are not yet configured (pre-pilot
+    // soft launch), log the lead to Cloudflare logs and return 200. The founder
+    // can pick leads up via `wrangler tail` until the CRM is wired. Once
+    // secrets land, this branch is skipped and the full Attio path runs.
+    if (!c.env.ATTIO_API_KEY || !c.env.NEON_DATABASE_URL) {
+      console.log(JSON.stringify({
+        level: "info",
+        evt: "lead.fallback_log",
+        ts: new Date().toISOString(),
+        // PII is intentionally logged here; this is the founder's only
+        // channel until Attio + Neon secrets are configured.
+        name: data.name,
+        email: data.email,
+        phone: data.phone ?? null,
+        message: data.message,
+        reason: c.env.ATTIO_API_KEY ? "missing_neon" : "missing_attio",
+      }));
+      return c.json({ ok: true, mode: "logged" }, 200);
+    }
+
     // Suppression check before any follow-up (06-outbound/gdpr-compliance.md).
     const supp = await isSuppressed(c.env.NEON_DATABASE_URL, {
       email: data.email,
