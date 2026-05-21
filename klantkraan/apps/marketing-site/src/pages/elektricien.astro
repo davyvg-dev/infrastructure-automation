@@ -80,10 +80,23 @@ const faqs: Faq[] = [
     linkLabel: 'Lees de algemene voorwaarden',
   },
 ]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
 ---
 
 <Base
-  title="Klantkraan voor elektriciens — AI-receptionist voor stroomstoringen, EV-laadpunten en avond-spoed"
+  title="Elektricien klanten werven — Klantkraan AI-receptionist voor stroomstoringen en EV-laadpunten"
   description="Nederlandstalige AI-receptionist die uw kortsluitings-spoedtarief, EV-laadpaal-meerprijs en voorrijkosten kent. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar, geen setup, EU-gehost."
   centered={false}
 >
@@ -160,7 +173,7 @@ const faqs: Faq[] = [
         Wat Klantkraan doet voor elektriciens.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Drie modules in één maandprijs. Eén werkwijze, getest in de praktijk.
+        Drie modules in één maandprijs — gebouwd voor elektriciens in heel Nederland, van Amsterdam en Rotterdam tot Eindhoven en daarbuiten.
       </p>
       <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
         {
@@ -276,4 +289,6 @@ const faqs: Faq[] = [
       </div>
     </div>
   </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
 </Base>

@@ -30,6 +30,19 @@ const faqs = [
     a: 'Ja. Geen jaarcontract, geen setup-fee, opzegtermijn 30 dagen. Volledige voorwaarden: <a href="/legal/voorwaarden">/legal/voorwaarden</a>.',
   },
 ]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
 ---
 
 <section class="py-10 md:py-16">
@@ -58,4 +71,6 @@ const faqs = [
       }
     </div>
   </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
 </section>

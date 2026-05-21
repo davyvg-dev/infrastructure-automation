@@ -81,10 +81,23 @@ const faqs: Faq[] = [
     linkLabel: 'Lees de algemene voorwaarden',
   },
 ]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
 ---
 
 <Base
-  title="Klantkraan voor loodgieters — gemiste oproepen teruggebeld binnen 60 seconden"
+  title="Loodgieter klanten werven — Klantkraan AI-receptionist voor spoed en voorrijkosten"
   description="Nederlandstalige AI-receptionist die voorrijkosten en spoedtoeslagen kent. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar, geen setup, EU-gehost."
   centered={false}
 >
@@ -160,7 +173,7 @@ const faqs: Faq[] = [
         Wat Klantkraan doet voor loodgieters.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Drie modules in één maandprijs. Eén werkwijze, getest in de praktijk.
+        Drie modules in één maandprijs — gebouwd voor loodgieters in heel Nederland, van Amsterdam en Rotterdam tot Eindhoven en daarbuiten.
       </p>
       <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
         {
@@ -197,10 +210,6 @@ const faqs: Faq[] = [
           Uw browser ondersteunt geen audio-element. Bel het demo-nummer op
           <a href="/demo">/demo</a>.
         </audio>
-        <p class="mt-4 text-small text-(--color-kraan-stone-500)">
-          Audio-demo komt binnenkort online — bel zelf het demo-nummer op
-          <a href="/demo" class="underline">/demo</a>.
-        </p>
       </div>
     </div>
   </section>
@@ -242,39 +251,7 @@ const faqs: Faq[] = [
     </div>
   </section>
 
-  <!-- 6. Social proof placeholder (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Referenties</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
-        Pilots in voorbereiding.
-      </h2>
-      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Wij selecteren in het tweede kwartaal van 2026 drie loodgieters voor een
-        pilot van twee maanden. Plaatsen die hier vrijkomen worden ingevuld met
-        echte cases zodra die afgerond zijn.
-      </p>
-      <div class="mt-10 grid gap-4 md:gap-6 md:grid-cols-3">
-        {
-          [1, 2, 3].map(() => (
-            <article class="rounded-(--radius-card) border border-dashed border-(--color-kraan-stone-300) bg-white p-5 md:p-6">
-              <p class="text-small text-(--color-kraan-stone-500)">
-                [Pilot loodgieter · regio Randstad · komt binnenkort]
-              </p>
-              <p class="mt-4 text-body text-(--color-kraan-stone-500)">
-                Case en cijfers volgen na afronding van de pilot.
-              </p>
-            </article>
-          ))
-        }
-      </div>
-      <p class="mt-6 text-small text-(--color-kraan-stone-500)">
-        Eerste pilots starten Q2 2026.
-      </p>
-    </div>
-  </section>
-
-  <!-- 7. FAQ (cream) -->
+  <!-- 6. FAQ (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Vragen</p>
@@ -335,4 +312,6 @@ const faqs: Faq[] = [
       </div>
     </div>
   </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
 </Base>
