@@ -1,7 +1,9 @@
 ---
+import Icon from './Icon.astro'
+import { branches } from '../data/branches'
+
+// Top-level nav items besides the Voor wie? dropdown.
 const nav = [
-  { href: '/loodgieters', label: 'Loodgieters' },
-  { href: '/dakdekkers', label: 'Dakdekkers' },
   { href: '/prijzen', label: 'Prijzen' },
   { href: '/rekentool', label: 'Rekentool' },
   { href: '/blog', label: 'Blog' },
@@ -16,8 +18,48 @@ const nav = [
       klantkraan
     </a>
 
+    <!-- Desktop nav -->
     <nav class="hidden md:block" aria-label="Hoofdnavigatie">
       <ul class="flex items-center gap-4 md:gap-6 text-small">
+        <!-- Voor wie? dropdown — native <details>, no JS required. -->
+        <li class="relative">
+          <details class="group" data-branches-dropdown="desktop">
+            <summary
+              class="flex cursor-pointer list-none items-center gap-1 text-(--color-kraan-ink) marker:hidden hover:underline"
+              aria-label="Voor welke vakmensen"
+            >
+              <span>Voor wie?</span>
+              <Icon
+                name="chevron-down"
+                class="h-4 w-4 transition-transform group-open:rotate-180"
+              />
+            </summary>
+            <ul
+              class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-2"
+            >
+              {
+                branches.map((b) => (
+                  <li>
+                    <a
+                      href={b.href}
+                      class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
+                    >
+                      {b.labelPlural}
+                    </a>
+                  </li>
+                ))
+              }
+              <li class="mt-1 border-t border-(--color-kraan-stone-300) pt-1">
+                <a
+                  href="/voor-wie"
+                  class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+                >
+                  Alle branches →
+                </a>
+              </li>
+            </ul>
+          </details>
+        </li>
         {
           nav.map((item) => (
             <li>
@@ -57,6 +99,7 @@ const nav = [
     </button>
   </div>
 
+  <!-- Mobile menu -->
   <nav
     id="mobile-menu"
     class="hidden border-t border-(--color-kraan-stone-300) md:hidden"
@@ -64,6 +107,41 @@ const nav = [
     hidden
   >
     <ul class="mx-auto flex max-w-5xl flex-col">
+      <li class="border-b border-(--color-kraan-stone-300)">
+        <details data-branches-dropdown="mobile" class="group">
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-kraan-ink) marker:hidden"
+          >
+            <span>Voor wie?</span>
+            <Icon
+              name="chevron-down"
+              class="h-5 w-5 transition-transform group-open:rotate-180"
+            />
+          </summary>
+          <ul class="bg-(--color-kraan-cream)">
+            {
+              branches.map((b) => (
+                <li class="border-t border-(--color-kraan-stone-300)">
+                  <a
+                    href={b.href}
+                    class="block px-10 py-3 text-body text-(--color-kraan-ink) no-underline"
+                  >
+                    {b.labelPlural}
+                  </a>
+                </li>
+              ))
+            }
+            <li class="border-t border-(--color-kraan-stone-300)">
+              <a
+                href="/voor-wie"
+                class="block px-10 py-3 text-body text-(--color-kraan-blue) no-underline"
+              >
+                Alle branches →
+              </a>
+            </li>
+          </ul>
+        </details>
+      </li>
       {
         nav.map((item) => (
           <li class="border-b border-(--color-kraan-stone-300) last:border-b-0">

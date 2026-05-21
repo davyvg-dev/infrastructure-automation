@@ -1,15 +1,8 @@
 ---
 import Icon from './Icon.astro'
+import { branches } from '../data/branches'
 
 const year = new Date().getFullYear()
-
-const branches = [
-  { href: '/loodgieters', label: 'Loodgieters' },
-  { href: '/dakdekkers', label: 'Dakdekkers' },
-  { href: '/elektricien', label: 'Elektriciens' },
-  { href: '/installateur', label: 'Installateurs' },
-  { href: '/aannemer', label: 'Aannemers' },
-]
 
 const legal = [
   { href: '/legal/voorwaarden', label: 'Algemene voorwaarden' },
@@ -100,11 +93,16 @@ const trustBadges: TrustBadge[] = [
             branches.map((item) => (
               <li>
                 <a href={item.href} class="block py-2">
-                  {item.label}
+                  {item.labelPlural}
                 </a>
               </li>
             ))
           }
+          <li>
+            <a href="/voor-wie" class="block py-2 text-(--color-kraan-blue)">
+              Alle branches →
+            </a>
+          </li>
         </ul>
       </div>
       <div>
