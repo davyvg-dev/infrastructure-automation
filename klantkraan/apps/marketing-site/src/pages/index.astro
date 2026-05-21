@@ -3,6 +3,8 @@ import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
 import LeadForm from '../components/LeadForm.astro'
 import Stat from '../components/Stat.astro'
+import RingingPhone from '../components/illustrations/RingingPhone.astro'
+import DashboardMock from '../components/DashboardMock.astro'
 ---
 
 <Base
@@ -12,29 +14,38 @@ import Stat from '../components/Stat.astro'
 >
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-kraan-ink)">
-        De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor Nederlandse vakmensen.
-      </h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-        Elke gemiste oproep teruggebeld binnen 60 seconden. AI-receptionist die uw vak spreekt,
-        automatische reviews, geen setup, per maand opzegbaar.
-      </p>
-      <div class="mt-10 flex flex-wrap gap-4">
-        <a
-          href="/demo"
-          class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-        >
-          Probeer de AI-receptionist
-        </a>
-        <a
-          href="/rekentool"
-          class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
-        >
-          Bereken uw ROI
-        </a>
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor Nederlandse vakmensen.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          Elke gemiste oproep teruggebeld binnen 60 seconden. AI-receptionist die uw vak spreekt,
+          automatische reviews, geen setup, per maand opzegbaar.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="/demo"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Probeer de AI-receptionist
+          </a>
+          <a
+            href="/rekentool"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            Bereken uw ROI
+          </a>
+        </div>
       </div>
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <RingingPhone class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
 
+    <div class="mx-auto max-w-5xl px-6">
       <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
         <div class="flex items-start gap-3">
           <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
@@ -58,6 +69,26 @@ import Stat from '../components/Stat.astro'
           </div>
         </div>
       </dl>
+    </div>
+  </section>
+
+  <!-- 1b. Product mock (cream) — shows the gesprekslog + missed-call SMS flow -->
+  <section class="pb-10 md:pb-16" aria-label="Voorbeeld van het Klantkraan-dashboard">
+    <div class="mx-auto max-w-5xl px-6">
+      <p
+        class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)"
+      >
+        Zo ziet het eruit
+      </p>
+      <h2 class="mt-3 max-w-2xl font-display text-h2 text-(--color-kraan-ink)">
+        Elke gemiste oproep wordt een terugbel-afspraak — automatisch.
+      </h2>
+      <div class="mt-8">
+        <DashboardMock />
+      </div>
+      <p class="mt-4 text-small text-(--color-kraan-stone-500)">
+        Voorbeeldweergave. Het echte dashboard is bereikbaar voor pilotklanten vanaf Q2 2026.
+      </p>
     </div>
   </section>
 

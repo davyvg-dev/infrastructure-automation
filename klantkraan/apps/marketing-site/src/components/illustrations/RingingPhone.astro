@@ -1,0 +1,57 @@
+---
+/*
+ * Single-line illustration — old-style ringing telephone receiver with
+ * sound waves. Brand brief § 5.2: hand-drawn, single-line, kraan-blue
+ * ink on cream. One per page max. Used on the homepage hero.
+ *
+ * The stroke uses currentColor so the parent <div class="text-(--color-kraan-blue)">
+ * controls the colour. Sizing via Tailwind utility classes on the parent.
+ */
+interface Props {
+  class?: string
+  'aria-label'?: string
+}
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Rinkelende telefoon' } = Astro.props
+---
+
+<svg
+  viewBox="0 0 240 240"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={ariaLabel}
+  class={className}
+>
+  <!-- Receiver: curved handset (single contiguous path) -->
+  <path
+    d="M65 145
+       Q55 110 75 95
+       Q90 85 105 95
+       L120 115
+       Q130 125 118 132
+       L108 138
+       Q116 156 138 168
+       L150 158
+       Q160 150 170 162
+       L180 178
+       Q188 192 175 200
+       Q145 215 105 195
+       Q75 178 65 145 Z"
+  />
+  <!-- Spiral cord coming from earpiece -->
+  <path d="M75 95 Q60 78 80 70 Q98 64 92 50 Q88 38 102 36" />
+  <!-- Sound waves — left side (earpiece) -->
+  <path d="M42 105 Q34 115 42 125" />
+  <path d="M30 95 Q18 115 30 135" />
+  <!-- Sound waves — right side (mouthpiece) -->
+  <path d="M195 168 Q203 178 195 188" />
+  <path d="M207 158 Q219 178 207 198" />
+  <!-- Subtle ring indicator (small star/dot above) -->
+  <circle cx="120" cy="28" r="3" fill="currentColor" stroke="none" />
+  <path d="M120 38 L120 48" />
+  <path d="M105 32 L98 25" />
+  <path d="M135 32 L142 25" />
+</svg>

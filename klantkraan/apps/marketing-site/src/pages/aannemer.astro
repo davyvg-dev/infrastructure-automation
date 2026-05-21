@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
+import HardHat from '../components/illustrations/HardHat.astro'
 
 // Aannemer landing page. Follows the /loodgieters template structure.
 // Trade-specific copy: offerteaanvragen, meerwerk, onderaannemers, projectplanning.
@@ -106,29 +107,37 @@ const faqSchema = {
 >
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-kraan-ink)">
-        De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor aannemers.
-      </h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-        Een AI-receptionist die offerteaanvragen, meerwerk en leveranciers uit elkaar houdt.
-        Vangt prospects terwijl u op de bouwplaats staat — ook 's avonds en in het weekend.
-      </p>
-      <div class="mt-10 flex flex-wrap gap-4">
-        <a
-          href="/demo"
-          class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-        >
-          Probeer de demo
-        </a>
-        <a
-          href="/rekentool"
-          class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
-        >
-          Bereken uw ROI
-        </a>
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor aannemers.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          Een AI-receptionist die offerteaanvragen, meerwerk en leveranciers uit elkaar houdt.
+          Vangt prospects terwijl u op de bouwplaats staat — ook 's avonds en in het weekend.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="/demo"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Probeer de demo
+          </a>
+          <a
+            href="/rekentool"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            Bereken uw ROI
+          </a>
+        </div>
       </div>
-
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <HardHat class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
       <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
         <div class="flex items-start gap-3">
           <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />

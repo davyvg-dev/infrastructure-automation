@@ -1,0 +1,53 @@
+---
+/*
+ * Single-line illustration — storm cloud over a pitched roof. Used on
+ * /dakdekkers hero. Combines roof + cloud + lightning to signal the
+ * dakdekker storm-protocol that the cornerstone is about.
+ */
+interface Props {
+  class?: string
+  'aria-label'?: string
+}
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Onweer boven dak' } = Astro.props
+---
+
+<svg
+  viewBox="0 0 240 240"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={ariaLabel}
+  class={className}
+>
+  <!-- Cloud (bumpy top, flat bottom) -->
+  <path
+    d="M55 90
+       Q40 90 40 75
+       Q40 60 58 60
+       Q60 40 85 42
+       Q95 28 115 32
+       Q130 22 148 32
+       Q175 28 180 50
+       Q200 50 200 70
+       Q200 88 182 90
+       L55 90 Z"
+  />
+  <!-- Lightning bolt -->
+  <path d="M118 95 L100 135 L120 135 L105 175" />
+  <!-- Rain drops -->
+  <line x1="75" y1="100" x2="68" y2="118" />
+  <line x1="95" y1="100" x2="88" y2="118" />
+  <line x1="150" y1="100" x2="143" y2="118" />
+  <line x1="170" y1="100" x2="163" y2="118" />
+  <!-- Pitched roof below -->
+  <path d="M30 215 L120 165 L210 215" />
+  <!-- Chimney -->
+  <path d="M160 185 L160 165 L175 165 L175 195" />
+  <!-- Roof ridge tile lines (rhythm hint) -->
+  <line x1="80" y1="190" x2="85" y2="187" />
+  <line x1="100" y1="180" x2="105" y2="177" />
+  <line x1="135" y1="180" x2="140" y2="177" />
+</svg>
