@@ -125,6 +125,8 @@ See `docs/00-MASTER-PLAN.md § 5`.
 ### Content (wave 3)
 - [x] `/blog` Astro Content Collection + 2 Dutch SEO cornerstone posts
 - [x] First 17 LinkedIn personal-profile post drafts (`marketing/linkedin/drafts/`, weeks 1–4; 11 ship-ready, 6 holdback awaiting pilot data)
+- [x] Programmatic SEO Wave 1 (10 G4 city×niche pages live, /[stad]/[vak] route, src/data/{cities,niches,wave1}.ts — 2026-05-21)
+- [ ] Programmatic SEO Wave 2 (next 10 pages: Eindhoven niches + Den Haag/Utrecht loodgieter + Amsterdam/Rotterdam aannemer — wait T+6 wk for Wave 1 indexation per blueprint §6)
 
 ### Tooling integrations
 - [ ] Attio workspace + pipeline + automation hooks
