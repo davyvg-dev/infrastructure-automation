@@ -109,13 +109,13 @@ import Base from '../layouts/Base.astro'
         <h3 class="font-display text-h3 text-(--color-kraan-ink)">Terugverdientijd Klantkraan</h3>
         <ul class="mt-3 space-y-2 text-body text-(--color-kraan-stone-700)">
           <li>
-            Lite (€299/mnd): <span id="out-payback-lite" class="font-mono">–</span>
+            Lite (€349/mnd): <span id="out-payback-lite" class="font-mono">–</span>
           </li>
           <li>
             Pro (€599/mnd): <span id="out-payback-pro" class="font-mono">–</span>
           </li>
           <li>
-            Max (€999/mnd): <span id="out-payback-max" class="font-mono">–</span>
+            Max (€849/mnd): <span id="out-payback-max" class="font-mono">–</span>
           </li>
         </ul>
         <p class="mt-4 text-small text-(--color-kraan-stone-500)">
@@ -150,62 +150,6 @@ import Base from '../layouts/Base.astro'
     </div>
   </section>
 
-  <script>
-  // Client-side ROI calculator. No framework — vanilla DOM, reactive on every input.
-  const callsEl = document.getElementById('calls') as HTMLInputElement | null
-  const missedEl = document.getElementById('missed') as HTMLInputElement | null
-  const valueEl = document.getElementById('value') as HTMLInputElement | null
-
-  const outMissed = document.getElementById('out-missed-year')
-  const outLost = document.getElementById('out-lost-revenue')
-  const outPaybackLite = document.getElementById('out-payback-lite')
-  const outPaybackPro = document.getElementById('out-payback-pro')
-  const outPaybackMax = document.getElementById('out-payback-max')
-
-  const TIERS = { lite: 299, pro: 599, max: 999 } as const
-  const CONVERSION = 0.33 // share of missed calls that would have become a paying job
-
-  const eurFmt = new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0,
-  })
-  const numFmt = new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 0 })
-
-  function readNumber(el: HTMLInputElement | null, fallback: number): number {
-    if (!el) return fallback
-    const n = Number(el.value)
-    return Number.isFinite(n) && n >= 0 ? n : fallback
-  }
-
-  function formatPayback(monthly: number, lostRevenuePerYear: number): string {
-    if (lostRevenuePerYear <= 0) return 'n.v.t.'
-    const lostPerMonth = lostRevenuePerYear / 12
-    if (lostPerMonth <= 0) return 'n.v.t.'
-    const months = monthly / lostPerMonth
-    if (months < 1) return '< 1 maand'
-    if (months > 60) return '> 5 jaar'
-    return `${months.toFixed(1)} maand`
-  }
-
-  function recompute(): void {
-    const calls = readNumber(callsEl, 0)
-    const missedPct = Math.min(100, readNumber(missedEl, 0))
-    const value = readNumber(valueEl, 0)
-
-    const missedPerYear = Math.round(calls * 52 * (missedPct / 100))
-    const lostRevenue = Math.round(missedPerYear * value * CONVERSION)
-
-    if (outMissed) outMissed.textContent = numFmt.format(missedPerYear)
-    if (outLost) outLost.textContent = eurFmt.format(lostRevenue)
-    if (outPaybackLite) outPaybackLite.textContent = formatPayback(TIERS.lite, lostRevenue)
-    if (outPaybackPro) outPaybackPro.textContent = formatPayback(TIERS.pro, lostRevenue)
-    if (outPaybackMax) outPaybackMax.textContent = formatPayback(TIERS.max, lostRevenue)
-  }
-
-    for (const el of [callsEl, missedEl, valueEl]) {
-      if (el) el.addEventListener('input', recompute)
-    }
-    recompute()
-  </script>
+  <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+  <script src="/js/rekentool.js" type="module" is:inline></script>
 </Base>

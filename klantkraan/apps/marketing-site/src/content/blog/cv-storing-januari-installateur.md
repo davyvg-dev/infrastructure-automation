@@ -87,9 +87,9 @@ Drie abonnementen, alle excl. BTW, maandelijks opzegbaar:
 
 | Tier | Per maand | Per dag | Geschikt voor |
 |---|---|---|---|
-| Lite | €299 | ≈ €9,97 | Eenmans-installateur, alleen SMS-terugbel + reviews |
+| Lite | €349 | ≈ €11,63 | Eenmans-installateur, alleen SMS-terugbel + reviews |
 | Pro | €599 | ≈ €19,97 | 2–5 monteurs, AI-receptionist 24/7 + Cal.com-koppeling |
-| Max | €999 | ≈ €33,30 | 5+ monteurs, eigen integraties (Werkbon, Snelstart, Skoon) |
+| Max | €849 | ≈ €28,30 | 5+ monteurs, eigen integraties (Werkbon, Snelstart, Skoon) |
 
 Voor een eenmans-installateur die in januari 15 oproepen per week mist:
 

@@ -119,4 +119,4 @@ Bereken eerst uw eigen verlies met de [rekentool](/rekentool) — drie velden in
 
 Als het bedrag boven de €1.000 per maand uitkomt, [plan een demo](/demo) van 20 minuten. We laten u dezelfde middag horen hoe het op uw nummer klinkt, zonder verkooppraatje en zonder verplichting.
 
-[Bekijk prijzen](/prijzen) — vanaf €299 per maand voor de SMS-laag, €599 voor de volledige AI-telefoniste, BTW excl., per maand opzegbaar.
+[Bekijk prijzen](/prijzen) — vanaf €349 per maand voor de SMS-laag, €599 voor de volledige AI-telefoniste, BTW excl., per maand opzegbaar.

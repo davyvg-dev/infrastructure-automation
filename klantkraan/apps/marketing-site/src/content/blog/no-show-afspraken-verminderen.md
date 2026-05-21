@@ -92,7 +92,7 @@ Geen verrassingen = geen verongelijkte klant = geen no-show.
 
 ## Wat dit kost om in te voeren
 
-- **SMS-laag** via Klantkraan Lite: €299 per maand BTW excl., inclusief twee SMS-templates (bevestiging + reminder), maandelijks opzegbaar. Zie [prijzen](/prijzen).
+- **SMS-laag** via Klantkraan Lite: €349 per maand BTW excl., inclusief twee SMS-templates (bevestiging + reminder), maandelijks opzegbaar. Zie [prijzen](/prijzen).
 - **AI-confirm-belletje** zit in de Pro-laag (€599 per maand BTW excl., 200 spreekminuten).
 - **DIY met losse SMS-provider** (CM.com, MessageBird) is haalbaar als u zelf de flows bouwt — reken op 8–12 uur eenmalige setup en geen ondersteuning bij storingen.
 
