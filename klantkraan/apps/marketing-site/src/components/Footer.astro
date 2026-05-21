@@ -19,9 +19,68 @@ const legal = [
   { href: '/legal/ai-disclosure', label: 'AI-disclosure' },
   { href: '/legal/subprocessors', label: 'Sub-processors' },
 ]
+
+interface TrustBadge {
+  icon: 'shield-check' | 'check' | 'phone-call' | 'clock'
+  label: string
+  sub: string
+}
+
+const trustBadges: TrustBadge[] = [
+  {
+    icon: 'shield-check',
+    label: 'AVG / GDPR conform',
+    sub: 'Standaard verwerkersovereenkomst',
+  },
+  {
+    icon: 'shield-check',
+    label: 'EU AI Act art. 50',
+    sub: 'Disclosure niet uitschakelbaar',
+  },
+  {
+    icon: 'check',
+    label: 'EU-gehost',
+    sub: 'Cloudflare · Neon · Hetzner FSN1',
+  },
+  {
+    icon: 'clock',
+    label: 'Per maand opzegbaar',
+    sub: 'Geen wurgcontract, geen setup',
+  },
+]
 ---
 
 <footer class="border-t border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100)">
+  <!-- Trust band — sits above the legal/branch grid. -->
+  <section
+    class="border-b border-(--color-kraan-stone-300) bg-white"
+    aria-label="Vertrouwens-signalen"
+  >
+    <div class="mx-auto max-w-5xl px-6 py-8 md:py-10">
+      <p
+        class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)"
+      >
+        Waarom u ons kunt vertrouwen
+      </p>
+      <ul class="mt-5 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
+        {
+          trustBadges.map((b) => (
+            <li class="flex items-start gap-3">
+              <Icon
+                name={b.icon}
+                class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)"
+              />
+              <div>
+                <p class="text-small font-medium text-(--color-kraan-ink)">{b.label}</p>
+                <p class="text-small text-(--color-kraan-stone-500)">{b.sub}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
   <div class="mx-auto max-w-5xl px-6 py-8 md:py-12 text-small text-(--color-kraan-stone-700)">
     <div class="grid gap-6 md:gap-8 sm:grid-cols-2 md:grid-cols-4">
       <div>
@@ -29,7 +88,9 @@ const legal = [
         <p class="mt-2">De Klantenmotor voor Nederlandse vakmensen.</p>
         <p class="mt-4 text-micro">
           Klantkraan is een handelsnaam van T4 Software Consulting BV.<br />
-          KvK: <span class="font-mono">TODO</span> · BTW: <span class="font-mono">TODO</span>
+          KvK: <span class="font-mono">{/* KVK */}TODO</span> · BTW: <span class="font-mono"
+            >{/* BTW */}TODO</span
+          >
         </p>
       </div>
       <div>
@@ -38,7 +99,9 @@ const legal = [
           {
             branches.map((item) => (
               <li>
-                <a href={item.href} class="block py-2">{item.label}</a>
+                <a href={item.href} class="block py-2">
+                  {item.label}
+                </a>
               </li>
             ))
           }
@@ -50,7 +113,9 @@ const legal = [
           {
             legal.map((item) => (
               <li>
-                <a href={item.href} class="block py-2">{item.label}</a>
+                <a href={item.href} class="block py-2">
+                  {item.label}
+                </a>
               </li>
             ))
           }
@@ -67,9 +132,23 @@ const legal = [
         <p>
           <a href="tel:+31000000000" class="flex items-center gap-2 py-2">
             <Icon name="phone" class="h-4 w-4 shrink-0" />
-            <span>+31 (0) TODO</span>
+            <span>+31 (0) {/* phone */}TODO</span>
           </a>
         </p>
+        <a href="/over" class="mt-4 flex items-center gap-3 py-2">
+          <span
+            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-kraan-stone-300) bg-(--color-kraan-cream) font-display text-h3 text-(--color-kraan-blue)"
+            aria-hidden="true"
+          >
+            D
+          </span>
+          <span>
+            <span class="block text-(--color-kraan-ink)">Davy</span>
+            <span class="block text-micro text-(--color-kraan-stone-500)"
+              >oprichter Klantkraan</span
+            >
+          </span>
+        </a>
       </div>
     </div>
     <p class="mt-10 text-micro">&copy; {year} Klantkraan · Gemaakt in Nederland.</p>

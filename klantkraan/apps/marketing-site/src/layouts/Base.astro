@@ -2,6 +2,7 @@
 import '../styles/global.css'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import StickyMobileCta from '../components/StickyMobileCta.astro'
 
 interface Props {
   title: string
@@ -46,7 +47,7 @@ const ogImage = new URL('/og-default.png', Astro.site).toString()
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0F4C81" />
   </head>
-  <body>
+  <body class="pb-[5.5rem] md:pb-0">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-kraan-blue) focus:px-4 focus:py-2 focus:text-white focus:no-underline"
@@ -66,5 +67,6 @@ const ogImage = new URL('/og-default.png', Astro.site).toString()
       )
     }
     <Footer />
+    <StickyMobileCta />
   </body>
 </html>
