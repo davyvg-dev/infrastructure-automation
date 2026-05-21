@@ -1,5 +1,5 @@
 ---
-title: Installateurs en de CV-storingenpiek van januari — hoe u die maand niet kapot draait
+title: 'Installateurs en de CV-storingenpiek van januari: hoe u die maand niet kapot draait'
 description: Praktische gids voor installatiebedrijven over de januari-piek, ISDE-subsidie als gespreksopener en het filteren van warmtepomp-aanvragen.
 pubDate: 2026-05-21
 vertical: installateur
@@ -18,7 +18,7 @@ Cijfers van branchekoepel Techniek Nederland over winter 2024-2025: in de week 6
 
 Het probleem is niet de werkdruk. Het probleem is dat 30 tot 40 procent van de januari-oproepen niet eens binnenkomt. Voicemails worden vol, telefoons worden niet opgenomen tijdens een klus, terugbelnotities raken zoek tussen werkbonnen. Verloren omzet: €1.800 tot €3.200 per monteur per week.
 
-## Spoed versus uitstel — een werkbare triage
+## Spoed versus uitstel: een werkbare triage
 
 Niet elke CV-storing is spoed. Een werkbare triage:
 
@@ -39,13 +39,13 @@ De Investeringssubsidie Duurzame Energie en energiebesparing (ISDE) loopt door t
 - Bodemwarmtepomp: tot €4.500
 - Warmtepompboiler: tot €825
 
-Veel particulieren weten niet dat installateurs de aanvraag mogen indienen, of denken dat de subsidie alleen geldt voor volledige all-electric vervanging. Een installateur die bij elke ketelstoring boven de tien jaar oud de hybride-optie noemt — inclusief actuele ISDE-bedragen voor het juiste model — heeft een conversielift van 8 tot 14 procent richting offerte voor een hybride installatie.
+Veel particulieren weten niet dat installateurs de aanvraag mogen indienen, of denken dat de subsidie alleen geldt voor volledige all-electric vervanging. Een installateur die bij elke ketelstoring boven de tien jaar oud de hybride-optie noemt (inclusief actuele ISDE-bedragen voor het juiste model) heeft een conversielift van 8 tot 14 procent richting offerte voor een hybride installatie.
 
-Praktisch: hou een korte checklist bij de telefoon (twee zinnen, drie tarieven, één link naar rvo.nl). Geen verkooppraatje, alleen een feitelijke melding: "uw ketel is uit 2014, met een hybride warmtepomp komt u voor €2.400 tot €3.000 ISDE-subsidie in aanmerking — wilt u dat ik daar een offerte voor maak?" Dit kost u 25 seconden in een gesprek dat toch al gevoerd wordt.
+Praktisch: hou een korte checklist bij de telefoon (twee zinnen, drie tarieven, één link naar rvo.nl). Geen verkooppraatje, alleen een feitelijke melding: "uw ketel is uit 2014, met een hybride warmtepomp komt u voor €2.400 tot €3.000 ISDE-subsidie in aanmerking. Wilt u dat ik daar een offerte voor maak?" Dit kost u 25 seconden in een gesprek dat toch al gevoerd wordt.
 
 ## Warmtepomp-aanvragen filteren
 
-Met de energietransitie nemen warmtepomp-aanvragen sterk toe — maar niet elke aanvraag is een goede aanvraag. De vijf vragen die u vooraf moet kunnen beantwoorden vóórdat u opmetingsbezoek inplant:
+Met de energietransitie nemen warmtepomp-aanvragen sterk toe. Maar niet elke aanvraag is een goede aanvraag. De vijf vragen die u vooraf moet kunnen beantwoorden vóórdat u opmetingsbezoek inplant:
 
 1. Bouwjaar woning en aanwezigheid spouwmuur- en dakisolatie (slechte isolatie = warmtepomp met groter vermogen of niet haalbaar)
 2. Type huidige verwarming (HR-ketel, gaskachel, blokverwarming bij VvE)
@@ -63,7 +63,7 @@ VvE-besturen vergaderen meestal in maart, april en oktober. Dat is het moment om
 
 ## Reviews binnenhalen direct na de piek
 
-In januari is geen vakman bezig met reviews — iedereen is bezig met ketels. Juist daarom levert februari een gouden gelegenheid op. Een installateur die in de eerste week van februari structureel reviewverzoeken stuurt naar de 80 tot 130 klanten van januari, kan in één maand 25 tot 40 nieuwe Google-reviews binnenhalen. Dat is meer dan veel installateurs in een heel jaar verzamelen.
+In januari is geen vakman bezig met reviews. Iedereen is bezig met ketels. Juist daarom levert februari een gouden gelegenheid op. Een installateur die in de eerste week van februari structureel reviewverzoeken stuurt naar de 80 tot 130 klanten van januari, kan in één maand 25 tot 40 nieuwe Google-reviews binnenhalen. Dat is meer dan veel installateurs in een heel jaar verzamelen.
 
 Praktisch: SMS, niet e-mail. Open rate SMS rond 95 procent in Nederland, e-mail rond 22 procent. Verstuur 24 tot 72 uur na de klus, om 10:00 's ochtends, niet op vrijdag of zaterdag. Een korte tekst van twee zinnen plus een Google-reviewlink volstaat. Reviews vanuit de januaripiek zijn bovendien hoogwaardiger qua inhoud, want klanten herinneren zich het probleem en de oplossing nog levendig. Trefwoorden als "spoed", "CV-storing" en "warm water" in reviews verbeteren uw Google Local Pack-zichtbaarheid in de aanloop naar de volgende winter.
 

@@ -28,8 +28,8 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: 'phone-call',
-    title: 'AI-receptionist die uw vak spreekt',
-    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Kent uw voorrijkosten, CV-onderhoudstarief, spoedtoeslag-vorst en eventueel weekend-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.',
+    title: 'Herkent een CV-storing in januari',
+    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Noemt uw eigen CV-onderhoudstarief, voorrijkosten en vorst-spoedtoeslag. Verwart een storing niet met een planning-vraag voor de jaarbeurt.',
   },
   {
     icon: 'message-square',
@@ -39,7 +39,7 @@ const features: Feature[] = [
   {
     icon: 'star',
     title: 'Google-reviews na elke klus',
-    body: 'De volgende ochtend om 10:00 stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk — Google-ranking voor "CV-monteur + plaats" stijgt vanzelf.',
+    body: 'De volgende ochtend om 10:00 stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk. Daarna gaan de Google-sterren werken voor uw vindbaarheid op "CV-monteur + plaats".',
   },
 ]
 
@@ -53,7 +53,7 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Werkt het ook met mijn huidige telefoonnummer?',
-    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor — u bepaalt.',
+    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor. U bepaalt.',
   },
   {
     q: 'En als ik op locatie zit en niet kan opnemen?',
@@ -61,7 +61,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Hoe houdt de AI piek-momenten in januari aan?',
-    a: 'De AI-receptionist handelt oproepen parallel af — er is geen wachtrij van één gesprek. Tien klanten kunnen tegelijk bellen voor een CV-storing, alle tien krijgen direct iemand aan de lijn. Spoed-storingen worden herkend en gescheiden van regulier onderhoud, dus u weet welke u eerst belt.',
+    a: 'De AI-receptionist handelt oproepen parallel af. Geen wachtrij van één gesprek. Tien klanten kunnen tegelijk bellen voor een CV-storing, alle tien krijgen direct iemand aan de lijn. Spoed-storingen worden herkend en gescheiden van regulier onderhoud, zodat u weet welke u eerst belt.',
   },
   {
     q: 'Hoort de klant dat het AI is?',
@@ -71,7 +71,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn tarieven?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet — voorrijkosten, CV-onderhoudstarief, spoed-CV, geiser-tarief. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet: voorrijkosten, CV-onderhoudstarief, spoed-CV, geiser-tarief. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
@@ -80,7 +80,7 @@ const faqs: Faq[] = [
     linkLabel: 'Bekijk DPA en privacyverklaring',
   },
   {
-    q: 'Per maand opzegbaar — echt waar?',
+    q: 'Per maand opzegbaar, echt waar?',
     a: 'Ja. Geen jaarcontract, geen setup-kosten, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%).',
     href: '/legal/voorwaarden',
     linkLabel: 'Lees de algemene voorwaarden',
@@ -102,7 +102,7 @@ const faqSchema = {
 ---
 
 <Base
-  title="Installateur klanten werven — Klantkraan AI-receptionist voor CV-storingen en onderhoud"
+  title="Installateur klanten werven: Klantkraan AI-receptionist voor CV-storingen en onderhoud"
   description="Nederlandstalige AI-receptionist die uw CV-onderhoudstarief, spoedtoeslag-vorst en voorrijkosten kent. Vangt januari-pieken en oktober-onderhoud zonder dat u opneemt. Per maand opzegbaar, EU-gehost."
   centered={false}
 >
@@ -116,8 +116,9 @@ const faqSchema = {
           De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor installateurs.
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-          Een AI-receptionist die CV-storingen, geiser-pannes en jaarlijks onderhoud uit elkaar
-          houdt. Vangt januari-pieken en oktober-onderhoud — ook 's avonds en in het weekend.
+          Een stem die een CV-storing herkent en hem niet verwart met een planning-vraag voor de
+          jaarbeurt. Vangt de januari-piek en het oktober-onderhoud op. Avonden en weekenden
+          inbegrepen.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
@@ -189,7 +190,7 @@ const faqSchema = {
         Wat Klantkraan doet voor installateurs.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Drie modules in één maandprijs — gebouwd voor installateurs in heel Nederland, van Amsterdam en Rotterdam tot Eindhoven en daarbuiten.
+        Drie modules. Eén maandprijs. Gebouwd voor de installateur die de januari-piek niet meer aan zijn vrouw wil overlaten.
       </p>
       <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
         {
@@ -219,8 +220,8 @@ const faqSchema = {
           Mist u 7 oproepen per week in januari à €340? Dat is <strong class="text-(--color-kraan-rust)">€124.000 verloren omzet per jaar</strong>.
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          Klantkraan Pro is €599 per maand. Terugverdiend zodra u één extra spoed-CV-storing per
-          maand vangt. De rest is winst — en de klant valt niet in de kou.
+          €599 per maand. Eén extra spoed-CV uit de januari-piek dekt het abonnement. Wat erna
+          binnenkomt is omzet. En de klant zit niet drie uur in een koud huis.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
@@ -286,8 +287,8 @@ const faqSchema = {
         Klaar voor het volgende stookseizoen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Een demo van acht minuten op uw eigen nummer is de snelste manier om te horen
-        wat Klantkraan voor uw bedrijf doet.
+        Acht minuten met de demo-lijn. Daarna weet u of hij een CV-storing herkent en hoe hij hem
+        scheidt van een vraag over de jaarbeurt.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a

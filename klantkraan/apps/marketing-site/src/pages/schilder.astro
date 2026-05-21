@@ -28,8 +28,8 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: 'phone-call',
-    title: 'AI-receptionist die uw vak spreekt',
-    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Kent uw voorrijkosten, m²-tarief binnen en buiten, kleurproef-meerprijs en spuitwerk-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.',
+    title: 'Kent uw m²-tarief van buiten',
+    body: 'Neemt op in vlot Nederlands, ook na 17:00. Noemt alleen uw eigen m²-tarief, kleurproef-meerprijs en spuitwerk-toeslag. Niets verzonnen, niets benaderend.',
   },
   {
     icon: 'message-square',
@@ -39,7 +39,7 @@ const features: Feature[] = [
   {
     icon: 'star',
     title: 'Google-reviews na elke oplevering',
-    body: 'Op de dag na oplevering stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk — uw lokale ranking voor "schilder + plaats" stijgt vanzelf.',
+    body: 'Op de dag na oplevering stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk. Daarna gaan de Google-sterren werken voor uw vindbaarheid op "schilder + plaats".',
   },
 ]
 
@@ -53,15 +53,15 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Werkt het ook met mijn huidige telefoonnummer?',
-    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor — u bepaalt.',
+    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor. U bepaalt.',
   },
   {
     q: 'En als ik op een stelling sta en niet kan opnemen?',
-    a: 'Daar is dit voor gemaakt. De AI-receptionist neemt op, classificeert de oproep (nieuwe offerteaanvraag, planning-vraag, leverancier, klacht), kwalificeert de aanvraag op postcode en project-omvang, en boekt een terugbel-afspraak in Cal.com. U krijgt een samenvatting per WhatsApp of e-mail — terugbellen kan in de pauze of na werktijd.',
+    a: 'Daar is dit voor gemaakt. De AI-receptionist neemt op, classificeert de oproep (nieuwe offerteaanvraag, planning-vraag, leverancier, klacht), kwalificeert de aanvraag op postcode en project-omvang, en boekt een terugbel-afspraak in Cal.com. U krijgt een samenvatting per WhatsApp of e-mail. Terugbellen kan in de pauze of na werktijd.',
   },
   {
     q: 'Wat als vijf klanten tegelijk bellen in het lente-seizoen?',
-    a: 'De AI handelt oproepen parallel af — er is geen wachtrij van één gesprek. Tien klanten kunnen tegelijk bellen voor een buiten-schilderklus, alle tien krijgen direct iemand aan de lijn. Spoed (water- of schimmelschade) wordt herkend en gescheiden van planning-aanvragen.',
+    a: 'De AI handelt oproepen parallel af. Geen wachtrij van één gesprek. Tien klanten kunnen tegelijk bellen voor een buiten-schilderklus, alle tien krijgen direct iemand aan de lijn. Spoed (water- of schimmelschade) wordt herkend en gescheiden van planning-aanvragen.',
   },
   {
     q: 'Hoort de klant dat het AI is?',
@@ -71,7 +71,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn tarieven?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet — voorrijkosten, m²-tarief binnen en buiten, spuitwerk-toeslag, kleurproef. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet: voorrijkosten, m²-tarief binnen en buiten, spuitwerk-toeslag, kleurproef. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
@@ -80,7 +80,7 @@ const faqs: Faq[] = [
     linkLabel: 'Bekijk DPA en privacyverklaring',
   },
   {
-    q: 'Per maand opzegbaar — echt waar?',
+    q: 'Per maand opzegbaar, echt waar?',
     a: 'Ja. Geen jaarcontract, geen setup-kosten, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%).',
     href: '/legal/voorwaarden',
     linkLabel: 'Lees de algemene voorwaarden',
@@ -102,7 +102,7 @@ const faqSchema = {
 ---
 
 <Base
-  title="Schilder klanten werven — Klantkraan AI-receptionist voor offertes en seizoenswerk"
+  title="Schilder klanten werven: Klantkraan AI-receptionist voor offertes en seizoenswerk"
   description="Nederlandstalige AI-receptionist die uw m²-tarief, kleurproef-meerprijs en voorrijkosten kent. Vangt lente-piek aanvragen en avond-bellers zonder dat u opneemt. Per maand opzegbaar, EU-gehost."
   centered={false}
 >
@@ -116,8 +116,9 @@ const faqSchema = {
           De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor schilders.
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-          Een AI-receptionist die offerteaanvragen, planning-vragen en leveranciers uit elkaar
-          houdt. Vangt lente-piek aanvragen en avond-bellers — ook 's avonds en in het weekend.
+          Houdt offerteaanvragen, planning-vragen en leveranciers uit elkaar. Vangt de avond-bellers
+          die u nu mist als u op de stelling staat. En de lente-piek zonder dat u extra mensen
+          aanneemt.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
@@ -189,7 +190,7 @@ const faqSchema = {
         Wat Klantkraan doet voor schilders.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Drie modules in één maandprijs — gebouwd voor schilders in heel Nederland, van Amsterdam en Rotterdam tot Eindhoven en daarbuiten.
+        Drie modules. Eén maandprijs. Gemaakt voor de schilder die in de lente-piek geen avondtelefoontjes meer wil missen.
       </p>
       <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
         {
@@ -219,8 +220,8 @@ const faqSchema = {
           Mist u 5 offerteaanvragen per maand à €2.500? Dat is <strong class="text-(--color-kraan-rust)">€150.000 verloren omzet per jaar</strong>.
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          Klantkraan Pro is €599 per maand. Terugverdiend zodra u één extra schilderklus per
-          maand binnenhaalt die u anders zou hebben gemist. De rest is winst.
+          €599 per maand. Eén lente-klus die u nu mist tijdens de avond-bellers betaalt het hele
+          abonnement. De rest gaat in uw zak in plaats van die van de concurrent.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
@@ -278,7 +279,7 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- 5b. Wij werken ook in — programmatic city link block -->
+  <!-- 5b. Wij werken ook in: programmatic city link block -->
   <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="Schilders per stad">
     <div class="mx-auto max-w-5xl px-6">
       <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">
@@ -311,8 +312,8 @@ const faqSchema = {
         Klaar voor het lente-seizoen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Een demo van acht minuten op uw eigen nummer is de snelste manier om te horen
-        wat Klantkraan voor uw bedrijf doet.
+        Acht minuten testbellen. U hoort hoe hij een m²-vraag en een kleurproef-vraag uit elkaar
+        houdt en wat hij doet als iemand belt over spuitwerk.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a

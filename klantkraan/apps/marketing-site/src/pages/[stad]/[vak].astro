@@ -29,8 +29,8 @@ const city = cities[citySlug]
 const niche = niches[nicheSlug]
 const combo = wave1.find((c) => c.city === citySlug && c.niche === nicheSlug)!
 
-const pageTitle = `${niche.label} in ${city.name} — Klantkraan AI-receptionist`
-const pageDescription = `${niche.label} in ${city.name}? Klantkraan helpt ${niche.labelPlural} in ${city.name} gemiste oproepen terug te bellen, reviews te verzamelen en klanten te boeien — per maand opzegbaar.`
+const pageTitle = `${niche.label} in ${city.name}: Klantkraan AI-receptionist`
+const pageDescription = `${niche.label} in ${city.name}? Klantkraan helpt ${niche.labelPlural} in ${city.name} gemiste oproepen terug te bellen, reviews te verzamelen en klanten te boeien. Per maand opzegbaar.`
 
 // Merge FAQs: 2 city-named first (per blueprint thin-content rule), then 4 base.
 const faqs: Faq[] = [...combo.cityFaqs, ...niche.baseFaqs]
@@ -127,7 +127,7 @@ const serviceSchema = {
         {niche.label} in <span class="text-(--color-kraan-rust)">{city.name}</span>.
       </h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-        Een Nederlandstalige AI-receptionist die uw tarieven kent en uw oproepen 24/7 opneemt — ook
+        Een Nederlandstalige AI-receptionist die uw tarieven kent en uw oproepen 24/7 opneemt. Ook
         wanneer u in {city.name} op locatie zit.
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
@@ -238,7 +238,7 @@ const serviceSchema = {
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
           Klantkraan Pro is €599 per maand. Voor {niche.labelPlural} in {city.name} verdiend zodra
-          u één extra klus per maand herwint — de rest is winst.
+          u één extra klus per maand herwint. Wat erna binnenkomt is marge.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
@@ -316,7 +316,7 @@ const serviceSchema = {
           <ul class="mt-3 space-y-1 text-body text-(--color-kraan-stone-700)">
             <li>
               <a href={niche.cornerstonePath} class="text-(--color-kraan-blue) underline">
-                {niche.label} — landelijke pagina
+                {niche.label}: landelijke pagina
               </a>
             </li>
           </ul>

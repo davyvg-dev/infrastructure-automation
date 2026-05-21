@@ -1,5 +1,5 @@
 ---
-title: Dakdekkers en het storm-protocol — hoe u de oktoberpiek niet kwijtraakt aan de concurrent
+title: 'Dakdekkers en het storm-protocol: hoe u de oktoberpiek niet kwijtraakt aan de concurrent'
 description: Praktische gids voor dakdekkers over 24-uurs reactietijden, offertetemplates per dakvorm en de seizoenspiek tussen oktober en februari.
 pubDate: 2026-05-21
 vertical: dakdekker
@@ -25,7 +25,7 @@ Een werkbaar protocol heeft vier stappen, in deze volgorde:
 1. **0 tot 60 minuten na binnenkomst aanvraag**: bevestiging dat de aanvraag ontvangen is, met indicatie wanneer u terugbelt. Dit is een SMS, niet een e-mail. SMS open rate ligt op 95 procent, e-mail tijdens een storm onder de 20 procent omdat klanten ook andere offertes aanvragen.
 2. **Binnen 4 uur**: korte triage telefonisch of via WhatsApp. Vijf vragen volstaan: postcode, dakvorm (plat, schuin, mansarde), schadebeeld (losse pannen, lekkage, dakgoot), oppervlakte indicatie, bouwjaar van het dak.
 3. **Binnen 24 uur**: fysieke inspectie of een gedetailleerde indicatieve offerte. Voor 60 procent van de stormschades volstaat een drone-inspectie van 20 minuten in plaats van een steiger.
-4. **Binnen 48 uur na inspectie**: schriftelijke offerte met foto-rapport. De foto's zijn niet decoratief — verzekeraars eisen ze voor een schade-uitkering.
+4. **Binnen 48 uur na inspectie**: schriftelijke offerte met foto-rapport. De foto's zijn niet decoratief. Verzekeraars eisen ze voor een schade-uitkering.
 
 Wat dit protocol op cijferniveau oplevert: dakdekkers die deze cyclus volgen, sluiten 38 tot 52 procent van de stormaanvragen, tegen 12 tot 18 procent voor bedrijven die binnen 72 uur reageren.
 
@@ -42,22 +42,22 @@ Een vaste template scheelt 35 tot 50 minuten per offerte. Vermenigvuldig met 4 t
 
 ## Foto-rapport bij elke inspectie
 
-Een fotorapport is geen extra service — het is een commercieel instrument. Dakdekkers die bij elke inspectie 8 tot 12 foto's leveren met korte tekstuele toelichting, halen 22 tot 30 procent hogere conversie op offerte naar opdracht. Reden: de klant ziet wat er mis is en hoeft niet de aannemer te geloven op zijn woord.
+Een fotorapport is geen extra service. Het is een commercieel instrument. Dakdekkers die bij elke inspectie 8 tot 12 foto's leveren met korte tekstuele toelichting, halen 22 tot 30 procent hogere conversie op offerte naar opdracht. Reden: de klant ziet wat er mis is en hoeft niet de aannemer te geloven op zijn woord.
 
-Praktisch: maak foto's van het dak in overzicht, van elk schadepunt close-up, en — belangrijk — van één detail dat geen schade is, om vertrouwen te geven dat u het hele dak heeft bekeken. Sla foto's op met de adresgegevens en datum in de bestandsnaam. AVG-wise: bewaar geen herkenbare gevels van buren in het rapport.
+Praktisch: maak foto's van het dak in overzicht, van elk schadepunt close-up, en (belangrijk) van één detail dat geen schade is, om vertrouwen te geven dat u het hele dak heeft bekeken. Sla foto's op met de adresgegevens en datum in de bestandsnaam. AVG-wise: bewaar geen herkenbare gevels van buren in het rapport.
 
-## Seizoensplanning — niet alleen in piekperiode rijden
+## Seizoensplanning: niet alleen in piekperiode rijden
 
 De drukste maanden zijn oktober tot februari. De rustigste: april tot juni. Dat is de verkeerde manier om naar het jaar te kijken. April tot juni is het ideale moment voor:
 
 - Onderhoudsabonnementen verkopen (jaarlijkse inspectie €145 tot €185, ideaal in mei)
 - Daken met einde-levensduur proactief offreren aan klanten uit de winterpiek
-- Trainingen NEN 3140 en valbeveiliging inplannen — niet in november
+- Trainingen NEN 3140 en valbeveiliging inplannen, niet in november
 - Drone-piloot certificering (verplicht boven 250 gram per EU drone-regels)
 
 Dakdekkers die in het voorjaar gericht 30 tot 50 onderhoudsabonnementen verkopen, hebben in januari een gegarandeerde inspectie-omzet en een ingebouwde reden om bij die klanten als eerste te bellen na een storm.
 
-## Werkspot en Trustoo — nuttig, maar niet bepalend
+## Werkspot en Trustoo: nuttig, maar niet bepalend
 
 Stormpieken trekken een explosie aan leadmarktplaats-aanvragen, met leadprijzen die in november 2025 piekten op €40 tot €75 per gedeelde aanvraag voor daklekkages. Conversie van die leads ligt onder de 20 procent omdat ze met drie tot vijf concurrenten gedeeld worden. De echte winst zit in uw eigen Google-vermelding plus reviewstrategie: een dakdekker met 60+ Google-reviews en wekelijkse foto-updates op Google Business Profile staat in de Local Pack van Google en krijgt 4 tot 6 keer meer rechtstreekse telefoontjes dan een bedrijf zonder dat profiel.
 

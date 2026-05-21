@@ -29,8 +29,8 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: 'phone-call',
-    title: 'AI-receptionist die uw vak spreekt',
-    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag — en noemt alleen tarieven die u zelf heeft ingesteld.',
+    title: 'Kent uw voorrijkosten van buiten',
+    body: 'Neemt op in vlot Nederlands. Ook \'s avonds en in het weekend. Noemt nooit een tarief dat u niet zelf heeft ingesteld.',
   },
   {
     icon: 'message-square',
@@ -54,7 +54,7 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Werkt het ook met mijn huidige telefoonnummer?',
-    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw visitekaartjes, busbestickering en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor — u bepaalt.',
+    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw visitekaartjes, busbestickering en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor. U bepaalt.',
   },
   {
     q: 'En wat als ik op locatie zit en niet kan opnemen?',
@@ -68,7 +68,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn prijzen?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet — voorrijkosten, uurtarief, spoedtoeslag, materiaalopslag. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief, spoedtoeslag, materiaalopslag. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
@@ -77,7 +77,7 @@ const faqs: Faq[] = [
     linkLabel: 'Bekijk DPA en privacyverklaring',
   },
   {
-    q: 'Per maand opzegbaar — echt waar?',
+    q: 'Per maand opzegbaar, echt waar?',
     a: 'Ja. Geen jaarcontract, geen setup-kosten, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
     href: '/legal/voorwaarden',
     linkLabel: 'Lees de algemene voorwaarden',
@@ -99,7 +99,7 @@ const faqSchema = {
 ---
 
 <Base
-  title="Loodgieter klanten werven — Klantkraan AI-receptionist voor spoed en voorrijkosten"
+  title="Loodgieter klanten werven: Klantkraan AI-receptionist voor spoed en voorrijkosten"
   description="Nederlandstalige AI-receptionist die voorrijkosten en spoedtoeslagen kent. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar, geen setup, EU-gehost."
   centered={false}
 >
@@ -113,9 +113,9 @@ const faqSchema = {
           De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor loodgieters.
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-          Een AI-receptionist die voorrijkosten, spoedtoeslag en materiaalopslag kent. Neemt op
-          in vlot Nederlands, ook 's avonds en in het weekend. Reviews en terugbel-afspraken
-          erbij, in één pakket.
+          Bent u onder een gootsteen bezig? Dan neemt onze AI-receptionist op. In het Nederlands,
+          met uw voorrijkosten en spoedtarief paraat. 's Avonds, weekend, vakantie. Hetzelfde
+          verhaal. Reviews en terugbel-afspraken zitten in hetzelfde abonnement.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
@@ -187,7 +187,7 @@ const faqSchema = {
         Wat Klantkraan doet voor loodgieters.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Drie modules in één maandprijs — gebouwd voor loodgieters in heel Nederland, van Amsterdam en Rotterdam tot Eindhoven en daarbuiten.
+        Drie modules. Eén maandprijs. Gebouwd voor de loodgieter die meer onder een gootsteen ligt dan achter zijn telefoon.
       </p>
       <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
         {
@@ -213,8 +213,8 @@ const faqSchema = {
         Hoor het zelf.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Een opname van de AI-receptionist die een spoed-oproep afhandelt — inclusief
-        voorrijkosten, spoedtoeslag en terugbel-afspraak.
+        Een opname van de AI-receptionist die een spoed-oproep afhandelt: voorrijkosten,
+        spoedtoeslag en terugbel-afspraak inbegrepen.
       </p>
       <div
         class="mt-8 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5 md:p-6"
@@ -240,8 +240,8 @@ const faqSchema = {
           Mist u 10 oproepen per week à €450? Dat is <strong class="text-(--color-kraan-rust)">€234.000 verloren omzet per jaar</strong>.
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          Klantkraan Pro is €599 per maand. Terugverdiend zodra u één extra klus per maand
-          herwint. De rest is winst.
+          Klantkraan Pro is €599 per maand. Eén extra spoedklus per maand en u staat quitte. Wat
+          erna binnenkomt is uw marge.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
@@ -300,7 +300,7 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- 7b. Wij werken ook in — programmatic city link block -->
+  <!-- 7b. Wij werken ook in: programmatic city link block -->
   <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="Loodgieters per stad">
     <div class="mx-auto max-w-5xl px-6">
       <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">
@@ -330,8 +330,8 @@ const faqSchema = {
         Klaar om geen klus meer te missen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Een demo van acht minuten op uw eigen nummer is de snelste manier om te horen
-        wat Klantkraan voor uw bedrijf doet.
+        Bel het demo-nummer. In acht minuten weet u of de stem klopt voor uw klanten en hoe hij
+        een vraag over voorrijkosten beantwoordt.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a

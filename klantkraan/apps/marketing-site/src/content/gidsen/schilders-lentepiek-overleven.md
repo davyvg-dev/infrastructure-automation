@@ -1,5 +1,5 @@
 ---
-title: Schilders en de lentepiek — hoe u maart tot juni omzet 1,8 keer hoger krijgt
+title: 'Schilders en de lentepiek: hoe u maart tot juni omzet 1,8 keer hoger krijgt'
 description: Praktische gids voor schildersbedrijven over m²-tarieven binnen en buiten, kleurproef-meerprijs en offertedoorlooptijden in het hoogseizoen.
 pubDate: 2026-05-21
 vertical: schilder
@@ -22,22 +22,22 @@ Het knelpunt in de lentepiek is bijna nooit beschikbare manuren. Het knelpunt is
 
 De m²-prijs verschilt aanzienlijk tussen binnen- en buitenwerk, en tussen ondergrond:
 
-- **Binnen — wanden latex**: €11 tot €17 per m² inclusief BTW (één voorstrijk, twee lagen latex), exclusief plamuur- en schuurwerk
-- **Binnen — plafonds**: €13 tot €19 per m², hoger door werken boven het hoofd
-- **Binnen — kozijnen en deuren**: per stuk geprijsd, €65 tot €120 per binnendeur tweezijdig
-- **Buiten — kozijnen schilderen (onderhoud)**: €85 tot €145 per kozijn, afhankelijk van grootte en staat van het hout
-- **Buiten — gevels stuc of metselwerk**: €18 tot €32 per m², inclusief één laag grondverf en één laag muurverf
-- **Buiten — boeidelen en daklijsten**: €22 tot €38 per strekkende meter
+- **Binnen, wanden latex**: €11 tot €17 per m² inclusief BTW (één voorstrijk, twee lagen latex), exclusief plamuur- en schuurwerk
+- **Binnen, plafonds**: €13 tot €19 per m², hoger door werken boven het hoofd
+- **Binnen, kozijnen en deuren**: per stuk geprijsd, €65 tot €120 per binnendeur tweezijdig
+- **Buiten, kozijnen schilderen (onderhoud)**: €85 tot €145 per kozijn, afhankelijk van grootte en staat van het hout
+- **Buiten, gevels stuc of metselwerk**: €18 tot €32 per m², inclusief één laag grondverf en één laag muurverf
+- **Buiten, boeidelen en daklijsten**: €22 tot €38 per strekkende meter
 
 Wat het verschil maakt tussen €11 en €17 per m² binnen: de staat van de ondergrond. Een gladde, niet eerder geschilderde wand kost u 18 tot 25 minuten per m². Een wand met grote scheuren, gaten of een eerdere donkere kleur kost u 35 tot 50 minuten per m². Reken dat door in uw offerte, anders draait u in het rood op uw zwaarste klussen.
 
-## Kleurproef-meerprijs — een gemiste verdienpost
+## Kleurproef-meerprijs: een gemiste verdienpost
 
 Bijna geen enkele Nederlandse schilder rekent kleurproeven separaat door. Dat is jammer, want het kost gemiddeld 45 tot 70 minuten per kleurproef en de meerprijs is redelijk vanaf €25 tot €45 per proefkleur. Klanten begrijpen dit als u het uitlegt: u koopt een testpot van €18 tot €22, brengt twee strookjes aan en komt terug om het bij verschillend daglicht te beoordelen.
 
 Een vaste regel: tot twee kleurproeven inbegrepen in de offerte, daarboven €35 per extra proef. Een gemiddelde klant kiest 2,8 kleuren voordat hij beslist. U laat dus gemiddeld €28 per klant liggen door dit niet te factureren.
 
-## Offertedoorlooptijd — waar de échte conversie zit
+## Offertedoorlooptijd: waar de échte conversie zit
 
 Het verhaal is bekend: snelle offerte wint. Maar hoe snel is snel genoeg in 2026? Een vergelijking van 50 schildersaanvragen via Werkspot en eigen websites tussen maart en mei 2025:
 
@@ -60,7 +60,7 @@ Praktisch:
 
 ## Werkspot en de zelfstandige rol
 
-Werkspot levert schilders 6 tot 10 procent van de leads, tegen €5 tot €25 per aanvraag (kleinere klussen) en €45 tot €75 voor grotere geveltrajecten. Conversie ligt onder de 22 procent vanwege gedeelde leads. Voor een eenmanszaak die de lentepiek wil uitzitten, is Werkspot een aanvullend kanaal — niet een fundament. Het fundament is een Google Business Profile met minimaal 25 reviews en foto's van uw eigen werk per project. Schilders met een actief profiel halen 3 tot 5 keer meer rechtstreekse aanvragen dan schilders zonder.
+Werkspot levert schilders 6 tot 10 procent van de leads, tegen €5 tot €25 per aanvraag (kleinere klussen) en €45 tot €75 voor grotere geveltrajecten. Conversie ligt onder de 22 procent vanwege gedeelde leads. Voor een eenmanszaak die de lentepiek wil uitzitten, is Werkspot een aanvullend kanaal. Niet een fundament. Het fundament is een Google Business Profile met minimaal 25 reviews en foto's van uw eigen werk per project. Schilders met een actief profiel halen 3 tot 5 keer meer rechtstreekse aanvragen dan schilders zonder.
 
 ## Wat Klantkraan voor uw schildersbedrijf doet
 

@@ -28,8 +28,8 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: 'phone-call',
-    title: 'AI-receptionist die uw vak spreekt',
-    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Kent uw voorrijkosten, uurtarief, kortsluitings-spoedtarief en eventueel weekend-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.',
+    title: 'Praat over kortsluiting in vakjargon',
+    body: 'Neemt op in vlot Nederlands, ook na 17:00 en in het weekend. Noemt alleen uw eigen kortsluitings-spoedtarief, uurtarief en weekendtoeslag. Geen prijs die u niet vooraf heeft ingesteld.',
   },
   {
     icon: 'message-square',
@@ -53,7 +53,7 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Werkt het ook met mijn huidige telefoonnummer?',
-    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor — u bepaalt.',
+    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor. U bepaalt.',
   },
   {
     q: 'En als ik op een installatie zit en niet kan opnemen?',
@@ -67,7 +67,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn tarieven?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet — voorrijkosten, uurtarief, spoedtoeslag, EV-laadpaal-meerprijs. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief, spoedtoeslag, EV-laadpaal-meerprijs. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
@@ -76,7 +76,7 @@ const faqs: Faq[] = [
     linkLabel: 'Bekijk DPA en privacyverklaring',
   },
   {
-    q: 'Per maand opzegbaar — echt waar?',
+    q: 'Per maand opzegbaar, echt waar?',
     a: 'Ja. Geen jaarcontract, geen setup-kosten, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%).',
     href: '/legal/voorwaarden',
     linkLabel: 'Lees de algemene voorwaarden',
@@ -98,7 +98,7 @@ const faqSchema = {
 ---
 
 <Base
-  title="Elektricien klanten werven — Klantkraan AI-receptionist voor stroomstoringen en EV-laadpunten"
+  title="Elektricien klanten werven: Klantkraan AI-receptionist voor stroomstoringen en EV-laadpunten"
   description="Nederlandstalige AI-receptionist die uw kortsluitings-spoedtarief, EV-laadpaal-meerprijs en voorrijkosten kent. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar, geen setup, EU-gehost."
   centered={false}
 >
@@ -112,9 +112,9 @@ const faqSchema = {
           De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor elektriciens.
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-          Een AI-receptionist die kortsluitings-spoed, EV-laadpaal-meerprijs en uurtarief kent.
-          Neemt op in vlot Nederlands, ook 's avonds en in het weekend. Reviews en
-          terugbel-afspraken erbij, in één pakket.
+          Een stem die uw klant uitlegt wat een kortsluitings-spoedtarief is. Of een
+          EV-laadpaal-meerprijs. Neemt op tot 22:00, zeven dagen per week. Reviews en
+          terugbelafspraken zitten in hetzelfde abonnement.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
@@ -186,7 +186,7 @@ const faqSchema = {
         Wat Klantkraan doet voor elektriciens.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
-        Drie modules in één maandprijs — gebouwd voor elektriciens in heel Nederland, van Amsterdam en Rotterdam tot Eindhoven en daarbuiten.
+        Drie modules. Eén maandprijs. Niet voor de grote installatiebureaus. Voor de elektricien met twee tot acht monteurs.
       </p>
       <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
         {
@@ -216,8 +216,8 @@ const faqSchema = {
           Mist u 8 oproepen per week à €375? Dat is <strong class="text-(--color-kraan-rust)">€156.000 verloren omzet per jaar</strong>.
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          Klantkraan Pro is €599 per maand. Terugverdiend zodra u één extra klus per maand
-          herwint. De rest is winst.
+          Klantkraan Pro is €599 per maand. Eén kortsluitings-spoed per maand betaalt het
+          abonnement. Wat daarna binnenkomt gaat niet meer naar de concurrent verderop.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
@@ -283,8 +283,8 @@ const faqSchema = {
         Klaar om geen kortsluitings-spoed meer te missen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Een demo van acht minuten op uw eigen nummer is de snelste manier om te horen
-        wat Klantkraan voor uw bedrijf doet.
+        Acht minuten demo op een testnummer. U hoort hoe hij uw kortsluitings-spoedtarief noemt
+        en wat hij doet als iemand belt over een EV-laadpaal.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
