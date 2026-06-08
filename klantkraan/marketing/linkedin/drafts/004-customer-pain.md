@@ -17,7 +17,7 @@ character_count: 1219
 
 ## Post body (kopieer dit naar LinkedIn)
 
-Hoe een loodgieter 12 calls per week beantwoordt zonder receptionist.
+Stel: een loodgieter beantwoordt 12 calls per week zonder receptionist.
 
 Geen magie. Drie modules die samen draaien.
 
@@ -45,7 +45,7 @@ Resultaat in een gemiddelde week: 12 calls beantwoord, 0 verloren oproepen, 3 ni
 
 Geen nieuwe app. Geen training. Geen receptionist op de loonlijst. Per maand opzegbaar.
 
-Klinkt dit als jouw probleem? DM open. Ik zoek nog 2 pilots voor mei.
+Klinkt dit als jouw probleem? DM open. Ik zoek nog 2 pilots deze maand.
 
 #loodgieter #dakdekker #ondernemen
 

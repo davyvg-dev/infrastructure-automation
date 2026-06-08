@@ -17,11 +17,11 @@ character_count: 1183
 
 ## Post body (kopieer dit naar LinkedIn)
 
-Drie plekken open voor mei. Daarna sluit deze ronde.
+Drie plekken open in deze pilot-ronde. Daarna sluit deze lichting.
 
 Wie ik zoek: loodgieter met 2–8 monteurs, in de Randstad of het oosten, die structureel calls mist omdat de telefoon afgaat tijdens een klus.
 
-Wat je krijgt voor mei + juni (eerste 2 maanden):
+Wat je krijgt de eerste 2 maanden:
 - Nederlandstalige AI-receptionist op je vaste lijn, 24/7
 - Missed-call SMS binnen 60 seconden naar elke gemiste beller
 - Automatische Google-review-SMS, 24 uur na elke afgeronde klus
@@ -36,13 +36,13 @@ Wat het kost:
 Waarom alleen drie:
 - Ik bouw nog. Drie pilots is wat ik kwalitatief kan begeleiden.
 - Ik leer van jullie scripts, tarieven, edge-cases. Die input gaat terug in de productie-flow.
-- Geen marketing-truc — als plek 4 zich meldt, pak ik hem in de wachtrij voor juni.
+- Geen marketing-truc — als plek 4 zich meldt, pak ik hem in de volgende ronde.
 
 Wat ik vraag terug:
 - Eén check-in per week (15 min, op een tijd die jou uitkomt)
 - Toestemming voor één anonieme case study na 30 dagen
 
-Belangstelling? Stuur me een DM met "mei-pilot" + je werkgebied. Ik bel je binnen 24 uur terug.
+Belangstelling? Stuur me een DM met "pilot" + je werkgebied. Ik bel je binnen 24 uur terug.
 
 #loodgieter #dakdekker #ondernemen
 

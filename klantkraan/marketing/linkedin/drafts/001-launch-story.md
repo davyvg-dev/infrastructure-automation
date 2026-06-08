@@ -23,7 +23,7 @@ Korte versie: een Nederlandstalige AI-receptionist plus missed-call SMS plus aut
 
 Waarom dit en waarom nu.
 
-Een loodgieter in Utrecht vertelde mij: "Ik mis elke week 8 oproepen. Soms 12. Niet omdat ik lui ben — ik zit onder een keukenkast."
+Vakmensen vertellen mij steeds hetzelfde: "Ik mis elke week oproepen. Niet omdat ik lui ben — ik zit onder een keukenkast."
 
 Dat is geen lui-probleem. Dat is een structuurprobleem.
 
@@ -44,7 +44,7 @@ Voor wie: loodgieters en dakdekkers met 2–8 monteurs, in de Randstad.
 
 Wat ik vraag aan jullie:
 
-Ken jij een loodgieter of dakdekker die structureel oproepen mist? Stuur mij een DM. Ik zoek 2 pilots voor mei — eerste maand 50% korting, daarna gewoon per maand opzegbaar.
+Ken jij een loodgieter of dakdekker die structureel oproepen mist? Stuur mij een DM. Ik zoek 2 pilots deze maand — eerste maand 50% korting, daarna gewoon per maand opzegbaar.
 
 #loodgieter #dakdekker #ondernemen
 

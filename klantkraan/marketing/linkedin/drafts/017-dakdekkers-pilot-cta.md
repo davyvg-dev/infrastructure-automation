@@ -2,7 +2,8 @@
 post_number: 017
 publish_week: 4
 post_type: soft_cta
-status: draft
+status: holdback
+holdback_reason: "Body claims a running dakdekker pilot and references case-study post 015 (holdback); publish only after a real dakdekker pilot has run ~30 days."
 character_count: 1103
 ---
 
