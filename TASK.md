@@ -57,6 +57,25 @@ Tests Claude + tools end to end, in the terminal, no web UI yet.
 
 ---
 
+## Step 4b — Extra channels (optional, but great for demos)
+
+Full setup in `docs/CHANNELS.md`. All channels share one brain, so if Step 3 passed these
+"just work".
+
+**Telegram:**
+- [ ] ▶ Create a *second* bot with @BotFather; put its token in `.env` as
+      `TELEGRAM_BOT_TOKEN`.
+- [ ] ▶ `python -m app.channels.telegram_bot`
+- [ ] ✓ Message the bot, send `/start`, and complete a booking in Telegram.
+
+**WhatsApp (Twilio sandbox):**
+- [ ] ▶ `python -m app.server`, then `ngrok http 8000` for a public URL.
+- [ ] ▶ Join the Twilio WhatsApp sandbox and set its inbound webhook to
+      `https://<ngrok>/whatsapp`.
+- [ ] ✓ Message the sandbox number from your phone and complete a booking over WhatsApp.
+
+---
+
 ## Step 5 — Rebrand test
 
 - [ ] ▶ Copy `config/business.yaml` → `config/demo2.yaml`, change the business to a

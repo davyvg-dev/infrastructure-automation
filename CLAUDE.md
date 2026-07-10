@@ -22,7 +22,13 @@ See `README.md` and `docs/DEMO.md`.
    `business.yaml`, not in `.py`. Only touch code for *how it works*.
 2. **One module, one job.** Keep the seams: `settings` (config), `calendar_store`
    (persistence + the real-integration seam), `tools` (definitions + handlers),
-   `receptionist` (Claude loop + persona), `server` (FastAPI), `selftest` (checks).
+   `receptionist` (Claude loop + persona), `sessions` (shared conversation store),
+   `server` (FastAPI: web widget + WhatsApp webhook), `channels/` (per-platform adapters),
+   `selftest` (checks).
+   - **Channels stay thin.** A new channel is an adapter that calls
+     `sessions.respond("<channel>", "<user_id>", text)` and sends the reply back — no
+     receptionist logic in channel code. All channels must go through `sessions`, never
+     call `receptionist.run_turn` directly (that's how history stays per-user and bounded).
 3. **Test each layer in isolation.** `python -m app.selftest {config,calendar,agent,chat}`.
    `config` and `calendar` need no network — keep them that way so logic is testable offline.
 4. **`calendar_store.py` is the integration seam.** For a real client, replace the bodies

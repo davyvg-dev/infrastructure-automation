@@ -41,6 +41,20 @@ python -m app.selftest chat        # interactive terminal chat
 python -m app.server               # then open http://127.0.0.1:8000
 ```
 
+## Channels
+
+The same receptionist answers on three channels, all sharing one conversation store
+(`app/sessions.py`):
+
+| Channel | Run it with | Public URL? |
+|---|---|---|
+| Web widget | `python -m app.server` | No |
+| Telegram | `python -m app.channels.telegram_bot` | No |
+| WhatsApp (Twilio) | webhook on the server: `POST /whatsapp` | Yes (ngrok in dev) |
+
+Run any subset. Full setup — creating the Telegram bot and wiring the Twilio WhatsApp
+sandbox — is in **`docs/CHANNELS.md`**.
+
 ## Rebrand for a prospect
 
 1. Copy `config/business.yaml` to `config/<prospect>.yaml`.
@@ -65,12 +79,17 @@ ai-receptionist/
 │   ├── calendar_store.py    # simulated calendar (the real-integration seam)
 │   ├── tools.py             # check_availability + book_appointment
 │   ├── receptionist.py      # Claude tool-use loop + persona
-│   ├── server.py            # FastAPI: chat widget + /chat
+│   ├── sessions.py          # shared conversation store (all channels)
+│   ├── server.py            # FastAPI: web widget + WhatsApp webhook
+│   ├── channels/
+│   │   ├── telegram_bot.py  # Telegram polling bot
+│   │   └── whatsapp.py      # Twilio WhatsApp webhook handler
 │   └── selftest.py          # isolated checks + terminal chat
 ├── web/
 │   └── index.html           # self-contained, theme-aware chat widget
 └── docs/
-    └── DEMO.md              # how to run, film, and pitch it
+    ├── DEMO.md              # how to run, film, and pitch it
+    └── CHANNELS.md          # Telegram + WhatsApp setup
 ```
 
 See `docs/DEMO.md` for how to record a demo clip and pitch it, and `TASK.md` to build it up
