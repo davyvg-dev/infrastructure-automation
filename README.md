@@ -41,6 +41,23 @@ python -m src.run
 Read **`docs/SETUP.md`** for the exact steps to create your Telegram bot and X API app,
 and **`docs/STRATEGY.md`** for the positioning, content pillars, and 30-day plan.
 
+## Build & test order
+
+Don't wire it all up at once. **`TASK.md`** is a gated checklist that tests each process
+in isolation before moving on — config → drafting → Telegram → X auth → full dry-run →
+first real post. Each layer has an isolated self-test:
+
+```bash
+python -m src.selftest config      # config sanity, no network
+python -m src.selftest generate    # Claude drafting only
+python -m src.selftest telegram    # send a test message
+python -m src.selftest x           # verify X auth (never posts)
+python -m src.selftest all         # all of the above, in order
+```
+
+**`CLAUDE.md`** documents the conventions for working in this project (config-over-code,
+one-module-one-job, never post in dev, respect platform ToS).
+
 ## How it runs
 
 `src/run.py` starts one long-running process that:
