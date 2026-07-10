@@ -1,0 +1,85 @@
+# The single knob-board for the engine. Edit this, not the code.
+
+brand:
+  name: "Davy"                       # your name / handle for the personal brand
+  offer: "AI receptionists — custom AI assistants that answer a business's customers
+    instantly 24/7, qualify them, and book them in."
+  one_liner: "Your business gets an AI that answers every customer instantly, 24/7,
+    and books them in — so you stop losing leads to slow replies."
+  audience: "Local service SMBs (clinics, salons, trades, agencies) in the Netherlands,
+    plus online small businesses. They lose money to missed calls and slow replies."
+  # 'build-in-public': you have no past client work yet, so content is shipped live.
+  proof_mode: "build_in_public"
+
+voice:
+  # How the drafts should sound. Keep it concrete and human.
+  tone: "Direct, concrete, a little opinionated. Builder-to-builder honesty. No hype,
+    no emoji spam, no 'in today's fast-paced world' filler. Short sentences."
+  avoid: "Corporate buzzwords, engagement-bait questions with no substance, hashtag walls,
+    fake urgency, 'game-changer', 'unlock', 'in this thread I'll'."
+
+languages:
+  primary: "English"
+  local: "Dutch"          # local variant generated for NL-targeted posts
+
+# Content pillars the engine rotates through. Weights bias how often each is picked.
+pillars:
+  - key: build_log
+    weight: 3
+    brief: "A behind-the-scenes update from building an AI receptionist. Show a specific
+      technical or product decision from today, honestly, including what was tricky."
+  - key: teardown
+    weight: 3
+    brief: "Pick a common local business type and quantify what slow replies / missed calls
+      cost it, then outline how an AI receptionist fixes it in a few concrete steps."
+  - key: proof_demo
+    weight: 2
+    brief: "Describe a concrete demo of the AI receptionist working (a booking, a reschedule,
+      a qualified lead). Written so it pairs with a screenshot or short clip the user attaches."
+  - key: hot_take
+    weight: 2
+    brief: "A sharp, defensible opinion about AI for small business — why most attempts fail,
+      what actually matters, a myth to kill. Useful, not just contrarian."
+
+# Which platforms get drafted, and how each is delivered.
+platforms:
+  x:
+    enabled: true
+    delivery: auto          # auto-post via API on approval
+    max_chars: 280
+  linkedin:
+    enabled: true
+    delivery: assisted      # formatted + pushed to you to paste
+  reddit:
+    enabled: true
+    delivery: assisted
+    note: "Value-first only. 1-2 high-effort posts/week, posted manually."
+
+# Cadence: how many generation runs per day and how many drafts each run makes.
+# Start conservative; raise once you trust the quality.
+cadence:
+  # 'starter' while you warm up; switch to 'growth' or 'aggressive' when ready.
+  active: starter
+  profiles:
+    starter:
+      runs_per_day: 1
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin"]
+    growth:
+      runs_per_day: 2
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin"]
+    aggressive:
+      runs_per_day: 3
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin"]
+  # Reddit is drafted separately, at most this often (days between reddit drafts).
+  reddit_every_days: 3
+  # Local-hour window (24h) to send drafts for approval, so you're not pinged at 3am.
+  quiet_hours_start: 22
+  quiet_hours_end: 8
+  timezone: "Europe/Amsterdam"
+
+model:
+  id: "claude-opus-4-8"
+  effort: "medium"          # low | medium | high — medium is a good balance for short posts
