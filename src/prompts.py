@@ -30,7 +30,12 @@ Voice: {v['tone']}
 Never do these: {v['avoid']}
 
 Rules that matter:
-- Write like a real builder talking to peers and prospects, not a marketer.
+- Write FOR THE BUYER — a busy local business owner (a plumber, dentist, salon owner) — not
+  for other developers or the tech crowd. Lead with their money and their pain, not the tech.
+- Never lead with "AI" or jargon. Say what it does for them ("answers every call 24/7 and
+  books the job") — not how it's built. Anchor value in their numbers (missed calls = lost
+  jobs/bookings).
+- Write like a real builder talking to prospects, not a marketer.
 - Be specific and concrete. Real numbers, real scenarios, real decisions beat vague claims.
 - One idea per post. Earn the read; no engagement-bait.
 - This account is BUILD-IN-PUBLIC: there is no past client roster to cite. Frame proof as \
@@ -52,11 +57,14 @@ How to make a post land (this matters most):
 
 
 _PLATFORM_SPECS = {
-    "x": "X post: max 280 characters, punchy, no hashtags unless natural. A strong "
-         "first line that stands alone.",
-    "linkedin": "LinkedIn post: 3-8 short lines, first line is a scroll-stopping hook, "
-                "line breaks between thoughts, ends with a light, genuine call to "
-                "engage or a takeaway. No hashtag walls.",
+    # X = distribution + personality. Punchier; links are fine here.
+    "x": "X post: max 280 characters, punchy, personality-forward, no hashtags unless "
+         "natural. A strong first line that stands alone.",
+    # LinkedIn = the primary B2B channel where buyers live. Native long-form performs best.
+    "linkedin": "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are "
+                "a scroll-stopping hook that stands alone above the fold. Generous line "
+                "breaks (1-2 sentences each), one idea, end with a genuine question to spark "
+                "comments. NO links in the body. No hashtag walls.",
     "reddit": "Reddit: value-first, zero self-promotion in the body. Written to genuinely "
               "help in a relevant subreddit (e.g. r/smallbusiness, r/dentistry, r/msp). "
               "Sound like a helpful practitioner, not an ad.",
