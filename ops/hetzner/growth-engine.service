@@ -1,0 +1,16 @@
+[Unit]
+Description=Klantkraan growth-engine (Telegram approval bot + scheduler)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/growth-engine
+ExecStart=/opt/klantkraan/growth-engine/.venv/bin/python -m src.run
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

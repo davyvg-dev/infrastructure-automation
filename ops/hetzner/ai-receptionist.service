@@ -1,0 +1,16 @@
+[Unit]
+Description=Klantkraan ai-receptionist demo (web chat + WhatsApp webhook)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.server
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
