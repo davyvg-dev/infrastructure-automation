@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from . import calendar_store
+from . import calendar_store, notify
 
 TOOLS: list[dict[str, Any]] = [
     {
@@ -46,6 +46,24 @@ TOOLS: list[dict[str, Any]] = [
             "required": ["customer_name", "contact", "service", "slot"],
         },
     },
+    {
+        "name": "take_message",
+        "description": (
+            "Capture a message for the human team when you can't fully help — a question "
+            "you can't answer, a special request, a complaint, or a callback request. "
+            "Always collect the customer's name and a contact first. This notifies the "
+            "owner so a human can follow up."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "customer_name": {"type": "string"},
+                "contact": {"type": "string", "description": "Phone or email."},
+                "message": {"type": "string", "description": "What to pass to the team."},
+            },
+            "required": ["customer_name", "contact", "message"],
+        },
+    },
 ]
 
 
@@ -59,4 +77,10 @@ def execute(name: str, tool_input: dict[str, Any]) -> str:
             service=tool_input.get("service", ""),
             slot=tool_input.get("slot", ""),
         ))
+    if name == "take_message":
+        customer = tool_input.get("customer_name", "unknown")
+        contact = tool_input.get("contact", "no contact")
+        message = tool_input.get("message", "")
+        notify.owner(f"📨 Message from {customer} ({contact}):\n{message}")
+        return json.dumps({"ok": True, "delivered": True})
     return json.dumps({"error": f"Unknown tool: {name}"})

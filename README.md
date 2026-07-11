@@ -55,6 +55,18 @@ The same receptionist answers on three channels, all sharing one conversation st
 Run any subset. Full setup — creating the Telegram bot and wiring the Twilio WhatsApp
 sandbox — is in **`docs/CHANNELS.md`**.
 
+## Owner notifications & human handoff
+
+The receptionist keeps you in the loop:
+
+- **Bookings** ping you (name, service, time, contact).
+- A **`take_message`** tool captures a lead when the bot can't help — a question it can't
+  answer, a complaint, a callback request — and notifies you so a human follows up.
+- If it ever gets **stuck**, you get alerted so no customer is left hanging.
+
+Set `OWNER_TELEGRAM_CHAT_ID` in `.env` (see `.env.example`). If it's unset, notifications
+just print to the console, so the demo still runs.
+
 ## Rebrand for a prospect
 
 1. Copy `config/business.yaml` to `config/<prospect>.yaml`.

@@ -70,6 +70,11 @@ appointments, the works. Each phone number is its own conversation.
 > by Meta) instead of the sandbox. The code doesn't change — only the Twilio config and the
 > `From` number do.
 
+> **Staging vs production:** Telegram and WhatsApp each allow only one active webhook per
+> app, and pointing a test setup at your bot overwrites production. Use **separate bot
+> tokens / Twilio numbers for staging and production** so testing never hijacks a live
+> client's channel.
+
 ---
 
 ## Adding another channel later

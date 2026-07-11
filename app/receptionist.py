@@ -7,13 +7,16 @@ easy to explain in build-in-public content and to hand to a client.
 
 from __future__ import annotations
 
+import logging
 from datetime import date
 from typing import Any
 
 import anthropic
 
-from . import tools
+from . import notify, tools
 from .settings import business, env
+
+log = logging.getLogger("receptionist")
 
 
 def build_system_prompt() -> str:
@@ -26,34 +29,50 @@ def build_system_prompt() -> str:
     faq = "\n".join(f"  - Q: {f['q']}\n    A: {f['a']}" for f in cfg.get("faq", []))
     hours = "\n".join(f"  - {day}: {h[0]}–{h[1]}" for day, h in cfg.get("hours", {}).items())
 
-    return f"""You are {p['name']}, the virtual receptionist for {b['name']}, a \
-{b['type']} in {b.get('address', '')} ({b['timezone']} timezone).
+    # Prescriptive, labeled sections with the most load-bearing rules at the top and the
+    # "never do this" list at the bottom — where models attend most reliably.
+    return f"""# Role
+You are {p['name']}, the virtual receptionist for {b['name']}, a {b['type']} in \
+{b.get('address', '')} ({b['timezone']} timezone). Today is {date.today():%A, %Y-%m-%d}.
 
-Today's date is {date.today():%A, %Y-%m-%d}.
+# Tone
+{p['tone']} Keep every reply short and natural — you're chatting, not writing an email.
+Ask at most one question per reply.
 
-Tone: {p['tone']}
+# Goals
+{p['goals']}
 
-Your goals: {p['goals']}
+# Booking flow (follow exactly)
+1. Call check_availability to find real open slots before offering any time. NEVER invent a slot.
+2. Collect the customer's name and a contact (phone or email).
+3. Confirm the service and the exact time back to the customer in plain language.
+4. Only then call book_appointment. After it succeeds, read back the confirmation code and the date/time.
 
-Hard rules: {p['guardrails']}
+# When you can't help
+If you can't answer something, or the customer has a special request, complaint, or wants a
+callback, collect their name + contact and call take_message so a human follows up. For
+anything urgent, give the phone number: {b.get('phone', '(not provided)')}.
 
+# What you know
 Services:
 {services or '  (none listed)'}
-
-Opening hours (days not listed are closed):
+Opening hours (days not listed are CLOSED):
 {hours}
-
-FAQ you can answer directly:
+FAQ:
 {faq or '  (none)'}
 
-Phone for anything you can't handle: {b.get('phone', '(not provided)')}
+# What you do NOT know — never guess these
+- Prices beyond the services list above, medical/clinical advice, or outcomes.
+- Availability you haven't confirmed with check_availability this conversation.
+- Anything about a specific customer's history or records.
+If asked about any of these, say you don't have that and offer to take a message or book a
+consultation. Do not make up an answer.
 
-Booking flow:
-- Use check_availability to find real open slots before offering times. Never invent a slot.
-- Collect the customer's name and a contact (phone or email) and confirm the service and
-  time before calling book_appointment.
-- After booking, read back the confirmation code and the date/time in plain language.
-Keep every reply short and natural — you're chatting, not writing an email."""
+# Hard rules
+{p['guardrails']}
+- Never invent slots, prices, confirmations, or facts. If unsure, use a tool or take a message.
+- When you have enough information to act, act. When you've answered or booked, stop —
+  don't pad with extra questions."""
 
 
 def _client() -> anthropic.Anthropic:
@@ -88,10 +107,14 @@ def run_turn(history: list[dict[str, Any]], user_message: str) -> tuple[str, lis
             results = []
             for block in response.content:
                 if block.type == "tool_use":
+                    output = tools.execute(block.name, block.input)
+                    # Observable tool trace — you'll want this when debugging "why did it
+                    # book the wrong slot?" support questions.
+                    log.info("tool %s(%s) -> %s", block.name, block.input, output)
                     results.append({
                         "type": "tool_result",
                         "tool_use_id": block.id,
-                        "content": tools.execute(block.name, block.input),
+                        "content": output,
                     })
             history = history + [{"role": "user", "content": results}]
             continue
@@ -102,4 +125,7 @@ def run_turn(history: list[dict[str, Any]], user_message: str) -> tuple[str, lis
         text = "".join(b.text for b in response.content if b.type == "text").strip()
         return text or "(no response)", history
 
+    log.warning("receptionist hit the turn cap without finishing")
+    notify.owner("⚠️ The receptionist got stuck on a conversation and couldn't finish. "
+                 "A customer may need a callback.")
     return "Sorry — I got stuck. Please call us and we'll help right away.", history

@@ -13,6 +13,7 @@ import uuid
 from datetime import date, datetime, timedelta
 from typing import Any
 
+from . import notify
 from .settings import DATA_DIR, business, ensure_dirs
 
 _BOOKINGS_PATH = DATA_DIR / "bookings.json"
@@ -109,4 +110,8 @@ def book(customer_name: str, contact: str, service: str, slot: str) -> dict[str,
             "created_at": datetime.now().isoformat(timespec="seconds"),
         })
         _save(bookings)
+        notify.owner(
+            f"📅 New booking: {customer_name} — {service} at {slot}\n"
+            f"Contact: {contact}\nConfirmation: {confirmation}"
+        )
         return {"ok": True, "confirmation": confirmation, "slot": slot, "service": service}
