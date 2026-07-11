@@ -36,9 +36,10 @@ No keys needed yet. This proves the strategy file parses and the cadence is vali
 Needs `ANTHROPIC_API_KEY` in `.env`. This tests generation end to end with **no** Telegram
 or X involved — pure "does Claude produce good drafts."
 
-- [ ] ▶ Put your Anthropic key in `.env` (see `docs/SETUP.md` §1) — **BLOCKED: the current
-      value is the `sk-ant-...` placeholder; founder must paste a real key**
-- [ ] ▶ `python -m src.selftest generate`
+- [x] ▶ Put your Anthropic key in `.env` (see `docs/SETUP.md` §1) — real key in place,
+      auth passes
+- [ ] ▶ `python -m src.selftest generate` — **BLOCKED: account has no API credits; founder
+      must buy credits at console.anthropic.com → Plans & Billing, then re-run**
 - [ ] ✓ You get a pillar, a topic, and an X + LinkedIn variant printed, X under 280 chars.
 - [ ] ✓ **Read the output.** Does it sound like you and match the offer? If not, tune
       `voice` / `pillars` in the YAML (Step 1) and re-run until the drafts are good.
