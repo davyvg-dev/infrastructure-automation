@@ -1,17 +1,17 @@
 # Growth Strategy
 
 The thinking the engine runs on, updated with a research round on how solo builders actually
-**sell** AI services and **grow an audience** (full sources + numbers in
-`research/gtm-and-growth-brief.md`). Edit `config/content_strategy.yaml` to change behavior;
+**sell** AI services and **grow an audience**. Klantkraan's own market research (9 reports)
+lives in `klantkraan/research/`. Edit `config/content_strategy.yaml` to change behavior;
 this doc explains the *why*.
 
 ---
 
 ## 1. Positioning
 
-**You:** an independent builder shipping **AI receptionists** — a done-for-you assistant that
-answers a business's customers instantly, 24/7, on their website, WhatsApp, and Telegram, and
-books them straight into the calendar.
+**You:** the founder of **Klantkraan** (klantkraan.nl), shipping **AI receptionists** for
+Dutch trades — a done-for-you assistant that answers a business's customers instantly, 24/7,
+by phone, website, and WhatsApp, and books them straight into the calendar.
 
 **Angle:** you don't *talk about* AI, you *ship it in public* and show it working. The demo is
 proof; the content is the top of the funnel.
@@ -21,33 +21,23 @@ Build-in-public only sells when the audience you attract is the audience that bu
 with their money and pain, and **never lead with "AI"** — say "24/7 call answering that stops
 you losing jobs".
 
-## 2. Pick ONE niche
+## 2. The niche (decided)
 
-"One niche, one offer, one outcome." Niche fluency closes ~3× faster. Pick the ONE
-appointment-driven vertical you can reach warmly:
-
-| Niche | Why it fits |
-|---|---|
-| **Home services** (plumbers, HVAC, electricians, roofers) | Grasp "missed call = lost job" instantly; high per-job value; already buy monthly subscriptions. Fastest to sell. |
-| **Dental / med-spa** | High patient LTV (€10k+); lose patients to slow follow-up and no-shows. |
-| **Salons / barbers** | High booking volume; every missed call is a walk-in gone. |
-
-Set your choice in `config/content_strategy.yaml` → `brand.audience`. Start with one; expand
-only once it works.
+"One niche, one offer, one outcome." Niche fluency closes ~3× faster. Klantkraan's niche is
+**Dutch trades** (installateurs, loodgieters, elektriciens, schilders): they grasp
+"missed call = lost job" instantly, per-job value is high, and they already buy monthly
+subscriptions. It is set in `config/content_strategy.yaml` → `brand.audience`. Expand only
+once it works.
 
 ## 3. The offer & pricing
 
 **Productize one fixed-scope package** (don't build a snowflake each time):
-intake → availability check → calendar write → web/WhatsApp/Telegram → confirmation + reminder.
-The `ai-receptionist/` project is exactly this, rebrandable per client.
+intake → availability check → calendar write → phone/web/WhatsApp → confirmation + reminder.
+Klantkraan's voice agent (`klantkraan/apps/voice-agent`, LiveKit) plus the marketing site is
+exactly this, rebrandable per client.
 
-**Pricing band for a solo op in the EU:**
-- **Setup: €600–€1,200** one-off — done-for-you: connect their calendar, load services/FAQ/
-  hours, brand it, go live.
-- **Retainer: €150–€350/mo** — hosting, the Claude API + messaging costs, monitoring, monthly
-  updates, and a 24–48h breakage SLA.
-- **Add-ons (+€50–100/mo each, same architecture):** no-show reminders, review-request
-  follow-ups, lead reactivation.
+**Pricing is decided:** three tiers at **€349 / €599 / €849 per month** (set 2026-05-21 from
+the research-aligned whitespace band; details in `klantkraan/docs/`).
 
 **Where this sits:** above DIY tools (€25–65/mo, e.g. Upfirst/Aira) and below the managed tier
 (Smith.ai €270–800/mo). You **never compete on price** — you win on *done-for-you + local +
@@ -97,8 +87,8 @@ dev-facing rotation grows the wrong audience:
 ## 5. Profile = landing page (do this before posting)
 
 - **Real headshot**, not a logo.
-- **Headline = outcome:** "I help clinics & salons never miss a call — AI receptionist that
-  books 24/7."
+- **Headline = outcome:** "Ik help installateurs en loodgieters nooit meer een klus missen —
+  AI-receptionist die 24/7 opneemt en inplant (klantkraan.nl)."
 - **About:** positioning + who you help + one proof metric + a soft CTA ("DM me 'CALLS' for a
   2-min demo").
 - **Featured / pinned:** a short demo clip + one case study — this is where your links live
@@ -113,9 +103,9 @@ Content and demos are the easy part; the sales grind is what determines revenue.
 2. **Permission-based Loom.** Ask first ("mind if I send a 90-second video?"). Only for
    repliers, record a 2-min Loom that opens on *their* website, then shows *their* branded
    demo booking a slot. Personalized video lifts replies 2–3×.
-3. **Rebrand the demo before the call.** Clone `ai-receptionist/config/business.yaml` to their
-   details (pulled from their site/Google profile), deploy a demo URL + live Telegram/WhatsApp
-   test number. The "aha" is hearing it answer as *their* business.
+3. **Rebrand the demo before the call.** Configure the Klantkraan voice agent with their
+   details (pulled from their site/Google profile), deploy a demo URL + live test number.
+   The "aha" is hearing it answer as *their* business.
 4. **Discovery.** Pre-qualify by email (situation / what they've tried / questions). On the
    call run SPIN — *implication* questions make the missed-call cost concrete ("what's a missed
    new-customer call worth to you?") — and BANT to confirm they can say yes.
@@ -156,4 +146,4 @@ beats a long follow-up. Don't expect double-digit reply rates without real perso
 - The pipeline gets attention; **you** close. Budget time for follow-up and trust-building,
   not just posting.
 
-Full sources and the deeper findings are in `research/gtm-and-growth-brief.md`.
+Full sources and the deeper findings are in `klantkraan/research/`.

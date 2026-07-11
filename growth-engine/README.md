@@ -1,8 +1,8 @@
 # Growth Engine
 
-An automated, personal-brand content pipeline for selling **AI receptionists** (custom
-AI assistants that answer every customer instantly and book them in) — documented
-build-in-public.
+The content pipeline for **Klantkraan** (klantkraan.nl) — AI receptionists for Dutch
+trade businesses. It markets the business build-in-public from the founder's personal
+accounts.
 
 It generates high-quality drafts with Claude, pushes them to you on Telegram for a
 one-tap approval, auto-posts approved posts to X, and hands you ready-to-paste versions
@@ -55,8 +55,8 @@ python -m src.selftest x           # verify X auth (never posts)
 python -m src.selftest all         # all of the above, in order
 ```
 
-**`CLAUDE.md`** documents the conventions for working in this project (config-over-code,
-one-module-one-job, never post in dev, respect platform ToS).
+The repo-root **`CLAUDE.md`** (§ growth-engine rules) documents the conventions for working
+in this project (config-over-code, one-module-one-job, never post in dev, respect platform ToS).
 
 ## How it runs
 

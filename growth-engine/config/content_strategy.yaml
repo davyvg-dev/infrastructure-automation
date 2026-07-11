@@ -1,18 +1,18 @@
 # The single knob-board for the engine. Edit this, not the code.
 
 brand:
-  name: "Davy"                       # your name / handle for the personal brand
-  offer: "AI receptionists — custom AI assistants that answer a business's customers
-    instantly 24/7, qualify them, and book them in."
-  one_liner: "Your business gets an AI that answers every customer instantly, 24/7,
-    and books them in — so you stop losing leads to slow replies."
-  # Niche down to ONE appointment-driven vertical you can reach warmly (research: "one
-  # niche, one offer, one outcome"). Shortlist: home services (plumbers/HVAC), dental/
-  # med-spa, salons/barbers. Edit this to your chosen niche.
-  audience: "Owners of appointment-driven local businesses in the Netherlands — start with
-    ONE niche (e.g. plumbers/HVAC, dental, or salons). They lose real money to missed calls
-    and slow replies: an unanswered after-hours call is usually a job or booking that walks
-    to a competitor. They are business owners, not tech people."
+  name: "Klantkraan"                 # the business; posts go out from the founder's accounts
+  website: "klantkraan.nl"
+  offer: "AI receptionists for Dutch trade businesses — an assistant that answers every
+    call and WhatsApp instantly 24/7, qualifies the customer, and books the job into the
+    calendar."
+  one_liner: "Je bedrijf krijgt een AI die elke klant direct antwoordt, 24/7, en de
+    afspraak meteen inplant — zodat je geen klussen meer verliest aan gemiste telefoontjes."
+  # Niche is DECIDED: Dutch trades (see klantkraan/research/). Don't broaden until it works.
+  audience: "Owners of Dutch trade businesses — installateurs, loodgieters, elektriciens,
+    schilders. They lose real money to missed calls and slow replies: an unanswered
+    after-hours call is usually a job that walks to a competitor. They are vakmensen and
+    business owners, not tech people."
   # 'build-in-public': you have no past client work yet, so content is shipped live.
   proof_mode: "build_in_public"
 
@@ -24,8 +24,8 @@ voice:
     fake urgency, 'game-changer', 'unlock', 'in this thread I'll'."
 
 languages:
-  primary: "English"
-  local: "Dutch"          # local variant generated for NL-targeted posts
+  primary: "Dutch"        # the buyer's language — customer-facing posts are Dutch
+  secondary: "English"    # allowed for build-log posts aimed at the builder crowd
 
 # Content pillars, weighted toward the BUYER (a business owner), not other builders. The
 # mix is ~40% proof, 30% problem, 20% teardown/hot-take, 10% build log — proof + problem

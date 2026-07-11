@@ -11,10 +11,10 @@ with the virtualenv active.
 
 ## Step 0 — Install & environment
 
-- [ ] ▶ `python -m venv .venv && source .venv/bin/activate`
-- [ ] ▶ `pip install -r requirements.txt`
-- [ ] ▶ `cp .env.example .env`
-- [ ] ✓ `python -m py_compile src/*.py` prints nothing (all modules compile)
+- [x] ▶ `python -m venv .venv && source .venv/bin/activate` (Python 3.12)
+- [x] ▶ `pip install -r requirements.txt`
+- [x] ▶ `cp .env.example .env`
+- [x] ✓ `python -m py_compile src/*.py` prints nothing (all modules compile)
 
 ---
 
@@ -22,8 +22,8 @@ with the virtualenv active.
 
 No keys needed yet. This proves the strategy file parses and the cadence is valid.
 
-- [ ] ▶ `python -m src.selftest config`
-- [ ] ✓ It prints your offer, the four pillars, and the active cadence with no errors.
+- [x] ▶ `python -m src.selftest config`
+- [x] ✓ It prints your offer, the four pillars, and the active cadence with no errors.
 - [ ] ▶ (optional) Edit `config/content_strategy.yaml` — tweak `brand`, `voice`, or
       `cadence.active` — and re-run. Confirm your change shows up.
 
@@ -36,7 +36,8 @@ No keys needed yet. This proves the strategy file parses and the cadence is vali
 Needs `ANTHROPIC_API_KEY` in `.env`. This tests generation end to end with **no** Telegram
 or X involved — pure "does Claude produce good drafts."
 
-- [ ] ▶ Put your Anthropic key in `.env` (see `docs/SETUP.md` §1)
+- [ ] ▶ Put your Anthropic key in `.env` (see `docs/SETUP.md` §1) — **BLOCKED: the current
+      value is the `sk-ant-...` placeholder; founder must paste a real key**
 - [ ] ▶ `python -m src.selftest generate`
 - [ ] ✓ You get a pillar, a topic, and an X + LinkedIn variant printed, X under 280 chars.
 - [ ] ✓ **Read the output.** Does it sound like you and match the offer? If not, tune
@@ -50,10 +51,10 @@ or X involved — pure "does Claude produce good drafts."
 
 Needs `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`. Tests that the bot can reach *you*.
 
-- [ ] ▶ Create the bot and get your chat id (see `docs/SETUP.md` §2). **Message your bot
+- [x] ▶ Create the bot and get your chat id (see `docs/SETUP.md` §2). **Message your bot
       once** first, or it can't message you.
-- [ ] ▶ `python -m src.selftest telegram`
-- [ ] ✓ A "Telegram is wired up" test message lands in your chat.
+- [x] ▶ `python -m src.selftest telegram`
+- [x] ✓ A "Telegram is wired up" test message lands in your chat (@davy_growth_bot).
 
 ---
 
@@ -61,10 +62,10 @@ Needs `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`. Tests that the bot can reach *y
 
 Needs the four `X_*` values. Verifies auth **without** publishing anything.
 
-- [ ] ▶ Create the X app with **Read + Write** and fill in `.env` (see `docs/SETUP.md` §3)
-- [ ] ▶ `python -m src.selftest x`
-- [ ] ✓ It prints "authenticated as @you". If it fails on auth, regenerate the access
-      token *after* enabling Read+Write (the usual culprit).
+- [x] ▶ Create the X app with **Read + Write** and fill in `.env` (see `docs/SETUP.md` §3)
+- [x] ▶ `python -m src.selftest x`
+- [x] ✓ It prints "authenticated as @you". If it fails on auth, regenerate the access
+      token *after* enabling Read+Write (the usual culprit). (Passed as @davy22036589.)
 
 - [ ] ▶ Run everything together: `python -m src.selftest all` → ✓ all four pass.
 
