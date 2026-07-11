@@ -22,7 +22,8 @@ See `README.md` and `docs/DEMO.md`.
    `business.yaml`, not in `.py`. Only touch code for *how it works*.
 2. **One module, one job.** Keep the seams: `settings` (config), `calendar_store`
    (persistence + the real-integration seam), `tools` (definitions + handlers),
-   `receptionist` (Claude loop + persona), `sessions` (shared conversation store),
+   `receptionist` (Claude loop + persona), `scaffold` (generate a prospect demo config),
+   `notify` (owner alerts), `sessions` (shared conversation store),
    `server` (FastAPI: web widget + WhatsApp webhook), `channels/` (per-platform adapters),
    `selftest` (checks).
    - **Channels stay thin.** A new channel is an adapter that calls

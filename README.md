@@ -67,14 +67,20 @@ The receptionist keeps you in the loop:
 Set `OWNER_TELEGRAM_CHAT_ID` in `.env` (see `.env.example`). If it's unset, notifications
 just print to the console, so the demo still runs.
 
-## Rebrand for a prospect
+## Rebrand for a prospect (≈60 seconds)
 
-1. Copy `config/business.yaml` to `config/<prospect>.yaml`.
-2. Edit the business name, services, hours, FAQ, and persona.
-3. Set `BUSINESS_CONFIG=config/<prospect>.yaml` in `.env`.
-4. Restart the server — the widget and the receptionist are now *their* business.
+Use the scaffolder — it writes a ready-to-run config from a home-services template:
 
-No code changes. That's the whole pitch: "here's what this looks like for you."
+```bash
+python -m app.scaffold "Their Business Name" --phone "+31 20 555 0199" --address "Utrecht"
+# → writes config/their-business-name.yaml, prefilled. Tweak services/hours/FAQ to match.
+
+BUSINESS_CONFIG=config/their-business-name.yaml python -m app.server   # their branded demo
+```
+
+Or edit a config by hand (`config/business.yaml` = dental example,
+`config/home-services-example.yaml` = a ready plumbing demo). No code changes either way —
+that's the whole pitch: "here's what this looks like for *you*."
 
 ## Layout
 
@@ -91,6 +97,8 @@ ai-receptionist/
 │   ├── calendar_store.py    # simulated calendar (the real-integration seam)
 │   ├── tools.py             # check_availability + book_appointment
 │   ├── receptionist.py      # Claude tool-use loop + persona
+│   ├── scaffold.py          # generate a branded prospect demo config
+│   ├── notify.py            # owner alerts (bookings, messages, stuck)
 │   ├── sessions.py          # shared conversation store (all channels)
 │   ├── server.py            # FastAPI: web widget + WhatsApp webhook
 │   ├── channels/

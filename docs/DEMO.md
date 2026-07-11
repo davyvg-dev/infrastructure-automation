@@ -25,9 +25,13 @@ How to turn this into content and into a close.
 
 ## Pitch a prospect (the close)
 
-1. Copy `config/business.yaml` → `config/<prospect>.yaml`. Fill in *their* name, services,
-   hours, and FAQ (2 minutes — you can pull it off their website/Google profile).
-2. Set `BUSINESS_CONFIG=config/<prospect>.yaml`, restart, and screen-share.
+1. Scaffold their demo in one command, then tweak the details from their website/Google
+   profile (2 minutes):
+   ```bash
+   python -m app.scaffold "Their Business Name" --phone "..." --address "..."
+   ```
+2. `BUSINESS_CONFIG=config/their-business-name.yaml python -m app.server`, then screen-share
+   (or record a Loom over it and send before the call).
 3. Let them try to book. Then: "This answers every customer instantly, day or night, and
    books them straight in. Want me to wire it to your real calendar and phone/WhatsApp?"
 4. The paid work is the real integration (calendar, their channels, their branding) — the

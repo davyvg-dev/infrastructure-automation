@@ -76,12 +76,13 @@ Full setup in `docs/CHANNELS.md`. All channels share one brain, so if Step 3 pas
 
 ---
 
-## Step 5 — Rebrand test
+## Step 5 — Rebrand test (the scaffolder)
 
-- [ ] ▶ Copy `config/business.yaml` → `config/demo2.yaml`, change the business to a
-      different type (e.g. a salon or a garage), set `BUSINESS_CONFIG=config/demo2.yaml`.
-- [ ] ▶ Restart the server.
-- [ ] ✓ The widget + receptionist are now the new business, with no code changes.
+- [ ] ▶ `python -m app.scaffold "Demo Plumbing Co" --phone "+31 20 555 0111"`
+- [ ] ✓ It writes `config/demo-plumbing-co.yaml` and prints the run command.
+- [ ] ▶ `BUSINESS_CONFIG=config/demo-plumbing-co.yaml python -m app.server`, restart.
+- [ ] ✓ The widget + receptionist are now that business, no code changes. (Also try the
+      ready-made `config/home-services-example.yaml`.)
 
 ---
 
