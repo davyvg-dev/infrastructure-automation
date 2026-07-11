@@ -38,24 +38,41 @@ work shipped live (demos, builds in progress), never invent fake clients, testim
 metrics. If a concrete number would help, frame it as an estimate or industry pattern, not a \
 fabricated result.
 - No hashtags on LinkedIn beyond 0-2 if truly relevant; none on X unless natural.
-- Do not use em dashes as a stylistic tic; write plainly."""
+- Do not use em dashes as a stylistic tic; write plainly.
+
+How to make a post land (this matters most):
+- Anchor every post to ONE specific, real detail — a number, a timestamp, an exact failure,
+  a concrete before/after. "The bot misheard '15' as '50' on 1 in 40 messages until I added
+  a confirm step" beats "made good progress on accuracy". Vague = skippable AI slop.
+- Open with the concrete moment, not a generic setup. Never start with "In today's world",
+  "Most people struggle with", or "Here's why X matters".
+- Structure: a hook (the real moment) then a plain takeaway the reader walks away with.
+- Publish gate — before finishing, check: (1) does this prove I actually did the work?
+  (2) is the takeaway specific, not vague? If either fails, rewrite it."""
+
+
+_PLATFORM_SPECS = {
+    "x": "X post: max 280 characters, punchy, no hashtags unless natural. A strong "
+         "first line that stands alone.",
+    "linkedin": "LinkedIn post: 3-8 short lines, first line is a scroll-stopping hook, "
+                "line breaks between thoughts, ends with a light, genuine call to "
+                "engage or a takeaway. No hashtag walls.",
+    "reddit": "Reddit: value-first, zero self-promotion in the body. Written to genuinely "
+              "help in a relevant subreddit (e.g. r/smallbusiness, r/dentistry, r/msp). "
+              "Sound like a helpful practitioner, not an ad.",
+}
+
+
+def platform_instructions(platforms: list[str]) -> str:
+    """The per-platform formatting block, reused by every generator."""
+    return "\n".join(f"- {_PLATFORM_SPECS[p]}" for p in platforms if p in _PLATFORM_SPECS)
 
 
 def draft_brief(pillar: dict[str, Any], platforms: list[str], recent: list[str]) -> str:
     s = strategy()
     langs = s["languages"]
     avoid = "\n".join(f"- {t}" for t in recent) if recent else "(none yet)"
-    platform_specs = {
-        "x": "X post: max 280 characters, punchy, no hashtags unless natural. A strong "
-             "first line that stands alone.",
-        "linkedin": "LinkedIn post: 3-8 short lines, first line is a scroll-stopping hook, "
-                    "line breaks between thoughts, ends with a light, genuine call to "
-                    "engage or a takeaway. No hashtag walls.",
-        "reddit": "Reddit: value-first, zero self-promotion in the body. Written to genuinely "
-                  "help in a relevant subreddit (e.g. r/smallbusiness, r/dentistry, r/msp). "
-                  "Sound like a helpful practitioner, not an ad.",
-    }
-    wanted = "\n".join(f"- {platform_specs[p]}" for p in platforms if p in platform_specs)
+    wanted = platform_instructions(platforms)
 
     return f"""Write one social post idea for this pillar, then adapt it per platform.
 

@@ -68,6 +68,9 @@ one-module-one-job, never post in dev, respect platform ToS).
 3. On **✅** it auto-posts the X version and marks LinkedIn/Reddit "ready to paste";
    on **✏️** it regenerates with your note; on **❌** it drops the draft.
 
+Send **/buildlog** any time to draft a build-in-public post straight from your recent git
+commits — real work in, honest post out (configured under `buildlog:` in the strategy YAML).
+
 Run it on any always-on host — your laptop overnight, a €4/mo VPS, or a free
 Fly.io/Railway instance. A GitHub Actions workflow for headless generation is included
 in `deploy/` as an alternative if you don't have an always-on host (see SETUP).

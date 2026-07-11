@@ -25,7 +25,7 @@ from telegram.ext import (
     filters,
 )
 
-from . import formatting, generate, store
+from . import buildlog, formatting, generate, store
 from .publish_x import post as post_to_x
 from .settings import active_cadence, env, strategy
 
@@ -143,6 +143,23 @@ async def cmd_now(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(f"⚠️ Generation failed: {exc}")
 
 
+async def cmd_buildlog(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("Reading your recent commits…")
+    platforms = active_cadence()["platforms_per_draft"]
+    try:
+        draft = await asyncio.to_thread(buildlog.build_draft, platforms)
+    except Exception as exc:
+        await update.message.reply_text(f"⚠️ Build-log failed: {exc}")
+        return
+    if draft is None:
+        await update.message.reply_text("No new commits since your last build-log. Ship something first 🙂")
+        return
+    await update.message.reply_text(
+        f"From {len(draft.get('source_commits', []))} commit(s):"
+    )
+    await _send_draft(context.application, update.effective_chat.id, draft)
+
+
 async def cmd_cadence(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     cad = strategy()["cadence"]
     profiles = ", ".join(cad["profiles"].keys())
@@ -156,6 +173,7 @@ async def cmd_cadence(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         "/now — generate a draft now\n"
+        "/buildlog — draft a build-in-public post from your recent git commits\n"
         "/cadence — show cadence\n"
         "/start — (re)schedule jobs\n\n"
         "On each draft: ✅ approve (auto-posts X, hands you LinkedIn/Reddit to paste), "
@@ -260,6 +278,7 @@ def build_app() -> Application:
     app = Application.builder().token(token).post_init(_post_init).build()
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("now", cmd_now))
+    app.add_handler(CommandHandler("buildlog", cmd_buildlog))
     app.add_handler(CommandHandler("cadence", cmd_cadence))
     app.add_handler(CommandHandler("help", cmd_help))
     app.add_handler(CallbackQueryHandler(on_button))

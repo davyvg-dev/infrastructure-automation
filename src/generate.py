@@ -82,6 +82,44 @@ def generate_draft(platforms: list[str]) -> dict[str, Any]:
     }
 
 
+def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> dict[str, Any]:
+    """Generate a draft from a custom brief (e.g. build-log material) under a fixed pillar.
+
+    Shares the drafting engine, schema, and voice with generate_draft — only the user
+    brief differs.
+    """
+    model_cfg = strategy()["model"]
+    client = _client()
+    response = client.messages.create(
+        model=model_cfg["id"],
+        max_tokens=2000,
+        thinking={"type": "adaptive"},
+        output_config={
+            "effort": model_cfg.get("effort", "medium"),
+            "format": {"type": "json_schema", "schema": _DRAFT_SCHEMA},
+        },
+        system=[{
+            "type": "text",
+            "text": prompts.system_prompt(),
+            "cache_control": {"type": "ephemeral"},
+        }],
+        messages=[{"role": "user", "content": brief}],
+    )
+    payload = _extract_json(response)
+    variants = {
+        k: v.strip()
+        for k, v in payload["variants"].items()
+        if v and v.strip() and k in platforms
+    }
+    return {
+        "id": f"{date.today():%Y%m%d}-{uuid.uuid4().hex[:4]}",
+        "pillar": pillar_key,
+        "topic": payload["topic"].strip(),
+        "status": "pending",
+        "variants": variants,
+    }
+
+
 def regenerate_variant(draft: dict[str, Any], platform: str, note: str) -> str:
     """Rewrite a single platform's variant given the user's feedback note."""
     model_cfg = strategy()["model"]
