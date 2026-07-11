@@ -1,0 +1,116 @@
+# The single knob-board for the engine. Edit this, not the code.
+
+brand:
+  name: "Davy"                       # your name / handle for the personal brand
+  offer: "AI receptionists — custom AI assistants that answer a business's customers
+    instantly 24/7, qualify them, and book them in."
+  one_liner: "Your business gets an AI that answers every customer instantly, 24/7,
+    and books them in — so you stop losing leads to slow replies."
+  # Niche down to ONE appointment-driven vertical you can reach warmly (research: "one
+  # niche, one offer, one outcome"). Shortlist: home services (plumbers/HVAC), dental/
+  # med-spa, salons/barbers. Edit this to your chosen niche.
+  audience: "Owners of appointment-driven local businesses in the Netherlands — start with
+    ONE niche (e.g. plumbers/HVAC, dental, or salons). They lose real money to missed calls
+    and slow replies: an unanswered after-hours call is usually a job or booking that walks
+    to a competitor. They are business owners, not tech people."
+  # 'build-in-public': you have no past client work yet, so content is shipped live.
+  proof_mode: "build_in_public"
+
+voice:
+  # How the drafts should sound. Keep it concrete and human.
+  tone: "Direct, concrete, a little opinionated. Builder-to-builder honesty. No hype,
+    no emoji spam, no 'in today's fast-paced world' filler. Short sentences."
+  avoid: "Corporate buzzwords, engagement-bait questions with no substance, hashtag walls,
+    fake urgency, 'game-changer', 'unlock', 'in this thread I'll'."
+
+languages:
+  primary: "English"
+  local: "Dutch"          # local variant generated for NL-targeted posts
+
+# Content pillars, weighted toward the BUYER (a business owner), not other builders. The
+# mix is ~40% proof, 30% problem, 20% teardown/hot-take, 10% build log — proof + problem
+# convert; a dev-facing build/teardown/hot-take rotation grows the wrong audience.
+pillars:
+  - key: proof_demo
+    weight: 4
+    brief: "Show the receptionist actually working — a booking made, a call answered, a
+      reschedule handled, an uptime/latency number, 'it booked an appointment while I slept'.
+      Lead with the concrete result. Written to pair with a screenshot, call recording, or
+      short clip the user attaches."
+  - key: problem
+    weight: 3
+    brief: "Speak to the buyer's pain in money terms. Quantify what missed calls / slow
+      replies cost a specific local business type (e.g. 'a plumber who misses 12 calls a week
+      is leaking ~EUR X/month'), or a sharp before/after. End with a light, non-pushy
+      takeaway. This is the highest-converting angle: educate the problem, don't hard-sell."
+  - key: teardown
+    weight: 2
+    brief: "Tear down a bad customer experience the buyer's own clients hit — a call that
+      rang out, a booking form nobody answers — and show how it should work. OR plainly
+      explain how an AI receptionist actually works. Buyer-relevant, never developer bait."
+  - key: hot_take
+    weight: 2
+    brief: "A sharp, industry-facing opinion aimed at business owners (e.g. 'phone trees are
+      dead', 'your front desk shouldn't cost EUR 3k/month to still miss calls'). Defensible
+      and useful, not an AI/tech debate."
+  - key: build_log
+    weight: 1
+    brief: "An honest behind-the-scenes note on building the receptionist — a decision, a
+      bug, a small win — but tie it back to the customer benefit so it lands with buyers,
+      not just other builders."
+
+# Which platforms get drafted, and how each is delivered.
+# LinkedIn is your HOME platform (B2B buyers live there); X is DISTRIBUTION + personality.
+# The engine drafts native variants for each — never the same string on both.
+platforms:
+  x:
+    enabled: true
+    delivery: auto          # auto-post via API on approval
+    max_chars: 280
+    note: "Distribution/personality. Links OK in-body. Punchier than LinkedIn."
+  linkedin:
+    enabled: true
+    delivery: assisted      # formatted + pushed to you to paste (native posts perform best)
+    note: "Primary B2B channel. No links in the post body (put them in comment 1 / Featured)."
+  reddit:
+    enabled: true
+    delivery: assisted
+    note: "Value-first only. 1-2 high-effort posts/week, posted manually."
+
+# Cadence: how many generation runs per day and how many drafts each run makes.
+# Start conservative; raise once you trust the quality.
+# NOTE: the engine drafts ORIGINAL posts only. The real growth lever — replies/comments
+# (5-10/day on LinkedIn, 20-40/day on X) and DMs — must stay HUMAN; automating them kills
+# reach and trust. See docs/STRATEGY.md.
+cadence:
+  # 'starter' while you warm up; switch to 'growth' or 'aggressive' when ready.
+  active: starter
+  profiles:
+    starter:
+      runs_per_day: 1
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin"]
+    growth:
+      runs_per_day: 2
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin"]
+    aggressive:
+      runs_per_day: 3
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin"]
+  # Reddit is drafted separately, at most this often (days between reddit drafts).
+  reddit_every_days: 3
+  # Local-hour window (24h) to send drafts for approval, so you're not pinged at 3am.
+  quiet_hours_start: 22
+  quiet_hours_end: 8
+  timezone: "Europe/Amsterdam"
+
+# Build-in-public: turn your real git commits into 'build log' posts (/buildlog in the bot).
+buildlog:
+  enabled: true
+  repo_path: ".."           # relative to growth-engine/ — points at the git repo root
+  max_commits: 25           # how many recent commits to consider on the first run
+
+model:
+  id: "claude-opus-4-8"
+  effort: "medium"          # low | medium | high — medium is a good balance for short posts
