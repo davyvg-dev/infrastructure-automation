@@ -41,9 +41,9 @@ or X involved — pure "does Claude produce good drafts."
 - [x] ▶ `python -m src.selftest generate`
 - [x] ✓ You get a pillar, a topic, and an X + LinkedIn variant printed, X under 280 chars.
       (Dutch, proof_demo pillar, X at 262 chars.)
-- [ ] ✓ **Read the output.** Does it sound like you and match the offer? If not, tune
+- [x] ✓ **Read the output.** Does it sound like you and match the offer? If not, tune
       `voice` / `pillars` in the YAML (Step 1) and re-run until the drafts are good.
-      (Founder judgement — review drafts in the dry-run loop before ticking.)
+      (Founder reviewed drafts in the dry-run loop 2026-07-11: "works great".)
 
 **This is the most important gate. Don't move on until the drafts are ones you'd post.**
 
@@ -77,14 +77,15 @@ Needs the four `X_*` values. Verifies auth **without** publishing anything.
 
 Now wire the pieces together, but with posting disabled so mistakes are harmless.
 
-- [ ] ▶ `GROWTH_ENGINE_DRY_RUN=1 python -m src.run`
-- [ ] ✓ You get a "Growth Engine started" message in Telegram.
-- [ ] ▶ Send the bot `/now`.
-- [ ] ✓ A draft arrives with ✅ / ✏️ / ❌ buttons.
-- [ ] ▶ Tap **✏️**, send a note like "punchier hook" → ✓ it returns a rewritten draft.
-- [ ] ▶ Tap **✅** → ✓ it reports the X post as a **dry-run** (not actually posted) and
+- [x] ▶ `GROWTH_ENGINE_DRY_RUN=1 python -m src.run`
+- [x] ✓ You get a "Growth Engine started" message in Telegram.
+- [x] ▶ Send the bot `/now`.
+- [x] ✓ A draft arrives with ✅ / ✏️ / ❌ buttons.
+- [x] ▶ Tap **✏️**, send a note like "punchier hook" → ✓ it returns a rewritten draft.
+- [x] ▶ Tap **✅** → ✓ it reports the X post as a **dry-run** (not actually posted) and
       hands you the LinkedIn text to paste.
-- [ ] ▶ Tap **❌** on another draft → ✓ it marks it skipped.
+- [x] ▶ Tap **❌** on another draft → ✓ it marks it skipped.
+      (Founder walked the full loop in dry-run, 2026-07-11.)
 
 **Everything above happens without a single real post. Confirm the whole loop feels right.**
 
