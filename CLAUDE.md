@@ -1,8 +1,9 @@
 # Claude — operating rules for this repo
 
 ## Project
-Two active parts, one business — Klantkraan (klantkraan.nl), AI receptionists for Dutch trades:
-- `/klantkraan/` — the product + marketing site + sales docs.
+Three active parts, one business — Klantkraan (klantkraan.nl), AI receptionists for Dutch trades:
+- `/klantkraan/` — the product + marketing site + sales docs (voice agent on LiveKit lives here; currently blocked on founder creds).
+- `/ai-receptionist/` — the text-first receptionist (web chat + Telegram + WhatsApp, FastAPI + Claude tool use). The sellable demo and the starting point for client builds; text-first is the delivery path, voice is the upsell.
 - `/growth-engine/` — the content pipeline that markets Klantkraan (Claude drafts → Telegram approval → X auto-post, LinkedIn/Reddit paste-ready). Self-contained Python app.
 
 All other folders are unrelated legacy.
@@ -39,6 +40,16 @@ All other folders are unrelated legacy.
 - Surface errors to the user (Telegram or selftest output); the only swallow allowed is keeping a scheduled loop alive after reporting.
 - Claude API: model + effort come from config (`model.id`, currently `claude-opus-4-8`); adaptive thinking + `output_config.effort`; no `budget_tokens`/`temperature`/`top_p`. Keep the JSON schema and system prompt static (prompt caching); per-request variation goes in the user message.
 - Python 3.11+, stdlib first, type hints, no heavyweight deps. After edits: `python -m py_compile src/*.py` + the relevant selftest.
+
+## ai-receptionist rules
+- `config/<business>.yaml` is the single source of truth (business, persona, services, hours, FAQ, booking rules, model); `BUSINESS_CONFIG` in `.env` selects it. Rebranding for a prospect = a new config file, zero code. The Klantkraan showcase is `config/klantkraan-demo.yaml` (Dutch).
+- One module, one job: `settings` / `calendar_store` / `tools` / `receptionist` / `scaffold` / `notify` / `sessions` / `server` / `channels/` / `selftest`. Channels stay thin: adapters call `sessions.respond(...)`, never `receptionist.run_turn` directly.
+- Test layers in isolation: `python -m app.selftest {config,calendar,agent,chat}` — `config` and `calendar` must stay offline-testable.
+- `calendar_store.py` is the real-integration seam: swap the bodies of `availability()`/`book()` for a client's calendar API, never the signatures.
+- The receptionist only offers slots `check_availability` returned — never invented times, prices, or advice. Enforced in the system prompt; keep it.
+- The greeting always discloses it's a digital assistant (EU AI Act art. 50) — in every config file, every prospect demo.
+- Same Claude API conventions as growth-engine (model + effort from config, adaptive thinking, manual bounded tool loop).
+- The receptionist's Telegram channel needs its OWN bot token — never reuse the growth-engine approval bot (two pollers on one token conflict).
 
 ## Forbidden
 - Cold-call automation (founder constraint).
