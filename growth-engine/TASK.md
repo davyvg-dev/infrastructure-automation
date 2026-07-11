@@ -37,12 +37,13 @@ Needs `ANTHROPIC_API_KEY` in `.env`. This tests generation end to end with **no*
 or X involved — pure "does Claude produce good drafts."
 
 - [x] ▶ Put your Anthropic key in `.env` (see `docs/SETUP.md` §1) — real key in place,
-      auth passes
-- [ ] ▶ `python -m src.selftest generate` — **BLOCKED: account has no API credits; founder
-      must buy credits at console.anthropic.com → Plans & Billing, then re-run**
-- [ ] ✓ You get a pillar, a topic, and an X + LinkedIn variant printed, X under 280 chars.
+      auth passes (credits purchased 2026-07-11)
+- [x] ▶ `python -m src.selftest generate`
+- [x] ✓ You get a pillar, a topic, and an X + LinkedIn variant printed, X under 280 chars.
+      (Dutch, proof_demo pillar, X at 262 chars.)
 - [ ] ✓ **Read the output.** Does it sound like you and match the offer? If not, tune
       `voice` / `pillars` in the YAML (Step 1) and re-run until the drafts are good.
+      (Founder judgement — review drafts in the dry-run loop before ticking.)
 
 **This is the most important gate. Don't move on until the drafts are ones you'd post.**
 
@@ -68,7 +69,7 @@ Needs the four `X_*` values. Verifies auth **without** publishing anything.
 - [x] ✓ It prints "authenticated as @you". If it fails on auth, regenerate the access
       token *after* enabling Read+Write (the usual culprit). (Passed as @davy22036589.)
 
-- [ ] ▶ Run everything together: `python -m src.selftest all` → ✓ all four pass.
+- [x] ▶ Run everything together: `python -m src.selftest all` → ✓ all four pass.
 
 ---
 
