@@ -24,43 +24,44 @@ from .settings import ROOT
 
 CONFIG_DIR = ROOT / "config"
 
-# Home-services (plumbing/heating) template — the niche you're starting with. Tweak the
-# defaults here once and every scaffolded prospect inherits them.
+# Dutch trades template (Klantkraan's niche). Customer-facing text is Dutch (repo style
+# rule); tweak the defaults here once and every scaffolded prospect inherits them.
 _TEMPLATE: dict = {
     "business": {
         "name": "",  # filled from the prospect name
-        "type": "plumbing & heating company",
+        "type": "installatiebedrijf (cv, sanitair, lekkages)",
         "timezone": "Europe/Amsterdam",
         "phone": "+31 20 000 0000",
-        "address": "Amsterdam & surrounding areas",
+        "address": "Amsterdam en omgeving",
     },
     "persona": {
-        "name": "Sam",
+        "name": "Fleur",
         "tone": (
-            "Friendly, calm, and quick — like a helpful person at the front desk. Short "
-            "sentences. Reassuring for urgent problems (a leak, no heating). Confirms "
-            "details back."
+            "Je spreekt Nederlands; schakel alleen naar Engels als de klant in het Engels "
+            "schrijft. Vriendelijk, rustig en snel — als een behulpzame collega aan de balie. "
+            "Korte zinnen. Geruststellend bij spoed (een lekkage, geen verwarming). Bevestig "
+            "details altijd terug."
         ),
         "goals": (
-            "1) Answer the caller's question. 2) If they need a visit, find a time and book "
-            "it. 3) Capture the caller's name, a phone number, and a short description of the "
-            "problem before booking. 4) Treat major leaks or no-heat-in-winter as "
-            "emergencies and offer the soonest slot."
+            "1) Beantwoord de vraag van de klant. 2) Wil de klant een afspraak, zoek dan een "
+            "tijd en plan die in. 3) Vraag vóór het boeken om naam, telefoonnummer en een "
+            "korte omschrijving van het probleem. 4) Behandel grote lekkages of geen "
+            "verwarming in de winter als spoed en bied het eerstvolgende slot aan."
         ),
         "guardrails": (
-            "Only book slots the check_availability tool returns. Never quote exact repair "
-            "prices beyond the services list — give the call-out/inspection price and say "
-            "the engineer confirms on site. Never give DIY safety advice for gas or "
-            "electrical work; advise booking or calling instead. When booking, set the "
-            "service to a short description of the job (e.g. 'Emergency: no hot water'). Keep "
-            "replies short."
+            "Boek alleen tijden die check_availability teruggeeft. Noem geen exacte "
+            "reparatieprijzen buiten de dienstenlijst — noem het starttarief en zeg dat de "
+            "monteur het op locatie bevestigt. Geef nooit doe-het-zelfadvies voor gas- of "
+            "elektrawerk; adviseer een afspraak of bellen. Zet bij het boeken een korte "
+            "omschrijving van de klus als service (bijv. 'Spoed: geen warm water'). Houd "
+            "antwoorden kort. Je bent een digitale assistent en doet je nooit voor als mens."
         ),
     },
     "services": [
-        {"name": "Emergency call-out", "price": "from €90", "duration_min": 60},
-        {"name": "Boiler service", "price": "€120", "duration_min": 60},
-        {"name": "Leak / repair visit", "price": "from €75", "duration_min": 60},
-        {"name": "Quote / inspection", "price": "free", "duration_min": 30},
+        {"name": "Spoedservice (lekkage / storing)", "price": "vanaf €90", "duration_min": 60},
+        {"name": "Cv-ketel onderhoud", "price": "€120", "duration_min": 60},
+        {"name": "Reparatie / lekkage-afspraak", "price": "vanaf €75", "duration_min": 60},
+        {"name": "Offerte / inspectie", "price": "gratis", "duration_min": 30},
     ],
     "hours": {
         "monday": ["08:00", "18:00"],
@@ -72,13 +73,13 @@ _TEMPLATE: dict = {
     },
     "booking": {"slot_minutes": 60, "horizon_days": 14},
     "faq": [
-        {"q": "Do you handle emergencies?",
-         "a": "Yes — we keep emergency call-out slots each day. I can check the soonest time."},
-        {"q": "Do you charge a call-out fee?",
-         "a": "Emergency call-outs start from €90; quotes and inspections are free."},
-        {"q": "What areas do you cover?", "a": "We cover Amsterdam and the surrounding areas."},
-        {"q": "How soon can someone come out?",
-         "a": "It depends on the day — I can check today's availability right now."},
+        {"q": "Doen jullie spoedklussen?",
+         "a": "Ja — we houden elke dag spoedslots vrij. Ik kan direct de eerstvolgende tijd voor u nakijken."},
+        {"q": "Rekenen jullie voorrijkosten?",
+         "a": "Spoedservice vanaf €90; offertes en inspecties zijn gratis."},
+        {"q": "In welke regio werken jullie?", "a": "We werken in de regio en omgeving."},
+        {"q": "Hoe snel kan er iemand komen?",
+         "a": "Dat hangt van de dag af — ik kan nu de beschikbaarheid voor u nakijken."},
     ],
     "greeting": "",  # generated from name + persona
     "model": {"id": "claude-opus-4-8", "effort": "low"},
@@ -90,9 +91,11 @@ def slug(name: str) -> str:
 
 
 def _greeting(business_name: str, persona_name: str) -> str:
+    # "digitale receptionist" stays in every greeting: EU AI Act art. 50 disclosure.
     return (
-        f"Hi! I'm {persona_name} at {business_name}. I can answer questions or book you a "
-        "visit — including emergencies. What do you need?"
+        f"Goedendag! Ik ben {persona_name}, de digitale receptionist van {business_name}. "
+        "Ik beantwoord uw vragen en plan direct een afspraak in — ook bij spoed. Waarmee "
+        "kan ik u helpen?"
     )
 
 
@@ -123,11 +126,11 @@ def write_config(cfg: dict, path: Path) -> None:
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="app.scaffold", description="Scaffold a prospect demo config.")
     parser.add_argument("name", nargs="?", help="The prospect's business name.")
-    parser.add_argument("--type", help="Business type (default: plumbing & heating company).")
+    parser.add_argument("--type", help="Business type (default: installatiebedrijf).")
     parser.add_argument("--phone")
     parser.add_argument("--address")
     parser.add_argument("--timezone")
-    parser.add_argument("--persona", help="Receptionist name (default: Sam).")
+    parser.add_argument("--persona", help="Receptionist name (default: Fleur).")
     parser.add_argument("--force", action="store_true", help="Overwrite if the config exists.")
     args = parser.parse_args(argv[1:])
 
