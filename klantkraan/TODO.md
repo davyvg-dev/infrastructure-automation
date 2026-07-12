@@ -2,6 +2,46 @@
 
 > Living checklist. Tick boxes as we go. Ralph Higgums loop: small step → test → next.
 
+## ACTIVE — Productize sprint (from 2026-07-12 birds-eye audit)
+
+Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and-play per client config, done-for-you setup. Voice = upsell later. Work top-to-bottom; each box = one small verified commit.
+
+### A. Lock the offer (blocks all sales artefacts)
+- [ ] Decide pricing. Recommended: **"Klantkraan Chat" €299/mo** (webchat + WhatsApp receptionist, booking, done-for-you setup) + **"Klantkraan Compleet" €499/mo** (adds voice line, later); €249 one-time setup, waived for pilots. Market anchors (2026-07): Klusio €199 (bundles chat+WhatsApp+voice), Voicelabs €199–399, VoxFlow €99, secretaresse.ai €397 flat, InstallatieTelefoniste €0.25/min no-subscription, human telefoonservice €25–150.
+- [ ] Propagate the locked price everywhere in one pass: `prijzen.astro`, `rekentool.astro`, `docs/00-MASTER-PLAN.md`, `01-strategy/offer-and-pricing.md`, `02-sales/{offerte-template,discovery-script,objection-handling}.md`, `07-finance/{unit-economics,cogs-per-tier}.md`, `04-legal/msa-outline.md`, LinkedIn post 006 (currently: site €349/599/849 vs docs €299/599/999 vs post €450 — three different stories)
+- [ ] Rewrite offer docs voice-first → text-first (master plan §product, offer-and-pricing, discovery script demo flow)
+
+### B. Product hardening (`ai-receptionist/` — make it sellable plug-and-play)
+- [ ] Commit the pending WhatsApp-first site pass (8 modified files + new `contact.ts` + `docs/strategy/zero-touch-audit`)
+- [ ] Art. 50 disclosure into `config/business.yaml` + `config/home-services-example.yaml` (the default config currently ships without it)
+- [ ] WhatsApp webhook signature validation fail-closed (fail-open only behind an explicit dev env flag)
+- [ ] `take_message`: persist leads to disk; only tell the customer "delivered" when notify or persistence actually succeeded (core promise = never lose a lead)
+- [ ] `/chat`: per-IP rate limit + optional API key; catch API errors so they don't 500 raw
+- [ ] Logging `basicConfig` at startup; `/health` endpoint; `HOST`/`PORT` from env (currently hardcoded 127.0.0.1)
+- [ ] Calendar: stop offering already-elapsed slots today; tz-aware datetimes; per-business bookings file (demos currently collide in one shared file)
+- [ ] Session store: lock around read-modify-write; document the single-worker constraint
+- [ ] Decide: prospect configs with real company names/phones in git — keep, or move to gitignored dir
+- [ ] Privacy page: replace the Plausible claim with Cloudflare Web Analytics (what's actually live)
+- [ ] `/over`: remove or gate the dead `kvk-uittreksel` download link until the PDF exists
+
+### C. Repo hygiene
+- [ ] Fix root `.gitignore` (`*.retry .DS_Store` mashed on one line — .DS_Store not actually ignored; add `.wrangler/`)
+- [ ] Delete legacy `Python/`; rewrite root `README.md` to describe Klantkraan
+- [ ] Mark `apps/voice-agent/` as dormant voice upsell (README note), not the active product
+- [ ] growth-engine: tick TASK.md step 6 (first real post went live 2026-07-12), tighten `anthropic` version pin, delete dead `formatting.paste_block`, add `buildlog` to the CLAUDE.md module list
+
+### D. Founder real-world batch (Claude preps, founder executes)
+- [ ] KvK + BTW numbers → new `src/data/company.ts` → renders on `/over`, legal pages, offerte template (founder supplies 2 numbers; one file edit fixes every placeholder)
+- [ ] Upload real KvK-uittreksel PDF → `public/downloads/`
+- [ ] Attach `klantkraan.nl` custom domain (check NS propagation via `dig`, attach via Cloudflare API/wrangler — CLI, no dashboard)
+- [ ] Moneybird trial + Mollie account (walkthrough prepped; needed before first invoice)
+- [ ] Point `/demo` at the live text demo (web chat) instead of the TODO phone number — text demo works today, no CM.com dependency
+
+### E. First pilot (the gate everything else waits behind)
+- [ ] Finish ONE prospect config fully (real services, hours, FAQ — the 6 scaffolds are template defaults)
+- [ ] Deploy the demo publicly (ops/hetzner kit or Cloudflare) at a stable URL
+- [ ] Walk one warm prospect through it; offer pilot terms (free/€99 for 30 days in exchange for case-study data)
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
@@ -137,7 +177,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 ### Demo assets
 - [ ] Public AI demo number (+31 ...) live
 - [x] ROI calculator live (page built; goes live with Pages deploy)
-- [ ] Founder bio page with KVK + DPA download
+- [x] Founder bio page with KVK + DPA download (added to `/over`: founder section + 3-column downloads block; KvK PDF path placeholder until founder uploads)
 
 ## Phase 2 — Pilots + outbound (after Phase 1)
 
