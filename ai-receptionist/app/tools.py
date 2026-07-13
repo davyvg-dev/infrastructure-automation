@@ -51,8 +51,10 @@ TOOLS: list[dict[str, Any]] = [
         "description": (
             "Capture a message for the human team when you can't fully help — a question "
             "you can't answer, a special request, a complaint, or a callback request. "
-            "Always collect the customer's name and a contact first. This notifies the "
-            "owner so a human can follow up."
+            "Always collect the customer's name and a contact first. This saves the "
+            "message and notifies the owner so a human can follow up. If the result has "
+            "ok: false, apologize and give the customer the business phone number instead "
+            "— do not claim the message was passed on."
         ),
         "input_schema": {
             "type": "object",
@@ -78,9 +80,9 @@ def execute(name: str, tool_input: dict[str, Any]) -> str:
             slot=tool_input.get("slot", ""),
         ))
     if name == "take_message":
-        customer = tool_input.get("customer_name", "unknown")
-        contact = tool_input.get("contact", "no contact")
-        message = tool_input.get("message", "")
-        notify.owner(f"📨 Message from {customer} ({contact}):\n{message}")
-        return json.dumps({"ok": True, "delivered": True})
+        return json.dumps(notify.take_message(
+            customer=tool_input.get("customer_name", "unknown"),
+            contact=tool_input.get("contact", "no contact"),
+            message=tool_input.get("message", ""),
+        ))
     return json.dumps({"error": f"Unknown tool: {name}"})
