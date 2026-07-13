@@ -20,26 +20,26 @@ const painStats: PainStat[] = [
 ]
 
 interface Feature {
-  icon: 'phone-call' | 'message-square' | 'star'
+  icon: 'phone' | 'message-square' | 'calendar-check'
   title: string
   body: string
 }
 
 const features: Feature[] = [
   {
-    icon: 'phone-call',
-    title: 'Splitst offerteaanvragen en meerwerk apart',
-    body: 'Neemt op in vlot Nederlands, ook \'s avonds en in het weekend. Splitst offerteaanvragen, meerwerk, leveranciers en spoed apart. \'s Ochtends staat een kort lijstje in uw WhatsApp, voor u de bus instapt.',
-  },
-  {
     icon: 'message-square',
-    title: 'Missed-call SMS binnen 60 seconden',
-    body: 'Mist u een oproep tijdens een werkbezoek, dan krijgt de beller binnen een minuut een Nederlandstalig bericht met een terugbel-link via Cal.com. Geen prospect raakt verloren in een voicemail tussen twee renovaties door.',
+    title: 'Splitst offerteaanvragen en meerwerk apart',
+    body: 'Beantwoordt klantvragen op uw website en via WhatsApp, in vlot Nederlands, ook \'s avonds en in het weekend. Splitst offerteaanvragen, meerwerk, leveranciers en spoed apart. \'s Ochtends staat een kort lijstje in uw WhatsApp, voor u de bus instapt.',
   },
   {
-    icon: 'star',
-    title: 'Google-reviews na elke oplevering',
-    body: 'Op de dag na oplevering stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk. Daarna gaan de Google-sterren werken voor uw vindbaarheid op "aannemer + plaats".',
+    icon: 'calendar-check',
+    title: 'Afspraken direct in uw agenda',
+    body: 'Advies- en inmeet-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail tussen twee renovaties door.',
+  },
+  {
+    icon: 'phone',
+    title: 'Leads en terugbelverzoeken op uw telefoon',
+    body: 'Meldt een opdrachtgever zich tijdens een werkbezoek? De receptionist vangt de aanvraag op en zet haar direct als bericht op uw telefoon, met naam, nummer en projecttype. Geen prospect raakt verloren in een voicemail.',
   },
 ]
 
@@ -52,30 +52,30 @@ interface Faq {
 
 const faqs: Faq[] = [
   {
-    q: 'Werkt het ook met mijn huidige telefoonnummer?',
-    a: 'Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, facturen en Google-vermelding. Doorschakelen kan altijd, alleen \'s avonds, of alleen bij geen gehoor. U bepaalt.',
+    q: 'Hoe komt de receptionist op mijn website?',
+    a: 'Met één klein scriptje dat wij voor u installeren — u hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
   },
   {
     q: 'En als ik op de bouwplaats sta?',
-    a: 'Daar is dit voor gemaakt. De AI-receptionist neemt op, classificeert de oproep (offerteaanvraag, meerwerk-vraag, leverancier, klacht), kwalificeert nieuwe aanvragen op postcode en projecttype, en boekt een terugbel-afspraak in Cal.com. U krijgt een samenvatting per WhatsApp of e-mail. Terugbellen kan in de pauze.',
+    a: 'Daar is dit voor gemaakt. De receptionist beantwoordt de vraag (offerteaanvraag, meerwerk-vraag, leverancier, klacht), kwalificeert nieuwe aanvragen op postcode en projecttype, en plant een afspraak in uw agenda. U krijgt een samenvatting per WhatsApp of e-mail. Terugbellen kan in de pauze.',
   },
   {
-    q: 'Wat als drie klanten tegelijk bellen om een offerteaanvraag?',
-    a: 'De AI handelt oproepen parallel af. Geen wachtrij van één gesprek. Tien klanten kunnen tegelijk bellen, alle tien krijgen direct iemand aan de lijn. Spoed (lekkage, schade, verzekeringsclaim) wordt herkend en gescheiden van planning-aanvragen.',
+    q: 'Wat als drie klanten tegelijk een offerteaanvraag doen?',
+    a: 'De receptionist handelt gesprekken parallel af. Geen wachtrij. Tien klanten kunnen tegelijk chatten of appen, alle tien krijgen direct antwoord. Spoed (lekkage, schade, verzekeringsclaim) wordt herkend en gescheiden van planning-aanvragen.',
   },
   {
     q: 'Hoort de klant dat het AI is?',
-    a: 'Ja. Direct na de begroeting meldt de assistent dat het gesprek door een AI gevoerd wordt, namens uw bedrijf. Geen marketingkeuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
+    a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Geen marketingkeuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
     href: '/legal/ai-disclosure',
     linkLabel: 'Lees de volledige AI-disclosure',
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn tarieven of beschikbaarheid?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen wat u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief inspectie, doorlooptijd op uw planning, vakantieperioden. Onbekende vragen worden nooit verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen wat u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief inspectie, doorlooptijd op uw planning, vakantieperioden. Onbekende vragen worden nooit verzonnen; de klant krijgt dan een terugbelverzoek. Wij testen elke configuratie voor u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
-    a: 'Alles draait in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren gespreksopnamen 30 dagen, tenzij u korter wenst. Geen data naar VS-leveranciers.',
+    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren chatgesprekken 30 dagen, tenzij u korter wenst. De volledige leverancierslijst staat openbaar in ons sub-processorregister.',
     href: '/legal/dpa',
     linkLabel: 'Bekijk DPA en privacyverklaring',
   },
@@ -103,7 +103,7 @@ const faqSchema = {
 
 <Base
   title="Aannemer klanten werven: Klantkraan AI-receptionist voor offertes en bouwplaats"
-  description="Nederlandstalige AI-receptionist voor aannemers. Filtert offerteaanvragen, meerwerk en leveranciers terwijl u op de bouwplaats staat. Automatische missed-call SMS en Google-review automation. Per maand opzegbaar, EU-gehost."
+  description="Nederlandstalige digitale receptionist via websitechat en WhatsApp voor aannemers. Filtert offerteaanvragen, meerwerk en leveranciers, plant afspraken en vangt leads terwijl u op de bouwplaats staat. Per maand opzegbaar, EU-gehost."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -116,16 +116,16 @@ const faqSchema = {
           De <span class="text-(--color-kraan-rust)">Klantenmotor</span> voor aannemers.
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-          Houdt offerteaanvragen, meerwerk en leveranciers apart. Belt iemand om 19:30 over een
-          verbouwing terwijl u nog op de bouwplaats staat? De AI-receptionist neemt op. Geen
-          voicemail meer.
+          Houdt offerteaanvragen, meerwerk en leveranciers apart. Stelt iemand om 19:30 een vraag
+          over een verbouwing terwijl u nog op de bouwplaats staat? De digitale receptionist
+          beantwoordt hem — op uw website en via WhatsApp. Geen gemiste aanvraag meer.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
             href="/demo"
             class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
           >
-            Probeer de demo
+            Plan een demo
           </a>
           <a
             href="/rekentool"
@@ -217,7 +217,7 @@ const faqSchema = {
       </h2>
       <div class="mt-8 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6 md:p-10">
         <p class="text-h3 text-(--color-kraan-ink)">
-          Mist u 2 offerteaanvragen per maand à €12.000? Dat is <strong class="text-(--color-kraan-rust)">€288.000 verloren omzet per jaar</strong>.
+          Mist u 2 offerteaanvragen per maand à €12.000? Dat is <strong class="text-(--color-kraan-rust)">circa €95.000 verloren omzet per jaar</strong>.
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
           Klantkraan Chat is €299 per maand. Eén extra renovatie per jaar dekt ruim drie jaar abonnement. Daarna telt
@@ -239,7 +239,8 @@ const faqSchema = {
         </div>
         <p class="mt-6 text-micro text-(--color-kraan-stone-500)">
           Bedragen excl. 21% BTW. Voorbeeld op basis van branche-gemiddelde €12k per
-          verbouwings-/renovatie-offerte (bron: BNA / Aedes 2024 benchmarks).
+          verbouwings-/renovatie-offerte (bron: BNA / Aedes 2024 benchmarks) en de aanname dat
+          ongeveer 1 op 3 gemiste aanvragen een betalende klus had opgeleverd (33% conversiekans).
         </p>
       </div>
     </div>
@@ -287,7 +288,7 @@ const faqSchema = {
         Klaar om geen verbouwingsaanvraag meer te missen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Acht minuten demo. Daarna weet u hoe hij offerteaanvragen, meerwerk-vragen en
+        Plan een live demo. Daarna weet u hoe hij offerteaanvragen, meerwerk-vragen en
         leveranciers uit elkaar houdt. En hoe dat in uw WhatsApp landt.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
@@ -295,7 +296,7 @@ const faqSchema = {
           href="/demo"
           class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
-          Probeer de demo
+          Plan een demo
         </a>
         <a
           href="/prijzen"

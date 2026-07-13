@@ -40,7 +40,7 @@ const lastUpdated = '20 mei 2026'
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Niet-toerekenbare Downtime</td>
-              <td class="py-2">Uitval die niet aan Klantkraan is toe te rekenen: sub-processor outage (Synthflow, CM.com, Anthropic, Cloudflare), internetstoring, overmacht, besluit van de toezichthouder of door Klant veroorzaakte issues.</td>
+              <td class="py-2">Uitval die niet aan Klantkraan is toe te rekenen: sub-processor outage (Anthropic, Twilio, Cloudflare), internetstoring, overmacht, besluit van de toezichthouder of door Klant veroorzaakte issues.</td>
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Service Credit</td>
@@ -108,13 +108,13 @@ const lastUpdated = '20 mei 2026'
           <tbody class="divide-y divide-(--color-kraan-stone-300)">
             <tr>
               <td class="py-2 pr-4">S1 &mdash; Critical</td>
-              <td class="py-2 pr-4">Volledige dienst-uitval, geen calls worden afgehandeld.</td>
+              <td class="py-2 pr-4">Volledige dienst-uitval, geen gesprekken worden afgehandeld.</td>
               <td class="py-2 pr-4">&le; 30 min</td>
               <td class="py-2">&le; 4 uur</td>
             </tr>
             <tr>
               <td class="py-2 pr-4">S2 &mdash; High</td>
-              <td class="py-2 pr-4">Significant deel uitgevallen (bijvoorbeeld SMS werkt niet).</td>
+              <td class="py-2 pr-4">Significant deel uitgevallen (bijvoorbeeld WhatsApp werkt niet).</td>
               <td class="py-2 pr-4">&le; 2 uur</td>
               <td class="py-2">&le; 8 uur werkuren</td>
             </tr>
@@ -142,16 +142,17 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-kraan-ink)">6. Statuspagina</h2>
       <p class="text-body">
-        De statuspagina is bereikbaar op
-        <span class="font-mono">status.klantkraan.nl</span> en toont per dienst-component
-        (marketing-site, automation-engine, API, Synthflow, CM.com, database) de actuele status.
+        Zodra de statuspagina live is op
+        <span class="font-mono">status.klantkraan.nl</span>, toont deze per dienst-component
+        (marketing-site, API, chat-kanalen, database) de actuele status. Tot die tijd melden wij
+        storingen per e-mail en WhatsApp.
       </p>
     </section>
 
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-kraan-ink)">7. Beperkingen</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
-        <li>Klant meldt het incident via <a href="mailto:support@klantkraan.nl">support@klantkraan.nl</a> of WhatsApp om credit-recht in te roepen.</li>
+        <li>Klant meldt het incident via <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a> of WhatsApp om credit-recht in te roepen.</li>
         <li>Credit-aanvragen moeten binnen 30 dagen na het incident worden ingediend.</li>
         <li>Geen credits voor downtime tijdens trial of de eerste 50%-korting-maand.</li>
       </ul>

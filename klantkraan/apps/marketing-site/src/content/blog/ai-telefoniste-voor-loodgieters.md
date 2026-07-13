@@ -1,6 +1,6 @@
 ---
 title: 'AI-telefoniste voor loodgieters: wat het wel en niet kan in 2026'
-description: 'Wat een AI-telefoniste voor loodgieters wel en niet doet. Eerlijke uitleg, Nederlandse audio-demo, kosten en wanneer het zin heeft.'
+description: 'Wat een AI-telefoniste voor loodgieters wel en niet doet. Eerlijke uitleg, kosten, en waarom u vandaag al kunt starten met chat en WhatsApp.'
 pubDate: 2026-05-20
 author: 'Klantkraan'
 vertical: 'loodgieter'
@@ -26,7 +26,7 @@ In de praktijk doet hij vier dingen:
 - Hij **neemt op binnen één tot twee keer overgaan**, ook 's avonds, in het weekend en tijdens uw werk.
 - Hij **stelt de juiste vragen**: spoed of geen spoed, welk type klus, welk postcodegebied, BV of particulier.
 - Hij **plant een terugbelafspraak** in uw agenda (bijvoorbeeld Cal.com) of zet de oproep door als het écht spoed is.
-- Hij **stuurt een SMS naar de beller** met bevestiging en uw vaste tarieven, zodat er geen ruis ontstaat.
+- Hij **stuurt een schriftelijke bevestiging** met uw vaste tarieven, zodat er geen ruis ontstaat.
 
 De stem is Nederlandstalig, niet vertaald uit het Engels. Geen accent, geen robotklank.
 
@@ -36,7 +36,7 @@ Hier wordt het vaak misleidend verkocht, dus we zijn direct.
 
 - Hij **kan geen lekkage diagnosticeren** door de telefoon. Hij vraagt wel de juiste informatie uit zodat u dat zelf snel inschat.
 - Hij **kan geen offerte op maat schrijven** voor een badkamerrenovatie. Hij plant wel een opname-afspraak en stuurt het intakeformulier.
-- Hij **kan een boze klant niet kalmeren** zoals een mens dat kan. Bij sterke emotie schakelt hij door naar u of naar voicemail met directe SMS-alert.
+- Hij **kan een boze klant niet kalmeren** zoals een mens dat kan. Bij sterke emotie geeft hij het gesprek aan u door, met een directe melding op uw telefoon.
 - Hij **kan niet onderhandelen over prijs**. Hij noemt uw tarief, punt.
 - Hij **vervangt geen monteur**. Een AI-telefoniste vervangt het stuk werk *vóór* de monteur: de opname, de planning, de bevestiging.
 
@@ -76,22 +76,22 @@ Bij alle andere profielen — owner-operator met twee tot acht monteurs, Randsta
 
 ## EU AI Act en uw verantwoordelijkheid
 
-Sinds februari 2025 moet u onder **artikel 50 van de EU AI Act** uw bellers expliciet melden dat ze met een AI praten. Niet in kleine lettertjes. Gewoon in de eerste of tweede zin.
+Onder **artikel 50 van de EU AI Act** moet u uw klanten expliciet melden dat ze met een AI praten — aan de telefoon én in de chat. Niet in kleine lettertjes. Gewoon in de eerste zin.
 
-Onze standaard-opener is:
+Onze standaardbegroeting in de chat luidt:
 
-> *Goedendag, u spreekt met de virtuele assistent van \[Bedrijf]. Dit gesprek voer ik als AI namens hen, conform de Europese AI-wet. Wat kan ik voor u betekenen?*
+> *Goedendag, u chat met de digitale assistent van \[Bedrijf]. Dit gesprek wordt gevoerd door een AI-systeem. Waarmee kan ik u helpen?*
 
-Bellers vinden dit prima. Sterker: ze waarderen de directheid. Wie u een product verkoopt dat deze disclosure verstopt of "optioneel" maakt, brengt u in juridisch risico. Vraag er altijd naar.
+Klanten vinden dit prima. Sterker: ze waarderen de directheid. Wie u een product verkoopt dat deze disclosure verstopt of "optioneel" maakt, brengt u in juridisch risico. Vraag er altijd naar.
 
-## Hoe begin u met een AI-telefoniste
+## Hoe begint u vandaag
 
-In één werkdag is een Nederlandstalige AI-telefoniste live op uw bestaande nummer. De stappen:
+De telefonische variant komt eraan als onderdeel van onze Compleet-laag. Wat vandaag al kan: dezelfde AI-receptionist via **websitechat en WhatsApp** — het kanaal waar een groeiend deel van uw klanten toch al de voorkeur aan geeft. In één werkdag live. De stappen:
 
-1. **Demo van 20 minuten** met uw eigen telefoonnummer als test. Geen presentatie, gewoon bellen en luisteren.
-2. **Promptcustomisatie**: uw tarieven, voorrijkosten, postcodegebied, beste-tijden-om-terug-te-bellen, doorzet-nummer voor spoed.
-3. **Bel-doorverwijzing instellen** via uw provider (KPN, Odido, Voys, T-Mobile). Meestal *21\#nummer\# voor altijd-doorschakelen of *61\#nummer\# voor alleen-bij-geen-gehoor.
-4. **Twee weken meelopen**: u krijgt elke transcriptie als SMS-samenvatting, past de prompt aan waar nodig.
+1. **Demo van 20 minuten**: u chat zelf met de receptionist, ingesteld op een loodgietersbedrijf. Geen presentatie, gewoon proberen.
+2. **Promptcustomisatie**: uw tarieven, voorrijkosten, postcodegebied, spoedafspraken.
+3. **Chatwidget op uw website** plaatsen (één regel code) en uw WhatsApp-nummer koppelen.
+4. **Twee weken meelopen**: u ontvangt elk gesprek als samenvatting, en past de prompt aan waar nodig.
 5. **Maandelijkse afrekening**, opzegbaar wanneer u wilt.
 
 Geen lange contracten, geen "we komen langs voor een intake". Eenmalige setup €249, kwijtgescholden voor pilotklanten. Alles op afstand, in vlot Nederlands.
@@ -102,7 +102,7 @@ Geen lange contracten, geen "we komen langs voor een intake". Eenmalige setup �
 Ja. De stemmodellen die in 2026 in Nederland worden gebruikt, zijn getraind op Nederlandse spraakdata. Geen vertaling, geen accent. Bellers herkennen dat het een AI is omdat we het zeggen (artikel 50 EU AI Act), niet aan de uitspraak.
 
 **Wat gebeurt er bij echte spoed, zoals een gesprongen leiding?**
-De prompt staat in op spoeddetectie. Bij triggers als "water", "lek", "stroomt" of "noodgeval" schakelt de AI direct door naar uw spoednummer of stuurt hij u een SMS met de naam en het adres van de beller binnen 30 seconden, zodat u terug kunt bellen.
+De prompt staat in op spoeddetectie. Bij triggers als "water", "lek", "stroomt" of "noodgeval" stuurt de AI u direct een melding met de naam en contactgegevens van de klant, zodat u meteen kunt bellen.
 
 **Wat als de beller geen Nederlands spreekt?**
 De AI herkent Engels en Pools als veelvoorkomende secundaire talen in Nederland. Voor andere talen biedt hij aan om in eenvoudig Engels door te gaan of een terugbelafspraak te plannen met vertaling via tekst.
@@ -117,6 +117,6 @@ Ja. Voorrijkosten, spoedtoeslag, materiaalopslag, postcodegebied, openingstijden
 
 Bereken eerst uw eigen verlies met de [rekentool](/rekentool). Drie velden invullen, antwoord in tien seconden.
 
-Als het bedrag boven de €1.000 per maand uitkomt, [plan een demo](/demo) van 20 minuten. We laten u dezelfde middag horen hoe het op uw nummer klinkt, zonder verkooppraatje en zonder verplichting.
+Als het bedrag boven de €1.000 per maand uitkomt, [plan een demo](/demo) van 20 minuten. U chat dezelfde middag zelf met de receptionist, zonder verkooppraatje en zonder verplichting.
 
-[Bekijk prijzen](/prijzen). Vanaf €299 per maand voor Klantkraan Chat (websitechat + WhatsApp), €499 voor Compleet inclusief AI-telefonist, BTW excl., per maand opzegbaar.
+[Bekijk prijzen](/prijzen). Vanaf €299 per maand voor Klantkraan Chat (websitechat + WhatsApp), €499 voor Compleet inclusief AI-telefonist zodra die beschikbaar is, BTW excl., per maand opzegbaar.

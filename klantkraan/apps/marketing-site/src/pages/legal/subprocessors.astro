@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro'
 
-const lastUpdated = '20 mei 2026'
+const lastUpdated = '13 juli 2026'
 
 type Subprocessor = {
   name: string
@@ -14,7 +14,7 @@ type Subprocessor = {
 const subprocessors: Subprocessor[] = [
   {
     name: 'Hetzner',
-    purpose: 'Hosting van de VPS (n8n, automation-engine, monitoring).',
+    purpose: 'Hosting van de VPS (applicatie-server, monitoring).',
     location: 'EU (Falkenstein DE, Helsinki FI)',
     transfer: 'Geen doorgifte buiten de EER.',
     dpa: 'https://www.hetzner.com/AV/DPA_en.pdf',
@@ -34,32 +34,18 @@ const subprocessors: Subprocessor[] = [
     dpa: 'https://www.cloudflare.com/cloudflare-customer-dpa/',
   },
   {
-    name: 'Synthflow',
-    purpose: 'Voice-agent runtime voor de AI-receptionist.',
-    location: 'EU-regio geconfigureerd, leverancier in de VS',
-    transfer: 'SCC 2021/914 plus aanvullende technische maatregelen.',
-    dpa: 'https://docs.synthflow.ai/privacy-policy',
-  },
-  {
-    name: 'ElevenLabs',
-    purpose: 'Text-to-speech (Dutch voice) via Synthflow.',
-    location: 'VS',
-    transfer: 'SCC 2021/914.',
-    dpa: 'https://elevenlabs.io/legal',
-  },
-  {
     name: 'Anthropic',
-    purpose: 'LLM-inference (Claude) voor content- en gespreksondersteuning.',
-    location: 'VS',
+    purpose: 'AI-antwoorden van de receptionist (Claude API).',
+    location: 'VS; verwerking van EU-data via API',
     transfer: 'SCC 2021/914 plus aanvullende technische maatregelen.',
-    dpa: 'https://www.anthropic.com/legal/data-processing-addendum',
+    dpa: 'https://www.anthropic.com/legal/commercial-terms',
   },
   {
-    name: 'CM.com',
-    purpose: 'SMS en telefonie (Nederlandse landlines).',
-    location: 'NL',
-    transfer: 'Geen doorgifte buiten de EER.',
-    dpa: 'https://www.cm.com/nl-nl/app/legal/',
+    name: 'Twilio',
+    purpose: 'WhatsApp-kanaal van de AI-receptionist.',
+    location: 'VS, EU-regio waar beschikbaar',
+    transfer: 'SCC 2021/914.',
+    dpa: 'https://www.twilio.com/en-us/legal/data-protection-addendum',
   },
   {
     name: 'Mollie',
@@ -158,6 +144,10 @@ const subprocessors: Subprocessor[] = [
           </tbody>
         </table>
       </div>
+      <p class="text-small text-(--color-kraan-stone-700)">
+        Sub-processors voor het AI-telefonie-kanaal (voice) worden aangekondigd zodra die dienst
+        live gaat, met de gebruikelijke aankondigingstermijn van 30 dagen.
+      </p>
     </section>
 
     <section class="mt-10 space-y-4">
@@ -166,7 +156,7 @@ const subprocessors: Subprocessor[] = [
         Klanten kunnen binnen 30 dagen na aankondiging van een nieuwe sub-processor schriftelijk
         bezwaar maken. Indien er geen alternatieve oplossing mogelijk is, heeft de klant in dat
         geval een opzeggingsrecht zonder kosten. Bezwaren naar
-        <a href="mailto:privacy@klantkraan.nl">privacy@klantkraan.nl</a>.
+        <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a>.
       </p>
     </section>
 

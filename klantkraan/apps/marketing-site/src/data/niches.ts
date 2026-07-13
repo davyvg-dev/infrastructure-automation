@@ -6,7 +6,7 @@
 export type NicheSlug = 'loodgieter' | 'dakdekker' | 'schilder' | 'aannemer'
 
 export interface Feature {
-  icon: 'phone-call' | 'message-square' | 'star'
+  icon: 'phone' | 'message-square' | 'calendar-check'
   title: string
   body: string
 }
@@ -43,61 +43,61 @@ export interface Niche {
 const sharedFeatures = (kind: NicheSlug): Feature[] => {
   // The three core modules are identical product-wise but the framing changes
   // per niche so the page reads as written for that trade.
-  const reviewLine = {
+  const leadLine = {
     loodgieter:
-      'De volgende ochtend om 10:00 stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk.',
+      'Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam, nummer en de vraag van de klant. Geen klant raakt verloren in een voicemail.',
     dakdekker:
-      'Na de dakinspectie of oplevering stuurt het systeem automatisch een korte review-uitnodiging. Soft follow-up op dag 7. Uw lokale ranking voor "dakdekker + plaats" stijgt zonder dat u erover hoeft na te denken.',
+      'Meldt iemand een lekkage terwijl u op een dak staat? De receptionist vangt de melding op en zet hem direct als bericht op uw telefoon, met naam, nummer en adres. Geen lekkage-melding raakt verloren.',
     schilder:
-      'Op de dag na oplevering stuurt het systeem een korte review-uitnodiging aan uw klant. Soft follow-up per e-mail op dag 7. Geen handmatig werk — uw lokale ranking voor "schilder + plaats" stijgt vanzelf.',
+      'Vraagt een particulier na werktijd een offerte aan? De receptionist vangt de aanvraag op en zet hem direct als bericht op uw telefoon. Geen prospect raakt verloren terwijl u op de stelling staat.',
     aannemer:
-      'Na elke oplevering stuurt het systeem automatisch een korte review-uitnodiging. Soft follow-up per e-mail op dag 7. Pasende reviews per project-type — verbouwing, dakkapel, badkamer — versterken uw lokale autoriteit.',
+      'Meldt een opdrachtgever zich tijdens een inmeet-bezoek? De receptionist vangt de aanvraag op en zet hem direct als bericht op uw telefoon. Geen prospect raakt verloren in een voicemail.',
   }[kind]
   return [
     {
-      icon: 'phone-call',
-      title: 'AI-receptionist die uw vak spreekt',
-      body: {
-        loodgieter:
-          "Neemt op in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
-        dakdekker:
-          "Neemt op in vlot Nederlands, ook 's avonds en in het weekend. Kent uw inspectietarief, spoedtoeslag bij lekkage en regio-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
-        schilder:
-          "Neemt op in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, m²-tarief binnen en buiten, kleurproef-meerprijs en spuitwerk-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
-        aannemer:
-          "Neemt op in vlot Nederlands, ook 's avonds en in het weekend. Kent uw uurtarief, het verschil tussen advies-, inmeet- en regiebezoek, en uw regio — en noemt alleen tarieven die u zelf heeft ingesteld.",
-      }[kind],
-    },
-    {
       icon: 'message-square',
-      title: 'Missed-call SMS binnen 60 seconden',
+      title: 'Digitale receptionist op uw site en WhatsApp',
       body: {
         loodgieter:
-          'Mist u een oproep, dan krijgt de beller binnen een minuut een Nederlandstalig bericht met een directe terugbel-link via Cal.com. Geen klant raakt verloren in een voicemail.',
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
         dakdekker:
-          'Mist u een oproep tijdens een dakinspectie of bij stormwacht, dan krijgt de beller binnen een minuut een Nederlandstalig bericht met een terugbel-link via Cal.com. Geen lekkage-melding raakt verloren.',
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw inspectietarief, spoedtoeslag bij lekkage en regio-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
         schilder:
-          'Belt een particulier na werktijd voor een offerte? De beller krijgt direct een Nederlandstalig bericht met een terugbel-link via Cal.com. Geen prospect raakt verloren in een voicemail terwijl u op de stelling staat.',
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, m²-tarief binnen en buiten, kleurproef-meerprijs en spuitwerk-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
         aannemer:
-          'Belt een opdrachtgever tijdens een inmeet-bezoek? Klantkraan stuurt binnen 60 seconden een Nederlandstalig bericht met een directe terugbel-link via Cal.com. Geen prospect raakt verloren in een voicemail.',
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw uurtarief, het verschil tussen advies-, inmeet- en regiebezoek, en uw regio — en noemt alleen tarieven die u zelf heeft ingesteld.",
       }[kind],
     },
     {
-      icon: 'star',
-      title: 'Google-reviews na elke klus',
-      body: reviewLine,
+      icon: 'calendar-check',
+      title: 'Afspraken direct in uw agenda',
+      body: {
+        loodgieter:
+          'De receptionist plant terugbel- en klusafspraken rechtstreeks in uw agenda — alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail.',
+        dakdekker:
+          'Inspectie- en offerte-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. U ziet elke ochtend wat er op de planning staat.',
+        schilder:
+          'Opname- en offerte-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail.',
+        aannemer:
+          'Advies- en inmeet-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. U ziet elke ochtend wat er op de planning staat.',
+      }[kind],
+    },
+    {
+      icon: 'phone',
+      title: 'Leads en terugbelverzoeken op uw telefoon',
+      body: leadLine,
     },
   ]
 }
 
 const baseFaqs: Faq[] = [
   {
-    q: 'Werkt het ook met mijn huidige telefoonnummer?',
-    a: "Ja. Wij koppelen Klantkraan aan uw bestaande nummer via een doorschakeling. U houdt hetzelfde nummer op uw bus, visitekaartjes en Google-vermelding. Doorschakelen kan altijd, alleen 's avonds, of alleen bij geen gehoor — u bepaalt.",
+    q: 'Hoe komt de receptionist op mijn website?',
+    a: 'Met één klein scriptje dat wij voor u installeren — u hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
   },
   {
     q: 'Hoort de klant dat het AI is?',
-    a: 'Ja. Direct na de begroeting meldt de assistent dat het gesprek door een AI gevoerd wordt, namens uw bedrijf. Dat is geen marketing-keuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
+    a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketing-keuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
     href: '/legal/ai-disclosure',
     linkLabel: 'Lees de volledige AI-disclosure',
   },

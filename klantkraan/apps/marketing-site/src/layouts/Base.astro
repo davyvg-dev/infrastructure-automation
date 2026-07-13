@@ -15,9 +15,11 @@ interface Props {
    * own their own bg + width (used by pages with full-bleed alt-bg sections).
    */
   centered?: boolean
+  /** When true: emit a robots noindex meta (private pages like /r/ dashboards). */
+  noindex?: boolean
 }
 
-const { title, description, canonical, centered = true } = Astro.props
+const { title, description, canonical, centered = true, noindex = false } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
 ---
@@ -28,6 +30,7 @@ const ogImage = new URL('/og-default.png', Astro.site).toString()
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>

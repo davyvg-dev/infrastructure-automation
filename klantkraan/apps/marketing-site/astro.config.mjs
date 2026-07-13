@@ -14,7 +14,12 @@ export default defineConfig({
       enabled: true,
     },
   }),
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // /r/* are private per-client dashboards — keep them out of the sitemap.
+      filter: (page) => !page.includes('/r/'),
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     server: {

@@ -30,7 +30,7 @@ const niche = niches[nicheSlug]
 const combo = wave1.find((c) => c.city === citySlug && c.niche === nicheSlug)!
 
 const pageTitle = `${niche.label} in ${city.name}: Klantkraan AI-receptionist`
-const pageDescription = `${niche.label} in ${city.name}? Klantkraan helpt ${niche.labelPlural} in ${city.name} gemiste oproepen terug te bellen, reviews te verzamelen en klanten te boeien. Per maand opzegbaar.`
+const pageDescription = `${niche.label} in ${city.name}? De digitale receptionist van Klantkraan beantwoordt klantvragen via websitechat en WhatsApp, plant afspraken en vangt leads — 24/7. Per maand opzegbaar.`
 
 // Merge FAQs: 2 city-named first (per blueprint thin-content rule), then 4 base.
 const faqs: Faq[] = [...combo.cityFaqs, ...niche.baseFaqs]
@@ -127,15 +127,15 @@ const serviceSchema = {
         {niche.label} in <span class="text-(--color-kraan-rust)">{city.name}</span>.
       </h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-        Een Nederlandstalige AI-receptionist die uw tarieven kent en uw oproepen 24/7 opneemt. Ook
-        wanneer u in {city.name} op locatie zit.
+        Een Nederlandstalige digitale receptionist op uw website en WhatsApp die uw tarieven kent
+        en klantvragen 24/7 beantwoordt. Ook wanneer u in {city.name} op locatie zit.
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
         <a
           href="/demo"
           class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
         >
-          Probeer de demo
+          Plan een demo
         </a>
         <a
           href="/rekentool"
@@ -374,15 +374,15 @@ const serviceSchema = {
         Klaar om geen klus in {city.name} meer te missen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Een demo van acht minuten op uw eigen nummer is de snelste manier om te horen wat Klantkraan
-        voor uw bedrijf in {city.name} doet.
+        Een live demo via WhatsApp is de snelste manier om te zien wat Klantkraan voor uw bedrijf
+        in {city.name} doet.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
           href="/demo"
           class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
-          Probeer de demo
+          Plan een demo
         </a>
         <a
           href="/prijzen"
