@@ -9,7 +9,7 @@
 | | Detail |
 |---|---|
 | **Trigger** | 12 active clients (M5-6 base case) — NOT M8 |
-| **Role** | Onboarding ops, SMS template QA, review-pipeline monitoring, intake-form gap-filling, weekly stats email QA |
+| **Role** | Onboarding ops, WhatsApp welcome QA, lead-notification monitoring, intake-extraction gap-filling (prices), weekly stats QA |
 | **Hours** | 30/mo to start (1.5h/day weekdays) |
 | **Rate** | €20/hr (NL VA market) |
 | **Cost** | €600/mo |
