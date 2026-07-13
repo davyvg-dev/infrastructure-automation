@@ -12,29 +12,42 @@ import threading
 import uuid
 from datetime import date, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from . import notify
-from .settings import DATA_DIR, business, ensure_dirs
+from .settings import DATA_DIR, business, config_path, ensure_dirs
 
-_BOOKINGS_PATH = DATA_DIR / "bookings.json"
 _lock = threading.Lock()
 
 _WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 
+def _bookings_path() -> Any:
+    # One file per business config, so prospect demos don't share (and collide on) slots.
+    return DATA_DIR / f"bookings-{config_path().stem}.json"
+
+
+def _now() -> datetime:
+    """Naive 'now' in the business's own timezone — the frame all slot strings live in."""
+    tz = business()["business"].get("timezone", "Europe/Amsterdam")
+    return datetime.now(ZoneInfo(tz)).replace(tzinfo=None)
+
+
 def _load() -> list[dict[str, Any]]:
-    if not _BOOKINGS_PATH.exists():
+    path = _bookings_path()
+    if not path.exists():
         return []
-    with _BOOKINGS_PATH.open(encoding="utf-8") as fh:
+    with path.open(encoding="utf-8") as fh:
         return json.load(fh)
 
 
 def _save(bookings: list[dict[str, Any]]) -> None:
     ensure_dirs()
-    tmp = _BOOKINGS_PATH.with_suffix(".json.tmp")
+    path = _bookings_path()
+    tmp = path.with_suffix(".json.tmp")
     with tmp.open("w", encoding="utf-8") as fh:
         json.dump(bookings, fh, ensure_ascii=False, indent=2)
-    tmp.replace(_BOOKINGS_PATH)
+    tmp.replace(path)
 
 
 def _slots_for_day(day: date) -> list[str]:
@@ -47,9 +60,11 @@ def _slots_for_day(day: date) -> list[str]:
     step = int(cfg["booking"]["slot_minutes"])
     cur = datetime.combine(day, open_t)
     end = datetime.combine(day, close_t)
+    now = _now()
     out = []
     while cur + timedelta(minutes=step) <= end:
-        out.append(cur.strftime("%Y-%m-%d %H:%M"))
+        if cur > now:  # never offer a slot that has already started
+            out.append(cur.strftime("%Y-%m-%d %H:%M"))
         cur += timedelta(minutes=step)
     return out
 
@@ -75,7 +90,7 @@ def availability(on_date: str | None = None, days: int = 5) -> dict[str, Any]:
             return {"error": f"Could not parse date '{on_date}'. Use YYYY-MM-DD."}
         return {"date": on_date, "open_slots": free(day)}
 
-    today = date.today()
+    today = _now().date()
     result: dict[str, list[str]] = {}
     checked = 0
     while len(result) < days and checked < horizon:
