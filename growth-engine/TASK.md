@@ -93,10 +93,13 @@ Now wire the pieces together, but with posting disabled so mistakes are harmless
 
 ## Step 6 — First real post
 
-- [ ] ▶ Stop the dry-run. Start for real: `python -m src.run`
-- [ ] ▶ `/now`, review a draft, tap **✅**.
-- [ ] ✓ It posts to X and returns the live URL; LinkedIn text arrives to paste.
-- [ ] ▶ Check the post actually on X. 🎉
+- [x] ▶ Stop the dry-run. Start for real: `python -m src.run`
+- [x] ▶ `/now`, review a draft, tap **✅**.
+- [x] ✓ It posts to X and returns the live URL; LinkedIn text arrives to paste.
+- [x] ▶ Check the post actually on X. 🎉
+
+(Done 2026-07-12 — first live post approved via the bot; URL recorded in
+`data/queue.json`, draft `20260712-85ed`.)
 
 ---
 
@@ -112,7 +115,8 @@ Now wire the pieces together, but with posting disabled so mistakes are harmless
 ## Step 8 — Decide where it runs long-term
 
 - [ ] ▶ Pick a home for the always-on process (laptop → small VPS → free Fly/Railway).
-      See `docs/SETUP.md` "Where to run it long-term".
+      See `docs/SETUP.md` "Where to run it long-term". A ready systemd unit + deploy
+      script for Hetzner already exists at `../ops/hetzner/` (growth-engine.service).
 - [ ] ▶ No always-on host? Activate the headless path: copy `deploy/github-actions.yml`
       to `.github/workflows/` and add the secrets. It generates + pushes drafts for manual
       posting (no X auto-post in that mode).

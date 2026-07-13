@@ -32,7 +32,7 @@ All other folders are unrelated legacy.
 
 ## growth-engine rules
 - `config/content_strategy.yaml` is the single source of truth for offer, voice, pillars, platforms, cadence, model. **Config over code**: only touch `.py` files for *how* it works, never for *what* it says.
-- One module, one job: `settings` / `store` / `ideas` / `prompts` / `generate` / `formatting` / `publish_x` / `bot` / `push` / `selftest`. Don't merge them.
+- One module, one job: `settings` / `store` / `ideas` / `prompts` / `generate` / `formatting` / `publish_x` / `bot` / `push` / `buildlog` / `selftest`. Don't merge them.
 - Test layers in isolation: `python -m src.selftest <config|generate|telegram|x|all>`. Follow `TASK.md` gates in order.
 - **Never post during development** — set `GROWTH_ENGINE_DRY_RUN=1` when running the bot.
 - Secrets live in `.env` (gitignored, as is `data/`). New secret → also add to `.env.example`.

@@ -25,11 +25,6 @@ def preview(draft: dict[str, Any]) -> str:
     return "\n".join(lines).strip()
 
 
-def paste_block(platform: str, text: str) -> str:
-    """A clean, code-fenced block the user can one-tap copy on mobile."""
-    return f"Copy this for *{_esc(_LABELS.get(platform, platform))}*:\n```\n{text}\n```"
-
-
 def _esc(text: str) -> str:
     """Escape Telegram MarkdownV2 special chars."""
     specials = r"_*[]()~`>#+-=|{}.!"
