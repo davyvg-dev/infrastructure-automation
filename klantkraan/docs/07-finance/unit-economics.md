@@ -1,36 +1,29 @@
 # Unit Economics
 
-> **Headline**: 95% gross margin, <1 month payback, LTV/CAC > 30× even in pessimistic scenarios. The constraint is not economics — it's distribution and founder throughput.
+> Herzien 2026-07-13 for the two-tier text-first pricing (€299 Chat / €499 Compleet, €249 setup waived for pilots). **Headline**: ~97% gross margin on Chat, <1 month payback, LTV/CAC > 40× even in pessimistic scenarios. The constraint is not economics — it's distribution and founder throughput.
 
-## ARPU (blended)
+## ARPU
 
-Mix assumption: 30% Lite / 55% Pro / 15% Max.
+Voice (Compleet) is not yet live, so the planning ARPU is **Chat-only €299**. Once voice ships, target mix 70% Chat / 30% Compleet.
 
-| Tier | List price | Annual-prepay drag (-15% on 15% of mix) | Net ARPU |
-|---|---|---|---|
-| Lite | €299 | – | €299 |
-| Pro | €599 | – | €599 |
-| Max | €999 | – | €999 |
-| **Blended (list)** | **€569** | | |
-| **Blended (net)** | | ~5% prepay drag | **~€540** |
+| Scenario | List ARPU | Net ARPU (~5% prepay drag) |
+|---|---|---|
+| Today (100% Chat) | €299 | **~€285** |
+| Once voice live (70/30 mix) | €359 | ~€341 |
+
+Setup fee €249 (one-time, waived for pilots) is cash on top, not ARPU.
 
 ## COGS per tier
 
-| Cost item | Lite | Pro | Max |
-|---|---|---|---|
-| CM.com SMS (~50/mo @ €0.08) | €4 | €4 | €4 |
-| CM.com Dutch local number | €1 | €1 | €1 |
-| Synthflow voice (~150 min Pro, ~350 min Max × €0.12) | – | €18 | €42 |
-| Claude API (receptionist + reports) | – | €4 | €5 |
-| Attio contact slot | ~€0 | ~€0 | ~€0 |
-| Hetzner amortised per client | €0.50 | €0.50 | €0.50 |
-| Cloudflare R2 storage amortised | €0.10 | €0.30 | €0.50 |
-| Misc + buffer | €0.40 | €2.20 | €2.00 |
-| **Total COGS** | **€6** | **€30** | **€55** |
-| **Gross margin** | **98.0%** | **95.0%** | **94.5%** |
-| **Blended GM** | | | **95.1%** |
+Conservative estimates, pending real usage data — see `07-finance/cogs-per-tier.md` for line items.
 
-Overage voice minutes (>200 Pro / >500 Max) billed at €0.50/min with ~€0.12 cost → 76% margin on overage. Bonus.
+| Tier | List | COGS | GM% |
+|---|---|---|---|
+| Chat | €299 | ~€10 | **96.7%** |
+| Compleet (provisional) | €499 | ~€35 | **93.0%** |
+| Blended (70/30, once voice live) | €359 | ~€17.50 | **95.1%** |
+
+Text is the structural win: a Claude API chat conversation costs cents; voice minutes (TTS/STT/telephony) were the dominant COGS line of the old model.
 
 ## CAC by channel
 
@@ -41,40 +34,42 @@ Volume math based on 2026 benchmarks (Apollo, Smartlead, Cleverly, HeyReach):
 | Cold email (5,300/mo, 0.10-0.15% send→client) | 5-8 clients/mo | €146 outbound stack | €18-29 | ~€450 (50% founder time tagged) |
 | LinkedIn (600 invites/mo, 35%→6%→25%→25%) | ~3 clients/mo | €170 (HeyReach + Sales Nav) | €57 | ~€250 |
 | Organic content (LinkedIn personal + SEO) | grows to 3/mo by M6 | €162 content tools | €50-140 | very low at scale |
-| Google Ads "AI telefoniste loodgieter" (CPC €2.50-4.50, CVR 6%) | 2-4 clients @ €400/mo | €400 | €100-200 | similar |
+| Google Ads "AI receptionist loodgieter" (CPC €2.50-4.50, CVR 6%) | 2-4 clients @ €400/mo | €400 | €100-200 | similar |
 | Partnerships (10% rev-share Y1) | grows to 1-3/mo by M6 | rev-share only | ~€60 effective | ~€60 |
 
 **Blended target CAC**: €150-250 cash, ~€400 fully loaded.
 
 ## LTV
 
-LTV = ARPU × GM% ÷ monthly churn.
+LTV = net ARPU × GM% ÷ monthly churn. At Chat-only net ARPU €285, GM 96.7%:
 
 | Churn scenario | Annual | Monthly | Avg life | LTV (net) |
 |---|---|---|---|---|
-| High | 30% | 2.9% | 34 mo | **€17,750** |
-| Realistic | 20% | 1.84% | 54 mo | **€27,900** |
-| Best-in-class | 12% | 1.06% | 94 mo | **€48,200** |
+| High | 30% | 2.9% | 34 mo | **€9,500** |
+| Realistic | 20% | 1.84% | 54 mo | **€15,000** |
+| Best-in-class | 12% | 1.06% | 94 mo | **€26,000** |
+
+Compleet upsell raises each of these ~20% at the 70/30 mix.
 
 ## LTV / CAC
 
 | Scenario | LTV | CAC (cash €200) | Ratio |
 |---|---|---|---|
-| High churn | 17,750 | 200 | **89×** |
-| Realistic | 27,900 | 200 | **140×** |
-| Best | 48,200 | 200 | **241×** |
+| High churn | 9,500 | 200 | **48×** |
+| Realistic | 15,000 | 200 | **75×** |
+| Best | 26,000 | 200 | **130×** |
 
-Even at fully-loaded CAC of €600, LTV/CAC stays 30×+. Industry "healthy" benchmark is 3-5×.
+Even at fully-loaded CAC of €600, LTV/CAC stays 15×+. Industry "healthy" benchmark is 3-5×.
 
 ## Payback period
 
-`Payback = CAC / (ARPU × GM%)`
+`Payback = CAC / (net ARPU × GM%)` → contribution ≈ €275/mo (Chat).
 
-- CAC €200 / €513 contribution = **<1 month**
-- Even at fully-loaded CAC €600 → **~1.2 months**
+- CAC €200 / €275 contribution = **<1 month**
+- Fully-loaded CAC €600 → **~2.2 months**
 - Industry SMB SaaS benchmark: 9-12 months
 
-The reason is structural: high price relative to channel cost. Klantkraan isn't a $20/mo product fighting on PPC — it's a €540/mo product where one demo can be closed in 14 days.
+The reason is structural: high price relative to channel cost. Klantkraan isn't a $20/mo product fighting on PPC — it's a €299/mo product where one demo can be closed in 14 days. The €249 setup fee (non-pilot clients) additionally covers most of cash CAC in month 0.
 
 ## Fixed monthly overhead (ex founder draw)
 
@@ -90,33 +85,32 @@ The reason is structural: high price relative to channel cost. Klantkraan isn't 
 | + ad budget (Google Ads from M3) | +€400 |
 | **Total cash burn pre-revenue** | **~€900-1,000/mo** |
 
-Breakeven on burn: MRR × 95% > €950 → ~€1,000 MRR (month 2 in base case).
+Breakeven on burn: MRR × 97% > €950 → ~€1,000 MRR (month 2-3 in the repriced base case).
 
-Breakeven incl. €3,500 founder draw: ~€4,700 MRR → month 4-5 in base case.
+Breakeven incl. €3,500 founder draw: ~€4,700 MRR → month 5-6 in the repriced base case.
 
 ## Why this works as a business (vs. consulting)
 
 | Option | Year 1 take-home | Asset value at year-end |
 |---|---|---|
 | Contract work at €85/hr × 12.5h/wk | ~€55k | €0 |
-| Klantkraan base case | ~€60-80k after founder draw (M5 on) | ~€280k-550k EV (2-4× ARR) |
-| Klantkraan risk-adjusted EV (60% base / 25% bear / 15% bull) | | **~€290k EV + €60k take-home** |
+| Klantkraan repriced base case (~€16.7k MRR M12 ≈ €200k ARR) | ~€35-55k after founder draw (M6 on) | ~€150k-400k EV (2-4× ARR excl. Compleet upside) |
 
-Expected value of building > expected value of contracting, unless founder discounts very heavily for execution risk.
+Expected value of building > expected value of contracting, unless founder discounts very heavily for execution risk. The old €540-ARPU EV table overstated both; this is the honest repriced version.
 
 ## Key sensitivities
 
 | Input | Base | Sensitivity test | Effect on M12 MRR |
 |---|---|---|---|
-| ARPU | €540 | -20% (€432) | Bear case |
+| ARPU (net) | €285 | -20% (€228) | Bear case |
 | Annual churn | 20% | +30% (26%) | Bear case |
 | CAC | €200 | +50% (€300) | Bear case |
 | New clients / month profile | 2→3→5→7→8 | -25% | Bear case |
-| (Combined Bear) | | | **€13.0k** |
-| (Base) | | | **€31.3k** |
-| (Combined Bull: +15% ARPU, -40% churn, -30% CAC) | | | **€52.8k** |
+| (Combined Bear) | | | **~€7k** |
+| (Base, Chat-only) | | | **~€16.7k** |
+| (Bull: +30% pacing, -40% churn, +30% Compleet mix) | | | **~€28k** |
 
-Even the bear case clears the €10k MRR target by ~month 9-11.
+At Chat-only pricing the **bear case no longer clears €10k MRR within year 1** — the base case clears it around month 9. The lever that restores headroom is the Compleet upsell (+€200/client) once voice is live.
 
 ## Source
 

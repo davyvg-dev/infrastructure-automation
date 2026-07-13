@@ -4,25 +4,25 @@
 
 ## The eight objections
 
-### 1. "Te duur" / "€599 vind ik veel"
+### 1. "Te duur" / "€299 vind ik veel"
 
-> "€599 per maand = één misgelopen badkamer-klus. Bij 3 extra klussen per jaar verdien je het 20x terug. Wil je de rekentool zien?"
+> "€299 per maand = minder dan één misgelopen klus. Bij 3 extra klussen per jaar verdien je het 20x terug. Wil je de rekentool zien?"
 
-→ If still resistant: offer Lite at €299 with upgrade path. Never discount Pro.
+→ If still resistant: offer the 6-month prepay (15% off). Never discount the monthly rate.
 
 ### 2. "Wat als het niet werkt voor mij?"
 
-> "Maandelijks opzegbaar, geen setup-fee, 30 dagen geld-terug-garantie. Werkt het niet na 30 dagen, dan stop je en je geld komt terug. Het risico ligt bij mij, niet bij jou."
+> "Maandelijks opzegbaar, 30 dagen geld-terug-garantie, en voor pilotklanten vervalt de setup van €249. Werkt het niet na 30 dagen, dan stop je en je geld komt terug. Het risico ligt bij mij, niet bij jou."
 
 ### 3. "Ik wil het eerst zelf proberen"
 
-> "Begrijp ik. Bel onze demo-lijn nu, op een lastig scenario. Vind je er één gat in, dan geen deal. **085-XXX XX XX.**"
+> "Begrijp ik. Open de demo-chat op klantkraan.nl en gooi er nu een lastig scenario in. Vind je er één gat in, dan geen deal."
 
-→ Hand them the number; even silence in the call is fine.
+→ Hand them the link; let them try to break it live.
 
 ### 4. "Mijn klanten willen een mens spreken"
 
-> "60% van je inkomende calls is buiten kantooruren — daar is geen mens. De keuze is niet AI of jou, het is AI of voicemail. Welke vangt meer klanten op?"
+> "60% van je aanvragen komt buiten kantooruren — daar is geen mens. De keuze is niet AI of jou, het is AI of een onbeantwoord appje en voicemail. Welke vangt meer klanten op?"
 
 ### 5. "Geen tijd om dit te leren"
 
@@ -34,9 +34,9 @@
 
 > "Top — dan vangen wij de avonden, weekenden en piek-momenten op als zij in gesprek is. Aanvulling, geen vervanging. Zij houdt het persoonlijke werk, wij de overflow."
 
-### 7. "Klant denkt dat het een echte stem is — juridisch?"
+### 7. "Klant denkt dat het een echt persoon is — juridisch?"
 
-> "De AI meldt zichzelf bij opnemen: 'U spreekt met de digitale assistent van {{bedrijfsnaam}}.' AVG- en EU-AI-Act-compliant. Ik stuur de DPA mee met de offerte, kun je laten checken door je accountant."
+> "De AI meldt zichzelf in de begroeting: 'U chat met de digitale assistent van {{bedrijfsnaam}}.' AVG- en EU-AI-Act-compliant. Ik stuur de DPA mee met de offerte, kun je laten checken door je accountant."
 
 → Reference `04-legal/ai-act-disclosure.md` for the verbatim Dutch text.
 
@@ -47,17 +47,17 @@
 ## Bonus objections (lower-frequency)
 
 ### "Ik heb al een CRM, doet die dit niet?"
-> "Welke gebruik je? Werkbon, Snelstart, Skoon? Geen van die heeft een AI-stem die opneemt. Wij vullen aan, vervangen niet. We koppelen met je werkbon op tier Max."
+> "Welke gebruik je? Werkbon, Snelstart, Skoon? Geen van die beantwoordt je websitechat en WhatsApp en plant zelf afspraken in. Wij vullen aan, vervangen niet."
 
 ### "Mijn neef kan dit ook bouwen voor €0"
-> "Kan kloppen. Vraag hem hoe hij EU-AVG-compliance + 24/7 monitoring + maandelijkse software-updates inricht. Bij ons zit dat in de €599. Bij hem zit het bij jou op je bord."
+> "Kan kloppen. Vraag hem hoe hij EU-AVG-compliance + 24/7 monitoring + maandelijkse software-updates inricht. Bij ons zit dat in de €299. Bij hem zit het bij jou op je bord."
 
 ### "Ik wil eerst zien dat het werkt bij een andere loodgieter"
 > "Hier is {{naam_pilot_klant}} in {{stad}} — bel hem gerust, hij vertelt je in 5 min wat het hem opleverde." 
 → This requires case-study references to be in place. By M3 we have 3.
 
-### "Ik twijfel of het bij mijn stem/regio past"
-> "We finetunen het script op jouw tarieven, jouw service-gebied, jouw FAQ. Kies tussen mannelijke of vrouwelijke Nederlandse stem. Geen Vlaamse, geen Engelse accenten."
+### "Ik twijfel of het bij mijn bedrijf/regio past"
+> "We finetunen de assistent op jouw tarieven, jouw service-gebied, jouw FAQ en jouw toon. Gewoon Nederlands, geen vertaalmachine-taal."
 
 ### "Hoe weet ik dat ik in 12 maanden niet vastzit?"
 > "Maandelijks opzegbaar in de hoofdregel. Alleen als je vrijwillig kiest voor 6- of 12-maandsprepay (met 15-20% korting) zit je vast — en dan altijd vrijwillig."

@@ -69,7 +69,7 @@
 
 32. Voorkeur AI-stem (mannelijk neutraal ABN / vrouwelijk neutraal ABN / geen voorkeur). Naam-suggestie voor de AI? (default: "Sanne" voor vrouw / "Daan" voor man)
 
-## Conditional questions (Max tier only)
+## Conditional questions (custom-integration requests only — herzien 2026-07-13: no longer a tier; handle case-by-case)
 
 - Welke custom integratie heeft u nodig? (Werkbon, Snelstart, eigen ERP)
 - API-toegang beschikbaar? (ja / nee / weet niet)
@@ -99,7 +99,7 @@ INSERT INTO clients (
   gbp_email, trustpilot_url, calendar_provider, accounting_pkg, crm_pkg,
   owner_name, owner_phone, secondary_contact,
   whatsapp_support, voice_pref, agent_name,
-  -- Max-tier only:
+  -- custom-integration requests only:
   integration_request, api_available, tech_contact,
   created_at
 ) VALUES (...);

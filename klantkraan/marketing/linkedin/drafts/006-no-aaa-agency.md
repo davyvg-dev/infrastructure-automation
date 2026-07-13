@@ -3,7 +3,7 @@ post_number: 006
 publish_week: 2
 post_type: contrarian_take
 status: draft
-character_count: 1269
+character_count: 1306
 ---
 
 # Waarom je geen AAA-agency moet inhuren (intern — niet gepubliceerd)
@@ -34,16 +34,16 @@ Wat je daarvoor krijgt:
 - Geen Nederlandse vakman-context (geen voorrijkosten, spoedtoeslag, 8-tot-5-tarief)
 
 Wat een vakman écht nodig heeft:
-- Inkomende calls beantwoorden — ook als hij op een dak staat
-- Terugbellen-SMS binnen 60 seconden bij gemist
-- Reviews automatisch na de klus
+- Klantvragen beantwoord op z'n website en WhatsApp — ook als hij op een dak staat
+- Afspraken direct in de agenda gepland
+- Leads en terugbelverzoeken vastgelegd, niets kwijt
 - Eigen klantdata
 
-Drietal modules, geen retainer.
+Eén dienst, geen retainer.
 
-Klantkraan vraagt €450 per maand all-in, per maand opzegbaar, eigen Attio-CRM, AVG-conform, EU-hosted.
+Klantkraan vraagt €299 per maand, per maand opzegbaar, eenmalige setup van €249 — geen duizenden euro's. AVG-conform, EU-hosted.
 
-Geen 6-maanden lock-in. Geen setup-fee. Geen "we hebben jouw account nodig om de flow te beheren".
+Geen 6-maanden lock-in. Geen "we hebben jouw account nodig om de flow te beheren".
 
 Als een agency dat wel biedt: prima keuze. Maar vraag eerst wie de eigenaar van je lead-pipeline is op dag 1 én op dag 365.
 

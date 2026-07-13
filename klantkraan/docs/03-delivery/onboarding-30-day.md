@@ -88,7 +88,7 @@ The single highest-leverage retention moment.
 - Share the Loom on screen.
 - Ask: "Welke call was voor jou de mooiste win?" — feed marketing.
 - Ask: "Iets dat anders moet?"
-- Upsell trigger: if Lite → Pro (showed enough volume), if Pro → Max (custom integration request).
+- Upsell trigger: Chat → Compleet (voice) if the client mentions missed calls or high phone volume — log the candidate; convert once the AI-telefonist is live.
 
 ## Churn-prevention touchpoints (first 90 days)
 

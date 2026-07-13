@@ -24,7 +24,7 @@ A €600/mo VA saves ~1 churn save per quarter, which alone justifies the cost.
 
 | | Detail |
 |---|---|
-| **Trigger** | €15k MRR (M7-8 base) |
+| **Trigger** | €15k MRR (~M11 base, herzien 2026-07-13) |
 | **Role** | Cold-email reply triage, LinkedIn DM cadence, demo-call booking |
 | **Rate** | €1,500-2,000/mo + 10% commission on closed deals they sourced |
 | **Hours** | ~40h/mo |
@@ -36,8 +36,8 @@ A €600/mo VA saves ~1 churn save per quarter, which alone justifies the cost.
 
 | | Detail |
 |---|---|
-| **Trigger** | €25k MRR (M10-11 base) OR first lost Max-tier deal due to integration backlog |
-| **Role** | Custom integrations for Max clients (Snelstart, Werkbon, Skoon, ERP), n8n workflow scaling, telemetry/observability |
+| **Trigger** | €25k MRR OR first lost Compleet deal due to voice/integration backlog |
+| **Role** | Voice-agent hardening, custom integrations (Snelstart, Werkbon, Skoon, ERP), workflow scaling, telemetry/observability |
 | **Rate** | €2,500-4,000/mo for 1-2 days/week (€60-80/hr) |
 | **Source candidates** | Dutch freelance dev networks, ex-colleagues, Reddit r/cscareerquestionsEU |
 | **Profile** | TypeScript + Python + n8n + Postgres, ideally familiar with telephony APIs |
@@ -57,7 +57,7 @@ A €600/mo VA saves ~1 churn save per quarter, which alone justifies the cost.
 
 Each €600 of monthly hire spend should free up ~10-15 founder hours/month (i.e., €40-60/h equivalent of opportunity cost). Pass that test before saying yes.
 
-Quick gut-check: if a hire frees the founder for one additional discovery call per week → 4 calls/mo × 25% close × €540 ARPU = €540 NEW MRR / month from the hire's existence. That pays back in 1 month.
+Quick gut-check: if a hire frees the founder for one additional discovery call per week → 4 calls/mo × 25% close × €299 ARPU = ~€300 NEW MRR / month from the hire's existence. A €600/mo hire pays back in ~2 months of compounding new MRR.
 
 ## Founder time budget by stage
 

@@ -183,7 +183,7 @@ GSM-7 is 160 chars/message. Templates above kept ≤ 155 chars to leave room for
 |---|---|
 | CM.com SMS to NL | €0.08 |
 | CM.com SMS to BE | €0.08 |
-| CM.com SMS to international | €0.10–0.15 (Pro/Max only, rare) |
+| CM.com SMS to international | €0.10–0.15 (rare) |
 | Avg SMS / client / month | ~50 (across all categories) |
 | Avg cost / client / month | ~€4 |
 

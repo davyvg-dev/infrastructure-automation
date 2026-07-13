@@ -52,15 +52,15 @@ Ask these in order. Type answers into Attio open in another window.
    → if alleen → close today. If partner/accountant → schedule follow-up.
 
 8. **"Als dit werkt, wat mag het per maand kosten — ruwe orde grootte?"**
-   → never reveal price first. If they say €100 → Lite. €300–500 → Pro. €600+ → Max.
+   → never reveal price first. €200+ → Chat (€299) fits. If they push on missed *calls* specifically → note as Compleet (voice) candidate for when the AI-telefonist is live; sell Chat today.
 
 ## Phase 3: Demo (6 min)
 
-### 90-second audio (3 min including comment)
+### Live chat demo (3 min including comment)
 
-Play a pre-recorded WAV from Synthflow: AI handling a spoed-lek call in Dutch, asking postcode, scheduling terugbel, closing politely. Stop the audio. Single comment:
+Screenshare the Klantkraan demo receptionist (web chat, `klantkraan-demo` config). Type a spoed-lek scenario as the customer: the AI asks the right questions, offers real agenda slots, books the appointment, captures the terugbelverzoek. Single comment:
 
-> "Dat is letterlijk wat hij voor jou gaat doen, getuned op jouw tarieven en service-gebied."
+> "Dat is letterlijk wat hij voor jou gaat doen — op je website én op WhatsApp, getuned op jouw diensten en tarieven."
 
 ### Dashboard screenshare (3 min)
 
@@ -79,7 +79,9 @@ Comment: "Deze pagina komt elke maandag in je mailbox. Eén link, geen wachtwoor
 
 Based on Phase 2 answers, recommend one tier. Be confident:
 
-> "Op basis van wat je vertelt past **Pro** bij je: €599 per maand, eerste maand 50% korting dus €299. Geen setup, maandelijks opzegbaar, live binnen 7 werkdagen."
+> "Op basis van wat je vertelt past **Klantkraan Chat** bij je: €299 per maand, eerste maand 50% korting dus €149,50. Eenmalige setup €249 — die vervalt voor pilotklanten. Maandelijks opzegbaar, live binnen 7 werkdagen."
+
+If they ask about phone calls: "De AI-telefonist op je eigen nummer is de volgende stap — Klantkraan Compleet, €499 per maand. Zodra die live is, sta jij bovenaan de lijst." Never promise a date.
 
 ### Two options close
 

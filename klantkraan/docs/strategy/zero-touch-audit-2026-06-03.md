@@ -1,5 +1,7 @@
 # Zero-touch product audit
 
+> **Update 2026-07-13:** pricing has since been decided at €299 (Chat) / €499 (Compleet), text-first. Numbers below are the historical 2026-06-03 snapshot — left intact.
+
 > Date: 2026-06-03
 > Source: Founder constraint — "the product needs to operate without recurring manual intervention. Ideally no support, customisation, or delivery work."
 

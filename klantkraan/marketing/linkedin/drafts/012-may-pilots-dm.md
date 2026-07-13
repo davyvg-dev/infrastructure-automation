@@ -3,7 +3,7 @@ post_number: 012
 publish_week: 3
 post_type: soft_cta
 status: draft
-character_count: 1183
+character_count: 1255
 ---
 
 # Eerste 3 loodgieters van mei — DM open (intern — niet gepubliceerd)
@@ -19,19 +19,20 @@ character_count: 1183
 
 Drie plekken open in deze pilot-ronde. Daarna sluit deze lichting.
 
-Wie ik zoek: loodgieter met 2–8 monteurs, in de Randstad of het oosten, die structureel calls mist omdat de telefoon afgaat tijdens een klus.
+Wie ik zoek: loodgieter met 2–8 monteurs, in de Randstad of het oosten, die structureel klanten misloopt omdat er tijdens een klus niemand reageert op vragen en aanvragen.
 
 Wat je krijgt de eerste 2 maanden:
-- Nederlandstalige AI-receptionist op je vaste lijn, 24/7
-- Missed-call SMS binnen 60 seconden naar elke gemiste beller
-- Automatische Google-review-SMS, 24 uur na elke afgeronde klus
-- Eén dashboard met al je calls, leads en reviews
+- Nederlandstalige AI-receptionist op je website en WhatsApp, 24/7
+- Beantwoordt klantvragen over je diensten en tarieven
+- Plant afspraken direct in je agenda
+- Vangt elke lead en elk terugbelverzoek — niets kwijt
+- Setup en tuning volledig door mij verzorgd
 - Gewoon per maand opzegbaar — geen lock-in
 
 Wat het kost:
-- Maand 1: €225 (de helft van het reguliere tarief)
-- Maand 2 en verder: €450 per maand all-in
-- Setup: €0
+- Maand 1: €149,50 (de helft van het reguliere tarief)
+- Maand 2 en verder: €299 per maand
+- Setup: €0 (pilotkorting — normaal €249)
 
 Waarom alleen drie:
 - Ik bouw nog. Drie pilots is wat ik kwalitatief kan begeleiden.

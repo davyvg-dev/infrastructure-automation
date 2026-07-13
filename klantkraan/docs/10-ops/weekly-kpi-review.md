@@ -34,7 +34,7 @@ Colour bands: green = at/above target, amber = within 20% below target, red = >2
 | 5 | Activation | Pilots / clients live | Count of clients with status `live` (calls routed) | 2 | 8 | 22 | 39 | Postgres `clients` | Below master plan § 3 by 2 → see escalation table |
 | 6 | Activation | Time-to-go-live | Median days from `won` to `live`, trailing 30 | n/a | <30 | <30 | <21 | Postgres `clients` | >35 → onboarding bottleneck, productize further |
 | 7 | Activation | First-week call volume | Mean inbound calls per client in days 1–7 after `live` | n/a | >15 | >15 | >20 | Synthflow + CM.com logs | <8 → forwarding misconfigured, audit each new client |
-| 8 | Revenue | MRR (€) | Sum of active recurring subscriptions, net of prepay drag | 540 | 3,780 | 10,800 | 19,980 | Mollie + Postgres `subscriptions` | <80% of plan 2 weeks → emergency reposition (see § 5) |
+| 8 | Revenue | MRR (€) | Sum of active recurring subscriptions, net of prepay drag | 300 | 1,940 | 5,830 | 10,600 | Mollie + Postgres `subscriptions` | <80% of plan 2 weeks → emergency reposition (see § 5). Targets herzien 2026-07-13 (€299 Chat-only ARPU). |
 | 9 | Retention | Gross logo churn (monthly) | (cancellations this month) ÷ (active at month start) | 0% | <3% | <3% | <2.5% | Mollie + Postgres | >5% in any month → churn postmortem doc |
 | 10 | Unit economics | CAC (cash, blended) | (outbound + ads spend this month) ÷ new clients this month | n/a | <€250 | <€200 | <€200 | Smartlead + Google Ads + Postgres | >€350 → cut weakest channel |
 | 11 | Delivery quality | % calls answered by AI (after-hours) | AI-answered calls ÷ inbound calls between 18:00–08:00 + weekends | n/a | >85% | >85% | >90% | Synthflow + CM.com | <75% → escalate Synthflow incident or routing fix |

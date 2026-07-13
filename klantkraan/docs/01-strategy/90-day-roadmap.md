@@ -1,6 +1,6 @@
 # 90-Day Roadmap
 
-> Three months from $0 → ~€4–6k MRR with 8–14 active clients, all systems instrumented, brand and content engine compounding.
+> Three months from $0 → ~€2–3k MRR with 8–14 active clients, all systems instrumented, brand and content engine compounding. *(MRR targets herzien 2026-07-13 at €299 Chat-only ARPU.)*
 
 ## Month 1 — Foundation (build the unfair advantage, no selling)
 
@@ -58,8 +58,8 @@ Cannot proceed to month 2 outbound until:
 - First 2 anonymised case studies live on the site.
 - Cold email Sequence A live to ~1,500 prospects via Smartlead.
 - LinkedIn outreach (HeyReach) live.
-- 3–5 new paying clients signed (Pro tier mix expected).
-- MRR end of month: ~€3,000–4,000.
+- 3–5 new paying clients signed (Chat tier).
+- MRR end of month: ~€1,500–2,000.
 
 ### Week-by-week
 
@@ -71,7 +71,7 @@ Cannot proceed to month 2 outbound until:
 
 **Week 6**
 - Discovery calls from week-5 outbound (target: 8–12 booked, 6–10 shown).
-- Close 1–2 clients at Pro tier.
+- Close 1–2 clients at Chat tier.
 - Publish 2 more SEO cornerstones.
 - First YouTube long-form (10-min screen-rec: "Live demo van onze AI-receptionist").
 - Run a Sequence A → Sequence B A/B in Smartlead.
@@ -96,7 +96,7 @@ Cannot proceed to month 2 outbound until:
 
 ### Outcomes
 - 8 paying clients minimum (bear case: 6; base: 8; bull: 11).
-- MRR end of month: ~€4,000–6,500.
+- MRR end of month: ~€2,000–3,300.
 - Google Ads campaign live at €400/mo on Dutch high-intent.
 - First accountant partnership signed (10% rev-share, 12 months).
 - KPI dashboard automated and reviewed weekly.
@@ -118,7 +118,7 @@ Cannot proceed to month 2 outbound until:
 - Begin English-language repurposing of top-3 LinkedIn posts for UK seed audience.
 
 **Week 12 (Day 89)**
-- Run 90-day retrospective. Compare to base case (MRR €3,780 at month 3). Document learnings.
+- Run 90-day retrospective. Compare to base case (MRR €1,940 at month 3). Document learnings.
 - Trigger criteria for hiring a VA (€600/mo) is at 12 active clients — set a Linear ticket if hit.
 
 ## Cumulative deliverables (end of M3)
@@ -126,7 +126,7 @@ Cannot proceed to month 2 outbound until:
 | Asset | Count |
 |---|---|
 | Paying clients | 8 (base) |
-| MRR | ~€4,500 (base) |
+| MRR | ~€2,300 (base) |
 | Case studies published | 3 |
 | LinkedIn posts | ~60 |
 | YouTube videos | 3 (1 long-form + 2 weekly series) |
@@ -154,7 +154,7 @@ Cannot proceed to month 2 outbound until:
 | Pilot client #1 churns in M1 | Any | Stop outbound. Diagnose root cause (product, delivery, expectation-setting). |
 | Cold email reply <2% positive at week 6 | < 1.5% positive | Rotate hooks; consider switching to Sequence C-style value-first. |
 | Discovery → close rate <15% in M2 | < 15% | Review script, the offerte template, and pricing presentation. |
-| MRR end of M3 < €3,000 | < €3k | Slow content, accelerate outbound, get founder on every call personally. |
+| MRR end of M3 < €1,500 | < €1.5k | Slow content, accelerate outbound, get founder on every call personally. |
 | Founder hours / week > 25h | > 25h | Productize harder. Onboarding must be ≤2h, not 3h. |
 
 ## Source

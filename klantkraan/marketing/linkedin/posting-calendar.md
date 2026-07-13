@@ -14,8 +14,8 @@
 
 Sequence logic: story -> proof -> engagement -> education -> ask. CTA lands only after 4 weeks of value; poll seeded early.
 
-## Open item before scheduling
-- **006** states "€450 per maand all-in" — contradicts the tiers €349/€599/€849. Reconcile the number before publishing post 006 (week 3, Thu).
+## Pricing reconciled 2026-07-13
+- Pricing decided at **€299 (Chat) / €499 (Compleet)**, setup €249 (waived for pilots). Drafts 006, 012 and 017 updated to €299 + text-first framing (websitechat + WhatsApp). Verify klantkraan.nl/prijzen shows the same numbers before publishing any post that links to it.
 
 ## Held back — do NOT publish until real pilot data exists
 - 008 case-study, 009 lessons, 013 voiceover, 014 dashboard, 015 dakdekker case, 016 month-1 reflection — all gated on a real pilot.

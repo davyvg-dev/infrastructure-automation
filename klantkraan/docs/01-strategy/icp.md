@@ -46,7 +46,7 @@ Dakdekkers tolerate a higher ticket and a longer onboarding because the asymmetr
 | Niche | Why avoid |
 |---|---|
 | **HVAC / warmtepomp installateurs** | 12–16 week backlogs in 2026; they reject leads, not seek them. Most saturated agency segment (VPM, Cherry, Gigaleads, Brutael). |
-| Schilders | Low job value (€1.5–5k), heavy referral, price-sensitive, low margin for €599/mo. |
+| Schilders | Low job value (€1.5–5k), heavy referral, price-sensitive, low margin for €299/mo. |
 | Schoonmaakbedrijven | Contract-based already; missed-call recovery doesn't move the needle. |
 | Slotenmakers | TAM too small (a few hundred). Won't scale. |
 

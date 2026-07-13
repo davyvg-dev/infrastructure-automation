@@ -1,33 +1,32 @@
 # Offer & Pricing
 
+> Herzien 2026-07-13 — repriced to two tiers (€299 Chat / €499 Compleet) and reframed text-first after the 2026-07-11 pivot. Replaces the old €299/€599/€999 structure.
+
 ## The product
 
-**Klantkraan** is a productized monthly service combining three modules:
+**Klantkraan** is a productized monthly service: a Dutch AI-receptionist for trade businesses, delivered text-first.
 
-1. **Missed-call-back SMS** — when a call is missed, an automated Dutch SMS reaches the caller within 60 seconds with a Cal.com booking link.
-2. **Review automation** — when a job is marked done, the customer receives a Dutch SMS asking for a Google review (Trustpilot secondary), with a soft email follow-up at day 7.
-3. **AI receptionist (Pro/Max)** — a Synthflow Dutch voice agent answers inbound calls 24/7, classifies intent (SPOED / NIEUW_WERK / BESTAANDE_KLANT / LEVERANCIER / SPAM), books appointments into Cal.com, and escalates to the owner.
+1. **AI-receptionist (websitechat + WhatsApp)** — answers customer questions 24/7 in Dutch, books appointments straight into the calendar, captures leads and terugbelverzoeken, and escalates to the owner. Built on the `ai-receptionist` app (FastAPI + Claude tool use); per-client rebrand is a config file, zero code.
+2. **Done-for-you setup and tuning** — Klantkraan configures services, tariffs, FAQ, and booking rules per business and keeps tuning them. The client does nothing technical.
+3. **AI-telefonist (voice) — the upsell** — the same receptionist answering inbound calls on the client's own Dutch number. The voice agent (LiveKit) is built but **not yet live**; Compleet is sold only once voice is production-ready.
 
-All three modules run on a per-client n8n workflow with credentials isolated by `client_id` in Postgres. Per-client COGS averages €6 (Lite) / €30 (Pro) / €55 (Max).
+The receptionist only offers real calendar slots, never invents prices or advice, and always discloses it is a digital assistant (EU AI Act art. 50).
 
 ## The tiers
 
-| | **Lite** | **Pro** ⭐ | **Max** |
-|---|---|---|---|
-| **Price** | €299 / mo | €599 / mo | €999 / mo |
-| Missed-call SMS | ✅ | ✅ | ✅ |
-| Google + Trustpilot review automation | ✅ | ✅ | ✅ |
-| Monthly stats email | ✅ | ✅ | ✅ |
-| Cloudflare-hosted dashboard | ✅ | ✅ | ✅ |
-| AI Receptionist (Dutch, 24/7) | — | ✅ 200 min | ✅ 500 min |
-| Cal.com booking flow | — | ✅ | ✅ |
-| Custom integrations (Snelstart, Werkbon, Skoon) | — | — | ✅ |
-| Monthly strategy call | — | — | ✅ |
-| Priority support (WhatsApp Business) | — | — | ✅ |
-| Overage minutes | n/a | €0.50/min | €0.50/min |
+| | **Chat** | **Compleet** (upsell) |
+|---|---|---|
+| **Price** | €299 / mo | €499 / mo |
+| Websitechat + WhatsApp receptionist (24/7, Dutch) | ✅ | ✅ |
+| Beantwoordt vragen (diensten, tarieven, FAQ) | ✅ | ✅ |
+| Plant afspraken in de agenda | ✅ | ✅ |
+| Vangt leads en terugbelverzoeken | ✅ | ✅ |
+| Done-for-you setup en tuning | ✅ | ✅ |
+| Maandelijks rapport | ✅ | ✅ |
+| AI-telefonist (voice) op eigen Nederlands nummer | — | ✅ |
 
-**All tiers include:**
-- No setup fee
+**Both tiers include:**
+- Eenmalige setup €249 (waived for pilot clients)
 - Monthly cancel (30-day opzegtermijn)
 - First month 50% off (NOT free — preserves perceived value)
 - 30-day satisfaction guarantee (full refund of first month if not satisfied)
@@ -37,16 +36,18 @@ All three modules run on a per-client n8n workflow with credentials isolated by 
 - 6-month prepay: 15% off
 - 12-month prepay: 20% off (and locked-in pricing if annual rate index changes)
 
+**Status (2026-07-13):** only Chat is sellable today. The voice agent is dormant; Compleet is quoted as the upgrade path, never sold before voice is verified live. No third tier — the old €999/€849 Premium is killed.
+
 ## Why this structure wins
 
 | Lever | Effect |
 |---|---|
-| Tiered (€299/€599/€999) | Anchors high at Max → makes Pro feel like the safe choice. Lite catches the skeptical. |
-| No setup fee | Beats UK Invox (~£99/mo but with setup) and NL Gold Lemon (€199 + €899 setup). |
+| Two tiers (€299/€499) | No decoy needed. Chat is a low-friction entry under every NL voice-tool bundle; Compleet anchors the value of voice at +€200. |
+| Low setup (€249, waived for pilots) | Beats NL Gold Lemon (€199 + €899 setup) and agency setups of €1,500+. |
 | Monthly cancel | Destroys the Podium-style 12-mo lock-in objection — a known #1 NL trade pain. |
 | First month 50% off | Better than "free" — paid attention is more honest than free anything. |
 | 30-day guarantee | Risk reversal. Costs us almost nothing because COGS is tiny. |
-| Annual prepay 15% off | Pulls cash forward, predicts MRR, signals strong intent. |
+| Prepay 15–20% off | Pulls cash forward, predicts MRR, signals strong intent. |
 
 ## What we do NOT offer
 
@@ -54,43 +55,41 @@ All three modules run on a per-client n8n workflow with credentials isolated by 
 - ❌ Pay-per-lead pricing. We don't compete with Werkspot / Gigaleads.
 - ❌ "Starting at" pricing. Dutch buyers demand the full number up front.
 - ❌ One-off projects. Productized only.
-- ❌ Long contracts < €999. (Available as a discount, not a default.)
+- ❌ Selling Compleet before voice is live. Honest upsell only.
 
 ## Per-tier ARPU + margin
 
-Assumed mix 30% Lite / 55% Pro / 15% Max → blended ARPU **€569** list, **~€540 net** after small prepay discount drag.
+COGS assumptions are provisional (see `07-finance/cogs-per-tier.md`); text conversations via the Claude API cost cents, so Chat margin is structurally higher than the old voice-first tiers.
 
-| Tier | ARPU | COGS | GM% |
+| Tier | List | COGS (est.) | GM% |
 |---|---|---|---|
-| Lite | €299 | €6 | 98.0% |
-| Pro | €599 | €30 | 95.0% |
-| Max | €999 | €55 | 94.5% |
-| **Blended** | **€569** | **€26.55** | **95.1%** |
+| Chat | €299 | ~€10 | ~96.7% |
+| Compleet | €499 | ~€35 | ~93.0% |
+| **Blended (70% Chat / 30% Compleet, once voice live)** | **€359** | **~€17.50** | **~95.1%** |
+
+Until voice ships, the realistic planning ARPU is **€299** (100% Chat); net ~€285 after ~5% prepay-discount drag.
 
 ## How to handle pricing in sales
 
 - Always quote **incl. BTW** if the prospect is a BV that can reclaim it (avoids friction). Quote excl. BTW if eenmanszaak.
-- Default recommendation = **Pro**. Lite is "if you want to try the SMS layer first." Max is "if you want it to feel like a real ops upgrade."
+- Default recommendation = **Chat**. Compleet is mentioned as the upgrade path ("zodra de telefonist live is, zet ik je bovenaan de lijst") — never promised with a date.
 - When asked "kan ik korting?": offer the 6-month prepay (15% off) — never discount the monthly rate.
-- When asked "kan ik later upgraden?": yes, same-day, prorated. Downgrade only at month boundary.
+- When asked "kan ik later upgraden?": yes, same-day once voice is live, prorated. Downgrade only at month boundary.
 
 ## Tier upgrade triggers (account-management lever)
 
-A Lite client is a Pro candidate when:
-- Recovered 3+ missed calls in their first month, OR
-- Their dashboard shows ≥10 inbound calls/week, OR
-- They mention "ik kan mijn telefoon niet bijhouden" in a check-in.
+A Chat client is a Compleet candidate when:
+- They mention missed calls or "ik kan mijn telefoon niet bijhouden" in a check-in, OR
+- Their chat log shows repeated "kan ik iemand bellen?" requests, OR
+- They have staff answering phones during work hours.
 
-A Pro client is a Max candidate when:
-- Their voice minutes consistently exceed 180/mo (90% of cap), OR
-- They have an existing CRM/ERP integration request, OR
-- They've added staff and need WhatsApp Business priority lane.
+Log candidates now; convert them the week voice goes live.
 
 ## Future tiers (roadmap, not yet sold)
 
-- **Klantkraan UK** — Pro equivalent in English, separate landing page, separate Synthflow voice library. Month 6+.
-- **Klantkraan Multi-site** (€1,499/mo) — for groups of 2+ branches sharing the AI receptionist. Month 9+.
-- **Klantkraan White-label** (€2,499/mo + rev share) — license to other agencies / accountants. Year 2.
+- **Klantkraan UK** — Chat equivalent in English, separate landing page. Month 6+.
+- **Klantkraan Multi-site** — for groups of 2+ branches sharing the receptionist. Priced on request. Month 9+.
+- **Klantkraan White-label** — license to other agencies / accountants. Year 2.
 
 ## Sources
 

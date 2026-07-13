@@ -1,6 +1,8 @@
 # Copy audit — klantkraan.nl
 Date: 2026-05-21
 
+> **Update 2026-07-13:** pricing has since been decided at €299 (Chat) / €499 (Compleet), text-first. Prices quoted below are the historical May snapshot — left intact.
+
 ## Executive summary
 
 The Klantkraan copy is far above the Dutch trades-marketing baseline — it is concrete, u-form, uses real numbers, and avoids the worst AI cliches (no "ontgrendel", no "naadloos", no "transformeer", no "krachtige oplossing"). On the cornerstone pages it reads close to what a smart operator would actually write. The three problems that consistently undercut that voice: (1) **em-dash addiction** — 231 em-dashes across the copy, with several files using 8-15 each; this is the single loudest AI tell, (2) **structural twinning** — the six trade landing pages are near-clones of each other with the same hero formula, the same "Drie modules in één maandprijs" tricolon, the same "Vlot Nederlands, ook 's avonds en in het weekend" subhead, the same identical FAQ blocks; this reads CMS-generated even though it's not, and (3) **the homepage hero subhead is a textbook AI tricolon** ("AI-receptionist die uw vak spreekt, automatische reviews, geen setup, per maand opzegbaar"). The cleanest pages are `over.astro` and the gidsen — both read human. The two worst offenders are the blog post `cv-storing-januari-installateur.md` (15 em-dashes, scenario opener that sounds written for the page) and the homepage `index.astro` (every conversational pause is an em-dash).

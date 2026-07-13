@@ -71,7 +71,7 @@ Every piece of copy should pass: **"Would Marc say this out loud?"**
 
 - Komma vóór "en" (Oxford comma) — niet gebruiken (Nederlandse stijl).
 - Aanhalingstekens — Nederlandse stijl: ‚enkele' of "dubbele". Geen typografische 'krullen' tenzij in PDF.
-- Decimaal — komma (`€599,00`).
+- Decimaal — komma (`€299,00`).
 - Duizendscheiding — punt (`€10.000`).
 - Telefoonnummers — `06 12 34 56 78` (spaties) of `+31 6 12345678` (internationaal).
 - Datums — `13 mei 2026` (volledig) of `13-05-2026` (kort, geen `05/13`).

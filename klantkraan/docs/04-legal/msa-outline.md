@@ -19,7 +19,7 @@ NL B2B has specific quirks: `art. 6:233(a) BW` on *onredelijk bezwarend*, the Ho
 
 ### 2. Dienstomschrijving
 - Verwijzing naar de Service Description URL (versiebeheer via Wayback / hash)
-- Tier (Lite / Pro / Max) zoals vastgelegd in de offerte
+- Tier (Chat / Compleet) zoals vastgelegd in de offerte
 - Wijzigingen aan de Dienst worden vooraf gecommuniceerd met 30 dagen voorafgaande kennisgeving
 
 ### 3. Looptijd & opzegging
@@ -52,7 +52,7 @@ NL B2B has specific quirks: `art. 6:233(a) BW` on *onredelijk bezwarend*, the Ho
 - **Absolute cap: €25.000 per geval, €50.000 per kalenderjaar**
 - Uitsluiting *indirecte schade*: gederfde winst, omzet, goodwill, dataverlies, gemiste klantopdrachten
 - Uitzonderingen niet uitsluitbaar: opzet of bewuste roekeloosheid (analogie art. 7:951 BW)
-- *Onredelijk bezwarend* (art. 6:233 sub a BW) toets: bij Lite-tier (€299) kan een 12-mo cap acceptabel zijn omdat klant ook eenvoudig kan opzeggen. Op Max wordt een hogere cap overlegd.
+- *Onredelijk bezwarend* (art. 6:233 sub a BW) toets: bij Chat (€299) kan een 12-mo cap acceptabel zijn omdat klant ook eenvoudig kan opzeggen. Op Compleet (€499) wordt de cap-hoogte overlegd.
 
 ### 8. Intellectueel eigendom
 - Klantkraan houdt IE op platform, prompts, modellen, dashboards, code
@@ -81,7 +81,7 @@ NL B2B has specific quirks: `art. 6:233(a) BW` on *onredelijk bezwarend*, the Ho
 - Klant vrijwaart Klantkraan voor boetes voortvloeiend uit klant-veroorzaakte non-compliance
 
 ### 13. Overmacht (art. 6:75 BW)
-- Inclusief: uitval Anthropic/Synthflow/CM.com, internetstoringen, DDoS-aanvallen, AVG-toezichthouder-besluiten met opschortend effect, oorlog, pandemie
+- Inclusief: uitval Anthropic/Meta (WhatsApp)/CM.com/Hetzner, internetstoringen, DDoS-aanvallen, AVG-toezichthouder-besluiten met opschortend effect, oorlog, pandemie
 - Indien overmacht > 30 dagen, mag elke partij beëindigen zonder schadevergoeding
 - Eerder betaalde maandfees worden naar rato terugbetaald
 

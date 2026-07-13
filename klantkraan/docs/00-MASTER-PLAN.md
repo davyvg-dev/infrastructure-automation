@@ -1,6 +1,6 @@
 # Klantkraan — Master Plan
 
-> **One-line summary.** Productized "AI receptionist + missed-call recovery + Google review automation" for Dutch loodgieters and dakdekkers, priced €299 / €599 / €999 per month, no setup fee, monthly cancel. Target €10k MRR by month 6, €20k+ by month 9, scaling toward €30k+ ARR by end of year 1.
+> **One-line summary.** Productized text-first AI-receptionist (websitechat + WhatsApp, voice as upsell) for Dutch loodgieters and dakdekkers, priced €299 (Chat) / €499 (Compleet) per month, €249 setup (waived for pilots), monthly cancel. Target €10k MRR by month 9, ~€17–20k by month 12. *(Pricing herzien 2026-07-13; product reframed text-first per 2026-07-11 pivot.)*
 
 ## 1. Why this works (one paragraph)
 
@@ -14,27 +14,30 @@ Dutch trade owner-operators miss 27–40% of inbound calls. Each missed plumbing
 | Vertical | **Loodgieters + dakdekkers** in parallel (shared product, separate landing pages). |
 | ICP | Owner-operators of 2–8 staff trade businesses, **registered as BV** for cold outbound (eenmanszaak/VOF are opt-in only under Dutch law). |
 | Geography | NL primary (Randstad first). UK from month 6+. Spain deferred to month 12+ pending NL/UK proof. |
-| Offer | Three tiers: Lite €299 (SMS+reviews) / Pro €599 (+AI receptionist) / Max €999 (+integrations+priority). No setup. Monthly cancel. First month 50% off. Annual or 6-mo commit: 15% off. |
+| Offer | Two tiers (herzien 2026-07-13): **Chat €299** (websitechat + WhatsApp receptionist, afspraken, leads, done-for-you setup en tuning) / **Compleet €499** (+ AI-telefonist op eigen NL nummer — upsell, sold once voice is live). Setup €249 (waived for pilots). Monthly cancel. First month 50% off. 6-mo prepay 15% / 12-mo 20% off. |
 | Sales | 14-day cycle, 20-min Zoom discovery, 1-page offerte PDF, SignWell e-sign, Mollie SEPA recurring. |
 | Delivery | 2h 10m founder time per onboarding, conditional call forwarding (not porting), 30-day go-live. |
-| Tech | pnpm + Turborepo monorepo / Astro on Cloudflare Pages / n8n self-hosted on Hetzner CX22 (€3.79/mo) / Attio CRM free / CM.com SMS / Synthflow Dutch voice / Mollie billing / Moneybird invoicing. |
+| Tech | pnpm + Turborepo monorepo / Astro on Cloudflare Pages / `ai-receptionist` (FastAPI + Claude, web chat + WhatsApp) on Hetzner / n8n self-hosted / Attio CRM free / CM.com messaging / LiveKit voice agent (dormant, upsell) / Mollie billing / Moneybird invoicing. |
 | Acquisition mix (M1–3) | Cold email to BV-filtered list (KvK API + Outscraper, ~5,300/mo via Smartlead) + LinkedIn DM via HeyReach + founder LinkedIn personal content + Dutch SEO + partnerships (accountants, Techniek Nederland). |
 | Compliance | EU AI Act Art. 50 mandatory disclosure at call start, AVG controller/processor split via DPA, Art. 30 RoPA, DPIA per service tier, Hiscox PI+AVB+cyber ~€150/mo. |
 
-## 3. The numbers (base case, see `07-finance/`)
+## 3. The numbers (base case, herzien 2026-07-13 at €299 Chat-only ARPU, see `07-finance/`)
+
+Same client pacing as before; ARPU conservatively €299 (all Chat — Compleet counted as upside only, since voice is not yet live). New-client month at 50% off.
 
 | Month | New | Active end | MRR (€) |
 |---|---|---|---|
-| 1 | 2 (pilots, half ARPU) | 2 | 540 |
-| 3 | 3 | 8 | 3,780 |
-| 6 | 5 | 22 | **10,800** |
-| 9 | 7 | 39 | **19,980** |
-| 12 | 8 | 60 | **31,320** |
+| 1 | 2 (pilots, half ARPU) | 2 | 300 |
+| 3 | 3 | 8 | 1,940 |
+| 6 | 5 | 22 | **5,830** |
+| 9 | 7 | 39 | **10,600** |
+| 12 | 8 | 60 | **16,700** |
 
-- Gross margin: ~95% blended.
+- Gross margin: ~97% on Chat (~95% blended once Compleet mixes in at 30%).
 - Payback period: <1 month at €200 cash CAC.
-- Bear case (20% lower ARPU, +30% churn, +50% CAC): still €13k MRR by month 12. Even pessimism hits the €10k goal.
-- Required personal cash injection: **€5–6k** to bridge months 1–4 (founder draws nothing those months).
+- Upside: 30% of base upgraded to Compleet (+€200) → ~€20,300 MRR at month 12. Setup fees (€249 × non-pilot new clients) are one-off cash on top, not MRR.
+- €10k MRR milestone shifts from month 6 to ~month 9 at Chat-only ARPU. Honest trade: lower price, faster yes.
+- Required personal cash injection: **€5–6k** to bridge the early months (founder draws nothing then); breakeven points in `07-finance/mrr-projections.md` shift ~2–3 months later than the pre-repricing model.
 
 ## 4. The 90-day sequence
 
@@ -72,7 +75,7 @@ If any of items 1–4 come back blocked, fall back to **Vakflow** (priority 2) o
 | AP / GDPR enforcement on outbound to eenmanszaak | M | High | BV-only filter on cold list. LIA + Art. 30 RoPA documented from day one. |
 | Founder delivery wall at ~30 active clients | H | Med | Productized onboarding to <2h. VA hire at month 6 (not 8). |
 | One critical sub-processor outage (Synthflow, CM.com) | L | Med | 99% SLA only (not 99.9%); telephony adapter pattern lets us swap providers. |
-| Pricing too high vs. NL voice-only tools (€149) | M | Med | Tier structure anchors at €999, real money at €599. Killer demo destroys the comparison. |
+| Pricing too high vs. NL voice-only tools (€149) | M | Med | Chat at €299 undercuts every voice bundle; Compleet €499 anchors voice value. Killer demo destroys the comparison. |
 | EU AI Act non-compliance (missing Art. 50 disclosure) | L | High (€15M fine ceiling) | Disclosure baked into Synthflow prompt; MSA makes it non-waivable. |
 
 ## 7. What's missing / open questions for the founder

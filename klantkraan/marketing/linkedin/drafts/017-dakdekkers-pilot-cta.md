@@ -4,7 +4,7 @@ publish_week: 4
 post_type: soft_cta
 status: holdback
 holdback_reason: "Body claims a running dakdekker pilot and references case-study post 015 (holdback); publish only after a real dakdekker pilot has run ~30 days."
-character_count: 1103
+character_count: 1117
 ---
 
 # Op zoek naar 2 dakdekkers voor juni-pilot (intern — niet gepubliceerd)
@@ -26,19 +26,19 @@ Wie ik zoek:
 - Dakdekker met 2–8 monteurs
 - Combinatie van renovatie + reparatie (geen pure new-build)
 - Werkgebied Randstad of het oosten
-- Mist regelmatig calls van klanten die offerte aanvragen, niet alleen spoed
+- Mist regelmatig aanvragen van klanten die een offerte willen, niet alleen spoed
 
 Wat je krijgt voor juni + juli:
-- AI-intake op je vaste lijn (vraagt postcode, dak-type, ouderdom, vermoede oorzaak)
-- Missed-call SMS binnen 60 seconden
-- Follow-up SMS na 48 uur — getuned voor offerte-cyclus, niet voor spoed
-- Eén dashboard met al je calls + leads + lopende offertes
+- AI-intake op je website en WhatsApp (vraagt postcode, dak-type, ouderdom, vermoede oorzaak)
+- Plant afspraken direct in je agenda
+- Follow-up getuned voor de offerte-cyclus, niet voor spoed
+- Elke lead en elk terugbelverzoek vastgelegd
 - Per maand opzegbaar
 
 Wat het kost:
-- Maand 1: €225 (halve prijs, pilot-tarief)
-- Maand 2 en verder: €450 per maand all-in
-- Setup: €0
+- Maand 1: €149,50 (halve prijs, pilot-tarief)
+- Maand 2 en verder: €299 per maand
+- Setup: €0 (pilotkorting — normaal €249)
 
 Wat ik vraag terug:
 - 15 min check-in per week

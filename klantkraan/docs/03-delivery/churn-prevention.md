@@ -82,8 +82,8 @@ geen verplichting. App me.
 ## Saved-churn math
 
 A saved churn is more valuable than a new sale:
-- New client: CAC ~€200, ARPU €540, LTV ~€27,900 at 20% churn
-- Saved churn: cost ~€0, recovers ~€6,000–10,000 of LTV (assumes 11–18 months of remaining life)
+- New client: CAC ~€200, ARPU €299, LTV ~€15,000 at 20% churn (herzien 2026-07-13)
+- Saved churn: cost ~€0, recovers ~€3,000–5,000 of LTV (assumes 11–18 months of remaining life)
 
 → Spending up to €500 in founder time to save a churn is rational.
 
