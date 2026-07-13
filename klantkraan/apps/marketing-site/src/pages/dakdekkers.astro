@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import VerderLezen from '../components/VerderLezen.astro'
 import Hero from '../components/dakdekkers/Hero.astro'
 import PainStats from '../components/dakdekkers/PainStats.astro'
 import Features from '../components/dakdekkers/Features.astro'
@@ -12,8 +13,8 @@ import RiskReversal from '../components/RiskReversal.astro'
 ---
 
 <Base
-  title="Dakdekker klanten werven — Klantkraan storm-protocol en 24/7 noodreparaties"
-  description="Nederlandstalige AI-receptionist voor dakdekkers. Storm-protocol herkent spoed-lekkages en escaleert direct. Inspectie-afspraken in uw agenda, automatische reviews. Per maand opzegbaar."
+  title="Dakdekker klanten werven: AI-receptionist met storm-protocol"
+  description="AI-receptionist voor dakdekkers, per maand opzegbaar. Storm-protocol escaleert spoed-lekkages direct, plant inspecties in uw agenda en vangt leads — 24/7."
   centered={false}
 >
   <Hero />
@@ -24,5 +25,8 @@ import RiskReversal from '../components/RiskReversal.astro'
   <RoiSnippet />
   <Faq />
   <CityLinks />
+  <!-- Verder lezen: gids + blog voor deze branche -->
+  <VerderLezen vertical="dakdekker" />
+
   <FinalCta />
 </Base>

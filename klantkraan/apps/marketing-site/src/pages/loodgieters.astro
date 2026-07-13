@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import VerderLezen from '../components/VerderLezen.astro'
 import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
 import TapValve from '../components/illustrations/TapValve.astro'
@@ -63,7 +64,7 @@ const faqs: Faq[] = [
   {
     q: 'Hoort de klant dat het AI is?',
     a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketing-keuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
-    href: '/legal/ai-disclosure',
+    href: '/legal/ai-disclosure/',
     linkLabel: 'Lees de volledige AI-disclosure',
   },
   {
@@ -73,13 +74,13 @@ const faqs: Faq[] = [
   {
     q: 'Wat gebeurt er met de klantgegevens?',
     a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren chatgesprekken 30 dagen, tenzij u korter wenst. De volledige leverancierslijst staat openbaar in ons sub-processorregister.',
-    href: '/legal/dpa',
+    href: '/legal/dpa/',
     linkLabel: 'Bekijk DPA en privacyverklaring',
   },
   {
     q: 'Per maand opzegbaar, echt waar?',
     a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
-    href: '/legal/voorwaarden',
+    href: '/legal/voorwaarden/',
     linkLabel: 'Lees de algemene voorwaarden',
   },
 ]
@@ -99,8 +100,8 @@ const faqSchema = {
 ---
 
 <Base
-  title="Loodgieter klanten werven: Klantkraan AI-receptionist voor spoed en voorrijkosten"
-  description="Nederlandstalige digitale receptionist via websitechat en WhatsApp die voorrijkosten en spoedtoeslagen kent. Beantwoordt vragen, plant afspraken en vangt leads — 24/7. Per maand opzegbaar, done-for-you setup, EU-gehost."
+  title="Loodgieter klanten werven: AI-receptionist voor spoed"
+  description="AI-receptionist voor loodgieters, per maand opzegbaar. Kent uw voorrijkosten en spoedtoeslag, plant afspraken en vangt leads via chat en WhatsApp — 24/7."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -120,13 +121,13 @@ const faqSchema = {
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
-            href="/demo"
+            href="/demo/"
             class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
           >
             Plan een demo
           </a>
           <a
-            href="/rekentool"
+            href="/rekentool/"
             class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
           >
             Bereken uw ROI
@@ -223,13 +224,13 @@ const faqSchema = {
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
-            href="/rekentool"
+            href="/rekentool/"
             class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
           >
             Open de rekentool
           </a>
           <a
-            href="/prijzen"
+            href="/prijzen/"
             class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
           >
             Bekijk de tarieven
@@ -290,17 +291,20 @@ const faqSchema = {
       </h2>
       <ul class="mt-6 grid max-w-3xl grid-cols-2 gap-2 text-body sm:grid-cols-3 md:grid-cols-4">
         <li>
-          <a href="/amsterdam/loodgieter" class="text-(--color-kraan-blue) underline">Amsterdam</a>
+          <a href="/amsterdam/loodgieter/" class="text-(--color-kraan-blue) underline">Amsterdam</a>
         </li>
         <li>
-          <a href="/rotterdam/loodgieter" class="text-(--color-kraan-blue) underline">Rotterdam</a>
+          <a href="/rotterdam/loodgieter/" class="text-(--color-kraan-blue) underline">Rotterdam</a>
         </li>
         <li>
-          <a href="/utrecht/loodgieter" class="text-(--color-kraan-blue) underline">Utrecht</a>
+          <a href="/utrecht/loodgieter/" class="text-(--color-kraan-blue) underline">Utrecht</a>
         </li>
       </ul>
     </div>
   </section>
+
+  <!-- Verder lezen: gids + blog voor deze branche -->
+  <VerderLezen vertical="loodgieter" />
 
   <!-- 8. Eind-CTA band (blue) -->
   <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
@@ -314,13 +318,13 @@ const faqSchema = {
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
-          href="/demo"
+          href="/demo/"
           class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
           Plan een demo
         </a>
         <a
-          href="/prijzen"
+          href="/prijzen/"
           class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
         >
           Bekijk prijzen

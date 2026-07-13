@@ -50,7 +50,7 @@ De industriecijfers zijn helder en pijnlijk:
 - **68%** van spoedoproepen in de loodgieterij valt buiten kantooruren (avond, weekend, vroege ochtend).
 - De gemiddelde klus voor een Nederlandse loodgieter is **€150 tot €600 spoedwerk**, met een gemiddelde van **€450** per gemiste oproep die converteert.
 
-Reken het door op uw eigen cijfers met de [rekentool](/rekentool). Een vakman die 30 oproepen per week krijgt en 30% mist, mist negen klussen per week. Negen keer €450 is €4.050 per week potentieel verloren. Zonder dat hij er één werkdag bijkomt.
+Reken het door op uw eigen cijfers met de [rekentool](/rekentool/). Een vakman die 30 oproepen per week krijgt en 30% mist, mist negen klussen per week. Negen keer €450 is €4.050 per week potentieel verloren. Zonder dat hij er één werkdag bijkomt.
 
 ## Wat een AI-telefoniste voor loodgieters kost
 
@@ -58,7 +58,7 @@ De prijs varieert, maar in Nederland in 2026 ziet de markt er ruwweg zo uit:
 
 - **DIY met een open AI-model en een handige neef**: technisch mogelijk, in de praktijk een tijdrover van 40+ uur en geen ondersteuning bij storingen. Niet aan te raden voor wie facturabel werk heeft.
 - **Generieke virtuele assistenten** (Engelstalige tools, vertaald): €100 tot €300 per maand, maar accent en culturele mismatch maken Nederlandse klanten kopschuw.
-- **Nederlandstalige AI-telefonist met loodgieter-specifieke prompt** (zoals onze [Compleet-laag](/prijzen), binnenkort beschikbaar): **€499 per maand, BTW excl.**, inclusief de volledige chat- en WhatsApp-receptionist. Eenmalige setup €249 (kwijtgescholden voor pilotklanten), maandelijks opzegbaar.
+- **Nederlandstalige AI-telefonist met loodgieter-specifieke prompt** (zoals onze [Compleet-laag](/prijzen/), binnenkort beschikbaar): **€499 per maand, BTW excl.**, inclusief de volledige chat- en WhatsApp-receptionist. Eenmalige setup €249 (kwijtgescholden voor pilotklanten), maandelijks opzegbaar.
 - **Antwoordservice met mens**: €1,50 tot €4 per gesprek, gemiddeld €350–€600 per maand, alleen kantooruren, en zij kennen uw stad noch uw tarief.
 
 De eerlijke rekensom: **één extra geconverteerde klus per maand dekt vrijwel het hele abonnement**. Dat is bij gemiddeld €450 omzet per klus, geen heroïsche conversie aannemen. Gewoon iemand die anders niet teruggebeld was.
@@ -115,8 +115,8 @@ Ja. Voorrijkosten, spoedtoeslag, materiaalopslag, postcodegebied, openingstijden
 
 ## Wat u nu kunt doen
 
-Bereken eerst uw eigen verlies met de [rekentool](/rekentool). Drie velden invullen, antwoord in tien seconden.
+Bereken eerst uw eigen verlies met de [rekentool](/rekentool/). Drie velden invullen, antwoord in tien seconden.
 
-Als het bedrag boven de €1.000 per maand uitkomt, [plan een demo](/demo) van 20 minuten. U chat dezelfde middag zelf met de receptionist, zonder verkooppraatje en zonder verplichting.
+Als het bedrag boven de €1.000 per maand uitkomt, [plan een demo](/demo/) van 20 minuten. U chat dezelfde middag zelf met de receptionist, zonder verkooppraatje en zonder verplichting.
 
-[Bekijk prijzen](/prijzen). Vanaf €299 per maand voor Klantkraan Chat (websitechat + WhatsApp), €499 voor Compleet inclusief AI-telefonist zodra die beschikbaar is, BTW excl., per maand opzegbaar.
+[Bekijk prijzen](/prijzen/). Vanaf €299 per maand voor Klantkraan Chat (websitechat + WhatsApp), €499 voor Compleet inclusief AI-telefonist zodra die beschikbaar is, BTW excl., per maand opzegbaar.

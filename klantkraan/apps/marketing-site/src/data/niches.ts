@@ -29,7 +29,7 @@ export interface Niche {
   label: string
   // Plural used in copy ("loodgieters")
   labelPlural: string
-  // Path to existing cornerstone (no trailing slash; Astro adds it)
+  // Path to existing cornerstone (with trailing slash; trailingSlash: 'always')
   cornerstonePath: string
   // schema.org type for LocalBusiness wrapper on the trade being described
   schemaType: 'Plumber' | 'RoofingContractor' | 'HousePainter' | 'GeneralContractor'
@@ -98,7 +98,7 @@ const baseFaqs: Faq[] = [
   {
     q: 'Hoort de klant dat het AI is?',
     a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketing-keuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
-    href: '/legal/ai-disclosure',
+    href: '/legal/ai-disclosure/',
     linkLabel: 'Lees de volledige AI-disclosure',
   },
   {
@@ -108,7 +108,7 @@ const baseFaqs: Faq[] = [
   {
     q: 'Per maand opzegbaar — echt waar?',
     a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
-    href: '/legal/voorwaarden',
+    href: '/legal/voorwaarden/',
     linkLabel: 'Lees de algemene voorwaarden',
   },
 ]
@@ -118,7 +118,7 @@ export const niches: Record<NicheSlug, Niche> = {
     slug: 'loodgieter',
     label: 'Loodgieter',
     labelPlural: 'loodgieters',
-    cornerstonePath: '/loodgieters',
+    cornerstonePath: '/loodgieters/',
     schemaType: 'Plumber',
     jobValueEur: 450,
     features: sharedFeatures('loodgieter'),
@@ -133,7 +133,7 @@ export const niches: Record<NicheSlug, Niche> = {
     slug: 'dakdekker',
     label: 'Dakdekker',
     labelPlural: 'dakdekkers',
-    cornerstonePath: '/dakdekkers',
+    cornerstonePath: '/dakdekkers/',
     schemaType: 'RoofingContractor',
     jobValueEur: 600,
     features: sharedFeatures('dakdekker'),
@@ -148,7 +148,7 @@ export const niches: Record<NicheSlug, Niche> = {
     slug: 'schilder',
     label: 'Schilder',
     labelPlural: 'schilders',
-    cornerstonePath: '/schilder',
+    cornerstonePath: '/schilder/',
     schemaType: 'HousePainter',
     jobValueEur: 2500,
     features: sharedFeatures('schilder'),
@@ -163,7 +163,7 @@ export const niches: Record<NicheSlug, Niche> = {
     slug: 'aannemer',
     label: 'Aannemer',
     labelPlural: 'aannemers',
-    cornerstonePath: '/aannemer',
+    cornerstonePath: '/aannemer/',
     schemaType: 'GeneralContractor',
     jobValueEur: 5000,
     features: sharedFeatures('aannemer'),

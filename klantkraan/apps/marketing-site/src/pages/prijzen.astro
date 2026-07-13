@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import { company } from '../data/company'
 
 interface Tier {
   id: 'chat' | 'compleet'
@@ -52,13 +53,43 @@ const features: FeatureRow[] = [
     compleet: 'binnenkort beschikbaar',
   },
 ]
+
+// Service schema with both subscription tiers, derived from the tiers array
+// above so the JSON-LD can never drift from the visible pricing cards.
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `${company.tradeName} AI-receptionist`,
+  serviceType: 'AI-receptionist voor vakmensen',
+  url: new URL('/prijzen/', Astro.site).toString(),
+  provider: {
+    '@type': 'Organization',
+    name: company.tradeName,
+    url: new URL('/', Astro.site).toString(),
+  },
+  areaServed: { '@type': 'Country', name: 'Nederland' },
+  offers: tiers.map((tier) => ({
+    '@type': 'Offer',
+    name: `${company.tradeName} ${tier.name}`,
+    description: tier.blurb,
+    price: String(tier.price),
+    priceCurrency: 'EUR',
+    priceSpecification: {
+      '@type': 'UnitPriceSpecification',
+      price: String(tier.price),
+      priceCurrency: 'EUR',
+      unitText: 'per maand',
+    },
+  })),
+}
 ---
 
 <Base
-  title="Prijzen — Klantkraan"
-  description="Twee heldere abonnementen: Chat €299 en Compleet €499 per maand. Eenmalige setup €249 (kwijtgescholden voor pilotklanten), maandelijks opzegbaar, eerste maand 50% korting."
+  title="Prijzen AI-receptionist: Chat €299 of Compleet €499 — Klantkraan"
+  description="Twee abonnementen: Chat €299 en Compleet €499 per maand. Setup €249 (kwijtgescholden voor pilotklanten), maandelijks opzegbaar, eerste maand 50% korting."
   centered={false}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
@@ -95,7 +126,7 @@ const features: FeatureRow[] = [
             </p>
             <p class="mt-3 text-body text-(--color-kraan-stone-700)">{tier.blurb}</p>
             <a
-              href="/demo"
+              href="/demo/"
               class={`mt-6 inline-block rounded-(--radius-button) px-5 py-3 text-body font-medium no-underline ${tier.highlight ? 'bg-(--color-kraan-blue) text-white hover:bg-(--color-kraan-blue-700)' : 'border border-(--color-kraan-blue) text-(--color-kraan-blue) hover:bg-(--color-kraan-stone-100)'}`}
             >
               Plan een demo
@@ -190,7 +221,7 @@ const features: FeatureRow[] = [
         verkooppraatje, wel een rekensom op uw cijfers.
       </p>
       <a
-        href="/demo"
+        href="/demo/"
         class="mt-6 inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
       >
         Plan een demo

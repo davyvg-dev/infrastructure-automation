@@ -19,23 +19,27 @@ const nicheLabelPlural = (v: string): string =>
 
 const dateFmt = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
 const cornerstone: Record<string, string> = {
-  loodgieter: '/loodgieters',
-  dakdekker: '/dakdekkers',
-  schilder: '/schilder',
-  installateur: '/installateur',
-  elektricien: '/elektricien',
-  aannemer: '/aannemer',
+  loodgieter: '/loodgieters/',
+  dakdekker: '/dakdekkers/',
+  schilder: '/schilder/',
+  installateur: '/installateur/',
+  elektricien: '/elektricien/',
+  aannemer: '/aannemer/',
 }
-const cornerstonePath = cornerstone[gids.data.vertical] ?? '/voor-wie'
+const cornerstonePath = cornerstone[gids.data.vertical] ?? '/voor-wie/'
+
+// Only append the brand suffix when the title stays within ~65 chars.
+const pageTitle =
+  gids.data.title.length <= 52 ? `${gids.data.title} — Klantkraan` : gids.data.title
 ---
 
-<Base title={`${gids.data.title} — Klantkraan`} description={gids.data.description} centered={false}>
+<Base title={pageTitle} description={gids.data.description} centered={false}>
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-3xl px-6">
       <nav class="text-small text-(--color-kraan-stone-500)" aria-label="Kruimelpad">
         <a href="/" class="hover:underline">Home</a>
         <span aria-hidden="true"> › </span>
-        <a href="/gidsen" class="hover:underline">Gidsen</a>
+        <a href="/gidsen/" class="hover:underline">Gidsen</a>
         <span aria-hidden="true"> › </span>
         <span>{nicheLabelPlural(gids.data.vertical)}</span>
       </nav>
@@ -82,7 +86,7 @@ const cornerstonePath = cornerstone[gids.data.vertical] ?? '/voor-wie'
           Bekijk de oplossing
         </a>
         <a
-          href="/demo"
+          href="/demo/"
           class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
           Plan een demo

@@ -4,6 +4,8 @@ import { ClientRouter } from 'astro:transitions'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
+import { company } from '../data/company'
+import { contact } from '../data/contact'
 
 interface Props {
   title: string
@@ -22,6 +24,36 @@ interface Props {
 const { title, description, canonical, centered = true, noindex = false } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
+
+// Site-wide structured data: who runs this site (Organization) + what it is
+// (WebSite). Company registration details come from src/data/company.ts.
+const siteUrl = new URL('/', Astro.site).toString()
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}#organization`,
+      name: company.tradeName,
+      url: siteUrl,
+      logo: new URL('/favicon.svg', Astro.site).toString(),
+      legalName: company.legalName,
+      identifier: {
+        '@type': 'PropertyValue',
+        propertyID: 'KVK',
+        value: company.kvk,
+      },
+      email: contact.email,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}#website`,
+      name: company.tradeName,
+      url: siteUrl,
+      publisher: { '@id': `${siteUrl}#organization` },
+    },
+  ],
+}
 ---
 
 <!doctype html>
@@ -50,6 +82,7 @@ const ogImage = new URL('/og-default.png', Astro.site).toString()
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0F4C81" />
+    <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
     <ClientRouter />
   </head>
   <body class="pb-[5.5rem] md:pb-0">

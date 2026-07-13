@@ -3,6 +3,8 @@
 // (/llmstxt/astro_build_llms-full_txt, 2026-05-20)
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 import Base from '../../layouts/Base.astro'
+import { niches, type NicheSlug } from '../../data/niches'
+import { company } from '../../data/company'
 
 type BlogPost = CollectionEntry<'blog'>
 
@@ -21,10 +23,46 @@ interface Props {
 const { post } = Astro.props as Props
 const { Content } = await render(post)
 
-const verticalLabel: Record<'loodgieter' | 'dakdekker' | 'algemeen', string> = {
-  loodgieter: 'Loodgieters',
-  dakdekker: 'Dakdekkers',
-  algemeen: 'Algemeen',
+const postSlug = (p: BlogPost): string => p.id.replace(/\.md$/, '')
+
+// Same label pattern as gidsen/[slug].astro: niches.ts where available,
+// regular Dutch plural as fallback so no vertical ever renders undefined.
+const verticalLabel = (v: string): string =>
+  v === 'algemeen' ? 'Algemeen' : v in niches ? niches[v as NicheSlug].labelPlural : `${v}s`
+
+// Cornerstone page per vertical (same map as gidsen/[slug].astro).
+const cornerstone: Record<string, string> = {
+  loodgieter: '/loodgieters/',
+  dakdekker: '/dakdekkers/',
+  schilder: '/schilder/',
+  installateur: '/installateur/',
+  elektricien: '/elektricien/',
+  aannemer: '/aannemer/',
+}
+const cornerstonePath = cornerstone[post.data.vertical] ?? '/voor-wie/'
+const cornerstoneLabel =
+  post.data.vertical === 'algemeen' ? 'vakmensen' : verticalLabel(post.data.vertical).toLowerCase()
+
+// Related posts: same vertical first; otherwise the two most recent others.
+const otherPosts = (await getCollection('blog')).filter((p) => p.id !== post.id)
+const sameVertical = otherPosts.filter((p) => p.data.vertical === post.data.vertical)
+const related = (
+  sameVertical.length > 0
+    ? sameVertical
+    : otherPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+).slice(0, 2)
+
+const canonical = new URL(`/blog/${postSlug(post)}/`, Astro.site).toString()
+const blogSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString().slice(0, 10),
+  author: { '@type': 'Organization', name: company.tradeName },
+  publisher: { '@type': 'Organization', name: company.tradeName },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  url: canonical,
 }
 
 const dateFmt = new Intl.DateTimeFormat('nl-NL', {
@@ -32,13 +70,18 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
   month: 'long',
   year: 'numeric',
 })
+
+// Only append the brand suffix when the title stays within ~65 chars.
+const pageTitle =
+  post.data.title.length <= 52 ? `${post.data.title} — Klantkraan` : post.data.title
 ---
 
-<Base title={`${post.data.title} — Klantkraan`} description={post.data.description}>
+<Base title={pageTitle} description={post.data.description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
   <article class="py-8">
     <p class="text-micro uppercase tracking-wide text-(--color-kraan-stone-500)">
-      <a href="/blog" class="no-underline hover:underline">Blog</a> · {
-        verticalLabel[post.data.vertical]
+      <a href="/blog/" class="no-underline hover:underline">Blog</a> · {
+        verticalLabel(post.data.vertical)
       } · {dateFmt.format(post.data.pubDate)}
     </p>
     <h1 class="mt-4 font-display text-hero text-(--color-kraan-ink)">{post.data.title}</h1>
@@ -48,12 +91,41 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
       <Content />
     </div>
 
+    <aside class="mt-10 max-w-2xl text-body text-(--color-kraan-stone-700)">
+      <p>
+        Meer voor {cornerstoneLabel}:
+        <a href={cornerstonePath} class="text-(--color-kraan-blue) underline">
+          zo werkt de Klantkraan AI-receptionist voor {cornerstoneLabel}
+        </a>.
+      </p>
+    </aside>
+
+    {
+      related.length > 0 && (
+        <section class="mt-10 max-w-2xl">
+          <h2 class="font-display text-h3 text-(--color-kraan-ink)">Gerelateerde artikelen</h2>
+          <ul class="mt-3 space-y-2 text-body">
+            {related.map((p) => (
+              <li>
+                <a
+                  href={`/blog/${postSlug(p)}/`}
+                  class="text-(--color-kraan-blue) underline hover:text-(--color-kraan-rust)"
+                >
+                  {p.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <footer
       class="mt-12 border-t border-(--color-kraan-stone-300) pt-8 text-small text-(--color-kraan-stone-500)"
     >
       Geschreven door {post.data.author}. Vragen of feedback?
-      <a href="/demo" class="no-underline hover:underline">Plan een demo</a> of bekijk de
-      <a href="/prijzen" class="no-underline hover:underline">prijzen</a>.
+      <a href="/demo/" class="no-underline hover:underline">Plan een demo</a> of bekijk de
+      <a href="/prijzen/" class="no-underline hover:underline">prijzen</a>.
     </footer>
   </article>
 </Base>

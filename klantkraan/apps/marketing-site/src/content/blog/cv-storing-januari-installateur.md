@@ -108,6 +108,6 @@ Klantkraan is gemaakt voor de installateur die regelmatig de bezetkleur hoort te
 
 In plaats van uitleggen wat de stem klinkt: bel het demo-nummer en spreek de AI-telefoniste tien minuten zelf. Vraag naar een CV-storing in uw eigen postcode, vraag de voorrijkosten op, vraag een terugbel-afspraak voor de volgende ochtend. Hang op en kijk binnen 60 seconden of u de bevestigings-SMS hebt.
 
-[Ga naar /demo](/demo) voor het nummer en een testscript.
+[Ga naar /demo](/demo/) voor het nummer en een testscript.
 
-Of: [bereken op /rekentool](/rekentool) wat een gemiste oproep voor uw eigen bedrijf kost en hoe snel een Klantkraan-abonnement zichzelf terugverdient op uw cijfers.
+Of: [bereken op /rekentool](/rekentool/) wat een gemiste oproep voor uw eigen bedrijf kost en hoe snel een Klantkraan-abonnement zichzelf terugverdient op uw cijfers.

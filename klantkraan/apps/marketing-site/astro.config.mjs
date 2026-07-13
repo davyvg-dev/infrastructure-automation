@@ -9,6 +9,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   site: 'https://klantkraan.nl',
   output: 'static',
+  // Cloudflare Pages serves /path/ (directory build format); trailing-slash
+  // internal URLs avoid a 308 redirect hop on every link.
+  trailingSlash: 'always',
   adapter: cloudflare({
     platformProxy: {
       enabled: true,
@@ -18,6 +21,9 @@ export default defineConfig({
     sitemap({
       // /r/* are private per-client dashboards — keep them out of the sitemap.
       filter: (page) => !page.includes('/r/'),
+      // Stamp every entry with the build date so crawlers see fresh lastmod
+      // values on each deploy.
+      serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
     }),
   ],
   vite: {

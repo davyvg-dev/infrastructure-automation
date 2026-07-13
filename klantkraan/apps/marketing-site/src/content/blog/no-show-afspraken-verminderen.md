@@ -86,13 +86,13 @@ Dit klinkt agressief. Nederlandse vakmensen die hun voorrijkosten vooraf vermeld
 
 ## Wat dit kost om in te voeren
 
-- **Bevestigings- en reminderflow** via Klantkraan Chat: €299 per maand BTW excl. — de AI-receptionist plant de afspraak via websitechat of WhatsApp en stuurt de bevestiging direct mee, maandelijks opzegbaar. Zie [prijzen](/prijzen).
+- **Bevestigings- en reminderflow** via Klantkraan Chat: €299 per maand BTW excl. — de AI-receptionist plant de afspraak via websitechat of WhatsApp en stuurt de bevestiging direct mee, maandelijks opzegbaar. Zie [prijzen](/prijzen/).
 - **AI-confirm-belletje** zit in Klantkraan Compleet (€499 per maand BTW excl., AI-telefonist op een eigen Nederlands nummer — binnenkort beschikbaar).
 - **DIY met losse SMS-provider** (CM.com, MessageBird) is haalbaar als u zelf de flows bouwt. Reken op 8 tot 12 uur eenmalige setup en geen ondersteuning bij storingen.
 
 De rekensom is simpel: één voorkomen no-show per maand (€60 + 2 uur tijd) dekt het abonnement al voor de helft. Vanaf de tweede voorkomen no-show is alles winst.
 
-Bereken uw eigen voorkombare verlies met de [rekentool](/rekentool). Twee minuten, geen e-mailadres nodig.
+Bereken uw eigen voorkombare verlies met de [rekentool](/rekentool/). Twee minuten, geen e-mailadres nodig.
 
 ## Wat u vandaag al kunt doen, gratis
 
@@ -121,4 +121,4 @@ Reminders versturen op basis van een lopende dienstverleningsafspraak valt onder
 **Werkt dit ook als ik geen vaste agenda-software heb?**
 Ja. De bevestigings- en reminderflow werkt zelfstandig; u krijgt de bevestigingen en afzeggingen in een eenvoudig overzicht. Cal.com of Google Calendar maakt het automatischer, maar is geen voorwaarde.
 
-[Plan een demo](/demo) van 20 minuten om te zien hoe Klantkraan de drie lagen in uw bestaande agenda inbouwt, of [bekijk de prijzen](/prijzen) eerst.
+[Plan een demo](/demo/) van 20 minuten om te zien hoe Klantkraan de drie lagen in uw bestaande agenda inbouwt, of [bekijk de prijzen](/prijzen/) eerst.

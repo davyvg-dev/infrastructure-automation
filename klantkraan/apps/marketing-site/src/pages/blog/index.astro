@@ -42,7 +42,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
             </p>
             <h2 class="mt-3 font-display text-h2 text-(--color-kraan-ink)">
               <a
-                href={`/blog/${post.id.replace(/\.md$/, '')}`}
+                href={`/blog/${post.id.replace(/\.md$/, '')}/`}
                 class="text-(--color-kraan-ink) no-underline hover:text-(--color-kraan-blue)"
               >
                 {post.data.title}
@@ -53,7 +53,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
             {post.data.description}
           </p>
           <a
-            href={`/blog/${post.id.replace(/\.md$/, '')}`}
+            href={`/blog/${post.id.replace(/\.md$/, '')}/`}
             class="mt-6 inline-block text-body font-medium text-(--color-kraan-blue) no-underline hover:underline"
           >
             Lees het artikel →

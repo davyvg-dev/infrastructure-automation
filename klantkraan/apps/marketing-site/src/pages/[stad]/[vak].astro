@@ -30,7 +30,7 @@ const niche = niches[nicheSlug]
 const combo = wave1.find((c) => c.city === citySlug && c.niche === nicheSlug)!
 
 const pageTitle = `${niche.label} in ${city.name}: Klantkraan AI-receptionist`
-const pageDescription = `${niche.label} in ${city.name}? De digitale receptionist van Klantkraan beantwoordt klantvragen via websitechat en WhatsApp, plant afspraken en vangt leads — 24/7. Per maand opzegbaar.`
+const pageDescription = `${niche.label} in ${city.name}? De AI-receptionist beantwoordt vragen via chat en WhatsApp, plant afspraken en vangt leads — 24/7. Per maand opzegbaar.`
 
 // Merge FAQs: 2 city-named first (per blueprint thin-content rule), then 4 base.
 const faqs: Faq[] = [...combo.cityFaqs, ...niche.baseFaqs]
@@ -50,7 +50,7 @@ const jobValueWithTier =
       : niche.jobValueEur
 
 // ---- Structured data
-const canonical = new URL(`/${citySlug}/${nicheSlug}`, Astro.site).toString()
+const canonical = new URL(`/${citySlug}/${nicheSlug}/`, Astro.site).toString()
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -132,13 +132,13 @@ const serviceSchema = {
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
         <a
-          href="/demo"
+          href="/demo/"
           class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
         >
           Plan een demo
         </a>
         <a
-          href="/rekentool"
+          href="/rekentool/"
           class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
           Bereken uw ROI
@@ -242,13 +242,13 @@ const serviceSchema = {
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
-            href="/rekentool"
+            href="/rekentool/"
             class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
           >
             Open de rekentool
           </a>
           <a
-            href="/prijzen"
+            href="/prijzen/"
             class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
           >
             Bekijk de tarieven
@@ -331,7 +331,7 @@ const serviceSchema = {
                 {lateralCities.map((c) => (
                   <li>
                     <a
-                      href={`/${c}/${nicheSlug}`}
+                      href={`/${c}/${nicheSlug}/`}
                       class="text-(--color-kraan-blue) underline"
                     >
                       {niche.label} in {cities[c].name}
@@ -352,7 +352,7 @@ const serviceSchema = {
                 {sameCityCrossNiches.map((n) => (
                   <li>
                     <a
-                      href={`/${citySlug}/${n}`}
+                      href={`/${citySlug}/${n}/`}
                       class="text-(--color-kraan-blue) underline"
                     >
                       {niches[n].label} in {city.name}
@@ -379,13 +379,13 @@ const serviceSchema = {
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
-          href="/demo"
+          href="/demo/"
           class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
           Plan een demo
         </a>
         <a
-          href="/prijzen"
+          href="/prijzen/"
           class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
         >
           Bekijk prijzen
