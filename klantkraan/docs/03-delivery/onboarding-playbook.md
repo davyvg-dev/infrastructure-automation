@@ -271,7 +271,7 @@ The gap between "signed" and "live on the client's site booking into their calen
 2. **Embeddable widget** (`<script>` bubble → iframe to hosted URL, per-client, CSP-safe) — **DONE** (commit 2851f4f); see `ai-receptionist/docs/WIDGET.md`.
 3. **Multi-client routing** (serve >1 client from one box by slug/subdomain) — **DONE** — `config/clients/<slug>.yaml` routed by Host subdomain, `BUSINESS_CONFIG` as fallback; session + sim-bookings state namespaced per slug.
 4. **Client-facing lead/booking notification** — `notify.owner()` targets the founder's Telegram only; needs a per-client destination (WhatsApp/e-mail).
-5. **Scrape→draft pipeline** (`app/extract.py` + `scaffold.py --from-json` + a `selftest intake` that asserts no price is ever written without human input) — **not built**.
+5. **Scrape→draft pipeline** (`app/extract.py` + `scaffold.py --from-json` + `selftest intake`) — **DONE** (commit 2d11e72). Site + Google Places (New) → Claude cited-extraction JSON via structured outputs; prices are structurally absent from the schema (never inferred), citation-or-blank, merged over the template with every service stamped `PRIJS?`. Live extraction verified offline only (needs `ANTHROPIC_API_KEY`; `GOOGLE_PLACES_API_KEY` optional).
 
 ---
 
