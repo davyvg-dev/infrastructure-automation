@@ -1,5 +1,11 @@
 # `kk-voice-agent` — self-hosted Dutch AI receptionist
 
+> **Status: DORMANT (2026-07).** The business pivoted text-first: the sellable
+> product is the top-level `ai-receptionist/` app (web chat + WhatsApp +
+> Telegram). Voice is the upsell and this agent is its future home — P1/P2 are
+> done, resume here when a client wants voice. Blockers unchanged: LiveKit
+> Cloud creds, Deepgram/ElevenLabs keys, and a Dutch `voice_id`.
+
 Replaces Synthflow with a stack we own: same Dutch prompt, same tools, same
 art. 50 disclosure, same `call-end` webhook — but no proprietary console and no
 per-minute platform margin. Built on **LiveKit Agents (Python)**.
