@@ -21,7 +21,7 @@ from starlette.concurrency import run_in_threadpool
 
 from . import sessions
 from .channels import whatsapp
-from .settings import business, ensure_dirs
+from .settings import business, clear_slug, ensure_dirs, resolve_slug, use_slug
 
 log = logging.getLogger(__name__)
 
@@ -41,6 +41,13 @@ def _client_ip(request: Request) -> str:
     if forwarded:
         return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
+
+
+def _activate(request: Request):
+    """Bind the request to a client config (by Host subdomain, or an explicit override) for
+    the rest of this call. Returns a token to pass to clear_slug() in a finally block."""
+    override = request.query_params.get("client") or request.headers.get("x-client-slug")
+    return use_slug(resolve_slug(request.headers.get("host"), override))
 
 
 def _rate_ok(ip: str) -> bool:
@@ -86,20 +93,28 @@ def widget_js() -> FileResponse:
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
-    # Liveness probe for Caddy/Uptime Kuma; also confirms the config loads.
-    return {"status": "ok", "business": business()["business"]["name"]}
+def health(request: Request) -> dict[str, str]:
+    # Liveness probe for Caddy/Uptime Kuma; also confirms the (routed) config loads.
+    token = _activate(request)
+    try:
+        return {"status": "ok", "business": business()["business"]["name"]}
+    finally:
+        clear_slug(token)
 
 
 @app.get("/config")
-def config() -> dict[str, str]:
-    cfg = business()
-    return {
-        "name": cfg["business"]["name"],
-        "greeting": sessions.greeting(),
-        # Drives the widget's UI chrome only; defaults to Dutch (the target market).
-        "locale": cfg.get("locale", "nl"),
-    }
+def config(request: Request) -> dict[str, str]:
+    token = _activate(request)
+    try:
+        cfg = business()
+        return {
+            "name": cfg["business"]["name"],
+            "greeting": sessions.greeting(),
+            # Drives the widget's UI chrome only; defaults to Dutch (the target market).
+            "locale": cfg.get("locale", "nl"),
+        }
+    finally:
+        clear_slug(token)
 
 
 @app.post("/chat", response_model=ChatOut)
@@ -111,11 +126,14 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
     if not _rate_ok(_client_ip(request)):
         raise HTTPException(status_code=429, detail="Too many messages — try again in a minute.")
     session_id = body.session_id or uuid.uuid4().hex
+    token = _activate(request)
     try:
         reply = sessions.respond("web", session_id, body.message)
     except Exception:
         log.exception("chat turn failed (session %s)", session_id)
         raise HTTPException(status_code=503, detail="The receptionist is temporarily unavailable.")
+    finally:
+        clear_slug(token)
     return ChatOut(session_id=session_id, reply=reply)
 
 

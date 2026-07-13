@@ -1,6 +1,7 @@
 """Isolated checks + an interactive terminal chat — test each layer before the web UI.
 
     python -m app.selftest config      # config loads, no network
+    python -m app.selftest routing     # multi-tenant slug -> config resolution, no network
     python -m app.selftest calendar    # slot generation + a booking round-trip, no network
     python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
@@ -11,7 +12,11 @@
 from __future__ import annotations
 
 import sys
+import tempfile
+import textwrap
+from pathlib import Path
 
+from . import settings
 from .settings import MissingSetting, business, env
 
 
@@ -34,6 +39,57 @@ def check_config() -> bool:
     _ok(f"persona: {cfg['persona']['name']}")
     _ok(f"services: {', '.join(s['name'] for s in cfg.get('services', []))}")
     _ok(f"model: {cfg['model']['id']} (effort={cfg['model'].get('effort', 'low')})")
+    return True
+
+
+def check_routing() -> bool:
+    print("• routing (multi-tenant, no network)")
+    if settings.current_slug() is not None:
+        return _fail("expected no active client at rest")
+    default_name = business()["business"]["name"]
+    _ok(f"default client (no slug) resolves to: {default_name}")
+
+    orig_dir = settings.CLIENTS_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        settings.CLIENTS_DIR = Path(tmp)
+        (settings.CLIENTS_DIR / "acme-loodgieter.yaml").write_text(
+            textwrap.dedent(
+                """\
+                business:
+                  name: "Acme Loodgieter"
+                  type: "loodgieter"
+                  timezone: "Europe/Amsterdam"
+                """
+            ),
+            encoding="utf-8",
+        )
+        try:
+            if settings.resolve_slug("demo-1-2-3-4.sslip.io") is not None:
+                return _fail("an unknown host must not resolve to a client")
+            if settings.client_config_path("../secrets") is not None:
+                return _fail("a path-traversal slug must be rejected")
+            slug = settings.resolve_slug("acme-loodgieter.klantkraan.nl")
+            if slug != "acme-loodgieter":
+                return _fail(f"host subdomain routing failed: got {slug!r}")
+            _ok("unknown host -> default; traversal slug rejected; subdomain -> slug")
+
+            token = settings.use_slug(slug)
+            try:
+                if settings.active_client() != "acme-loodgieter":
+                    return _fail("active_client() did not track the slug")
+                if settings.config_path().name != "acme-loodgieter.yaml":
+                    return _fail("config_path() did not point at the client file")
+                if business()["business"]["name"] != "Acme Loodgieter":
+                    return _fail("business() did not switch to the client config")
+            finally:
+                settings.clear_slug(token)
+            _ok("active request -> client config swapped in (business/config_path/active_client)")
+        finally:
+            settings.CLIENTS_DIR = orig_dir
+
+    if settings.current_slug() is not None or business()["business"]["name"] != default_name:
+        return _fail("did not fall back to the default client after the request scope ended")
+    _ok("falls back to the default client once the request scope ends")
     return True
 
 
@@ -131,11 +187,12 @@ def interactive_chat() -> bool:
 
 CHECKS = {
     "config": check_config,
+    "routing": check_routing,
     "calendar": check_calendar,
     "calendar-google": check_calendar_google,
     "agent": check_agent,
 }
-ORDER = ["config", "calendar", "agent"]
+ORDER = ["config", "routing", "calendar", "agent"]
 
 
 def main(argv: list[str]) -> int:

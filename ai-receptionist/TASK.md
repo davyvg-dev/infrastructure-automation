@@ -69,7 +69,17 @@ Full guide in `docs/WIDGET.md`. The chat stays same-origin inside an iframe → 
 
 ---
 
-## Step 4b — Extra channels (optional, but great for demos)
+## Step 4b — Multi-client routing (host many clients on one server)
+
+Full convention in `config/clients/README.md`. `python -m app.selftest routing` covers it offline.
+
+- [ ] ▶ Drop a config as `config/clients/<slug>.yaml`, restart the server.
+- [ ] ✓ `curl -H "Host: <slug>.klantkraan.nl" .../config` returns that client; an unknown host
+      falls back to `BUSINESS_CONFIG`. (Locally, `?client=<slug>` or `X-Client-Slug` works too.)
+
+---
+
+## Step 4c — Extra channels (optional, but great for demos)
 
 Full setup in `docs/CHANNELS.md`. All channels share one brain, so if Step 3 passed these
 "just work".

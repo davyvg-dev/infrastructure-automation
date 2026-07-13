@@ -56,9 +56,10 @@ full-page link `https://CLIENT.klantkraan.nl` and place it wherever they *can* r
 - The widget page is **frameable by default** — the server never sends `X-Frame-Options`. If a
   reverse proxy (Caddy/nginx) sits in front, make sure it doesn't add one. If you set a CSP, allow
   the client's domain(s) via `frame-ancestors`.
-- Each client is served from a **distinct origin/subdomain** that selects their `BUSINESS_CONFIG`.
-  That gives per-client rate-limiting, logging, and the ability to kill one client's widget without
-  touching others. (Multi-client routing on one box is not built yet — one config per process today.)
+- Each client is served from a **distinct origin/subdomain** (`<slug>.klantkraan.nl`) that the
+  server maps to `config/clients/<slug>.yaml` — one process hosts many clients. Unknown hosts fall
+  back to the `BUSINESS_CONFIG` default. See `config/clients/README.md`. Per-tenant session state
+  and (sim) bookings are namespaced by slug, so clients never share conversations or slots.
 - `/chat` keeps its optional `CHAT_API_KEY` (a coarse gate, visible in any browser widget — the real
   guard is the per-IP `CHAT_RATE_LIMIT_PER_MINUTE`, default 20/min, since every call is a paid
   Claude request). Keep the server behind a proxy so `X-Forwarded-For` carries the real IP.

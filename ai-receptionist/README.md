@@ -82,6 +82,12 @@ Or edit a config by hand (`config/business.yaml` = dental example,
 `config/home-services-example.yaml` = a ready plumbing demo). No code changes either way —
 that's the whole pitch: "here's what this looks like for *you*."
 
+**Hosting many clients on one server:** drop a client's config in `config/clients/<slug>.yaml`
+and the server routes `https://<slug>.klantkraan.nl` to it automatically (Host subdomain →
+config). Unknown hosts fall back to `BUSINESS_CONFIG`, so a single-tenant run is unchanged. See
+`config/clients/README.md`. Embed the chat on a client's own site via the one-line widget in
+`docs/WIDGET.md`.
+
 ## Layout
 
 ```

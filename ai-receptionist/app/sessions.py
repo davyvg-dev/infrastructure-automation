@@ -17,8 +17,9 @@ import threading
 from typing import Any
 
 from . import receptionist
+from .settings import active_client
 
-# key = "<channel>:<user_id>"  ->  conversation history
+# key = "<client>:<channel>:<user_id>"  ->  conversation history
 _STORE: dict[str, list[dict[str, Any]]] = {}
 _locks: dict[str, threading.Lock] = {}
 _meta_lock = threading.Lock()
@@ -46,7 +47,7 @@ def _trim(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def respond(channel: str, user_id: str, text: str) -> str:
-    key = f"{channel}:{user_id}"
+    key = f"{active_client()}:{channel}:{user_id}"
     with _lock_for(key):
         history = _STORE.get(key, [])
         reply, history = receptionist.run_turn(history, text)
@@ -55,7 +56,7 @@ def respond(channel: str, user_id: str, text: str) -> str:
 
 
 def reset(channel: str, user_id: str) -> None:
-    key = f"{channel}:{user_id}"
+    key = f"{active_client()}:{channel}:{user_id}"
     with _lock_for(key):
         _STORE.pop(key, None)
 
