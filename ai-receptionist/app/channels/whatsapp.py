@@ -4,26 +4,36 @@ Twilio delivers inbound WhatsApp messages as a form-encoded webhook POST. We run
 receptionist turn and reply with TwiML, which Twilio sends back to the customer. Wired
 into the FastAPI server at POST /whatsapp.
 
-Signature validation is on when TWILIO_AUTH_TOKEN is set (recommended in production) and
-the twilio package is installed; otherwise it's skipped so local/dev works out of the box.
+Signature validation is fail-closed: requests are rejected unless TWILIO_AUTH_TOKEN is
+set and the signature verifies. For local development without Twilio, set
+WHATSAPP_ALLOW_UNSIGNED=1 explicitly.
 """
 
 from __future__ import annotations
 
+import logging
 import os
 from xml.sax.saxutils import escape
 
 from .. import sessions
 
+log = logging.getLogger(__name__)
+
 
 def _signature_ok(url: str, signature: str | None, params: dict[str, str]) -> bool:
     token = os.getenv("TWILIO_AUTH_TOKEN")
     if not token:
-        return True  # validation disabled (dev)
+        if os.getenv("WHATSAPP_ALLOW_UNSIGNED") == "1":
+            return True
+        log.warning("Rejected /whatsapp request: TWILIO_AUTH_TOKEN not set "
+                    "(set WHATSAPP_ALLOW_UNSIGNED=1 for local dev)")
+        return False
     try:
         from twilio.request_validator import RequestValidator
     except ModuleNotFoundError:
-        return True  # twilio not installed; don't hard-block the demo
+        log.warning("Rejected /whatsapp request: twilio package not installed, "
+                    "cannot validate signature")
+        return False
     return RequestValidator(token).validate(url, params, signature or "")
 
 
