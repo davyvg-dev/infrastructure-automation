@@ -74,3 +74,11 @@ greeting: >
 model:
   id: "claude-opus-4-8"
   effort: "low"
+
+# --- Calendar backend -------------------------------------------------------------------
+# This demo uses the built-in simulator (a local JSON file) — no setup, instant.
+# For a real client, connect their OWN Google Calendar instead:
+#   calendar:
+#     provider: google
+#     calendar_id: "client@gmail.com"   # the calendar they shared with our service account
+# and set GOOGLE_CALENDAR_SA_JSON in .env. Full steps: docs/GOOGLE-CALENDAR.md.

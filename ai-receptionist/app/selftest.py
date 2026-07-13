@@ -2,6 +2,7 @@
 
     python -m app.selftest config      # config loads, no network
     python -m app.selftest calendar    # slot generation + a booking round-trip, no network
+    python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
     python -m app.selftest chat        # interactive terminal chat with the receptionist
     python -m app.selftest all         # config + calendar + agent, in order
@@ -59,6 +60,31 @@ def check_calendar() -> bool:
     return True
 
 
+def check_calendar_google() -> bool:
+    print("• google calendar (needs calendar.provider: google + GOOGLE_CALENDAR_SA_JSON)")
+    provider = str((business().get("calendar") or {}).get("provider", "sim")).lower()
+    if provider != "google":
+        _ok(f"provider is '{provider}', not google — skipping. Set calendar.provider: google to test.")
+        return True
+    try:
+        env("GOOGLE_CALENDAR_SA_JSON")
+    except MissingSetting as exc:
+        return _fail(str(exc))
+    from . import calendar_store
+
+    try:
+        avail = calendar_store.availability()
+    except Exception as exc:
+        return _fail(f"live Google Calendar call failed: {exc}")
+    days = avail.get("open_days", {})
+    if not days:
+        _ok("connected to Google Calendar; no open days in the horizon (fully busy or closed?)")
+        return True
+    first_day, slots = next(iter(days.items()))
+    _ok(f"connected to Google Calendar; {len(days)} open day(s); {first_day} has {len(slots)} slots")
+    return True
+
+
 def check_agent() -> bool:
     print("• agent (needs ANTHROPIC_API_KEY)")
     try:
@@ -103,7 +129,12 @@ def interactive_chat() -> bool:
     return True
 
 
-CHECKS = {"config": check_config, "calendar": check_calendar, "agent": check_agent}
+CHECKS = {
+    "config": check_config,
+    "calendar": check_calendar,
+    "calendar-google": check_calendar_google,
+    "agent": check_agent,
+}
 ORDER = ["config", "calendar", "agent"]
 
 
@@ -113,7 +144,7 @@ def main(argv: list[str]) -> int:
         return 0 if interactive_chat() else 1
     names = ORDER if which == "all" else [which]
     if which != "all" and which not in CHECKS:
-        print(f"Unknown check '{which}'. Choose: {', '.join(ORDER)}, chat, all")
+        print(f"Unknown check '{which}'. Choose: {', '.join(CHECKS)}, chat, all")
         return 2
     for name in names:
         if not CHECKS[name]():
