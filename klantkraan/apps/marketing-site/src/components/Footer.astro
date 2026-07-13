@@ -2,6 +2,7 @@
 import Icon from './Icon.astro'
 import { branches } from '../data/branches'
 import { contact, waLink, telLink, mailLink } from '../data/contact'
+import { company } from '../data/company'
 
 const year = new Date().getFullYear()
 
@@ -81,10 +82,14 @@ const trustBadges: TrustBadge[] = [
         <p class="font-display text-h3 text-(--color-kraan-ink)">Klantkraan</p>
         <p class="mt-2">De Klantenmotor voor Nederlandse vakmensen.</p>
         <p class="mt-4 text-micro">
-          Klantkraan is een handelsnaam van T4 Software Consulting BV.<br />
-          KvK: <span class="font-mono">{/* KVK */}TODO</span> · BTW: <span class="font-mono"
-            >{/* BTW */}TODO</span
-          >
+          Klantkraan is een handelsnaam van {company.legalName}.<br />
+          KvK: <span class="font-mono">{company.kvk}</span>{
+            company.btw && (
+              <>
+                {' '}· BTW: <span class="font-mono">{company.btw}</span>
+              </>
+            )
+          }
         </p>
       </div>
       <div>

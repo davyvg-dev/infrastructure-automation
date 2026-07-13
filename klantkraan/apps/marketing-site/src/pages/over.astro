@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
 import { waLink } from '../data/contact'
+import { company } from '../data/company'
 ---
 
 <Base
@@ -36,12 +37,16 @@ import { waLink } from '../data/contact'
           </div>
           <div>
             <dt class="text-small text-(--color-kraan-stone-500)">KvK-nummer</dt>
-            <dd class="font-mono">TODO</dd>
+            <dd class="font-mono">{company.kvk}</dd>
           </div>
-          <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">BTW-nummer</dt>
-            <dd class="font-mono">TODO</dd>
-          </div>
+          {
+            company.btw && (
+              <div>
+                <dt class="text-small text-(--color-kraan-stone-500)">BTW-nummer</dt>
+                <dd class="font-mono">{company.btw}</dd>
+              </div>
+            )
+          }
           <div>
             <dt class="text-small text-(--color-kraan-stone-500)">Vestiging</dt>
             <dd>Nederland</dd>
