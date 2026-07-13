@@ -12,28 +12,28 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 - [ ] Rewrite offer docs voice-first → text-first (master plan §product, offer-and-pricing, discovery script demo flow)
 
 ### B. Product hardening (`ai-receptionist/` — make it sellable plug-and-play)
-- [ ] Commit the pending WhatsApp-first site pass (8 modified files + new `contact.ts` + `docs/strategy/zero-touch-audit`)
-- [ ] Art. 50 disclosure into `config/business.yaml` + `config/home-services-example.yaml` (the default config currently ships without it)
-- [ ] WhatsApp webhook signature validation fail-closed (fail-open only behind an explicit dev env flag)
-- [ ] `take_message`: persist leads to disk; only tell the customer "delivered" when notify or persistence actually succeeded (core promise = never lose a lead)
-- [ ] `/chat`: per-IP rate limit + optional API key; catch API errors so they don't 500 raw
-- [ ] Logging `basicConfig` at startup; `/health` endpoint; `HOST`/`PORT` from env (currently hardcoded 127.0.0.1)
-- [ ] Calendar: stop offering already-elapsed slots today; tz-aware datetimes; per-business bookings file (demos currently collide in one shared file)
-- [ ] Session store: lock around read-modify-write; document the single-worker constraint
-- [ ] Decide: prospect configs with real company names/phones in git — keep, or move to gitignored dir
-- [ ] Privacy page: replace the Plausible claim with Cloudflare Web Analytics (what's actually live)
-- [ ] `/over`: remove or gate the dead `kvk-uittreksel` download link until the PDF exists
+- [x] Commit the pending WhatsApp-first site pass (committed 2026-07-13, f169ac7)
+- [x] Art. 50 disclosure into `config/business.yaml` + `config/home-services-example.yaml` (0f82e7e)
+- [x] WhatsApp webhook signature validation fail-closed; `WHATSAPP_ALLOW_UNSIGNED=1` for local dev (5941efc)
+- [x] `take_message`: persists to `data/messages.json`; tool result reports saved/notified honestly (e3435cc)
+- [x] `/chat`: per-IP rate limit (default 20/min) + optional `CHAT_API_KEY` + 2000-char cap + caught 503 (36c77c0)
+- [x] Logging `basicConfig` at startup; `/health` endpoint; `HOST`/`PORT`/`LOG_LEVEL` from env (1db1745)
+- [x] Calendar: future-only slots, tz-aware via business config, per-business `bookings-<config>.json` (e5057df)
+- [x] Session store: per-conversation locks; single-worker constraint documented (e7ff1e2)
+- [ ] Decide: prospect configs with real company names/phones in git — keep, or move to gitignored dir (FOUNDER DECISION)
+- [x] Privacy page: Cloudflare Web Analytics named instead of Plausible (9022f04)
+- [x] `/over`: KvK-uittreksel is on-request via mail until the PDF exists (3999034)
 
 ### C. Repo hygiene
-- [ ] Fix root `.gitignore` (`*.retry .DS_Store` mashed on one line — .DS_Store not actually ignored; add `.wrangler/`)
-- [ ] Delete legacy `Python/`; rewrite root `README.md` to describe Klantkraan
-- [ ] Mark `apps/voice-agent/` as dormant voice upsell (README note), not the active product
-- [ ] growth-engine: tick TASK.md step 6 (first real post went live 2026-07-12), tighten `anthropic` version pin, delete dead `formatting.paste_block`, add `buildlog` to the CLAUDE.md module list
+- [x] Fix root `.gitignore` — .DS_Store/.wrangler now ignored; Python-era `downloads/` pattern removed (d9ef618)
+- [x] Delete legacy `Python/`; root `README.md` now describes Klantkraan (0d2db3f)
+- [x] `apps/voice-agent/` marked dormant — voice upsell, resume when a client wants it (9f67dcf)
+- [x] growth-engine: TASK.md step 6 ticked, `anthropic>=0.116,<1`, dead `paste_block` removed, `buildlog` in CLAUDE.md (0279d5f)
 
 ### D. Founder real-world batch (Claude preps, founder executes)
 - [ ] KvK + BTW numbers → new `src/data/company.ts` → renders on `/over`, legal pages, offerte template (founder supplies 2 numbers; one file edit fixes every placeholder)
 - [ ] Upload real KvK-uittreksel PDF → `public/downloads/`
-- [ ] Attach `klantkraan.nl` custom domain (check NS propagation via `dig`, attach via Cloudflare API/wrangler — CLI, no dashboard)
+- [x] Attach `klantkraan.nl` custom domain — NS propagation completed; apex + www both serve the site over Cloudflare (verified 2026-07-13, HTTP 200)
 - [ ] Moneybird trial + Mollie account (walkthrough prepped; needed before first invoice)
 - [ ] Point `/demo` at the live text demo (web chat) instead of the TODO phone number — text demo works today, no CM.com dependency
 
@@ -148,7 +148,7 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [x] Aesthetic pass per brand brief (6 commits, 2026-05-20): Lucide icons site-wide, rust hero accents, full-bleed cream/stone-100 alt-bg sections, Stat component with rust marker, mono section kickers, hairline-divided feature rows, link underline reveal
 - [x] Competitor-research polish (5 commits, 2026-05-20): three-icon trust badge strip (AVG + EU + Dutch voice), Article 50 transparency callout, day-price framing on /prijzen
 - [x] `/elektricien`, `/installateur`, `/aannemer` profession landings (template clone, trade-specific copy)
-- [ ] Attach `klantkraan.nl` + `www.klantkraan.nl` custom domains (blocked on NS-swap propagation; TransIP NS still resolving)
+- [x] Attach `klantkraan.nl` + `www.klantkraan.nl` custom domains (NS propagation completed; both live over Cloudflare, verified 2026-07-13)
 
 ### Automation infra
 - [x] Hetzner CX22 + Caddy + docker-compose (compose + Caddyfile + deploy.sh + borg-backup.sh ready; not yet provisioned — founder action)
