@@ -7,10 +7,9 @@
 > **Target:** signed → live in ~5 days, **≤ ~2h founder time** (~112 min to go-live).
 > **"Done" = first real lead handled by the receptionist — not "widget installed."**
 >
-> Supersedes the voice-era `onboarding-30-day.md` (deleted). Also makes stale, pending cleanup:
-> `intake-form.md` (32-field Tally form — replaced by §3 below), `sms-templates.md` and
-> `synthflow-system-prompt.md` (voice legacy). `churn-prevention.md` stays but read its
-> metric/channel swaps against §7/§9 here.
+> Supersedes the voice-era `onboarding-30-day.md`, `intake-form.md` (32-field Tally form —
+> replaced by §2), `sms-templates.md` and `synthflow-system-prompt.md` — all deleted.
+> `churn-prevention.md` stays but read its metric/channel swaps against §7/§8 here.
 
 ---
 

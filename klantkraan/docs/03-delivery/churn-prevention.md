@@ -8,7 +8,7 @@
 
 Owner gets an SMS every weekday evening with concrete numbers. This is the **#1 retention asset** because it's pull-based: the owner reads it; doesn't have to log in anywhere.
 
-See template `03-delivery/sms-templates.md § 6`.
+The old SMS template is retired; owner updates now go over WhatsApp/e-mail — see the onboarding playbook §5 (channel) and §8 (text-first churn swaps).
 
 ### 2. Monthly 4-min Loom (founder, semi-manual)
 
