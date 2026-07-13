@@ -6,7 +6,6 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-downloads/
 eggs/
 .eggs/
 parts/
@@ -23,6 +22,7 @@ node_modules/
 
 # Virtual Environment
 venv/
+.venv/
 ENV/
 env/
 
@@ -42,4 +42,10 @@ infra_automation.log
 credentials.json
 
 # Ansible
-*.retry .DS_Store
+*.retry
+
+# macOS
+.DS_Store
+
+# Wrangler local state
+.wrangler/
