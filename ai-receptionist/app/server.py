@@ -72,6 +72,12 @@ def index() -> FileResponse:
     return FileResponse(_WEB / "index.html")
 
 
+@app.get("/health")
+def health() -> dict[str, str]:
+    # Liveness probe for Caddy/Uptime Kuma; also confirms the config loads.
+    return {"status": "ok", "business": business()["business"]["name"]}
+
+
 @app.get("/config")
 def config() -> dict[str, str]:
     b = business()["business"]
@@ -109,8 +115,18 @@ async def whatsapp_webhook(request: Request) -> Response:
 def main() -> None:
     import uvicorn
 
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO"),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
     ensure_dirs()
-    uvicorn.run("app.server:app", host="127.0.0.1", port=8000, reload=False)
+    # Default binds localhost; set HOST=0.0.0.0 when serving behind Caddy on the VPS.
+    uvicorn.run(
+        "app.server:app",
+        host=os.getenv("HOST", "127.0.0.1"),
+        port=int(os.getenv("PORT", "8000")),
+        reload=False,
+    )
 
 
 if __name__ == "__main__":
