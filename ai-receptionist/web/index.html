@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Receptionist</title>
+  <title>Digitale receptionist</title>
   <style>
     :root {
       --bg: #f6f7f9; --panel: #ffffff; --ink: #1c2430; --muted: #6b7683;
@@ -28,13 +28,26 @@
       display: flex; flex-direction: column; overflow: hidden;
       box-shadow: 0 10px 40px rgba(0,0,0,.08);
     }
+    /* Embedded in the widget iframe: fill it edge-to-edge, the bubble/panel is the frame. */
+    body.embed { padding: 0; background: transparent; display: block; }
+    body.embed .card {
+      max-width: none; height: 100%; border: 0; border-radius: 0; box-shadow: none;
+    }
     header {
       padding: 14px 16px; border-bottom: 1px solid var(--line);
       display: flex; align-items: center; gap: 10px;
     }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: #35c46a; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #35c46a; flex: none; }
+    header .who { flex: 1; min-width: 0; }
     header h1 { font-size: 15px; margin: 0; font-weight: 600; }
     header span { color: var(--muted); font-size: 12px; }
+    #close {
+      display: none; flex: none; width: 30px; height: 30px; padding: 0; border: 0;
+      border-radius: 8px; background: transparent; color: var(--muted);
+      font-size: 20px; line-height: 1; cursor: pointer;
+    }
+    #close:hover { background: var(--bot); color: var(--ink); }
+    body.embed #close { display: block; }
     #log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
     .msg { max-width: 82%; padding: 9px 13px; border-radius: 14px; white-space: pre-wrap; word-wrap: break-word; }
     .bot { background: var(--bot); align-self: flex-start; border-bottom-left-radius: 4px; }
@@ -45,35 +58,74 @@
       flex: 1; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
       background: var(--bg); color: var(--ink); font-size: 15px;
     }
-    button {
+    button.send {
       padding: 0 16px; border: 0; border-radius: 10px; background: var(--me);
       color: #fff; font-weight: 600; cursor: pointer;
     }
-    button:disabled { opacity: .5; cursor: default; }
+    button.send:disabled { opacity: .5; cursor: default; }
   </style>
 </head>
 <body>
   <div class="card">
     <header>
       <span class="dot"></span>
-      <div>
+      <div class="who">
         <h1 id="biz">Assistant</h1>
-        <span>AI receptionist · replies instantly</span>
+        <span id="subtitle"></span>
       </div>
+      <button id="close" type="button" aria-label="Sluiten">&times;</button>
     </header>
     <div id="log"></div>
     <form id="form">
-      <input id="input" autocomplete="off" placeholder="Type a message…" />
-      <button id="send" type="submit">Send</button>
+      <input id="input" autocomplete="off" />
+      <button id="send" class="send" type="submit"></button>
     </form>
   </div>
 
   <script>
+    // UI chrome per locale (the config is source of truth via /config; defaults to Dutch,
+    // the target market). The actual greeting — which carries the EU AI Act art. 50
+    // disclosure — always comes from the server, never from this table.
+    const STRINGS = {
+      nl: {
+        subtitle: 'Digitale assistent · reageert direct',
+        placeholder: 'Typ een bericht…',
+        send: 'Versturen',
+        error: 'Sorry, er ging iets mis. Probeer het opnieuw.',
+        greeting: 'Hoi! Waarmee kan ik je helpen?',
+      },
+      en: {
+        subtitle: 'AI receptionist · replies instantly',
+        placeholder: 'Type a message…',
+        send: 'Send',
+        error: 'Sorry, something went wrong. Please try again.',
+        greeting: 'Hi! How can I help?',
+      },
+    };
+
     const log = document.getElementById('log');
     const form = document.getElementById('form');
     const input = document.getElementById('input');
     const send = document.getElementById('send');
+    const closeBtn = document.getElementById('close');
     let sessionId = null;
+    let t = STRINGS.nl;
+
+    // Embedded inside the widget iframe, or opened as a standalone hosted page (fallback)?
+    const embedded = new URLSearchParams(location.search).get('embed') === '1'
+      || window.self !== window.top;
+    if (embedded) document.body.classList.add('embed');
+
+    closeBtn.addEventListener('click', () => {
+      parent.postMessage({ type: 'klantkraan-widget', action: 'close' }, '*');
+    });
+
+    function applyStrings() {
+      document.documentElement.lang = t === STRINGS.en ? 'en' : 'nl';
+      document.getElementById('subtitle').textContent = t.subtitle;
+      input.placeholder = t.placeholder;
+      send.textContent = t.send;
+    }
 
     function bubble(text, cls) {
       const el = document.createElement('div');
@@ -85,14 +137,18 @@
     }
 
     async function init() {
+      applyStrings();
       try {
         const cfg = await (await fetch('/config')).json();
+        t = STRINGS[cfg.locale] || STRINGS.nl;
+        applyStrings();
         document.getElementById('biz').textContent = cfg.name;
         document.title = cfg.name;
         bubble(cfg.greeting, 'bot');
       } catch {
-        bubble('Hi! How can I help?', 'bot');
+        bubble(t.greeting, 'bot');
       }
+      if (!embedded) input.focus();
     }
 
     form.addEventListener('submit', async (e) => {
@@ -116,7 +172,7 @@
         bubble(data.reply, 'bot');
       } catch {
         typing.remove();
-        bubble('Sorry, something went wrong. Please try again.', 'bot');
+        bubble(t.error, 'bot');
       } finally {
         send.disabled = false;
       }

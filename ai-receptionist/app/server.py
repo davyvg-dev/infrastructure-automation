@@ -72,6 +72,19 @@ def index() -> FileResponse:
     return FileResponse(_WEB / "index.html")
 
 
+@app.get("/widget.js")
+def widget_js() -> FileResponse:
+    # The one-line loader a client pastes on their own site. It injects a floating bubble
+    # and an iframe back to this origin, so the chat stays same-origin (no CORS, no key
+    # leak). index.html is frameable by default (we never send X-Frame-Options); if a proxy
+    # sits in front, don't let it add one. Short cache so updates still propagate.
+    return FileResponse(
+        _WEB / "widget.js",
+        media_type="text/javascript",
+        headers={"Cache-Control": "public, max-age=300"},
+    )
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     # Liveness probe for Caddy/Uptime Kuma; also confirms the config loads.
@@ -80,8 +93,13 @@ def health() -> dict[str, str]:
 
 @app.get("/config")
 def config() -> dict[str, str]:
-    b = business()["business"]
-    return {"name": b["name"], "greeting": sessions.greeting()}
+    cfg = business()
+    return {
+        "name": cfg["business"]["name"],
+        "greeting": sessions.greeting(),
+        # Drives the widget's UI chrome only; defaults to Dutch (the target market).
+        "locale": cfg.get("locale", "nl"),
+    }
 
 
 @app.post("/chat", response_model=ChatOut)

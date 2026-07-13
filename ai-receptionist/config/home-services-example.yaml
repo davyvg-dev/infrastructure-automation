@@ -2,6 +2,8 @@
 #   BUSINESS_CONFIG=config/home-services-example.yaml python -m app.server
 # Or generate one per prospect: python -m app.scaffold "Their Business Name"
 
+locale: en  # widget UI chrome language; omit for the Dutch default
+
 business:
   name: "Vliet Loodgieters"
   type: "plumbing & heating company"

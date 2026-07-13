@@ -57,6 +57,18 @@ Tests Claude + tools end to end, in the terminal, no web UI yet.
 
 ---
 
+## Step 4a — Embeddable bubble (put the chat on a client's own site)
+
+Full guide in `docs/WIDGET.md`. The chat stays same-origin inside an iframe → no CORS, no key leak.
+
+- [ ] ▶ With the server running, paste on any test page:
+      `<script src="http://127.0.0.1:8000/widget.js" defer data-label="Chat"></script>`
+- [ ] ✓ A floating bubble appears bottom-right; clicking it opens the chat with the business
+      greeting, and the host page's CSS doesn't leak in (shadow-root isolation).
+- [ ] ✓ The hosted full-page link (`/`) still works as the no-code fallback.
+
+---
+
 ## Step 4b — Extra channels (optional, but great for demos)
 
 Full setup in `docs/CHANNELS.md`. All channels share one brain, so if Step 3 passed these
