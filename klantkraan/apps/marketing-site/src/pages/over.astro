@@ -1,10 +1,12 @@
 ---
 import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import { waLink } from '../data/contact'
 ---
 
 <Base
-  title="Over Klantkraan — de mensen achter de Klantenmotor"
-  description="Klantkraan is een handelsnaam van T4 Software Consulting BV. Nederlands gehost, AVG-compliant, gebouwd door een ervaren ICT-eenmanszaak die de vakbranche van binnen kent."
+  title="Over Klantkraan — wie het bouwt en waarom"
+  description="Klantkraan is een handelsnaam van T4 Software Consulting BV, gebouwd door één Nederlandse ICT-ondernemer. Nederlands gehost, AVG-compliant, geen externe investeerders."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -75,7 +77,51 @@ import Base from '../layouts/Base.astro'
     </div>
   </section>
 
-  <!-- 3. Waarom Klantkraan bestaat (cream) -->
+  <!-- 3. Wie bouwt Klantkraan (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">De oprichter</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">Wie bouwt Klantkraan</h2>
+
+      <div class="mt-8 grid gap-6 md:gap-10 md:grid-cols-[auto_1fr] md:items-start">
+        <div
+          class="flex h-24 w-24 items-center justify-center rounded-full bg-(--color-kraan-rust) font-display text-h1 text-white"
+          aria-hidden="true"
+        >
+          K
+        </div>
+
+        <div class="max-w-2xl space-y-4 text-body text-(--color-kraan-stone-700)">
+          <p>
+            Klantkraan wordt gebouwd door één Nederlandse ICT-ondernemer onder de BV
+            <strong>T4 Software Consulting</strong>, waaronder Klantkraan als handelsnaam is
+            geregistreerd. Geen externe investeerders, geen VC-druk, geen groeicijfers die boven
+            klantkwaliteit gaan.
+          </p>
+          <p>
+            De bouw is bewust solo: één persoon ontwerpt de Synthflow-prompts, schrijft de
+            n8n-workflows en kalibreert de SMS-templates. Bij een vraag wordt u niet via
+            support-tier 1, 2 en 3 geleid — u spreekt direct met de eigenaar.
+          </p>
+          <p>
+            Achtergrond: jarenlang software bouwen voor MKB-klanten via T4 Software Consulting.
+            Klantkraan is de productisatie van wat goed werkt voor één klant, herhaalbaar gemaakt
+            voor de vakbranche — loodgieters, dakdekkers, elektriciens, installateurs, aannemers,
+            schilders.
+          </p>
+          <p class="pt-2 text-small text-(--color-kraan-stone-500)">
+            <a
+              href="mailto:hallo@klantkraan.nl"
+              class="text-(--color-kraan-blue) underline underline-offset-4 hover:no-underline"
+              >hallo@klantkraan.nl</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Waarom Klantkraan bestaat (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Waarom</p>
@@ -102,14 +148,14 @@ import Base from '../layouts/Base.astro'
     </div>
   </section>
 
-  <!-- 4. DPA + spreek de oprichter (stone-100) -->
+  <!-- 5. Downloads + spreek de oprichter (stone-100) -->
   <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
-    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-2">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 md:grid-cols-3">
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Verwerkersovereenkomst (DPA)</h2>
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Verwerkersovereenkomst</h2>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          Vóór ondertekening van een abonnement krijgt u onze standaard DPA. Geen aparte
-          onderhandeling nodig — wij hebben hem al juridisch laten toetsen.
+          Onze standaard DPA, vóór ondertekening leesbaar. Juridisch getoetst, geen aparte
+          onderhandeling nodig.
         </p>
         <a
           href="/legal/dpa"
@@ -119,17 +165,41 @@ import Base from '../layouts/Base.astro'
         </a>
       </div>
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Spreek de oprichter</h2>
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">KvK-uittreksel</h2>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          Vragen die geen demo nodig hebben? Stuur een e-mail. Antwoord meestal binnen één werkdag,
-          direct van de eigenaar.
+          Officieel uittreksel handelsregister voor Klantkraan onder T4 Software Consulting BV.
+          Voor uw eigen leveranciersdossier.
         </p>
         <a
-          href="mailto:hallo@klantkraan.nl"
-          class="mt-4 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-5 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          href="/downloads/kvk-uittreksel-klantkraan.pdf"
+          class="mt-4 inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-5 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
         >
-          Mail de oprichter
+          Download uittreksel
         </a>
+      </div>
+      <div>
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Spreek de oprichter</h2>
+        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+          Vragen die geen demo nodig hebben? Stuur een WhatsApp of e-mail. Antwoord meestal binnen
+          één werkdag, direct van de eigenaar.
+        </p>
+        <div class="mt-4 flex flex-wrap gap-3">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-5 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>WhatsApp</span>
+          </a>
+          <a
+            href="mailto:hallo@klantkraan.nl"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-5 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
+          >
+            E-mail
+          </a>
+        </div>
       </div>
     </div>
   </section>

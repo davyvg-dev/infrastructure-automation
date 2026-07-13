@@ -13,6 +13,7 @@
  * - No JS. Pure CSS sticky bar.
  */
 import Icon from './Icon.astro'
+import { waLink, telLink } from '../data/contact'
 ---
 
 <aside
@@ -22,17 +23,20 @@ import Icon from './Icon.astro'
 >
   <div class="mx-auto flex max-w-5xl items-center gap-3">
     <a
-      href="tel:+31000000000"
+      href={telLink}
       class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-(--radius-button) border border-(--color-kraan-blue) text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
       aria-label="Bel Klantkraan"
     >
       <Icon name="phone" class="h-5 w-5" />
     </a>
     <a
-      href="/demo"
-      class="inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-button) bg-(--color-kraan-blue) px-5 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+      href={waLink}
+      target="_blank"
+      rel="noopener"
+      class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-5 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
     >
-      Probeer de demo
+      <Icon name="message-circle" class="h-5 w-5" />
+      <span>WhatsApp ons</span>
     </a>
   </div>
 </aside>

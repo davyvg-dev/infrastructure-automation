@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro'
 import { branches } from '../data/branches'
+import { contact, waLink, telLink, mailLink } from '../data/contact'
 
 const year = new Date().getFullYear()
 
@@ -122,15 +123,26 @@ const trustBadges: TrustBadge[] = [
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Contact</p>
         <p>
-          <a href="mailto:hallo@klantkraan.nl" class="flex items-center gap-2 py-2">
-            <Icon name="mail" class="h-4 w-4 shrink-0" />
-            <span>hallo@klantkraan.nl</span>
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener"
+            class="flex items-center gap-2 py-2"
+          >
+            <Icon name="message-circle" class="h-4 w-4 shrink-0" />
+            <span>WhatsApp ons</span>
           </a>
         </p>
         <p>
-          <a href="tel:+31000000000" class="flex items-center gap-2 py-2">
+          <a href={mailLink} class="flex items-center gap-2 py-2">
+            <Icon name="mail" class="h-4 w-4 shrink-0" />
+            <span>{contact.email}</span>
+          </a>
+        </p>
+        <p>
+          <a href={telLink} class="flex items-center gap-2 py-2">
             <Icon name="phone" class="h-4 w-4 shrink-0" />
-            <span>+31 (0) {/* phone */}TODO</span>
+            <span>{contact.phoneDisplay}</span>
           </a>
         </p>
         <a href="/over" class="mt-4 flex items-center gap-3 py-2">
@@ -138,12 +150,12 @@ const trustBadges: TrustBadge[] = [
             class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-kraan-stone-300) bg-(--color-kraan-cream) font-display text-h3 text-(--color-kraan-blue)"
             aria-hidden="true"
           >
-            D
+            K
           </span>
           <span>
-            <span class="block text-(--color-kraan-ink)">Davy</span>
+            <span class="block text-(--color-kraan-ink)">De oprichter</span>
             <span class="block text-micro text-(--color-kraan-stone-500)"
-              >oprichter Klantkraan</span
+              >Lees ons verhaal →</span
             >
           </span>
         </a>

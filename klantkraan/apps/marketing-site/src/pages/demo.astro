@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import { waLink } from '../data/contact'
 
 // Placeholder until CM.com landline is reserved by founder (see TODO.md Phase 0.5).
 const demoNumber = '+31 (0) TODO'
@@ -110,12 +112,23 @@ const demoTel = 'tel:+31000000000'
         In 20 minuten lopen wij samen door uw eigen situatie: gemiddeld aantal oproepen, openingstijd,
         bekende klant-typen. U ziet het dashboard en de SMS-templates in actie.
       </p>
-      <a
-        href="mailto:hallo@klantkraan.nl?subject=Live%20demo%20Klantkraan"
-        class="mt-6 inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-      >
-        Mail ons voor een afspraak
-      </a>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+        >
+          <Icon name="message-circle" class="h-5 w-5" />
+          <span>WhatsApp ons direct</span>
+        </a>
+        <a
+          href="mailto:hallo@klantkraan.nl?subject=Live%20demo%20Klantkraan"
+          class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
+        >
+          Liever per e-mail
+        </a>
+      </div>
     </div>
   </section>
 </Base>
