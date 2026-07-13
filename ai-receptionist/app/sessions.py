@@ -4,17 +4,29 @@ One receptionist, one place that maps a channel + user to their history. Channel
 thin: they receive a message, call `respond`, and send the reply back.
 
 In-memory is fine for a demo. To productionize, back `_STORE` with Redis/Postgres — the
-seam is just these three functions.
+seam is just these three functions. Because the store is per-process, the server must run
+as a SINGLE worker (uvicorn default); multiple workers would each hold their own sessions.
+
+Turns are serialized per conversation: a rapid double-send from the same user waits for
+the first turn instead of racing it and losing history. Different users run concurrently.
 """
 
 from __future__ import annotations
 
+import threading
 from typing import Any
 
 from . import receptionist
 
 # key = "<channel>:<user_id>"  ->  conversation history
 _STORE: dict[str, list[dict[str, Any]]] = {}
+_locks: dict[str, threading.Lock] = {}
+_meta_lock = threading.Lock()
+
+
+def _lock_for(key: str) -> threading.Lock:
+    with _meta_lock:
+        return _locks.setdefault(key, threading.Lock())
 
 # Keep memory (and token cost) bounded on long-running channels. Trims to a safe boundary
 # so we never split a tool_use / tool_result pair.
@@ -35,14 +47,17 @@ def _trim(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def respond(channel: str, user_id: str, text: str) -> str:
     key = f"{channel}:{user_id}"
-    history = _STORE.get(key, [])
-    reply, history = receptionist.run_turn(history, text)
-    _STORE[key] = _trim(history)
+    with _lock_for(key):
+        history = _STORE.get(key, [])
+        reply, history = receptionist.run_turn(history, text)
+        _STORE[key] = _trim(history)
     return reply
 
 
 def reset(channel: str, user_id: str) -> None:
-    _STORE.pop(f"{channel}:{user_id}", None)
+    key = f"{channel}:{user_id}"
+    with _lock_for(key):
+        _STORE.pop(key, None)
 
 
 def greeting() -> str:
