@@ -97,7 +97,7 @@ If any of items 1–4 come back blocked, fall back to **Vakflow** (priority 2) o
 
 - Strategy: [`01-strategy/`](01-strategy/)
 - Sales scripts and benchmarks: [`02-sales/`](02-sales/)
-- Onboarding playbook: [`03-delivery/`](03-delivery/)
+- Onboarding playbook (text-first): [`03-delivery/onboarding-playbook.md`](03-delivery/onboarding-playbook.md)
 - Legal templates and compliance: [`04-legal/`](04-legal/)
 - Content + SEO calendar: [`05-content/`](05-content/)
 - Outbound infrastructure: [`06-outbound/`](06-outbound/)

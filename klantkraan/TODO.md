@@ -63,12 +63,9 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 - [x] `funnel-benchmarks.md`
 
 ### 03-delivery
-- [x] `onboarding-30-day.md`
-- [x] `intake-form.md`
-- [x] `synthflow-system-prompt.md`
-- [x] `sms-templates.md`
-- [x] `dashboard-spec.md`
-- [x] `churn-prevention.md`
+- [x] `onboarding-playbook.md` (text-first; supersedes voice-era `onboarding-30-day.md`, now deleted)
+- [x] `churn-prevention.md` (read metric/channel swaps against the playbook §7/§8)
+- [ ] stale voice-legacy, pending cleanup: `intake-form.md` (32-field), `sms-templates.md`, `synthflow-system-prompt.md`; `dashboard-spec.md` needs text-first re-spec
 
 ### 04-legal
 - [x] `msa-outline.md`
