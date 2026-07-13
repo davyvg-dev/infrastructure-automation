@@ -42,7 +42,7 @@ experience is a finished demo of *their own* receptionist, not a blank setup.
 | Day 0–1 | Client **confirms the draft** by chatting with their own demo + a plain-Dutch one-pager, and supplies the only 4 human inputs: prices, spoed policy, where leads go, optional persona name (§3) | Client | 0 | — |
 | Day 1 | Founder pastes prices/spoed/lead-destination into the YAML, fills any gaps via WhatsApp; verify greeting keeps the AI-Act disclosure | Founder | 25 | FOUNDER |
 | Day 2 | **Kickoff (15 min, live or async):** set the one goal, **connect Google Calendar right there** (§4 — never homework), show their receptionist book a test lead | Founder | 15 | FOUNDER |
-| Day 2–3 | Founder sets `calendar.provider: google` + calendar id in config; deploy the client config to the server (route by slug) | Founder | 10 | AUTO once built |
+| Day 2–3 | Founder sets `calendar.provider: google` + calendar id in config; drop it as `config/clients/<slug>.yaml` and redeploy — the server routes `<slug>.klantkraan.nl` to it | Founder | 10 | semi-AUTO |
 | Day 3 | **5 test chats** (spoed / nieuw_werk / spam / leverancier / bestaande_klant); confirm a booking lands in the real Google Calendar and the owner gets the lead notification | Founder | 20 | FOUNDER |
 | Day 3–4 | **Widget install (§5):** default = we paste the snippet using access the client gave / a 2-min screen-share; fallback = per-CMS guide or hosted `<client>.klantkraan.nl` link | Founder | 15 | partial |
 | Day 4 | Client does **3 test chats** on their own live surface; go/no-go via WhatsApp | Client | 0 | — |
@@ -163,8 +163,9 @@ wie je site beheert en wij plaatsen het," with the per-CMS guide as fallback. Se
 send `X-Frame-Options: DENY` on the widget route; if you set CSP, allow the client's domain via
 `frame-ancestors`.
 
-**Status:** the embeddable widget is **not built yet** — today only a standalone full-page
-`web/index.html` exists. This is roadmap step 2 (see §12).
+**Status:** **built** (commit 2851f4f) — `ai-receptionist/web/widget.js` loader + `GET /widget.js`;
+per-CMS steps in `ai-receptionist/docs/WIDGET.md`. The standalone full-page `/` remains the no-code
+hosted-link fallback.
 
 ---
 
@@ -268,8 +269,8 @@ saved-churn math). Apply these swaps:
 The gap between "signed" and "live on the client's site booking into their calendar":
 
 1. **Google Calendar provider** — **DONE** (a980e30); pending founder's real service account + `selftest calendar-google`.
-2. **Embeddable widget** (`<script>` bubble → iframe to hosted URL, per-client, CSP-safe) — **not built** (roadmap step 2).
-3. **Multi-client routing** (serve >1 client from one box by slug/subdomain; today `BUSINESS_CONFIG` = one config per process) — **not built** (roadmap step 3).
+2. **Embeddable widget** (`<script>` bubble → iframe to hosted URL, per-client, CSP-safe) — **DONE** (commit 2851f4f); see `ai-receptionist/docs/WIDGET.md`.
+3. **Multi-client routing** (serve >1 client from one box by slug/subdomain) — **DONE** — `config/clients/<slug>.yaml` routed by Host subdomain, `BUSINESS_CONFIG` as fallback; session + sim-bookings state namespaced per slug.
 4. **Client-facing lead/booking notification** — `notify.owner()` targets the founder's Telegram only; needs a per-client destination (WhatsApp/e-mail).
 5. **Scrape→draft pipeline** (`app/extract.py` + `scaffold.py --from-json` + a `selftest intake` that asserts no price is ever written without human input) — **not built**.
 
