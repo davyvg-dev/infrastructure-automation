@@ -13,6 +13,7 @@ Run with no name on a terminal and it'll prompt you interactively.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from copy import deepcopy
@@ -20,6 +21,7 @@ from pathlib import Path
 
 import yaml
 
+from . import extract
 from .settings import ROOT
 
 CONFIG_DIR = ROOT / "config"
@@ -111,6 +113,85 @@ def build_config(name: str, **over: str | None) -> dict:
     return cfg
 
 
+# --- draft from a scraped extraction (app.extract) ---------------------------------------
+
+_WEEK = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+_TIME_RE = re.compile(r"^\d{2}:\d{2}$")
+
+# The template FAQ carries example euro amounts — safe as a demo, unsafe on a real prospect draft
+# where a wrong price would be quoted. A from-json draft gets this price-free FAQ instead; the
+# founder adds real answers during the confirm-in-chat step.
+_PRICE_FREE_FAQ = [
+    {"q": "Doen jullie spoedklussen?",
+     "a": "Ja — we houden elke dag ruimte vrij voor spoed. Ik kan direct de eerstvolgende tijd voor u nakijken."},
+    {"q": "In welke regio werken jullie?",
+     "a": "We werken in de regio en omgeving. Geef uw plaats door, dan kijk ik of het binnen ons gebied valt."},
+    {"q": "Hoe snel kan er iemand komen?",
+     "a": "Dat hangt van de dag af — ik kan nu de beschikbaarheid voor u nakijken."},
+]
+
+
+def _cited(field: object) -> str | None:
+    """A cited scalar's value, or None if it carries no verbatim snippet (uncited => dropped)."""
+    if isinstance(field, dict):
+        value, snippet = str(field.get("value", "")).strip(), str(field.get("snippet", "")).strip()
+        if value and snippet:
+            return value
+    return None
+
+
+def merge_extraction(name: str, extraction: dict, **over: str | None) -> dict:
+    """Overlay an app.extract extraction onto the template: cited values win, uncited ones fall
+    back to safe defaults, and NO price is ever inferred — every service is stamped `PRIJS?` for
+    the founder to fill in. greeting / persona / guardrails / model stay template-owned."""
+    cfg = build_config(name, **over)  # locked greeting/persona/guardrails/model + safe defaults
+
+    if not over.get("type"):
+        bt = _cited(extraction.get("business_type"))
+        if bt:
+            cfg["business"]["type"] = bt
+    if not over.get("phone"):
+        phone = _cited(extraction.get("phone"))
+        if phone:
+            cfg["business"]["phone"] = phone
+    if not over.get("address"):
+        region = _cited(extraction.get("region"))
+        if region:
+            cfg["business"]["address"] = region
+
+    services = []
+    for svc in extraction.get("services") or []:
+        snippet = str(svc.get("snippet", "")).strip()
+        svc_name = str(svc.get("name", "")).strip()
+        if not (snippet and svc_name):
+            continue  # citation-or-drop
+        category = svc.get("category") or "overig"
+        services.append(
+            {"name": svc_name, "price": "PRIJS?", "duration_min": extract._duration(category)}
+        )
+    if services:
+        cfg["services"] = services
+    else:
+        # No grounded services: keep the generic template set, but still price-free.
+        for svc in cfg["services"]:
+            svc["price"] = "PRIJS?"
+
+    hours = {}
+    for day, block in (extraction.get("hours") or {}).items():
+        if day not in _WEEK or not isinstance(block, dict):
+            continue
+        if not str(block.get("snippet", "")).strip():
+            continue
+        opens, closes = str(block.get("open", "")).strip(), str(block.get("close", "")).strip()
+        if _TIME_RE.match(opens) and _TIME_RE.match(closes):
+            hours[day] = [opens, closes]
+    if hours:
+        cfg["hours"] = hours
+
+    cfg["faq"] = deepcopy(_PRICE_FREE_FAQ)
+    return cfg
+
+
 def write_config(cfg: dict, path: Path) -> None:
     rel = path.relative_to(ROOT)
     header = (
@@ -131,6 +212,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--address")
     parser.add_argument("--timezone")
     parser.add_argument("--persona", help="Receptionist name (default: Fleur).")
+    parser.add_argument("--from-json", dest="from_json",
+                        help="An app.extract extraction JSON; merges cited values over the template.")
     parser.add_argument("--force", action="store_true", help="Overwrite if the config exists.")
     args = parser.parse_args(argv[1:])
 
@@ -145,16 +228,28 @@ def main(argv: list[str]) -> int:
         print(f"⚠️  {path.relative_to(ROOT)} already exists. Use --force to overwrite.")
         return 1
 
-    cfg = build_config(
-        name, type=args.type, phone=args.phone, address=args.address,
+    over = dict(
+        type=args.type, phone=args.phone, address=args.address,
         timezone=args.timezone, persona=args.persona,
     )
+    if args.from_json:
+        try:
+            extraction = json.loads(Path(args.from_json).read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            parser.error(f"could not read extraction JSON {args.from_json!r}: {exc}")
+        cfg = merge_extraction(name, extraction, **over)
+    else:
+        cfg = build_config(name, **over)
     write_config(cfg, path)
 
     rel = path.relative_to(ROOT)
     print(f"✅ Wrote {rel}")
     print("\nNext:")
-    print(f"  1. Open {rel} and edit services / hours / FAQ to match the prospect.")
+    if args.from_json:
+        print(f"  1. Open {rel} and fill in every 'PRIJS?' — prices are never scraped. Check the")
+        print("     scraped services / hours / region too.")
+    else:
+        print(f"  1. Open {rel} and edit services / hours / FAQ to match the prospect.")
     print(f"  2. Run their branded demo:")
     print(f"       BUSINESS_CONFIG={rel} python -m app.server")
     print("     then open http://127.0.0.1:8000")

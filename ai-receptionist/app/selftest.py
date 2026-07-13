@@ -4,6 +4,7 @@
     python -m app.selftest routing     # multi-tenant slug -> config resolution, no network
     python -m app.selftest calendar    # slot generation + a booking round-trip, no network
     python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
+    python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
     python -m app.selftest chat        # interactive terminal chat with the receptionist
     python -m app.selftest all         # config + calendar + agent, in order
@@ -141,6 +142,66 @@ def check_calendar_google() -> bool:
     return True
 
 
+def check_intake() -> bool:
+    print("• intake (scrape→draft merge, no network)")
+    import json as _json
+
+    from . import extract, scaffold
+
+    # 1. Schema-level invariant: a price can NEVER be extracted (structural, not prompt-based).
+    schema_blob = _json.dumps(extract._SCHEMA).lower()
+    if "price" in schema_blob or "prijs" in schema_blob or "tarief" in schema_blob:
+        return _fail("extraction schema references a price field — prices must be human-entered only")
+    _ok("extraction schema has no price field (invented prices are structurally impossible)")
+
+    fixture = {
+        "business_type": {"value": "loodgieter", "snippet": "Loodgietersbedrijf in Utrecht"},
+        "phone": {"value": "+31 30 123 4567", "snippet": "Bel ons: 030 123 4567"},
+        "region": {"value": "", "snippet": ""},  # uncited -> must fall back to a safe default
+        "services": [
+            {"name": "Lekkage verhelpen", "category": "lekkage-reparatie",
+             "snippet": "lekkage snel verholpen", "confidence": "high"},
+            {"name": "Verzonnen dienst", "category": "overig",
+             "snippet": "", "confidence": "low"},  # uncited -> dropped
+        ],
+        "hours": {
+            "monday": {"open": "08:00", "close": "17:00", "snippet": "ma 08:00-17:00"},
+            "sunday": {"open": "", "close": "", "snippet": ""},  # uncited -> dropped
+        },
+    }
+    cfg = scaffold.merge_extraction("Testbedrijf Utrecht", fixture)
+
+    for svc in cfg["services"]:
+        if svc.get("price") != "PRIJS?":
+            return _fail(f"service {svc['name']!r} has a non-placeholder price {svc.get('price')!r}")
+    _ok(f"{len(cfg['services'])} service(s), every price is PRIJS? (no price ever inferred)")
+
+    names = [s["name"] for s in cfg["services"]]
+    if "Verzonnen dienst" in names:
+        return _fail("an uncited service leaked into the draft")
+    if "Lekkage verhelpen" not in names:
+        return _fail("a cited service was dropped")
+    _ok("uncited service dropped; cited service kept")
+
+    if cfg["business"]["phone"] != "+31 30 123 4567":
+        return _fail("cited phone was not applied")
+    if not cfg["business"]["address"]:
+        return _fail("uncited region should fall back to a safe template default, not blank")
+    _ok("cited phone applied; uncited region fell back to a safe default (never guessed)")
+
+    if cfg["hours"] != {"monday": ["08:00", "17:00"]}:
+        return _fail(f"hours merge wrong: {cfg['hours']}")
+    _ok("cited hours applied; uncited day dropped")
+
+    if "digitale receptionist" not in cfg["greeting"]:
+        return _fail("greeting lost the art. 50 digital-assistant disclosure")
+    services_blob = _json.dumps(cfg["services"], ensure_ascii=False).lower()
+    if "€" in services_blob or "eur" in services_blob:
+        return _fail("a currency amount leaked into the services")
+    _ok("art. 50 disclosure intact; no currency amount anywhere in the services")
+    return True
+
+
 def check_agent() -> bool:
     print("• agent (needs ANTHROPIC_API_KEY)")
     try:
@@ -190,9 +251,10 @@ CHECKS = {
     "routing": check_routing,
     "calendar": check_calendar,
     "calendar-google": check_calendar_google,
+    "intake": check_intake,
     "agent": check_agent,
 }
-ORDER = ["config", "routing", "calendar", "agent"]
+ORDER = ["config", "routing", "calendar", "intake", "agent"]
 
 
 def main(argv: list[str]) -> int:
