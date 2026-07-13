@@ -107,7 +107,7 @@ const baseFaqs: Faq[] = [
   },
   {
     q: 'Per maand opzegbaar — echt waar?',
-    a: 'Ja. Geen jaarcontract, geen setup-kosten, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
+    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail; opzegtermijn is één maand. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
     href: '/legal/voorwaarden',
     linkLabel: 'Lees de algemene voorwaarden',
   },

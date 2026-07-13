@@ -58,17 +58,17 @@ De prijs varieert, maar in Nederland in 2026 ziet de markt er ruwweg zo uit:
 
 - **DIY met een open AI-model en een handige neef**: technisch mogelijk, in de praktijk een tijdrover van 40+ uur en geen ondersteuning bij storingen. Niet aan te raden voor wie facturabel werk heeft.
 - **Generieke virtuele assistenten** (Engelstalige tools, vertaald): €100 tot €300 per maand, maar accent en culturele mismatch maken Nederlandse klanten kopschuw.
-- **Nederlandstalige AI-telefoniste met loodgieter-specifieke prompt** (zoals onze [Pro-laag](/prijzen)): **€599 per maand, BTW excl.**, 200 spreekminuten inbegrepen. Setup gratis, maandelijks opzegbaar.
+- **Nederlandstalige AI-telefonist met loodgieter-specifieke prompt** (zoals onze [Compleet-laag](/prijzen), binnenkort beschikbaar): **€499 per maand, BTW excl.**, inclusief de volledige chat- en WhatsApp-receptionist. Eenmalige setup €249 (kwijtgescholden voor pilotklanten), maandelijks opzegbaar.
 - **Antwoordservice met mens**: €1,50 tot €4 per gesprek, gemiddeld €350–€600 per maand, alleen kantooruren, en zij kennen uw stad noch uw tarief.
 
-De eerlijke rekensom: **één extra geconverteerde klus per maand betaalt het abonnement terug**. Dat is bij gemiddeld €450 omzet per klus, geen heroïsche conversie aannemen. Gewoon iemand die anders niet teruggebeld was.
+De eerlijke rekensom: **één extra geconverteerde klus per maand dekt vrijwel het hele abonnement**. Dat is bij gemiddeld €450 omzet per klus, geen heroïsche conversie aannemen. Gewoon iemand die anders niet teruggebeld was.
 
 ## Wanneer een AI-telefoniste geen zin heeft
 
 Niet elk loodgietersbedrijf wint hier evenveel mee. Sla het over als:
 
 - U **mist minder dan vijf oproepen per week**. Het rekent zich dan op de korte termijn niet uit.
-- U heeft **al een fulltime telefoniste op kantoor** die genoeg capaciteit heeft. Dan is automatisering van de SMS-laag en review-flow zinvoller dan voice.
+- U heeft **al een fulltime telefoniste op kantoor** die genoeg capaciteit heeft. Dan is de chat-laag (websitechat + WhatsApp) zinvoller dan voice.
 - U **werkt alleen op contract** voor één opdrachtgever (housing corporatie, VvE). Inkomend belverkeer is dan te laag.
 - U wilt **principieel geen AI tussen u en de klant**. Een geldige keuze. Onze ervaring: de helft van de vakmensen die zo begint, belt na twee maanden terug omdat ze twee zaterdagen achter elkaar gemiste klussen telden. Maar het blijft uw keuze.
 
@@ -94,7 +94,7 @@ In één werkdag is een Nederlandstalige AI-telefoniste live op uw bestaande num
 4. **Twee weken meelopen**: u krijgt elke transcriptie als SMS-samenvatting, past de prompt aan waar nodig.
 5. **Maandelijkse afrekening**, opzegbaar wanneer u wilt.
 
-Geen lange contracten, geen setup-kosten, geen "we komen langs voor een intake". Alles op afstand, in vlot Nederlands.
+Geen lange contracten, geen "we komen langs voor een intake". Eenmalige setup €249, kwijtgescholden voor pilotklanten. Alles op afstand, in vlot Nederlands.
 
 ## Veelgestelde vragen van loodgieters
 
@@ -119,4 +119,4 @@ Bereken eerst uw eigen verlies met de [rekentool](/rekentool). Drie velden invul
 
 Als het bedrag boven de €1.000 per maand uitkomt, [plan een demo](/demo) van 20 minuten. We laten u dezelfde middag horen hoe het op uw nummer klinkt, zonder verkooppraatje en zonder verplichting.
 
-[Bekijk prijzen](/prijzen). Vanaf €349 per maand voor de SMS-laag, €599 voor de volledige AI-telefoniste, BTW excl., per maand opzegbaar.
+[Bekijk prijzen](/prijzen). Vanaf €299 per maand voor Klantkraan Chat (websitechat + WhatsApp), €499 voor Compleet inclusief AI-telefonist, BTW excl., per maand opzegbaar.

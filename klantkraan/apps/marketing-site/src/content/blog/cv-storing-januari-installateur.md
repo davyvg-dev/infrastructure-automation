@@ -83,19 +83,18 @@ Eerlijk over de grenzen:
 
 ## Wat het kost en wanneer het zich terugverdient
 
-Drie abonnementen, alle excl. BTW, maandelijks opzegbaar:
+Twee abonnementen, alle excl. BTW, maandelijks opzegbaar. Eenmalige setup €249, kwijtgescholden voor pilotklanten:
 
-| Tier | Per maand | Per dag | Geschikt voor |
+| Tier | Per maand | Per dag | Wat u krijgt |
 |---|---|---|---|
-| Lite | €349 | ≈ €11,63 | Eenmans-installateur, alleen SMS-terugbel + reviews |
-| Pro | €599 | ≈ €19,97 | 2–5 monteurs, AI-receptionist 24/7 + Cal.com-koppeling |
-| Max | €849 | ≈ €28,30 | 5+ monteurs, eigen integraties (Werkbon, Snelstart, Skoon) |
+| Chat | €299 | ≈ €9,97 | AI-receptionist via websitechat + WhatsApp: beantwoordt vragen, plant afspraken, vangt terugbelverzoeken |
+| Compleet | €499 | ≈ €16,63 | Alles van Chat + AI-telefonist op een eigen Nederlands nummer (binnenkort beschikbaar) |
 
 Voor een eenmans-installateur die in januari 15 oproepen per week mist:
 
 - **Verloren omzet zonder Klantkraan**: 15 × 33% conversie × €340 = €1.683 per piekweek
-- **Klantkraan Pro**: €599 / maand
-- **Terugverdientijd**: één extra spoed-CV per maand binnenhalen die u anders had gemist. Bij €340 per klus betaalt het abonnement zichzelf bijna terug. Alles daarboven is winst.
+- **Klantkraan Chat**: €299 / maand
+- **Terugverdientijd**: één extra spoed-CV per maand binnenhalen die u anders had gemist. Bij €340 per klus betaalt het abonnement zichzelf terug. Alles daarboven is winst.
 
 In de praktijk: een Klantkraan-klant in de installatie-branche heeft in januari minimaal 5–10 extra klussen die anders waren weggelekt. Dat is €1.700 tot €3.400 aan piekweek-omzet die binnenkomt zonder dat u één extra werknemer hoeft aan te nemen.
 

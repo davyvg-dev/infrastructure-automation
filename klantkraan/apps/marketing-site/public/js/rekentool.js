@@ -4,7 +4,7 @@
 //
 // astro:page-load aware so ClientRouter SPA transitions re-bind the inputs.
 
-const TIERS = { lite: 349, pro: 599, max: 849 }
+const TIERS = { chat: 299, compleet: 499 }
 const CONVERSION = 0.33
 
 const eurFmt = new Intl.NumberFormat('nl-NL', {
@@ -39,9 +39,8 @@ function initRekentool() {
 
   const outMissed = document.getElementById('out-missed-year')
   const outLost = document.getElementById('out-lost-revenue')
-  const outPaybackLite = document.getElementById('out-payback-lite')
-  const outPaybackPro = document.getElementById('out-payback-pro')
-  const outPaybackMax = document.getElementById('out-payback-max')
+  const outPaybackChat = document.getElementById('out-payback-chat')
+  const outPaybackCompleet = document.getElementById('out-payback-compleet')
 
   function recompute() {
     const calls = readNumber(callsEl, 0)
@@ -53,9 +52,9 @@ function initRekentool() {
 
     if (outMissed) outMissed.textContent = numFmt.format(missedPerYear)
     if (outLost) outLost.textContent = eurFmt.format(lostRevenue)
-    if (outPaybackLite) outPaybackLite.textContent = formatPayback(TIERS.lite, lostRevenue)
-    if (outPaybackPro) outPaybackPro.textContent = formatPayback(TIERS.pro, lostRevenue)
-    if (outPaybackMax) outPaybackMax.textContent = formatPayback(TIERS.max, lostRevenue)
+    if (outPaybackChat) outPaybackChat.textContent = formatPayback(TIERS.chat, lostRevenue)
+    if (outPaybackCompleet)
+      outPaybackCompleet.textContent = formatPayback(TIERS.compleet, lostRevenue)
   }
 
   for (const el of [callsEl, missedEl, valueEl]) {
