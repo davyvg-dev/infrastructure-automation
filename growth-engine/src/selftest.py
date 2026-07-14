@@ -170,20 +170,19 @@ def check_reel() -> bool:
             cap = float(cfg["target_seconds"]) + 0.5  # rounding headroom
             if duration > cap:
                 return _fail(f"reel is {duration:.1f}s, cap is {cfg['target_seconds']}s")
-            cards = float(cfg["title_seconds"]) + float(cfg["end_seconds"])
             if cfg["pop_cuts"]:
-                demo = duration - cards
-                # The three pop holds alone are 3×dwell = 4.2s; the 4s typing
-                # stretch must ADD time (at typing_speed ≈ +1.2s), and the ~6s of
-                # idle must all be gone. So the demo lands in a narrow band.
-                if demo > 6.2:
+                demo = duration - float(cfg["cta_seconds"])
+                # Expected band: 3 pop holds (3×dwell = 4.2s) + 4s typing at
+                # typing_speed (~1.3s) + cold open (1s) + suspense beat (0.6s)
+                # ≈ 7.1s. Above it = idle survived; below it = typing was cut.
+                if demo > 8.2:
                     return _fail(f"idle not cut: {demo:.1f}s demo from 12s raw")
-                if demo < 4.5:
+                if demo < 6.2:
                     return _fail(f"typing was cut, not sped up: {demo:.1f}s demo "
-                                 f"(pop holds alone are ~4.2s)")
-            _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw (pop cuts "
-                f"{'on' if cfg['pop_cuts'] else 'off'}: idle cut, typing "
-                f"{cfg['typing_speed']}×, pops held) → {record['platform_targets']}")
+                                 f"(holds + cold open + beat alone are ~5.8s)")
+            _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw (cold open + "
+                f"hook-on-footage, idle cut, typing {cfg['typing_speed']}×, "
+                f"suspense beat, CTA freeze) → {record['platform_targets']}")
             _ok(f"crop_top {cfg['crop_top']} · cap {cfg['target_seconds']}s · "
                 f"dwell ≤{cfg['dwell_seconds']}s · max speed {cfg['max_speed']}×")
     except subprocess.CalledProcessError as exc:

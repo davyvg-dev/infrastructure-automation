@@ -70,9 +70,11 @@ def reel() -> dict[str, Any]:
         "typing_threshold": 0.002,  # smaller-but-real change: a keystroke; below = idle
         "typing_speed": 3.0,    # typing stays visible, just this much faster
         "dwell_seconds": 1.4,   # max hold on each pop before jumping to the next
-        "title_seconds": 1.8,
-        "end_seconds": 2.4,
-        "cta_headline": "",     # end-card text; falls back to brand footer
+        "cold_open": True,      # open on the payoff message, then replay the chat
+        "suspense_seconds": 0.6,  # one "..." beat of real waiting before the payoff
+        "hook_seconds": 2.5,    # hook text rides the opening footage — no title card
+        "cta_seconds": 1.0,     # CTA rides a freeze of the last frame — no end card
+        "cta_headline": "",     # CTA text; falls back to brand footer
         "cta_sub": "",
     }
     values.update((strategy().get("media") or {}).get("reel") or {})

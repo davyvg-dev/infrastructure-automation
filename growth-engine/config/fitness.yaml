@@ -178,10 +178,12 @@ media:
     typing_threshold: 0.002   # smaller-but-real change: a keystroke; below = cut
     typing_speed: 3.0         # typing playback speed
     dwell_seconds: 1.4        # max hold per message; shrinks to fit the cap
-    target_seconds: 15      # hard cap for the finished reel, cards included
+    target_seconds: 15      # hard cap for the finished reel
     max_speed: 4.0
-    title_seconds: 1.0      # short title card — the hook can't wait
-    end_seconds: 2.0
+    cold_open: true         # open on the payoff message, then replay the chat
+    suspense_seconds: 0.6   # one "..." beat of real waiting before the payoff
+    hook_seconds: 2.5       # hook text rides the opening footage — no title card
+    cta_seconds: 1.0        # CTA rides a freeze of the last frame — no end card
     cta_headline: "Nooit meer een proefles-lead missen."   # end card (Dutch)
     cta_sub: "klantkraan.nl/sportscholen"                  # the fitness landing page
 

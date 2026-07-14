@@ -264,6 +264,12 @@ def attach_cards(draft: dict[str, Any]) -> None:
 
 _REEL_SIZE = (1080, 1920)
 _FPS = 30
+# Platform UI covers the frame edges: captions/buttons eat the bottom ~670px on the
+# worst platform (Facebook) and ~250px at the top. All TEXT stays inside this band;
+# the demo footage itself may run larger.
+_SAFE_TOP = 250
+_SAFE_BOTTOM = 670
+_VID_H = 1560  # demo footage height on the 1920 canvas — near full-bleed phone
 
 
 def attach_reel_task(draft: dict[str, Any], requested: list[str]) -> None:
@@ -301,17 +307,67 @@ def _probe(path: Path) -> tuple[int, int, float]:
     return int(stream["width"]), int(stream["height"]), float(info["format"]["duration"])
 
 
-def _render_stage(out_path: Path, scheme: dict[str, Any]) -> None:
-    """The 9:16 backdrop the demo video sits on — brand color, accent bar, footer."""
+def _render_stage(out_path: Path, scheme: dict[str, Any],
+                  hole: tuple[int, int]) -> None:
+    """Frame laid OVER the demo footage: brand surround with a rounded phone window
+    (thin accent bezel, no logo lockups) and the footer URL pinned in the safe zone."""
     b = brand.brand()
-    img = Image.new("RGB", _REEL_SIZE, scheme["bg"])
+    img = Image.new("RGBA", _REEL_SIZE, scheme["bg"])
+    hw, hh = hole
+    x0, y0 = (_REEL_SIZE[0] - hw) // 2, (_REEL_SIZE[1] - hh) // 2
+    box = (x0, y0, x0 + hw, y0 + hh)
+    mask = Image.new("L", _REEL_SIZE, 255)
+    ImageDraw.Draw(mask).rounded_rectangle(box, radius=44, fill=0)
+    img.putalpha(mask)
     draw = ImageDraw.Draw(img)
-    draw.rectangle((_PAD, _PAD, _PAD + 140, _PAD + 20), fill=scheme["accent"])
+    draw.rounded_rectangle(box, radius=44, outline=scheme["accent"], width=4)
     if b["footer"]:
-        footer_font = ImageFont.truetype(str(b["font_bold"]), 38)
-        fy = _REEL_SIZE[1] - _PAD - 46
-        draw.rectangle((_PAD, fy + 6, _PAD + 26, fy + 32), fill=scheme["accent"])
-        draw.text((_PAD + 46, fy), b["footer"], font=footer_font, fill=scheme["text"])
+        font = ImageFont.truetype(str(b["font_bold"]), 40)
+        tw = draw.textlength(b["footer"], font=font)
+        bx = (_REEL_SIZE[0] - tw) / 2
+        by = _REEL_SIZE[1] - _SAFE_BOTTOM - 84  # above the platform caption zone
+        draw.rounded_rectangle((bx - 22, by - 14, bx + tw + 22, by + 54),
+                               radius=14, fill=(10, 10, 10, 200))
+        draw.text((bx, by), b["footer"], font=font, fill="#FAF6EE")
+    img.save(out_path, "PNG")
+
+
+def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path) -> None:
+    """Text on a translucent scrim, overlaid on moving footage (hook / end CTA).
+
+    Sized for 35-55 eyes on a phone: ≥44px, ≤3 lines, high contrast; the box stays
+    inside the platform-safe band and clear of the right-hand icon rail."""
+    b = brand.brand()
+    img = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    max_w = 748
+    size = 64
+    while True:
+        font = ImageFont.truetype(str(b["font_bold"]), size)
+        lines = _wrap(draw, headline, font, max_w)
+        if len(lines) <= 3 or size <= 44:
+            break
+        size -= 4
+    step = int(size * 1.3)
+    sub_font = ImageFont.truetype(str(b["font_bold"]), 44)
+    pad = 36
+    widths = [draw.textlength(ln, font=font) for ln in lines]
+    if sub:
+        widths.append(draw.textlength(sub, font=sub_font))
+    bw = max(widths) + 2 * pad
+    bh = pad + len(lines) * step + (66 if sub else 0) + pad - (step - size)
+    x0 = (_REEL_SIZE[0] - bw) / 2
+    draw.rounded_rectangle((x0, y_top, x0 + bw, y_top + bh), radius=20,
+                           fill=(10, 10, 10, 205))
+    y = y_top + pad
+    for ln in lines:
+        lw = draw.textlength(ln, font=font)
+        draw.text(((_REEL_SIZE[0] - lw) / 2, y), ln, font=font, fill="#FAF6EE")
+        y += step
+    if sub:
+        lw = draw.textlength(sub, font=sub_font)
+        draw.text(((_REEL_SIZE[0] - lw) / 2, y + 8), sub, font=sub_font,
+                  fill="#FAF6EE")
     img.save(out_path, "PNG")
 
 
@@ -407,17 +463,23 @@ def _cut_plan(frames: list[tuple[float, float]], duration: float,
     return sorted(segs)
 
 
-def _cut_filter(crop: str, segs: list[tuple[float, float, float]]) -> str:
-    """Jump-cut filter: crop once, keep the given segments, each at its own speed."""
-    n = len(segs)
-    parts = [f"[1:v]{crop},split={n}" + "".join(f"[c{i}]" for i in range(n)) + ";"]
+def _slice_args(raw: Path, segs: list[tuple[float, float, float]],
+                crop: str, first_idx: int) -> tuple[list[str], str]:
+    """One seeked input per segment (may play out of source order — cold open).
+
+    Input-level -ss/-t decodes only each segment's window; a single decode fanned
+    out with split+trim deadlocks when concat drains the branches out of order.
+    """
+    args: list[str] = []
+    parts: list[str] = []
     for i, (s, e, v) in enumerate(segs):
+        args += ["-ss", f"{s:.3f}", "-t", f"{e - s:.3f}", "-i", str(raw)]
         parts.append(
-            f"[c{i}]trim=start={s:.3f}:end={e:.3f},"
-            f"setpts=(PTS-STARTPTS)/{v:.2f}[t{i}];"
+            f"[{first_idx + i}:v]{crop},setpts=(PTS-STARTPTS)/{v:.2f}[t{i}];"
         )
-    parts.append("".join(f"[t{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0[cut];")
-    return "".join(parts)
+    parts.append("".join(f"[t{i}]" for i in range(len(segs)))
+                 + f"concat=n={len(segs)}:v=1:a=0[cut];")
+    return args, "".join(parts)
 
 
 def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
@@ -428,10 +490,13 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     With `pop_cuts` (default) each frame is classified by how much the screen changes:
     a message appearing holds at natural speed so it can be read, typing stays visible
     but fast (`typing_speed`), and dead time — typing indicators, waiting on the reply —
-    is cut entirely, so responses land instantly. The finished reel stays under
-    `target_seconds` (cards included). Explicit `beats` (start, end) override the
-    detection; if no activity is detected the whole clip is sped up instead. Audio is
-    dropped — screen recordings are silent and IG/TikTok music is added in-app.
+    is cut entirely, so responses land instantly. A cold open replays the payoff
+    message first, one suspense beat of real waiting survives before the final reply,
+    the hook text rides the opening footage (no static title card), and the CTA rides
+    a freeze of the last frame so the loop back to the hook is seamless. Total stays
+    under `target_seconds`. Explicit `beats` (start, end) override the detection; if
+    no activity is detected the whole clip is sped up instead. Audio is dropped —
+    screen recordings are silent and IG/TikTok music is added in-app.
     """
     for tool in ("ffmpeg", "ffprobe"):
         if shutil.which(tool) is None:
@@ -445,54 +510,72 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     crop_top = int(height * float(cfg["crop_top"])) // 2 * 2
     crop_bottom = int(height * float(cfg["crop_bottom"])) // 2 * 2
     crop = f"crop=iw:ih-{crop_top + crop_bottom}:0:{crop_top}"
-    # Budget for the demo footage once the title and end cards take their share.
-    usable = max(
-        float(cfg["target_seconds"]) - float(cfg["title_seconds"])
-        - float(cfg["end_seconds"]),
-        3.0,
-    )
+    # Budget for the demo footage: the CTA rides a freeze of the last frame, so it
+    # is the only non-demo time in the cap.
+    usable = max(float(cfg["target_seconds"]) - float(cfg["cta_seconds"]), 3.0)
     plan = [(s, e, 1.0) for s, e in beats] if beats else None
     if plan is None and cfg["pop_cuts"]:
         plan = _cut_plan(_frame_scores(raw, crop), duration, cfg, usable)
+    if plan:
+        holds = [i for i, seg in enumerate(plan) if seg[2] == 1.0]
+        if holds:
+            last_s, last_e, _ = plan[holds[-1]]
+            # One "..." beat of real waiting survives, right before the payoff.
+            beat = float(cfg["suspense_seconds"])
+            if beat > 0 and last_s > beat:
+                plan.insert(holds[-1], (last_s - beat, last_s, 1.0))
+            # Cold open: show the payoff first, then replay the chat as an open loop.
+            if cfg["cold_open"]:
+                plan.insert(0, (last_s, min(last_s + 1.0, last_e), 1.0))
     # Output seconds the plan produces; a residual uniform speed-up covers the rest.
     kept = sum((e - s) / v for s, e, v in plan) if plan else duration
     speed = min(max(kept / usable, 1.0), float(cfg["max_speed"]))
+    out_dur = kept / speed
 
-    # The demo video sits inside the stage between the accent bar and the footer.
-    box_w = _REEL_SIZE[0] - 2 * _PAD
-    box_h = _REEL_SIZE[1] - 2 * (_PAD + 150)
+    # The demo footage runs near full-bleed; scaled width follows the source aspect.
+    src_h = height - crop_top - crop_bottom
+    vid_w = int(width * _VID_H / src_h) // 2 * 2
 
     schemes = brand.schemes()
     scheme = schemes[_pick(stem, len(schemes))]  # same scheme as the draft's card
     b = brand.brand()
     cta_headline = str(cfg["cta_headline"]).strip() or b["footer"] or headline
     with tempfile.TemporaryDirectory() as tmp:
-        title_png, end_png, stage_png = (Path(tmp) / n for n in
-                                         ("title.png", "end.png", "stage.png"))
-        _render(headline, sub, _REEL_SIZE, title_png, scheme, None)
-        _render(cta_headline, str(cfg["cta_sub"]).strip(), _REEL_SIZE, end_png,
-                scheme, None)
-        _render_stage(stage_png, scheme)
+        stage_png, hook_png, cta_png = (Path(tmp) / n for n in
+                                        ("stage.png", "hook.png", "cta.png"))
+        _render_stage(stage_png, scheme, (vid_w, _VID_H))
+        _render_overlay(headline, "", _SAFE_TOP, hook_png)
+        _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png)
 
-        card = f"setsar=1,fps={_FPS},format=yuv420p"
-        cut = _cut_filter(crop, plan) if plan else f"[1:v]{crop}[cut];"
+        bg = str(scheme["bg"]).replace("#", "0x")
+        if plan:
+            slice_args, cut = _slice_args(raw, plan, crop, first_idx=1)
+            n_vid = len(plan)
+        else:
+            slice_args, cut, n_vid = ["-i", str(raw)], f"[1:v]{crop}[cut];", 1
+        hook_idx, cta_idx = n_vid + 1, n_vid + 2
         graph = (
-            f"[0:v]{card}[title];"
-            + cut +
-            f"[cut]setpts=PTS/{speed:.4f},"
-            f"scale={box_w}:{box_h}:force_original_aspect_ratio=decrease:"
-            f"force_divisible_by=2,fps={_FPS}[vid];"
-            f"[3:v]{card}[stage];"
-            f"[stage][vid]overlay=(W-w)/2:(H-h)/2:shortest=1,{card}[main];"
-            f"[2:v]{card}[end];"
-            f"[title][main][end]concat=n=3:v=1:a=0[out]"
+            cut +
+            f"[cut]setpts=PTS/{speed:.4f},scale={vid_w}:{_VID_H},fps={_FPS},"
+            f"pad={_REEL_SIZE[0]}:{_REEL_SIZE[1]}:(ow-iw)/2:(oh-ih)/2:color={bg},"
+            f"tpad=stop_mode=clone:stop_duration={float(cfg['cta_seconds']):.2f}"
+            f"[base];"
+            # shortest=1 everywhere: the looped PNGs are endless, the video chain
+            # (base, tpad included) is what bounds the reel — without it the
+            # graph runs forever.
+            f"[base][0:v]overlay=0:0:shortest=1[framed];"
+            f"[framed][{hook_idx}:v]overlay=0:0:shortest=1:"
+            f"enable='lt(t,{float(cfg['hook_seconds']):.2f})'[hooked];"
+            f"[hooked][{cta_idx}:v]overlay=0:0:shortest=1:"
+            f"enable='gte(t,{out_dur:.2f})',"
+            f"setsar=1,fps={_FPS},format=yuv420p[out]"
         )
         cmd = [
             "ffmpeg", "-y", "-v", "error",
-            "-loop", "1", "-t", str(cfg["title_seconds"]), "-i", str(title_png),
-            "-i", str(raw),
-            "-loop", "1", "-t", str(cfg["end_seconds"]), "-i", str(end_png),
             "-loop", "1", "-i", str(stage_png),
+            *slice_args,
+            "-loop", "1", "-i", str(hook_png),
+            "-loop", "1", "-i", str(cta_png),
             "-filter_complex", graph, "-map", "[out]", "-an",
             "-c:v", "libx264", "-preset", "medium", "-crf", "20",
             "-movflags", "+faststart", str(out_path),
