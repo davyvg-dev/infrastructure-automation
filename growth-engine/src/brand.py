@@ -53,5 +53,25 @@ def stock() -> dict[str, Any]:
     return values
 
 
+def reel() -> dict[str, Any]:
+    """Config `media.reel` — screen-recording → branded reel. Off unless enabled.
+
+    Crop values are fractions of the source height (robust to Telegram re-encodes,
+    which change pixel dimensions but not proportions)."""
+    values = {
+        "enabled": False,
+        "crop_top": 0.0,        # iOS status bar — device-specific, tune once
+        "crop_bottom": 0.0,     # home indicator, usually fine to keep
+        "target_seconds": 30,   # speed the demo up to roughly this length
+        "max_speed": 4.0,       # never faster than this (unreadable beyond it)
+        "title_seconds": 1.8,
+        "end_seconds": 2.4,
+        "cta_headline": "",     # end-card text; falls back to brand footer
+        "cta_sub": "",
+    }
+    values.update((strategy().get("media") or {}).get("reel") or {})
+    return values
+
+
 def font_path(bold: bool = False) -> Path:
     return brand()["font_bold" if bold else "font_regular"]

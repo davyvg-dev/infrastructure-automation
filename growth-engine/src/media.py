@@ -1,4 +1,4 @@
-"""Generated media — image cards rendered with pure Pillow (no ffmpeg, no macOS tools).
+"""Generated media — image cards (pure Pillow) and reels (ffmpeg + Pillow cards).
 
 A card is the draft's sharpest claim as a branded image: flat background (or a stock
 photo under a dark scrim), accent bar, big headline, optional sub-line, footer. Color
@@ -9,6 +9,11 @@ template. Rendered in the two aspects social platforms want and attached to the 
 Stock photos come from the Pexels API (free key, commercial use allowed, no attribution
 required). Any photo failure falls back to a flat card — a missing photo must never
 kill a draft.
+
+A reel is a raw screen recording (the founder demos the receptionist on their phone)
+turned into a branded 9:16 video: iOS status bar cropped off, sped up to a watchable
+length (or jump-cut to explicit beats), placed on a brand stage, book-ended with
+Pillow-rendered title/end cards. All text is Pillow — this ffmpeg build has no drawtext.
 """
 
 from __future__ import annotations
@@ -16,7 +21,10 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
+import subprocess
 import sys
+import tempfile
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -246,3 +254,152 @@ def attach_cards(draft: dict[str, Any]) -> None:
         # query-less draft can't swallow the photo slot.
         use_photo=bool(photo_query) and _photo_turn(),
     )
+
+
+# --------------------------------------------------------------------------- #
+# Reels
+# --------------------------------------------------------------------------- #
+
+_REEL_SIZE = (1080, 1920)
+_FPS = 30
+
+
+def attach_reel_task(draft: dict[str, Any], requested: list[str]) -> None:
+    """Append a pending-recording video task when the draft targets video platforms.
+
+    The task is fulfilled later via the bot's 🎬 flow (founder uploads a screen
+    recording, build_reel turns it into the branded reel). It never blocks approval —
+    captions and image cards deliver regardless.
+    """
+    if not brand.reel()["enabled"]:
+        return
+    reg = platforms.registry()
+    targets = [
+        p for p in requested if reg.get(p, {}).get("media") in ("video", "both")
+    ]
+    if not targets:
+        return
+    draft.setdefault("media", []).append({
+        "type": "video",
+        "status": "pending_recording",
+        "platform_targets": targets,
+    })
+
+
+def _probe(path: Path) -> tuple[int, int, float]:
+    """Source video (width, height, duration in seconds) via ffprobe."""
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "v:0",
+         "-show_entries", "stream=width,height", "-show_entries", "format=duration",
+         "-of", "json", str(path)],
+        capture_output=True, text=True, check=True,
+    )
+    info = json.loads(out.stdout)
+    stream = info["streams"][0]
+    return int(stream["width"]), int(stream["height"]), float(info["format"]["duration"])
+
+
+def _render_stage(out_path: Path, scheme: dict[str, Any]) -> None:
+    """The 9:16 backdrop the demo video sits on — brand color, accent bar, footer."""
+    b = brand.brand()
+    img = Image.new("RGB", _REEL_SIZE, scheme["bg"])
+    draw = ImageDraw.Draw(img)
+    draw.rectangle((_PAD, _PAD, _PAD + 140, _PAD + 20), fill=scheme["accent"])
+    if b["footer"]:
+        footer_font = ImageFont.truetype(str(b["font_bold"]), 38)
+        fy = _REEL_SIZE[1] - _PAD - 46
+        draw.rectangle((_PAD, fy + 6, _PAD + 26, fy + 32), fill=scheme["accent"])
+        draw.text((_PAD + 46, fy), b["footer"], font=footer_font, fill=scheme["text"])
+    img.save(out_path, "PNG")
+
+
+def _cut_filter(crop: str, beats: list[tuple[float, float]]) -> str:
+    """Jump-cut filter: crop once, then keep only the given (start, end) segments."""
+    n = len(beats)
+    parts = [f"[1:v]{crop},split={n}" + "".join(f"[c{i}]" for i in range(n)) + ";"]
+    for i, (s, e) in enumerate(beats):
+        parts.append(f"[c{i}]trim=start={s:.3f}:end={e:.3f},setpts=PTS-STARTPTS[t{i}];")
+    parts.append("".join(f"[t{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0[cut];")
+    return "".join(parts)
+
+
+def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
+               beats: list[tuple[float, float]] | None = None,
+               out_dir: Path | None = None) -> dict[str, Any]:
+    """Cut a raw screen recording into a branded 1080×1920 reel; returns a media record.
+
+    `beats` are (start, end) seconds of the raw clip to keep (jump-cut, played at
+    natural speed); without beats the whole clip is sped up toward `target_seconds`.
+    Audio is dropped — screen recordings are silent and IG/TikTok music is added in-app.
+    """
+    for tool in ("ffmpeg", "ffprobe"):
+        if shutil.which(tool) is None:
+            raise RuntimeError(f"{tool} is not installed (needed for reels)")
+    cfg = brand.reel()
+    out_dir = out_dir or data_dir() / "media"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"{stem}-reel.mp4"
+
+    width, height, duration = _probe(raw)
+    crop_top = int(height * float(cfg["crop_top"])) // 2 * 2
+    crop_bottom = int(height * float(cfg["crop_bottom"])) // 2 * 2
+    crop = f"crop=iw:ih-{crop_top + crop_bottom}:0:{crop_top}"
+    kept = sum(e - s for s, e in beats) if beats else duration
+    speed = 1.0 if beats else min(
+        max(kept / float(cfg["target_seconds"]), 1.0), float(cfg["max_speed"])
+    )
+
+    # The demo video sits inside the stage between the accent bar and the footer.
+    box_w = _REEL_SIZE[0] - 2 * _PAD
+    box_h = _REEL_SIZE[1] - 2 * (_PAD + 150)
+
+    schemes = brand.schemes()
+    scheme = schemes[_pick(stem, len(schemes))]  # same scheme as the draft's card
+    b = brand.brand()
+    cta_headline = str(cfg["cta_headline"]).strip() or b["footer"] or headline
+    with tempfile.TemporaryDirectory() as tmp:
+        title_png, end_png, stage_png = (Path(tmp) / n for n in
+                                         ("title.png", "end.png", "stage.png"))
+        _render(headline, sub, _REEL_SIZE, title_png, scheme, None)
+        _render(cta_headline, str(cfg["cta_sub"]).strip(), _REEL_SIZE, end_png,
+                scheme, None)
+        _render_stage(stage_png, scheme)
+
+        card = f"setsar=1,fps={_FPS},format=yuv420p"
+        cut = _cut_filter(crop, beats) if beats else f"[1:v]{crop}[cut];"
+        graph = (
+            f"[0:v]{card}[title];"
+            + cut +
+            f"[cut]setpts=PTS/{speed:.4f},"
+            f"scale={box_w}:{box_h}:force_original_aspect_ratio=decrease:"
+            f"force_divisible_by=2,fps={_FPS}[vid];"
+            f"[3:v]{card}[stage];"
+            f"[stage][vid]overlay=(W-w)/2:(H-h)/2:shortest=1,{card}[main];"
+            f"[2:v]{card}[end];"
+            f"[title][main][end]concat=n=3:v=1:a=0[out]"
+        )
+        cmd = [
+            "ffmpeg", "-y", "-v", "error",
+            "-loop", "1", "-t", str(cfg["title_seconds"]), "-i", str(title_png),
+            "-i", str(raw),
+            "-loop", "1", "-t", str(cfg["end_seconds"]), "-i", str(end_png),
+            "-loop", "1", "-i", str(stage_png),
+            "-filter_complex", graph, "-map", "[out]", "-an",
+            "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+            "-movflags", "+faststart", str(out_path),
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        if result.returncode != 0:
+            raise RuntimeError(f"ffmpeg failed: {result.stderr.strip()[-400:]}")
+
+    video_platforms = [
+        name for name, desc in platforms.registry().items()
+        if desc["media"] in ("video", "both")
+    ]
+    return {
+        "type": "video",
+        "path": str(out_path),
+        "aspect": "story",
+        "platform_targets": video_platforms,
+        "status": "ready",
+    }

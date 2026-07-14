@@ -5,6 +5,7 @@ Run one layer at a time (see TASK.md):
     python -m src.selftest config      # config + env sanity, no network
     python -m src.selftest platforms   # platform registry sanity, no network
     python -m src.selftest media       # offline image-card render (Pillow + fonts)
+    python -m src.selftest reel        # offline reel build (needs ffmpeg)
     python -m src.selftest generate    # Claude drafting (needs ANTHROPIC_API_KEY)
     python -m src.selftest telegram    # send a test message (needs Telegram vars)
     python -m src.selftest x           # verify X auth, does NOT post (needs X vars)
@@ -120,6 +121,53 @@ def check_media() -> bool:
     return True
 
 
+def check_reel() -> bool:
+    print("• reel (offline build from a synthetic clip)")
+    import shutil
+
+    from . import brand
+
+    cfg = brand.reel()
+    if not cfg["enabled"]:
+        _ok("media.reel disabled in config — skipping")
+        return True
+    for tool in ("ffmpeg", "ffprobe"):
+        if shutil.which(tool) is None:
+            return _fail(f"{tool} not installed but media.reel.enabled is true")
+    import subprocess
+    import tempfile
+    from pathlib import Path
+
+    from . import media
+
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            raw = Path(tmp) / "raw.mp4"
+            # A fake phone recording: 4s portrait test pattern at a real iPhone ratio.
+            subprocess.run(
+                ["ffmpeg", "-y", "-v", "error", "-f", "lavfi",
+                 "-i", "testsrc=size=390x844:rate=30:duration=4",
+                 "-pix_fmt", "yuv420p", str(raw)],
+                check=True, capture_output=True, text=True,
+            )
+            record = media.build_reel(
+                raw, "selftest", "Testkop voor de reel", "Een sublijn.",
+                out_dir=Path(tmp),
+            )
+            w, h, duration = media._probe(Path(record["path"]))
+            if (w, h) != (1080, 1920):
+                return _fail(f"reel rendered {w}×{h}, want 1080×1920")
+            _ok(f"reel: 1080×1920, {duration:.1f}s (title + demo + end card) "
+                f"→ targets {record['platform_targets']}")
+            _ok(f"crop_top {cfg['crop_top']} · target {cfg['target_seconds']}s · "
+                f"max speed {cfg['max_speed']}×")
+    except subprocess.CalledProcessError as exc:
+        return _fail(f"ffmpeg failed: {exc.stderr.strip()[-300:]}")
+    except Exception as exc:
+        return _fail(f"reel build failed: {exc}")
+    return True
+
+
 def check_generate() -> bool:
     print("• generate (Claude)")
     try:
@@ -200,12 +248,13 @@ CHECKS = {
     "config": check_config,
     "platforms": check_platforms,
     "media": check_media,
+    "reel": check_reel,
     "generate": check_generate,
     "telegram": check_telegram,
     "x": check_x,
 }
 # Offline checks first, so a broken render can't waste an API call.
-ORDER = ["config", "platforms", "media", "generate", "telegram", "x"]
+ORDER = ["config", "platforms", "media", "reel", "generate", "telegram", "x"]
 
 
 def main(argv: list[str]) -> int:
