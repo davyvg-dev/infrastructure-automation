@@ -7,9 +7,14 @@ const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 )
 
-const verticalLabel: Record<'loodgieter' | 'dakdekker' | 'algemeen', string> = {
+// Covers every vertical the blog collection allows (src/content/config.ts).
+const verticalLabel: Record<(typeof posts)[number]['data']['vertical'], string> = {
   loodgieter: 'Loodgieters',
   dakdekker: 'Dakdekkers',
+  schilder: 'Schilders',
+  installateur: 'Installateurs',
+  elektricien: 'Elektriciens',
+  aannemer: 'Aannemers',
   algemeen: 'Algemeen',
 }
 
