@@ -26,6 +26,14 @@ export interface Branch {
 
 export const branches: Branch[] = [
   {
+    slug: 'sportscholen',
+    labelSingular: 'Sportschool',
+    labelPlural: 'Sportscholen',
+    href: '/sportscholen/',
+    hubLine: 'Proefles-aanvragen in de avond en het weekend direct beantwoord én ingepland.',
+    illustration: 'Dumbbell',
+  },
+  {
     slug: 'loodgieters',
     labelSingular: 'Loodgieter',
     labelPlural: 'Loodgieters',
@@ -72,13 +80,5 @@ export const branches: Branch[] = [
     href: '/aannemer/',
     hubLine: 'Offerteaanvragen, meerwerk en leveranciers uit elkaar terwijl u op de bouwplaats staat.',
     illustration: 'HardHat',
-  },
-  {
-    slug: 'sportscholen',
-    labelSingular: 'Sportschool',
-    labelPlural: 'Sportscholen',
-    href: '/sportscholen/',
-    hubLine: 'Proefles-aanvragen in de avond en het weekend direct beantwoord én ingepland.',
-    illustration: 'Dumbbell',
   },
 ]

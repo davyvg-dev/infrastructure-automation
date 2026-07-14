@@ -1,8 +1,9 @@
 # Klantkraan
 
-Klantkraan (klantkraan.nl) is an AI receptionist for Dutch trade businesses
-(plumbers, roofers, painters, installers, electricians, contractors) and gyms.
-It answers customer questions in Dutch on the business's website chat and
+Klantkraan (klantkraan.nl) is an AI receptionist for Dutch local businesses —
+gyms and trades (plumbers, roofers, painters, installers, electricians,
+contractors) today, any appointment-driven business by configuration. It
+answers customer questions in Dutch on the business's website chat and
 WhatsApp, books appointments in the owner's calendar and captures leads 24/7.
 Two subscriptions: Chat (EUR 299/month, website chat + WhatsApp) and Compleet
 (EUR 499/month, adds an AI phone agent on a Dutch number). Monthly cancellable,
@@ -14,13 +15,13 @@ done-for-you setup, EU-hosted. Trade name of T4 Software Consulting BV
 - Home: https://klantkraan.nl/
 - Pricing: https://klantkraan.nl/prijzen/
 - Demo: https://klantkraan.nl/demo/
+- Gyms: https://klantkraan.nl/sportscholen/
+- Gym demo: https://klantkraan.nl/demo/sportscholen/
 - Plumbers: https://klantkraan.nl/loodgieters/
 - Roofers: https://klantkraan.nl/dakdekkers/
 - Installers: https://klantkraan.nl/installateur/
 - Electricians: https://klantkraan.nl/elektricien/
 - Painters: https://klantkraan.nl/schilder/
 - Contractors: https://klantkraan.nl/aannemer/
-- Gyms: https://klantkraan.nl/sportscholen/
-- Gym demo: https://klantkraan.nl/demo/sportscholen/
 - Blog: https://klantkraan.nl/blog/
 - Guides: https://klantkraan.nl/gidsen/
