@@ -24,7 +24,7 @@ from typing import Any
 
 from PIL import Image, ImageDraw, ImageFont
 
-from . import brand, platforms
+from . import brand, platforms, store
 from .settings import data_dir
 
 # (width, height, pexels orientation) per aspect. Square feeds IG/FB feed; story is 9:16.
@@ -167,23 +167,31 @@ def _render(headline: str, sub: str, size: tuple[int, int], out_path: Path,
     img.save(out_path, "PNG")
 
 
+def _photo_turn() -> bool:
+    """Strict rotation: every Nth card with a photo query becomes a photo card.
+
+    A stored counter, not a hash of the draft id — a per-draft coin flip guarantees
+    only the long-run ratio and happily skips photos four drafts in a row.
+    """
+    stock_cfg = brand.stock()
+    if not stock_cfg["enabled"]:
+        return False
+    n = int(store.get_state("photo_card_cycle", 0))
+    store.set_state("photo_card_cycle", n + 1)
+    return n % int(stock_cfg["every"]) == 0
+
+
 def render_cards(headline: str, sub: str, stem: str, out_dir: Path | None = None,
-                 photo_query: str = "") -> list[dict[str, Any]]:
+                 photo_query: str = "", use_photo: bool = False) -> list[dict[str, Any]]:
     """Render one card per aspect; returns media records for the draft.
 
-    The stem doubles as the variation key: it picks the color scheme, and — when stock
-    photos are enabled and a query exists — whether this card is a photo card (every
-    Nth draft, deterministic).
+    The stem is the variation key for the color scheme; the photo decision is the
+    caller's (attach_cards rotates it via _photo_turn).
     """
     out_dir = out_dir or data_dir() / "media"
     schemes = brand.schemes()
     scheme = schemes[_pick(stem, len(schemes))]
-    stock_cfg = brand.stock()
-    use_photo = (
-        stock_cfg["enabled"]
-        and photo_query
-        and _pick(f"photo:{stem}", int(stock_cfg["every"])) == 0
-    )
+    use_photo = use_photo and bool(photo_query)
     image_platforms = [
         name for name, desc in platforms.registry().items()
         if desc["media"] in ("image", "both")
@@ -212,9 +220,13 @@ def attach_cards(draft: dict[str, Any]) -> None:
     headline = card.get("headline", "").strip()
     if not headline:
         return
+    photo_query = card.get("photo_query", "").strip()
     draft["media"] = render_cards(
         headline,
         card.get("sub", "").strip(),
         draft["id"],
-        photo_query=card.get("photo_query", "").strip(),
+        photo_query=photo_query,
+        # Only spend a rotation turn on drafts that actually have a query, so a
+        # query-less draft can't swallow the photo slot.
+        use_photo=bool(photo_query) and _photo_turn(),
     )
