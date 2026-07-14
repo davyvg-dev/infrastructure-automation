@@ -12,10 +12,13 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+import logging
 from zoneinfo import ZoneInfo
 
+import httpx
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.constants import ParseMode
+from telegram.request import HTTPXRequest
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
@@ -61,8 +64,7 @@ async def _send_media_previews(app: Application, chat_id: int, draft: dict) -> N
                 )
 
 
-async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
-    store.save_draft(draft)
+async def _deliver_draft(app: Application, chat_id: int, draft: dict) -> None:
     # Media previews first, so the approval message (with buttons) stays last in the chat.
     await _send_media_previews(app, chat_id, draft)
     await app.bot.send_message(
@@ -71,6 +73,13 @@ async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
         parse_mode=ParseMode.MARKDOWN_V2,
         reply_markup=_keyboard(draft["id"], formatting.pending_reel(draft)),
     )
+    # Marks the draft as having reached Telegram; undelivered ones are resent on startup.
+    store.update_draft(draft["id"], delivered_at=store.now_iso())
+
+
+async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
+    store.save_draft(draft)
+    await _deliver_draft(app, chat_id, draft)
 
 
 # --------------------------------------------------------------------------- #
@@ -360,6 +369,31 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # App wiring
 # --------------------------------------------------------------------------- #
 
+def _ipv4_request(pool_size: int) -> HTTPXRequest:
+    # Home IPv6 routes to api.telegram.org can silently break (TLS ConnectError on
+    # every new connection); binding the local side to 0.0.0.0 forces IPv4.
+    transport = httpx.AsyncHTTPTransport(
+        local_address="0.0.0.0",
+        limits=httpx.Limits(max_connections=pool_size),
+        retries=2,
+    )
+    return HTTPXRequest(
+        connection_pool_size=pool_size,
+        media_write_timeout=60.0,
+        httpx_kwargs={"transport": transport},
+    )
+
+
+async def _on_error(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    logging.getLogger(__name__).error("Unhandled error", exc_info=context.error)
+    try:
+        await context.bot.send_message(
+            int(env("TELEGRAM_CHAT_ID")), f"⚠️ Bot error: {context.error}"
+        )
+    except Exception:
+        pass  # reporting itself failed; already logged, keep the bot alive
+
+
 async def _post_init(app: Application) -> None:
     chat_id = int(env("TELEGRAM_CHAT_ID"))
     schedule_jobs(app, chat_id)
@@ -368,11 +402,34 @@ async def _post_init(app: Application) -> None:
         "🚀 Growth Engine started and scheduled. Send /now for a draft, or wait for the "
         "next scheduled run.",
     )
+    stuck = [
+        d for d in store.load_queue()
+        if d["status"] == "pending" and not d.get("delivered_at")
+    ]
+    if stuck:
+        await app.bot.send_message(
+            chat_id, f"📬 Resending {len(stuck)} draft(s) that never reached you:"
+        )
+    for draft in stuck:
+        try:
+            await _deliver_draft(app, chat_id, draft)
+        except Exception:
+            logging.getLogger(__name__).exception(
+                "Redelivery of %s failed; will retry on next start", draft["id"]
+            )
 
 
 def build_app() -> Application:
     token = env("TELEGRAM_BOT_TOKEN")
-    app = Application.builder().token(token).post_init(_post_init).build()
+    app = (
+        Application.builder()
+        .token(token)
+        .request(_ipv4_request(pool_size=8))
+        .get_updates_request(_ipv4_request(pool_size=1))
+        .post_init(_post_init)
+        .build()
+    )
+    app.add_error_handler(_on_error)
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("now", cmd_now))
     app.add_handler(CommandHandler("buildlog", cmd_buildlog))
