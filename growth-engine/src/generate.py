@@ -55,9 +55,10 @@ _DRAFT_SCHEMA = {
                 },
                 "photo_query": {
                     "type": "string",
-                    "description": "2-4 English keywords for a matching stock photo "
-                                   "(concrete scene, e.g. 'plumber repairing boiler'), "
-                                   "or empty string.",
+                    "description": "2-4 English keywords for a stock photo of a concrete "
+                                   "scene in the buyer's industry that backs the claim "
+                                   "(e.g. 'plumber repairing boiler'). Always fill this "
+                                   "when headline is set.",
                 },
             },
             "required": ["headline", "sub", "photo_query"],

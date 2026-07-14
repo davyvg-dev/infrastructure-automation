@@ -78,31 +78,46 @@ def _cover(img: Image.Image, size: tuple[int, int]) -> Image.Image:
     return img.crop((left, top, left + size[0], top + size[1]))
 
 
-def _stock_photo(query: str, orientation: str) -> Path | None:
-    """Fetch one Pexels photo for the query, or None (no key / no hit / any error)."""
+# Pexels 403s python-urllib's default User-Agent; identify ourselves properly.
+_UA = "klantkraan-growth-engine/1.0"
+
+
+def _search(query: str, orientation: str, key: str) -> list[dict[str, Any]]:
+    params = urllib.parse.urlencode(
+        {"query": query, "orientation": orientation, "per_page": 5}
+    )
+    req = urllib.request.Request(
+        f"https://api.pexels.com/v1/search?{params}",
+        headers={"Authorization": key, "User-Agent": _UA},
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        return json.load(resp).get("photos") or []
+
+
+def _stock_photo(query: str, orientation: str, variant: int = 0) -> Path | None:
+    """Fetch a Pexels photo for the query, or None (no key / no hit / any error).
+
+    The config `media.stock.theme` is appended to keep results in-industry; if that
+    themed search is too narrow to match anything, retry with the bare query. `variant`
+    picks among the top results so similar queries don't repeat the same photo.
+    """
     key = os.getenv("PEXELS_API_KEY", "").strip()
     if not key or not query:
         return None
+    theme = str(brand.stock().get("theme", "")).strip()
     try:
-        params = urllib.parse.urlencode(
-            {"query": query, "orientation": orientation, "per_page": 1}
-        )
-        # Pexels 403s python-urllib's default User-Agent; identify ourselves properly.
-        headers = {"Authorization": key, "User-Agent": "klantkraan-growth-engine/1.0"}
-        req = urllib.request.Request(
-            f"https://api.pexels.com/v1/search?{params}", headers=headers
-        )
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            photos = json.load(resp).get("photos") or []
+        photos = _search(f"{query} {theme}".strip(), orientation, key)
+        if not photos and theme:
+            photos = _search(query, orientation, key)
         if not photos:
+            print(f"stock photo: no results for {query!r}", file=sys.stderr)
             return None
-        url = photos[0]["src"]["large2x"]
-        out = data_dir() / "media" / "stock" / (
-            hashlib.sha1(f"{query}-{orientation}".encode()).hexdigest()[:12] + ".jpg"
-        )
+        photo = photos[variant % len(photos)]
+        url = photo["src"]["large2x"]
+        out = data_dir() / "media" / "stock" / f"{photo['id']}-{orientation}.jpg"
         if not out.exists():
             out.parent.mkdir(parents=True, exist_ok=True)
-            dl = urllib.request.Request(url, headers={"User-Agent": headers["User-Agent"]})
+            dl = urllib.request.Request(url, headers={"User-Agent": _UA})
             with urllib.request.urlopen(dl, timeout=30) as resp, out.open("wb") as fh:
                 fh.write(resp.read())
         return out
@@ -196,9 +211,10 @@ def render_cards(headline: str, sub: str, stem: str, out_dir: Path | None = None
         name for name, desc in platforms.registry().items()
         if desc["media"] in ("image", "both")
     ]
+    variant = _pick(stem, 5)
     records = []
     for aspect, (w, h, orientation) in _SIZES.items():
-        photo = _stock_photo(photo_query, orientation) if use_photo else None
+        photo = _stock_photo(photo_query, orientation, variant) if use_photo else None
         path = out_dir / f"{stem}-{aspect}.png"
         _render(headline, sub, (w, h), path, scheme, photo)
         records.append({

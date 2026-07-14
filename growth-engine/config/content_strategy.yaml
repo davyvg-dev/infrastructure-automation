@@ -152,7 +152,8 @@ media:
   # a photo_query and PEXELS_API_KEY is set. Pexels: free commercial use, no attribution.
   stock:
     enabled: true
-    every: 3
+    every: 1           # every card is a photo card (founder preference 2026-07-14)
+    theme: "plumber"    # appended to every photo search to keep results in-industry
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.
