@@ -21,6 +21,8 @@ rsync -az --delete \
 echo "==> build venvs + install units"
 ssh "$HOST" DEMO_HOST="$DEMO_HOST" 'bash -s' <<'REMOTE'
 set -euo pipefail
+# growth-engine reels (src/media.py build_reel) shell out to ffmpeg/ffprobe.
+command -v ffmpeg >/dev/null || DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg
 for app in growth-engine ai-receptionist; do
   cd /opt/klantkraan/$app
   [ -d .venv ] || python3 -m venv .venv
