@@ -163,16 +163,23 @@ media:
     every: 1           # every card is a photo card (founder preference 2026-07-14)
     theme: "gym"    # appended to every photo search to keep results in-industry
   # Reels: a raw screen recording (uploaded via the bot's 🎬 button) becomes a branded
-  # 9:16 video — status bar cropped, sped up to a watchable length, brand stage,
-  # Pillow title/end cards. IG/TikTok are this vertical's home turf, so every draft
-  # carries a reel task; unfulfilled tasks never block approval.
+  # 9:16 video — status bar cropped, dead time pop-cut away, brand stage, Pillow
+  # title/end cards. IG/TikTok are this vertical's home turf, so every draft carries
+  # a reel task; unfulfilled tasks never block approval.
   reel:
     enabled: true
     crop_top: 0.055     # fraction of source height to crop (iOS status bar) — tune
                         # once after the first reel; device-specific
     crop_bottom: 0.0
-    target_seconds: 30  # speed the demo up to roughly this length
+    # Short-form: typing and waiting are cut out entirely (pop cuts) — each message
+    # pops in, holds just long enough to read, then jump-cuts to the next.
+    pop_cuts: true
+    scene_threshold: 0.08   # how big a frame change counts as "a message appeared"
+    dwell_seconds: 1.4      # max hold per pop; shrinks automatically to fit the cap
+    target_seconds: 15      # hard cap for the finished reel, cards included
     max_speed: 4.0
+    title_seconds: 1.0      # short title card — the hook can't wait
+    end_seconds: 2.0
     cta_headline: "Nooit meer een proefles-lead missen."   # end card (Dutch)
     cta_sub: "klantkraan.nl/sportscholen"                  # the fitness landing page
 

@@ -143,10 +143,19 @@ def check_reel() -> bool:
     try:
         with tempfile.TemporaryDirectory() as tmp:
             raw = Path(tmp) / "raw.mp4"
-            # A fake phone recording: 4s portrait test pattern at a real iPhone ratio.
+            # A fake chat recording at a real iPhone ratio: four static scenes with
+            # hard changes between them — what a message popping in looks like to the
+            # pop-cut detector, with "typing time" (the static stretches) in between.
+            scenes = ["Red", "Green", "Blue", "Yellow"]
+            inputs: list[str] = []
+            for color in scenes:
+                inputs += ["-f", "lavfi", "-i",
+                           f"color=c={color}:size=390x844:rate=30:duration=3"]
             subprocess.run(
-                ["ffmpeg", "-y", "-v", "error", "-f", "lavfi",
-                 "-i", "testsrc=size=390x844:rate=30:duration=4",
+                ["ffmpeg", "-y", "-v", "error", *inputs,
+                 "-filter_complex",
+                 "".join(f"[{i}]" for i in range(len(scenes)))
+                 + f"concat=n={len(scenes)}:v=1:a=0",
                  "-pix_fmt", "yuv420p", str(raw)],
                 check=True, capture_output=True, text=True,
             )
@@ -157,10 +166,17 @@ def check_reel() -> bool:
             w, h, duration = media._probe(Path(record["path"]))
             if (w, h) != (1080, 1920):
                 return _fail(f"reel rendered {w}×{h}, want 1080×1920")
-            _ok(f"reel: 1080×1920, {duration:.1f}s (title + demo + end card) "
-                f"→ targets {record['platform_targets']}")
-            _ok(f"crop_top {cfg['crop_top']} · target {cfg['target_seconds']}s · "
-                f"max speed {cfg['max_speed']}×")
+            cap = float(cfg["target_seconds"]) + 0.5  # rounding headroom
+            if duration > cap:
+                return _fail(f"reel is {duration:.1f}s, cap is {cfg['target_seconds']}s")
+            if cfg["pop_cuts"] and duration >= 12.0 - 0.5:
+                # 12s of raw scenes must shrink: pop cuts drop the static stretches.
+                return _fail(f"pop cuts had no effect: {duration:.1f}s from a 12s raw")
+            _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw "
+                f"(pop cuts {'on' if cfg['pop_cuts'] else 'off'}, "
+                f"{len(scenes)} scenes) → targets {record['platform_targets']}")
+            _ok(f"crop_top {cfg['crop_top']} · cap {cfg['target_seconds']}s · "
+                f"dwell ≤{cfg['dwell_seconds']}s · max speed {cfg['max_speed']}×")
     except subprocess.CalledProcessError as exc:
         return _fail(f"ffmpeg failed: {exc.stderr.strip()[-300:]}")
     except Exception as exc:

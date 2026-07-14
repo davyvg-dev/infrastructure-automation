@@ -62,8 +62,12 @@ def reel() -> dict[str, Any]:
         "enabled": False,
         "crop_top": 0.0,        # iOS status bar — device-specific, tune once
         "crop_bottom": 0.0,     # home indicator, usually fine to keep
-        "target_seconds": 30,   # speed the demo up to roughly this length
+        "target_seconds": 15,   # max length of the FINISHED reel, cards included
         "max_speed": 4.0,       # never faster than this (unreadable beyond it)
+        "pop_cuts": True,       # cut typing/waiting entirely: keep only the moments
+                                # around screen changes, so messages pop in back-to-back
+        "scene_threshold": 0.08,  # how big a frame change counts as "something happened"
+        "dwell_seconds": 1.4,   # max hold on each pop before jumping to the next
         "title_seconds": 1.8,
         "end_seconds": 2.4,
         "cta_headline": "",     # end-card text; falls back to brand footer

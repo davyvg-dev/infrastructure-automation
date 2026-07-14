@@ -11,9 +11,10 @@ required). Any photo failure falls back to a flat card — a missing photo must 
 kill a draft.
 
 A reel is a raw screen recording (the founder demos the receptionist on their phone)
-turned into a branded 9:16 video: iOS status bar cropped off, sped up to a watchable
-length (or jump-cut to explicit beats), placed on a brand stage, book-ended with
-Pillow-rendered title/end cards. All text is Pillow — this ffmpeg build has no drawtext.
+turned into a branded 9:16 video: iOS status bar cropped off, dead time (typing,
+waiting) pop-cut away so messages appear back-to-back, placed on a brand stage,
+book-ended with Pillow-rendered title/end cards. All text is Pillow — this ffmpeg
+build has no drawtext.
 """
 
 from __future__ import annotations
@@ -21,6 +22,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -313,6 +315,43 @@ def _render_stage(out_path: Path, scheme: dict[str, Any]) -> None:
     img.save(out_path, "PNG")
 
 
+def _detect_change_times(raw: Path, crop: str, threshold: float) -> list[float]:
+    """Seconds at which the (cropped) screen visibly changes — a message popping in.
+
+    Typing indicators and the status-bar clock move too little to cross the scene
+    threshold, so the quiet stretches between changes carry no timestamps.
+    """
+    result = subprocess.run(
+        ["ffmpeg", "-hide_banner", "-nostats", "-v", "info", "-i", str(raw),
+         "-vf", f"{crop},select='gt(scene,{threshold})',showinfo",
+         "-f", "null", "-"],
+        capture_output=True, text=True, timeout=120,
+    )
+    return [float(m) for m in re.findall(r"pts_time:([0-9]+\.?[0-9]*)", result.stderr)]
+
+
+def _pop_beats(times: list[float], duration: float, usable: float,
+               dwell_max: float) -> list[tuple[float, float]]:
+    """Keep-segments from change moments: each pop holds just long enough to read.
+
+    The dwell shrinks as pops multiply so the demo fits `usable` seconds; overlapping
+    holds merge so rapid sequences play through uncut.
+    """
+    starts = [0.0]
+    for t in sorted(times):
+        if t - starts[-1] >= 0.25:  # double-triggers within one pop animation
+            starts.append(max(t - 0.05, 0.0))
+    dwell = max(0.5, min(dwell_max, usable / len(starts)))
+    beats: list[tuple[float, float]] = []
+    for s in starts:
+        e = min(s + dwell, duration)
+        if beats and s <= beats[-1][1] + 0.05:
+            beats[-1] = (beats[-1][0], max(beats[-1][1], e))
+        else:
+            beats.append((s, e))
+    return [(s, e) for s, e in beats if e - s > 0.05]
+
+
 def _cut_filter(crop: str, beats: list[tuple[float, float]]) -> str:
     """Jump-cut filter: crop once, then keep only the given (start, end) segments."""
     n = len(beats)
@@ -328,9 +367,12 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
                out_dir: Path | None = None) -> dict[str, Any]:
     """Cut a raw screen recording into a branded 1080×1920 reel; returns a media record.
 
-    `beats` are (start, end) seconds of the raw clip to keep (jump-cut, played at
-    natural speed); without beats the whole clip is sped up toward `target_seconds`.
-    Audio is dropped — screen recordings are silent and IG/TikTok music is added in-app.
+    With `pop_cuts` (default) the dead time — typing, waiting on replies — is cut out
+    entirely: only a short hold around each screen change survives, so messages pop in
+    back-to-back and the finished reel stays under `target_seconds` (cards included).
+    Explicit `beats` (start, end) override the detection; if no changes are detected
+    the whole clip is sped up instead. Audio is dropped — screen recordings are silent
+    and IG/TikTok music is added in-app.
     """
     for tool in ("ffmpeg", "ffprobe"):
         if shutil.which(tool) is None:
@@ -344,10 +386,18 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     crop_top = int(height * float(cfg["crop_top"])) // 2 * 2
     crop_bottom = int(height * float(cfg["crop_bottom"])) // 2 * 2
     crop = f"crop=iw:ih-{crop_top + crop_bottom}:0:{crop_top}"
-    kept = sum(e - s for s, e in beats) if beats else duration
-    speed = 1.0 if beats else min(
-        max(kept / float(cfg["target_seconds"]), 1.0), float(cfg["max_speed"])
+    # Budget for the demo footage once the title and end cards take their share.
+    usable = max(
+        float(cfg["target_seconds"]) - float(cfg["title_seconds"])
+        - float(cfg["end_seconds"]),
+        3.0,
     )
+    if beats is None and cfg["pop_cuts"]:
+        times = _detect_change_times(raw, crop, float(cfg["scene_threshold"]))
+        if times:
+            beats = _pop_beats(times, duration, usable, float(cfg["dwell_seconds"]))
+    kept = sum(e - s for s, e in beats) if beats else duration
+    speed = min(max(kept / usable, 1.0), float(cfg["max_speed"]))
 
     # The demo video sits inside the stage between the accent bar and the footer.
     box_w = _REEL_SIZE[0] - 2 * _PAD
