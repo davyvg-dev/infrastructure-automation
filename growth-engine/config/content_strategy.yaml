@@ -96,6 +96,36 @@ platforms:
     writing: "Reddit: value-first, zero self-promotion in the body. Written to genuinely
       help in a relevant subreddit (e.g. r/smallbusiness, r/Klussers, r/ondernemers).
       Sound like a helpful practitioner, not an ad."
+  # Meta/TikTok ToS forbid auto-posting — these three are assisted-only, permanently.
+  facebook:
+    enabled: true
+    delivery: assisted
+    label: "📘 Facebook (paste)"
+    media: image
+    media_required: false
+    note: "Local-business reach (trades owners are on FB). Image cards lift it, text works."
+    writing: "Facebook post: conversational local-business tone, 50-150 words. Open with
+      the customer's pain in plain words, close with one clear next step. No hashtag
+      walls, at most one link."
+  instagram:
+    enabled: true
+    delivery: assisted
+    label: "📸 Instagram (paste)"
+    media: both
+    media_required: true
+    note: "Fitness-vertical home turf. Needs an image or reel — caption alone can't post."
+    writing: "Instagram caption: the first line is the hook (shown before 'more'). Short
+      lines, concrete benefit, end with a simple CTA. 3-5 relevant hashtags at the end,
+      no more."
+  tiktok:
+    enabled: true
+    delivery: assisted
+    label: "🎵 TikTok (paste)"
+    media: video
+    media_required: true
+    note: "Reels-only channel for the fitness vertical. The caption rides along the video."
+    writing: "TikTok caption: one punchy line that frames the video's payoff, under 150
+      characters, plus 2-3 niche hashtags. No sales speak."
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.
@@ -109,15 +139,15 @@ cadence:
     starter:
       runs_per_day: 1
       drafts_per_run: 2
-      platforms_per_draft: ["x", "linkedin"]
+      platforms_per_draft: ["x", "linkedin", "facebook"]
     growth:
       runs_per_day: 2
       drafts_per_run: 2
-      platforms_per_draft: ["x", "linkedin"]
+      platforms_per_draft: ["x", "linkedin", "facebook"]
     aggressive:
       runs_per_day: 3
       drafts_per_run: 2
-      platforms_per_draft: ["x", "linkedin"]
+      platforms_per_draft: ["x", "linkedin", "facebook"]
   # Reddit is drafted separately, at most this often (days between reddit drafts).
   reddit_every_days: 3
   # Local-hour window (24h) to send drafts for approval, so you're not pinged at 3am.
