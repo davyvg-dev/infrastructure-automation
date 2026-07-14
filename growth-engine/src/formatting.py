@@ -22,7 +22,18 @@ def preview(draft: dict[str, Any]) -> str:
         lines.append(f"*{_esc(label)}*{warn}")
         lines.append(_esc(text))
         lines.append("")
+    if pending_reel(draft):
+        lines.append("🎬 " + _esc("Reel: waiting for your screen recording — "
+                                  "tap the 🎬 button and send the clip."))
     return "\n".join(lines).strip()
+
+
+def pending_reel(draft: dict[str, Any]) -> bool:
+    """True when the draft still carries an unfulfilled recording task."""
+    return any(
+        m.get("type") == "video" and m.get("status") == "pending_recording"
+        for m in draft.get("media", [])
+    )
 
 
 def _esc(text: str) -> str:

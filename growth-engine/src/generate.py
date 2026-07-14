@@ -111,6 +111,7 @@ def generate_draft(platforms: list[str]) -> dict[str, Any]:
         "card": payload.get("card", {}),
     }
     media.attach_cards(draft)
+    media.attach_reel_task(draft, platforms)
     return draft
 
 
@@ -152,6 +153,7 @@ def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> di
         "card": payload.get("card", {}),
     }
     media.attach_cards(draft)
+    media.attach_reel_task(draft, platforms)
     return draft
 
 

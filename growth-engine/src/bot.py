@@ -25,37 +25,51 @@ from telegram.ext import (
     filters,
 )
 
-from . import buildlog, formatting, generate, platforms, store
+from . import buildlog, formatting, generate, media, platforms, store
 from .publish_x import post as post_to_x
-from .settings import active_cadence, env, strategy
+from .settings import active_cadence, data_dir, env, strategy
 
 
 # --------------------------------------------------------------------------- #
 # Sending drafts
 # --------------------------------------------------------------------------- #
 
-def _keyboard(draft_id: str) -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup([[
+def _keyboard(draft_id: str, pending_reel: bool = False) -> InlineKeyboardMarkup:
+    rows = [[
         InlineKeyboardButton("✅ Approve", callback_data=f"approve:{draft_id}"),
         InlineKeyboardButton("✏️ Rewrite", callback_data=f"rewrite:{draft_id}"),
         InlineKeyboardButton("❌ Skip", callback_data=f"skip:{draft_id}"),
-    ]])
+    ]]
+    if pending_reel:
+        rows.append([InlineKeyboardButton(
+            "🎬 Send recording → reel", callback_data=f"record:{draft_id}"
+        )])
+    return InlineKeyboardMarkup(rows)
 
 
-async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
-    store.save_draft(draft)
-    # Card previews first, so the approval message (with buttons) stays last in the chat.
+async def _send_media_previews(app: Application, chat_id: int, draft: dict) -> None:
     for record in draft.get("media", []):
         if record["type"] == "image":
             with open(record["path"], "rb") as fh:
                 await app.bot.send_photo(
                     chat_id, fh, caption=f"🖼 card ({record['aspect']}) — save & attach"
                 )
+        elif record["type"] == "video" and record["status"] == "ready":
+            with open(record["path"], "rb") as fh:
+                await app.bot.send_video(
+                    chat_id, fh, caption="🎬 reel — save & attach"
+                )
+
+
+async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
+    store.save_draft(draft)
+    # Media previews first, so the approval message (with buttons) stays last in the chat.
+    await _send_media_previews(app, chat_id, draft)
     await app.bot.send_message(
         chat_id=chat_id,
         text=formatting.preview(draft),
         parse_mode=ParseMode.MARKDOWN_V2,
-        reply_markup=_keyboard(draft["id"]),
+        reply_markup=_keyboard(draft["id"], formatting.pending_reel(draft)),
     )
 
 
@@ -186,8 +200,9 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "/buildlog — draft a build-in-public post from your recent git commits\n"
         "/cadence — show cadence\n"
         "/start — (re)schedule jobs\n\n"
-        "On each draft: ✅ approve (auto-posts X, hands you LinkedIn/Reddit to paste), "
-        "✏️ rewrite (then send me a note), ❌ skip."
+        "On each draft: ✅ approve (auto-posts X, hands you the rest to paste), "
+        "✏️ rewrite (then send me a note), ❌ skip. Drafts for video platforms get a "
+        "🎬 button — send your screen recording and I'll cut it into a branded reel."
     )
 
 
@@ -213,6 +228,12 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.message.reply_text(
             "✏️ Send me a one-line note and I'll rewrite this draft "
             "(e.g. 'punchier hook', 'make it Dutch', 'shorter')."
+        )
+    elif action == "record":
+        context.chat_data["awaiting_recording"] = draft_id
+        await query.message.reply_text(
+            "🎬 Send me the screen recording (as a video message — bots can't download "
+            "files over 20MB) and I'll cut it into a branded reel."
         )
     elif action == "approve":
         await query.edit_message_reply_markup(reply_markup=None)
@@ -283,7 +304,55 @@ async def on_note(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         formatting.preview(draft),
         parse_mode=ParseMode.MARKDOWN_V2,
-        reply_markup=_keyboard(draft_id),
+        reply_markup=_keyboard(draft_id, formatting.pending_reel(draft)),
+    )
+
+
+async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """A video arrived: fulfill the draft's recording task by building the reel."""
+    draft_id = context.chat_data.pop("awaiting_recording", None)
+    msg = update.message
+    if not draft_id:
+        await msg.reply_text(
+            "Got a video, but no draft is waiting for one — tap 🎬 on a draft first."
+        )
+        return
+    draft = store.get_draft(draft_id)
+    if draft is None:
+        return
+    await msg.reply_text("🎬 Building the reel…")
+    raw_path = data_dir() / "media" / "raw" / f"{draft_id}-raw.mp4"
+    raw_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        tg_file = await (msg.video or msg.document).get_file()
+        await tg_file.download_to_drive(raw_path)
+        card = draft.get("card") or {}
+        record = await asyncio.to_thread(
+            media.build_reel,
+            raw_path,
+            draft_id,
+            card.get("headline", "").strip() or draft.get("topic", ""),
+            card.get("sub", "").strip(),
+        )
+    except Exception as exc:
+        # Keep the task open so the founder can just resend the clip.
+        context.chat_data["awaiting_recording"] = draft_id
+        await msg.reply_text(
+            f"⚠️ Reel build failed: {exc}\nSend the clip again to retry "
+            f"(a compressed video message avoids the 20MB bot download limit)."
+        )
+        return
+    media_list = [
+        m for m in draft.get("media", [])
+        if not (m["type"] == "video" and m["status"] == "pending_recording")
+    ] + [record]
+    draft = store.update_draft(draft_id, media=media_list) or draft
+    with open(record["path"], "rb") as fh:
+        await msg.reply_video(fh, caption="🎬 reel — save & attach")
+    await msg.reply_text(
+        formatting.preview(draft),
+        parse_mode=ParseMode.MARKDOWN_V2,
+        reply_markup=_keyboard(draft_id, formatting.pending_reel(draft)),
     )
 
 
@@ -311,4 +380,5 @@ def build_app() -> Application:
     app.add_handler(CommandHandler("help", cmd_help))
     app.add_handler(CallbackQueryHandler(on_button))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, on_note))
+    app.add_handler(MessageHandler(filters.VIDEO | filters.Document.VIDEO, on_recording))
     return app
