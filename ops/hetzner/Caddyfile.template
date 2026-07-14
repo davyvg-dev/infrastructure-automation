@@ -3,3 +3,9 @@
 __DEMO_HOST__ {
 	reverse_proxy 127.0.0.1:8000
 }
+
+# Fitness-vertical demo — same process; the server routes by the first Host label
+# ("fitness" -> config/clients/fitness.yaml). Linked from klantkraan.nl/sportscholen.
+fitness.__DEMO_HOST__ {
+	reverse_proxy 127.0.0.1:8000
+}
