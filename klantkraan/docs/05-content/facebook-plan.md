@@ -116,16 +116,19 @@ Voice = direct, concrete, a little opinionated, short sentences, no hype, no emo
 
 ## 4. Images
 
-Two on-brand square (1080×1080) posts in `facebook/assets/`, built from the brand palette
-(kraan-blue #0F4C81, cream #FAF6EE, rust #C75A2B), flat/no-gradient per the logo brief:
+Two square (1080×1080) posts in `facebook/assets/`, built from the brand palette
+(kraan-blue #0F4C81, cream #FAF6EE, rust #C75A2B) and carrying the **real @Klantkraan logo**
+(`klantkraan-logo-x.jpg`, pulled from the X profile) as a rounded badge:
 
 - `fb-post-problem.png` — cream, "Elke gemiste oproep is een klus voor de concurrent."
 - `fb-post-benefit.png` — blue, "Nooit meer een klus mislopen door een gemiste oproep."
 
 Source SVGs + `build_images.py` (regenerate: `python3 build_images.py`, needs macOS
 `qlmanage` + Pillow) sit alongside. To change wording, edit the SVG text or the builder.
-These use Helvetica Neue as an Inter Tight stand-in; swap to Inter Tight once the real font
-is embedded, and to the final wordmark once the logo designer delivers (see 09-brand).
+Text uses Helvetica Neue as an Inter Tight stand-in. Note: the live X logo (a cyan faucet +
+chat bubble on a navy gradient) departs from the older logo-designer-brief (09-brand); it is
+used here because it's the mark actually in public use. Reconcile the two when a final logo
+lands.
 
 ---
 
