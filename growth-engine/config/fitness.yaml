@@ -151,6 +151,16 @@ media:
     footer: ""           # empty until the fitness handle exists
     font_bold: "assets/fonts/Inter-Bold.ttf"
     font_regular: "assets/fonts/Inter-Regular.ttf"
+    # Rotated per draft (deterministic) so the feed isn't one repeated template.
+    schemes:
+      - { bg: "#1A1A1A", text: "#FAF6EE", muted: "#8C8474" }   # ink
+      - { bg: "#3F7F4A", text: "#FAF6EE", muted: "#CFE3D4" }   # leaf
+      - { bg: "#FAF6EE", text: "#1A1A1A", muted: "#8C8474" }   # cream
+  # Every Nth card becomes a stock photo (Pexels, dark scrim + text) when the draft has
+  # a photo_query and PEXELS_API_KEY is set. Pexels: free commercial use, no attribution.
+  stock:
+    enabled: true
+    every: 3
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.

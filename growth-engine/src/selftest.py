@@ -103,8 +103,20 @@ def check_media() -> bool:
                     if img.size != expected:
                         return _fail(f"{rec['aspect']} rendered {img.size}, want {expected}")
                 _ok(f"{rec['aspect']}: {expected[0]}×{expected[1]} → targets {rec['platform_targets']}")
+            # Every scheme must render (a bad hex value should fail here, not at 11:00).
+            for i, scheme in enumerate(brand.schemes()):
+                media._render("Schemacheck", "", (540, 540), Path(tmp) / f"s{i}.png",
+                              scheme, None)
+            _ok(f"{len(brand.schemes())} scheme(s) render")
     except Exception as exc:
         return _fail(f"card render failed: {exc}")
+    import os
+
+    stock = brand.stock()
+    if stock["enabled"]:
+        has_key = bool(os.getenv("PEXELS_API_KEY", "").strip())
+        _ok(f"stock photos: every {stock['every']}th card — "
+            f"PEXELS_API_KEY {'set' if has_key else 'NOT set (flat fallback)'}")
     return True
 
 

@@ -89,6 +89,7 @@ Avoid repeating these recent topics:
 
 Also fill the `card` field: the post's sharpest claim as an image-card headline (max 90 \
 chars, same language as the post — a number, a pain, or a punchline that stands alone), \
-plus one optional supporting line. Leave both empty only if nothing image-worthy exists.
+plus one optional supporting line, plus 2-4 English stock-photo keywords for a concrete \
+scene that matches the post. Leave fields empty only if nothing image-worthy exists.
 
 Pick ONE specific, fresh angle. Return the topic as a short label plus the platform variants."""

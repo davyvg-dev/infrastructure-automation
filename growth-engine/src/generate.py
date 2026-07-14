@@ -53,8 +53,14 @@ _DRAFT_SCHEMA = {
                     "description": "One supporting line for the card, max 110 chars, or "
                                    "empty string.",
                 },
+                "photo_query": {
+                    "type": "string",
+                    "description": "2-4 English keywords for a matching stock photo "
+                                   "(concrete scene, e.g. 'plumber repairing boiler'), "
+                                   "or empty string.",
+                },
             },
-            "required": ["headline", "sub"],
+            "required": ["headline", "sub", "photo_query"],
         },
     },
     "required": ["topic", "variants", "card"],

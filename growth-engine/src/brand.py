@@ -37,5 +37,21 @@ def brand() -> dict[str, Any]:
     return values
 
 
+def schemes() -> list[dict[str, Any]]:
+    """Color schemes to rotate across cards (feed variety). Each scheme inherits any
+    missing color from the top-level brand block, so old configs keep working."""
+    b = brand()
+    base = {k: b[k] for k in ("bg", "text", "accent", "muted")}
+    raw = b.get("schemes") or [{}]
+    return [{**base, **scheme} for scheme in raw]
+
+
+def stock() -> dict[str, Any]:
+    """Config `media.stock` — stock-photo cards (Pexels). Off unless enabled."""
+    values = {"enabled": False, "every": 3}
+    values.update((strategy().get("media") or {}).get("stock") or {})
+    return values
+
+
 def font_path(bold: bool = False) -> Path:
     return brand()["font_bold" if bold else "font_regular"]

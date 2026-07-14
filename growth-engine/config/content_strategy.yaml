@@ -143,6 +143,16 @@ media:
     footer: "klantkraan.nl"
     font_bold: "assets/fonts/Inter-Bold.ttf"
     font_regular: "assets/fonts/Inter-Regular.ttf"
+    # Rotated per draft (deterministic) so the feed isn't one repeated template.
+    schemes:
+      - { bg: "#0F4C81", text: "#FAF6EE", muted: "#4D80AD" }   # blue
+      - { bg: "#FAF6EE", text: "#0F4C81", muted: "#8C8474" }   # cream
+      - { bg: "#F1ECDF", text: "#1A1A1A", muted: "#8C8474" }   # stone
+  # Every Nth card becomes a stock photo (Pexels, dark scrim + text) when the draft has
+  # a photo_query and PEXELS_API_KEY is set. Pexels: free commercial use, no attribution.
+  stock:
+    enabled: true
+    every: 3
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.
