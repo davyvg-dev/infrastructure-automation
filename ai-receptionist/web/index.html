@@ -16,7 +16,7 @@
       }
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; overflow-x: hidden; }
+    html, body { height: 100%; margin: 0; width: 100%; max-width: 100%; overflow-x: hidden; }
     body {
       background: var(--bg); color: var(--ink);
       font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -49,13 +49,13 @@
     #close:hover { background: var(--bot); color: var(--ink); }
     body.embed #close { display: block; }
     #log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-    .msg { max-width: 82%; padding: 9px 13px; border-radius: 14px; white-space: pre-wrap; word-wrap: break-word; }
+    .msg { max-width: 82%; padding: 9px 13px; border-radius: 14px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; }
     .bot { background: var(--bot); align-self: flex-start; border-bottom-left-radius: 4px; }
     .me  { background: var(--me); color: var(--me-ink); align-self: flex-end; border-bottom-right-radius: 4px; }
     .typing { color: var(--muted); font-style: italic; }
     form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); }
     input {
-      flex: 1; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
+      flex: 1; min-width: 0; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
       background: var(--bg); color: var(--ink); font-size: 15px;
     }
     button.send {

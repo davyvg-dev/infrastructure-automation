@@ -27,16 +27,27 @@ function unlockBody() {
   document.body.style.overflow = ''
 }
 
-// Size the overlay to the *visible* viewport. When the keyboard opens, the
-// visual viewport shrinks from the bottom; matching the overlay height keeps
-// the chat's input row just above the keyboard with the log scrollable.
+// Pin the overlay to the *visible* viewport in BOTH axes.
+// Height matches the visual viewport so the on-screen keyboard shrinks the chat
+// instead of hiding it. Width + left are pinned too: without them iOS sizes the
+// position:fixed overlay to the (slightly wider) LAYOUT viewport, so the w-full
+// iframe rendered a few px too wide and the chat's right edge was clipped on
+// smaller iPhones. Position via top/left, not a transform — a transform on a
+// position:fixed element is the classic iOS containing-block trap.
 function sizeOverlay() {
   const el = overlay()
   if (!el || el.classList.contains('hidden')) return
+  const de = document.documentElement
+  const w = vv ? vv.width : de.clientWidth
   const h = vv ? vv.height : window.innerHeight
   const top = vv ? vv.offsetTop : 0
+  const left = vv ? vv.offsetLeft : 0
+  el.style.width = w + 'px'
   el.style.height = h + 'px'
-  el.style.transform = 'translateY(' + top + 'px)'
+  el.style.left = left + 'px'
+  el.style.right = 'auto'
+  el.style.top = top + 'px'
+  el.style.transform = ''
 }
 
 function openDemo() {
@@ -63,6 +74,10 @@ function closeDemo() {
   el.classList.add('hidden')
   el.setAttribute('aria-hidden', 'true')
   el.style.height = ''
+  el.style.width = ''
+  el.style.left = ''
+  el.style.right = ''
+  el.style.top = ''
   el.style.transform = ''
   // Drop the iframe so the session resets on next open (and stops any polling).
   const f = el.querySelector('iframe')
