@@ -24,6 +24,10 @@ def get(slug: str) -> dict | None:
     return _load().get(slug)
 
 
+def all_records() -> dict:
+    return _load()
+
+
 def put(slug: str, record: dict) -> None:
     data = _load()
     data[slug] = record

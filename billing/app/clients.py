@@ -21,7 +21,22 @@ def from_config(slug: str) -> dict:
 
     cfg = yaml.safe_load(path.read_text()) or {}
     biz = cfg.get("business", {})
-    return {"name": biz.get("name"), "email": biz.get("email"), "phone": biz.get("phone")}
+    return {
+        "name": biz.get("name"),
+        "email": biz.get("email"),
+        "phone": biz.get("phone"),
+        "address": biz.get("address"),
+    }
+
+
+def by_customer_id(customer_id: str) -> str | None:
+    """Reverse-lookup the client slug for a Mollie customer id (webhook path)."""
+    from . import store
+
+    for slug, rec in (store.all_records()).items():
+        if rec.get("customer_id") == customer_id:
+            return slug
+    return None
 
 
 def resolve(slug: str, name: str | None, email: str | None) -> dict:

@@ -51,6 +51,10 @@ class Mollie:
     def get_customer(self, customer_id: str) -> dict:
         return self._request("GET", f"/customers/{customer_id}")
 
+    def get_payment(self, payment_id: str) -> dict:
+        # Webhooks only send an id; always re-fetch to learn the real status/amount.
+        return self._request("GET", f"/payments/{payment_id}")
+
     # -- first payment (establishes the mandate) -----------------------------
     def create_first_payment(
         self,

@@ -1,12 +1,12 @@
 # billing — Mollie recurring subscriptions
 
 Mollie-only billing for Klantkraan clients: a client authorises one payment,
-Mollie then charges €299/€499 per month automatically. Invoicing (BTW facturen
-emailed on each payment) is the scaffold step — see `TASK.md`.
+Mollie then charges €299/€499 per month automatically, and on each charge this
+app emails the client a BTW-compliant factuur.
 
 Mollie is a payment processor, **not** an accounting tool: it does not issue BTW
-invoices to your clients. This app does that itself (scaffold step), so from you
-and the client's side it stays "Mollie only".
+invoices to your clients. This app does that itself, so from you and the client's
+side it stays "Mollie only". Go-live steps are in `TASK.md`.
 
 ## Setup (once)
 
@@ -37,6 +37,18 @@ python -m app.subscribe status meijer
 sending it. `--mandate-only` sets up the mandate with a €0.00 first payment (no
 first-month charge). Client name/email come from
 `ai-receptionist/config/clients/<slug>.yaml`; override with `--name`/`--email`.
+
+## Automatic invoicing
+
+`app.webhook` is a small server Mollie calls on every paid charge; it builds a
+BTW factuur (net + 21% BTW, sequential number, saved to `data/invoices/`) and
+emails it to the client via Resend. To turn it on: fill the seller identity +
+`RESEND_API_KEY` in `.env`, deploy the webhook, and set `BILLING_WEBHOOK_BASE`
+so `subscribe` registers the webhook URL with Mollie. See `TASK.md`.
+
+```sh
+python -m app.webhook          # POST /mollie/payment, GET /health (default :8090)
+```
 
 ## Test
 
