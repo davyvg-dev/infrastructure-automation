@@ -33,6 +33,10 @@ async def _main() -> None:
             await bot.send_message(
                 chat_id, f"— {draft['pillar']} · {draft['topic']} —"
             )
+            for record in draft.get("media", []):
+                if record["type"] == "image":
+                    with open(record["path"], "rb") as fh:
+                        await bot.send_photo(chat_id, fh, caption=f"🖼 {record['aspect']}")
             for platform, text in draft["variants"].items():
                 await bot.send_message(chat_id, f"[{platform}]")
                 await bot.send_message(chat_id, text)

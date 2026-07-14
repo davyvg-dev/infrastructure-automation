@@ -44,6 +44,13 @@ def _keyboard(draft_id: str) -> InlineKeyboardMarkup:
 
 async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
     store.save_draft(draft)
+    # Card previews first, so the approval message (with buttons) stays last in the chat.
+    for record in draft.get("media", []):
+        if record["type"] == "image":
+            with open(record["path"], "rb") as fh:
+                await app.bot.send_photo(
+                    chat_id, fh, caption=f"🖼 card ({record['aspect']}) — save & attach"
+                )
     await app.bot.send_message(
         chat_id=chat_id,
         text=formatting.preview(draft),

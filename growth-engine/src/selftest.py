@@ -4,6 +4,7 @@ Run one layer at a time (see TASK.md):
 
     python -m src.selftest config      # config + env sanity, no network
     python -m src.selftest platforms   # platform registry sanity, no network
+    python -m src.selftest media       # offline image-card render (Pillow + fonts)
     python -m src.selftest generate    # Claude drafting (needs ANTHROPIC_API_KEY)
     python -m src.selftest telegram    # send a test message (needs Telegram vars)
     python -m src.selftest x           # verify X auth, does NOT post (needs X vars)
@@ -71,6 +72,39 @@ def check_platforms() -> bool:
     _ok(f"enabled: {', '.join(platforms.enabled_platforms())}")
     _ok(f"auto: {', '.join(platforms.auto_platforms()) or '(none)'} — "
         f"assisted: {', '.join(platforms.assisted_platforms()) or '(none)'}")
+    return True
+
+
+def check_media() -> bool:
+    print("• media (offline card render)")
+    from . import brand
+
+    if not brand.cards_enabled():
+        _ok("media.cards disabled in config — skipping render")
+        return True
+    import tempfile
+    from pathlib import Path
+
+    from . import media
+
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            records = media.render_cards(
+                "Een gemiste oproep is een gemiste klus.",
+                "Zo verlies je stilletjes omzet — elke week weer.",
+                "selftest",
+                out_dir=Path(tmp),
+            )
+            from PIL import Image
+
+            for rec in records:
+                with Image.open(rec["path"]) as img:
+                    expected = {"square": (1080, 1080), "story": (1080, 1920)}[rec["aspect"]]
+                    if img.size != expected:
+                        return _fail(f"{rec['aspect']} rendered {img.size}, want {expected}")
+                _ok(f"{rec['aspect']}: {expected[0]}×{expected[1]} → targets {rec['platform_targets']}")
+    except Exception as exc:
+        return _fail(f"card render failed: {exc}")
     return True
 
 
@@ -153,11 +187,13 @@ def check_x() -> bool:
 CHECKS = {
     "config": check_config,
     "platforms": check_platforms,
+    "media": check_media,
     "generate": check_generate,
     "telegram": check_telegram,
     "x": check_x,
 }
-ORDER = ["config", "platforms", "generate", "telegram", "x"]
+# Offline checks first, so a broken render can't waste an API call.
+ORDER = ["config", "platforms", "media", "generate", "telegram", "x"]
 
 
 def main(argv: list[str]) -> int:

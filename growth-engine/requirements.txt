@@ -4,3 +4,5 @@ python-telegram-bot[job-queue]>=21.6
 tweepy>=4.14
 PyYAML>=6.0
 python-dotenv>=1.0
+# Image cards (src/media.py) — pure-Pillow rendering, no system tools needed.
+Pillow>=10.4

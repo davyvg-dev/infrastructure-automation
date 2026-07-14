@@ -12,7 +12,7 @@ from typing import Any
 
 import anthropic
 
-from . import ideas, platforms, prompts
+from . import ideas, media, platforms, prompts
 from .settings import env, strategy
 
 # Static schema → structured outputs cache the compiled schema for 24h. Built ONCE at
@@ -38,8 +38,26 @@ _DRAFT_SCHEMA = {
             },
             "required": platforms.enabled_platforms(),
         },
+        "card": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "headline": {
+                    "type": "string",
+                    "description": "Image-card headline: the post's sharpest claim, max "
+                                   "90 chars, in the post's language. Empty string if no "
+                                   "card fits this post.",
+                },
+                "sub": {
+                    "type": "string",
+                    "description": "One supporting line for the card, max 110 chars, or "
+                                   "empty string.",
+                },
+            },
+            "required": ["headline", "sub"],
+        },
     },
-    "required": ["topic", "variants"],
+    "required": ["topic", "variants", "card"],
 }
 
 
@@ -77,13 +95,16 @@ def generate_draft(platforms: list[str]) -> dict[str, Any]:
     # Only keep platforms that were actually requested.
     variants = {k: v for k, v in variants.items() if k in platforms}
 
-    return {
+    draft = {
         "id": f"{date.today():%Y%m%d}-{uuid.uuid4().hex[:4]}",
         "pillar": pillar["key"],
         "topic": payload["topic"].strip(),
         "status": "pending",
         "variants": variants,
+        "card": payload.get("card", {}),
     }
+    media.attach_cards(draft)
+    return draft
 
 
 def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> dict[str, Any]:
@@ -115,13 +136,16 @@ def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> di
         for k, v in payload["variants"].items()
         if v and v.strip() and k in platforms
     }
-    return {
+    draft = {
         "id": f"{date.today():%Y%m%d}-{uuid.uuid4().hex[:4]}",
         "pillar": pillar_key,
         "topic": payload["topic"].strip(),
         "status": "pending",
         "variants": variants,
+        "card": payload.get("card", {}),
     }
+    media.attach_cards(draft)
+    return draft
 
 
 def regenerate_variant(draft: dict[str, Any], platform: str, note: str) -> str:

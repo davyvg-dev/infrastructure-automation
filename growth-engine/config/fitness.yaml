@@ -138,6 +138,20 @@ platforms:
     writing: "TikTok caption: one punchy line that frames the video's payoff, under 150
       characters, plus 2-3 niche fitness/local hashtags. No sales speak."
 
+# Generated media: each draft gets an image card (square + story) rendered from its
+# sharpest claim, previewed in Telegram. Neutral dark scheme until the fitness
+# handle/branding is decided (open founder decision) — then update colors + footer here.
+media:
+  cards: true
+  brand:
+    bg: "#1A1A1A"        # neutral ink — no vertical branding yet
+    text: "#FAF6EE"
+    accent: "#3F7F4A"    # leaf — fits the health/fitness register
+    muted: "#8C8474"
+    footer: ""           # empty until the fitness handle exists
+    font_bold: "assets/fonts/Inter-Bold.ttf"
+    font_regular: "assets/fonts/Inter-Regular.ttf"
+
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.
 # NOTE: the engine drafts ORIGINAL posts only. The real growth lever — replies/comments

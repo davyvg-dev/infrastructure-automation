@@ -87,4 +87,8 @@ one language per post, do not mix.
 Avoid repeating these recent topics:
 {avoid}
 
+Also fill the `card` field: the post's sharpest claim as an image-card headline (max 90 \
+chars, same language as the post — a number, a pain, or a punchline that stands alone), \
+plus one optional supporting line. Leave both empty only if nothing image-worthy exists.
+
 Pick ONE specific, fresh angle. Return the topic as a short label plus the platform variants."""

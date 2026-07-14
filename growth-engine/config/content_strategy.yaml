@@ -131,6 +131,19 @@ platforms:
     writing: "TikTok caption: one punchy line that frames the video's payoff, under 150
       characters, plus 2-3 niche hashtags. No sales speak."
 
+# Generated media: each draft gets a branded image card (square + story) rendered from
+# its sharpest claim, previewed in Telegram. Colors/fonts per docs/09-brand (klantkraan).
+media:
+  cards: true
+  brand:
+    bg: "#0F4C81"        # kraan-blue
+    text: "#FAF6EE"      # kraan-cream
+    accent: "#C75A2B"    # kraan-rust
+    muted: "#4D80AD"     # kraan-blue-300
+    footer: "klantkraan.nl"
+    font_bold: "assets/fonts/Inter-Bold.ttf"
+    font_regular: "assets/fonts/Inter-Regular.ttf"
+
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.
 # NOTE: the engine drafts ORIGINAL posts only. The real growth lever — replies/comments
