@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import sys
 
+from . import settings
 from .settings import MissingSetting, active_cadence, dry_run, env, strategy
 
 
@@ -38,6 +39,8 @@ def check_config() -> bool:
         return _fail(f"could not load config: {exc}")
     if s["model"]["id"] != "claude-opus-4-8":
         _ok(f"model override in use: {s['model']['id']}")
+    _ok(f"vertical: {settings.vertical()} (config: {settings.CONFIG_PATH.name}, "
+        f"data: {settings.data_dir().relative_to(settings.ROOT)})")
     _ok(f"offer: {s['brand']['offer'][:60]}…")
     _ok(f"pillars: {', '.join(p['key'] for p in s['pillars'])}")
     _ok(f"cadence '{strategy()['cadence']['active']}': "
@@ -80,9 +83,11 @@ def check_generate() -> bool:
     from . import generate  # imported lazily so `config` works without the SDK installed
 
     try:
-        draft = generate.generate_draft(["x", "linkedin"])
+        draft = generate.generate_draft(active_cadence()["platforms_per_draft"])
     except Exception as exc:
         return _fail(f"generation failed: {exc}")
+    if not draft["variants"]:
+        return _fail("draft came back with no variants")
     _ok(f"pillar={draft['pillar']}  topic={draft['topic']}")
     for platform, text in draft["variants"].items():
         flag = " (over 280!)" if platform == "x" and len(text) > 280 else ""

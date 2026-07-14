@@ -1,76 +1,82 @@
-# The single knob-board for the engine. Edit this, not the code.
-# One engine process per vertical: this file is the trades vertical (the default);
-# another vertical = another YAML selected via GROWTH_CONFIG (e.g. config/fitness.yaml).
+# The single knob-board for the FITNESS vertical. Edit this, not the code.
+# Run the engine against it with: GROWTH_CONFIG=config/fitness.yaml
 
-vertical: trades
+vertical: fitness
 
 brand:
   name: "Klantkraan"                 # the business; posts go out from the founder's accounts
   website: "klantkraan.nl"
-  offer: "AI receptionists for Dutch trade businesses — an assistant that answers every
-    call and WhatsApp instantly 24/7, qualifies the customer, and books the job into the
-    calendar."
-  one_liner: "Je bedrijf krijgt een AI die elke klant direct antwoordt, 24/7, en de
-    afspraak meteen inplant — zodat je geen klussen meer verliest aan gemiste telefoontjes."
-  # Niche is DECIDED: Dutch trades (see klantkraan/research/). Don't broaden until it works.
-  audience: "Owners of Dutch trade businesses — installateurs, loodgieters, elektriciens,
-    schilders. They lose real money to missed calls and slow replies: an unanswered
-    after-hours call is usually a job that walks to a competitor. They are vakmensen and
-    business owners, not tech people."
+  # The fitness social handle / positioning name is an OPEN founder decision — copy must
+  # not invent one; the company stays Klantkraan for now.
+  offer: "AI-ledenassistent voor sportclubs — an assistant that instantly answers every
+    member and prospect message 24/7, qualifies the lead, and books the proefles into
+    the calendar."
+  one_liner: "Je sportschool krijgt een AI die elk bericht direct beantwoordt, 24/7, en de
+    proefles meteen inplant — zodat je geen nieuwe leden meer verliest aan onbeantwoorde
+    berichten."
+  audience: "Owners of Dutch gyms, sportscholen, and boutique studios — crossfit, yoga,
+    vechtsport, tennis. They lose trial-lesson leads to unanswered messages: evenings and
+    weekends are peak interest time, exactly when the desk is unstaffed or busy. Their #1
+    metric is new members, and that funnel starts with a proefles. They are ondernemers,
+    not tech people."
   # 'build-in-public': you have no past client work yet, so content is shipped live.
   proof_mode: "build_in_public"
 
 voice:
   # How the drafts should sound. Keep it concrete and human.
-  tone: "Direct, concrete, a little opinionated. Builder-to-builder honesty. No hype,
-    no emoji spam, no 'in today's fast-paced world' filler. Short sentences."
+  tone: "Direct, concrete, a little opinionated. Energetic but no fitness-bro hype.
+    Owner-to-owner honesty. No hype, no emoji spam, no 'in today's fast-paced world'
+    filler. Short sentences."
   avoid: "Corporate buzzwords, engagement-bait questions with no substance, hashtag walls,
-    fake urgency, 'game-changer', 'unlock', 'in this thread I'll'."
+    fake urgency, 'game-changer', 'unlock', 'in this thread I'll', geen fitness-clichés
+    ('zomerbody', 'beast mode')."
 
 languages:
   primary: "Dutch"        # the buyer's language — customer-facing posts are Dutch
   secondary: "English"    # allowed for build-log posts aimed at the builder crowd
 
-# Content pillars, weighted toward the BUYER (a business owner), not other builders. The
+# Content pillars, weighted toward the BUYER (a gym owner), not other builders. The
 # mix is ~40% proof, 30% problem, 20% teardown/hot-take, 10% build log — proof + problem
 # convert; a dev-facing build/teardown/hot-take rotation grows the wrong audience.
 pillars:
   - key: proof_demo
     weight: 4
-    brief: "Show the receptionist actually working — a booking made, a call answered, a
-      reschedule handled, an uptime/latency number, 'it booked an appointment while I slept'.
-      Lead with the concrete result. Written to pair with a screenshot, call recording, or
-      short clip the user attaches."
+    brief: "Show the ledenassistent actually working — a proefles booked at 22:00, an
+      abonnement question answered instantly, a lead qualified while the desk was closed.
+      Lead with the concrete result. Written to pair with a screenshot or short reel the
+      user attaches."
   - key: problem
     weight: 3
-    brief: "Speak to the buyer's pain in money terms. Quantify what missed calls / slow
-      replies cost a specific local business type (e.g. 'a plumber who misses 12 calls a week
-      is leaking ~EUR X/month'), or a sharp before/after. End with a light, non-pushy
-      takeaway. This is the highest-converting angle: educate the problem, don't hard-sell."
+    brief: "Speak to the owner's pain in money terms. A gym that misses evening/weekend
+      DMs loses X proefles-leads a month — and each proefles-lead is worth a yearly
+      membership (LTV), not one visit. Quantify it, or show a sharp before/after. End with
+      a light, non-pushy takeaway. This is the highest-converting angle: educate the
+      problem, don't hard-sell."
   - key: teardown
     weight: 2
-    brief: "Tear down a bad customer experience the buyer's own clients hit — a call that
-      rang out, a booking form nobody answers — and show how it should work. OR plainly
-      explain how an AI receptionist actually works. Buyer-relevant, never developer bait."
+    brief: "Tear down a bad lead experience gyms create — a DM answered two days later, a
+      dead contact form, a proefles request that goes nowhere — and show how it should
+      work. OR plainly explain how an AI ledenassistent actually works. Buyer-relevant,
+      never developer bait."
   - key: hot_take
     weight: 2
-    brief: "A sharp, industry-facing opinion aimed at business owners (e.g. 'phone trees are
-      dead', 'your front desk shouldn't cost EUR 3k/month to still miss calls'). Defensible
-      and useful, not an AI/tech debate."
+    brief: "A sharp, industry-facing opinion aimed at gym owners (e.g. 'je front desk
+      sluit om 22:00, je leads niet', 'a lead who messages three gyms joins the one that
+      answers first'). Defensible and useful, not an AI/tech debate."
   - key: build_log
     weight: 1
-    brief: "An honest behind-the-scenes note on building the receptionist — a decision, a
-      bug, a small win — but tie it back to the customer benefit so it lands with buyers,
-      not just other builders."
+    brief: "An honest behind-the-scenes note on building the ledenassistent — a decision,
+      a bug, a small win — but tie it back to the gym-owner benefit so it lands with
+      buyers, not just other builders."
 
 # The platform registry (read by src/platforms.py) — everything per-platform lives HERE.
-# LinkedIn is your HOME platform (B2B buyers live there); X is DISTRIBUTION + personality.
+# Fitness buyers live on Instagram/Facebook/TikTok; the trades B2B channels are off here.
 # The engine drafts native variants for each — never the same string on both.
 # Per platform: enabled, delivery (auto|assisted), label (shown in Telegram), char_limit
 # (optional), media (none|image|video|both), media_required, writing (drafting guidance).
 platforms:
   x:
-    enabled: true
+    enabled: false          # trades channel — off for fitness
     delivery: auto          # auto-post via API on approval
     label: "𝕏 (auto-post)"
     char_limit: 280
@@ -80,7 +86,7 @@ platforms:
     writing: "X post: max 280 characters, punchy, personality-forward, no hashtags unless
       natural. A strong first line that stands alone."
   linkedin:
-    enabled: true
+    enabled: false          # trades channel — off for fitness
     delivery: assisted      # formatted + pushed to you to paste (native posts perform best)
     label: "in LinkedIn (paste)"
     media: none
@@ -91,7 +97,7 @@ platforms:
       sentences each), one idea, end with a genuine question to spark comments. NO links
       in the body. No hashtag walls."
   reddit:
-    enabled: true
+    enabled: false          # trades channel — off for fitness
     delivery: assisted
     label: "🔶 Reddit (paste)"
     media: none
@@ -107,9 +113,10 @@ platforms:
     label: "📘 Facebook (paste)"
     media: image
     media_required: false
-    note: "Local-business reach (trades owners are on FB). Image cards lift it, text works."
+    note: "Local-business reach (gym owners and their members are on FB). Image cards lift
+      it, text works."
     writing: "Facebook post: conversational local-business tone, 50-150 words. Open with
-      the customer's pain in plain words, close with one clear next step. No hashtag
+      the gym owner's pain in plain words, close with one clear next step. No hashtag
       walls, at most one link."
   instagram:
     enabled: true
@@ -119,8 +126,8 @@ platforms:
     media_required: true
     note: "Fitness-vertical home turf. Needs an image or reel — caption alone can't post."
     writing: "Instagram caption: the first line is the hook (shown before 'more'). Short
-      lines, concrete benefit, end with a simple CTA. 3-5 relevant hashtags at the end,
-      no more."
+      lines, concrete benefit, end with a simple CTA. 3-5 relevant hashtags at the end
+      (niche fitness/local, e.g. sportschool + city, not generic #fitness), no more."
   tiktok:
     enabled: true
     delivery: assisted
@@ -129,13 +136,12 @@ platforms:
     media_required: true
     note: "Reels-only channel for the fitness vertical. The caption rides along the video."
     writing: "TikTok caption: one punchy line that frames the video's payoff, under 150
-      characters, plus 2-3 niche hashtags. No sales speak."
+      characters, plus 2-3 niche fitness/local hashtags. No sales speak."
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.
 # NOTE: the engine drafts ORIGINAL posts only. The real growth lever — replies/comments
-# (5-10/day on LinkedIn, 20-40/day on X) and DMs — must stay HUMAN; automating them kills
-# reach and trust. See docs/STRATEGY.md.
+# and DMs — must stay HUMAN; automating them kills reach and trust. See docs/STRATEGY.md.
 cadence:
   # 'starter' while you warm up; switch to 'growth' or 'aggressive' when ready.
   active: starter
@@ -143,17 +149,15 @@ cadence:
     starter:
       runs_per_day: 1
       drafts_per_run: 2
-      platforms_per_draft: ["x", "linkedin", "facebook"]
+      platforms_per_draft: ["instagram", "facebook", "tiktok"]
     growth:
       runs_per_day: 2
       drafts_per_run: 2
-      platforms_per_draft: ["x", "linkedin", "facebook"]
+      platforms_per_draft: ["instagram", "facebook", "tiktok"]
     aggressive:
       runs_per_day: 3
       drafts_per_run: 2
-      platforms_per_draft: ["x", "linkedin", "facebook"]
-  # Reddit is drafted separately, at most this often (days between reddit drafts).
-  reddit_every_days: 3
+      platforms_per_draft: ["instagram", "facebook", "tiktok"]
   # Local-hour window (24h) to send drafts for approval, so you're not pinged at 3am.
   quiet_hours_start: 22
   quiet_hours_end: 8

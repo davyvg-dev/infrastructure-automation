@@ -96,3 +96,18 @@ cadence) and runs until you stop it.
   (`starter` → `growth` → `aggressive`), then send `/start` to reschedule.
 - Change voice, pillars, or the offer: edit the same YAML. No code changes needed.
 - The `docs/STRATEGY.md` file explains the reasoning behind each default.
+
+## Running a second vertical (e.g. fitness)
+
+One engine process per vertical — each with its own strategy YAML, its own Telegram bot,
+and its own `data/<vertical>/` state:
+
+1. Create the bot: @BotFather → new bot → put its token (and your chat id) in
+   `.env.fitness`. Never reuse another vertical's token — two pollers on one token
+   conflict.
+2. Run: `GROWTH_CONFIG=config/fitness.yaml python -m src.run`.
+3. On the server: `systemctl enable --now growth-engine@fitness` (the templated unit
+   sets `GROWTH_CONFIG` from the instance name; the plain `growth-engine` unit stays
+   the trades vertical).
+
+`.env` holds shared secrets (Anthropic, X); `.env.<vertical>` overrides per vertical.

@@ -19,11 +19,17 @@ import threading
 from datetime import datetime, timezone
 from typing import Any
 
-from .settings import DATA_DIR, ensure_dirs
+from .settings import data_dir, ensure_dirs
 
-_QUEUE_PATH = DATA_DIR / "queue.json"
-_STATE_PATH = DATA_DIR / "state.json"
 _lock = threading.Lock()
+
+
+def _queue_path():
+    return data_dir() / "queue.json"
+
+
+def _state_path():
+    return data_dir() / "state.json"
 
 
 def _read(path) -> Any:
@@ -43,19 +49,19 @@ def _write(path, data: Any) -> None:
 
 def load_queue() -> list[dict[str, Any]]:
     with _lock:
-        return _read(_QUEUE_PATH) or []
+        return _read(_queue_path()) or []
 
 
 def save_draft(draft: dict[str, Any]) -> None:
     with _lock:
-        queue = _read(_QUEUE_PATH) or []
+        queue = _read(_queue_path()) or []
         queue.append(draft)
-        _write(_QUEUE_PATH, queue)
+        _write(_queue_path(), queue)
 
 
 def update_draft(draft_id: str, **fields: Any) -> dict[str, Any] | None:
     with _lock:
-        queue = _read(_QUEUE_PATH) or []
+        queue = _read(_queue_path()) or []
         found = None
         for d in queue:
             if d["id"] == draft_id:
@@ -63,7 +69,7 @@ def update_draft(draft_id: str, **fields: Any) -> dict[str, Any] | None:
                 found = d
                 break
         if found is not None:
-            _write(_QUEUE_PATH, queue)
+            _write(_queue_path(), queue)
         return found
 
 
@@ -78,15 +84,15 @@ def get_draft(draft_id: str) -> dict[str, Any] | None:
 
 def get_state(key: str, default: Any = None) -> Any:
     with _lock:
-        state = _read(_STATE_PATH) or {}
+        state = _read(_state_path()) or {}
         return state.get(key, default)
 
 
 def set_state(key: str, value: Any) -> None:
     with _lock:
-        state = _read(_STATE_PATH) or {}
+        state = _read(_state_path()) or {}
         state[key] = value
-        _write(_STATE_PATH, state)
+        _write(_state_path(), state)
 
 
 def now_iso() -> str:

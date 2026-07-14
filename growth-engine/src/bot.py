@@ -105,6 +105,9 @@ def schedule_jobs(app: Application, chat_id: int) -> None:
     for i, t in enumerate(_run_times(int(cadence["runs_per_day"]))):
         jq.run_daily(generation_job, time=t, chat_id=chat_id, name=f"gen-{i}")
 
+    # Reddit runs on its own timer — only in verticals where it's enabled.
+    if "reddit" not in platforms.enabled_platforms():
+        return
     every_days = int(strategy()["cadence"].get("reddit_every_days", 3))
     tz = ZoneInfo(strategy()["cadence"]["timezone"])
     jq.run_repeating(
