@@ -174,7 +174,9 @@ def availability(on_date: str | None, days: int) -> dict[str, Any]:
     return {"open_days": result}
 
 
-def book(customer_name: str, contact: str, service: str, slot: str) -> dict[str, Any]:
+def book(
+    customer_name: str, contact: str, service: str, slot: str, address: str = ""
+) -> dict[str, Any]:
     try:
         slot_start = datetime.strptime(slot, "%Y-%m-%d %H:%M")
     except ValueError:
@@ -188,14 +190,21 @@ def book(customer_name: str, contact: str, service: str, slot: str) -> dict[str,
         return {"ok": False, "error": "That slot was just taken. Please pick another."}
 
     confirmation = f"BK-{uuid.uuid4().hex[:6].upper()}"
+    description = f"Contact: {contact}\nGeboekt via Klantkraan\nRef: {confirmation}"
+    event: dict[str, Any] = {
+        "summary": f"{service} — {customer_name}",
+        "description": description,
+        "start": {"dateTime": _rfc3339(slot_start), "timeZone": _tz()},
+        "end": {"dateTime": _rfc3339(slot_start + timedelta(minutes=minutes)),
+                "timeZone": _tz()},
+    }
+    # For an on-site visit, put the address in `location` so it's tappable-to-navigate in the
+    # calendar app, and repeat it in the description where it's always visible.
+    if address:
+        event["location"] = address
+        event["description"] = f"Adres: {address}\n{description}"
     try:
-        _api("POST", f"/calendars/{urllib.parse.quote(_calendar_id())}/events", body={
-            "summary": f"{service} — {customer_name}",
-            "description": f"Contact: {contact}\nGeboekt via Klantkraan\nRef: {confirmation}",
-            "start": {"dateTime": _rfc3339(slot_start), "timeZone": _tz()},
-            "end": {"dateTime": _rfc3339(slot_start + timedelta(minutes=minutes)),
-                    "timeZone": _tz()},
-        })
+        _api("POST", f"/calendars/{urllib.parse.quote(_calendar_id())}/events", body=event)
     except RuntimeError as exc:
         return {"ok": False, "error": f"Could not create the calendar event: {exc}"}
     return {"ok": True, "confirmation": confirmation, "slot": slot, "service": service}

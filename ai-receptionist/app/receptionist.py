@@ -29,6 +29,22 @@ def build_system_prompt() -> str:
     faq = "\n".join(f"  - Q: {f['q']}\n    A: {f['a']}" for f in cfg.get("faq", []))
     hours = "\n".join(f"  - {day}: {h[0]}–{h[1]}" for day, h in cfg.get("hours", {}).items())
 
+    # On-site trades (a plumber/electrician who comes to the customer) must know WHERE to go,
+    # and whether the address is inside the service area — a config flag, off for come-to-us
+    # businesses like a clinic or salon so their flow is untouched.
+    booking_cfg = cfg.get("booking", {})
+    onsite_block = ""
+    if booking_cfg.get("onsite"):
+        area = booking_cfg.get("service_area") or b.get("address", "the service area")
+        onsite_block = f"""
+
+# On-site visits (this business comes to the customer)
+- Before you book, you MUST have the customer's full service address: street + number, postcode,
+  and town. Ask for it in one step if it's missing. Pass it as `address` to book_appointment.
+- Service area: {area}. If the address is clearly outside it, do NOT book. Say it's outside the
+  area, and offer to take a message so the team can call back — use take_message.
+- If you're unsure whether an address is in the area, take a message rather than promise a visit."""
+
     # Prescriptive, labeled sections with the most load-bearing rules at the top and the
     # "never do this" list at the bottom — where models attend most reliably.
     return f"""# Role
@@ -47,6 +63,7 @@ Ask at most one question per reply.
 2. Collect the customer's name and a contact (phone or email).
 3. Confirm the service and the exact time back to the customer in plain language.
 4. Only then call book_appointment. After it succeeds, read back the confirmation code and the date/time.
+{onsite_block}
 
 # When you can't help
 If you can't answer something, or the customer has a special request, complaint, or wants a

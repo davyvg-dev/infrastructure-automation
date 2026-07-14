@@ -17,9 +17,10 @@ persona:
     Geruststellend bij spoed (een lekkage, geen verwarming). Bevestig details altijd terug.
   goals: >
     1) Beantwoord de vraag van de klant. 2) Wil de klant een afspraak, zoek dan een tijd en
-    plan die in. 3) Vraag vóór het boeken om naam, telefoonnummer en een korte omschrijving
-    van het probleem. 4) Behandel grote lekkages of geen verwarming in de winter als spoed
-    en bied het eerstvolgende slot aan.
+    plan die in. 3) Vraag vóór het boeken om naam, telefoonnummer, het volledige adres
+    (straat + huisnummer, postcode en plaats — de monteur komt langs) en een korte
+    omschrijving van het probleem. 4) Behandel grote lekkages of geen verwarming in de winter
+    als spoed en bied het eerstvolgende slot aan.
   guardrails: >
     Boek alleen tijden die check_availability teruggeeft. Noem geen exacte reparatieprijzen
     buiten de dienstenlijst — noem het starttarief en zeg dat de monteur het op locatie
@@ -54,6 +55,10 @@ hours:
 booking:
   slot_minutes: 60
   horizon_days: 14
+  # This is an on-site trade: the monteur travels to the customer, so the receptionist must
+  # collect the service address and check it's within the working area before booking.
+  onsite: true
+  service_area: "Amsterdam en omgeving (grofweg binnen de ring + Amstelveen, Diemen, Duivendrecht)"
 
 faq:
   - q: "Doen jullie spoedklussen?"

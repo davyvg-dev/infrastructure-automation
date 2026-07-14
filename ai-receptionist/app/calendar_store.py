@@ -132,7 +132,9 @@ def _sim_availability(on_date: str | None, days: int) -> dict[str, Any]:
     return {"open_days": result}
 
 
-def _sim_book(customer_name: str, contact: str, service: str, slot: str) -> dict[str, Any]:
+def _sim_book(
+    customer_name: str, contact: str, service: str, slot: str, address: str = ""
+) -> dict[str, Any]:
     with _lock:
         bookings = _load()
         if any(b["slot"] == slot for b in bookings):
@@ -151,6 +153,7 @@ def _sim_book(customer_name: str, contact: str, service: str, slot: str) -> dict
             "contact": contact,
             "service": service,
             "slot": slot,
+            "address": address,
             "created_at": datetime.now().isoformat(timespec="seconds"),
         })
         _save(bookings)
@@ -170,17 +173,24 @@ def availability(on_date: str | None = None, days: int = 5) -> dict[str, Any]:
     return _sim_availability(on_date, days)
 
 
-def book(customer_name: str, contact: str, service: str, slot: str) -> dict[str, Any]:
-    """Book a slot if it's still open. Returns a confirmation or an error."""
+def book(
+    customer_name: str, contact: str, service: str, slot: str, address: str = ""
+) -> dict[str, Any]:
+    """Book a slot if it's still open. Returns a confirmation or an error.
+
+    `address` is the customer's on-site service address (empty for come-to-us businesses like a
+    clinic or salon). It is stored with the booking and surfaced to the owner so the person who
+    turns up knows where to go."""
     if _provider_name() == "google":
         from . import calendar_google
 
-        result = calendar_google.book(customer_name, contact, service, slot)
+        result = calendar_google.book(customer_name, contact, service, slot, address)
     else:
-        result = _sim_book(customer_name, contact, service, slot)
+        result = _sim_book(customer_name, contact, service, slot, address)
     if result.get("ok"):
+        where = f"\nAddress: {address}" if address else ""
         notify.owner(
-            f"📅 New booking: {customer_name} — {service} at {slot}\n"
-            f"Contact: {contact}\nConfirmation: {result['confirmation']}"
+            f"📅 New booking: {customer_name} — {service} at {slot}"
+            f"{where}\nContact: {contact}\nConfirmation: {result['confirmation']}"
         )
     return result

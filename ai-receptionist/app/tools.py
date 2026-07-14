@@ -33,7 +33,8 @@ TOOLS: list[dict[str, Any]] = [
         "description": (
             "Book a specific open slot. Only call this after you have the customer's name, "
             "a contact (phone or email), the service, and a slot confirmed open by "
-            "check_availability."
+            "check_availability. For an on-site visit, also pass the customer's full service "
+            "address (street + number + postcode + town) so the team knows where to go."
         ),
         "input_schema": {
             "type": "object",
@@ -42,6 +43,13 @@ TOOLS: list[dict[str, Any]] = [
                 "contact": {"type": "string", "description": "Phone or email."},
                 "service": {"type": "string"},
                 "slot": {"type": "string", "description": "Exact slot as 'YYYY-MM-DD HH:MM'."},
+                "address": {
+                    "type": "string",
+                    "description": (
+                        "The customer's full service address for an on-site visit: street + "
+                        "number, postcode and town. Leave empty only if the visit is not on-site."
+                    ),
+                },
             },
             "required": ["customer_name", "contact", "service", "slot"],
         },
@@ -78,6 +86,7 @@ def execute(name: str, tool_input: dict[str, Any]) -> str:
             contact=tool_input.get("contact", ""),
             service=tool_input.get("service", ""),
             slot=tool_input.get("slot", ""),
+            address=tool_input.get("address", ""),
         ))
     if name == "take_message":
         return json.dumps(notify.take_message(
