@@ -99,7 +99,7 @@ const siteSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
     <ClientRouter />
   </head>
-  <body class={stickyCta ? 'pb-[5.5rem] md:pb-0' : ''}>
+  <body class={stickyCta ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-kraan-blue) focus:px-4 focus:py-2 focus:text-white focus:no-underline"

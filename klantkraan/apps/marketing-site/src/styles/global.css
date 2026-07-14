@@ -65,11 +65,36 @@
     color: var(--color-kraan-ink);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Mobile safety net: never let a stray wide element widen the layout
+     * viewport past the visual viewport. `clip` (not `hidden`) avoids
+     * establishing a scroll container, so position:sticky/fixed keep working.
+     * The audits confirm no real content overflows — this only guards edge
+     * cases (long unbreakable strings, sub-pixel bleed) and, critically, keeps
+     * fixed full-width elements (sticky CTA, /demo overlay) matched to the
+     * visible screen on iOS instead of overhanging it. */
+    overflow-x: clip;
   }
 
   body {
     margin: 0;
     min-height: 100dvh;
+    /* Same guard on the body — some iOS versions widen via the body box. */
+    overflow-x: clip;
+  }
+
+  /* Media never overflows its column. height:auto keeps aspect ratio for any
+   * image dropped into article Markdown. SVG illustrations are sized by their
+   * own utility classes; max-width:100% only ever shrinks, never distorts. */
+  img,
+  svg,
+  video,
+  iframe {
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
   }
 
   h1,

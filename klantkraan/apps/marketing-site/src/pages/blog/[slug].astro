@@ -178,8 +178,42 @@ const pageTitle =
   .prose-blog a {
     color: var(--color-kraan-blue);
     text-underline-offset: 0.2em;
+    /* Long inline URLs must be able to break so they never widen the page. */
+    overflow-wrap: break-word;
   }
   .prose-blog a:hover {
     color: var(--color-kraan-rust);
+  }
+  /* Markdown tables become their own horizontal scroll container so a wide
+   * table (e.g. the 4-column one in cv-storing-januari-installateur.md) scrolls
+   * inside its box on a phone instead of pushing the whole page sideways. */
+  .prose-blog table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: var(--text-small);
+    -webkit-overflow-scrolling: touch;
+  }
+  .prose-blog th,
+  .prose-blog td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-kraan-stone-300);
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose-blog th {
+    font-weight: 600;
+    color: var(--color-kraan-ink);
+    background: var(--color-kraan-stone-100);
+  }
+  .prose-blog pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .prose-blog code {
+    overflow-wrap: break-word;
   }
 </style>
