@@ -4,21 +4,21 @@ from __future__ import annotations
 
 from typing import Any
 
-_LABELS = {
-    "x": "𝕏 (auto-post)",
-    "linkedin": "in LinkedIn (paste)",
-    "reddit": "🔶 Reddit (paste)",
-}
+from .platforms import registry
 
 
 def preview(draft: dict[str, Any]) -> str:
     """The Telegram approval message body."""
+    reg = registry()
     lines = [f"🧵 *{_esc(draft['pillar'])}* — {_esc(draft['topic'])}", ""]
     for platform, text in draft["variants"].items():
-        label = _LABELS.get(platform, platform)
+        # Stored drafts may predate a config change — fall back to the raw name.
+        desc = reg.get(platform, {})
+        label = desc.get("label", platform)
+        limit = desc.get("char_limit")
         warn = ""
-        if platform == "x" and len(text) > 280:
-            warn = f"  ⚠️ {len(text)} chars (over 280)"
+        if limit and len(text) > limit:
+            warn = f"  ⚠️ {len(text)} chars (over {limit})"
         lines.append(f"*{_esc(label)}*{warn}")
         lines.append(_esc(text))
         lines.append("")

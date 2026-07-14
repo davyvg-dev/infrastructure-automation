@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from .platforms import registry
 from .settings import strategy
 
 
@@ -59,24 +60,10 @@ How to make a post land (this matters most):
   (2) is the takeaway specific, not vague? If either fails, rewrite it."""
 
 
-_PLATFORM_SPECS = {
-    # X = distribution + personality. Punchier; links are fine here.
-    "x": "X post: max 280 characters, punchy, personality-forward, no hashtags unless "
-         "natural. A strong first line that stands alone.",
-    # LinkedIn = the primary B2B channel where buyers live. Native long-form performs best.
-    "linkedin": "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are "
-                "a scroll-stopping hook that stands alone above the fold. Generous line "
-                "breaks (1-2 sentences each), one idea, end with a genuine question to spark "
-                "comments. NO links in the body. No hashtag walls.",
-    "reddit": "Reddit: value-first, zero self-promotion in the body. Written to genuinely "
-              "help in a relevant subreddit (e.g. r/smallbusiness, r/Klussers, r/ondernemers). "
-              "Sound like a helpful practitioner, not an ad.",
-}
-
-
 def platform_instructions(platforms: list[str]) -> str:
-    """The per-platform formatting block, reused by every generator."""
-    return "\n".join(f"- {_PLATFORM_SPECS[p]}" for p in platforms if p in _PLATFORM_SPECS)
+    """The per-platform formatting block (config `writing`), reused by every generator."""
+    reg = registry()
+    return "\n".join(f"- {reg[p]['writing']}" for p in platforms if p in reg)
 
 
 def draft_brief(pillar: dict[str, Any], platforms: list[str], recent: list[str]) -> str:

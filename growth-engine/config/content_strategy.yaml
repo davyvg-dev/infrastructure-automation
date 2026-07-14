@@ -59,23 +59,43 @@ pillars:
       bug, a small win — but tie it back to the customer benefit so it lands with buyers,
       not just other builders."
 
-# Which platforms get drafted, and how each is delivered.
+# The platform registry (read by src/platforms.py) — everything per-platform lives HERE.
 # LinkedIn is your HOME platform (B2B buyers live there); X is DISTRIBUTION + personality.
 # The engine drafts native variants for each — never the same string on both.
+# Per platform: enabled, delivery (auto|assisted), label (shown in Telegram), char_limit
+# (optional), media (none|image|video|both), media_required, writing (drafting guidance).
 platforms:
   x:
     enabled: true
     delivery: auto          # auto-post via API on approval
-    max_chars: 280
+    label: "𝕏 (auto-post)"
+    char_limit: 280
+    media: none
+    media_required: false
     note: "Distribution/personality. Links OK in-body. Punchier than LinkedIn."
+    writing: "X post: max 280 characters, punchy, personality-forward, no hashtags unless
+      natural. A strong first line that stands alone."
   linkedin:
     enabled: true
     delivery: assisted      # formatted + pushed to you to paste (native posts perform best)
+    label: "in LinkedIn (paste)"
+    media: none
+    media_required: false
     note: "Primary B2B channel. No links in the post body (put them in comment 1 / Featured)."
+    writing: "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are
+      a scroll-stopping hook that stands alone above the fold. Generous line breaks (1-2
+      sentences each), one idea, end with a genuine question to spark comments. NO links
+      in the body. No hashtag walls."
   reddit:
     enabled: true
     delivery: assisted
+    label: "🔶 Reddit (paste)"
+    media: none
+    media_required: false
     note: "Value-first only. 1-2 high-effort posts/week, posted manually."
+    writing: "Reddit: value-first, zero self-promotion in the body. Written to genuinely
+      help in a relevant subreddit (e.g. r/smallbusiness, r/Klussers, r/ondernemers).
+      Sound like a helpful practitioner, not an ad."
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.

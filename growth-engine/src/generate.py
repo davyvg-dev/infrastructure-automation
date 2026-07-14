@@ -12,10 +12,12 @@ from typing import Any
 
 import anthropic
 
-from . import ideas, prompts
+from . import ideas, platforms, prompts
 from .settings import env, strategy
 
-# Static schema → structured outputs cache the compiled schema for 24h.
+# Static schema → structured outputs cache the compiled schema for 24h. Built ONCE at
+# import from the enabled-platform registry so it stays byte-stable for the process;
+# the post-filter in each generator prunes variants that weren't requested.
 _DRAFT_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
@@ -28,11 +30,13 @@ _DRAFT_SCHEMA = {
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "x": {"type": "string", "description": "X post, or empty string if not requested."},
-                "linkedin": {"type": "string", "description": "LinkedIn post, or empty string."},
-                "reddit": {"type": "string", "description": "Reddit post, or empty string."},
+                name: {
+                    "type": "string",
+                    "description": f"{name} post, or empty string if not requested.",
+                }
+                for name in platforms.enabled_platforms()
             },
-            "required": ["x", "linkedin", "reddit"],
+            "required": platforms.enabled_platforms(),
         },
     },
     "required": ["topic", "variants"],

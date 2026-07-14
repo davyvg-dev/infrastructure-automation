@@ -25,7 +25,7 @@ from telegram.ext import (
     filters,
 )
 
-from . import buildlog, formatting, generate, store
+from . import buildlog, formatting, generate, platforms, store
 from .publish_x import post as post_to_x
 from .settings import active_cadence, env, strategy
 
@@ -209,25 +209,43 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await _approve(context, query.message.chat_id, draft)
 
 
+# Publisher per auto-delivery platform. X is the only one wired up today; a new
+# `delivery: auto` platform in config needs an entry here before it can post.
+_PUBLISHERS = {"x": post_to_x}
+
+
 async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict) -> None:
     store.update_draft(draft["id"], status="approved", approved_at=store.now_iso())
     variants = draft["variants"]
 
-    # X: auto-post.
-    if "x" in variants:
-        result = await asyncio.to_thread(post_to_x, variants["x"])
+    # Auto-delivery platforms: post via API.
+    for platform in platforms.auto_platforms():
+        if platform not in variants:
+            continue
+        publisher = _PUBLISHERS.get(platform)
+        if publisher is None:  # config says auto, but no publisher exists — surface it
+            await context.bot.send_message(
+                chat_id,
+                f"⚠️ No publisher wired up for {platform}. Here it is to post by hand:",
+            )
+            await context.bot.send_message(chat_id, variants[platform])
+            continue
+        result = await asyncio.to_thread(publisher, variants[platform])
         if result.ok:
-            store.update_draft(draft["id"], status="posted", x_url=result.url)
-            await context.bot.send_message(chat_id, f"✅ Posted to X: {result.url}")
+            store.update_draft(draft["id"], status="posted", **{f"{platform}_url": result.url})
+            await context.bot.send_message(
+                chat_id, f"✅ Posted to {platform.title()}: {result.url}"
+            )
         else:
             await context.bot.send_message(
                 chat_id,
-                f"⚠️ X post failed ({result.error}). Here it is to post by hand:",
+                f"⚠️ {platform.title()} post failed ({result.error}). "
+                f"Here it is to post by hand:",
             )
-            await context.bot.send_message(chat_id, variants["x"])
+            await context.bot.send_message(chat_id, variants[platform])
 
-    # LinkedIn / Reddit: hand over clean text to paste.
-    for platform in ("linkedin", "reddit"):
+    # Assisted-delivery platforms: hand over clean text to paste.
+    for platform in platforms.assisted_platforms():
         if platform in variants:
             await context.bot.send_message(chat_id, f"⬇️ {platform.title()} — copy & paste:")
             await context.bot.send_message(chat_id, variants[platform])

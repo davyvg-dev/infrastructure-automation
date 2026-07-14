@@ -3,6 +3,7 @@
 Run one layer at a time (see TASK.md):
 
     python -m src.selftest config      # config + env sanity, no network
+    python -m src.selftest platforms   # platform registry sanity, no network
     python -m src.selftest generate    # Claude drafting (needs ANTHROPIC_API_KEY)
     python -m src.selftest telegram    # send a test message (needs Telegram vars)
     python -m src.selftest x           # verify X auth, does NOT post (needs X vars)
@@ -42,6 +43,31 @@ def check_config() -> bool:
     _ok(f"cadence '{strategy()['cadence']['active']}': "
         f"{cad['runs_per_day']} run(s)/day × {cad['drafts_per_run']} drafts "
         f"→ {cad['platforms_per_draft']}")
+    return True
+
+
+def check_platforms() -> bool:
+    print("• platforms (registry)")
+    from . import platforms  # imported lazily so `config` stays independent of it
+
+    try:
+        reg = platforms.registry()
+    except Exception as exc:
+        return _fail(f"registry failed to load: {exc}")
+    if not reg:
+        return _fail("no enabled platforms in config")
+    for name, desc in reg.items():
+        for key in ("label", "writing"):
+            if not desc.get(key):
+                return _fail(f"'{name}' is missing '{key}'")
+        # Repo rule: X is the only platform allowed to auto-post (LinkedIn/Reddit ToS).
+        if desc["delivery"] == "auto" and name != "x":
+            return _fail(f"'{name}' has delivery: auto — only x may auto-post")
+    if "x" in reg and reg["x"]["char_limit"] != 280:
+        return _fail(f"x char_limit must be 280, got {reg['x']['char_limit']}")
+    _ok(f"enabled: {', '.join(platforms.enabled_platforms())}")
+    _ok(f"auto: {', '.join(platforms.auto_platforms()) or '(none)'} — "
+        f"assisted: {', '.join(platforms.assisted_platforms()) or '(none)'}")
     return True
 
 
@@ -121,11 +147,12 @@ def check_x() -> bool:
 
 CHECKS = {
     "config": check_config,
+    "platforms": check_platforms,
     "generate": check_generate,
     "telegram": check_telegram,
     "x": check_x,
 }
-ORDER = ["config", "generate", "telegram", "x"]
+ORDER = ["config", "platforms", "generate", "telegram", "x"]
 
 
 def main(argv: list[str]) -> int:
