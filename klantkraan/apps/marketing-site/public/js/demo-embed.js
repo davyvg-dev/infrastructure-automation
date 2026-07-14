@@ -18,12 +18,23 @@
 // client-side navigation, so element lookups happen at call time and the
 // document-level listeners attach once for the page lifetime.
 
-const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?embed=1'
-const DEMO_ORIGIN = 'https://demo-168-119-173-25.sslip.io'
+// Default demo (trades). A vertical demo page (e.g. /demo/sportscholen/) points the
+// overlay elsewhere via a data-demo-src attribute on #demo-overlay; the allowed
+// message origin is derived from whichever src is active.
+const DEFAULT_DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?embed=1'
 const vv = window.visualViewport
 
 function overlay() {
   return document.getElementById('demo-overlay')
+}
+
+function demoSrc() {
+  const el = overlay()
+  return (el && el.dataset.demoSrc) || DEFAULT_DEMO_SRC
+}
+
+function demoOrigin() {
+  return new URL(demoSrc()).origin
 }
 
 function frame() {
@@ -94,7 +105,7 @@ function openDemo() {
   if (!el) return
   if (!frame()) {
     const f = document.createElement('iframe')
-    f.src = DEMO_SRC
+    f.src = demoSrc()
     f.title = 'Live chat met de digitale receptionist van Klantkraan'
     // Absolutely positioned inside the fixed backdrop; sizeFrame sets w/h/top/left.
     f.setAttribute('style', 'position:absolute;top:0;left:0;border:0;display:block;')
@@ -130,7 +141,7 @@ if (!window.__kkDemoEmbed) {
 
   // The embedded chat posts this when its own × (shown in embed mode) is tapped.
   window.addEventListener('message', (e) => {
-    if (e.origin !== DEMO_ORIGIN) return
+    if (e.origin !== demoOrigin()) return
     const d = e.data
     if (d && d.type === 'klantkraan-widget' && d.action === 'close') closeDemo()
   })

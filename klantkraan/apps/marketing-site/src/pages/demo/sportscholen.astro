@@ -1,12 +1,19 @@
 ---
-import Base from '../layouts/Base.astro'
-import Icon from '../components/Icon.astro'
-import { waLink, mailLink } from '../data/contact'
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import { waLink, mailLink } from '../../data/contact'
+
+// Live demo for the sportscholen vertical — mirrors /demo/ but embeds the
+// fitness showcase (Sportcentrum De Vaart, a fictional gym). The mobile
+// overlay reads its iframe src from #demo-overlay's data-demo-src (see
+// /js/demo-embed.js); the origin below is also allowlisted in public/_headers.
+
+const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
 ---
 
 <Base
-  title="Demo: probeer de digitale receptionist van Klantkraan"
-  description="Probeer de digitale receptionist van Klantkraan direct in uw browser — stel een vraag of vraag een afspraak aan. Liever een persoonlijke demo op uw eigen diensten? Stuur een WhatsApp of e-mail."
+  title="Demo voor sportscholen: probeer de digitale receptionist"
+  description="Probeer de digitale receptionist voor sportscholen direct in uw browser — stel een vraag over abonnementen of boek een gratis proefles. Liever een persoonlijke demo op uw eigen lessen en tarieven? Stuur een WhatsApp of e-mail."
   centered={false}
   stickyCta={false}
 >
@@ -15,7 +22,7 @@ import { waLink, mailLink } from '../data/contact'
     <div class="mx-auto max-w-3xl px-6">
       <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="font-display text-h1 md:text-hero text-(--color-kraan-ink)">
-          Probeer de <span class="text-(--color-kraan-rust)">digitale receptionist</span>.
+          De receptionist voor <span class="text-(--color-kraan-rust)">sportscholen</span>.
         </h1>
         <span
           class="inline-flex shrink-0 items-center gap-2 rounded-full bg-(--color-kraan-stone-100) px-3 py-1 font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)"
@@ -24,36 +31,34 @@ import { waLink, mailLink } from '../data/contact'
         </span>
       </div>
       <p class="mt-4 text-body md:text-h3 text-(--color-kraan-stone-700)">
-        Een echte, live voorbeeld-receptionist — hieronder in uw browser. Stel een vraag of vraag
-        een afspraak aan. Geen verplichting.
+        Een echte, live voorbeeld-receptionist van een sportschool — hieronder in uw browser.
+        Vraag naar het abonnement of boek een gratis proefles. Geen verplichting.
       </p>
 
-      <!-- Desktop: live embed inline. No on-screen keyboard, so no viewport
-           fight — the iframe sits happily in the page. -->
+      <!-- Desktop: live embed inline. -->
       <div class="mt-6 hidden rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-3 shadow-sm md:block md:p-4">
         <iframe
-          src="https://demo-168-119-173-25.sslip.io/?embed=1"
-          title="Live chat met de digitale receptionist van Klantkraan"
+          src={DEMO_SRC}
+          title="Live chat met de digitale receptionist van Sportcentrum De Vaart"
           loading="lazy"
           class="block h-[600px] w-full rounded-(--radius-button) border border-(--color-kraan-stone-300)"
         ></iframe>
       </div>
 
-      <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). An inline
-           fixed-height iframe fights the iOS keyboard; a full-viewport overlay
-           lets the chat own the screen so the keyboard never hides it. -->
+      <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). -->
       <div class="mt-6 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5 shadow-sm md:hidden">
         <div class="flex items-center gap-3">
           <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-kraan-stone-100) text-(--color-kraan-blue)">
             <Icon name="message-square" class="h-5 w-5" />
           </span>
           <div class="min-w-0">
-            <p class="font-display text-h3 text-(--color-kraan-ink)">Van Dijk Installatietechniek</p>
+            <p class="font-display text-h3 text-(--color-kraan-ink)">Sportcentrum De Vaart</p>
             <p class="text-small text-(--color-kraan-stone-500)">Digitale assistent · reageert direct</p>
           </div>
         </div>
         <p class="mt-4 rounded-(--radius-button) bg-(--color-kraan-stone-100) p-3 text-body text-(--color-kraan-stone-700)">
-          Chat als een klant — stel een vraag of vraag een afspraak aan. Opent op volledig scherm.
+          Chat als een bezoeker — vraag naar het abonnement of boek een proefles. Opent op
+          volledig scherm.
         </p>
         <button
           type="button"
@@ -66,9 +71,9 @@ import { waLink, mailLink } from '../data/contact'
       </div>
 
       <p class="mt-3 text-small text-(--color-kraan-stone-500)">
-        Dit is een voorbeeldbedrijf. Bij uw eigen receptionist staan uw diensten, tarieven en
-        werkgebied ingesteld. Heeft u een sportschool? <a href="/demo/sportscholen/">Probeer de
-        sportschool-demo</a>.
+        Dit is een voorbeeldsportschool. Bij uw eigen receptionist staan uw lessen, tarieven en
+        openingstijden ingesteld. <a href="/sportscholen/">Lees wat Klantkraan voor sportscholen
+        doet</a>.
       </p>
     </div>
   </section>
@@ -84,8 +89,18 @@ import { waLink, mailLink } from '../data/contact'
           <div>
             <h3 class="font-display text-h3 text-(--color-kraan-ink)">Chat op uw eigen site</h3>
             <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-              De receptionist beantwoordt vragen over uw diensten, tarieven en werkgebied. In vlot
-              Nederlands, 24 uur per dag — en alleen met informatie die u zelf heeft ingesteld.
+              De receptionist beantwoordt vragen over abonnementen, lessen en openingstijden. In
+              vlot Nederlands, ook om 22:00 — en alleen met informatie die u zelf heeft ingesteld.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-kraan-ink)">Een proefles in de agenda</h3>
+            <p class="mt-2 text-body text-(--color-kraan-stone-700)">
+              U ziet live hoe een vraag eindigt als geboekte proefles of PT-kennismaking in de
+              agenda — alleen op tijden die de sportschool zelf heeft vrijgegeven.
             </p>
           </div>
         </article>
@@ -94,18 +109,8 @@ import { waLink, mailLink } from '../data/contact'
           <div>
             <h3 class="font-display text-h3 text-(--color-kraan-ink)">Het WhatsApp-kanaal</h3>
             <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-              Dezelfde receptionist op het kanaal dat uw klanten al dagelijks gebruiken. Wie liever
+              Dezelfde receptionist op het kanaal dat uw leden al dagelijks gebruiken. Wie liever
               appt dan belt, krijgt direct antwoord.
-            </p>
-          </div>
-        </article>
-        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
-          <div>
-            <h3 class="font-display text-h3 text-(--color-kraan-ink)">Een afspraak in de agenda</h3>
-            <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-              U ziet live hoe een klantvraag eindigt als geplande afspraak in de agenda — zonder
-              telefoontag, zonder heen-en-weer-mailen.
             </p>
           </div>
         </article>
@@ -114,8 +119,8 @@ import { waLink, mailLink } from '../data/contact'
           <div>
             <h3 class="font-display text-h3 text-(--color-kraan-ink)">Lead-notificatie op uw telefoon</h3>
             <p class="mt-2 text-body text-(--color-kraan-stone-700)">
-              Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam,
-              nummer en de vraag van de klant.
+              Elke proefles-aanvraag en elk terugbelverzoek landt direct als bericht op uw
+              telefoon, met naam, nummer en de vraag van de bezoeker.
             </p>
           </div>
         </article>
@@ -131,8 +136,8 @@ import { waLink, mailLink } from '../data/contact'
           Liever een persoonlijke demo?
         </h2>
         <p class="mt-3 max-w-2xl text-body text-(--color-kraan-stone-700)">
-          Wij zetten de receptionist op uw eigen diensten en tarieven en lopen hem met u door.
-          Geen verkooppraatje, geen verplichting.
+          Wij zetten de receptionist op uw eigen lessen, tarieven en openingstijden en lopen hem
+          met u door. Geen verkooppraatje, geen verplichting.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
@@ -166,20 +171,20 @@ import { waLink, mailLink } from '../data/contact'
           AI-disclosure (EU AI Act, art. 50)
         </h2>
         <p class="mt-3 text-body text-(--color-kraan-stone-700)">
-          De receptionist is een AI. Dat is wettelijk verplicht om te vermelden. Dat doen wij in de
-          eerste zin van elk gesprek, woord voor woord:
+          De receptionist is een AI. Dat is wettelijk verplicht om te vermelden. Dat doet ook
+          deze demo, in de eerste zin van elk gesprek:
         </p>
         <blockquote
           class="mt-4 border-l-4 border-(--color-kraan-rust) bg-(--color-kraan-stone-100) p-3 md:p-4 text-body text-(--color-kraan-ink)"
         >
-          "Goedendag, u chat met {`{{agent_naam}}`}, de digitale assistent van {`{{bedrijfsnaam}}`}.
-          Waarmee kan ik u helpen?"
+          "Hoi! Ik ben Sam, de digitale receptionist van Sportcentrum De Vaart. Ik beantwoord je
+          vragen en plan direct een gratis proefles of afspraak in."
         </blockquote>
         <ul class="mt-4 space-y-2 text-small text-(--color-kraan-stone-700)">
           <li>De disclosure wordt nooit uitgeschakeld, ook niet op klantverzoek.</li>
           <li>
-            Vraagt uw klant "Ben ik met een mens in gesprek?" dan antwoordt de assistent eerlijk
-            dat zij een digitale assistent is en dat het bericht direct bij de eigenaar
+            Vraagt uw bezoeker "Ben ik met een mens in gesprek?" dan antwoordt de assistent
+            eerlijk dat zij een digitale assistent is en dat het bericht direct bij de eigenaar
             terechtkomt.
           </li>
         </ul>
@@ -193,17 +198,17 @@ import { waLink, mailLink } from '../data/contact'
   <!-- 5. Eind-CTA band (blue) -->
   <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
     <div class="mx-auto max-w-5xl px-6">
-      <h2 class="font-display text-h1 text-white">Liever eerst de cijfers?</h2>
+      <h2 class="font-display text-h1 text-white">Liever eerst het verhaal?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
-        Reken uit wat gemiste klantvragen u nu kosten, of bekijk de twee abonnementen. De demo
-        blijft daarna één klik verwijderd.
+        Lees wat Klantkraan voor sportscholen doet — wat een onbeantwoorde proefles-aanvraag
+        kost en hoe de rekensom uitvalt. De demo blijft daarna één klik verwijderd.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
-          href="/rekentool/"
+          href="/sportscholen/"
           class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
         >
-          Open de rekentool
+          Klantkraan voor sportscholen
         </a>
         <a
           href="/prijzen/"
@@ -215,29 +220,24 @@ import { waLink, mailLink } from '../data/contact'
     </div>
   </section>
 
-  <!-- Full-screen demo overlay (mobile). Fixed = outside page scroll flow; its
-       height is set to window.visualViewport by /js/demo-embed.js so the iOS
-       keyboard never hides the chat. The iframe is injected on first open. -->
+  <!-- Full-screen demo overlay (mobile) — see /js/demo-embed.js. data-demo-src
+       points the overlay at the fitness demo instead of the default. -->
   <div
     id="demo-overlay"
+    data-demo-src={DEMO_SRC}
     class="fixed inset-0 z-[70] hidden overflow-hidden"
     aria-hidden="true"
   >
   </div>
 
   <style>
-    /* Full-screen solid backdrop behind the chat iframe. It is never resized, so the
-       marketing page can never show through around or under the chat — even while the
-       keyboard animates. Matches the chat's own light/dark background so any strip
-       left beside the keyboard is invisible rather than a jarring block of colour. */
+    /* Full-screen solid backdrop behind the chat iframe — see /demo/ for rationale. */
     #demo-overlay { background: #f6f7f9; overscroll-behavior: contain; }
     @media (prefers-color-scheme: dark) {
       #demo-overlay { background: #0f1216; }
     }
   </style>
 
-  <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self').
-       ?v bumps the cache key — the plain path briefly cached the SPA fallback as
-       text/html during a deploy-propagation race; bump this on future edits. -->
+  <!-- Externalised JS (CSP script-src 'self'); ?v busts the Pages edge cache. -->
   <script src="/js/demo-embed.js?v=5" type="module" is:inline></script>
 </Base>
