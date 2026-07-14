@@ -30,6 +30,9 @@ done
 chown -R klantkraan:klantkraan /opt/klantkraan
 
 cp /opt/klantkraan/ops/hetzner/growth-engine.service /etc/systemd/system/
+# Template for extra verticals (not auto-enabled: each instance needs its own
+# .env.<vertical> with its own bot token first — see the unit's header comment).
+cp "/opt/klantkraan/ops/hetzner/growth-engine@.service" /etc/systemd/system/
 cp /opt/klantkraan/ops/hetzner/ai-receptionist.service /etc/systemd/system/
 sed "s/__DEMO_HOST__/$DEMO_HOST/" /opt/klantkraan/ops/hetzner/Caddyfile.template > /etc/caddy/Caddyfile
 
