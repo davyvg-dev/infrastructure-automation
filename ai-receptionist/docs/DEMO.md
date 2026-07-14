@@ -1,6 +1,7 @@
 # Demoing & pitching the AI receptionist
 
-How to turn this into content and into a close.
+How to turn this into content and into a close. For the per-vertical what-to-record menu
+(trades + fitness), see [RECORDING.md](RECORDING.md).
 
 ## Record a demo clip (for content)
 
