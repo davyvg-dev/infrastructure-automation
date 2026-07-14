@@ -15,7 +15,7 @@
 |---|---|---|
 | Rapport | 0:00 – 2:00 | Set context, set length |
 | Qualification | 2:00 – 10:00 | Discover pain, qualify, build trust |
-| Demo | 10:00 – 16:00 | Audio of AI handling a Dutch call + dashboard |
+| Demo | 10:00 – 16:00 | Live web-chat receptionist (websitechat + WhatsApp) + dashboard |
 | Close | 16:00 – 20:00 | Tier rec, objection handling, propose start date |
 
 ## Phase 1: Rapport (2 min)

@@ -16,7 +16,7 @@
 | **Reverse proxy** | Caddy 2 | Auto-HTTPS, simple config | €0 | Low |
 | **Containers** | Docker Compose | One file, no Kubernetes overhead | €0 | Low until ~50 services |
 | **Database** | Neon Postgres EU (Frankfurt) | Branching for ops + migrations, generous free tier | €0 → €19/mo at scale | Low (managed PG) |
-| **Object storage** | Cloudflare R2 | Zero egress fees, S3-compatible | €0 → €0.30/mo per Pro client | Low |
+| **Object storage** | Cloudflare R2 | Zero egress fees, S3-compatible | €0 → €0.30/mo per Compleet client | Low |
 | **Telephony** | CM.com Voice / SMS | NL native, AVG-clean, real Dutch landlines | €0 setup + per-msg/min usage | **Critical to abstract** via `packages/telephony` adapter — Twilio fallback documented |
 | **AI receptionist** | Synthflow + ElevenLabs Dutch | Best Dutch voice quality + tool-use combo as of 2026-05 | per-min ~€0.12 | High — but adapter abstracts it |
 | **LLM** | Anthropic Claude (Sonnet for drafts, Opus for cornerstone) | Best Dutch quality + safety + caching | usage-based | Low (provider swap behind a wrapper) |

@@ -1,6 +1,6 @@
 # Offer & Pricing
 
-> Herzien 2026-07-13 — repriced to two tiers (€299 Chat / €499 Compleet) and reframed text-first after the 2026-07-11 pivot. Replaces the old €299/€599/€999 structure.
+> Herzien 2026-07-13 — repriced to two tiers (€299 Chat / €499 Compleet) and reframed text-first after the 2026-07-11 pivot. Replaces the old three-tier voice-first structure.
 
 ## The product
 
@@ -36,7 +36,7 @@ The receptionist only offers real calendar slots, never invents prices or advice
 - 6-month prepay: 15% off
 - 12-month prepay: 20% off (and locked-in pricing if annual rate index changes)
 
-**Status (2026-07-13):** only Chat is sellable today. The voice agent is dormant; Compleet is quoted as the upgrade path, never sold before voice is verified live. No third tier — the old €999/€849 Premium is killed.
+**Status (2026-07-13):** only Chat is sellable today. The voice agent is dormant; Compleet is quoted as the upgrade path, never sold before voice is verified live. No third tier — the old top Premium tier is killed.
 
 ## Why this structure wins
 
