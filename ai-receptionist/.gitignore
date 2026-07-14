@@ -3,3 +3,8 @@
 data/
 __pycache__/
 *.pyc
+
+# Real prospect/client configs carry third-party PII (company names, phone numbers).
+# Never commit them; they still rsync to the server on deploy. READMEs stay tracked.
+config/prospects/*.yaml
+config/clients/*.yaml
