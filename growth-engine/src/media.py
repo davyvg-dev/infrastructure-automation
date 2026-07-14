@@ -87,8 +87,10 @@ def _stock_photo(query: str, orientation: str) -> Path | None:
         params = urllib.parse.urlencode(
             {"query": query, "orientation": orientation, "per_page": 1}
         )
+        # Pexels 403s python-urllib's default User-Agent; identify ourselves properly.
+        headers = {"Authorization": key, "User-Agent": "klantkraan-growth-engine/1.0"}
         req = urllib.request.Request(
-            f"https://api.pexels.com/v1/search?{params}", headers={"Authorization": key}
+            f"https://api.pexels.com/v1/search?{params}", headers=headers
         )
         with urllib.request.urlopen(req, timeout=15) as resp:
             photos = json.load(resp).get("photos") or []
@@ -100,7 +102,8 @@ def _stock_photo(query: str, orientation: str) -> Path | None:
         )
         if not out.exists():
             out.parent.mkdir(parents=True, exist_ok=True)
-            with urllib.request.urlopen(url, timeout=30) as resp, out.open("wb") as fh:
+            dl = urllib.request.Request(url, headers={"User-Agent": headers["User-Agent"]})
+            with urllib.request.urlopen(dl, timeout=30) as resp, out.open("wb") as fh:
                 fh.write(resp.read())
         return out
     except Exception as exc:  # degrade to a flat card, but say so
