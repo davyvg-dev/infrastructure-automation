@@ -19,9 +19,22 @@ interface Props {
   centered?: boolean
   /** When true: emit a robots noindex meta (private pages like /r/ dashboards). */
   noindex?: boolean
+  /**
+   * When true (default): render the sticky mobile CTA bar + reserve body
+   * bottom-padding for it. Set false on pages that own the bottom of the
+   * viewport (e.g. /demo, where the fixed bar overlaps the live chat).
+   */
+  stickyCta?: boolean
 }
 
-const { title, description, canonical, centered = true, noindex = false } = Astro.props
+const {
+  title,
+  description,
+  canonical,
+  centered = true,
+  noindex = false,
+  stickyCta = true,
+} = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
 
@@ -86,7 +99,7 @@ const siteSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
     <ClientRouter />
   </head>
-  <body class="pb-[5.5rem] md:pb-0">
+  <body class={stickyCta ? 'pb-[5.5rem] md:pb-0' : ''}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-kraan-blue) focus:px-4 focus:py-2 focus:text-white focus:no-underline"
@@ -106,6 +119,6 @@ const siteSchema = {
       )
     }
     <Footer />
-    <StickyMobileCta />
+    {stickyCta && <StickyMobileCta />}
   </body>
 </html>
