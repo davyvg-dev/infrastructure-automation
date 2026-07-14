@@ -219,13 +219,24 @@ import { waLink, mailLink } from '../data/contact'
        keyboard never hides the chat. The iframe is injected on first open. -->
   <div
     id="demo-overlay"
-    class="fixed inset-x-0 top-0 z-[70] hidden max-w-full overflow-hidden bg-black"
+    class="fixed inset-0 z-[70] hidden overflow-hidden"
     aria-hidden="true"
   >
   </div>
 
+  <style>
+    /* Full-screen solid backdrop behind the chat iframe. It is never resized, so the
+       marketing page can never show through around or under the chat — even while the
+       keyboard animates. Matches the chat's own light/dark background so any strip
+       left beside the keyboard is invisible rather than a jarring block of colour. */
+    #demo-overlay { background: #f6f7f9; overscroll-behavior: contain; }
+    @media (prefers-color-scheme: dark) {
+      #demo-overlay { background: #0f1216; }
+    }
+  </style>
+
   <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self').
        ?v bumps the cache key — the plain path briefly cached the SPA fallback as
        text/html during a deploy-propagation race; bump this on future edits. -->
-  <script src="/js/demo-embed.js?v=3" type="module" is:inline></script>
+  <script src="/js/demo-embed.js?v=4" type="module" is:inline></script>
 </Base>

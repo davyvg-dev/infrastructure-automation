@@ -2,13 +2,17 @@
 // Externalised so it loads under CSP `script-src 'self'` (no inline allowed).
 // See klantkraan/apps/marketing-site/public/_headers for the policy.
 //
-// Why: on desktop the live receptionist sits inline in an iframe and behaves.
-// On a phone an inline fixed-height iframe inside a scrolling page fights the
-// on-screen keyboard — iOS scrolls the PAGE to reveal the focused input and the
-// chat slides out of view ("the demo disappears"). Fix: on mobile we launch the
-// chat into a fixed, full-viewport overlay that sits OUTSIDE the page scroll
-// flow and is sized to window.visualViewport, so the keyboard shrinks the chat
-// instead of hiding it.
+// Robust model (why it's built this way):
+//  - The overlay is a FULL-SCREEN solid backdrop (position:fixed; inset:0). It is
+//    NEVER resized, so the marketing page can never peek out behind the chat — not
+//    mid keyboard-animation, not when visualViewport math is imperfect on old iOS.
+//    (The previous version sized the backdrop itself to the visual viewport, so it
+//    shrank when the keyboard opened and the page bled through underneath.)
+//  - The body is scroll-locked with the position:fixed technique so iOS can't
+//    rubber-band the page into view around the overlay.
+//  - Only the IFRAME is sized to the visual viewport, so the chat's input row sits
+//    just above the on-screen keyboard. If those numbers are ever off, the user
+//    sees the backdrop, never the page.
 //
 // astro:page-load aware: Astro 5 ClientRouter swaps the document body on
 // client-side navigation, so element lookups happen at call time and the
@@ -22,66 +26,95 @@ function overlay() {
   return document.getElementById('demo-overlay')
 }
 
-function unlockBody() {
-  document.documentElement.style.overflow = ''
-  document.body.style.overflow = ''
+function frame() {
+  const el = overlay()
+  return el && el.querySelector('iframe')
 }
 
-// Pin the overlay to the *visible* viewport in BOTH axes.
-// Height matches the visual viewport so the on-screen keyboard shrinks the chat
-// instead of hiding it. Width + left are pinned too: without them iOS sizes the
-// position:fixed overlay to the (slightly wider) LAYOUT viewport, so the w-full
-// iframe rendered a few px too wide and the chat's right edge was clipped on
-// smaller iPhones. Position via top/left, not a transform — a transform on a
-// position:fixed element is the classic iOS containing-block trap.
-function sizeOverlay() {
+let savedScrollY = 0
+
+// Lock the background page so it can't scroll or rubber-band into view behind the
+// overlay. position:fixed is the only reliable lock on iOS; overflow:hidden alone
+// is ignored once the keyboard is open.
+function lockBody() {
+  savedScrollY = window.scrollY || window.pageYOffset || 0
+  const b = document.body
+  b.style.position = 'fixed'
+  b.style.top = -savedScrollY + 'px'
+  b.style.left = '0'
+  b.style.right = '0'
+  b.style.width = '100%'
+  document.documentElement.style.overflow = 'hidden'
+}
+
+function unlockBody() {
+  const b = document.body
+  b.style.position = ''
+  b.style.top = ''
+  b.style.left = ''
+  b.style.right = ''
+  b.style.width = ''
+  document.documentElement.style.overflow = ''
+  window.scrollTo(0, savedScrollY)
+}
+
+// Size ONLY the iframe to the visible viewport (keyboard-aware). The backdrop stays
+// full-screen, so this only places the chat — it can never uncover the page.
+function sizeFrame() {
   const el = overlay()
   if (!el || el.classList.contains('hidden')) return
-  const de = document.documentElement
-  const w = vv ? vv.width : de.clientWidth
+  const f = frame()
+  if (!f) return
+  const w = vv ? vv.width : window.innerWidth
   const h = vv ? vv.height : window.innerHeight
   const top = vv ? vv.offsetTop : 0
   const left = vv ? vv.offsetLeft : 0
-  el.style.width = w + 'px'
-  el.style.height = h + 'px'
-  el.style.left = left + 'px'
-  el.style.right = 'auto'
-  el.style.top = top + 'px'
-  el.style.transform = ''
+  f.style.width = w + 'px'
+  f.style.height = h + 'px'
+  f.style.top = top + 'px'
+  f.style.left = left + 'px'
+}
+
+// The keyboard open/close animation settles over a few hundred ms, and older iOS
+// fires a single, sometimes-early resize. Re-measure a few times so the input ends
+// up right above the keyboard rather than behind it or with a gap under it.
+let settleTimer = null
+function sizeFrameSettling() {
+  sizeFrame()
+  if (settleTimer) clearInterval(settleTimer)
+  let n = 0
+  settleTimer = setInterval(() => {
+    sizeFrame()
+    if (++n >= 6) { clearInterval(settleTimer); settleTimer = null }
+  }, 100)
 }
 
 function openDemo() {
   const el = overlay()
   if (!el) return
-  if (!el.querySelector('iframe')) {
+  if (!frame()) {
     const f = document.createElement('iframe')
     f.src = DEMO_SRC
     f.title = 'Live chat met de digitale receptionist van Klantkraan'
-    f.className = 'block h-full w-full border-0'
+    // Absolutely positioned inside the fixed backdrop; sizeFrame sets w/h/top/left.
+    f.setAttribute('style', 'position:absolute;top:0;left:0;border:0;display:block;')
     el.appendChild(f)
   }
   el.classList.remove('hidden')
   el.setAttribute('aria-hidden', 'false')
-  document.documentElement.style.overflow = 'hidden'
-  document.body.style.overflow = 'hidden'
-  sizeOverlay()
+  lockBody()
+  sizeFrameSettling()
 }
 
 function closeDemo() {
-  unlockBody()
   const el = overlay()
   if (!el) return
   el.classList.add('hidden')
   el.setAttribute('aria-hidden', 'true')
-  el.style.height = ''
-  el.style.width = ''
-  el.style.left = ''
-  el.style.right = ''
-  el.style.top = ''
-  el.style.transform = ''
   // Drop the iframe so the session resets on next open (and stops any polling).
-  const f = el.querySelector('iframe')
+  const f = frame()
   if (f) f.remove()
+  unlockBody()
 }
 
 if (!window.__kkDemoEmbed) {
@@ -107,9 +140,10 @@ if (!window.__kkDemoEmbed) {
   })
 
   if (vv) {
-    vv.addEventListener('resize', sizeOverlay)
-    vv.addEventListener('scroll', sizeOverlay)
+    vv.addEventListener('resize', sizeFrameSettling)
+    vv.addEventListener('scroll', sizeFrame)
   }
+  window.addEventListener('orientationchange', sizeFrameSettling)
 }
 
 // If a prior /demo visit left the scroll lock on, clear it once we land on a
