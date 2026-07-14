@@ -143,19 +143,20 @@ def check_reel() -> bool:
     try:
         with tempfile.TemporaryDirectory() as tmp:
             raw = Path(tmp) / "raw.mp4"
-            # A fake chat recording at a real iPhone ratio: four static scenes with
-            # hard changes between them — what a message popping in looks like to the
-            # pop-cut detector, with "typing time" (the static stretches) in between.
-            scenes = ["Red", "Green", "Blue", "Yellow"]
-            inputs: list[str] = []
-            for color in scenes:
-                inputs += ["-f", "lavfi", "-i",
-                           f"color=c={color}:size=390x844:rate=30:duration=3"]
+            # A fake chat recording at a real iPhone ratio, 12s: idle stretches
+            # (static color), a "typing" stretch (a keystroke-sized box flickering
+            # 4×/s from 2s-6s, like a keyboard in use), and two hard full-frame
+            # changes (messages popping in at 6s and 9s). All three frame classes.
             subprocess.run(
-                ["ffmpeg", "-y", "-v", "error", *inputs,
+                ["ffmpeg", "-y", "-v", "error",
+                 "-f", "lavfi", "-i", "color=c=Gray:size=390x844:rate=30:duration=6",
+                 "-f", "lavfi", "-i", "color=c=White:size=90x60:rate=30:duration=6",
+                 "-f", "lavfi", "-i", "color=c=Blue:size=390x844:rate=30:duration=3",
+                 "-f", "lavfi", "-i", "color=c=Yellow:size=390x844:rate=30:duration=3",
                  "-filter_complex",
-                 "".join(f"[{i}]" for i in range(len(scenes)))
-                 + f"concat=n={len(scenes)}:v=1:a=0",
+                 "[0][1]overlay=x=150:y=650:"
+                 "enable='between(t,2,6)*lt(mod(t,0.5),0.25)'[a];"
+                 "[a][2][3]concat=n=3:v=1:a=0",
                  "-pix_fmt", "yuv420p", str(raw)],
                 check=True, capture_output=True, text=True,
             )
@@ -169,12 +170,20 @@ def check_reel() -> bool:
             cap = float(cfg["target_seconds"]) + 0.5  # rounding headroom
             if duration > cap:
                 return _fail(f"reel is {duration:.1f}s, cap is {cfg['target_seconds']}s")
-            if cfg["pop_cuts"] and duration >= 12.0 - 0.5:
-                # 12s of raw scenes must shrink: pop cuts drop the static stretches.
-                return _fail(f"pop cuts had no effect: {duration:.1f}s from a 12s raw")
-            _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw "
-                f"(pop cuts {'on' if cfg['pop_cuts'] else 'off'}, "
-                f"{len(scenes)} scenes) → targets {record['platform_targets']}")
+            cards = float(cfg["title_seconds"]) + float(cfg["end_seconds"])
+            if cfg["pop_cuts"]:
+                demo = duration - cards
+                # The three pop holds alone are 3×dwell = 4.2s; the 4s typing
+                # stretch must ADD time (at typing_speed ≈ +1.2s), and the ~6s of
+                # idle must all be gone. So the demo lands in a narrow band.
+                if demo > 6.2:
+                    return _fail(f"idle not cut: {demo:.1f}s demo from 12s raw")
+                if demo < 4.5:
+                    return _fail(f"typing was cut, not sped up: {demo:.1f}s demo "
+                                 f"(pop holds alone are ~4.2s)")
+            _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw (pop cuts "
+                f"{'on' if cfg['pop_cuts'] else 'off'}: idle cut, typing "
+                f"{cfg['typing_speed']}×, pops held) → {record['platform_targets']}")
             _ok(f"crop_top {cfg['crop_top']} · cap {cfg['target_seconds']}s · "
                 f"dwell ≤{cfg['dwell_seconds']}s · max speed {cfg['max_speed']}×")
     except subprocess.CalledProcessError as exc:

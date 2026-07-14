@@ -171,11 +171,13 @@ media:
     crop_top: 0.055     # fraction of source height to crop (iOS status bar) — tune
                         # once after the first reel; device-specific
     crop_bottom: 0.0
-    # Short-form: typing and waiting are cut out entirely (pop cuts) — each message
-    # pops in, holds just long enough to read, then jump-cuts to the next.
+    # Short-form: typing stays visible but fast; AI replies land instantly (the wait
+    # is cut, not sped up); each message holds just long enough to read.
     pop_cuts: true
-    scene_threshold: 0.08   # how big a frame change counts as "a message appeared"
-    dwell_seconds: 1.4      # max hold per pop; shrinks automatically to fit the cap
+    scene_threshold: 0.08     # frame change big enough to be "a message appeared"
+    typing_threshold: 0.002   # smaller-but-real change: a keystroke; below = cut
+    typing_speed: 3.0         # typing playback speed
+    dwell_seconds: 1.4        # max hold per message; shrinks to fit the cap
     target_seconds: 15      # hard cap for the finished reel, cards included
     max_speed: 4.0
     title_seconds: 1.0      # short title card — the hook can't wait

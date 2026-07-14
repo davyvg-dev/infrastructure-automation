@@ -315,49 +315,107 @@ def _render_stage(out_path: Path, scheme: dict[str, Any]) -> None:
     img.save(out_path, "PNG")
 
 
-def _detect_change_times(raw: Path, crop: str, threshold: float) -> list[float]:
-    """Seconds at which the (cropped) screen visibly changes — a message popping in.
+def _frame_scores(raw: Path, crop: str) -> list[tuple[float, float]]:
+    """(time, scene_score) for every frame of the (cropped) recording.
 
-    Typing indicators and the status-bar clock move too little to cross the scene
-    threshold, so the quiet stretches between changes carry no timestamps.
+    The score measures how much a frame differs from the previous one: a message
+    popping in scores high, a keystroke scores low but nonzero, a typing indicator
+    or the status-bar clock stays near zero.
     """
     result = subprocess.run(
         ["ffmpeg", "-hide_banner", "-nostats", "-v", "info", "-i", str(raw),
-         "-vf", f"{crop},select='gt(scene,{threshold})',showinfo",
+         "-vf", f"{crop},select='gte(scene,0)',"
+                "metadata=mode=print:key=lavfi.scene_score",
          "-f", "null", "-"],
-        capture_output=True, text=True, timeout=120,
+        capture_output=True, text=True, timeout=180,
     )
-    return [float(m) for m in re.findall(r"pts_time:([0-9]+\.?[0-9]*)", result.stderr)]
+    frames: list[tuple[float, float]] = []
+    t: float | None = None
+    for line in result.stderr.splitlines():
+        m = re.search(r"pts_time:([0-9]+\.?[0-9]*)", line)
+        if m:
+            t = float(m.group(1))
+            continue
+        m = re.search(r"lavfi\.scene_score=([0-9.eE+-]+)", line)
+        if m and t is not None:
+            frames.append((t, float(m.group(1))))
+            t = None
+    return frames
 
 
-def _pop_beats(times: list[float], duration: float, usable: float,
-               dwell_max: float) -> list[tuple[float, float]]:
-    """Keep-segments from change moments: each pop holds just long enough to read.
+def _subtract(run: tuple[float, float],
+              holds: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    """Pieces of `run` not covered by any hold."""
+    pieces = [run]
+    for hs, he in holds:
+        nxt = []
+        for s, e in pieces:
+            if he <= s or hs >= e:
+                nxt.append((s, e))
+                continue
+            if s < hs:
+                nxt.append((s, hs))
+            if he < e:
+                nxt.append((he, e))
+        pieces = nxt
+    return [(s, e) for s, e in pieces if e - s > 0.1]
 
-    The dwell shrinks as pops multiply so the demo fits `usable` seconds; overlapping
-    holds merge so rapid sequences play through uncut.
+
+def _cut_plan(frames: list[tuple[float, float]], duration: float,
+              cfg: dict[str, Any], usable: float
+              ) -> list[tuple[float, float, float]] | None:
+    """(start, end, speed) segments: pops hold at 1×, typing runs fast, idle is cut.
+
+    A pop (big change — a message appearing) holds `dwell` so it can be read; the
+    reply therefore lands on screen instantly, with the wait before it gone. Typing
+    (small but real activity) stays visible at `typing_speed`. Everything else —
+    typing indicators, dead waiting — never makes the cut.
     """
+    pop_thr = float(cfg["scene_threshold"])
+    typ_thr = float(cfg["typing_threshold"])
+    pops = [t for t, s in frames if s >= pop_thr]
+    typing = [t for t, s in frames if typ_thr <= s < pop_thr]
+    if not pops and not typing:
+        return None
+
     starts = [0.0]
-    for t in sorted(times):
+    for t in sorted(pops):
         if t - starts[-1] >= 0.25:  # double-triggers within one pop animation
             starts.append(max(t - 0.05, 0.0))
-    dwell = max(0.5, min(dwell_max, usable / len(starts)))
-    beats: list[tuple[float, float]] = []
+    dwell = max(0.5, min(float(cfg["dwell_seconds"]), usable / len(starts)))
+    holds: list[tuple[float, float]] = []
     for s in starts:
         e = min(s + dwell, duration)
-        if beats and s <= beats[-1][1] + 0.05:
-            beats[-1] = (beats[-1][0], max(beats[-1][1], e))
+        if holds and s <= holds[-1][1] + 0.05:
+            holds[-1] = (holds[-1][0], max(holds[-1][1], e))
         else:
-            beats.append((s, e))
-    return [(s, e) for s, e in beats if e - s > 0.05]
+            holds.append((s, e))
+
+    # Typing runs: nearby keystrokes coalesce; holds win where the two overlap.
+    runs: list[tuple[float, float]] = []
+    for t in typing:
+        if runs and t - runs[-1][1] <= 0.6:
+            runs[-1] = (runs[-1][0], t)
+        else:
+            runs.append((t, t))
+    speed = float(cfg["typing_speed"])
+    segs = [(s, e, 1.0) for s, e in holds]
+    for run in runs:
+        if run[1] - run[0] < 0.2:  # single-frame blips are noise, not typing
+            continue
+        segs.extend((s, e, speed) for s, e in _subtract(run, holds))
+    return sorted(segs)
 
 
-def _cut_filter(crop: str, beats: list[tuple[float, float]]) -> str:
-    """Jump-cut filter: crop once, then keep only the given (start, end) segments."""
-    n = len(beats)
+def _cut_filter(crop: str, segs: list[tuple[float, float, float]]) -> str:
+    """Jump-cut filter: crop once, keep the given segments, each at its own speed."""
+    n = len(segs)
     parts = [f"[1:v]{crop},split={n}" + "".join(f"[c{i}]" for i in range(n)) + ";"]
-    for i, (s, e) in enumerate(beats):
-        parts.append(f"[c{i}]trim=start={s:.3f}:end={e:.3f},setpts=PTS-STARTPTS[t{i}];")
+    for i, (s, e, v) in enumerate(segs):
+        parts.append(
+            f"[c{i}]trim=start={s:.3f}:end={e:.3f},"
+            f"setpts=(PTS-STARTPTS)/{v:.2f}[t{i}];"
+        )
     parts.append("".join(f"[t{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0[cut];")
     return "".join(parts)
 
@@ -367,12 +425,13 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
                out_dir: Path | None = None) -> dict[str, Any]:
     """Cut a raw screen recording into a branded 1080×1920 reel; returns a media record.
 
-    With `pop_cuts` (default) the dead time — typing, waiting on replies — is cut out
-    entirely: only a short hold around each screen change survives, so messages pop in
-    back-to-back and the finished reel stays under `target_seconds` (cards included).
-    Explicit `beats` (start, end) override the detection; if no changes are detected
-    the whole clip is sped up instead. Audio is dropped — screen recordings are silent
-    and IG/TikTok music is added in-app.
+    With `pop_cuts` (default) each frame is classified by how much the screen changes:
+    a message appearing holds at natural speed so it can be read, typing stays visible
+    but fast (`typing_speed`), and dead time — typing indicators, waiting on the reply —
+    is cut entirely, so responses land instantly. The finished reel stays under
+    `target_seconds` (cards included). Explicit `beats` (start, end) override the
+    detection; if no activity is detected the whole clip is sped up instead. Audio is
+    dropped — screen recordings are silent and IG/TikTok music is added in-app.
     """
     for tool in ("ffmpeg", "ffprobe"):
         if shutil.which(tool) is None:
@@ -392,11 +451,11 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         - float(cfg["end_seconds"]),
         3.0,
     )
-    if beats is None and cfg["pop_cuts"]:
-        times = _detect_change_times(raw, crop, float(cfg["scene_threshold"]))
-        if times:
-            beats = _pop_beats(times, duration, usable, float(cfg["dwell_seconds"]))
-    kept = sum(e - s for s, e in beats) if beats else duration
+    plan = [(s, e, 1.0) for s, e in beats] if beats else None
+    if plan is None and cfg["pop_cuts"]:
+        plan = _cut_plan(_frame_scores(raw, crop), duration, cfg, usable)
+    # Output seconds the plan produces; a residual uniform speed-up covers the rest.
+    kept = sum((e - s) / v for s, e, v in plan) if plan else duration
     speed = min(max(kept / usable, 1.0), float(cfg["max_speed"]))
 
     # The demo video sits inside the stage between the accent bar and the footer.
@@ -416,7 +475,7 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         _render_stage(stage_png, scheme)
 
         card = f"setsar=1,fps={_FPS},format=yuv420p"
-        cut = _cut_filter(crop, beats) if beats else f"[1:v]{crop}[cut];"
+        cut = _cut_filter(crop, plan) if plan else f"[1:v]{crop}[cut];"
         graph = (
             f"[0:v]{card}[title];"
             + cut +

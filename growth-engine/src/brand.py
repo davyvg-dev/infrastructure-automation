@@ -64,9 +64,11 @@ def reel() -> dict[str, Any]:
         "crop_bottom": 0.0,     # home indicator, usually fine to keep
         "target_seconds": 15,   # max length of the FINISHED reel, cards included
         "max_speed": 4.0,       # never faster than this (unreadable beyond it)
-        "pop_cuts": True,       # cut typing/waiting entirely: keep only the moments
-                                # around screen changes, so messages pop in back-to-back
-        "scene_threshold": 0.08,  # how big a frame change counts as "something happened"
+        "pop_cuts": True,       # classify every frame: message pops hold at 1×, typing
+                                # plays fast, waiting (typing dots, dead air) is cut
+        "scene_threshold": 0.08,  # frame change big enough to be "a message appeared"
+        "typing_threshold": 0.002,  # smaller-but-real change: a keystroke; below = idle
+        "typing_speed": 3.0,    # typing stays visible, just this much faster
         "dwell_seconds": 1.4,   # max hold on each pop before jumping to the next
         "title_seconds": 1.8,
         "end_seconds": 2.4,
