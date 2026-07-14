@@ -7,9 +7,9 @@
 Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and-play per client config, done-for-you setup. Voice = upsell later. Work top-to-bottom; each box = one small verified commit.
 
 ### A. Lock the offer (blocks all sales artefacts)
-- [ ] Decide pricing. Recommended: **"Klantkraan Chat" €299/mo** (webchat + WhatsApp receptionist, booking, done-for-you setup) + **"Klantkraan Compleet" €499/mo** (adds voice line, later); €249 one-time setup, waived for pilots. Market anchors (2026-07): Klusio €199 (bundles chat+WhatsApp+voice), Voicelabs €199–399, VoxFlow €99, secretaresse.ai €397 flat, InstallatieTelefoniste €0.25/min no-subscription, human telefoonservice €25–150.
-- [ ] Propagate the locked price everywhere in one pass: `prijzen.astro`, `rekentool.astro`, `docs/00-MASTER-PLAN.md`, `01-strategy/offer-and-pricing.md`, `02-sales/{offerte-template,discovery-script,objection-handling}.md`, `07-finance/{unit-economics,cogs-per-tier}.md`, `04-legal/msa-outline.md`, LinkedIn post 006 (currently: site €349/599/849 vs docs €299/599/999 vs post €450 — three different stories)
-- [ ] Rewrite offer docs voice-first → text-first (master plan §product, offer-and-pricing, discovery script demo flow)
+- [x] Pricing LOCKED (2026-07-14): **"Klantkraan Chat" €299/mo** (webchat + WhatsApp receptionist, booking, done-for-you setup) + **"Klantkraan Compleet" €499/mo** (adds voice line, later); €249 one-time setup, waived for pilots. Market anchors (2026-07): Klusio €199 (bundles chat+WhatsApp+voice), Voicelabs €199–399, VoxFlow €99, secretaresse.ai €397 flat, InstallatieTelefoniste €0.25/min no-subscription, human telefoonservice €25–150.
+- [x] Propagate the locked price everywhere — site (prijzen/rekentool) + all sales/finance/legal docs + LinkedIn post 006 now read €299/€499/€249; dead Pro/Max tier names and stale 599/999/849/699 figures retired
+- [x] Rewrite offer docs voice-first → text-first (offer-and-pricing, discovery-script demo flow, master-plan product section). NOTE: `00-MASTER-PLAN.md` §4/§5 still frames the Synthflow voice trial as the core pre-launch promise — founder decision, left intact (CLAUDE.md pins §5)
 
 ### B. Product hardening (`ai-receptionist/` — make it sellable plug-and-play)
 - [x] Commit the pending WhatsApp-first site pass (committed 2026-07-13, f169ac7)
@@ -20,7 +20,7 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 - [x] Logging `basicConfig` at startup; `/health` endpoint; `HOST`/`PORT`/`LOG_LEVEL` from env (1db1745)
 - [x] Calendar: future-only slots, tz-aware via business config, per-business `bookings-<config>.json` (e5057df)
 - [x] Session store: per-conversation locks; single-worker constraint documented (e7ff1e2)
-- [ ] Decide: prospect configs with real company names/phones in git — keep, or move to gitignored dir (FOUNDER DECISION)
+- [x] Prospect/client configs with real names/phones — DECIDED: gitignored dir. `config/prospects/*.yaml` + `config/clients/*.yaml` untracked (kept on disk, still rsync to server); tracked READMEs document it (68b68de). NOTE: the 6 scaffolds remain in past git history — say the word for a history scrub.
 - [x] Privacy page: Cloudflare Web Analytics named instead of Plausible (9022f04)
 - [x] `/over`: KvK-uittreksel is on-request via mail until the PDF exists (3999034)
 
@@ -38,9 +38,9 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 - [ ] Point `/demo` at the live text demo (web chat) instead of the TODO phone number — text demo works today, no CM.com dependency
 
 ### E. First pilot (the gate everything else waits behind)
-- [ ] Finish ONE prospect config fully (real services, hours, FAQ — the 6 scaffolds are template defaults)
-- [ ] Deploy the demo publicly (ops/hetzner kit or Cloudflare) at a stable URL
-- [ ] Walk one warm prospect through it; offer pilot terms (free/€99 for 30 days in exchange for case-study data)
+- [x] Finish ONE prospect config fully — **Loodgietersbedrijf Meijer B.V.** (`config/clients/meijer.yaml`): real services/hours/FAQ from their site, persona "Sanne", art. 50 disclosure, guardrails; `selftest config` passes
+- [x] Deploy the demo publicly at a stable URL — Hetzner ops redeployed 2026-07-14: `widget.js` now live (was 404), showcase at https://demo-168-119-173-25.sslip.io/ and Meijer's own bot at https://demo-168-119-173-25.sslip.io/?client=meijer (verified end-to-end: offers a real slot, collects details, books)
+- [ ] Walk one warm prospect through it; offer pilot terms (free/€99 for 30 days in exchange for case-study data) — FOUNDER: Meijer demo is ready to show
 
 ## Phase 0 — Planning docs
 
