@@ -14,6 +14,11 @@ cp .env.example .env
 
 Keep `.env` private — it's gitignored. Fill it in as you go through the steps below.
 
+Reels (turning your screen recordings into branded 9:16 videos via the bot's 🎬
+button) need **ffmpeg** on the machine the bot runs on: `brew install ffmpeg` on
+macOS; the Hetzner deploy script installs it automatically. Verify with
+`python -m src.selftest reel`.
+
 ## 1. Claude API key (drafting engine)
 
 You said you have an LLM key. This project uses **Claude** (`claude-opus-4-8`).
