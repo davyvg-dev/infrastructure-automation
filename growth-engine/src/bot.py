@@ -211,8 +211,9 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "/cadence — show cadence\n"
         "/start — (re)schedule jobs\n\n"
         "On each draft: ✅ approve (auto-posts X, hands you the rest to paste), "
-        "✏️ rewrite (then send me a note), ❌ skip. Drafts for video platforms get a "
-        "🎬 button — send your screen recording and I'll cut it into a branded reel."
+        "✏️ rewrite (then send me a note), ❌ skip. Drafts for video platforms "
+        "arrive with a generated chat-demo reel; tap 🎬 and send your own screen "
+        "recording to replace it with real footage."
     )
 
 
@@ -417,9 +418,10 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             f"(a compressed video message avoids the 20MB bot download limit)."
         )
         return
+    # Real footage supersedes the whole video story: the pending task it fulfills
+    # AND any scripted demo reel attached at generation time.
     media_list = [
-        m for m in draft.get("media", [])
-        if not (m["type"] == "video" and m["status"] == "pending_recording")
+        m for m in draft.get("media", []) if m["type"] != "video"
     ] + [record]
     draft = store.update_draft(draft_id, media=media_list) or draft
     with open(record["path"], "rb") as fh:

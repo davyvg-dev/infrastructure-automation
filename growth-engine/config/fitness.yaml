@@ -201,6 +201,24 @@ media:
       sfx: true
       bed: ""             # optional licensed/CC0 ambient file (path); empty = no bed
       bed_gain_db: -24    # bed level under the SFX
+    # Scripted chat-demo reels: drawn frame-by-frame from a scenario below, so every
+    # video draft ships with a reel automatically — sound perfectly synced by
+    # construction. The 🎬 upload replaces it with real footage when preferred.
+    # Fictional business, digital-assistant disclosure in the chat header.
+    demo:
+      enabled: true
+      business: "Sportschool Vitaal"
+      # On screen from the start — the widget's own greeting, with the disclosure.
+      greeting: "Hi! Je chat met de digitale assistent van Sportschool Vitaal. Waar kan ik je mee helpen?"
+      scenarios:
+        - - { from: klant, text: "Hoi! Kan ik deze week een proefles komen doen?" }
+          - { from: ai, text: "Leuk! Er is plek op donderdag 19:00 of zaterdag 10:00. Wat past?" }
+          - { from: klant, text: "Zaterdag 10:00 graag" }
+          - { from: ai, text: "Genoteerd: proefles zaterdag 10:00. Neem sportkleding mee — tot dan!" }
+        - - { from: klant, text: "Wat kost een abonnement per maand?" }
+          - { from: ai, text: "Vanaf 29,95 per maand, zonder inschrijfkosten. Zal ik een rondleiding inplannen?" }
+          - { from: klant, text: "Ja, morgen na 17:00?" }
+          - { from: ai, text: "Rondleiding staat: morgen 17:30. Je krijgt zo een bevestiging per mail!" }
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.

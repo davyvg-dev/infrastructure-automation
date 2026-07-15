@@ -1,5 +1,19 @@
 # Reels playbook — chat-demo short-form for IG / TikTok / FB
 
+## 0. Two ways a reel gets made
+
+1. **Scripted (default, `media.reel.demo`)** — the pipeline draws the demo itself
+   from a Dutch scenario in config: brand-styled web-widget chat (fictional
+   business, "digitale assistent" disclosure in the header, klantkraan.nl brand
+   mark), typing/pop/ding sound placed on the same frame grid the video is built
+   on — sync exact by construction. Every video draft arrives in Telegram with a
+   ready reel; scenarios rotate per draft. Edit the conversations in
+   `config/*.yaml`, never in code.
+2. **Recorded (🎬 button)** — the founder screen-records the real product, the
+   pipeline detects messages/keystrokes (adaptive thresholds, keyboard band) and
+   pop-cuts it. Sending a recording replaces the scripted reel for that draft.
+   Use this when a post needs real-product proof (§3).
+
 ## 1. Verwerk in de pipeline
 Ranked by impact/effort (highest first).
 

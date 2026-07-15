@@ -188,6 +188,24 @@ media:
       sfx: true
       bed: ""             # optional licensed/CC0 ambient file (path); empty = no bed
       bed_gain_db: -24    # bed level under the SFX
+    # Scripted chat-demo reels: drawn frame-by-frame from a scenario below, so every
+    # video draft ships with a reel automatically — sound perfectly synced by
+    # construction. The 🎬 upload replaces it with real footage when preferred.
+    # Fictional business, digital-assistant disclosure in the chat header.
+    demo:
+      enabled: true
+      business: "Jansen Installatie"
+      # On screen from the start — the widget's own greeting, with the disclosure.
+      greeting: "Goedemiddag! U chat met de digitale assistent van Jansen Installatie. Waarmee kan ik helpen?"
+      scenarios:
+        - - { from: klant, text: "Hoi, mijn cv-ketel valt steeds uit. Kunnen jullie komen?" }
+          - { from: ai, text: "Vervelend! Ik plan direct een monteur voor u in. Wanneer komt het uit?" }
+          - { from: klant, text: "Morgen om 10:00?" }
+          - { from: ai, text: "Ingepland: morgen 10:00. U ontvangt zo een bevestiging. Tot morgen!" }
+        - - { from: klant, text: "Bel net, geen gehoor. Lekkage onder de gootsteen!" }
+          - { from: ai, text: "Ik help u meteen — een spoedafspraak kan vandaag nog." }
+          - { from: klant, text: "Kan iemand vanmiddag komen?" }
+          - { from: ai, text: "Spoedafspraak staat: vandaag 15:30. De monteur belt als hij onderweg is." }
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.

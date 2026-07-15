@@ -89,9 +89,19 @@ def reel() -> dict[str, Any]:
                                 # NEVER commercial music — that stays in-app (REELS.md)
         "bed_gain_db": -24.0,   # bed sits far under the SFX
     }
+    demo_defaults = {
+        "enabled": False,       # scripted chat-demo reels: drawn from `scenarios`,
+                                # perfectly synced by construction — no recording,
+                                # no detection; the 🎬 upload stays as the override
+        "business": "Demo",     # fictional business name in the demo chat header
+        "greeting": "",         # widget greeting already on screen at the start —
+                                # the natural home for the assistant disclosure
+        "scenarios": [],        # list of conversations: [{from: klant|ai, text}]
+    }
     values.update((strategy().get("media") or {}).get("reel") or {})
     # Nested merge so a partial (or absent) audio block keeps the other defaults.
     values["audio"] = {**audio_defaults, **(values.get("audio") or {})}
+    values["demo"] = {**demo_defaults, **(values.get("demo") or {})}
     return values
 
 

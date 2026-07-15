@@ -214,6 +214,23 @@ def check_reel() -> bool:
                 if "audio" in streams:
                     return _fail("media.reel.audio disabled but reel has an audio stream")
                 _ok("audio disabled in config — reel is video-only, as configured")
+            # Scripted chat-demo path: drawn from config scenarios, sync by
+            # construction — must render the same 9:16 under the same cap.
+            demo_cfg = cfg["demo"]
+            if demo_cfg["enabled"] and demo_cfg["scenarios"]:
+                rec = media.build_chat_reel("selftest-demo", "Testkop demo",
+                                            out_dir=Path(tmp))
+                w, h, d = media._probe(Path(rec["path"]))
+                if (w, h) != (1080, 1920):
+                    return _fail(f"chat-demo reel rendered {w}×{h}, want 1080×1920")
+                if d > cap:
+                    return _fail(f"chat-demo reel is {d:.1f}s, cap is "
+                                 f"{cfg['target_seconds']}s")
+                _ok(f"chat-demo reel: 1080×1920, {d:.1f}s from a scripted scenario "
+                    f"({len(demo_cfg['scenarios'])} scenario(s), business "
+                    f"{demo_cfg['business']!r})")
+            else:
+                _ok("media.reel.demo disabled — reels come from 🎬 recordings only")
     except subprocess.CalledProcessError as exc:
         return _fail(f"ffmpeg failed: {exc.stderr.strip()[-300:]}")
     except Exception as exc:

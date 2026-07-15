@@ -35,7 +35,7 @@ from typing import Any
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-from . import brand, platforms, sfx, store
+from . import brand, chatdemo, platforms, sfx, store
 from .settings import data_dir
 
 # (width, height, pexels orientation) per aspect. Square feeds IG/FB feed; story is 9:16.
@@ -271,16 +271,20 @@ _FPS = 30
 _SAFE_TOP = 250
 _SAFE_BOTTOM = 670
 _VID_H = 1560  # demo footage height on the 1920 canvas — near full-bleed phone
+_DEMO_W = 720  # scripted chat-demo width: modern-phone aspect at _VID_H, no scaling
 
 
 def attach_reel_task(draft: dict[str, Any], requested: list[str]) -> None:
-    """Append a pending-recording video task when the draft targets video platforms.
+    """Attach the draft's video story when it targets video platforms.
 
-    The task is fulfilled later via the bot's 🎬 flow (founder uploads a screen
-    recording, build_reel turns it into the branded reel). It never blocks approval —
-    captions and image cards deliver regardless.
+    With `media.reel.demo` configured, a scripted chat-demo reel is built right
+    here — every video draft arrives in Telegram with a ready reel. A
+    pending-recording task rides along either way, so the bot's 🎬 flow can
+    replace the demo with real footage (or supply the reel when demo is off).
+    Neither blocks approval, and a failed demo build degrades to the 🎬 task.
     """
-    if not brand.reel()["enabled"]:
+    cfg = brand.reel()
+    if not cfg["enabled"]:
         return
     reg = platforms.registry()
     targets = [
@@ -288,6 +292,16 @@ def attach_reel_task(draft: dict[str, Any], requested: list[str]) -> None:
     ]
     if not targets:
         return
+    demo_cfg = cfg["demo"]
+    if demo_cfg["enabled"] and demo_cfg["scenarios"]:
+        card = draft.get("card") or {}
+        headline = (card.get("headline") or "").strip() or draft.get("topic", "")
+        try:
+            record = build_chat_reel(draft["id"], headline)
+            record["platform_targets"] = targets
+            draft.setdefault("media", []).append(record)
+        except Exception as exc:  # degrade to the 🎬 upload path, but say so
+            print(f"chat-demo reel failed ({draft['id']}): {exc}", file=sys.stderr)
     draft.setdefault("media", []).append({
         "type": "video",
         "status": "pending_recording",
@@ -330,15 +344,17 @@ def _render_stage(out_path: Path, scheme: dict[str, Any],
     img.save(out_path, "PNG")
 
 
-def _render_footer(out_path: Path, scheme: dict[str, Any]) -> None:
+def _render_footer(out_path: Path, scheme: dict[str, Any],
+                   enabled: bool = True) -> None:
     """The footer URL as its own overlay — a light watermark pill in the safe zone.
 
     Separate from the stage so it can cross-fade out when the CTA (which repeats the
-    URL) fades in; transparent when no footer is configured, so the filter graph
-    stays the same shape either way."""
+    URL) fades in; transparent when no footer is configured (or when the footage
+    carries its own brand mark, as the scripted chat demo does), so the filter
+    graph stays the same shape either way."""
     b = brand.brand()
     img = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
-    if b["footer"]:
+    if enabled and b["footer"]:
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(str(b["font_bold"]), 34)
         tw = draw.textlength(b["footer"], font=font)
@@ -661,6 +677,24 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     src_h = height - crop_top - crop_bottom
     vid_w = int(width * _VID_H / src_h) // 2 * 2
 
+    if plan:
+        slice_args, cut = _slice_args(raw, plan, crop, first_idx=1)
+        n_vid = len(plan)
+    else:
+        slice_args, cut, n_vid = ["-i", str(raw)], f"[1:v]{crop}[cut];", 1
+    events = _sound_events(plan, kinds, speed, out_dur, msgs, keys)
+    return _compose(slice_args, cut, n_vid, vid_w, speed, out_dur, events, stem,
+                    headline, out_path)
+
+
+def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
+             out_dur: float, events: list[tuple[float, str]], stem: str,
+             headline: str, out_path: Path, footer: bool = True) -> dict[str, Any]:
+    """Assemble footage into the branded reel — stage with the phone window,
+    hook/CTA/footer overlays on alpha fades, CTA freeze, synthesized soundtrack
+    at the given events. Shared by the recorded path (build_reel) and the
+    scripted path (build_chat_reel); returns the draft's media record."""
+    cfg = brand.reel()
     schemes = brand.schemes()
     scheme = schemes[_pick(stem, len(schemes))]  # same scheme as the draft's card
     b = brand.brand()
@@ -672,14 +706,9 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         _render_overlay(headline, "", _SAFE_TOP, hook_png, scheme["accent"])
         _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png,
                         scheme["accent"])
-        _render_footer(foot_png, scheme)
+        _render_footer(foot_png, scheme, enabled=footer)
 
         bg = str(scheme["bg"]).replace("#", "0x")
-        if plan:
-            slice_args, cut = _slice_args(raw, plan, crop, first_idx=1)
-            n_vid = len(plan)
-        else:
-            slice_args, cut, n_vid = ["-i", str(raw)], f"[1:v]{crop}[cut];", 1
         hook_idx, cta_idx, foot_idx = n_vid + 1, n_vid + 2, n_vid + 3
 
         # Sound layer: one full-length WAV (SFX at the message beats + optional bed),
@@ -689,9 +718,8 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         audio_out = ["-an"]
         if audio_cfg["enabled"]:
             track = Path(tmp) / "soundtrack.wav"
-            events = (_sound_events(plan, kinds, speed, out_dur, msgs, keys)
-                      if audio_cfg["sfx"] else [])
-            sfx.build_soundtrack(track, out_dur + float(cfg["cta_seconds"]), events,
+            sfx.build_soundtrack(track, out_dur + float(cfg["cta_seconds"]),
+                                 events if audio_cfg["sfx"] else [],
                                  bed=str(audio_cfg["bed"]),
                                  bed_gain_db=float(audio_cfg["bed_gain_db"]))
             audio_in = ["-i", str(track)]
@@ -727,7 +755,7 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         cmd = [
             "ffmpeg", "-y", "-v", "error",
             "-loop", "1", "-i", str(stage_png),
-            *slice_args,
+            *footage,
             "-loop", "1", "-i", str(hook_png),
             "-loop", "1", "-i", str(cta_png),
             "-loop", "1", "-i", str(foot_png),
@@ -751,3 +779,33 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         "platform_targets": video_platforms,
         "status": "ready",
     }
+
+
+def build_chat_reel(stem: str, headline: str,
+                    out_dir: Path | None = None) -> dict[str, Any]:
+    """Render a scripted chat-demo reel — no recording, no detection.
+
+    The demo is drawn frame by frame from a config scenario (`media.reel.demo`),
+    already on its final edited timeline, so every keystroke tick, message pop
+    and payoff ding shares the frame clock: sync is exact by construction. The
+    scenario rotates deterministically per draft, like the card color scheme.
+    """
+    if shutil.which("ffmpeg") is None:
+        raise RuntimeError("ffmpeg is not installed (needed for reels)")
+    cfg = brand.reel()
+    demo_cfg = cfg["demo"]
+    scenarios = demo_cfg["scenarios"]
+    if not (demo_cfg["enabled"] and scenarios):
+        raise RuntimeError("media.reel.demo is disabled or has no scenarios")
+    scenario = scenarios[_pick(f"{stem}:demo", len(scenarios))]
+    out_dir = out_dir or data_dir() / "media"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as tmp:
+        seq_dir, events, out_dur = chatdemo.render(
+            scenario, str(demo_cfg["business"]), str(demo_cfg["greeting"]),
+            Path(tmp), (_DEMO_W, _VID_H), cfg)
+        return _compose(
+            ["-framerate", str(_FPS), "-i", str(seq_dir / "%05d.png")],
+            "[1:v]setpts=PTS-STARTPTS[cut];", 1, _DEMO_W, 1.0, out_dur, events,
+            stem, headline, out_dir / f"{stem}-reel.mp4",
+            footer=False)  # the demo wears the brand mark in its own header
