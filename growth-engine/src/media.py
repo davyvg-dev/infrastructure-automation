@@ -23,7 +23,6 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import random
 import re
 import shutil
 import subprocess
@@ -34,7 +33,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from . import brand, platforms, sfx, store
 from .settings import data_dir
@@ -312,33 +311,54 @@ def _probe(path: Path) -> tuple[int, int, float]:
 def _render_stage(out_path: Path, scheme: dict[str, Any],
                   hole: tuple[int, int]) -> None:
     """Frame laid OVER the demo footage: brand surround with a rounded phone window
-    (thin accent bezel, no logo lockups) and the footer URL pinned in the safe zone."""
-    b = brand.brand()
+    (soft drop shadow + thin accent bezel, no logo lockups)."""
     img = Image.new("RGBA", _REEL_SIZE, scheme["bg"])
     hw, hh = hole
     x0, y0 = (_REEL_SIZE[0] - hw) // 2, (_REEL_SIZE[1] - hh) // 2
     box = (x0, y0, x0 + hw, y0 + hh)
+    # Soft ambient shadow around the window — lifts the phone off the flat surround.
+    # Painted before the hole is punched, so only the spill outside the window stays.
+    shadow = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle(
+        (x0 - 8, y0 + 4, x0 + hw + 8, y0 + hh + 22), radius=52, fill=(0, 0, 0, 92))
+    img = Image.alpha_composite(img, shadow.filter(ImageFilter.GaussianBlur(24)))
     mask = Image.new("L", _REEL_SIZE, 255)
     ImageDraw.Draw(mask).rounded_rectangle(box, radius=44, fill=0)
     img.putalpha(mask)
-    draw = ImageDraw.Draw(img)
-    draw.rounded_rectangle(box, radius=44, outline=scheme["accent"], width=4)
-    if b["footer"]:
-        font = ImageFont.truetype(str(b["font_bold"]), 40)
-        tw = draw.textlength(b["footer"], font=font)
-        bx = (_REEL_SIZE[0] - tw) / 2
-        by = _REEL_SIZE[1] - _SAFE_BOTTOM - 84  # above the platform caption zone
-        draw.rounded_rectangle((bx - 22, by - 14, bx + tw + 22, by + 54),
-                               radius=14, fill=(10, 10, 10, 200))
-        draw.text((bx, by), b["footer"], font=font, fill="#FAF6EE")
+    ImageDraw.Draw(img).rounded_rectangle(box, radius=44, outline=scheme["accent"],
+                                          width=4)
     img.save(out_path, "PNG")
 
 
-def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path) -> None:
+def _render_footer(out_path: Path, scheme: dict[str, Any]) -> None:
+    """The footer URL as its own overlay — a light watermark pill in the safe zone.
+
+    Separate from the stage so it can cross-fade out when the CTA (which repeats the
+    URL) fades in; transparent when no footer is configured, so the filter graph
+    stays the same shape either way."""
+    b = brand.brand()
+    img = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
+    if b["footer"]:
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype(str(b["font_bold"]), 34)
+        tw = draw.textlength(b["footer"], font=font)
+        tick = 20  # accent square before the URL — same lockup as the cards' footer
+        bx = (_REEL_SIZE[0] - (tw + tick + 16)) / 2
+        by = _REEL_SIZE[1] - _SAFE_BOTTOM - 76  # above the platform caption zone
+        draw.rounded_rectangle((bx - 22, by - 12, bx + tick + 16 + tw + 22, by + 46),
+                               radius=14, fill=(10, 10, 10, 176))
+        draw.rectangle((bx, by + 8, bx + tick, by + 8 + tick), fill=scheme["accent"])
+        draw.text((bx + tick + 16, by), b["footer"], font=font, fill="#FAF6EE")
+    img.save(out_path, "PNG")
+
+
+def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path,
+                    accent: str) -> None:
     """Text on a translucent scrim, overlaid on moving footage (hook / end CTA).
 
     Sized for 35-55 eyes on a phone: ≥44px, ≤3 lines, high contrast; the box stays
-    inside the platform-safe band and clear of the right-hand icon rail."""
+    inside the platform-safe band and clear of the right-hand icon rail. A small
+    centered accent bar tops the box — the same brand tick the cards carry."""
     b = brand.brand()
     img = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
@@ -353,15 +373,20 @@ def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path) -> None
     step = int(size * 1.3)
     sub_font = ImageFont.truetype(str(b["font_bold"]), 44)
     pad = 36
+    bar_h, bar_gap = 10, 26
     widths = [draw.textlength(ln, font=font) for ln in lines]
     if sub:
         widths.append(draw.textlength(sub, font=sub_font))
     bw = max(widths) + 2 * pad
-    bh = pad + len(lines) * step + (66 if sub else 0) + pad - (step - size)
+    bh = (pad + bar_h + bar_gap + len(lines) * step + (66 if sub else 0)
+          + pad - (step - size))
     x0 = (_REEL_SIZE[0] - bw) / 2
-    draw.rounded_rectangle((x0, y_top, x0 + bw, y_top + bh), radius=20,
+    draw.rounded_rectangle((x0, y_top, x0 + bw, y_top + bh), radius=22,
                            fill=(10, 10, 10, 205))
-    y = y_top + pad
+    bar_w = 88
+    draw.rectangle(((_REEL_SIZE[0] - bar_w) / 2, y_top + pad,
+                    (_REEL_SIZE[0] + bar_w) / 2, y_top + pad + bar_h), fill=accent)
+    y = y_top + pad + bar_h + bar_gap
     for ln in lines:
         lw = draw.textlength(ln, font=font)
         draw.text(((_REEL_SIZE[0] - lw) / 2, y), ln, font=font, fill="#FAF6EE")
@@ -369,7 +394,7 @@ def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path) -> None
     if sub:
         lw = draw.textlength(sub, font=sub_font)
         draw.text(((_REEL_SIZE[0] - lw) / 2, y + 8), sub, font=sub_font,
-                  fill="#FAF6EE")
+                  fill="#D9D2C0")
     img.save(out_path, "PNG")
 
 
@@ -419,7 +444,51 @@ def _subtract(run: tuple[float, float],
     return [(s, e) for s, e in pieces if e - s > 0.1]
 
 
-def _cut_plan(frames: list[tuple[float, float]], duration: float,
+def _classify(frames: list[tuple[float, float]], bottom: list[tuple[float, float]],
+              cfg: dict[str, Any]) -> tuple[list[float], list[float]]:
+    """(message times, keystroke times) from per-frame scene scores.
+
+    A message is a frame whose full-frame change clears an ADAPTIVE threshold — at
+    least 6% of this clip's own biggest change, floored well above keystroke scale
+    and ceilinged by `scene_threshold` — so detection tracks the recording instead
+    of trusting one absolute number across devices, themes and chat apps. Dedup
+    keeps one pop animation from firing twice.
+
+    A keystroke is a smaller change CONCENTRATED in the keyboard band (`bottom`,
+    the lower `keys_band` of the frame): key flashes and typed characters land
+    there. A typing-indicator pulse up in the chat area does not — that's waiting,
+    and waiting is cut, never scored as typing. These exact times drive both the
+    cut plan and the sound layer — every sound in the reel corresponds to one of
+    these on-screen events.
+    """
+    typ_thr = float(cfg["typing_threshold"])
+    band = float(cfg["keys_band"])
+    ceiling = float(cfg["scene_threshold"])
+    # Adapt to the clip's own scale, ignoring rare super-ceiling outliers (an app
+    # switch, the keyboard sliding in) that would inflate the reference peak.
+    sub = [s for _, s in frames if 0 < s < ceiling]
+    pop_thr = max(0.06 * max(sub), 10 * typ_thr) if sub else ceiling
+    bottom_by_t = {t: s for t, s in bottom}
+    msgs: list[float] = []
+    keys: list[float] = []
+    last = 0.0
+    for t, s in frames:
+        bs = bottom_by_t.get(t, 0.0)
+        # Band scores are normalized to the band's own area; scaled back to
+        # full-frame units, the band must account for most of the change. A
+        # band-dominant change is a keystroke NO MATTER how big it scores —
+        # a key-press flash can outscore a small message bubble.
+        dominant = bs >= typ_thr and bs * band >= 0.5 * s
+        if s >= ceiling or (s >= pop_thr and not dominant):
+            if t - last >= 0.25:  # double-triggers within one pop animation
+                msgs.append(t)
+                last = max(t - 0.05, 0.0)
+        elif dominant:
+            keys.append(t)
+    return msgs, keys
+
+
+def _cut_plan(msgs: list[float], keys: list[float], duration: float,
               cfg: dict[str, Any], usable: float
               ) -> list[tuple[float, float, float]] | None:
     """(start, end, speed) segments: pops hold at 1×, typing runs fast, idle is cut.
@@ -429,17 +498,10 @@ def _cut_plan(frames: list[tuple[float, float]], duration: float,
     (small but real activity) stays visible at `typing_speed`. Everything else —
     typing indicators, dead waiting — never makes the cut.
     """
-    pop_thr = float(cfg["scene_threshold"])
-    typ_thr = float(cfg["typing_threshold"])
-    pops = [t for t, s in frames if s >= pop_thr]
-    typing = [t for t, s in frames if typ_thr <= s < pop_thr]
-    if not pops and not typing:
+    if not msgs and not keys:
         return None
 
-    starts = [0.0]
-    for t in sorted(pops):
-        if t - starts[-1] >= 0.25:  # double-triggers within one pop animation
-            starts.append(max(t - 0.05, 0.0))
+    starts = [0.0] + [max(t - 0.05, 0.0) for t in msgs]
     dwell = max(0.5, min(float(cfg["dwell_seconds"]), usable / len(starts)))
     holds: list[tuple[float, float]] = []
     for s in starts:
@@ -451,7 +513,7 @@ def _cut_plan(frames: list[tuple[float, float]], duration: float,
 
     # Typing runs: nearby keystrokes coalesce; holds win where the two overlap.
     runs: list[tuple[float, float]] = []
-    for t in typing:
+    for t in keys:
         if runs and t - runs[-1][1] <= 0.6:
             runs[-1] = (runs[-1][0], t)
         else:
@@ -484,35 +546,51 @@ def _slice_args(raw: Path, segs: list[tuple[float, float, float]],
     return args, "".join(parts)
 
 
-def _sound_events(plan: list[tuple[float, float, float]] | None, kinds: list[str],
-                  speed: float, out_dur: float, stem: str
-                  ) -> list[tuple[float, str]]:
-    """(output-time, sfx-name) beats derived from the cut plan.
+_MIN_TICK_GAP = 0.06  # sped-up keystrokes closer than this merge into one tick
 
-    A pop marks every message appearing (cold open included, at t=0), ticks run
-    through the typing segments, and the ding lands on the final hold — the payoff.
-    The suspense beat ("wait") stays silent: it IS the silence. Tick spacing is
-    jittered but seeded from the stem, so a re-render is bit-identical.
+
+def _sound_events(plan: list[tuple[float, float, float]] | None, kinds: list[str],
+                  speed: float, out_dur: float,
+                  msgs: list[float], keys: list[float]) -> list[tuple[float, str]]:
+    """(output-time, sfx-name) beats — each one an actual on-screen event, mapped
+    from source time through the cut plan into output time.
+
+    A pop sounds at the exact output moment a detected message lands (the cold-open
+    replay included), a tick at each keystroke frame that survives the cut (thinned
+    where the speed-up packs them tighter than `_MIN_TICK_GAP`), and the payoff
+    message's pop is the ding. The suspense beat ("wait") stays silent: it IS the
+    silence. Nothing plays that isn't visible; nothing visible goes silent.
     """
     if not plan:  # uniform speed-up fallback: no per-message beats to place
         return [(0.0, "pop"), (max(out_dur - 0.8, 0.0), "ding")]
-    rng = random.Random(stem)
     hold_idxs = [i for i, k in enumerate(kinds) if k == "hold"]
+    if not msgs and not keys:  # explicit beats: no detected events, mark segment starts
+        events = [(sum((e - s) / v / speed for s, e, v in plan[:i]), "pop")
+                  for i in hold_idxs]
+        if events:
+            events[-1] = (events[-1][0], "ding")
+        return events or [(max(out_dur - 0.8, 0.0), "ding")]
+    payoff = msgs[-1] if msgs else None
     events: list[tuple[float, str]] = []
     t = 0.0
+    last_tick = -1.0
     for i, (s, e, v) in enumerate(plan):
-        seg_out = (e - s) / v / speed
         if kinds[i] == "hold":
-            events.append((t, "ding" if i == hold_idxs[-1] else "pop"))
+            for m in msgs:
+                if s <= m < e:
+                    name = "ding" if i == hold_idxs[-1] and m == payoff else "pop"
+                    events.append((t + (m - s) / v / speed, name))
         elif kinds[i] == "typing":
-            tt = t + rng.uniform(0.04, 0.12)
-            while tt < t + seg_out:  # ~6-8 ticks per output second
-                events.append((tt, "tick"))
-                tt += rng.uniform(0.10, 0.18)
-        t += seg_out
-    if not hold_idxs:
+            for k in keys:
+                if s <= k < e:
+                    tt = t + (k - s) / v / speed
+                    if tt - last_tick >= _MIN_TICK_GAP:
+                        events.append((tt, "tick"))
+                        last_tick = tt
+        t += (e - s) / v / speed
+    if not any(name == "ding" for _, name in events):
         events.append((max(out_dur - 0.8, 0.0), "ding"))
-    return events
+    return sorted(events)
 
 
 def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
@@ -549,9 +627,15 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     # Budget for the demo footage: the CTA rides a freeze of the last frame, so it
     # is the only non-demo time in the cap.
     usable = max(float(cfg["target_seconds"]) - float(cfg["cta_seconds"]), 3.0)
+    msgs: list[float] = []
+    keys: list[float] = []
     plan = [(s, e, 1.0) for s, e in beats] if beats else None
     if plan is None and cfg["pop_cuts"]:
-        plan = _cut_plan(_frame_scores(raw, crop), duration, cfg, usable)
+        band = float(cfg["keys_band"])
+        keyboard_crop = f"{crop},crop=iw:ih*{band:.2f}:0:ih*{1 - band:.2f}"
+        msgs, keys = _classify(_frame_scores(raw, crop),
+                               _frame_scores(raw, keyboard_crop), cfg)
+        plan = _cut_plan(msgs, keys, duration, cfg, usable)
     # kinds mirrors plan: what each segment IS (hold = message on screen, typing,
     # wait = the suspense beat) — drives the sound layer, not the video.
     kinds = ["hold" if v == 1.0 else "typing" for _, _, v in plan] if plan else []
@@ -582,11 +666,13 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     b = brand.brand()
     cta_headline = str(cfg["cta_headline"]).strip() or b["footer"] or headline
     with tempfile.TemporaryDirectory() as tmp:
-        stage_png, hook_png, cta_png = (Path(tmp) / n for n in
-                                        ("stage.png", "hook.png", "cta.png"))
+        stage_png, hook_png, cta_png, foot_png = (
+            Path(tmp) / n for n in ("stage.png", "hook.png", "cta.png", "foot.png"))
         _render_stage(stage_png, scheme, (vid_w, _VID_H))
-        _render_overlay(headline, "", _SAFE_TOP, hook_png)
-        _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png)
+        _render_overlay(headline, "", _SAFE_TOP, hook_png, scheme["accent"])
+        _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png,
+                        scheme["accent"])
+        _render_footer(foot_png, scheme)
 
         bg = str(scheme["bg"]).replace("#", "0x")
         if plan:
@@ -594,7 +680,7 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
             n_vid = len(plan)
         else:
             slice_args, cut, n_vid = ["-i", str(raw)], f"[1:v]{crop}[cut];", 1
-        hook_idx, cta_idx = n_vid + 1, n_vid + 2
+        hook_idx, cta_idx, foot_idx = n_vid + 1, n_vid + 2, n_vid + 3
 
         # Sound layer: one full-length WAV (SFX at the message beats + optional bed),
         # covering the CTA freeze too. -shortest keeps mux length = video length.
@@ -603,28 +689,39 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         audio_out = ["-an"]
         if audio_cfg["enabled"]:
             track = Path(tmp) / "soundtrack.wav"
-            events = (_sound_events(plan, kinds, speed, out_dur, stem)
+            events = (_sound_events(plan, kinds, speed, out_dur, msgs, keys)
                       if audio_cfg["sfx"] else [])
             sfx.build_soundtrack(track, out_dur + float(cfg["cta_seconds"]), events,
                                  bed=str(audio_cfg["bed"]),
                                  bed_gain_db=float(audio_cfg["bed_gain_db"]))
             audio_in = ["-i", str(track)]
-            audio_out = ["-map", f"{n_vid + 3}:a", "-c:a", "aac", "-b:a", "128k",
+            audio_out = ["-map", f"{n_vid + 4}:a", "-c:a", "aac", "-b:a", "128k",
                          "-shortest"]
+        # Overlays fade instead of snapping: the hook dissolves out at the end of its
+        # window, and the footer watermark cross-fades into the CTA (which repeats
+        # the URL) over the freeze. Full at t=0 (hook, footer) and at the video's
+        # end (CTA) — only the transition edges are soft.
+        fade = 0.35
+        hook_out = max(float(cfg["hook_seconds"]) - fade, 0.0)
         graph = (
             cut +
             f"[cut]setpts=PTS/{speed:.4f},scale={vid_w}:{_VID_H},fps={_FPS},"
             f"pad={_REEL_SIZE[0]}:{_REEL_SIZE[1]}:(ow-iw)/2:(oh-ih)/2:color={bg},"
             f"tpad=stop_mode=clone:stop_duration={float(cfg['cta_seconds']):.2f}"
             f"[base];"
+            f"[{hook_idx}:v]format=rgba,"
+            f"fade=t=out:st={hook_out:.2f}:d={fade:.2f}:alpha=1[hk];"
+            f"[{cta_idx}:v]format=rgba,"
+            f"fade=t=in:st={out_dur:.2f}:d={fade:.2f}:alpha=1[ct];"
+            f"[{foot_idx}:v]format=rgba,"
+            f"fade=t=out:st={out_dur:.2f}:d={fade:.2f}:alpha=1[ft];"
             # shortest=1 everywhere: the looped PNGs are endless, the video chain
             # (base, tpad included) is what bounds the reel — without it the
             # graph runs forever.
             f"[base][0:v]overlay=0:0:shortest=1[framed];"
-            f"[framed][{hook_idx}:v]overlay=0:0:shortest=1:"
-            f"enable='lt(t,{float(cfg['hook_seconds']):.2f})'[hooked];"
-            f"[hooked][{cta_idx}:v]overlay=0:0:shortest=1:"
-            f"enable='gte(t,{out_dur:.2f})',"
+            f"[framed][ft]overlay=0:0:shortest=1[branded];"
+            f"[branded][hk]overlay=0:0:shortest=1[hooked];"
+            f"[hooked][ct]overlay=0:0:shortest=1,"
             f"setsar=1,fps={_FPS},format=yuv420p[out]"
         )
         cmd = [
@@ -633,6 +730,7 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
             *slice_args,
             "-loop", "1", "-i", str(hook_png),
             "-loop", "1", "-i", str(cta_png),
+            "-loop", "1", "-i", str(foot_png),
             *audio_in,
             "-filter_complex", graph, "-map", "[out]", *audio_out,
             "-c:v", "libx264", "-preset", "medium", "-crf", "20",

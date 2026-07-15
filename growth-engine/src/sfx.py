@@ -167,6 +167,14 @@ def build_soundtrack(out_path: Path, duration: float,
         bed_buf = _bed_samples(bed.strip(), n, bed_gain_db)
         if bed_buf:
             buf = [a + b for a, b in zip(buf, bed_buf)]
+    # Overlapping SFX can sum past full scale — normalize down instead of hard-clipping.
+    peak = max((abs(s) for s in buf), default=0.0)
+    if peak > 0.98:
+        buf = [s * 0.98 / peak for s in buf]
+    # Short master fade so a truncated sfx tail can't click at the very end.
+    fade = min(int(0.12 * RATE), n)
+    for i in range(fade):
+        buf[n - fade + i] *= 1.0 - (i + 1) / fade
     _write_wav(out_path, buf)
 
 

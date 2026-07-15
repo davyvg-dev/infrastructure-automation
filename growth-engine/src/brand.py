@@ -66,8 +66,13 @@ def reel() -> dict[str, Any]:
         "max_speed": 4.0,       # never faster than this (unreadable beyond it)
         "pop_cuts": True,       # classify every frame: message pops hold at 1×, typing
                                 # plays fast, waiting (typing dots, dead air) is cut
-        "scene_threshold": 0.08,  # frame change big enough to be "a message appeared"
-        "typing_threshold": 0.002,  # smaller-but-real change: a keystroke; below = idle
+        "scene_threshold": 0.08,  # CEILING for "a message appeared"; the working
+                                  # threshold adapts to each clip (6% of its biggest
+                                  # frame change), so this only caps runaway clips
+        "typing_threshold": 0.0006,  # keystroke floor, measured in the keyboard band
+        "keys_band": 0.45,      # bottom fraction of the frame where typing happens
+                                # (keyboard + input bar); changes concentrated here
+                                # are keystrokes, changes above it are not
         "typing_speed": 3.0,    # typing stays visible, just this much faster
         "dwell_seconds": 1.4,   # max hold on each pop before jumping to the next
         "cold_open": True,      # open on the payoff message, then replay the chat

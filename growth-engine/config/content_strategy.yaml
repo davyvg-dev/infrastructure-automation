@@ -165,8 +165,11 @@ media:
     # Short-form: typing stays visible but fast; AI replies land instantly (the wait
     # is cut, not sped up); each message holds just long enough to read.
     pop_cuts: true
-    scene_threshold: 0.08     # frame change big enough to be "a message appeared"
-    typing_threshold: 0.002   # smaller-but-real change: a keystroke; below = cut
+    scene_threshold: 0.08     # CEILING for "a message appeared" — the working
+                              # threshold adapts per clip (6% of its biggest change)
+    typing_threshold: 0.0006  # keystroke floor, measured in the keyboard band
+    keys_band: 0.45           # bottom fraction of the frame where typing happens;
+                              # changes above it (typing indicator) are cut, not ticked
     typing_speed: 3.0         # typing playback speed
     dwell_seconds: 1.4        # max hold per message; shrinks to fit the cap
     target_seconds: 15      # hard cap for the finished reel
