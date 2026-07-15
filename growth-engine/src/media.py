@@ -370,11 +370,12 @@ def _render_footer(out_path: Path, scheme: dict[str, Any],
 
 def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path,
                     accent: str) -> None:
-    """Text on a translucent scrim, overlaid on moving footage (hook / end CTA).
+    """Text on a near-opaque scrim, overlaid on moving footage (hook / end CTA).
 
     Sized for 35-55 eyes on a phone: ≥44px, ≤3 lines, high contrast; the box stays
     inside the platform-safe band and clear of the right-hand icon rail. A small
-    centered accent bar tops the box — the same brand tick the cards carry."""
+    centered accent bar tops the box — the same brand tick the cards carry. The
+    scrim is near-solid so the busy chat behind it never ghosts through the text."""
     b = brand.brand()
     img = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
@@ -397,8 +398,8 @@ def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path,
     bh = (pad + bar_h + bar_gap + len(lines) * step + (66 if sub else 0)
           + pad - (step - size))
     x0 = (_REEL_SIZE[0] - bw) / 2
-    draw.rounded_rectangle((x0, y_top, x0 + bw, y_top + bh), radius=22,
-                           fill=(10, 10, 10, 205))
+    draw.rounded_rectangle((x0, y_top, x0 + bw, y_top + bh), radius=24,
+                           fill=(18, 18, 18, 250), outline=accent, width=3)
     bar_w = 88
     draw.rectangle(((_REEL_SIZE[0] - bar_w) / 2, y_top + pad,
                     (_REEL_SIZE[0] + bar_w) / 2, y_top + pad + bar_h), fill=accent)
@@ -703,7 +704,9 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
         stage_png, hook_png, cta_png, foot_png = (
             Path(tmp) / n for n in ("stage.png", "hook.png", "cta.png", "foot.png"))
         _render_stage(stage_png, scheme, (vid_w, _VID_H))
-        _render_overlay(headline, "", _SAFE_TOP, hook_png, scheme["accent"])
+        # Hook sits below the phone's own header so the branding stays visible
+        # above it; CTA rides the mid-frame over the freeze.
+        _render_overlay(headline, "", _SAFE_TOP + 100, hook_png, scheme["accent"])
         _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png,
                         scheme["accent"])
         _render_footer(foot_png, scheme, enabled=footer)

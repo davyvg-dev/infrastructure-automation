@@ -172,14 +172,19 @@ def check_reel() -> bool:
                 return _fail(f"reel is {duration:.1f}s, cap is {cfg['target_seconds']}s")
             if cfg["pop_cuts"]:
                 demo = duration - float(cfg["cta_seconds"])
-                # Expected band: 3 pop holds (3×dwell = 4.2s) + 4s typing at
-                # typing_speed (~1.3s) + cold open (1s) + suspense beat (0.6s)
-                # ≈ 7.1s. Above it = idle survived; below it = typing was cut.
-                if demo > 8.2:
-                    return _fail(f"idle not cut: {demo:.1f}s demo from 12s raw")
-                if demo < 6.2:
+                # Expected band, derived from config so it tracks dwell/speed
+                # changes: 3 pop holds (3×dwell) + 4s of typing at typing_speed +
+                # cold open (1s) + suspense beat. Above the band = idle survived;
+                # below the holds+cold+beat floor = typing was cut, not sped up.
+                floor = 3 * float(cfg["dwell_seconds"]) + 1.0 + \
+                    float(cfg["suspense_seconds"])
+                expected = floor + 4.0 / float(cfg["typing_speed"])
+                if demo > expected + 1.2:
+                    return _fail(f"idle not cut: {demo:.1f}s demo from 12s raw "
+                                 f"(expected ~{expected:.1f}s)")
+                if demo < floor + 0.4:
                     return _fail(f"typing was cut, not sped up: {demo:.1f}s demo "
-                                 f"(holds + cold open + beat alone are ~5.8s)")
+                                 f"(holds + cold open + beat alone are ~{floor:.1f}s)")
             _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw (cold open + "
                 f"hook-on-footage, idle cut, typing {cfg['typing_speed']}×, "
                 f"suspense beat, CTA freeze) → {record['platform_targets']}")

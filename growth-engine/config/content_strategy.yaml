@@ -171,12 +171,12 @@ media:
     keys_band: 0.45           # bottom fraction of the frame where typing happens;
                               # changes above it (typing indicator) are cut, not ticked
     typing_speed: 3.0         # typing playback speed
-    dwell_seconds: 1.4        # max hold per message; shrinks to fit the cap
+    dwell_seconds: 1.8        # max hold per message; shrinks to fit the cap
     target_seconds: 15      # hard cap for the finished reel
     max_speed: 4.0
     cold_open: true         # open on the payoff message, then replay the chat
     suspense_seconds: 0.6   # one "..." beat of real waiting before the payoff
-    hook_seconds: 2.5       # hook text rides the opening footage — no title card
+    hook_seconds: 3.0       # hook text rides the opening footage — no title card
     cta_seconds: 1.0        # CTA rides a freeze of the last frame — no end card
     cta_headline: "Zien hoe het werkt?"   # end card (Dutch, buyer-facing)
     cta_sub: "klantkraan.nl"

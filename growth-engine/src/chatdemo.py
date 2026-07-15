@@ -29,6 +29,7 @@ _CHAR_FRAMES = 2        # one typed character every 2 frames (~15 chars/s on scr
 _SEND_FRAMES = 4        # beat between the last keystroke and the message popping
 _MIN_DWELL = 18         # a message never holds shorter than this (0.6s)
 _COLD_FRAMES = 34       # cold open: 4 pre-pop frames + 1s of the payoff on screen
+_HEAD_H = 150           # chat header band height
 
 # Widget palette — the product's web-chat look on brand tokens.
 _BG = "#F1ECDF"
@@ -98,22 +99,38 @@ class _Painter:
     def _paint(self, msgs: int, typed: str, indicator: int) -> Image.Image:
         img = Image.new("RGB", (self.w, self.h), _BG)
         d = ImageDraw.Draw(img)
-        # Header: avatar + business + the standing "digitale assistent" disclosure.
-        d.rectangle((0, 0, self.w, 148), fill=_BLUE)
-        d.ellipse((28, 38, 100, 110), fill="#4D80AD")
+        # Header: avatar + business name + the standing "digitale assistent"
+        # disclosure. Name and status sit on their own rows, centered as a block;
+        # the green dot is the online signal, the brand mark rides the far right —
+        # nothing shares a baseline, nothing overlaps.
+        d.rectangle((0, 0, self.w, _HEAD_H), fill=_BLUE)
+        av = 76
+        ax, ay = 28, (_HEAD_H - av) // 2
+        d.ellipse((ax, ay, ax + av, ay + av), fill="#4D80AD")
         initial = (self.business or "K")[0].upper()
-        iw = d.textlength(initial, font=self.font_bold)
-        d.text((64 - iw / 2, 48), initial, font=self.font_bold, fill=_CREAM)
-        d.text((124, 34), self.business, font=self.font_bold, fill=_CREAM)
-        d.ellipse((124, 100, 140, 116), fill="#8FD49A")
-        d.text((152, 92), "digitale assistent • online", font=self.font_small,
+        d.text((ax + av / 2, ay + av / 2 - 2), initial, font=self.font_bold,
+               fill=_CREAM, anchor="mm")
+
+        tx = ax + av + 24  # text column, right of the avatar
+        name_asc, name_desc = self.font_bold.getmetrics()
+        stat_asc = self.font_small.getmetrics()[0]
+        gap = 8
+        top = (_HEAD_H - (name_asc + name_desc + gap + stat_asc)) // 2
+        d.text((tx, top), self.business, font=self.font_bold, fill=_CREAM)
+
+        sy = top + name_asc + name_desc + gap  # status row, below the name
+        dot = 15
+        cy = sy + stat_asc * 0.58  # dot centered on the lowercase status text
+        d.ellipse((tx, cy - dot / 2, tx + dot, cy + dot / 2), fill="#8FD49A")
+        d.text((tx + dot + 14, sy), "digitale assistent", font=self.font_small,
                fill="#BCD2E4")
-        if self.powered_by:  # brand mark rides the header — never over the chat
+        if self.powered_by:  # subtle brand mark, far right, clear of the status line
             pw = d.textlength(self.powered_by, font=self.font_small)
-            d.rectangle((self.w - 24 - pw - 30, 96, self.w - 24 - pw - 12, 114),
-                        fill=self.accent)
-            d.text((self.w - 24 - pw, 92), self.powered_by,
-                   font=self.font_small, fill="#BCD2E4")
+            tick = 14
+            px = self.w - 28 - pw
+            d.rectangle((px - 12 - tick, cy - tick / 2, px - 12, cy + tick / 2),
+                        fill=self.accent)  # centered on the status row, like the dot
+            d.text((px, sy), self.powered_by, font=self.font_small, fill="#BCD2E4")
         # Input bar, above it the bubble stack (newest at the bottom).
         bar_top = self.h - 124
         d.rounded_rectangle((24, bar_top, self.w - 118, self.h - 40), radius=40,
@@ -143,7 +160,7 @@ class _Painter:
         for i in range(msgs - 1, -1, -1):
             b = self.bubbles[i]
             y -= b.height
-            if y < 180:
+            if y < _HEAD_H + 32:
                 break  # older messages scroll off behind the header
             x = 24 if self.turns[i]["from"] == "ai" else self.w - b.width - 24
             img.paste(b, (x, y), b)
