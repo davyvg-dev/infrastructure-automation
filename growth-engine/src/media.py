@@ -14,7 +14,8 @@ A reel is a raw screen recording (the founder demos the receptionist on their ph
 turned into a branded 9:16 video: iOS status bar cropped off, dead time (typing,
 waiting) pop-cut away so messages appear back-to-back, placed on a brand stage,
 book-ended with Pillow-rendered title/end cards. All text is Pillow — this ffmpeg
-build has no drawtext.
+build has no drawtext. A synthesized sound layer (src/sfx.py, config
+`media.reel.audio`) is baked in; commercial music never is.
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -34,7 +36,7 @@ from typing import Any
 
 from PIL import Image, ImageDraw, ImageFont
 
-from . import brand, platforms, store
+from . import brand, platforms, sfx, store
 from .settings import data_dir
 
 # (width, height, pexels orientation) per aspect. Square feeds IG/FB feed; story is 9:16.
@@ -482,6 +484,37 @@ def _slice_args(raw: Path, segs: list[tuple[float, float, float]],
     return args, "".join(parts)
 
 
+def _sound_events(plan: list[tuple[float, float, float]] | None, kinds: list[str],
+                  speed: float, out_dur: float, stem: str
+                  ) -> list[tuple[float, str]]:
+    """(output-time, sfx-name) beats derived from the cut plan.
+
+    A pop marks every message appearing (cold open included, at t=0), ticks run
+    through the typing segments, and the ding lands on the final hold — the payoff.
+    The suspense beat ("wait") stays silent: it IS the silence. Tick spacing is
+    jittered but seeded from the stem, so a re-render is bit-identical.
+    """
+    if not plan:  # uniform speed-up fallback: no per-message beats to place
+        return [(0.0, "pop"), (max(out_dur - 0.8, 0.0), "ding")]
+    rng = random.Random(stem)
+    hold_idxs = [i for i, k in enumerate(kinds) if k == "hold"]
+    events: list[tuple[float, str]] = []
+    t = 0.0
+    for i, (s, e, v) in enumerate(plan):
+        seg_out = (e - s) / v / speed
+        if kinds[i] == "hold":
+            events.append((t, "ding" if i == hold_idxs[-1] else "pop"))
+        elif kinds[i] == "typing":
+            tt = t + rng.uniform(0.04, 0.12)
+            while tt < t + seg_out:  # ~6-8 ticks per output second
+                events.append((tt, "tick"))
+                tt += rng.uniform(0.10, 0.18)
+        t += seg_out
+    if not hold_idxs:
+        events.append((max(out_dur - 0.8, 0.0), "ding"))
+    return events
+
+
 def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
                beats: list[tuple[float, float]] | None = None,
                out_dir: Path | None = None) -> dict[str, Any]:
@@ -495,8 +528,11 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     the hook text rides the opening footage (no static title card), and the CTA rides
     a freeze of the last frame so the loop back to the hook is seamless. Total stays
     under `target_seconds`. Explicit `beats` (start, end) override the detection; if
-    no activity is detected the whole clip is sped up instead. Audio is dropped —
-    screen recordings are silent and IG/TikTok music is added in-app.
+    no activity is detected the whole clip is sped up instead. Screen recordings are
+    silent, so a synthesized sound layer is baked in (config `media.reel.audio`):
+    a pop per message, ticks under typing, a ding on the payoff, and optionally a
+    founder-licensed ambient bed. Commercial/trending music is never baked in —
+    that stays in-app (copyright; see docs/REELS.md).
     """
     for tool in ("ffmpeg", "ffprobe"):
         if shutil.which(tool) is None:
@@ -516,6 +552,9 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     plan = [(s, e, 1.0) for s, e in beats] if beats else None
     if plan is None and cfg["pop_cuts"]:
         plan = _cut_plan(_frame_scores(raw, crop), duration, cfg, usable)
+    # kinds mirrors plan: what each segment IS (hold = message on screen, typing,
+    # wait = the suspense beat) — drives the sound layer, not the video.
+    kinds = ["hold" if v == 1.0 else "typing" for _, _, v in plan] if plan else []
     if plan:
         holds = [i for i, seg in enumerate(plan) if seg[2] == 1.0]
         if holds:
@@ -524,9 +563,11 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
             beat = float(cfg["suspense_seconds"])
             if beat > 0 and last_s > beat:
                 plan.insert(holds[-1], (last_s - beat, last_s, 1.0))
+                kinds.insert(holds[-1], "wait")
             # Cold open: show the payoff first, then replay the chat as an open loop.
             if cfg["cold_open"]:
                 plan.insert(0, (last_s, min(last_s + 1.0, last_e), 1.0))
+                kinds.insert(0, "hold")
     # Output seconds the plan produces; a residual uniform speed-up covers the rest.
     kept = sum((e - s) / v for s, e, v in plan) if plan else duration
     speed = min(max(kept / usable, 1.0), float(cfg["max_speed"]))
@@ -554,6 +595,22 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
         else:
             slice_args, cut, n_vid = ["-i", str(raw)], f"[1:v]{crop}[cut];", 1
         hook_idx, cta_idx = n_vid + 1, n_vid + 2
+
+        # Sound layer: one full-length WAV (SFX at the message beats + optional bed),
+        # covering the CTA freeze too. -shortest keeps mux length = video length.
+        audio_cfg = cfg["audio"]
+        audio_in: list[str] = []
+        audio_out = ["-an"]
+        if audio_cfg["enabled"]:
+            track = Path(tmp) / "soundtrack.wav"
+            events = (_sound_events(plan, kinds, speed, out_dur, stem)
+                      if audio_cfg["sfx"] else [])
+            sfx.build_soundtrack(track, out_dur + float(cfg["cta_seconds"]), events,
+                                 bed=str(audio_cfg["bed"]),
+                                 bed_gain_db=float(audio_cfg["bed_gain_db"]))
+            audio_in = ["-i", str(track)]
+            audio_out = ["-map", f"{n_vid + 3}:a", "-c:a", "aac", "-b:a", "128k",
+                         "-shortest"]
         graph = (
             cut +
             f"[cut]setpts=PTS/{speed:.4f},scale={vid_w}:{_VID_H},fps={_FPS},"
@@ -576,7 +633,8 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
             *slice_args,
             "-loop", "1", "-i", str(hook_png),
             "-loop", "1", "-i", str(cta_png),
-            "-filter_complex", graph, "-map", "[out]", "-an",
+            *audio_in,
+            "-filter_complex", graph, "-map", "[out]", *audio_out,
             "-c:v", "libx264", "-preset", "medium", "-crf", "20",
             "-movflags", "+faststart", str(out_path),
         ]

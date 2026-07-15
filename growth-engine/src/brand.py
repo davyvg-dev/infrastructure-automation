@@ -77,7 +77,16 @@ def reel() -> dict[str, Any]:
         "cta_headline": "",     # CTA text; falls back to brand footer
         "cta_sub": "",
     }
+    audio_defaults = {
+        "enabled": True,        # baked-in sound design (silent reels feel broken)
+        "sfx": True,            # pops on messages, ticks while typing, ding on payoff
+        "bed": "",              # founder-supplied licensed/CC0 ambient file; "" = none.
+                                # NEVER commercial music — that stays in-app (REELS.md)
+        "bed_gain_db": -24.0,   # bed sits far under the SFX
+    }
     values.update((strategy().get("media") or {}).get("reel") or {})
+    # Nested merge so a partial (or absent) audio block keeps the other defaults.
+    values["audio"] = {**audio_defaults, **(values.get("audio") or {})}
     return values
 
 

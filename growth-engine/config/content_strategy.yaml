@@ -177,6 +177,14 @@ media:
     cta_seconds: 1.0        # CTA rides a freeze of the last frame — no end card
     cta_headline: "Zien hoe het werkt?"   # end card (Dutch, buyer-facing)
     cta_sub: "klantkraan.nl"
+    # Baked-in sound design: synthesized SFX from assets/sfx (pop per message, ticks
+    # while typing, ding on the payoff). NEVER commercial music — trending audio is
+    # added in-app when posting (copyright; see docs/REELS.md).
+    audio:
+      enabled: true
+      sfx: true
+      bed: ""             # optional licensed/CC0 ambient file (path); empty = no bed
+      bed_gain_db: -24    # bed level under the SFX
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.

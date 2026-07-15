@@ -16,10 +16,11 @@ Ranked by impact/effort (highest first).
 11. **Phone silhouette, minimal branding.** Rounded corners + thin bezel/shadow (the "peeking at someone's phone" genre cue), phone filling the frame up to the safe zones — no small phone floating in dead space. Tradeoff branded-stage vs. raw: minimal-logo content beats ad-format by +81% ROI, so accent bar stays subtle and logo lockups live on the end card only.
 12. **Export CFR:** add `fps=30` / `-vsync cfr`, 1080x1920 H.264. Phone screen recordings are VFR and stutter after IG re-encode. One clean master, uploaded natively per platform.
 13. **Auto-generate a cover frame (Pillow):** consistent branded template, one bold Dutch title per video, all key visuals in the center 1080x1080 square (grids crop to 1:1/3:4; TikTok overlays caption on bottom ~270px). The grid is the storefront a visiting gym owner judges.
+14. **Baked-in sound design (`media.reel.audio`):** synthesized UI SFX from `assets/sfx/` — a pop as each message lands, soft ticks under typing, a ding on the payoff — plus an optional founder-supplied licensed/CC0 ambient bed at ~-24 dB. Silent files read as broken; this layer is copyright-safe because every sample is generated in-repo (`python -m src.sfx --make-sfx`). Commercial/trending music is still never baked in — that stays in-app (§2).
 
 ## 2. Bij het posten (founder, in-app)
 - **Music — TikTok:** pick a *rising* sound (trending arrows in-app, <24h old = up to 3x views); low-energy/ambient only — never a meme sound on a demo. Audio communities are the biggest organic reach lever under 10k followers.
-- **Music — Instagram:** business accounts only get the limited Sound Collection. Switch account type to **Creator** for the full trending library (keeps insights). Never bake music into the file server-side — copyright strike risk; in-app selection keeps Meta's license.
+- **Music — Instagram:** business accounts only get the limited Sound Collection. Switch account type to **Creator** for the full trending library (keeps insights). Never bake music into the file server-side — copyright strike risk; in-app selection keeps Meta's license. (The pipeline's own baked-in layer — synthesized SFX + optional licensed bed, §1.14 — is fine; in-app music stacks on top of it.)
 - **Music — Facebook:** optional. FB discovery runs on retention/shares, not audio; skipping music there costs nothing.
 - **Captions:** primary Dutch search phrase in the first 125 chars ("AI-receptionist voor sportscholen — proefles geboekt om 22:47"), then context; **3–5 hashtags** max, 1 broad + 2–4 niche (#sportschool #fitnessondernemer #ondernemen) — no #fyp, no 30-tag spam (hurts search ranking).
 - **Covers:** set the pipeline-generated cover on both IG and TikTok every post. Consistent grid = trust signal for a zero-follower account.
@@ -60,7 +61,7 @@ Five hook lines (title/overlay):
 - No padding to fill 15s; cut messages instead.
 - No fade-out or "finished"-feeling ending — it kills the replay loop.
 - No re-uploading files downloaded from another platform (watermark = 40–70% reach penalty).
-- No sideloaded commercial music in the ffmpeg output (copyright strike; in-app only).
+- No sideloaded commercial music in the ffmpeg output (copyright strike; in-app only). Synthesized SFX and a founder-licensed/CC0 bed (`media.reel.audio`) are the only audio allowed in the file.
 - No high-energy meme sounds on a product demo — mismatched trending audio backfires.
 - No hashtag spam (>5 tags) and no generic reach tags (#fyp) — niche tags define your topical cluster.
 - No heavy branded stage during the demo: no logo lockups, no thick accent bars — save branding for the ~1s end card.

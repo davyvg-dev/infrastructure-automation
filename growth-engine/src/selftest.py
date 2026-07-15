@@ -185,6 +185,35 @@ def check_reel() -> bool:
                 f"suspense beat, CTA freeze) → {record['platform_targets']}")
             _ok(f"crop_top {cfg['crop_top']} · cap {cfg['target_seconds']}s · "
                 f"dwell ≤{cfg['dwell_seconds']}s · max speed {cfg['max_speed']}×")
+            # Sound layer: the reel must carry a real audio stream with actual
+            # content (SFX beats) — a silent track means the layer regressed.
+            import re as _re
+            streams = subprocess.run(
+                ["ffprobe", "-v", "error", "-show_entries", "stream=codec_type",
+                 "-of", "csv=p=0", record["path"]],
+                check=True, capture_output=True, text=True,
+            ).stdout.split()
+            if cfg["audio"]["enabled"]:
+                if streams.count("video") != 1 or streams.count("audio") != 1:
+                    return _fail(f"want 1 video + 1 audio stream, got {streams}")
+                vd = subprocess.run(
+                    ["ffmpeg", "-hide_banner", "-i", record["path"], "-map", "0:a:0",
+                     "-af", "volumedetect", "-f", "null", "-"],
+                    capture_output=True, text=True,
+                )
+                m = _re.search(r"mean_volume:\s*(-?[\d.]+) dB", vd.stderr)
+                if not m:
+                    return _fail("volumedetect gave no mean_volume for the audio track")
+                mean = float(m.group(1))
+                if mean <= -80.0:
+                    return _fail(f"audio is effectively silent (mean {mean:.1f} dB)")
+                _ok(f"audio: aac stream present, mean {mean:.1f} dB (sfx "
+                    f"{'on' if cfg['audio']['sfx'] else 'off'}, bed "
+                    f"{cfg['audio']['bed'] or 'none'})")
+            else:
+                if "audio" in streams:
+                    return _fail("media.reel.audio disabled but reel has an audio stream")
+                _ok("audio disabled in config — reel is video-only, as configured")
     except subprocess.CalledProcessError as exc:
         return _fail(f"ffmpeg failed: {exc.stderr.strip()[-300:]}")
     except Exception as exc:
