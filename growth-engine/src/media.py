@@ -811,4 +811,7 @@ def build_chat_reel(stem: str, headline: str,
             ["-framerate", str(_FPS), "-i", str(seq_dir / "%05d.png")],
             "[1:v]setpts=PTS-STARTPTS[cut];", 1, _DEMO_W, 1.0, out_dur, events,
             stem, headline, out_dir / f"{stem}-reel.mp4",
-            footer=False)  # the demo wears the brand mark in its own header
+            # No persistent watermark: a chat fills the whole frame, so any footer
+            # pill overlaps a bubble. The header stays clean business identity and
+            # klantkraan.nl lands on the CTA end-card (seen every loop) instead.
+            footer=False)

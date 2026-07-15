@@ -70,7 +70,6 @@ class _Painter:
         self.font_small = ImageFont.truetype(str(brand.font_path()), 28)
         b = brand.brand()
         self.accent = b["accent"]
-        self.powered_by = b["footer"]  # brand URL, worn like the widget wears it
         self.cache_dir = tmp / "cache"
         self.seq_dir = tmp / "seq"
         self.cache_dir.mkdir(parents=True)
@@ -100,9 +99,9 @@ class _Painter:
         img = Image.new("RGB", (self.w, self.h), _BG)
         d = ImageDraw.Draw(img)
         # Header: avatar + business name + the standing "digitale assistent"
-        # disclosure. Name and status sit on their own rows, centered as a block;
-        # the green dot is the online signal, the brand mark rides the far right —
-        # nothing shares a baseline, nothing overlaps.
+        # disclosure. Business identity only — the widget's own header, like a
+        # real chat. The klantkraan.nl brand rides the "powered by" footer at the
+        # bottom (media._render_footer), never crammed next to the disclosure.
         d.rectangle((0, 0, self.w, _HEAD_H), fill=_BLUE)
         av = 76
         ax, ay = 28, (_HEAD_H - av) // 2
@@ -122,15 +121,8 @@ class _Painter:
         dot = 15
         cy = sy + stat_asc * 0.58  # dot centered on the lowercase status text
         d.ellipse((tx, cy - dot / 2, tx + dot, cy + dot / 2), fill="#8FD49A")
-        d.text((tx + dot + 14, sy), "digitale assistent", font=self.font_small,
-               fill="#BCD2E4")
-        if self.powered_by:  # subtle brand mark, far right, clear of the status line
-            pw = d.textlength(self.powered_by, font=self.font_small)
-            tick = 14
-            px = self.w - 28 - pw
-            d.rectangle((px - 12 - tick, cy - tick / 2, px - 12, cy + tick / 2),
-                        fill=self.accent)  # centered on the status row, like the dot
-            d.text((px, sy), self.powered_by, font=self.font_small, fill="#BCD2E4")
+        d.text((tx + dot + 14, sy), "digitale assistent • online",
+               font=self.font_small, fill="#BCD2E4")
         # Input bar, above it the bubble stack (newest at the bottom).
         bar_top = self.h - 124
         d.rounded_rectangle((24, bar_top, self.w - 118, self.h - 40), radius=40,
