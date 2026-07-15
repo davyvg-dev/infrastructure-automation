@@ -28,7 +28,8 @@ from telegram.ext import (
     filters,
 )
 
-from . import buildlog, formatting, generate, media, pagekit, platforms, store
+from . import (buildlog, formatting, generate, media, pagekit, platforms,
+               publish_meta, publish_tiktok, store)
 from .publish_x import post as post_to_x
 from .settings import active_cadence, data_dir, env, strategy
 
@@ -249,9 +250,44 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await _approve(context, query.message.chat_id, draft)
 
 
-# Publisher per auto-delivery platform. X is the only one wired up today; a new
-# `delivery: auto` platform in config needs an entry here before it can post.
-_PUBLISHERS = {"x": post_to_x}
+def _media_for(draft: dict, platform: str) -> dict | None:
+    """Best ready media record for a platform: the reel wins over a card; for
+    images the square card beats the story (feeds crop 9:16)."""
+    records = [
+        m for m in draft.get("media") or []
+        if m.get("status") == "ready" and platform in (m.get("platform_targets") or [])
+    ]
+    for match in (
+        lambda m: m["type"] == "video",
+        lambda m: m["type"] == "image" and m.get("aspect") == "square",
+        lambda m: m["type"] == "image",
+    ):
+        for m in records:
+            if match(m):
+                return m
+    return None
+
+
+def _pub_x(draft: dict, text: str, media: dict | None) -> str:
+    result = post_to_x(text)
+    if not result.ok:
+        raise RuntimeError(result.error)
+    return result.url
+
+
+def _pub_instagram(draft: dict, text: str, media: dict | None) -> str:
+    if media is None:
+        raise RuntimeError("Instagram can't post caption-only; no ready image/reel on this draft.")
+    return publish_meta.publish_instagram(draft, media)
+
+
+def _pub_facebook(draft: dict, text: str, media: dict | None) -> str:
+    return publish_meta.publish_facebook(draft, media)
+
+
+# Publisher per auto-delivery platform: fn(draft, text, media) -> url, raises on
+# failure. A new `delivery: auto` platform in config needs an entry here.
+_PUBLISHERS = {"x": _pub_x, "instagram": _pub_instagram, "facebook": _pub_facebook}
 
 
 async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict) -> None:
@@ -270,19 +306,48 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
             )
             await context.bot.send_message(chat_id, variants[platform])
             continue
-        result = await asyncio.to_thread(publisher, variants[platform])
-        if result.ok:
-            store.update_draft(draft["id"], status="posted", **{f"{platform}_url": result.url})
-            await context.bot.send_message(
-                chat_id, f"✅ Posted to {platform.title()}: {result.url}"
+        try:
+            url = await asyncio.to_thread(
+                publisher, draft, variants[platform], _media_for(draft, platform)
             )
-        else:
+            store.update_draft(draft["id"], status="posted", **{f"{platform}_url": url})
+            await context.bot.send_message(
+                chat_id, f"✅ Posted to {platform.title()}: {url}"
+            )
+        except Exception as exc:
             await context.bot.send_message(
                 chat_id,
-                f"⚠️ {platform.title()} post failed ({result.error}). "
+                f"⚠️ {platform.title()} post failed ({exc}). "
                 f"Here it is to post by hand:",
             )
             await context.bot.send_message(chat_id, variants[platform])
+
+    # Draft-delivery platforms (TikTok): upload the reel to the founder's in-app
+    # inbox; the caption can't ride along, so it is handed over to paste there.
+    for platform in platforms.draft_platforms():
+        if platform not in variants:
+            continue
+        media_rec = _media_for(draft, platform)
+        try:
+            if platform != "tiktok":
+                raise RuntimeError(f"no draft-uploader wired up for {platform}")
+            if media_rec is None or media_rec["type"] != "video":
+                raise RuntimeError("no ready reel on this draft")
+            note = await asyncio.to_thread(
+                publish_tiktok.upload_draft, draft, media_rec
+            )
+            await context.bot.send_message(
+                chat_id,
+                f"📥 {platform.title()}: reel is in your in-app inbox ({note}).\n"
+                f"Open the app, add a rising sound, paste the caption below, post.",
+            )
+        except Exception as exc:
+            await context.bot.send_message(
+                chat_id,
+                f"⚠️ {platform.title()} draft upload failed ({exc}). "
+                f"Post by hand — caption below:",
+            )
+        await context.bot.send_message(chat_id, variants[platform])
 
     # Assisted-delivery platforms: hand over clean text to paste.
     for platform in platforms.assisted_platforms():

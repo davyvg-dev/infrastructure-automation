@@ -297,6 +297,28 @@ def check_x() -> bool:
     return True
 
 
+def check_meta() -> bool:
+    print("• meta (Graph API auth only — does NOT post)")
+    from . import publish_meta
+
+    try:
+        _ok(publish_meta.verify_auth())
+    except Exception as exc:
+        return _fail(str(exc))
+    return True
+
+
+def check_tiktok() -> bool:
+    print("• tiktok (token refresh only — does NOT upload)")
+    from . import publish_tiktok
+
+    try:
+        _ok(publish_tiktok.verify_auth())
+    except Exception as exc:
+        return _fail(str(exc))
+    return True
+
+
 CHECKS = {
     "config": check_config,
     "platforms": check_platforms,
@@ -305,8 +327,11 @@ CHECKS = {
     "generate": check_generate,
     "telegram": check_telegram,
     "x": check_x,
+    "meta": check_meta,
+    "tiktok": check_tiktok,
 }
-# Offline checks first, so a broken render can't waste an API call.
+# Offline checks first, so a broken render can't waste an API call. meta/tiktok
+# stay out of 'all' until their creds exist (docs/AUTOPUBLISH.md) — run by name.
 ORDER = ["config", "platforms", "media", "reel", "generate", "telegram", "x"]
 
 
@@ -316,7 +341,7 @@ def main(argv: list[str]) -> int:
         print("(GROWTH_ENGINE_DRY_RUN is set)\n")
     names = ORDER if which == "all" else [which]
     if which != "all" and which not in CHECKS:
-        print(f"Unknown check '{which}'. Choose from: {', '.join(ORDER)}, all")
+        print(f"Unknown check '{which}'. Choose from: {', '.join(CHECKS)}, all")
         return 2
     for name in names:
         if not CHECKS[name]():

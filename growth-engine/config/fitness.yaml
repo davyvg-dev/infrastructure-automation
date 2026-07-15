@@ -106,7 +106,10 @@ platforms:
     writing: "Reddit: value-first, zero self-promotion in the body. Written to genuinely
       help in a relevant subreddit (e.g. r/smallbusiness, r/Klussers, r/ondernemers).
       Sound like a helpful practitioner, not an ad."
-  # Meta/TikTok ToS forbid auto-posting — these three are assisted-only, permanently.
+  # Meta (IG/FB) auto-posts via the official Graph API and TikTok takes inbox-draft
+  # uploads via its Content Posting API — publishers are wired; flip facebook/
+  # instagram to `delivery: auto` and tiktok to `delivery: draft` once the META_*/
+  # TIKTOK_* creds from docs/AUTOPUBLISH.md are in .env (until then: assisted).
   facebook:
     enabled: true
     delivery: assisted

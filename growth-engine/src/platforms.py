@@ -12,7 +12,9 @@ from typing import Any
 
 from .settings import strategy
 
-_DELIVERIES = ("auto", "assisted")
+# auto = post via API on approval · assisted = hand text over to paste ·
+# draft = upload media via API, founder finishes in-app (TikTok inbox flow)
+_DELIVERIES = ("auto", "assisted", "draft")
 _MEDIA = ("none", "image", "video", "both")
 
 
@@ -51,6 +53,10 @@ def auto_platforms() -> list[str]:
 
 def assisted_platforms() -> list[str]:
     return [n for n, d in registry().items() if d["delivery"] == "assisted"]
+
+
+def draft_platforms() -> list[str]:
+    return [n for n, d in registry().items() if d["delivery"] == "draft"]
 
 
 def spec(name: str) -> dict[str, Any]:
