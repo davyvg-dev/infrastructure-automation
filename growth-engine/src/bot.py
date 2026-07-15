@@ -28,7 +28,7 @@ from telegram.ext import (
     filters,
 )
 
-from . import buildlog, formatting, generate, media, platforms, store
+from . import buildlog, formatting, generate, media, pagekit, platforms, store
 from .publish_x import post as post_to_x
 from .settings import active_cadence, data_dir, env, strategy
 
@@ -336,11 +336,12 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         tg_file = await (msg.video or msg.document).get_file()
         await tg_file.download_to_drive(raw_path)
         card = draft.get("card") or {}
+        headline = card.get("headline", "").strip() or draft.get("topic", "")
         record = await asyncio.to_thread(
             media.build_reel,
             raw_path,
             draft_id,
-            card.get("headline", "").strip() or draft.get("topic", ""),
+            headline,
             card.get("sub", "").strip(),
         )
     except Exception as exc:
@@ -358,6 +359,14 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     draft = store.update_draft(draft_id, media=media_list) or draft
     with open(record["path"], "rb") as fh:
         await msg.reply_video(fh, caption="🎬 reel — save & attach")
+    # A matching cover (same scheme as the draft's cards) — set it in-app when
+    # posting so the grid stays coherent. Never blocks the reel.
+    try:
+        cover = await asyncio.to_thread(pagekit.render_cover, headline, draft_id)
+        with open(cover, "rb") as fh:
+            await msg.reply_photo(fh, caption="🖼 cover — set on IG/TikTok when posting")
+    except Exception as exc:
+        await msg.reply_text(f"⚠️ Cover render failed (reel is fine): {exc}")
     await msg.reply_text(
         formatting.preview(draft),
         parse_mode=ParseMode.MARKDOWN_V2,

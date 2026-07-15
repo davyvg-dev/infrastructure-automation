@@ -154,7 +154,8 @@ media:
     # Rotated per draft (deterministic) so the feed isn't one repeated template.
     schemes:
       - { bg: "#1A1A1A", text: "#FAF6EE", muted: "#8C8474" }   # ink
-      - { bg: "#3F7F4A", text: "#FAF6EE", muted: "#CFE3D4" }   # leaf
+      - { bg: "#3F7F4A", text: "#FAF6EE", muted: "#CFE3D4", accent: "#FAF6EE" }   # leaf
+        # accent overridden: the inherited brand accent equals this bg — invisible bar
       - { bg: "#FAF6EE", text: "#1A1A1A", muted: "#8C8474" }   # cream
   # Every Nth card becomes a stock photo (Pexels, dark scrim + text) when the draft has
   # a photo_query and PEXELS_API_KEY is set. Pexels: free commercial use, no attribution.
