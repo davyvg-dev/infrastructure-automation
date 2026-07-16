@@ -231,9 +231,12 @@ def check_reel() -> bool:
                 if d > cap:
                     return _fail(f"chat-demo reel is {d:.1f}s, cap is "
                                  f"{cfg['target_seconds']}s")
+                scs = demo_cfg["scenarios"]
+                _, biz, _ = media._demo_scenario(
+                    scs[media._pick("selftest-demo:demo", len(scs))], demo_cfg)
                 _ok(f"chat-demo reel: 1080×1920, {d:.1f}s from a scripted scenario "
-                    f"({len(demo_cfg['scenarios'])} scenario(s), business "
-                    f"{demo_cfg['business']!r})")
+                    f"({len(scs)} scenario(s), each its own business; this one "
+                    f"{biz!r})")
             else:
                 _ok("media.reel.demo disabled — reels come from 🎬 recordings only")
     except subprocess.CalledProcessError as exc:

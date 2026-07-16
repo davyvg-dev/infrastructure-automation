@@ -191,21 +191,121 @@ media:
     # Scripted chat-demo reels: drawn frame-by-frame from a scenario below, so every
     # video draft ships with a reel automatically — sound perfectly synced by
     # construction. The 🎬 upload replaces it with real footage when preferred.
-    # Fictional business, digital-assistant disclosure in the chat header.
+    # Each scenario carries its OWN fictional business + greeting, so the feed shows a
+    # different company every time instead of one repeated header. The greeting is the
+    # standing digital-assistant disclosure (EU AI Act art. 50); the chat header shows
+    # it too. A scenario with no greeting gets one synthesized from its business name.
     demo:
       enabled: true
-      business: "Jansen Installatie"
-      # On screen from the start — the widget's own greeting, with the disclosure.
-      greeting: "Goedemiddag! U chat met de digitale assistent van Jansen Installatie. Waarmee kan ik helpen?"
+      # Fallbacks only — used if a scenario below omits its own business/greeting.
+      business: "Installatiebedrijf Jansen"
+      greeting: "Goedendag! U chat met de digitale assistent. Waarmee kan ik u helpen?"
       scenarios:
-        - - { from: klant, text: "Hoi, mijn cv-ketel valt steeds uit. Kunnen jullie komen?" }
-          - { from: ai, text: "Vervelend! Ik plan direct een monteur voor u in. Wanneer komt het uit?" }
-          - { from: klant, text: "Morgen om 10:00?" }
-          - { from: ai, text: "Ingepland: morgen 10:00. U ontvangt zo een bevestiging. Tot morgen!" }
-        - - { from: klant, text: "Bel net, geen gehoor. Lekkage onder de gootsteen!" }
-          - { from: ai, text: "Ik help u meteen — een spoedafspraak kan vandaag nog." }
-          - { from: klant, text: "Kan iemand vanmiddag komen?" }
-          - { from: ai, text: "Spoedafspraak staat: vandaag 15:30. De monteur belt als hij onderweg is." }
+        - business: "Van der Meer Loodgieters"
+          greeting: "Goedendag! U chat met de digitale assistent van Van der Meer Loodgieters. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Mijn cv-ketel valt steeds uit. Kunnen jullie langskomen?" }
+            - { from: ai, text: "Vervelend. Ik plan direct een monteur voor u in. Wanneer komt het u uit?" }
+            - { from: klant, text: "Morgen rond 10:00 graag." }
+            - { from: ai, text: "Gelukt. Morgen 10:00 staat genoteerd. U krijgt zo de bevestiging per mail." }
+        - business: "Elektro De Groot"
+          greeting: "Goedendag! U chat met de digitale assistent van Elektro De Groot. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "De groepenkast slaat steeds af, ik zit zonder stroom in de keuken." }
+            - { from: ai, text: "Dat pakken we op. Wilt u vandaag nog een elektricien langs?" }
+            - { from: klant, text: "Ja graag, zo snel mogelijk." }
+            - { from: ai, text: "Geregeld. Vandaag tussen 14:00 en 15:00 komt de elektricien. Tot straks." }
+        - business: "Schildersbedrijf Willemsen"
+          greeting: "Goedendag! U chat met de digitale assistent van Schildersbedrijf Willemsen. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil een offerte voor het buitenschilderwerk van mijn woning." }
+            - { from: ai, text: "Prima. Ik plan een vrijblijvende opname in. Welke dag schikt u?" }
+            - { from: klant, text: "Donderdagmiddag kan ik." }
+            - { from: ai, text: "Genoteerd: donderdag 13:30 voor de opname. Daarna ontvangt u de offerte." }
+        - business: "Installatiebedrijf Hoekstra"
+          greeting: "Goedendag! U chat met de digitale assistent van Installatiebedrijf Hoekstra. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Er lekt water onder de gootsteen, het loopt op de vloer!" }
+            - { from: ai, text: "Naar. Zet de kraan even dicht. Een spoedmonteur kan vandaag nog komen." }
+            - { from: klant, text: "Graag, hoe snel kan hij er zijn?" }
+            - { from: ai, text: "Spoedafspraak staat: vandaag 15:30. De monteur belt als hij onderweg is." }
+        - business: "Dakdekkers Smit"
+          greeting: "Goedendag! U chat met de digitale assistent van Dakdekkers Smit. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Na de storm lekt mijn dak. Kunnen jullie komen kijken?" }
+            - { from: ai, text: "Dat regelen we. Ik plan een dakinspectie in. Wanneer bent u thuis?" }
+            - { from: klant, text: "Morgenochtend ben ik er." }
+            - { from: ai, text: "Genoteerd: morgen 09:00 dakinspectie. U krijgt de bevestiging per mail." }
+        - business: "Loodgieter Van den Berg"
+          greeting: "Goedendag! U chat met de digitale assistent van Loodgieter Van den Berg. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik heb geen warm water meer. Zijn jullie nog open?" }
+            - { from: ai, text: "We zijn gesloten, maar ik plan u gewoon in voor morgenvroeg." }
+            - { from: klant, text: "Fijn, wat is de eerste mogelijkheid?" }
+            - { from: ai, text: "Ingepland: morgen 08:30. De monteur komt langs, u hoeft niets te doen." }
+        - business: "CV Service Peters"
+          greeting: "Goedendag! U chat met de digitale assistent van CV Service Peters. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil mijn cv-ketel dit jaar laten onderhouden." }
+            - { from: ai, text: "Goed idee. Ik plan het jaarlijkse onderhoud in. Welke dag komt uit?" }
+            - { from: klant, text: "Volgende week dinsdag?" }
+            - { from: ai, text: "Genoteerd: dinsdag 11:00 ketelonderhoud. U ontvangt de bevestiging." }
+        - business: "Elektricien Nieuwhuis"
+          greeting: "Goedendag! U chat met de digitale assistent van Elektricien Nieuwhuis. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil een laadpaal voor mijn auto laten plaatsen." }
+            - { from: ai, text: "Dat kan. Ik plan een opname in om de situatie te bekijken. Wanneer schikt het?" }
+            - { from: klant, text: "Vrijdag na 15:00." }
+            - { from: ai, text: "Genoteerd: vrijdag 15:30 voor de opname. Daarna krijgt u de offerte." }
+        - business: "Hoveniersbedrijf Groenendaal"
+          greeting: "Goedendag! U chat met de digitale assistent van Hoveniersbedrijf Groenendaal. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Mijn tuin is een wildernis. Kunnen jullie het onderhoud doen?" }
+            - { from: ai, text: "Zeker. Ik plan een hovenier in om langs te komen. Welke dag past u?" }
+            - { from: klant, text: "Woensdag graag." }
+            - { from: ai, text: "Genoteerd: woensdag 10:00. De hovenier bekijkt de tuin en maakt een plan." }
+        - business: "Timmerbedrijf Vermeer"
+          greeting: "Goedendag! U chat met de digitale assistent van Timmerbedrijf Vermeer. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Een kozijn is rot, ik wil het laten vervangen." }
+            - { from: ai, text: "Dat maken we in orde. Ik plan een opmeetafspraak in. Wanneer bent u thuis?" }
+            - { from: klant, text: "Maandagochtend." }
+            - { from: ai, text: "Genoteerd: maandag 09:30 opmeten. Daarna ontvangt u een offerte op maat." }
+        - business: "Ontstoppingsdienst De Wit"
+          greeting: "Goedendag! U chat met de digitale assistent van Ontstoppingsdienst De Wit. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Mijn afvoer zit verstopt, het water loopt niet weg." }
+            - { from: ai, text: "Vervelend. Een monteur kan vandaag nog langskomen om te ontstoppen." }
+            - { from: klant, text: "Graag, hoe laat kan dat?" }
+            - { from: ai, text: "Spoedafspraak staat: vandaag 16:00. De monteur belt voor hij komt." }
+        - business: "Schildersbedrijf Bakker"
+          greeting: "Goedendag! U chat met de digitale assistent van Schildersbedrijf Bakker. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik heb donderdag een afspraak, maar die red ik niet." }
+            - { from: ai, text: "Geen probleem, ik zet hem voor u om. Welke dag komt beter uit?" }
+            - { from: klant, text: "Kan het maandag?" }
+            - { from: ai, text: "Gedaan. Uw afspraak staat nu maandag 13:00. U krijgt de nieuwe bevestiging." }
+        - business: "Klusbedrijf Van Leeuwen"
+          greeting: "Goedendag! U chat met de digitale assistent van Klusbedrijf Van Leeuwen. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil mijn badkamer laten verbouwen, waar begin ik?" }
+            - { from: ai, text: "Leuk project. We starten met een vrijblijvend intakegesprek. Wanneer schikt het?" }
+            - { from: klant, text: "Volgende week donderdag?" }
+            - { from: ai, text: "Genoteerd: donderdag 14:00 intake. We bespreken uw wensen en het budget." }
+        - business: "Installatiebedrijf Kuiper"
+          greeting: "Goedendag! U chat met de digitale assistent van Installatiebedrijf Kuiper. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Een radiator wordt niet warm, de rest wel." }
+            - { from: ai, text: "Dat kijken we na, waarschijnlijk moet hij ontlucht worden. Zal ik iemand inplannen?" }
+            - { from: klant, text: "Ja graag, wanneer kan dat?" }
+            - { from: ai, text: "Ingepland: morgen 13:00. De monteur verhelpt het ter plekke." }
+        - business: "Elektro Mulder"
+          greeting: "Goedendag! U chat met de digitale assistent van Elektro Mulder. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "De verlichting in de woonkamer valt steeds uit." }
+            - { from: ai, text: "Dat zoeken we uit. Ik plan een elektricien in om de storing te vinden. Welke dag?" }
+            - { from: klant, text: "Donderdag na de lunch." }
+            - { from: ai, text: "Genoteerd: donderdag 13:30. De elektricien lost de storing op." }
 
 # Cadence: how many generation runs per day and how many drafts each run makes.
 # Start conservative; raise once you trust the quality.

@@ -784,6 +784,35 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
     }
 
 
+# Digital-assistant disclosure (EU AI Act art. 50) baked into a demo greeting when a
+# scenario doesn't supply its own — so every reel, whatever the business, still opens
+# by disclosing it's an assistant. The chat header carries the disclosure too.
+_DEMO_DISCLOSURE = ("Goedendag! U chat met de digitale assistent van {business}. "
+                    "Waarmee kan ik u helpen?")
+
+
+def _demo_scenario(scenario: Any, demo_cfg: dict[str, Any]
+                   ) -> tuple[list[dict[str, str]], str, str]:
+    """Resolve one config scenario to (chat turns, business, greeting).
+
+    A scenario is either a bare list of turns (uses the demo-block defaults) or a
+    dict carrying its OWN `business` + `greeting` + `chat` — so each reel looks like
+    a different company, not the same header every time. A missing greeting is
+    synthesized from the business, keeping the assistant disclosure intact.
+    """
+    if isinstance(scenario, dict):
+        chat = scenario.get("chat") or []
+        business = str(scenario.get("business") or demo_cfg["business"]).strip()
+        greeting = str(scenario.get("greeting") or "").strip()
+    else:
+        chat = scenario
+        business = str(demo_cfg["business"]).strip()
+        greeting = str(demo_cfg.get("greeting") or "").strip()
+    if not greeting:
+        greeting = _DEMO_DISCLOSURE.format(business=business or "ons bedrijf")
+    return chat, business, greeting
+
+
 def build_chat_reel(stem: str, headline: str,
                     out_dir: Path | None = None) -> dict[str, Any]:
     """Render a scripted chat-demo reel — no recording, no detection.
@@ -791,7 +820,8 @@ def build_chat_reel(stem: str, headline: str,
     The demo is drawn frame by frame from a config scenario (`media.reel.demo`),
     already on its final edited timeline, so every keystroke tick, message pop
     and payoff ding shares the frame clock: sync is exact by construction. The
-    scenario rotates deterministically per draft, like the card color scheme.
+    scenario rotates deterministically per draft, like the card color scheme, and
+    each scenario carries its own business identity (see `_demo_scenario`).
     """
     if shutil.which("ffmpeg") is None:
         raise RuntimeError("ffmpeg is not installed (needed for reels)")
@@ -801,11 +831,12 @@ def build_chat_reel(stem: str, headline: str,
     if not (demo_cfg["enabled"] and scenarios):
         raise RuntimeError("media.reel.demo is disabled or has no scenarios")
     scenario = scenarios[_pick(f"{stem}:demo", len(scenarios))]
+    chat, business, greeting = _demo_scenario(scenario, demo_cfg)
     out_dir = out_dir or data_dir() / "media"
     out_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         seq_dir, events, out_dur = chatdemo.render(
-            scenario, str(demo_cfg["business"]), str(demo_cfg["greeting"]),
+            chat, business, greeting,
             Path(tmp), (_DEMO_W, _VID_H), cfg)
         return _compose(
             ["-framerate", str(_FPS), "-i", str(seq_dir / "%05d.png")],

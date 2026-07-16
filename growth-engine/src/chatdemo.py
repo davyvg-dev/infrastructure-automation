@@ -68,6 +68,7 @@ class _Painter:
         self.font = ImageFont.truetype(str(brand.font_path()), 40)
         self.font_bold = ImageFont.truetype(str(brand.font_path(bold=True)), 44)
         self.font_small = ImageFont.truetype(str(brand.font_path()), 28)
+        self.name_font = self._fit_name(business)
         b = brand.brand()
         self.accent = b["accent"]
         self.cache_dir = tmp / "cache"
@@ -77,6 +78,17 @@ class _Painter:
         self.cache: dict[tuple, Path] = {}
         self.n = 0
         self.bubbles = [self._bubble(t) for t in turns]
+
+    def _fit_name(self, business: str) -> ImageFont.FreeTypeFont:
+        """Header name font, shrunk so a long business name fits beside the avatar
+        (the text column runs from x=128 to a 24px right margin)."""
+        probe = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+        name_max = self.w - 128 - 24
+        for size in (44, 40, 36, 32, 28):
+            font = ImageFont.truetype(str(brand.font_path(bold=True)), size)
+            if probe.textlength(business, font=font) <= name_max:
+                return font
+        return ImageFont.truetype(str(brand.font_path(bold=True)), 28)
 
     def _bubble(self, turn: dict[str, str]) -> Image.Image:
         probe = ImageDraw.Draw(Image.new("RGB", (1, 1)))
@@ -111,11 +123,11 @@ class _Painter:
                fill=_CREAM, anchor="mm")
 
         tx = ax + av + 24  # text column, right of the avatar
-        name_asc, name_desc = self.font_bold.getmetrics()
+        name_asc, name_desc = self.name_font.getmetrics()
         stat_asc = self.font_small.getmetrics()[0]
         gap = 8
         top = (_HEAD_H - (name_asc + name_desc + gap + stat_asc)) // 2
-        d.text((tx, top), self.business, font=self.font_bold, fill=_CREAM)
+        d.text((tx, top), self.business, font=self.name_font, fill=_CREAM)
 
         sy = top + name_asc + name_desc + gap  # status row, below the name
         dot = 15
