@@ -1,6 +1,8 @@
 # deploy.sh substitutes __DEMO_HOST__ (demo-<ip-dashes>.sslip.io until real DNS exists).
-# When demo.klantkraan.nl gets a DNS record, add it in front of the sslip host.
-__DEMO_HOST__ {
+# demo.klantkraan.nl is served here too; add its A record (DNS-only / grey cloud in
+# Cloudflare, so Caddy can provision its own Let's Encrypt cert) then run deploy.sh.
+# The sslip host stays as a fallback that always works without DNS.
+demo.klantkraan.nl, __DEMO_HOST__ {
 	reverse_proxy 127.0.0.1:8000
 }
 
