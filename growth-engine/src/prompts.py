@@ -91,6 +91,13 @@ Also fill the `card` field: the post's sharpest claim as an image-card headline 
 chars, same language as the post — a number, a pain, or a punchline that stands alone), \
 plus one optional supporting line, plus 2-4 English stock-photo keywords. The photo must \
 show a concrete scene from the buyer's own world (their workplace, their customers, their \
-daily reality) that backs the claim — never abstract tech imagery.
+daily reality) that backs the claim — never abstract tech imagery. Always fill the card, \
+even when you also build a carousel.
+
+The `carousel` field is optional. Fill it with 3-6 slides ONLY if this angle is naturally \
+a list or a short sequence of steps (e.g. "5 momenten dat je een klus verliest", "3 dingen \
+die een gemiste oproep je kosten"). Slide 1 is a scroll-stopping hook, each middle slide \
+makes ONE concrete point, the last slide is a soft CTA to the site. If the post is a single \
+thought, leave `carousel` an empty array and let the card carry it. Same language as the post.
 
 Pick ONE specific, fresh angle. Return the topic as a short label plus the platform variants."""

@@ -63,8 +63,32 @@ _DRAFT_SCHEMA = {
             },
             "required": ["headline", "sub", "photo_query"],
         },
+        "carousel": {
+            "type": "array",
+            "description": "3-6 slides ONLY when the post's angle is naturally a list "
+                           "or a short step sequence (e.g. '5 momenten dat een klus "
+                           "wegloopt', '3 stappen naar...'); otherwise an EMPTY array. "
+                           "Slide 1 is a scroll-stopping hook, each middle slide carries "
+                           "one concrete point, the last slide is a soft CTA. Same "
+                           "language as the post.",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "headline": {
+                        "type": "string",
+                        "description": "Slide headline, punchy, max 60 chars.",
+                    },
+                    "body": {
+                        "type": "string",
+                        "description": "One supporting line, max 90 chars, or empty string.",
+                    },
+                },
+                "required": ["headline", "body"],
+            },
+        },
     },
-    "required": ["topic", "variants", "card"],
+    "required": ["topic", "variants", "card", "carousel"],
 }
 
 
@@ -109,8 +133,12 @@ def generate_draft(platforms: list[str]) -> dict[str, Any]:
         "status": "pending",
         "variants": variants,
         "card": payload.get("card", {}),
+        "carousel": payload.get("carousel", []),
     }
-    media.attach_cards(draft)
+    # A carousel and a single card are mutually exclusive: prefer the carousel when the
+    # model produced one, else fall back to the single sharpest-claim card.
+    if not media.attach_carousel(draft):
+        media.attach_cards(draft)
     media.attach_reel_task(draft, platforms)
     return draft
 
@@ -151,8 +179,10 @@ def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> di
         "status": "pending",
         "variants": variants,
         "card": payload.get("card", {}),
+        "carousel": payload.get("carousel", []),
     }
-    media.attach_cards(draft)
+    if not media.attach_carousel(draft):
+        media.attach_cards(draft)
     media.attach_reel_task(draft, platforms)
     return draft
 

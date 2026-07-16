@@ -53,6 +53,14 @@ def stock() -> dict[str, Any]:
     return values
 
 
+def carousel() -> dict[str, Any]:
+    """Config `media.carousel` — multi-slide swipe posts. When a draft supplies
+    between min_slides and max_slides slides, they render instead of a single card."""
+    values = {"enabled": True, "min_slides": 3, "max_slides": 6}
+    values.update((strategy().get("media") or {}).get("carousel") or {})
+    return values
+
+
 def reel() -> dict[str, Any]:
     """Config `media.reel` — screen-recording → branded reel. Off unless enabled.
 

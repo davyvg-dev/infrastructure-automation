@@ -154,6 +154,13 @@ media:
     enabled: true
     every: 1           # every card is a photo card (founder preference 2026-07-14)
     theme: "plumber"    # appended to every photo search to keep results in-industry
+  # Carousels: when a draft's angle is a list/step sequence, the engine renders a
+  # multi-slide swipe post (square, brand slides) INSTEAD of a single card. LinkedIn +
+  # Instagram reward carousels most. The model decides per draft; these are the bounds.
+  carousel:
+    enabled: true
+    min_slides: 3       # fewer than this -> fall back to a single card
+    max_slides: 6       # extra slides beyond this are dropped
   # Reels: a raw screen recording (uploaded via the bot's 🎬 button) becomes a branded
   # 9:16 video — status bar cropped, dead time pop-cut away, brand stage, Pillow
   # title/end cards. Only attached to drafts that target a video platform.

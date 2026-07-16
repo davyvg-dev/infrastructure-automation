@@ -260,6 +260,127 @@ def attach_cards(draft: dict[str, Any]) -> None:
 
 
 # --------------------------------------------------------------------------- #
+# Carousels — a multi-slide swipe post (list/step angles), brand-consistent with
+# the single card. Square only (the feed aspect); one flat brand slide per point.
+# --------------------------------------------------------------------------- #
+
+def _render_slide(index: int, total: int, headline: str, body: str,
+                  size: tuple[int, int], out_path: Path,
+                  scheme: dict[str, Any]) -> None:
+    """One carousel slide: slide counter, accent bar, big headline, one sub-line.
+    A swipe hint rides every slide but the last; the last carries the brand footer."""
+    b = brand.brand()
+    width, height = size
+    img = Image.new("RGB", size, scheme["bg"])
+    draw = ImageDraw.Draw(img)
+    text_color, muted_color, accent = scheme["text"], scheme["muted"], scheme["accent"]
+    text_width = width - 2 * _PAD
+    is_last = index == total - 1
+
+    counter_font = ImageFont.truetype(str(b["font_bold"]), 36)
+    draw.text((_PAD, _PAD), f"{index + 1:02d} / {total:02d}",
+              font=counter_font, fill=muted_color)
+
+    top_min = _PAD + 120
+    bottom = height - _PAD - (120 if is_last and b["footer"] else 96)
+
+    sub_font = ImageFont.truetype(str(b["font_regular"]), 46)
+    sub_lines = _wrap(draw, body, sub_font, text_width) if body else []
+    sub_step = int(sub_font.size * 1.4)
+
+    for pt in (120, 104, 92, 80, 70, 60):
+        head_font = ImageFont.truetype(str(b["font_bold"]), pt)
+        head_lines = _wrap(draw, headline, head_font, text_width, _TRACKING)
+        head_step = int(pt * 1.12)
+        block_height = (
+            len(head_lines) * head_step
+            + (44 + len(sub_lines) * sub_step if sub_lines else 0)
+        )
+        if len(head_lines) <= 6 and top_min + block_height <= bottom:
+            break
+    y = top_min + max(0, (bottom - top_min - block_height) // 2)
+
+    draw.rectangle((_PAD, y - 78, _PAD + 140, y - 58), fill=accent)
+    for line in head_lines:
+        _tracked_text(draw, (_PAD, y), line, head_font, text_color, _TRACKING)
+        y += head_step
+    if sub_lines:
+        y += 44
+        for line in sub_lines:
+            draw.text((_PAD, y), line, font=sub_font, fill=muted_color)
+            y += sub_step
+
+    if is_last and b["footer"]:
+        footer_font = ImageFont.truetype(str(b["font_bold"]), 40)
+        fy = height - _PAD - 46
+        draw.rectangle((_PAD, fy + 6, _PAD + 26, fy + 34), fill=accent)
+        draw.text((_PAD + 46, fy), b["footer"], font=footer_font, fill=text_color)
+    elif not is_last:
+        hint_font = ImageFont.truetype(str(b["font_bold"]), 46)
+        hint = "›››"
+        hw = draw.textlength(hint, font=hint_font)
+        draw.text((width - _PAD - hw, height - _PAD - 48), hint,
+                  font=hint_font, fill=accent)
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out_path, "PNG")
+
+
+def render_carousel(slides: list[dict[str, str]], stem: str,
+                    out_dir: Path | None = None) -> list[dict[str, Any]]:
+    """Render an ordered set of square slides; returns media records for the draft.
+
+    The stem picks one color scheme for the whole set (a carousel reads as one unit,
+    unlike single cards which rotate schemes per draft)."""
+    out_dir = out_dir or data_dir() / "media"
+    schemes = brand.schemes()
+    scheme = schemes[_pick(stem, len(schemes))]
+    w, h, _ = _SIZES["square"]
+    image_platforms = [
+        name for name, desc in platforms.registry().items()
+        if desc["media"] in ("image", "both")
+    ]
+    total = len(slides)
+    records = []
+    for i, slide in enumerate(slides):
+        path = out_dir / f"{stem}-slide-{i + 1:02d}.png"
+        _render_slide(i, total, slide["headline"], slide.get("body", ""),
+                      (w, h), path, scheme)
+        records.append({
+            "type": "image",
+            "path": str(path),
+            "aspect": "square",
+            "style": "carousel",
+            "slide": i + 1,
+            "slides": total,
+            "platform_targets": image_platforms,
+            "status": "ready",
+        })
+    return records
+
+
+def attach_carousel(draft: dict[str, Any]) -> bool:
+    """Render the draft's carousel (if it has one) as draft['media']; return whether
+    it did. A carousel and a single card are mutually exclusive for one draft, so the
+    caller falls back to attach_cards when this returns False."""
+    if not brand.cards_enabled():
+        return False
+    cfg = brand.carousel()
+    if not cfg.get("enabled", True):
+        return False
+    slides = [
+        {"headline": (s.get("headline") or "").strip(),
+         "body": (s.get("body") or "").strip()}
+        for s in (draft.get("carousel") or [])
+        if (s.get("headline") or "").strip()
+    ]
+    if len(slides) < int(cfg["min_slides"]):
+        return False
+    draft["media"] = render_carousel(slides[:int(cfg["max_slides"])], draft["id"])
+    return True
+
+
+# --------------------------------------------------------------------------- #
 # Reels
 # --------------------------------------------------------------------------- #
 
