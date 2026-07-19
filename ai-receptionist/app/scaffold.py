@@ -59,6 +59,16 @@ _TEMPLATE: dict = {
             "antwoorden kort. Je bent een digitale assistent en doet je nooit voor als mens."
         ),
     },
+    # What the business takes on, beyond the priced services below — so the receptionist says
+    # "ja, dat doen we" to any in-scope job, not just the listed line items. Tune per prospect;
+    # if removed, scope falls back to business.type. Never a place for prices (books an offerte).
+    "scope": {
+        "does": (
+            "Alle installatie-, cv-, sanitair- en loodgieterswerk: cv-ketels plaatsen, "
+            "onderhouden en repareren, warm water en verwarming, radiatoren en vloerverwarming, "
+            "kranen, toiletten, leidingwerk, lekkages en verstoppingen — particulier en zakelijk."
+        ),
+    },
     "services": [
         {"name": "Spoedservice (lekkage / storing)", "price": "vanaf €90", "duration_min": 60},
         {"name": "Cv-ketel onderhoud", "price": "€120", "duration_min": 60},
@@ -110,7 +120,16 @@ def build_config(name: str, **over: str | None) -> dict:
     if over.get("persona"):
         cfg["persona"]["name"] = over["persona"]
     cfg["greeting"] = _greeting(name, cfg["persona"]["name"])
+    _fit_scope_to_type(cfg)
     return cfg
+
+
+def _fit_scope_to_type(cfg: dict) -> None:
+    """The template's curated `scope` describes the default installateur trade. If the type has
+    been changed to another trade, that scope no longer fits (a painter doesn't fit cv-ketels), so
+    drop it — the receptionist then derives scope from business.type until the founder curates it."""
+    if cfg.get("business", {}).get("type") != _TEMPLATE["business"]["type"]:
+        cfg.pop("scope", None)
 
 
 # --- draft from a scraped extraction (app.extract) ---------------------------------------
@@ -150,6 +169,7 @@ def merge_extraction(name: str, extraction: dict, **over: str | None) -> dict:
         bt = _cited(extraction.get("business_type"))
         if bt:
             cfg["business"]["type"] = bt
+            _fit_scope_to_type(cfg)  # a scraped type may not match the template's installateur scope
     if not over.get("phone"):
         phone = _cited(extraction.get("phone"))
         if phone:

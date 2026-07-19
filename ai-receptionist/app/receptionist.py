@@ -29,6 +29,24 @@ def build_system_prompt() -> str:
     faq = "\n".join(f"  - Q: {f['q']}\n    A: {f['a']}" for f in cfg.get("faq", []))
     hours = "\n".join(f"  - {day}: {h[0]}–{h[1]}" for day, h in cfg.get("hours", {}).items())
 
+    # Scope of work: the receptionist must confidently take on ANY job within the business's
+    # trade, not only the handful of priced line items in `services`. Without this frame, a
+    # specific but perfectly in-scope request ("kunt u ons kantoor schilderen?") gets pushed
+    # into the can't-help / take-a-message path. Scope is DERIVED from business.type by default
+    # (so every config benefits with zero edits), and an optional `scope:` block tunes it:
+    #   scope:
+    #     does: "Alle schilderwerk binnen en buiten — woningen, kantoren, kozijnen, ..."
+    #     does_not: "geen stukadoors- of dakwerk"
+    scope_cfg = cfg.get("scope") or {}
+    scope_does = str(scope_cfg.get("does", "")).strip()
+    scope_does_not = str(scope_cfg.get("does_not", "")).strip()
+    scope_does_line = f"\nSpecifically, this includes: {scope_does}" if scope_does else ""
+    scope_does_not_line = (
+        f"\n- Out of scope (a different trade): {scope_does_not}. For these, don't pretend to "
+        "help — take a message or point them to the right kind of company."
+        if scope_does_not else ""
+    )
+
     # On-site trades (a plumber/electrician who comes to the customer) must know WHERE to go,
     # and whether the address is inside the service area — a config flag, off for come-to-us
     # businesses like a clinic or salon so their flow is untouched.
@@ -65,29 +83,42 @@ Ask at most one question per reply.
 4. Only then call book_appointment. After it succeeds, read back the confirmation code and the date/time.
 {onsite_block}
 
-# When you can't help
-If you can't answer something, or the customer has a special request, complaint, or wants a
-callback, collect their name + contact and call take_message so a human follows up. For
-anything urgent, give the phone number: {b.get('phone', '(not provided)')}.
-
 # What you know
-Services:
+Services (common jobs and their prices — a starting point, not the limit of what you do):
 {services or '  (none listed)'}
 Opening hours (days not listed are CLOSED):
 {hours}
 FAQ:
 {faq or '  (none)'}
 
-# What you do NOT know — never guess these
-- Prices beyond the services list above, medical/clinical advice, or outcomes.
+# What we do (scope of work)
+{b['name']} is a {b['type']}. You confidently handle the FULL range of work that trade covers —
+not only the specific services priced above.{scope_does_line}
+- If a customer describes a job that fits this trade — even a large, unusual, or commercial one,
+  and even if it isn't in the list above — say yes, we can help, and move toward booking. Never
+  turn away a job that belongs to our trade.
+- If the job has no fixed price, do NOT quote and do NOT refuse: offer a free inspection or quote
+  (offerte) to confirm the price on site, and book that.{scope_does_not_line}
+
+# When you can't help
+This means a job for a DIFFERENT trade, a complaint, or a special request you genuinely can't
+resolve — NOT an in-scope job (see scope above). For those, collect the customer's name + contact
+and call take_message so a human follows up. For anything urgent, give the phone number:
+{b.get('phone', '(not provided)')}.
+
+# What you do NOT know — never guess these (these are facts, not the scope of your trade)
+- Exact prices for jobs not in the list above — offer an inspection/offerte instead of quoting.
+- Medical/clinical advice, outcomes, or DIY instructions for gas/electrical work.
 - Availability you haven't confirmed with check_availability this conversation.
 - Anything about a specific customer's history or records.
 If asked about any of these, say you don't have that and offer to take a message or book a
-consultation. Do not make up an answer.
+consultation. Do not make up an answer. Lacking a fact is never a reason to turn away a job that
+fits our trade — book an inspection instead.
 
 # Hard rules
 {p['guardrails']}
 - Never invent slots, prices, confirmations, or facts. If unsure, use a tool or take a message.
+- Never turn away a job that fits our trade — confirm it and book an inspection or offerte.
 - When you have enough information to act, act. When you've answered or booked, stop —
   don't pad with extra questions."""
 

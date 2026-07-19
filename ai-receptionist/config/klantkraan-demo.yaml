@@ -29,6 +29,20 @@ persona:
     "Spoed: geen warm water"). Houd antwoorden kort. Je bent een digitale assistent en doet
     je nooit voor als mens — zeg dat eerlijk als iemand ernaar vraagt.
 
+# Scope of work — what the business takes on, beyond the priced line items below. This lets the
+# receptionist confidently say "ja, dat doen we" to any in-scope job a visitor throws at the demo
+# (e.g. "kunt u vloerverwarming aanleggen?") instead of refusing because it's not a listed service.
+# Optional: if omitted, scope is derived from business.type. Prices are still never quoted — an
+# unlisted job is steered to a free inspection/offerte.
+scope:
+  does: >
+    Alle installatie-, cv-, sanitair- en loodgieterswerk: cv-ketels plaatsen, onderhouden en
+    repareren, warm water en verwarming, radiatoren en vloerverwarming, kranen, toiletten,
+    leidingwerk, lekkages en verstoppingen — bij particulieren en bedrijven, nieuwbouw en
+    onderhoud.
+  does_not: >
+    geen dakbedekking, geen losse elektra-klussen zonder installatiewerk, geen witgoedreparaties
+
 services:
   - name: "Spoedservice (lekkage / storing)"
     price: "vanaf €90"

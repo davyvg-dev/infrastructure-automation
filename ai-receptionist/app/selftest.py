@@ -6,8 +6,9 @@
     python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
     python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
+    python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
     python -m app.selftest chat        # interactive terminal chat with the receptionist
-    python -m app.selftest all         # config + calendar + agent, in order
+    python -m app.selftest all         # config + calendar + agent + scope, in order
 """
 
 from __future__ import annotations
@@ -227,6 +228,54 @@ def check_agent() -> bool:
     return True
 
 
+# A job squarely in the installateur's trade but NOT one of the priced service lines — exactly the
+# case that used to get refused. The receptionist must take it on and steer to an inspection/offerte,
+# never turn the customer away. Regression guard for the scope-of-work frame in build_system_prompt.
+_SCOPE_CONFIG = "config/klantkraan-demo.yaml"
+_SCOPE_REQUEST = "Goedemiddag, kunnen jullie bij ons in de woonkamer vloerverwarming aanleggen?"
+_REFUSAL_MARKERS = (
+    "kan ik u niet helpen", "kan ik niet helpen", "kunnen wij niet helpen",
+    "kunnen we u niet helpen", "dat doen wij niet", "dat doen we niet",
+    "niet mogelijk", "helaas kunnen we",
+)
+_HELP_MARKERS = (
+    "offerte", "inspectie", "afspraak", "inplann", "beschikbaar", "langskomen", "opmeten",
+)
+
+
+def check_scope() -> bool:
+    print("• scope (in-trade job not on the price list; needs ANTHROPIC_API_KEY)")
+    try:
+        env("ANTHROPIC_API_KEY")
+    except MissingSetting as exc:
+        return _fail(str(exc))
+    import os
+
+    from . import receptionist
+
+    prev = os.environ.get("BUSINESS_CONFIG")
+    os.environ["BUSINESS_CONFIG"] = _SCOPE_CONFIG
+    try:
+        print(f"    🧑 {_SCOPE_REQUEST}")
+        reply, _ = receptionist.run_turn([], _SCOPE_REQUEST)
+        print(f"    🤖 {reply}")
+    except Exception as exc:
+        return _fail(f"scope turn failed: {exc}")
+    finally:
+        if prev is None:
+            os.environ.pop("BUSINESS_CONFIG", None)
+        else:
+            os.environ["BUSINESS_CONFIG"] = prev
+
+    low = reply.lower()
+    if any(m in low for m in _REFUSAL_MARKERS):
+        return _fail("refused an in-scope job — it should offer an inspection/offerte instead")
+    if not any(m in low for m in _HELP_MARKERS):
+        return _fail("didn't steer an in-scope job toward booking/inspection")
+    _ok("takes on an in-trade job that isn't a listed service and steers to an inspection/offerte")
+    return True
+
+
 def interactive_chat() -> bool:
     from . import receptionist
 
@@ -253,8 +302,9 @@ CHECKS = {
     "calendar-google": check_calendar_google,
     "intake": check_intake,
     "agent": check_agent,
+    "scope": check_scope,
 }
-ORDER = ["config", "routing", "calendar", "intake", "agent"]
+ORDER = ["config", "routing", "calendar", "intake", "agent", "scope"]
 
 
 def main(argv: list[str]) -> int:
