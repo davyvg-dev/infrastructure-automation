@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Deploy/redeploy the Klantkraan apps to the Hetzner server.
 # Usage: ops/hetzner/deploy.sh <server-ip>
-# Idempotent: rsyncs the repo (incl. .env files), rebuilds venvs only when
-# requirements change, (re)installs systemd units + Caddyfile, restarts services.
+# Idempotent: rsyncs the repo (NOT .env files — server .env is the source of truth
+# for secrets; edit it on the box), rebuilds venvs only when requirements change,
+# (re)installs systemd units + Caddyfile, restarts services.
 set -euo pipefail
 
 IP="${1:?usage: deploy.sh <server-ip>}"
@@ -15,6 +16,7 @@ echo "==> rsync repo to $HOST:$DEST"
 rsync -az --delete \
   --exclude .venv --exclude node_modules --exclude .wrangler \
   --exclude .DS_Store --exclude __pycache__ \
+  --exclude '.env' --exclude '.env.*' \
   --exclude growth-engine/data --exclude ai-receptionist/data \
   "$REPO_ROOT"/ "$HOST:$DEST/"
 
