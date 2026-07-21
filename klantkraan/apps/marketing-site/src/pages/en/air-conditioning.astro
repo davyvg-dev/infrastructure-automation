@@ -13,9 +13,9 @@ interface PainStat {
 }
 
 const painStats: PainStat[] = [
-  { value: '24/7', caption: "someone asks about a no-cooling call at 9pm — the receptionist answers instantly." },
+  { value: '24/7', caption: "someone asks about a no-cooling call at 9pm. The receptionist answers on the spot." },
   { value: '28%', caption: "of calls to tradespeople go unanswered, usually because you're on a job." },
-  { value: '€450', caption: 'average value of a missed enquiry — one saved install pays for months.' },
+  { value: '€450', caption: 'average value of a missed enquiry. One saved install pays for months.' },
 ]
 
 interface Feature {
@@ -28,12 +28,12 @@ const features: Feature[] = [
   {
     icon: 'message-square',
     title: 'Handles the summer rush',
-    body: "Answers questions on your website and via WhatsApp, in natural English, evenings and weekends included. Quotes your own rates for a service, a recharge or a new install — and tells an urgent no-cooling call apart from a routine maintenance booking.",
+    body: "Answers questions on your website and via WhatsApp, in natural English, evenings and weekends included. Quotes your own rates for a service, a recharge or a new install, and tells an urgent no-cooling call apart from a routine maintenance booking.",
   },
   {
     icon: 'calendar-check',
     title: 'Appointments straight into your calendar',
-    body: "Service visits and installations are booked directly into your calendar — only in the slots you've released. Urgent breakdowns are separated from routine jobs, so you know what comes first.",
+    body: "Service visits and installations are booked directly into your calendar, only in the slots you've released. Urgent breakdowns are separated from routine jobs, so you know what comes first.",
   },
   {
     icon: 'phone',
@@ -52,7 +52,7 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: "With one small script we install for you — you don't have to do anything. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
+    a: "With one small script we install for you. You don't lift a finger. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
   },
   {
     q: "And if I'm on a job and can't reply?",
@@ -60,17 +60,17 @@ const faqs: Faq[] = [
   },
   {
     q: 'Can it handle the summer peak?',
-    a: 'Yes. The receptionist handles conversations in parallel — no queue. Ten customers can chat or message about a broken unit at once and all ten get an instant answer. Urgent breakdowns are recognised and separated from routine servicing, so you know who to call first.',
+    a: 'Yes. The receptionist handles conversations in parallel. No queue. Ten customers can chat or message about a broken unit at once and all ten get an instant answer. Urgent breakdowns are recognised and separated from routine servicing, so you know who to call first.',
   },
   {
     q: "Does the customer know it's AI?",
-    a: 'Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. Not a marketing choice but a legal requirement under the EU AI Act (article 50). The disclosure always stays on.',
+    a: "Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. This isn't a marketing choice. It's a legal requirement under the EU AI Act (article 50). The disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
   {
     q: 'What if it says something wrong about my prices?',
-    a: "It can't. The assistant only quotes rates you've set yourself: call-out fee, service price, recharge, install survey. Unknown prices are never invented — the customer gets a callback request instead. We test every configuration before it goes live.",
+    a: "It can't. The assistant only quotes rates you've set yourself: call-out fee, service price, recharge, install survey. It never invents a price it doesn't have. The customer gets a callback request instead. We test every configuration before it goes live.",
   },
   {
     q: 'What happens to customer data?',
@@ -103,7 +103,7 @@ const faqSchema = {
 <Base
   lang="en"
   title="AI receptionist for air-conditioning companies | Klantkraan"
-  description="A digital receptionist for air-conditioning & HVAC companies: answers no-cooling calls, quotes your rates, books installs and services — on your website and WhatsApp, 24/7. Cancel monthly."
+  description="A digital receptionist for air-conditioning & HVAC companies: answers no-cooling calls, quotes your rates, books installs and services, on your website and WhatsApp, 24/7. Cancel monthly."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -219,7 +219,7 @@ const faqSchema = {
         </p>
         <p class="mt-4 text-body text-(--color-kraan-stone-700)">
           Klantkraan Chat is €299 a month. One extra install from the summer rush covers the
-          subscription for months. Everything after that is revenue — and your customer isn't
+          subscription for months. Everything after that is revenue, and your customer isn't
           sweating through a 40°C afternoon waiting for a callback.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">

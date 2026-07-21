@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
-import LeadForm from '../components/LeadForm.astro'
 import Stat from '../components/Stat.astro'
 import RingingPhone from '../components/illustrations/RingingPhone.astro'
 import DashboardMock from '../components/DashboardMock.astro'
@@ -135,18 +134,4 @@ import { waLink } from '../data/contact'
     </div>
   </section>
 
-  <!-- 4. Lead form (stone-100) -->
-  <section id="contact" class="bg-(--color-kraan-stone-100) py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Contact</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">Laat ons u terugbellen.</h2>
-      <p class="mt-4 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-        Vul het formulier in. Binnen 1 werkdag bellen wij u terug om uw situatie door te nemen en
-        een demo op uw eigen cijfers te plannen.
-      </p>
-      <div class="mt-8 max-w-2xl">
-        <LeadForm />
-      </div>
-    </div>
-  </section>
 </Base>
