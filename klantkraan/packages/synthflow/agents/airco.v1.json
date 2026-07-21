@@ -1,0 +1,105 @@
+{
+  "_comment_schema": "Synthflow agent export — schema is best-effort: Synthflow not available in context7 as of 2026-05-20; structure mirrors agents/loodgieter.v1.json. Verify against current Synthflow console export before first prod deploy.",
+  "_comment_source_prompt": "System prompt master copy lives at klantkraan/packages/prompts/en/airco.v1.md — pasted verbatim at render time; the .rendered.md (after mustache fill) is what gets deployed, and its SHA-256 is logged per call.",
+
+  "name": "klantkraan-airco-en-v1",
+  "vertical": "airco",
+  "version": "1.0.0",
+  "language": "en-GB",
+
+  "voice": {
+    "provider": "elevenlabs",
+    "voice_id": "TODO_ELEVENLABS_VOICE_ID",
+    "_comment_voice": "TODO: replace with an ElevenLabs English voice id (neutral British/European English, clear and calm). Not a US-broadcast style. Resolve during onboarding; store the choice on the client's Attio record.",
+    "stability": 0.6,
+    "similarity_boost": 0.75,
+    "style": 0.2,
+    "use_speaker_boost": true,
+    "model": "eleven_multilingual_v2"
+  },
+
+  "model": {
+    "provider": "anthropic",
+    "name": "claude-sonnet-4-6",
+    "_comment_model": "Matches the Dutch agents; Synthflow's supported list as of 2026-05. Founder picks the model in agent settings; the prompt is model-agnostic.",
+    "temperature": 0.3,
+    "max_tokens": 600
+  },
+
+  "first_message": "Hello, you're speaking with {{agent_naam}}, the digital assistant at {{client_name}}. This call is handled by an AI system and may be recorded for quality and training purposes. If you'd rather speak with a person, just say 'agent'. How can I help you?",
+  "_comment_first_message": "English counterpart of the verbatim disclosure in klantkraan/docs/04-legal/ai-act-disclosure.md. Non-waivable per MSA. Before first deploy, add this English text to that legal doc so CI drift-checks have a source of truth.",
+
+  "system_prompt_source": "klantkraan/packages/prompts/en/airco.v1.md",
+  "system_prompt": "PLACEHOLDER — at deploy time, the n8n client-onboarding.json workflow reads packages/prompts/en/airco.v1.md, runs mustache substitution with the per-client variables resolved from Attio, writes the result to packages/prompts/en/airco.{client_id}.rendered.md, computes SHA-256, then PUTs the rendered content into this field via the Synthflow API.",
+
+  "tools": [
+    {
+      "name": "schedule_callback",
+      "description": "Log a callback request for the owner. Use when the caller is NEW_JOB or EXISTING_CUSTOMER. Never schedule an actual calendar appointment without explicit caller confirmation of date + time.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caller_name":   { "type": "string",  "description": "Caller first and last name." },
+          "caller_phone":  { "type": "string",  "description": "Phone number in E.164." },
+          "town":          { "type": "string",  "description": "Town + address." },
+          "job_summary":   { "type": "string",  "description": "Short description, max 200 chars." },
+          "intent":        { "type": "string",  "enum": ["NEW_JOB", "EXISTING_CUSTOMER", "SUPPLIER"] },
+          "urgency":       { "type": "string",  "enum": ["LOW", "MED", "HIGH"] },
+          "preferred_window": { "type": "string", "description": "e.g. 'within 4 hours', 'tomorrow morning', 'this week'." }
+        },
+        "required": ["caller_name", "caller_phone", "intent", "urgency"]
+      }
+    },
+    {
+      "name": "transfer_emergency",
+      "description": "Transfer the caller straight to the owner on an EMERGENCY (no cooling for a vulnerable person, water leak onto electrics, burning smell/electrical fault, refrigerant leak, gas smell). Transfer first; only collect extra details if the transfer fails.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transfer_to":   { "type": "string", "description": "Transfer number ({{escalation_number}})." },
+          "emergency_type": { "type": "string", "enum": ["NO_COOLING_VULNERABLE", "WATER_LEAK_ELECTRICS", "BURNING_SMELL_ELECTRICAL", "REFRIGERANT_LEAK", "GAS_SMELL", "OTHER_EMERGENCY"] },
+          "caller_phone":  { "type": "string" },
+          "address":       { "type": "string" },
+          "summary":       { "type": "string", "description": "One-sentence summary for the owner." }
+        },
+        "required": ["transfer_to", "emergency_type", "caller_phone"]
+      }
+    },
+    {
+      "name": "lookup_tariff",
+      "description": "Fetch the client's rate context (call-out fee, service price, recharge, install survey) and give a short spoken summary. May only be called when may_quote_prices = true.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tariff_kind": { "type": "string", "enum": ["callout_fee", "service", "recharge", "survey", "all"] }
+        },
+        "required": ["tariff_kind"]
+      }
+    }
+  ],
+
+  "webhooks": {
+    "call_end": "https://api.klantkraan.nl/api/webhook/synthflow/call-end",
+    "_comment_webhook": "POST JSON: {intent, caller_name, caller_phone, town, summary, next_action, priority, audio_url, transcript, duration_s, prompt_hash, model, voice_id, disclosure_played_at_ms}. See apps/api route in klantkraan/docs/08-tech/repo-architecture.md."
+  },
+
+  "transfer_phone_number": "{{escalation_number}}",
+
+  "compliance": {
+    "ai_act_disclosure_required": true,
+    "disclosure_position": "before_first_user_input",
+    "disclosure_verbatim_source": "klantkraan/docs/04-legal/ai-act-disclosure.md",
+    "call_recording_consent_required": true,
+    "human_handoff_keyword_en": "agent",
+    "max_call_duration_seconds": 360,
+    "_comment_compliance": "AI Act art. 50 in force 2 Aug 2026; disclosure is non-waivable per MSA; logged via compliance_audits table; founder spot-checks 10 random calls/month per 04-legal/ai-act-disclosure.md."
+  },
+
+  "fallback": {
+    "on_no_input_seconds": 8,
+    "on_no_input_prompt_en": "Are you still there?",
+    "on_unintelligible_max_attempts": 2,
+    "on_unintelligible_prompt_en": "I'm sorry, I can't hear you well. I'll ask {{owner_naam}} to call you back.",
+    "on_call_duration_exceeded_prompt_en": "To be thorough, I'll have {{owner_naam}} call you back personally. He'll have your details within 4 hours."
+  }
+}
