@@ -42,6 +42,14 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 - [x] Deploy the demo publicly at a stable URL — Hetzner ops redeployed 2026-07-14: `widget.js` now live (was 404), showcase at https://demo-168-119-173-25.sslip.io/ and Meijer's own bot at https://demo-168-119-173-25.sslip.io/?client=meijer (verified end-to-end: offers a real slot, collects details, books)
 - [ ] Walk one warm prospect through it; offer pilot terms (free/€99 for 30 days in exchange for case-study data) — FOUNDER: Meijer demo is ready to show
 
+### F. Onboarding + maintenance process — research + harden (added 2026-07-21)
+Goal: make onboarding frictionless for BOTH sides, so the product works smoothly from day one and stays that way. Not a from-scratch build — audit/harden the existing `docs/03-delivery/onboarding-playbook.md` + `churn-prevention.md` against the text-first + Synthflow reality and the first real client (Mallorca airco).
+- [ ] Research/benchmark how comparable done-for-you providers onboard trades with minimal client effort (intake → build → go-live → handover)
+- [ ] Map the end-to-end flow: close → one-time intake → build config → deploy/route → client test & sign-off → go-live → maintenance
+- [ ] Define the minimal client-side intake collected ONCE (services, hours, FAQ, calendar access, phone/WhatsApp) — a single checklist/form, not back-and-forth
+- [ ] Define the post-go-live upkeep loop (monitoring, monthly tune, change requests, who owns what) — extend churn-prevention.md
+- [ ] Output: one smooth, repeatable playbook the founder runs per client
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
