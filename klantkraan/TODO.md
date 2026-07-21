@@ -52,10 +52,10 @@ Goal: make onboarding frictionless for BOTH sides, so the product works smoothly
 
 ### G. Website copy — de-AI / professional-copywriter pass (added 2026-07-21)
 Goal: the site copy reads like a professional copywriter wrote it, not like AI. Founder specifically flagged em-dashes and AI-tell writing. Cut them; keep dashes/punctuation only when genuinely relevant.
-- [ ] Audit live copy. Start with the new `/en/` pages (home, prijzen, over, demo, air-conditioning) — they were AI-drafted and lean on em-dashes — then the Dutch pages.
-- [ ] Rewrite in a natural, professional voice: kill decorative em-dashes, hollow parallel triads, "it's not just X, it's Y", hedging, over-punctuation.
-- [ ] Keep every fact/price accurate. Dutch stays Dutch, English stays English.
-- [ ] Re-deploy after the pass (Cloudflare Pages) and re-verify.
+- [x] `/en/` pages done (home, prijzen, over, demo, air-conditioning): decorative em-dashes + AI-tells removed, facts/prices/AI Act art. 50 disclosure kept, natural professional voice; build passes. (2026-07-21)
+- [x] Also dropped the "call you back / book a demo" lead-form block (section 4) from both home pages; capture now runs via the hero WhatsApp + demo CTAs. (2026-07-21)
+- [ ] Dutch pass: home + trade landings + prijzen/over/demo, plus shared components that still carry em-dashes (DashboardMock, RiskReversal, LeadForm, Footer + illustration comments).
+- [ ] Re-deploy after the Dutch pass (Cloudflare Pages, manual wrangler) and re-verify.
 
 ## Phase 0 — Planning docs
 
