@@ -4,16 +4,31 @@ import { branches } from '../data/branches'
 import { contact, waLink, telLink, mailLink } from '../data/contact'
 import { company } from '../data/company'
 
+interface Props {
+  lang?: 'nl' | 'en'
+}
+const { lang = 'nl' } = Astro.props
+const isEn = lang === 'en'
+
 const year = new Date().getFullYear()
 
-const legal = [
-  { href: '/legal/voorwaarden/', label: 'Algemene voorwaarden' },
-  { href: '/legal/dpa/', label: 'Verwerkersovereenkomst' },
-  { href: '/legal/sla/', label: 'SLA' },
-  { href: '/legal/privacy/', label: 'Privacy' },
-  { href: '/legal/ai-disclosure/', label: 'AI-disclosure' },
-  { href: '/legal/subprocessors/', label: 'Sub-processors' },
-]
+const legal = isEn
+  ? [
+      { href: '/legal/voorwaarden/', label: 'Terms & conditions' },
+      { href: '/legal/dpa/', label: 'Data processing agreement' },
+      { href: '/legal/sla/', label: 'SLA' },
+      { href: '/legal/privacy/', label: 'Privacy' },
+      { href: '/legal/ai-disclosure/', label: 'AI disclosure' },
+      { href: '/legal/subprocessors/', label: 'Sub-processors' },
+    ]
+  : [
+      { href: '/legal/voorwaarden/', label: 'Algemene voorwaarden' },
+      { href: '/legal/dpa/', label: 'Verwerkersovereenkomst' },
+      { href: '/legal/sla/', label: 'SLA' },
+      { href: '/legal/privacy/', label: 'Privacy' },
+      { href: '/legal/ai-disclosure/', label: 'AI-disclosure' },
+      { href: '/legal/subprocessors/', label: 'Sub-processors' },
+    ]
 
 interface TrustBadge {
   icon: 'shield-check' | 'check' | 'phone-call' | 'clock'
@@ -21,50 +36,52 @@ interface TrustBadge {
   sub: string
 }
 
-const trustBadges: TrustBadge[] = [
-  {
-    icon: 'shield-check',
-    label: 'AVG / GDPR conform',
-    sub: 'Standaard verwerkersovereenkomst',
-  },
-  {
-    icon: 'shield-check',
-    label: 'EU AI Act art. 50',
-    sub: 'Disclosure niet uitschakelbaar',
-  },
-  {
-    icon: 'check',
-    label: 'EU-gehost',
-    sub: 'Cloudflare · Neon · Hetzner FSN1',
-  },
-  {
-    icon: 'clock',
-    label: 'Per maand opzegbaar',
-    sub: 'Geen wurgcontract, geen verborgen kosten',
-  },
-]
+const trustBadges: TrustBadge[] = isEn
+  ? [
+      { icon: 'shield-check', label: 'GDPR compliant', sub: 'Standard data processing agreement' },
+      { icon: 'shield-check', label: 'EU AI Act art. 50', sub: "Disclosure can't be switched off" },
+      { icon: 'check', label: 'EU-hosted', sub: 'Cloudflare · Neon · Hetzner FSN1' },
+      { icon: 'clock', label: 'Cancel monthly', sub: 'No lock-in, no hidden fees' },
+    ]
+  : [
+      { icon: 'shield-check', label: 'AVG / GDPR conform', sub: 'Standaard verwerkersovereenkomst' },
+      { icon: 'shield-check', label: 'EU AI Act art. 50', sub: 'Disclosure niet uitschakelbaar' },
+      { icon: 'check', label: 'EU-gehost', sub: 'Cloudflare · Neon · Hetzner FSN1' },
+      { icon: 'clock', label: 'Per maand opzegbaar', sub: 'Geen wurgcontract, geen verborgen kosten' },
+    ]
+
+const t = {
+  trustKicker: isEn ? 'Why you can trust us' : 'Waarom u ons kunt vertrouwen',
+  trustAria: isEn ? 'Trust signals' : 'Vertrouwens-signalen',
+  tagline: isEn
+    ? 'The digital receptionist for tradespeople and local businesses.'
+    : 'De Klantenmotor voor Nederlandse ondernemers.',
+  tradeNameNote: isEn ? 'Klantkraan is a trade name of' : 'Klantkraan is een handelsnaam van',
+  branchesHead: isEn ? 'Trades' : 'Branches',
+  allBranches: isEn ? 'All trades →' : 'Alle branches →',
+  legalHead: isEn ? 'Legal' : 'Juridisch',
+  contactHead: 'Contact',
+  whatsapp: isEn ? 'WhatsApp us' : 'WhatsApp ons',
+  founder: isEn ? 'The founder' : 'De oprichter',
+  founderSub: isEn ? 'Read our story →' : 'Lees ons verhaal →',
+  madeIn: isEn ? 'Made in the Netherlands.' : 'Gemaakt in Nederland.',
+}
+const overHref = isEn ? '/en/over/' : '/over/'
+const gridCols = isEn ? 'sm:grid-cols-2 md:grid-cols-3' : 'sm:grid-cols-2 md:grid-cols-4'
 ---
 
 <footer class="border-t border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100)">
   <!-- Trust band — sits above the legal/branch grid. -->
-  <section
-    class="border-b border-(--color-kraan-stone-300) bg-white"
-    aria-label="Vertrouwens-signalen"
-  >
+  <section class="border-b border-(--color-kraan-stone-300) bg-white" aria-label={t.trustAria}>
     <div class="mx-auto max-w-5xl px-6 py-8 md:py-10">
-      <p
-        class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)"
-      >
-        Waarom u ons kunt vertrouwen
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">
+        {t.trustKicker}
       </p>
       <ul class="mt-5 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
         {
           trustBadges.map((b) => (
             <li class="flex items-start gap-3">
-              <Icon
-                name={b.icon}
-                class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)"
-              />
+              <Icon name={b.icon} class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
               <div>
                 <p class="text-small font-medium text-(--color-kraan-ink)">{b.label}</p>
                 <p class="text-small text-(--color-kraan-stone-500)">{b.sub}</p>
@@ -77,12 +94,12 @@ const trustBadges: TrustBadge[] = [
   </section>
 
   <div class="mx-auto max-w-5xl px-6 py-8 md:py-12 text-small text-(--color-kraan-stone-700)">
-    <div class="grid gap-6 md:gap-8 sm:grid-cols-2 md:grid-cols-4">
+    <div class:list={['grid gap-6 md:gap-8', gridCols]}>
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">Klantkraan</p>
-        <p class="mt-2">De Klantenmotor voor Nederlandse ondernemers.</p>
+        <p class="mt-2">{t.tagline}</p>
         <p class="mt-4 text-micro">
-          Klantkraan is een handelsnaam van {company.legalName}.<br />
+          {t.tradeNameNote} {company.legalName}.<br />
           KvK: <span class="font-mono">{company.kvk}</span>{
             company.btw && (
               <>
@@ -92,27 +109,29 @@ const trustBadges: TrustBadge[] = [
           }
         </p>
       </div>
-      <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">Branches</p>
-        <ul class="mt-2">
-          {
-            branches.map((item) => (
+      {
+        !isEn && (
+          <div>
+            <p class="font-display text-h3 text-(--color-kraan-ink)">{t.branchesHead}</p>
+            <ul class="mt-2">
+              {branches.map((item) => (
+                <li>
+                  <a href={item.href} class="block py-2">
+                    {item.labelPlural}
+                  </a>
+                </li>
+              ))}
               <li>
-                <a href={item.href} class="block py-2">
-                  {item.labelPlural}
+                <a href="/voor-wie/" class="block py-2 text-(--color-kraan-blue)">
+                  {t.allBranches}
                 </a>
               </li>
-            ))
-          }
-          <li>
-            <a href="/voor-wie/" class="block py-2 text-(--color-kraan-blue)">
-              Alle branches →
-            </a>
-          </li>
-        </ul>
-      </div>
+            </ul>
+          </div>
+        )
+      }
       <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">Juridisch</p>
+        <p class="font-display text-h3 text-(--color-kraan-ink)">{t.legalHead}</p>
         <ul class="mt-2">
           {
             legal.map((item) => (
@@ -126,16 +145,11 @@ const trustBadges: TrustBadge[] = [
         </ul>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">Contact</p>
+        <p class="font-display text-h3 text-(--color-kraan-ink)">{t.contactHead}</p>
         <p>
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener"
-            class="flex items-center gap-2 py-2"
-          >
+          <a href={waLink} target="_blank" rel="noopener" class="flex items-center gap-2 py-2">
             <Icon name="message-circle" class="h-4 w-4 shrink-0" />
-            <span>WhatsApp ons</span>
+            <span>{t.whatsapp}</span>
           </a>
         </p>
         <p>
@@ -150,7 +164,7 @@ const trustBadges: TrustBadge[] = [
             <span>{contact.phoneDisplay}</span>
           </a>
         </p>
-        <a href="/over/" class="mt-4 flex items-center gap-3 py-2">
+        <a href={overHref} class="mt-4 flex items-center gap-3 py-2">
           <span
             class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-kraan-stone-300) bg-(--color-kraan-cream) font-display text-h3 text-(--color-kraan-blue)"
             aria-hidden="true"
@@ -158,14 +172,12 @@ const trustBadges: TrustBadge[] = [
             K
           </span>
           <span>
-            <span class="block text-(--color-kraan-ink)">De oprichter</span>
-            <span class="block text-micro text-(--color-kraan-stone-500)"
-              >Lees ons verhaal →</span
-            >
+            <span class="block text-(--color-kraan-ink)">{t.founder}</span>
+            <span class="block text-micro text-(--color-kraan-stone-500)">{t.founderSub}</span>
           </span>
         </a>
       </div>
     </div>
-    <p class="mt-10 text-micro">&copy; {year} Klantkraan · Gemaakt in Nederland.</p>
+    <p class="mt-10 text-micro">&copy; {year} Klantkraan · {t.madeIn}</p>
   </div>
 </footer>

@@ -10,6 +10,8 @@ import { contact } from '../data/contact'
 interface Props {
   title: string
   description: string
+  /** Page language — drives <html lang>, og:locale, the skip-link, and the shared chrome. */
+  lang?: 'nl' | 'en'
   canonical?: string
   /**
    * When true (default): wrap <slot /> in a centered max-w-5xl main.
@@ -30,6 +32,7 @@ interface Props {
 const {
   title,
   description,
+  lang = 'nl',
   canonical,
   centered = true,
   noindex = false,
@@ -37,6 +40,7 @@ const {
 } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
+const isEn = lang === 'en'
 
 // Site-wide structured data: who runs this site (Organization) + what it is
 // (WebSite). Company registration details come from src/data/company.ts.
@@ -70,7 +74,7 @@ const siteSchema = {
 ---
 
 <!doctype html>
-<html lang="nl">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -86,7 +90,7 @@ const siteSchema = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:locale" content={isEn ? 'en_GB' : 'nl_NL'} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -104,9 +108,9 @@ const siteSchema = {
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-kraan-blue) focus:px-4 focus:py-2 focus:text-white focus:no-underline"
     >
-      Ga naar hoofdinhoud
+      {isEn ? 'Skip to main content' : 'Ga naar hoofdinhoud'}
     </a>
-    <Header />
+    <Header lang={lang} />
     {
       centered ? (
         <main id="main" class="mx-auto max-w-5xl px-6 py-10 md:py-16">
@@ -118,7 +122,7 @@ const siteSchema = {
         </main>
       )
     }
-    <Footer />
+    <Footer lang={lang} />
     {stickyCta && <StickyMobileCta />}
   </body>
 </html>

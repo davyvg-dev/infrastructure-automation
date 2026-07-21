@@ -1,0 +1,126 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import LeadForm from '../../components/LeadForm.astro'
+import Stat from '../../components/Stat.astro'
+import RingingPhone from '../../components/illustrations/RingingPhone.astro'
+import { waLink } from '../../data/contact'
+---
+
+<Base
+  lang="en"
+  title="AI receptionist for your business — website chat & WhatsApp | Klantkraan"
+  description="An AI receptionist on your website and WhatsApp: answers questions, books appointments and captures leads — day and night. Done-for-you setup. Cancel monthly."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          Every customer question <span class="text-(--color-kraan-rust)">answered</span> — day and night.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          You're up a ladder or with a customer while your best lead has a question. Klantkraan's
+          digital receptionist answers it — on your website and via WhatsApp — books the appointment
+          in your calendar and captures every callback request. Done-for-you setup. Cancel monthly.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>WhatsApp us now</span>
+          </a>
+          <a
+            href="/en/demo/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            Try the demo
+          </a>
+        </div>
+        <p class="mt-3 text-small text-(--color-kraan-stone-500)">
+          Usually a reply within one working day, straight from the owner.
+        </p>
+      </div>
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <RingingPhone class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-5xl px-6">
+      <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">GDPR + AI Act art. 50</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Disclosure on by default</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Hosted in the EU</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Natural conversation</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Knows your rates + services</dd>
+          </div>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 2. Stat band (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="The receptionist in numbers">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      <Stat value="28%" label="of your calls go unanswered." />
+      <Stat value="24/7" label="the receptionist answers questions on your site and WhatsApp." />
+      <Stat value="€450" label="average value of a missed enquiry." />
+    </div>
+  </section>
+
+  <!-- 3. Transparency (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Transparency</p>
+      <div class="mt-3 rounded-(--radius-card) border-l-4 border-(--color-kraan-rust) bg-(--color-kraan-stone-100) p-6 md:p-8">
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">
+          Honest about AI, from the very first second.
+        </h2>
+        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+          At the start of every conversation your customer reads: "You're chatting with a digital
+          assistant." Required under EU AI Act article 50 — and simply good business: open, nothing
+          to hide. No confusion for the customer, no fine from the regulator.
+        </p>
+        <p class="mt-4 text-small">
+          <a href="/legal/ai-disclosure/" class="underline">Read the full disclosure</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Lead form (stone-100) -->
+  <section id="contact" class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Contact</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">Let us call you back.</h2>
+      <p class="mt-4 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+        Fill in the form. Within 1 working day we'll call you back to go through your situation and
+        set up a demo on your own numbers.
+      </p>
+      <div class="mt-8 max-w-2xl">
+        <LeadForm lang="en" />
+      </div>
+    </div>
+  </section>
+</Base>

@@ -33,7 +33,11 @@ export default defineConfig({
     },
   },
   i18n: {
-    locales: ['nl'],
+    locales: ['nl', 'en'],
     defaultLocale: 'nl',
+    routing: {
+      // Dutch stays at the root (/prijzen/); English lives under /en/ (/en/prijzen/).
+      prefixDefaultLocale: false,
+    },
   },
 })

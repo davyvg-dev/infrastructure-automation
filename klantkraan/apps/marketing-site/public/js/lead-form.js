@@ -53,9 +53,14 @@ function initLeadForm() {
     return ok
   }
 
+  // Labels come from the rendered button so the form works in any locale:
+  // the idle label is whatever the server rendered; the busy label is a data attr.
+  const idleLabel = submitBtn.textContent.trim()
+  const submittingLabel = submitBtn.dataset.submitting ?? idleLabel
+
   function setSubmitting(submitting) {
     submitBtn.disabled = submitting
-    submitBtn.textContent = submitting ? 'Versturen...' : 'Vraag een demo aan'
+    submitBtn.textContent = submitting ? submittingLabel : idleLabel
   }
 
   function renderSuccess() {
