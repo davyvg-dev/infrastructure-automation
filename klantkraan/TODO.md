@@ -54,7 +54,8 @@ Goal: make onboarding frictionless for BOTH sides, so the product works smoothly
 Goal: the site copy reads like a professional copywriter wrote it, not like AI. Founder specifically flagged em-dashes and AI-tell writing. Cut them; keep dashes/punctuation only when genuinely relevant.
 - [x] `/en/` pages done (home, prijzen, over, demo, air-conditioning): decorative em-dashes + AI-tells removed, facts/prices/AI Act art. 50 disclosure kept, natural professional voice; build passes. (2026-07-21)
 - [x] Also dropped the "call you back / book a demo" lead-form block (section 4) from both home pages; capture now runs via the hero WhatsApp + demo CTAs. (2026-07-21)
-- [ ] Dutch pass: home + trade landings + prijzen/over/demo, plus shared components that still carry em-dashes (DashboardMock, RiskReversal, LeadForm, Footer + illustration comments).
+- [x] Dutch pass done (2026-07-21): home, over, demo, demo/sportscholen, voor-wie, sportscholen, rekentool, all 6 trade landings, the `[stad]/[vak]` template, gidsen/blog titles, and the RiskReversal + DashboardMock + dakdekkers/* components; art. 50 FAQ harmonised across the 6 trade/gym pages. Visible marketing prose is em-dash-free; build passes.
+- [ ] Deferred (not marketing prose): legal-page `<title>` "— Klantkraan" suffixes + DPA "Annex I —" headings, the `/r/[slug]` internal dashboard, and the now-unused LeadForm component.
 - [ ] Re-deploy after the Dutch pass (Cloudflare Pages, manual wrangler) and re-verify.
 
 ## Phase 0 — Planning docs

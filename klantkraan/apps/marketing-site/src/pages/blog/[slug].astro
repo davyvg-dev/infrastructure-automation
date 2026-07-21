@@ -73,7 +73,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
 
 // Only append the brand suffix when the title stays within ~65 chars.
 const pageTitle =
-  post.data.title.length <= 52 ? `${post.data.title} — Klantkraan` : post.data.title
+  post.data.title.length <= 52 ? `${post.data.title} | Klantkraan` : post.data.title
 ---
 
 <Base title={pageTitle} description={post.data.description} canonical={canonical}>

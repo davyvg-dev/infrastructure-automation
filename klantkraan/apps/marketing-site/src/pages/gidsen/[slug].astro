@@ -30,7 +30,7 @@ const cornerstonePath = cornerstone[gids.data.vertical] ?? '/voor-wie/'
 
 // Only append the brand suffix when the title stays within ~65 chars.
 const pageTitle =
-  gids.data.title.length <= 52 ? `${gids.data.title} — Klantkraan` : gids.data.title
+  gids.data.title.length <= 52 ? `${gids.data.title} | Klantkraan` : gids.data.title
 ---
 
 <Base title={pageTitle} description={gids.data.description} centered={false}>
@@ -75,8 +75,8 @@ const pageTitle =
         Klantkraan voor {nicheLabelPlural(gids.data.vertical).toLowerCase()}
       </h2>
       <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-        Bekijk de complete oplossing voor uw vak — een digitale receptionist via websitechat en
-        WhatsApp die vragen beantwoordt, afspraken inplant en leads vangt — in één abonnement.
+        Bekijk de complete oplossing voor uw vak: een digitale receptionist via websitechat en
+        WhatsApp die vragen beantwoordt, afspraken inplant en leads vangt, in één abonnement.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a

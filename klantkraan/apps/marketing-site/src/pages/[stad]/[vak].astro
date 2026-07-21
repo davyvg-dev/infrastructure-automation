@@ -30,7 +30,7 @@ const niche = niches[nicheSlug]
 const combo = wave1.find((c) => c.city === citySlug && c.niche === nicheSlug)!
 
 const pageTitle = `${niche.label} in ${city.name}: Klantkraan AI-receptionist`
-const pageDescription = `${niche.label} in ${city.name}? De AI-receptionist beantwoordt vragen via chat en WhatsApp, plant afspraken en vangt leads — 24/7. Per maand opzegbaar.`
+const pageDescription = `${niche.label} in ${city.name}? De AI-receptionist beantwoordt vragen via chat en WhatsApp, plant afspraken en vangt leads, 24/7. Per maand opzegbaar.`
 
 // Merge FAQs: 2 city-named first (per blueprint thin-content rule), then 4 base.
 const faqs: Faq[] = [...combo.cityFaqs, ...niche.baseFaqs]
