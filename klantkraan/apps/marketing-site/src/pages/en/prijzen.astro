@@ -8,6 +8,8 @@ interface Tier {
   price: number
   /** Day-price equivalent in English decimal-point format (price / 30, rounded to cents). */
   dayPrice: string
+  /** Optional usage note under the price (e.g. included call minutes + overage rate). */
+  priceNote?: string
   blurb: string
   highlight: boolean
 }
@@ -27,6 +29,7 @@ const tiers: Tier[] = [
     name: 'Compleet',
     price: 499,
     dayPrice: '16.63',
+    priceNote: 'incl. 750 call minutes/mo, then €0.40/min',
     blurb:
       'Everything in Chat, plus an AI phone agent on your own Dutch number (coming soon).',
     highlight: false,
@@ -51,6 +54,11 @@ const features: FeatureRow[] = [
     feature: 'AI phone agent on your own Dutch number',
     chat: '–',
     compleet: 'coming soon',
+  },
+  {
+    feature: 'Included call minutes per month',
+    chat: '–',
+    compleet: '750, then €0.40/min',
   },
 ]
 
@@ -125,6 +133,9 @@ const serviceSchema = {
             <p class="mt-1 font-mono text-small text-(--color-kraan-stone-500)">
               ≈ €{tier.dayPrice} per day
             </p>
+            {tier.priceNote && (
+              <p class="mt-2 text-small text-(--color-kraan-stone-500)">{tier.priceNote}</p>
+            )}
             <p class="mt-3 text-body text-(--color-kraan-stone-700)">{tier.blurb}</p>
             <a
               href="/en/demo/"
