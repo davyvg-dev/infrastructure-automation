@@ -1,0 +1,311 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import Stat from '../../components/Stat.astro'
+import RingingPhone from '../../components/illustrations/RingingPhone.astro'
+
+// English landing page for the air-conditioning / HVAC ICP. Follows the Dutch
+// /installateur template structure; self-contained (no Dutch-copy components).
+
+interface PainStat {
+  value: string
+  caption: string
+}
+
+const painStats: PainStat[] = [
+  { value: '24/7', caption: "someone asks about a no-cooling call at 9pm — the receptionist answers instantly." },
+  { value: '28%', caption: "of calls to tradespeople go unanswered, usually because you're on a job." },
+  { value: '€450', caption: 'average value of a missed enquiry — one saved install pays for months.' },
+]
+
+interface Feature {
+  icon: 'phone' | 'message-square' | 'calendar-check'
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    icon: 'message-square',
+    title: 'Handles the summer rush',
+    body: "Answers questions on your website and via WhatsApp, in natural English, evenings and weekends included. Quotes your own rates for a service, a recharge or a new install — and tells an urgent no-cooling call apart from a routine maintenance booking.",
+  },
+  {
+    icon: 'calendar-check',
+    title: 'Appointments straight into your calendar',
+    body: "Service visits and installations are booked directly into your calendar — only in the slots you've released. Urgent breakdowns are separated from routine jobs, so you know what comes first.",
+  },
+  {
+    icon: 'phone',
+    title: 'Leads and callbacks on your phone',
+    body: "A unit down in a heatwave? The receptionist captures it and drops it straight onto your phone as a message, with name, number and the question. No customer walks to a competitor while you're on another job.",
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+  href?: string
+  linkLabel?: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'How does the receptionist get onto my website?',
+    a: "With one small script we install for you — you don't have to do anything. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
+  },
+  {
+    q: "And if I'm on a job and can't reply?",
+    a: "That's exactly what this is for. The receptionist answers the question (urgent no-cooling, a service, a recharge, a new install), books an appointment in your calendar if wanted, and sends you a summary by WhatsApp or email. You call back between jobs.",
+  },
+  {
+    q: 'Can it handle the summer peak?',
+    a: 'Yes. The receptionist handles conversations in parallel — no queue. Ten customers can chat or message about a broken unit at once and all ten get an instant answer. Urgent breakdowns are recognised and separated from routine servicing, so you know who to call first.',
+  },
+  {
+    q: "Does the customer know it's AI?",
+    a: 'Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. Not a marketing choice but a legal requirement under the EU AI Act (article 50). The disclosure always stays on.',
+    href: '/legal/ai-disclosure/',
+    linkLabel: 'Read the full AI disclosure',
+  },
+  {
+    q: 'What if it says something wrong about my prices?',
+    a: "It can't. The assistant only quotes rates you've set yourself: call-out fee, service price, recharge, install survey. Unknown prices are never invented — the customer gets a callback request instead. We test every configuration before it goes live.",
+  },
+  {
+    q: 'What happens to customer data?',
+    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, or shorter if you prefer. The full supplier list is public in our sub-processor register.',
+    href: '/legal/dpa/',
+    linkLabel: 'View the DPA and privacy policy',
+  },
+  {
+    q: 'Cancel monthly, really?',
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email; notice is one month. If you'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively).",
+    href: '/legal/voorwaarden/',
+    linkLabel: 'Read the terms & conditions',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<Base
+  lang="en"
+  title="AI receptionist for air-conditioning companies | Klantkraan"
+  description="A digital receptionist for air-conditioning & HVAC companies: answers no-cooling calls, quotes your rates, books installs and services — on your website and WhatsApp, 24/7. Cancel monthly."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          The <span class="text-(--color-kraan-rust)">digital receptionist</span> for air-conditioning companies.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          A digital receptionist on your website and WhatsApp that recognises an urgent no-cooling
+          call and doesn't confuse it with a routine service booking. Catches the summer rush and the
+          after-hours enquiries. Evenings and weekends included.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="/en/demo/"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Try the demo
+          </a>
+          <a
+            href="/en/prijzen/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            View pricing
+          </a>
+        </div>
+      </div>
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <RingingPhone class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
+      <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">GDPR + AI Act art. 50</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Disclosure on by default</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Hosted in the EU</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Natural English</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Knows your rates + services</dd>
+          </div>
+        </div>
+      </dl>
+      <p class="mt-8 text-small text-(--color-kraan-stone-500)">
+        Cancel monthly · Done-for-you setup · 50% off the first month
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Pain-stats trio (stone-100) -->
+  <section
+    class="bg-(--color-kraan-stone-100) py-10 md:py-16"
+    aria-label="What missed enquiries cost an air-conditioning company"
+  >
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
+    </div>
+  </section>
+
+  <!-- 3. Modules (cream, hairline rows) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        What Klantkraan does for air-conditioning companies.
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+        Three modules. One monthly price. Built for the installer who no longer wants to leave the
+        summer rush to voicemail.
+      </p>
+      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+        {
+          features.map((feature) => (
+            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
+              <div>
+                <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
+                <p class="mt-2 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ROI snippet (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">The maths</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        Run the numbers.
+      </h2>
+      <div class="mt-8 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6 md:p-10">
+        <p class="text-h3 text-(--color-kraan-ink)">
+          Miss 5 enquiries a week at €450? That's <strong class="text-(--color-kraan-rust)">around €39,000 in lost revenue a year</strong>.
+        </p>
+        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+          Klantkraan Chat is €299 a month. One extra install from the summer rush covers the
+          subscription for months. Everything after that is revenue — and your customer isn't
+          sweating through a 40°C afternoon waiting for a callback.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-4">
+          <a
+            href="/en/demo/"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Try the demo
+          </a>
+          <a
+            href="/en/prijzen/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            View pricing
+          </a>
+        </div>
+        <p class="mt-6 text-micro text-(--color-kraan-stone-500)">
+          Amounts excl. 21% VAT. Illustrative example based on a €450 average missed-enquiry value
+          and the assumption that roughly 1 in 3 missed enquiries would have become a paying job
+          (33% conversion).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FAQ (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Questions</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        Frequently asked questions.
+      </h2>
+      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+        {
+          faqs.map((faq) => (
+            <details class="group py-4">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-(--color-kraan-ink) marker:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-180"
+                  />
+                </span>
+              </summary>
+              <p class="mt-3 text-body text-(--color-kraan-stone-700)">{faq.a}</p>
+              {faq.href && faq.linkLabel && (
+                <p class="mt-3 text-small">
+                  <a href={faq.href} class="underline">
+                    {faq.linkLabel}
+                  </a>
+                </p>
+              )}
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Final CTA (blue) -->
+  <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-white">
+        Ready for the next heatwave?
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
+        Try the live demo. Then you'll know whether it recognises an urgent no-cooling call and how
+        it tells that apart from a routine service question.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href="/en/demo/"
+          class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+        >
+          Try the demo
+        </a>
+        <a
+          href="/en/prijzen/"
+          class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+        >
+          View pricing
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

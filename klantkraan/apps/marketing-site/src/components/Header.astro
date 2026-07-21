@@ -32,8 +32,9 @@ const TRANSLATED = new Set(['/', '/prijzen/', '/demo/', '/over/'])
 const path = Astro.url.pathname
 let switchHref
 if (isEn) {
-  const nl = path.replace(/^\/en/, '')
-  switchHref = nl === '' ? '/' : nl
+  // Strip the /en prefix; only toggle to the Dutch twin if one exists, else Dutch home.
+  const nl = path.replace(/^\/en/, '') || '/'
+  switchHref = TRANSLATED.has(nl) ? nl : '/'
 } else {
   switchHref = TRANSLATED.has(path) ? '/en' + (path === '/' ? '/' : path) : '/en/'
 }
