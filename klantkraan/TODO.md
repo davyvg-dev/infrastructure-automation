@@ -50,6 +50,13 @@ Goal: make onboarding frictionless for BOTH sides, so the product works smoothly
 - [ ] Define the post-go-live upkeep loop (monitoring, monthly tune, change requests, who owns what) — extend churn-prevention.md
 - [ ] Output: one smooth, repeatable playbook the founder runs per client
 
+### G. Website copy — de-AI / professional-copywriter pass (added 2026-07-21)
+Goal: the site copy reads like a professional copywriter wrote it, not like AI. Founder specifically flagged em-dashes and AI-tell writing. Cut them; keep dashes/punctuation only when genuinely relevant.
+- [ ] Audit live copy. Start with the new `/en/` pages (home, prijzen, over, demo, air-conditioning) — they were AI-drafted and lean on em-dashes — then the Dutch pages.
+- [ ] Rewrite in a natural, professional voice: kill decorative em-dashes, hollow parallel triads, "it's not just X, it's Y", hedging, over-punctuation.
+- [ ] Keep every fact/price accurate. Dutch stays Dutch, English stays English.
+- [ ] Re-deploy after the pass (Cloudflare Pages) and re-verify.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
