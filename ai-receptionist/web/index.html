@@ -124,6 +124,12 @@
       || window.self !== window.top;
     if (embedded) document.body.classList.add('embed');
 
+    // Branded demo: the hosted link carries ?client=<slug>. Forward it to the API on every
+    // call so the backend swaps in that client's config; without it every link shows the
+    // default business.
+    const clientSlug = new URLSearchParams(location.search).get('client');
+    const clientQ = clientSlug ? ('?client=' + encodeURIComponent(clientSlug)) : '';
+
     closeBtn.addEventListener('click', () => {
       parent.postMessage({ type: 'klantkraan-widget', action: 'close' }, '*');
     });
@@ -147,7 +153,7 @@
     async function init() {
       applyStrings();
       try {
-        const cfg = await (await fetch('/config')).json();
+        const cfg = await (await fetch('/config' + clientQ)).json();
         t = STRINGS[cfg.locale] || STRINGS.nl;
         applyStrings();
         document.getElementById('biz').textContent = cfg.name;
@@ -169,7 +175,7 @@
       send.disabled = true;
       const typing = bubble('…', 'bot typing');
       try {
-        const res = await fetch('/chat', {
+        const res = await fetch('/chat' + clientQ, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ session_id: sessionId, message: text }),
