@@ -67,7 +67,14 @@ const t = {
   madeIn: isEn ? 'Made in the Netherlands.' : 'Gemaakt in Nederland.',
 }
 const overHref = isEn ? '/en/over/' : '/over/'
-const gridCols = isEn ? 'sm:grid-cols-2 md:grid-cols-3' : 'sm:grid-cols-2 md:grid-cols-4'
+const gridCols = 'sm:grid-cols-2 md:grid-cols-4'
+
+// Trades column, resolved per language from the shared branch list.
+const branchLinks = branches.map((b) => ({
+  href: isEn ? `/en/${b.slug}/` : b.href,
+  label: isEn ? b.labelPluralEn : b.labelPlural,
+}))
+const hubHref = isEn ? '/en/voor-wie/' : '/voor-wie/'
 ---
 
 <footer class="border-t border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100)">
@@ -109,27 +116,23 @@ const gridCols = isEn ? 'sm:grid-cols-2 md:grid-cols-3' : 'sm:grid-cols-2 md:gri
           }
         </p>
       </div>
-      {
-        !isEn && (
-          <div>
-            <p class="font-display text-h3 text-(--color-kraan-ink)">{t.branchesHead}</p>
-            <ul class="mt-2">
-              {branches.map((item) => (
-                <li>
-                  <a href={item.href} class="block py-2">
-                    {item.labelPlural}
-                  </a>
-                </li>
-              ))}
-              <li>
-                <a href="/voor-wie/" class="block py-2 text-(--color-kraan-blue)">
-                  {t.allBranches}
-                </a>
-              </li>
-            </ul>
-          </div>
-        )
-      }
+      <div>
+        <p class="font-display text-h3 text-(--color-kraan-ink)">{t.branchesHead}</p>
+        <ul class="mt-2">
+          {branchLinks.map((item) => (
+            <li>
+              <a href={item.href} class="block py-2">
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href={hubHref} class="block py-2 text-(--color-kraan-blue)">
+              {t.allBranches}
+            </a>
+          </li>
+        </ul>
+      </div>
       <div>
         <p class="font-display text-h3 text-(--color-kraan-ink)">{t.legalHead}</p>
         <ul class="mt-2">

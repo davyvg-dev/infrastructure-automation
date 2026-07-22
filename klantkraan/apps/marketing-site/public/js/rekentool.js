@@ -7,27 +7,10 @@
 const TIERS = { chat: 299, compleet: 499 }
 const CONVERSION = 0.33
 
-const eurFmt = new Intl.NumberFormat('nl-NL', {
-  style: 'currency',
-  currency: 'EUR',
-  maximumFractionDigits: 0,
-})
-const numFmt = new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 0 })
-
 function readNumber(el, fallback) {
   if (!el) return fallback
   const n = Number(el.value)
   return Number.isFinite(n) && n >= 0 ? n : fallback
-}
-
-function formatPayback(monthly, lostRevenuePerYear) {
-  if (lostRevenuePerYear <= 0) return 'n.v.t.'
-  const lostPerMonth = lostRevenuePerYear / 12
-  if (lostPerMonth <= 0) return 'n.v.t.'
-  const months = monthly / lostPerMonth
-  if (months < 1) return '< 1 maand'
-  if (months > 60) return '> 5 jaar'
-  return `${months.toFixed(1)} maand`
 }
 
 function initRekentool() {
@@ -36,6 +19,31 @@ function initRekentool() {
   const valueEl = document.getElementById('value')
   if (!callsEl || callsEl.dataset.kkInit) return
   callsEl.dataset.kkInit = '1'
+
+  // The same script serves /rekentool/ and /en/rekentool/. Pick locale + strings
+  // from <html lang>, which Base.astro stamps per page. Computed inside init (not
+  // at module load) so an SPA switch between the two pages picks the right lang.
+  const isEn = (document.documentElement.lang || 'nl').toLowerCase().startsWith('en')
+  const locale = isEn ? 'en-GB' : 'nl-NL'
+  const eurFmt = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'EUR',
+    maximumFractionDigits: 0,
+  })
+  const numFmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 })
+  const strings = isEn
+    ? { na: 'n/a', lt1: '< 1 month', gt5: '> 5 years', unit: 'months' }
+    : { na: 'n.v.t.', lt1: '< 1 maand', gt5: '> 5 jaar', unit: 'maand' }
+
+  function formatPayback(monthly, lostRevenuePerYear) {
+    if (lostRevenuePerYear <= 0) return strings.na
+    const lostPerMonth = lostRevenuePerYear / 12
+    if (lostPerMonth <= 0) return strings.na
+    const months = monthly / lostPerMonth
+    if (months < 1) return strings.lt1
+    if (months > 60) return strings.gt5
+    return `${months.toFixed(1)} ${strings.unit}`
+  }
 
   const outMissed = document.getElementById('out-missed-year')
   const outLost = document.getElementById('out-lost-revenue')

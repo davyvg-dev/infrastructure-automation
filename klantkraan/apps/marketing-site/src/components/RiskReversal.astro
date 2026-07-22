@@ -9,34 +9,58 @@
  */
 import Icon from './Icon.astro'
 
+interface Props {
+  lang?: 'nl' | 'en'
+}
+const { lang = 'nl' } = Astro.props
+const isEn = lang === 'en'
+
 interface Promise {
   icon: 'check' | 'clock' | 'shield-check'
   title: string
   body: string
 }
 
-const promises: Promise[] = [
-  {
-    icon: 'check',
-    title: 'Eerste maand 50% korting',
-    body: 'Klantkraan Chat vanaf €149,50 in maand 1. Werkt het niet voor u, zegt u op zonder uitleg.',
-  },
-  {
-    icon: 'clock',
-    title: 'Maandelijks opzegbaar',
-    body: 'Geen jaarcontract, geen verborgen verlenging. Eén e-mail naar hallo@klantkraan.nl, 30 dagen opzegtermijn, klaar.',
-  },
-  {
-    icon: 'shield-check',
-    title: 'Live zonder gedoe',
-    body: 'Eén klein scriptje op uw website en de receptionist draait. Wij installeren het. U hoeft niets te doen.',
-  },
-]
+const promises: Promise[] = isEn
+  ? [
+      {
+        icon: 'check',
+        title: 'First month 50% off',
+        body: 'Klantkraan Chat from €149.50 in month one. If it does not work for you, cancel without having to explain.',
+      },
+      {
+        icon: 'clock',
+        title: 'Cancel monthly',
+        body: 'No annual contract, no hidden renewal. One email to hallo@klantkraan.nl, 30 days notice, done.',
+      },
+      {
+        icon: 'shield-check',
+        title: 'Live without the hassle',
+        body: 'One small script on your website and the receptionist is running. We install it. You do nothing.',
+      },
+    ]
+  : [
+      {
+        icon: 'check',
+        title: 'Eerste maand 50% korting',
+        body: 'Klantkraan Chat vanaf €149,50 in maand 1. Werkt het niet voor u, zegt u op zonder uitleg.',
+      },
+      {
+        icon: 'clock',
+        title: 'Maandelijks opzegbaar',
+        body: 'Geen jaarcontract, geen verborgen verlenging. Eén e-mail naar hallo@klantkraan.nl, 30 dagen opzegtermijn, klaar.',
+      },
+      {
+        icon: 'shield-check',
+        title: 'Live zonder gedoe',
+        body: 'Eén klein scriptje op uw website en de receptionist draait. Wij installeren het. U hoeft niets te doen.',
+      },
+    ]
 ---
 
 <section
   class="border-y border-(--color-kraan-rust)/30 bg-(--color-kraan-cream) py-8 md:py-10"
-  aria-label="Risico-reductie"
+  aria-label={isEn ? 'Risk reduction' : 'Risico-reductie'}
 >
   <div class="mx-auto max-w-5xl px-6">
     <dl class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">

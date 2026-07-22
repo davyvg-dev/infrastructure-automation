@@ -1,0 +1,310 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import Stat from '../../components/Stat.astro'
+import Plug from '../../components/illustrations/Plug.astro'
+import RiskReversal from '../../components/RiskReversal.astro'
+
+// Elektricien landing page. Follows the /loodgieters template structure.
+// Trade-specific copy: kortsluiting, groepenkast, EV-laadpunt, stroomstoring.
+
+interface PainStat {
+  value: string
+  caption: string
+}
+
+const painStats: PainStat[] = [
+  { value: '34%', caption: 'of your calls after 5pm go unanswered.' },
+  { value: '€375', caption: 'average value of a power-outage call.' },
+  { value: '0', caption: "reviews per job you're not asking for right now." },
+]
+
+interface Feature {
+  icon: 'phone' | 'message-square' | 'calendar-check'
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    icon: 'message-square',
+    title: 'Talks short circuits in the trade’s own terms',
+    body: 'Answers customer questions on your website and via WhatsApp, in natural, fluent conversation, after 5pm and at weekends too. It only quotes your own short-circuit emergency rate, hourly rate and weekend surcharge. Never a price you haven’t set in advance.',
+  },
+  {
+    icon: 'calendar-check',
+    title: 'Appointments straight into your calendar',
+    body: 'Fault and installation appointments are booked straight into your calendar, only in the slots you’ve opened up yourself. No phone tag, no back-and-forth email.',
+  },
+  {
+    icon: 'phone',
+    title: 'Leads and callback requests on your phone',
+    body: 'Power cut after closing time? The receptionist takes the report and sends it straight to your phone as a message, with name, number and the question. No customer walks to the competitor while you’re on another job.',
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+  href?: string
+  linkLabel?: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'How does the receptionist get onto my website?',
+    a: 'With one small script that we install for you. You don’t have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.',
+  },
+  {
+    q: 'And if I’m on an installation and can’t respond?',
+    a: 'That’s exactly what this is built for. The receptionist answers the question (short-circuit emergency, new job, existing customer, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back once the consumer unit is closed up again.',
+  },
+  {
+    q: 'Can the customer tell it’s AI?',
+    a: 'Yes. Every conversation opens by telling your customer they’re chatting with a digital assistant, on behalf of your business. That isn’t a marketing choice but a legal requirement under the European AI Act (article 50). The disclosure always stays on.',
+    href: '/legal/ai-disclosure/',
+    linkLabel: 'Read the full AI disclosure',
+  },
+  {
+    q: 'What if the AI says something wrong about my rates?',
+    a: 'That can’t happen. The assistant only quotes rates you’ve set in your system yourself: call-out charge, hourly rate, emergency surcharge, EV charge-point extra. Unknown prices are never made up; the customer gets a callback request instead. We test every configuration before you go live.',
+  },
+  {
+    q: 'What happens to the customer data?',
+    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you’d prefer shorter. The full supplier list is public in our sub-processor register.',
+    href: '/legal/dpa/',
+    linkLabel: 'View the DPA and privacy statement',
+  },
+  {
+    q: 'Cancel monthly, really?',
+    a: 'Yes. No annual contract, no hidden renewal. You cancel by email; the notice period is one month. If you’d rather pay 6 or 12 months up front there’s a discount (15% and 20% respectively).',
+    href: '/legal/voorwaarden/',
+    linkLabel: 'Read the terms and conditions',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<Base
+  lang="en"
+  title="Win electrician customers: AI receptionist for emergencies and EV"
+  description="AI receptionist for electricians, cancel monthly. Knows your emergency rate and EV charge-point extra, books appointments and captures leads, 24/7."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          The <span class="text-(--color-kraan-rust)">customer engine</span> for electricians.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          A digital receptionist on your website and WhatsApp that explains to your customer what a
+          short-circuit emergency rate is. Or an EV charge-point extra. It answers questions 24/7,
+          seven days a week. Appointments and callback requests come in the same subscription.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="/en/demo/"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Try the demo
+          </a>
+          <a
+            href="/en/rekentool/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            Work out your ROI
+          </a>
+        </div>
+      </div>
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <Plug class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
+      <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">GDPR + AI Act art. 50</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Disclosure on by default</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Hosted in the EU</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Natural conversation</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Knows your hourly rate + emergency surcharge</dd>
+          </div>
+        </div>
+      </dl>
+      <p class="mt-8 text-small text-(--color-kraan-stone-500)">
+        Cancel monthly · Done-for-you setup · 50% off the first month
+      </p>
+    </div>
+  </section>
+
+  <!-- 1b. Risk-reversal -->
+  <RiskReversal lang="en" />
+
+  <!-- 2. Pain-stats trio (stone-100) -->
+  <section
+    class="bg-(--color-kraan-stone-100) py-10 md:py-16"
+    aria-label="What a missed call costs an electrician"
+  >
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
+    </div>
+  </section>
+
+  <!-- 3. Modules (cream, hairline rows) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        What Klantkraan does for electricians.
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+        Three modules. One monthly price. Not for the big installation firms. For the electrician with two to eight engineers.
+      </p>
+      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+        {
+          features.map((feature) => (
+            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
+              <div>
+                <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
+                <p class="mt-2 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ROI snippet (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">The maths</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        Run the numbers.
+      </h2>
+      <div class="mt-8 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6 md:p-10">
+        <p class="text-h3 text-(--color-kraan-ink)">
+          Miss 8 calls a week at €375? That’s <strong class="text-(--color-kraan-rust)">over €51,000 of lost revenue a year</strong>.
+        </p>
+        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+          Klantkraan Chat is €299 a month. One short-circuit emergency a month pays for the
+          subscription. Everything that comes in after that no longer goes to the competitor down the road.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-4">
+          <a
+            href="/en/rekentool/"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Open the calculator
+          </a>
+          <a
+            href="/en/prijzen/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            See the rates
+          </a>
+        </div>
+        <p class="mt-6 text-micro text-(--color-kraan-stone-500)">
+          Amounts exclude 21% VAT. Example based on an industry average of €375 per call for
+          installation and electrical work (source: Aira / Invoca missed-call benchmarks) and the
+          assumption that roughly 1 in 3 missed calls would have produced a paying job (33%
+          conversion rate).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FAQ (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Questions</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        Frequently asked questions.
+      </h2>
+      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+        {
+          faqs.map((faq) => (
+            <details class="group py-4">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-(--color-kraan-ink) marker:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-180"
+                  />
+                </span>
+              </summary>
+              <p class="mt-3 text-body text-(--color-kraan-stone-700)">{faq.a}</p>
+              {faq.href && faq.linkLabel && (
+                <p class="mt-3 text-small">
+                  <a href={faq.href} class="underline">
+                    {faq.linkLabel}
+                  </a>
+                </p>
+              )}
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Final CTA (blue) -->
+  <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-white">
+        Ready to stop missing short-circuit emergencies?
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
+        Try the live demo. You’ll see how it quotes your short-circuit emergency rate and what it does when
+        someone asks a question about an EV charge point.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href="/en/demo/"
+          class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+        >
+          Try the demo
+        </a>
+        <a
+          href="/en/prijzen/"
+          class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+        >
+          See pricing
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

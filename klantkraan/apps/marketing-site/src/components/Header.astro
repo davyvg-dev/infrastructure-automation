@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro'
 import { branches } from '../data/branches'
+import { altPath } from '../data/i18n'
 
 interface Props {
   lang?: 'nl' | 'en'
@@ -8,11 +9,12 @@ interface Props {
 const { lang = 'nl' } = Astro.props
 const isEn = lang === 'en'
 
-// Nav differs by language: the English site is scoped to the core pages that
-// exist under /en/, so it never links into the Dutch-only pages.
+// Gidsen + blog are Dutch-only, so the English nav drops them; everything else
+// has an /en/ twin.
 const nav = isEn
   ? [
       { href: '/en/prijzen/', label: 'Pricing' },
+      { href: '/en/rekentool/', label: 'Calculator' },
       { href: '/en/demo/', label: 'Demo' },
       { href: '/en/over/', label: 'About' },
     ]
@@ -25,19 +27,17 @@ const nav = isEn
       { href: '/over/', label: 'Over' },
     ]
 
-// Language switcher target. Pages that exist in both languages share the same
-// slug under /en/; anything else falls back to the other language's home so the
-// switcher never points at a 404.
-const TRANSLATED = new Set(['/', '/prijzen/', '/demo/', '/over/'])
+// Trades dropdown, resolved per language from the shared branch list.
+const branchLinks = branches.map((b) => ({
+  href: isEn ? `/en/${b.slug}/` : b.href,
+  label: isEn ? b.labelPluralEn : b.labelPlural,
+}))
+const hubHref = isEn ? '/en/voor-wie/' : '/voor-wie/'
+
+// Language switcher target. Pairs come from src/data/i18n.ts (the same map that
+// drives hreflang); a page with no twin falls back to the other language's home.
 const path = Astro.url.pathname
-let switchHref
-if (isEn) {
-  // Strip the /en prefix; only toggle to the Dutch twin if one exists, else Dutch home.
-  const nl = path.replace(/^\/en/, '') || '/'
-  switchHref = TRANSLATED.has(nl) ? nl : '/'
-} else {
-  switchHref = TRANSLATED.has(path) ? '/en' + (path === '/' ? '/' : path) : '/en/'
-}
+const switchHref = altPath(path) ?? (isEn ? '/' : '/en/')
 const switchLabel = isEn ? 'NL' : 'EN'
 const switchAria = isEn ? 'Deze pagina in het Nederlands' : 'View this page in English'
 
@@ -61,44 +61,40 @@ const t = {
     <!-- Desktop nav -->
     <nav class="hidden md:block" aria-label={t.mainNav}>
       <ul class="flex items-center gap-4 md:gap-6 text-small">
-        {
-          !isEn && (
-            <li class="relative">
-              <details class="group" data-branches-dropdown="desktop">
-                <summary
-                  class="flex cursor-pointer list-none items-center gap-1 text-(--color-kraan-ink) marker:hidden hover:underline"
-                  aria-label={t.forWhoAria}
+        <li class="relative">
+          <details class="group" data-branches-dropdown="desktop">
+            <summary
+              class="flex cursor-pointer list-none items-center gap-1 text-(--color-kraan-ink) marker:hidden hover:underline"
+              aria-label={t.forWhoAria}
+            >
+              <span>{t.forWho}</span>
+              <Icon
+                name="chevron-down"
+                class="h-4 w-4 transition-transform group-open:rotate-180"
+              />
+            </summary>
+            <ul class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-2">
+              {branchLinks.map((b) => (
+                <li>
+                  <a
+                    href={b.href}
+                    class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
+                  >
+                    {b.label}
+                  </a>
+                </li>
+              ))}
+              <li class="mt-1 border-t border-(--color-kraan-stone-300) pt-1">
+                <a
+                  href={hubHref}
+                  class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
                 >
-                  <span>{t.forWho}</span>
-                  <Icon
-                    name="chevron-down"
-                    class="h-4 w-4 transition-transform group-open:rotate-180"
-                  />
-                </summary>
-                <ul class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-2">
-                  {branches.map((b) => (
-                    <li>
-                      <a
-                        href={b.href}
-                        class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
-                      >
-                        {b.labelPlural}
-                      </a>
-                    </li>
-                  ))}
-                  <li class="mt-1 border-t border-(--color-kraan-stone-300) pt-1">
-                    <a
-                      href="/voor-wie/"
-                      class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
-                    >
-                      {t.allBranches}
-                    </a>
-                  </li>
-                </ul>
-              </details>
-            </li>
-          )
-        }
+                  {t.allBranches}
+                </a>
+              </li>
+            </ul>
+          </details>
+        </li>
         {
           nav.map((item) => (
             <li>
@@ -155,41 +151,37 @@ const t = {
     hidden
   >
     <ul class="mx-auto flex max-w-5xl flex-col">
-      {
-        !isEn && (
-          <li class="border-b border-(--color-kraan-stone-300)">
-            <details data-branches-dropdown="mobile" class="group">
-              <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-kraan-ink) marker:hidden">
-                <span>{t.forWho}</span>
-                <Icon
-                  name="chevron-down"
-                  class="h-5 w-5 transition-transform group-open:rotate-180"
-                />
-              </summary>
-              <ul class="bg-(--color-kraan-cream)">
-                {branches.map((b) => (
-                  <li class="border-t border-(--color-kraan-stone-300)">
-                    <a
-                      href={b.href}
-                      class="block px-10 py-3 text-body text-(--color-kraan-ink) no-underline"
-                    >
-                      {b.labelPlural}
-                    </a>
-                  </li>
-                ))}
-                <li class="border-t border-(--color-kraan-stone-300)">
-                  <a
-                    href="/voor-wie/"
-                    class="block px-10 py-3 text-body text-(--color-kraan-blue) no-underline"
-                  >
-                    {t.allBranches}
-                  </a>
-                </li>
-              </ul>
-            </details>
-          </li>
-        )
-      }
+      <li class="border-b border-(--color-kraan-stone-300)">
+        <details data-branches-dropdown="mobile" class="group">
+          <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-kraan-ink) marker:hidden">
+            <span>{t.forWho}</span>
+            <Icon
+              name="chevron-down"
+              class="h-5 w-5 transition-transform group-open:rotate-180"
+            />
+          </summary>
+          <ul class="bg-(--color-kraan-cream)">
+            {branchLinks.map((b) => (
+              <li class="border-t border-(--color-kraan-stone-300)">
+                <a
+                  href={b.href}
+                  class="block px-10 py-3 text-body text-(--color-kraan-ink) no-underline"
+                >
+                  {b.label}
+                </a>
+              </li>
+            ))}
+            <li class="border-t border-(--color-kraan-stone-300)">
+              <a
+                href={hubHref}
+                class="block px-10 py-3 text-body text-(--color-kraan-blue) no-underline"
+              >
+                {t.allBranches}
+              </a>
+            </li>
+          </ul>
+        </details>
+      </li>
       {
         nav.map((item) => (
           <li class="border-b border-(--color-kraan-stone-300)">

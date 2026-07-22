@@ -14,10 +14,21 @@
  */
 import Icon from './Icon.astro'
 import { waLink, telLink } from '../data/contact'
+
+interface Props {
+  lang?: 'nl' | 'en'
+}
+const { lang = 'nl' } = Astro.props
+const isEn = lang === 'en'
+const t = {
+  actions: isEn ? 'Quick actions' : 'Snelle acties',
+  call: isEn ? 'Call Klantkraan' : 'Bel Klantkraan',
+  whatsapp: isEn ? 'WhatsApp us' : 'WhatsApp ons',
+}
 ---
 
 <aside
-  aria-label="Snelle acties"
+  aria-label={t.actions}
   class="fixed inset-x-0 bottom-0 z-40 border-t border-(--color-kraan-stone-300) bg-white px-4 py-3 md:hidden"
   style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem)"
 >
@@ -25,7 +36,7 @@ import { waLink, telLink } from '../data/contact'
     <a
       href={telLink}
       class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-(--radius-button) border border-(--color-kraan-blue) text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
-      aria-label="Bel Klantkraan"
+      aria-label={t.call}
     >
       <Icon name="phone" class="h-5 w-5" />
     </a>
@@ -36,7 +47,7 @@ import { waLink, telLink } from '../data/contact'
       class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-5 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
     >
       <Icon name="message-circle" class="h-5 w-5" />
-      <span>WhatsApp ons</span>
+      <span>{t.whatsapp}</span>
     </a>
   </div>
 </aside>

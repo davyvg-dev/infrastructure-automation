@@ -1,0 +1,355 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import Stat from '../../components/Stat.astro'
+import StormCloud from '../../components/illustrations/StormCloud.astro'
+import RiskReversal from '../../components/RiskReversal.astro'
+
+// English roofers (dakdekkers) landing page. Inlined from the Dutch section
+// components (Hero, PainStats, Features, StormScenario, RoiSnippet, Faq,
+// FinalCta). CityLinks + VerderLezen dropped. Voice: British-English
+// copywriter, u-form "you/your", concrete and declarative, no AI-tells.
+
+interface Feature {
+  icon: 'zap' | 'calendar-check' | 'phone'
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    icon: 'zap',
+    title: 'Storm protocol',
+    body: `On your website and WhatsApp, the receptionist tells the difference between a quote request and an emergency leak. For an emergency: an instant alert on your phone, evenings and weekends included. Simultaneous conversations run in parallel. No queue.`,
+  },
+  {
+    icon: 'calendar-check',
+    title: 'Inspection and quote appointments',
+    body: `Non-urgent requests are qualified by postcode and roof type, then booked straight into your calendar. In the morning you see what's on the schedule. No phone tag, no back-and-forth email.`,
+  },
+  {
+    icon: 'phone',
+    title: 'Leads and callback requests on your phone',
+    body: `Every lead and every callback request lands straight on your phone as a message, with the customer's name, number and what they reported. No leak report gets lost while you're up on a roof.`,
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'Does it work during a storm with lots of reports at once?',
+    a: `Yes. The receptionist handles conversations in parallel. No queue. Ten customers can chat or message at the same time and all ten get an answer straight away. Emergency leaks are recognised and separated from quote requests.`,
+  },
+  {
+    q: 'Does the AI know my set rates for inspection and emergency repair?',
+    a: `Yes. During onboarding we configure your inspection rate, emergency-repair surcharge, call-out charge and, if you have one, a weekend surcharge. The AI quotes those figures exactly as you set them. No wrong amounts, no 'we'll get back to you on price'.`,
+  },
+  {
+    q: 'Does the customer know it\'s AI?',
+    a: `Yes, from the very first line. The assistant states clearly that your customer is chatting with a digital assistant, in line with the European AI Act (art. 50). The experience stays professional and natural. Full details: <a href="/legal/ai-disclosure/">/legal/ai-disclosure</a>.`,
+  },
+  {
+    q: 'What if I\'m up on the roof and can\'t respond?',
+    a: `For an emergency leak you get an instant alert on your phone with the customer's name, number and address. In the conversation the customer is told their report has been passed on and when to expect a reply. You call back the moment you're off the roof.`,
+  },
+  {
+    q: 'Does it work alongside my existing phone number or answering service?',
+    a: `Yes. The receptionist runs on your website and WhatsApp, separate from your phone line. You keep your current number, nothing is ported or forwarded. It can be switched on or off within one working day.`,
+  },
+  {
+    q: 'Can I cancel Klantkraan monthly?',
+    a: `Yes. No annual contract, 30 days' notice. Full terms: <a href="/legal/voorwaarden/">/legal/voorwaarden</a>.`,
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<Base
+  lang="en"
+  title="Win roofing customers: AI receptionist with storm protocol | Klantkraan"
+  description="AI receptionist for roofers, cancel monthly. The storm protocol escalates emergency leaks straight to your phone, books inspections in your calendar and captures leads, 24/7."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          The <span class="text-(--color-kraan-rust)">customer engine</span> for roofers.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          A storm protocol that escalates emergency leaks straight to your phone. A 24/7 emergency
+          line that answers naturally. Inspection and quote appointments booked straight into your
+          calendar.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href="/en/demo/"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Try the demo
+          </a>
+          <a
+            href="/en/rekentool/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            Work out your ROI
+          </a>
+        </div>
+      </div>
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <StormCloud class="h-64 w-64 lg:h-72 lg:w-72" aria-label="Storm over a roof" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
+      <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">GDPR + AI Act art. 50</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Disclosure on by default</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Hosted in the EU</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Natural conversation</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Knows storm protocol + emergency rate</dd>
+          </div>
+        </div>
+      </dl>
+      <p class="mt-8 text-small text-(--color-kraan-stone-500)">
+        Done-for-you setup · Cancel monthly · First month 50% off
+      </p>
+    </div>
+  </section>
+
+  <!-- 1b. Risk-reversal -->
+  <RiskReversal lang="en" />
+
+  <!-- 2. Pain-stats trio (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      <Stat
+        value="35%"
+        label="of your storm calls come in after peak hours and go unanswered."
+      />
+      <Stat
+        value="€650"
+        label="average value of a single emergency repair after a storm."
+      />
+      <Stat
+        value="4–6 weeks"
+        label="of revenue that evaporates when an inspection request is left sitting."
+      />
+    </div>
+  </section>
+
+  <!-- 3. What Klantkraan does for roofers (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        What Klantkraan does for roofers.
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+        Three modules. One monthly price. Written after an evening spent listening in with a roofer in Utrecht after storm Pia.
+      </p>
+
+      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+        {
+          features.map((feature) => (
+            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
+              <div>
+                <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
+                <p class="mt-2 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Storm scenario (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Scenario</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        Saturday night, 21:00. A <span class="text-(--color-kraan-rust)">storm</span> rolls in.
+      </h2>
+      <p class="mt-4 max-w-3xl text-body text-(--color-kraan-stone-700)">
+        Three customers call at once with a leak. You're at a birthday party,
+        or you're already asleep. What happens now? And with Klantkraan?
+      </p>
+
+      <div class="mt-10 grid gap-4 md:gap-6 md:grid-cols-2">
+        <article
+          class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5 md:p-6"
+        >
+          <p
+            class="text-micro uppercase tracking-wider text-(--color-kraan-rust)"
+          >
+            Without Klantkraan
+          </p>
+          <h3 class="mt-2 font-display text-h3 text-(--color-kraan-ink)">
+            Three calls, one voicemail.
+          </h3>
+          <ul class="mt-4 space-y-3 text-body text-(--color-kraan-stone-700)">
+            <li>Call 1 hits a busy tone while you take call 2.</li>
+            <li>Call 3 goes to voicemail. That customer rings a competitor.</li>
+            <li>Monday: one review fewer, two jobs lost.</li>
+            <li>Damage: about €1,300 in revenue gone, plus a knock to your Google rating.</li>
+          </ul>
+        </article>
+
+        <article
+          class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-white p-5 md:p-6"
+        >
+          <p
+            class="text-micro uppercase tracking-wider text-(--color-kraan-leaf)"
+          >
+            With Klantkraan
+          </p>
+          <h3 class="mt-2 font-display text-h3 text-(--color-kraan-ink)">
+            Three calls, three resolutions.
+          </h3>
+          <ul class="mt-4 space-y-3 text-body text-(--color-kraan-stone-700)">
+            <li>
+              The AI takes all three in parallel, in natural conversation, with
+              AI disclosure.
+            </li>
+            <li>
+              The emergency leak is recognised. Your phone rings once, with the
+              address and roof type already gathered.
+            </li>
+            <li>
+              The other two get a callback booked for Monday morning at 08:00
+              in your calendar.
+            </li>
+            <li>
+              Monday: three review requests sent, three customers helped, zero
+              missed jobs.
+            </li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ROI snippet (cream; inner white card) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">The maths</p>
+      <div
+        class="mt-3 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6 md:p-10"
+      >
+        <h2 class="font-display text-h1 text-(--color-kraan-ink)">
+          The maths for one storm season.
+        </h2>
+        <p class="mt-6 max-w-3xl text-body text-(--color-kraan-stone-700)">
+          Say you miss 5 emergency repairs per storm season.
+          <span class="font-mono">€650</span> per repair =
+          <span class="font-mono text-(--color-kraan-rust)">€3,250</span> handed to the competition.
+          Klantkraan Chat costs <span class="font-mono">€299</span> per month. One recovered
+          emergency repair covers more than two months of subscription.
+        </p>
+        <p class="mt-2 text-small text-(--color-kraan-stone-500)">
+          All amounts exclude 21% VAT.
+        </p>
+        <div class="mt-8">
+          <a
+            href="/en/rekentool/"
+            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            Work out your own ROI
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FAQ (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Questions</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+        Questions roofers often ask.
+      </h2>
+
+      <div class="mt-10 space-y-3">
+        {
+          faqs.map((faq) => (
+            <details
+              class="group rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5 md:p-6"
+            >
+              <summary class="flex min-h-[2.75rem] cursor-pointer items-center justify-between gap-4 font-display text-h3 text-(--color-kraan-ink) marker:content-none">
+                <span>{faq.q}</span>
+                <Icon
+                  name="chevron-down"
+                  class="h-5 w-5 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-180"
+                />
+              </summary>
+              <p class="mt-4 text-body text-(--color-kraan-stone-700)" set:html={faq.a} />
+            </details>
+          ))
+        }
+      </div>
+    </div>
+
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+  </section>
+
+  <!-- 7. Final CTA band (blue) -->
+  <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-white">
+        Ready for the next storm season?
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-white/90">
+        One subscription that takes the storm peak. No annual contract. We set everything up for you.
+        First month half price.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a
+          href="/en/demo/"
+          class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+        >
+          Try the demo
+        </a>
+        <a
+          href="/en/prijzen/"
+          class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-white/10"
+        >
+          See pricing
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

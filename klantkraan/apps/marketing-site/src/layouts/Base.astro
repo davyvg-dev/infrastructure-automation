@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
 import { company } from '../data/company'
 import { contact } from '../data/contact'
+import { pairForPath } from '../data/i18n'
 
 interface Props {
   title: string
@@ -41,6 +42,13 @@ const {
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
 const isEn = lang === 'en'
+
+// hreflang: pages that exist in both languages advertise each other (and an
+// x-default pointing at the Dutch original). Pairs come from src/data/i18n.ts,
+// the same map the header's language switcher uses, so the two can't drift.
+const localePair = pairForPath(Astro.url.pathname)
+const nlAltUrl = localePair ? new URL(localePair.nl, Astro.site).toString() : null
+const enAltUrl = localePair ? new URL(localePair.en, Astro.site).toString() : null
 
 // Site-wide structured data: who runs this site (Organization) + what it is
 // (WebSite). Company registration details come from src/data/company.ts.
@@ -82,6 +90,15 @@ const siteSchema = {
     <meta name="google-site-verification" content="hSoNEwz-lNJiLCr4fTF43SHaNp0BgJvocv3BFgUhbvI" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalUrl} />
+    {
+      localePair && (
+        <>
+          <link rel="alternate" hreflang="nl" href={nlAltUrl} />
+          <link rel="alternate" hreflang="en" href={enAltUrl} />
+          <link rel="alternate" hreflang="x-default" href={nlAltUrl} />
+        </>
+      )
+    }
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -123,6 +140,6 @@ const siteSchema = {
       )
     }
     <Footer lang={lang} />
-    {stickyCta && <StickyMobileCta />}
+    {stickyCta && <StickyMobileCta lang={lang} />}
   </body>
 </html>
