@@ -296,6 +296,42 @@ def note(slug: str, text: str) -> dict:
     return record
 
 
+def stage(slug: str, *, force: bool = False) -> dict:
+    """Build the branded demo config for a record via scaffold, then advance it to `staged`.
+
+    Writes `config/<slug>.yaml` (the staging location); slice-4 `sign` promotes it to
+    `config/clients/`. Honors the record's `lang` so a non-Dutch prospect gets the right
+    template (the Dutch trade template no longer fits an English airco client on Mallorca).
+    """
+    record = load(slug)
+    if record is None:
+        raise FileNotFoundError(f"no pipeline record for {slug!r}")
+    if record.get("config") and not force:
+        raise FileExistsError(f"{slug} already points at {record['config']}; use --force to rebuild")
+
+    from . import scaffold  # lazy: scaffold pulls in the Anthropic SDK via extract
+
+    contact = record.get("contact") or {}
+    cfg = scaffold.build_config(
+        record["business"],
+        lang=record.get("lang", "nl"),
+        type=record.get("type"),
+        phone=contact.get("phone"),
+    )
+    path = scaffold.CONFIG_DIR / f"{slug}.yaml"
+    if path.exists() and not force:
+        raise FileExistsError(f"config/{slug}.yaml already exists; use --force to overwrite")
+    scaffold.write_config(cfg, path)
+
+    rel = f"config/{slug}.yaml"
+    record["config"] = rel
+    record["history"].append({"ts": _now_ts(), "event": f"staged demo → {rel}"})
+    if record.get("status") in ("lead", "qualified"):
+        record["status"] = "staged"
+    save(record)
+    return {"config": rel, "status": record["status"]}
+
+
 def _fmt_contact(record: dict) -> str:
     c = record.get("contact") or {}
     parts = [c.get("email"), c.get("phone")]
@@ -389,6 +425,10 @@ def main(argv: list[str]) -> int:
     p_adv.add_argument("status", choices=ALL_STATUSES)
     p_adv.add_argument("--note", help="Why — logged with the move.")
 
+    p_stage = sub.add_parser("stage", help="Build the branded demo config (scaffold) and mark staged.")
+    p_stage.add_argument("slug")
+    p_stage.add_argument("--force", action="store_true", help="Rebuild even if a config exists.")
+
     p_note = sub.add_parser("note", help="Append a note to a record's history.")
     p_note.add_argument("slug")
     p_note.add_argument("text")
@@ -429,6 +469,14 @@ def main(argv: list[str]) -> int:
         except (ValueError, FileNotFoundError) as exc:
             parser.error(str(exc))
         print(f"✅ {args.slug}: → {rec['status']}")
+        return 0
+    if args.cmd == "stage":
+        try:
+            r = stage(args.slug, force=args.force)
+        except (FileNotFoundError, FileExistsError) as exc:
+            parser.error(str(exc))
+        print(f"✅ {args.slug}: staged → {r['config']}  (status={r['status']})")
+        print(f"   demo: BUSINESS_CONFIG={r['config']} python -m app.server")
         return 0
     if args.cmd == "note":
         try:

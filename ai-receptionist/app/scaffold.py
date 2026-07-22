@@ -97,6 +97,81 @@ _TEMPLATE: dict = {
     "model": {"id": "claude-opus-4-8", "effort": "low"},
 }
 
+# English/international template (positioning is now any-business, any-language — the first real
+# client is an English/German airco company on Mallorca). Same shape as the Dutch template, but
+# the locked parts — persona tone/goals/guardrails, greeting, FAQ — are English and the defaults
+# are generic-service, not trade-specific. `type`/`services` are meant to be overridden per
+# prospect. The art. 50 disclosure ("digital assistant") stays in the greeting.
+_EN_TEMPLATE: dict = {
+    "locale": "en",  # widget UI chrome in English
+    "business": {
+        "name": "",
+        "type": "service business",
+        "timezone": "Europe/Amsterdam",
+        "phone": "+00 000 000 000",
+        "address": "your service area",
+    },
+    "persona": {
+        "name": "Robin",
+        "tone": (
+            "You speak English; switch to another language only if the customer writes in it. "
+            "Friendly, calm, and quick, like a helpful person at the front desk. Short sentences. "
+            "Reassuring in an emergency. Always confirm details back."
+        ),
+        "goals": (
+            "1) Answer the customer's question. 2) If they want an appointment, find a time and "
+            "book it. 3) Before booking, capture the customer's name, phone number, and a short "
+            "description of the job. 4) Treat urgent problems as a priority and offer the soonest "
+            "slot."
+        ),
+        "guardrails": (
+            "Only book times that check_availability returns. Do not quote exact prices beyond the "
+            "service list — give the starting or call-out fee and say the engineer confirms it on "
+            "site. Never give DIY advice for gas, electrical, or other unsafe work; advise booking "
+            "or calling instead. When booking, set a short description of the job as the service "
+            "(e.g. 'Emergency: no hot water'). Keep replies short. You are a digital assistant and "
+            "never pretend to be human; say so honestly if anyone asks."
+        ),
+    },
+    "scope": {
+        "does": (
+            "The core services this business offers to private and commercial customers, including "
+            "urgent call-outs during opening hours and, where offered, after hours."
+        ),
+    },
+    "services": [
+        {"name": "Emergency call-out", "price": "call-out fee applies, confirmed on site", "duration_min": 60},
+        {"name": "Standard service visit", "price": "confirmed on site", "duration_min": 60},
+        {"name": "Repair / breakdown visit", "price": "confirmed on site", "duration_min": 60},
+        {"name": "Quote / site survey", "price": "free", "duration_min": 30},
+    ],
+    "hours": {
+        "monday": ["08:00", "18:00"],
+        "tuesday": ["08:00", "18:00"],
+        "wednesday": ["08:00", "18:00"],
+        "thursday": ["08:00", "18:00"],
+        "friday": ["08:00", "18:00"],
+        "saturday": ["09:00", "13:00"],
+    },
+    "booking": {"slot_minutes": 60, "horizon_days": 14},
+    "faq": [
+        {"q": "Do you handle emergencies?",
+         "a": "Yes — we keep room each day for urgent jobs. I can check the soonest time for you right now."},
+        {"q": "Which areas do you cover?",
+         "a": "We cover the local area and around it. Tell me your town and I'll check it's within our range."},
+        {"q": "How soon can someone come?",
+         "a": "It depends on the day — I can check availability for you now."},
+        {"q": "What does a visit cost?",
+         "a": "A call-out fee applies and the engineer confirms the exact price on site; a quote or survey is free. I can book you in whenever suits."},
+    ],
+    "greeting": "",  # generated from name + persona
+    "model": {"id": "claude-opus-4-8", "effort": "low"},
+}
+
+# Template registry, keyed by language. build_config() selects on `lang`; unknown langs fall back
+# to the Dutch template (the historical default, so existing callers are unaffected).
+_TEMPLATES: dict[str, dict] = {"nl": _TEMPLATE, "en": _EN_TEMPLATE}
+
 
 def slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "prospect"
@@ -111,24 +186,34 @@ def _greeting(business_name: str, persona_name: str) -> str:
     )
 
 
-def build_config(name: str, **over: str | None) -> dict:
-    cfg = deepcopy(_TEMPLATE)
+def _greeting_en(business_name: str, persona_name: str) -> str:
+    # "digital assistant" stays in every greeting: EU AI Act art. 50 disclosure.
+    return (
+        f"Hi, I'm {persona_name}, the digital assistant at {business_name}. I can answer your "
+        "questions and book you an appointment, including urgent jobs. How can I help?"
+    )
+
+
+def build_config(name: str, lang: str = "nl", **over: str | None) -> dict:
+    template = _TEMPLATES.get(lang, _TEMPLATE)
+    cfg = deepcopy(template)
     cfg["business"]["name"] = name
     for field in ("type", "phone", "address", "timezone"):
         if over.get(field):
             cfg["business"][field] = over[field]
     if over.get("persona"):
         cfg["persona"]["name"] = over["persona"]
-    cfg["greeting"] = _greeting(name, cfg["persona"]["name"])
-    _fit_scope_to_type(cfg)
+    greet = _greeting_en if lang == "en" else _greeting
+    cfg["greeting"] = greet(name, cfg["persona"]["name"])
+    _fit_scope_to_type(cfg, template["business"]["type"])
     return cfg
 
 
-def _fit_scope_to_type(cfg: dict) -> None:
-    """The template's curated `scope` describes the default installateur trade. If the type has
-    been changed to another trade, that scope no longer fits (a painter doesn't fit cv-ketels), so
-    drop it — the receptionist then derives scope from business.type until the founder curates it."""
-    if cfg.get("business", {}).get("type") != _TEMPLATE["business"]["type"]:
+def _fit_scope_to_type(cfg: dict, default_type: str) -> None:
+    """The template's curated `scope` describes its default trade. If the type has been changed to
+    another trade, that scope no longer fits (a painter doesn't fit cv-ketels), so drop it — the
+    receptionist then derives scope from business.type until the founder curates it."""
+    if cfg.get("business", {}).get("type") != default_type:
         cfg.pop("scope", None)
 
 
@@ -169,7 +254,8 @@ def merge_extraction(name: str, extraction: dict, **over: str | None) -> dict:
         bt = _cited(extraction.get("business_type"))
         if bt:
             cfg["business"]["type"] = bt
-            _fit_scope_to_type(cfg)  # a scraped type may not match the template's installateur scope
+            # a scraped type may not match the template's installateur scope
+            _fit_scope_to_type(cfg, _TEMPLATE["business"]["type"])
     if not over.get("phone"):
         phone = _cited(extraction.get("phone"))
         if phone:
@@ -232,6 +318,8 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--address")
     parser.add_argument("--timezone")
     parser.add_argument("--persona", help="Receptionist name (default: Fleur).")
+    parser.add_argument("--lang", default="nl", choices=("nl", "en"),
+                        help="Template language (default nl). --from-json is Dutch-only.")
     parser.add_argument("--from-json", dest="from_json",
                         help="An app.extract extraction JSON; merges cited values over the template.")
     parser.add_argument("--force", action="store_true", help="Overwrite if the config exists.")
@@ -259,7 +347,7 @@ def main(argv: list[str]) -> int:
             parser.error(f"could not read extraction JSON {args.from_json!r}: {exc}")
         cfg = merge_extraction(name, extraction, **over)
     else:
-        cfg = build_config(name, **over)
+        cfg = build_config(name, lang=args.lang, **over)
     write_config(cfg, path)
 
     rel = path.relative_to(ROOT)
