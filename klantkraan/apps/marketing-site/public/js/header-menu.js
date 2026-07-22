@@ -16,9 +16,15 @@ function initHeaderMenu() {
     const openIcons = toggle.querySelectorAll('[data-icon-open]')
     const closeIcons = toggle.querySelectorAll('[data-icon-close]')
 
+    // Match the button's aria-label to <html lang> (Base.astro stamps it).
+    const lang = (document.documentElement.lang || 'nl').toLowerCase().slice(0, 2)
+    const menuLabels =
+      { nl: { open: 'Menu openen', close: 'Menu sluiten' }, en: { open: 'Open menu', close: 'Close menu' }, es: { open: 'Abrir menú', close: 'Cerrar menú' } }[lang] ||
+      { open: 'Menu openen', close: 'Menu sluiten' }
+
     function setOpen(open) {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
-      toggle.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen')
+      toggle.setAttribute('aria-label', open ? menuLabels.close : menuLabels.open)
       menu.hidden = !open
       menu.classList.toggle('hidden', !open)
       openIcons.forEach((el) => el.classList.toggle('hidden', open))

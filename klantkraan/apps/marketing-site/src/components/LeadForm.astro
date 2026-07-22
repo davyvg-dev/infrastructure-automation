@@ -7,50 +7,69 @@
  * Field names never change across locales — only the display strings do.
  */
 interface Props {
-  lang?: 'nl' | 'en'
+  lang?: 'nl' | 'en' | 'es'
 }
 const { lang = 'nl' } = Astro.props
-const isEn = lang === 'en'
 const apiBase = import.meta.env.PUBLIC_API_BASE ?? 'https://api.klantkraan.nl'
 
-const t = isEn
-  ? {
-      nameLabel: 'Your name',
-      nameError: 'Enter your name (at least 2 characters).',
-      emailLabel: 'Email address',
-      emailError: 'Enter a valid email address.',
-      phoneLabel: 'Phone number',
-      phoneOptional: '(optional)',
-      phoneError: 'Enter a valid phone number (digits, spaces, brackets or dashes).',
-      messageLabel: 'How can we help?',
-      messagePlaceholder: "e.g. 'We miss a lot of calls while we're on a job'",
-      messageError: 'Let us know how we can help.',
-      formError: 'Something went wrong. Please try again or email us directly.',
-      submit: 'Request a demo',
-      submitting: 'Submitting…',
-      privacyPre: 'By submitting this form you agree to our',
-      privacyLink: 'privacy policy',
-      successTitle: "Thanks — we'll be in touch within 1 working day.",
-    }
-  : {
-      nameLabel: 'Uw naam',
-      nameError: 'Vul uw naam in (minimaal 2 tekens).',
-      emailLabel: 'E-mailadres',
-      emailError: 'Vul een geldig e-mailadres in.',
-      phoneLabel: 'Telefoonnummer',
-      phoneOptional: '(optioneel)',
-      phoneError: 'Vul een geldig telefoonnummer in (cijfers, spaties, haakjes of streepjes).',
-      messageLabel: 'Waar kunnen wij u mee helpen?',
-      messagePlaceholder: "Bijv. 'Wij missen veel oproepen tijdens spoedklussen'",
-      messageError: 'Laat ons weten waar wij u mee kunnen helpen.',
-      formError: 'Er ging iets mis. Probeer het opnieuw of mail ons direct.',
-      submit: 'Vraag een demo aan',
-      submitting: 'Versturen...',
-      privacyPre: 'Door dit formulier te versturen gaat u akkoord met onze',
-      privacyLink: 'privacyverklaring',
-      successTitle: 'Bedankt — wij nemen binnen 1 werkdag contact op.',
-    }
-const privacyHref = isEn ? '/legal/privacy/' : '/legal/privacy/'
+const T = {
+  nl: {
+    nameLabel: 'Uw naam',
+    nameError: 'Vul uw naam in (minimaal 2 tekens).',
+    emailLabel: 'E-mailadres',
+    emailError: 'Vul een geldig e-mailadres in.',
+    phoneLabel: 'Telefoonnummer',
+    phoneOptional: '(optioneel)',
+    phoneError: 'Vul een geldig telefoonnummer in (cijfers, spaties, haakjes of streepjes).',
+    messageLabel: 'Waar kunnen wij u mee helpen?',
+    messagePlaceholder: "Bijv. 'Wij missen veel oproepen tijdens spoedklussen'",
+    messageError: 'Laat ons weten waar wij u mee kunnen helpen.',
+    formError: 'Er ging iets mis. Probeer het opnieuw of mail ons direct.',
+    submit: 'Vraag een demo aan',
+    submitting: 'Versturen...',
+    privacyPre: 'Door dit formulier te versturen gaat u akkoord met onze',
+    privacyLink: 'privacyverklaring',
+    successTitle: 'Bedankt — wij nemen binnen 1 werkdag contact op.',
+  },
+  en: {
+    nameLabel: 'Your name',
+    nameError: 'Enter your name (at least 2 characters).',
+    emailLabel: 'Email address',
+    emailError: 'Enter a valid email address.',
+    phoneLabel: 'Phone number',
+    phoneOptional: '(optional)',
+    phoneError: 'Enter a valid phone number (digits, spaces, brackets or dashes).',
+    messageLabel: 'How can we help?',
+    messagePlaceholder: "e.g. 'We miss a lot of calls while we're on a job'",
+    messageError: 'Let us know how we can help.',
+    formError: 'Something went wrong. Please try again or email us directly.',
+    submit: 'Request a demo',
+    submitting: 'Submitting…',
+    privacyPre: 'By submitting this form you agree to our',
+    privacyLink: 'privacy policy',
+    successTitle: "Thanks — we'll be in touch within 1 working day.",
+  },
+  es: {
+    nameLabel: 'Su nombre',
+    nameError: 'Introduzca su nombre (mínimo 2 caracteres).',
+    emailLabel: 'Correo electrónico',
+    emailError: 'Introduzca un correo electrónico válido.',
+    phoneLabel: 'Teléfono',
+    phoneOptional: '(opcional)',
+    phoneError: 'Introduzca un teléfono válido (cifras, espacios, paréntesis o guiones).',
+    messageLabel: '¿En qué podemos ayudarle?',
+    messagePlaceholder: "P. ej. 'Perdemos muchas llamadas cuando estamos en una obra'",
+    messageError: 'Díganos en qué podemos ayudarle.',
+    formError: 'Algo ha salido mal. Vuelva a intentarlo o escríbanos directamente.',
+    submit: 'Solicitar una demo',
+    submitting: 'Enviando...',
+    privacyPre: 'Al enviar este formulario acepta nuestra',
+    privacyLink: 'política de privacidad',
+    successTitle: 'Gracias. Le responderemos en un día laborable.',
+  },
+} as const
+const t = T[lang]
+const privacyHref = '/legal/privacy/'
 ---
 
 <form

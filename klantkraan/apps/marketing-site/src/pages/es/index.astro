@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import Stat from '../../components/Stat.astro'
+import RingingPhone from '../../components/illustrations/RingingPhone.astro'
+import { waLink } from '../../data/contact'
+---
+
+<Base
+  lang="es"
+  title="Recepcionista con IA para su negocio: chat web y WhatsApp | Klantkraan"
+  description="Una recepcionista con IA en su web y en WhatsApp: responde preguntas, agenda citas y capta clientes, de día y de noche. Instalación llave en mano. Cancele cada mes."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-(--color-kraan-ink)">
+          Cada pregunta de sus clientes, <span class="text-(--color-kraan-rust)">respondida</span>, de día y de noche.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+          Está en lo alto de una escalera o atendiendo a un cliente justo cuando su mejor oportunidad
+          tiene una pregunta. La recepcionista digital de Klantkraan la responde en su web y por
+          WhatsApp, agenda la cita en su calendario y anota cada solicitud de llamada. Instalación
+          llave en mano. Cancele cada mes.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          >
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>Escríbanos por WhatsApp</span>
+          </a>
+          <a
+            href="/es/demo/"
+            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          >
+            Pruebe la demo
+          </a>
+        </div>
+        <p class="mt-3 text-small text-(--color-kraan-stone-500)">
+          Normalmente respondemos en un día laborable, directamente del propietario.
+        </p>
+      </div>
+      <div class="hidden text-(--color-kraan-blue) md:block">
+        <RingingPhone class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-5xl px-6">
+      <dl class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">RGPD + Reglamento de IA art. 50</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Declaración activada por defecto</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Alojado en la UE</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</dd>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <div>
+            <dt class="text-small font-medium text-(--color-kraan-ink)">Conversación natural</dt>
+            <dd class="text-small text-(--color-kraan-stone-500)">Conoce sus tarifas y servicios</dd>
+          </div>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 2. Stat band (stone-100) -->
+  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="La recepcionista en cifras">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      <Stat value="28%" label="de sus llamadas quedan sin responder." />
+      <Stat value="24/7" label="la recepcionista responde preguntas en su web y WhatsApp." />
+      <Stat value="€450" label="valor medio de una consulta perdida." />
+    </div>
+  </section>
+
+  <!-- 3. Transparency (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Transparencia</p>
+      <div class="mt-3 rounded-(--radius-card) border-l-4 border-(--color-kraan-rust) bg-(--color-kraan-stone-100) p-6 md:p-8">
+        <h2 class="font-display text-h2 text-(--color-kraan-ink)">
+          Honestos con la IA desde el primer segundo.
+        </h2>
+        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+          Al inicio de cada conversación su cliente lee: "Está hablando con un asistente digital." Lo
+          exige el artículo 50 del Reglamento de IA de la UE, y además es buen negocio: transparencia,
+          nada que ocultar. Sin confusión para el cliente y sin multas del regulador.
+        </p>
+        <p class="mt-4 text-small">
+          <a href="/legal/ai-disclosure/" class="underline">Lea la declaración completa</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+</Base>

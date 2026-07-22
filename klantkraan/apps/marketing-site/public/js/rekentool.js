@@ -20,20 +20,24 @@ function initRekentool() {
   if (!callsEl || callsEl.dataset.kkInit) return
   callsEl.dataset.kkInit = '1'
 
-  // The same script serves /rekentool/ and /en/rekentool/. Pick locale + strings
-  // from <html lang>, which Base.astro stamps per page. Computed inside init (not
-  // at module load) so an SPA switch between the two pages picks the right lang.
-  const isEn = (document.documentElement.lang || 'nl').toLowerCase().startsWith('en')
-  const locale = isEn ? 'en-GB' : 'nl-NL'
+  // The same script serves /rekentool/, /en/rekentool/ and /es/rekentool/. Pick
+  // locale + strings from <html lang>, which Base.astro stamps per page. Computed
+  // inside init (not at module load) so an SPA switch between the pages picks the
+  // right lang.
+  const lang = (document.documentElement.lang || 'nl').toLowerCase().slice(0, 2)
+  const locale = lang === 'en' ? 'en-GB' : lang === 'es' ? 'es-ES' : 'nl-NL'
   const eurFmt = new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 0,
   })
   const numFmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 })
-  const strings = isEn
-    ? { na: 'n/a', lt1: '< 1 month', gt5: '> 5 years', unit: 'months' }
-    : { na: 'n.v.t.', lt1: '< 1 maand', gt5: '> 5 jaar', unit: 'maand' }
+  const stringsByLang = {
+    nl: { na: 'n.v.t.', lt1: '< 1 maand', gt5: '> 5 jaar', unit: 'maand' },
+    en: { na: 'n/a', lt1: '< 1 month', gt5: '> 5 years', unit: 'months' },
+    es: { na: 'n/d', lt1: '< 1 mes', gt5: '> 5 años', unit: 'meses' },
+  }
+  const strings = stringsByLang[lang] || stringsByLang.nl
 
   function formatPayback(monthly, lostRevenuePerYear) {
     if (lostRevenuePerYear <= 0) return strings.na

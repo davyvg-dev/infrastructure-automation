@@ -1,55 +1,107 @@
 ---
 import Icon from './Icon.astro'
 import { branches } from '../data/branches'
-import { altPath } from '../data/i18n'
+import { localeUrls } from '../data/i18n'
 
 interface Props {
-  lang?: 'nl' | 'en'
+  lang?: 'nl' | 'en' | 'es'
 }
 const { lang = 'nl' } = Astro.props
-const isEn = lang === 'en'
 
-// Gidsen + blog are Dutch-only, so the English nav drops them; everything else
-// has an /en/ twin.
-const nav = isEn
-  ? [
-      { href: '/en/prijzen/', label: 'Pricing' },
-      { href: '/en/rekentool/', label: 'Calculator' },
-      { href: '/en/demo/', label: 'Demo' },
-      { href: '/en/over/', label: 'About' },
-    ]
-  : [
-      { href: '/prijzen/', label: 'Prijzen' },
-      { href: '/rekentool/', label: 'Rekentool' },
-      { href: '/gidsen/', label: 'Gidsen' },
-      { href: '/blog/', label: 'Blog' },
-      { href: '/demo/', label: 'Demo' },
-      { href: '/over/', label: 'Over' },
-    ]
+// Gidsen + blog are Dutch-only, so the EN/ES navs drop them; everything else
+// in these navs has an /en/ and /es/ twin.
+const navByLang = {
+  nl: [
+    { href: '/prijzen/', label: 'Prijzen' },
+    { href: '/rekentool/', label: 'Rekentool' },
+    { href: '/gidsen/', label: 'Gidsen' },
+    { href: '/blog/', label: 'Blog' },
+    { href: '/demo/', label: 'Demo' },
+    { href: '/over/', label: 'Over' },
+  ],
+  en: [
+    { href: '/en/prijzen/', label: 'Pricing' },
+    { href: '/en/rekentool/', label: 'Calculator' },
+    { href: '/en/demo/', label: 'Demo' },
+    { href: '/en/over/', label: 'About' },
+  ],
+  es: [
+    { href: '/es/prijzen/', label: 'Precios' },
+    { href: '/es/rekentool/', label: 'Calculadora' },
+    { href: '/es/demo/', label: 'Demo' },
+    { href: '/es/over/', label: 'Nosotros' },
+  ],
+} as const
+const nav = navByLang[lang]
 
-// Trades dropdown, resolved per language from the shared branch list.
+// Trades dropdown, resolved per language from the shared branch list. ES trade
+// cornerstones don't exist yet, so ES reuses the English cornerstones.
 const branchLinks = branches.map((b) => ({
-  href: isEn ? `/en/${b.slug}/` : b.href,
-  label: isEn ? b.labelPluralEn : b.labelPlural,
+  href: lang === 'nl' ? b.href : `/en/${b.slug}/`,
+  label: lang === 'es' ? b.labelPluralEs : lang === 'en' ? b.labelPluralEn : b.labelPlural,
 }))
-const hubHref = isEn ? '/en/voor-wie/' : '/voor-wie/'
+const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' : '/en/voor-wie/'
+const homeHref = lang === 'nl' ? '/' : lang === 'es' ? '/es/' : '/en/'
 
-// Language switcher target. Pairs come from src/data/i18n.ts (the same map that
-// drives hreflang); a page with no twin falls back to the other language's home.
-const path = Astro.url.pathname
-const switchHref = altPath(path) ?? (isEn ? '/' : '/en/')
-const switchLabel = isEn ? 'NL' : 'EN'
-const switchAria = isEn ? 'Deze pagina in het Nederlands' : 'View this page in English'
+// Language switcher: an inline NL | EN | ES segmented control. Targets come
+// from src/data/i18n.ts (the same map that drives hreflang); a page with no
+// twin in a locale falls back to that locale's home.
+const urls = localeUrls(Astro.url.pathname)
+const switchAria = {
+  nl: {
+    nl: 'Deze pagina in het Nederlands',
+    en: 'Deze pagina in het Engels',
+    es: 'Deze pagina in het Spaans',
+  },
+  en: {
+    nl: 'View this page in Dutch',
+    en: 'View this page in English',
+    es: 'View this page in Spanish',
+  },
+  es: {
+    nl: 'Ver esta página en neerlandés',
+    en: 'Ver esta página en inglés',
+    es: 'Ver esta página en español',
+  },
+}[lang]
+const langSwitch = (['nl', 'en', 'es'] as const).map((code) => ({
+  code,
+  label: code.toUpperCase(),
+  href: urls[code],
+  aria: switchAria[code],
+  current: code === lang,
+}))
 
-const homeHref = isEn ? '/en/' : '/'
-const t = {
-  mainNav: isEn ? 'Main navigation' : 'Hoofdnavigatie',
-  forWho: isEn ? 'For who?' : 'Voor wie?',
-  forWhoAria: isEn ? 'Which trades' : 'Voor welke branches',
-  allBranches: isEn ? 'All trades →' : 'Alle branches →',
-  openMenu: isEn ? 'Open menu' : 'Menu openen',
-  mobileNav: isEn ? 'Mobile main navigation' : 'Mobiele hoofdnavigatie',
-}
+const T = {
+  nl: {
+    mainNav: 'Hoofdnavigatie',
+    forWho: 'Voor wie?',
+    forWhoAria: 'Voor welke branches',
+    allBranches: 'Alle branches →',
+    openMenu: 'Menu openen',
+    mobileNav: 'Mobiele hoofdnavigatie',
+    langSwitcher: 'Taalkeuze',
+  },
+  en: {
+    mainNav: 'Main navigation',
+    forWho: 'For who?',
+    forWhoAria: 'Which trades',
+    allBranches: 'All trades →',
+    openMenu: 'Open menu',
+    mobileNav: 'Mobile main navigation',
+    langSwitcher: 'Language',
+  },
+  es: {
+    mainNav: 'Navegación principal',
+    forWho: '¿Para quién?',
+    forWhoAria: 'Para qué sectores',
+    allBranches: 'Todos los sectores →',
+    openMenu: 'Abrir menú',
+    mobileNav: 'Navegación principal móvil',
+    langSwitcher: 'Idioma',
+  },
+} as const
+const t = T[lang]
 ---
 
 <header class="border-b border-(--color-kraan-stone-300) bg-(--color-kraan-cream)">
@@ -105,13 +157,36 @@ const t = {
           ))
         }
         <li>
-          <a
-            href={switchHref}
-            aria-label={switchAria}
-            class="rounded-(--radius-button) border border-(--color-kraan-stone-300) px-2 py-1 font-mono text-micro text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
+          <div
+            class="inline-flex items-center overflow-hidden rounded-(--radius-button) border border-(--color-kraan-stone-300) font-mono text-micro"
+            role="group"
+            aria-label={t.langSwitcher}
           >
-            {switchLabel}
-          </a>
+            {langSwitch.map((s, i) =>
+              s.current ? (
+                <span
+                  aria-current="true"
+                  class:list={[
+                    'px-2 py-1 bg-(--color-kraan-blue) text-white',
+                    i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                  ]}
+                >
+                  {s.label}
+                </span>
+              ) : (
+                <a
+                  href={s.href}
+                  aria-label={s.aria}
+                  class:list={[
+                    'px-2 py-1 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)',
+                    i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                  ]}
+                >
+                  {s.label}
+                </a>
+              )
+            )}
+          </div>
         </li>
       </ul>
     </nav>
@@ -194,14 +269,37 @@ const t = {
           </li>
         ))
       }
-      <li class="border-b border-(--color-kraan-stone-300) last:border-b-0">
-        <a
-          href={switchHref}
-          aria-label={switchAria}
-          class="block px-6 py-4 text-body text-(--color-kraan-blue) no-underline"
+      <li class="border-b border-(--color-kraan-stone-300) px-6 py-4 last:border-b-0">
+        <div
+          class="flex overflow-hidden rounded-(--radius-button) border border-(--color-kraan-stone-300) font-mono text-small"
+          role="group"
+          aria-label={t.langSwitcher}
         >
-          {isEn ? 'Nederlands' : 'English'}
-        </a>
+          {langSwitch.map((s, i) =>
+            s.current ? (
+              <span
+                aria-current="true"
+                class:list={[
+                  'flex-1 py-2 text-center bg-(--color-kraan-blue) text-white',
+                  i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                ]}
+              >
+                {s.label}
+              </span>
+            ) : (
+              <a
+                href={s.href}
+                aria-label={s.aria}
+                class:list={[
+                  'flex-1 py-2 text-center text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)',
+                  i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                ]}
+              >
+                {s.label}
+              </a>
+            )
+          )}
+        </div>
       </li>
     </ul>
   </nav>

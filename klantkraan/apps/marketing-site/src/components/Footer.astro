@@ -5,30 +5,45 @@ import { contact, waLink, telLink, mailLink } from '../data/contact'
 import { company } from '../data/company'
 
 interface Props {
-  lang?: 'nl' | 'en'
+  lang?: 'nl' | 'en' | 'es'
 }
 const { lang = 'nl' } = Astro.props
-const isEn = lang === 'en'
 
 const year = new Date().getFullYear()
 
-const legal = isEn
-  ? [
-      { href: '/legal/voorwaarden/', label: 'Terms & conditions' },
-      { href: '/legal/dpa/', label: 'Data processing agreement' },
-      { href: '/legal/sla/', label: 'SLA' },
-      { href: '/legal/privacy/', label: 'Privacy' },
-      { href: '/legal/ai-disclosure/', label: 'AI disclosure' },
-      { href: '/legal/subprocessors/', label: 'Sub-processors' },
-    ]
-  : [
-      { href: '/legal/voorwaarden/', label: 'Algemene voorwaarden' },
-      { href: '/legal/dpa/', label: 'Verwerkersovereenkomst' },
-      { href: '/legal/sla/', label: 'SLA' },
-      { href: '/legal/privacy/', label: 'Privacy' },
-      { href: '/legal/ai-disclosure/', label: 'AI-disclosure' },
-      { href: '/legal/subprocessors/', label: 'Sub-processors' },
-    ]
+interface LegalLink {
+  href: string
+  label: string
+}
+
+// Legal hrefs are identical across locales; only the labels differ.
+const legalByLang: Record<'nl' | 'en' | 'es', LegalLink[]> = {
+  nl: [
+    { href: '/legal/voorwaarden/', label: 'Algemene voorwaarden' },
+    { href: '/legal/dpa/', label: 'Verwerkersovereenkomst' },
+    { href: '/legal/sla/', label: 'SLA' },
+    { href: '/legal/privacy/', label: 'Privacy' },
+    { href: '/legal/ai-disclosure/', label: 'AI-disclosure' },
+    { href: '/legal/subprocessors/', label: 'Sub-processors' },
+  ],
+  en: [
+    { href: '/legal/voorwaarden/', label: 'Terms & conditions' },
+    { href: '/legal/dpa/', label: 'Data processing agreement' },
+    { href: '/legal/sla/', label: 'SLA' },
+    { href: '/legal/privacy/', label: 'Privacy' },
+    { href: '/legal/ai-disclosure/', label: 'AI disclosure' },
+    { href: '/legal/subprocessors/', label: 'Sub-processors' },
+  ],
+  es: [
+    { href: '/legal/voorwaarden/', label: 'Términos y condiciones' },
+    { href: '/legal/dpa/', label: 'Contrato de tratamiento de datos' },
+    { href: '/legal/sla/', label: 'SLA' },
+    { href: '/legal/privacy/', label: 'Privacidad' },
+    { href: '/legal/ai-disclosure/', label: 'Declaración de IA' },
+    { href: '/legal/subprocessors/', label: 'Subencargados' },
+  ],
+}
+const legal = legalByLang[lang]
 
 interface TrustBadge {
   icon: 'shield-check' | 'check' | 'phone-call' | 'clock'
@@ -36,45 +51,84 @@ interface TrustBadge {
   sub: string
 }
 
-const trustBadges: TrustBadge[] = isEn
-  ? [
-      { icon: 'shield-check', label: 'GDPR compliant', sub: 'Standard data processing agreement' },
-      { icon: 'shield-check', label: 'EU AI Act art. 50', sub: "Disclosure can't be switched off" },
-      { icon: 'check', label: 'EU-hosted', sub: 'Cloudflare · Neon · Hetzner FSN1' },
-      { icon: 'clock', label: 'Cancel monthly', sub: 'No lock-in, no hidden fees' },
-    ]
-  : [
-      { icon: 'shield-check', label: 'AVG / GDPR conform', sub: 'Standaard verwerkersovereenkomst' },
-      { icon: 'shield-check', label: 'EU AI Act art. 50', sub: 'Disclosure niet uitschakelbaar' },
-      { icon: 'check', label: 'EU-gehost', sub: 'Cloudflare · Neon · Hetzner FSN1' },
-      { icon: 'clock', label: 'Per maand opzegbaar', sub: 'Geen wurgcontract, geen verborgen kosten' },
-    ]
-
-const t = {
-  trustKicker: isEn ? 'Why you can trust us' : 'Waarom u ons kunt vertrouwen',
-  trustAria: isEn ? 'Trust signals' : 'Vertrouwens-signalen',
-  tagline: isEn
-    ? 'The digital receptionist for tradespeople and local businesses.'
-    : 'De Klantenmotor voor Nederlandse ondernemers.',
-  tradeNameNote: isEn ? 'Klantkraan is a trade name of' : 'Klantkraan is een handelsnaam van',
-  branchesHead: isEn ? 'Trades' : 'Branches',
-  allBranches: isEn ? 'All trades →' : 'Alle branches →',
-  legalHead: isEn ? 'Legal' : 'Juridisch',
-  contactHead: 'Contact',
-  whatsapp: isEn ? 'WhatsApp us' : 'WhatsApp ons',
-  founder: isEn ? 'The founder' : 'De oprichter',
-  founderSub: isEn ? 'Read our story →' : 'Lees ons verhaal →',
-  madeIn: isEn ? 'Made in the Netherlands.' : 'Gemaakt in Nederland.',
+const trustBadgesByLang: Record<'nl' | 'en' | 'es', TrustBadge[]> = {
+  nl: [
+    { icon: 'shield-check', label: 'AVG / GDPR conform', sub: 'Standaard verwerkersovereenkomst' },
+    { icon: 'shield-check', label: 'EU AI Act art. 50', sub: 'Disclosure niet uitschakelbaar' },
+    { icon: 'check', label: 'EU-gehost', sub: 'Cloudflare · Neon · Hetzner FSN1' },
+    { icon: 'clock', label: 'Per maand opzegbaar', sub: 'Geen wurgcontract, geen verborgen kosten' },
+  ],
+  en: [
+    { icon: 'shield-check', label: 'GDPR compliant', sub: 'Standard data processing agreement' },
+    { icon: 'shield-check', label: 'EU AI Act art. 50', sub: "Disclosure can't be switched off" },
+    { icon: 'check', label: 'EU-hosted', sub: 'Cloudflare · Neon · Hetzner FSN1' },
+    { icon: 'clock', label: 'Cancel monthly', sub: 'No lock-in, no hidden fees' },
+  ],
+  es: [
+    { icon: 'shield-check', label: 'Conforme al RGPD', sub: 'Contrato de tratamiento estándar' },
+    { icon: 'shield-check', label: 'Reglamento de IA de la UE art. 50', sub: 'La declaración no se puede desactivar' },
+    { icon: 'check', label: 'Alojado en la UE', sub: 'Cloudflare · Neon · Hetzner FSN1' },
+    { icon: 'clock', label: 'Cancele cada mes', sub: 'Sin permanencia ni costes ocultos' },
+  ],
 }
-const overHref = isEn ? '/en/over/' : '/over/'
+const trustBadges = trustBadgesByLang[lang]
+
+const T = {
+  nl: {
+    trustKicker: 'Waarom u ons kunt vertrouwen',
+    trustAria: 'Vertrouwens-signalen',
+    tagline: 'De Klantenmotor voor Nederlandse ondernemers.',
+    tradeNameNote: 'Klantkraan is een handelsnaam van',
+    branchesHead: 'Branches',
+    allBranches: 'Alle branches →',
+    legalHead: 'Juridisch',
+    contactHead: 'Contact',
+    whatsapp: 'WhatsApp ons',
+    founder: 'De oprichter',
+    founderSub: 'Lees ons verhaal →',
+    madeIn: 'Gemaakt in Nederland.',
+  },
+  en: {
+    trustKicker: 'Why you can trust us',
+    trustAria: 'Trust signals',
+    tagline: 'The digital receptionist for tradespeople and local businesses.',
+    tradeNameNote: 'Klantkraan is a trade name of',
+    branchesHead: 'Trades',
+    allBranches: 'All trades →',
+    legalHead: 'Legal',
+    contactHead: 'Contact',
+    whatsapp: 'WhatsApp us',
+    founder: 'The founder',
+    founderSub: 'Read our story →',
+    madeIn: 'Made in the Netherlands.',
+  },
+  es: {
+    trustKicker: 'Por qué puede confiar en nosotros',
+    trustAria: 'Señales de confianza',
+    tagline: 'La recepcionista digital para profesionales y negocios locales.',
+    tradeNameNote: 'Klantkraan es un nombre comercial de',
+    branchesHead: 'Sectores',
+    allBranches: 'Todos los sectores →',
+    legalHead: 'Legal',
+    contactHead: 'Contacto',
+    whatsapp: 'Escríbanos por WhatsApp',
+    founder: 'El fundador',
+    founderSub: 'Lea nuestra historia →',
+    madeIn: 'Hecho en los Países Bajos.',
+  },
+} as const
+const t = T[lang]
+
+const overHref = lang === 'nl' ? '/over/' : lang === 'es' ? '/es/over/' : '/en/over/'
 const gridCols = 'sm:grid-cols-2 md:grid-cols-4'
 
-// Trades column, resolved per language from the shared branch list.
+// Trades column, resolved per language from the shared branch list. ES trade
+// cornerstones don't exist yet, so ES reuses the English cornerstones.
 const branchLinks = branches.map((b) => ({
-  href: isEn ? `/en/${b.slug}/` : b.href,
-  label: isEn ? b.labelPluralEn : b.labelPlural,
+  href: lang === 'nl' ? b.href : `/en/${b.slug}/`,
+  label: lang === 'es' ? b.labelPluralEs : lang === 'en' ? b.labelPluralEn : b.labelPlural,
 }))
-const hubHref = isEn ? '/en/voor-wie/' : '/voor-wie/'
+const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' : '/en/voor-wie/'
 ---
 
 <footer class="border-t border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100)">

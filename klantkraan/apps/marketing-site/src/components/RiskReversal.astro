@@ -10,10 +10,9 @@
 import Icon from './Icon.astro'
 
 interface Props {
-  lang?: 'nl' | 'en'
+  lang?: 'nl' | 'en' | 'es'
 }
 const { lang = 'nl' } = Astro.props
-const isEn = lang === 'en'
 
 interface Promise {
   icon: 'check' | 'clock' | 'shield-check'
@@ -21,46 +20,67 @@ interface Promise {
   body: string
 }
 
-const promises: Promise[] = isEn
-  ? [
-      {
-        icon: 'check',
-        title: 'First month 50% off',
-        body: 'Klantkraan Chat from €149.50 in month one. If it does not work for you, cancel without having to explain.',
-      },
-      {
-        icon: 'clock',
-        title: 'Cancel monthly',
-        body: 'No annual contract, no hidden renewal. One email to hallo@klantkraan.nl, 30 days notice, done.',
-      },
-      {
-        icon: 'shield-check',
-        title: 'Live without the hassle',
-        body: 'One small script on your website and the receptionist is running. We install it. You do nothing.',
-      },
-    ]
-  : [
-      {
-        icon: 'check',
-        title: 'Eerste maand 50% korting',
-        body: 'Klantkraan Chat vanaf €149,50 in maand 1. Werkt het niet voor u, zegt u op zonder uitleg.',
-      },
-      {
-        icon: 'clock',
-        title: 'Maandelijks opzegbaar',
-        body: 'Geen jaarcontract, geen verborgen verlenging. Eén e-mail naar hallo@klantkraan.nl, 30 dagen opzegtermijn, klaar.',
-      },
-      {
-        icon: 'shield-check',
-        title: 'Live zonder gedoe',
-        body: 'Eén klein scriptje op uw website en de receptionist draait. Wij installeren het. U hoeft niets te doen.',
-      },
-    ]
+const promisesByLang: Record<'nl' | 'en' | 'es', Promise[]> = {
+  nl: [
+    {
+      icon: 'check',
+      title: 'Eerste maand 50% korting',
+      body: 'Klantkraan Chat vanaf €149,50 in maand 1. Werkt het niet voor u, zegt u op zonder uitleg.',
+    },
+    {
+      icon: 'clock',
+      title: 'Maandelijks opzegbaar',
+      body: 'Geen jaarcontract, geen verborgen verlenging. Eén e-mail naar hallo@klantkraan.nl, 30 dagen opzegtermijn, klaar.',
+    },
+    {
+      icon: 'shield-check',
+      title: 'Live zonder gedoe',
+      body: 'Eén klein scriptje op uw website en de receptionist draait. Wij installeren het. U hoeft niets te doen.',
+    },
+  ],
+  en: [
+    {
+      icon: 'check',
+      title: 'First month 50% off',
+      body: 'Klantkraan Chat from €149.50 in month one. If it does not work for you, cancel without having to explain.',
+    },
+    {
+      icon: 'clock',
+      title: 'Cancel monthly',
+      body: 'No annual contract, no hidden renewal. One email to hallo@klantkraan.nl, 30 days notice, done.',
+    },
+    {
+      icon: 'shield-check',
+      title: 'Live without the hassle',
+      body: 'One small script on your website and the receptionist is running. We install it. You do nothing.',
+    },
+  ],
+  es: [
+    {
+      icon: 'check',
+      title: 'Primer mes al 50%',
+      body: 'Klantkraan Chat desde 149,50 € el primer mes. Si no le funciona, cancele sin dar explicaciones.',
+    },
+    {
+      icon: 'clock',
+      title: 'Cancele cada mes',
+      body: 'Sin contrato anual ni renovaciones ocultas. Un correo a hallo@klantkraan.nl, 30 días de preaviso y listo.',
+    },
+    {
+      icon: 'shield-check',
+      title: 'En marcha sin complicaciones',
+      body: 'Un pequeño script en su web y la recepcionista funciona. Lo instalamos nosotros. Usted no hace nada.',
+    },
+  ],
+}
+const promises = promisesByLang[lang]
+const sectionAria =
+  lang === 'en' ? 'Risk reduction' : lang === 'es' ? 'Reducción de riesgo' : 'Risico-reductie'
 ---
 
 <section
   class="border-y border-(--color-kraan-rust)/30 bg-(--color-kraan-cream) py-8 md:py-10"
-  aria-label={isEn ? 'Risk reduction' : 'Risico-reductie'}
+  aria-label={sectionAria}
 >
   <div class="mx-auto max-w-5xl px-6">
     <dl class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">

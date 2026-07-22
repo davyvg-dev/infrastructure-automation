@@ -16,15 +16,19 @@ import Icon from './Icon.astro'
 import { waLink, telLink } from '../data/contact'
 
 interface Props {
-  lang?: 'nl' | 'en'
+  lang?: 'nl' | 'en' | 'es'
 }
-const { lang = 'nl' } = Astro.props
-const isEn = lang === 'en'
-const t = {
-  actions: isEn ? 'Quick actions' : 'Snelle acties',
-  call: isEn ? 'Call Klantkraan' : 'Bel Klantkraan',
-  whatsapp: isEn ? 'WhatsApp us' : 'WhatsApp ons',
-}
+const { lang = 'nl' } = Astro.props as Props
+const T = {
+  nl: { actions: 'Snelle acties', call: 'Bel Klantkraan', whatsapp: 'WhatsApp ons' },
+  en: { actions: 'Quick actions', call: 'Call Klantkraan', whatsapp: 'WhatsApp us' },
+  es: {
+    actions: 'Acciones rápidas',
+    call: 'Llamar a Klantkraan',
+    whatsapp: 'Escríbanos por WhatsApp',
+  },
+} as const
+const t = T[lang]
 ---
 
 <aside

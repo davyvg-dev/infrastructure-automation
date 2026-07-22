@@ -12,7 +12,7 @@ interface Props {
   title: string
   description: string
   /** Page language — drives <html lang>, og:locale, the skip-link, and the shared chrome. */
-  lang?: 'nl' | 'en'
+  lang?: 'nl' | 'en' | 'es'
   canonical?: string
   /**
    * When true (default): wrap <slot /> in a centered max-w-5xl main.
@@ -41,14 +41,22 @@ const {
 } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
-const isEn = lang === 'en'
+const ogLocale = lang === 'en' ? 'en_GB' : lang === 'es' ? 'es_ES' : 'nl_NL'
+const skipLabel =
+  lang === 'en'
+    ? 'Skip to main content'
+    : lang === 'es'
+      ? 'Ir al contenido principal'
+      : 'Ga naar hoofdinhoud'
 
-// hreflang: pages that exist in both languages advertise each other (and an
-// x-default pointing at the Dutch original). Pairs come from src/data/i18n.ts,
-// the same map the header's language switcher uses, so the two can't drift.
+// hreflang: pages that exist in more than one language advertise each other (and
+// an x-default pointing at the Dutch original). Pairs come from src/data/i18n.ts,
+// the same map the header's language switcher uses, so the two can't drift. A
+// locale link is only emitted when that locale actually has a twin for the page.
 const localePair = pairForPath(Astro.url.pathname)
 const nlAltUrl = localePair ? new URL(localePair.nl, Astro.site).toString() : null
-const enAltUrl = localePair ? new URL(localePair.en, Astro.site).toString() : null
+const enAltUrl = localePair?.en ? new URL(localePair.en, Astro.site).toString() : null
+const esAltUrl = localePair?.es ? new URL(localePair.es, Astro.site).toString() : null
 
 // Site-wide structured data: who runs this site (Organization) + what it is
 // (WebSite). Company registration details come from src/data/company.ts.
@@ -94,7 +102,8 @@ const siteSchema = {
       localePair && (
         <>
           <link rel="alternate" hreflang="nl" href={nlAltUrl} />
-          <link rel="alternate" hreflang="en" href={enAltUrl} />
+          {enAltUrl && <link rel="alternate" hreflang="en" href={enAltUrl} />}
+          {esAltUrl && <link rel="alternate" hreflang="es" href={esAltUrl} />}
           <link rel="alternate" hreflang="x-default" href={nlAltUrl} />
         </>
       )
@@ -107,7 +116,7 @@ const siteSchema = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content={isEn ? 'en_GB' : 'nl_NL'} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -125,7 +134,7 @@ const siteSchema = {
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-kraan-blue) focus:px-4 focus:py-2 focus:text-white focus:no-underline"
     >
-      {isEn ? 'Skip to main content' : 'Ga naar hoofdinhoud'}
+      {skipLabel}
     </a>
     <Header lang={lang} />
     {
