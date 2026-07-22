@@ -83,21 +83,21 @@ const sectionAria =
   aria-label={sectionAria}
 >
   <div class="mx-auto max-w-5xl px-6">
-    <dl class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">
+    <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">
       {
         promises.map((p) => (
-          <div class="flex items-start gap-3">
+          <li class="flex items-start gap-3">
             <Icon
               name={p.icon}
               class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-rust)"
             />
             <div>
-              <dt class="text-body font-medium text-(--color-kraan-ink)">{p.title}</dt>
-              <dd class="mt-1 text-small text-(--color-kraan-stone-700)">{p.body}</dd>
+              <p class="text-body font-medium text-(--color-kraan-ink)">{p.title}</p>
+              <p class="mt-1 text-small text-(--color-kraan-stone-700)">{p.body}</p>
             </div>
-          </div>
+          </li>
         ))
       }
-    </dl>
+    </ul>
   </div>
 </section>

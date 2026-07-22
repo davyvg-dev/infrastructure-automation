@@ -1,0 +1,47 @@
+---
+// Custom 404. Astro builds this to dist/404.html; Cloudflare Pages serves it
+// with a real HTTP 404 for any unmatched path. Without it, Pages falls back to
+// index.html with a 200 — a soft 404 that reads as duplicate content to crawlers.
+import Base from '../layouts/Base.astro'
+---
+
+<Base
+  title="Pagina niet gevonden (404) | Klantkraan"
+  description="Deze pagina bestaat niet of is verplaatst. Ga terug naar de homepage of bekijk de prijzen en demo van Klantkraan."
+  noindex={true}
+  stickyCta={false}
+>
+  <section class="py-16 md:py-24">
+    <div class="mx-auto max-w-2xl px-6 text-center">
+      <p class="font-mono text-small uppercase tracking-wide text-(--color-kraan-stone-500)">
+        Fout 404
+      </p>
+      <h1 class="mt-3 font-display text-hero text-(--color-kraan-ink)">
+        Deze pagina bestaat niet
+      </h1>
+      <p class="mt-6 text-h3 text-(--color-kraan-stone-700)">
+        De link klopt niet meer of de pagina is verplaatst. Kies hieronder waar u naartoe wilt.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a
+          href="/"
+          class="rounded-(--radius-button) bg-(--color-kraan-blue) px-5 py-3 font-medium text-white no-underline hover:opacity-90"
+        >
+          Naar de homepage
+        </a>
+        <a
+          href="/prijzen/"
+          class="rounded-(--radius-button) border border-(--color-kraan-stone-300) px-5 py-3 font-medium text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
+        >
+          Prijzen
+        </a>
+        <a
+          href="/demo/"
+          class="rounded-(--radius-button) border border-(--color-kraan-stone-300) px-5 py-3 font-medium text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
+        >
+          Demo
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

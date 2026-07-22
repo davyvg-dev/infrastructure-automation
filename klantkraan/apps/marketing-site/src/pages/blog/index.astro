@@ -26,7 +26,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
 ---
 
 <Base
-  title="Blog | Klantkraan"
+  title="Blog over klantcontact voor vakmensen | Klantkraan"
   description="Praktische artikelen voor Nederlandse ondernemers over AI-receptionist, gemiste oproepen, no-shows en klantenmotor-automatisering."
 >
   <section class="py-8">
@@ -59,6 +59,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
           </p>
           <a
             href={`/blog/${post.id.replace(/\.md$/, '')}/`}
+            aria-label={`Lees het artikel: ${post.data.title}`}
             class="mt-6 inline-flex min-h-[2.75rem] items-center text-body font-medium text-(--color-kraan-blue) no-underline hover:underline"
           >
             Lees het artikel →

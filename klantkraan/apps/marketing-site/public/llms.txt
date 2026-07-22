@@ -12,16 +12,16 @@ done-for-you setup, EU-hosted. Trade name of T4 Software Consulting BV
 
 ## Key pages
 
-- Home: https://klantkraan.nl/
-- Pricing: https://klantkraan.nl/prijzen/
-- Demo: https://klantkraan.nl/demo/
-- Gyms: https://klantkraan.nl/sportscholen/
-- Gym demo: https://klantkraan.nl/demo/sportscholen/
-- Plumbers: https://klantkraan.nl/loodgieters/
-- Roofers: https://klantkraan.nl/dakdekkers/
-- Installers: https://klantkraan.nl/installateur/
-- Electricians: https://klantkraan.nl/elektricien/
-- Painters: https://klantkraan.nl/schilder/
-- Contractors: https://klantkraan.nl/aannemer/
-- Blog: https://klantkraan.nl/blog/
-- Guides: https://klantkraan.nl/gidsen/
+- [Home](https://klantkraan.nl/)
+- [Pricing](https://klantkraan.nl/prijzen/)
+- [Demo](https://klantkraan.nl/demo/)
+- [Gyms](https://klantkraan.nl/sportscholen/)
+- [Gym demo](https://klantkraan.nl/demo/sportscholen/)
+- [Plumbers](https://klantkraan.nl/loodgieters/)
+- [Roofers](https://klantkraan.nl/dakdekkers/)
+- [Installers](https://klantkraan.nl/installateur/)
+- [Electricians](https://klantkraan.nl/elektricien/)
+- [Painters](https://klantkraan.nl/schilder/)
+- [Contractors](https://klantkraan.nl/aannemer/)
+- [Blog](https://klantkraan.nl/blog/)
+- [Guides](https://klantkraan.nl/gidsen/)

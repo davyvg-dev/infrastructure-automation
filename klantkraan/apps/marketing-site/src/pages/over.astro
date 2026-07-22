@@ -7,7 +7,7 @@ import { company } from '../data/company'
 
 <Base
   title="Over Klantkraan: wie het bouwt en waarom"
-  description="Klantkraan is een handelsnaam van T4 Software Consulting BV, gebouwd door één Nederlandse ICT-ondernemer. Nederlands gehost, AVG-compliant, geen externe investeerders."
+  description="Klantkraan is een handelsnaam van T4 Software Consulting BV, gebouwd door één ICT-ondernemer. Nederlands gehost, AVG-compliant, geen externe investeerders."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -26,35 +26,25 @@ import { company } from '../data/company'
     <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
       <div>
         <h2 class="font-display text-h2 text-(--color-kraan-ink)">Het bedrijf</h2>
-        <dl class="mt-4 space-y-3 text-body text-(--color-kraan-stone-700)">
-          <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Handelsnaam</dt>
-            <dd>Klantkraan</dd>
-          </div>
-          <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Juridische entiteit</dt>
-            <dd>T4 Software Consulting BV</dd>
-          </div>
-          <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">KvK-nummer</dt>
-            <dd class="font-mono break-all">{company.kvk}</dd>
-          </div>
+        <dl class="mt-4 text-body text-(--color-kraan-stone-700)">
+          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Handelsnaam</dt>
+          <dd>Klantkraan</dd>
+          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Juridische entiteit</dt>
+          <dd>T4 Software Consulting BV</dd>
+          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">KvK-nummer</dt>
+          <dd class="font-mono break-all">{company.kvk}</dd>
           {
             company.btw && (
-              <div>
-                <dt class="text-small text-(--color-kraan-stone-500)">BTW-nummer</dt>
+              <Fragment>
+                <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">BTW-nummer</dt>
                 <dd class="font-mono break-all">{company.btw}</dd>
-              </div>
+              </Fragment>
             )
           }
-          <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Vestiging</dt>
-            <dd>Nederland</dd>
-          </div>
-          <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Contact</dt>
-            <dd><a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a></dd>
-          </div>
+          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Vestiging</dt>
+          <dd>Nederland</dd>
+          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Contact</dt>
+          <dd><a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a></dd>
         </dl>
       </div>
 

@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro'
 
 <Base
   lang="en"
-  title="ROI calculator | Klantkraan"
+  title="ROI calculator: what missed calls cost you | Klantkraan"
   description="Work out in 10 seconds how much revenue you lose to missed calls, and how quickly Klantkraan pays for itself."
   centered={false}
 >
@@ -84,26 +84,26 @@ import Base from '../../layouts/Base.astro'
         class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-white p-5 md:p-6"
       >
         <h2 class="font-display text-h2 text-(--color-kraan-ink)">Your loss in numbers</h2>
-        <dl class="mt-4 space-y-4">
+        <div class="mt-4 space-y-4">
           <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Missed calls per year</dt>
-            <dd
+            <p class="text-small text-(--color-kraan-stone-500)">Missed calls per year</p>
+            <p
               id="out-missed-year"
               class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-kraan-blue)"
             >
               0
-            </dd>
+            </p>
           </div>
           <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Lost revenue per year</dt>
-            <dd id="out-lost-revenue" class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-kraan-rust)">
+            <p class="text-small text-(--color-kraan-stone-500)">Lost revenue per year</p>
+            <p id="out-lost-revenue" class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-kraan-rust)">
               €0
-            </dd>
+            </p>
             <p class="mt-1 text-small text-(--color-kraan-stone-500)">
               Assumption: roughly 1 in 3 missed calls would have become a paying job.
             </p>
           </div>
-        </dl>
+        </div>
 
         <hr class="my-6 border-(--color-kraan-stone-300)" />
 

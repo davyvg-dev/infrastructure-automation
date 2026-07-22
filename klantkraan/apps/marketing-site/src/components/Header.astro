@@ -68,7 +68,10 @@ const langSwitch = (['nl', 'en', 'es'] as const).map((code) => ({
   code,
   label: code.toUpperCase(),
   href: urls[code],
-  aria: switchAria[code],
+  // Prefix the accessible name with the visible label ("ES") so it contains the
+  // visible text — WCAG 2.5.3 label-in-name. Without it, aria-label alone
+  // ("Deze pagina in het Spaans") mismatches the visible "ES".
+  aria: `${code.toUpperCase()}: ${switchAria[code]}`,
   current: code === lang,
 }))
 
@@ -176,6 +179,8 @@ const t = T[lang]
               ) : (
                 <a
                   href={s.href}
+                  hreflang={s.code}
+                  lang={s.code}
                   aria-label={s.aria}
                   class:list={[
                     'px-2 py-1 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)',

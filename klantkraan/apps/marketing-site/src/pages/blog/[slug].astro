@@ -53,14 +53,20 @@ const related = (
 ).slice(0, 2)
 
 const canonical = new URL(`/blog/${postSlug(post)}/`, Astro.site).toString()
+const ogImage = new URL('/og-default.png', Astro.site).toString()
 const blogSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
   headline: post.data.title,
   description: post.data.description,
+  image: ogImage,
   datePublished: post.data.pubDate.toISOString().slice(0, 10),
   author: { '@type': 'Organization', name: company.tradeName },
-  publisher: { '@type': 'Organization', name: company.tradeName },
+  publisher: {
+    '@type': 'Organization',
+    name: company.tradeName,
+    logo: { '@type': 'ImageObject', url: ogImage },
+  },
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
   url: canonical,
 }

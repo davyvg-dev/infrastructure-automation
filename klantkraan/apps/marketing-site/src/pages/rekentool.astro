@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro'
 ---
 
 <Base
-  title="ROI-rekentool | Klantkraan"
+  title="ROI-rekentool: bereken uw gemiste omzet | Klantkraan"
   description="Bereken in 10 seconden hoeveel omzet u laat liggen aan gemiste oproepen en hoe snel Klantkraan zichzelf terugverdient."
   centered={false}
 >
@@ -83,26 +83,26 @@ import Base from '../layouts/Base.astro'
         class="rounded-(--radius-card) border border-(--color-kraan-blue) bg-white p-5 md:p-6"
       >
         <h2 class="font-display text-h2 text-(--color-kraan-ink)">Uw verlies in cijfers</h2>
-        <dl class="mt-4 space-y-4">
+        <div class="mt-4 space-y-4">
           <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Gemiste oproepen per jaar</dt>
-            <dd
+            <p class="text-small text-(--color-kraan-stone-500)">Gemiste oproepen per jaar</p>
+            <p
               id="out-missed-year"
               class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-kraan-blue)"
             >
               0
-            </dd>
+            </p>
           </div>
           <div>
-            <dt class="text-small text-(--color-kraan-stone-500)">Verloren omzet per jaar</dt>
-            <dd id="out-lost-revenue" class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-kraan-rust)">
+            <p class="text-small text-(--color-kraan-stone-500)">Verloren omzet per jaar</p>
+            <p id="out-lost-revenue" class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-kraan-rust)">
               €0
-            </dd>
+            </p>
             <p class="mt-1 text-small text-(--color-kraan-stone-500)">
               Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
             </p>
           </div>
-        </dl>
+        </div>
 
         <hr class="my-6 border-(--color-kraan-stone-300)" />
 

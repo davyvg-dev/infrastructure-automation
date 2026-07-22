@@ -136,7 +136,7 @@ const subprocessors: Subprocessor[] = [
                   <td class="py-2 pr-4 align-top">{sp.location}</td>
                   <td class="py-2 pr-4 align-top">{sp.transfer}</td>
                   <td class="py-2 align-top">
-                    <a href={sp.dpa} rel="external">Link</a>
+                    <a href={sp.dpa} rel="external" aria-label={`DPA van ${sp.name}`}>DPA</a>
                   </td>
                 </tr>
               ))

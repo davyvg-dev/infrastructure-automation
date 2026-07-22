@@ -1,5 +1,5 @@
 ---
-title: 'No-show afspraken verminderen: hoe vakmensen 80% minder gemiste opnames krijgen'
+title: 'No-show afspraken verminderen: 80% minder gemiste opnames'
 description: 'Praktische gids: hoe verlaag u no-shows op opname- en monteursafspraken met SMS-reminders, AI-confirm en duidelijke voorrijkosten. Met cijfers.'
 pubDate: 2026-05-19
 author: 'Klantkraan'
