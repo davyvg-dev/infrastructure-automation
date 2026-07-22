@@ -12,8 +12,9 @@ Capture must NEVER break a conversation: every public call swallows its own erro
 (after logging) and returns quietly, exactly like notify.
 
 Privacy: the channel user id (a phone number on WhatsApp) is stored only as a salted
-hash — never in the clear. Transcript text is stored as-is for the analyst layer; a
-retention/purge job (AVG) is the next sub-slice.
+hash — never in the clear. Transcript text is stored as-is for the analyst layer, then
+purged on an AVG retention window (purge_transcripts) — the aggregated `sessions` rollup,
+which holds no message text, is kept as the ROI history.
 """
 
 from __future__ import annotations
@@ -23,8 +24,9 @@ import json
 import logging
 import os
 import sqlite3
+import sys
 import threading
-from datetime import datetime, time as dtime
+from datetime import datetime, time as dtime, timedelta
 from typing import Any
 
 from . import settings
@@ -185,6 +187,52 @@ def record_turn(
         log.warning("analytics capture failed: %s", exc)
 
 
+# --- retention (AVG) ---------------------------------------------------------------------
+
+# Default window for keeping raw transcript text. 90 days is the top of the doc's 30-90d band;
+# override with ANALYTICS_RETENTION_DAYS. The `sessions` rollup outlives this — it carries no
+# message text, only counts/tokens/outcome, so it stays as the per-client ROI history.
+_DEFAULT_RETENTION_DAYS = 90
+
+
+def _retention_days() -> int:
+    raw = os.getenv("ANALYTICS_RETENTION_DAYS", "")
+    try:
+        days = int(raw)
+    except ValueError:
+        return _DEFAULT_RETENTION_DAYS
+    # A non-positive window would wipe all history — treat a misconfig as the safe default.
+    return days if days >= 1 else _DEFAULT_RETENTION_DAYS
+
+
+def purge_transcripts(retention_days: int | None = None, now: datetime | None = None) -> int:
+    """Delete raw `turns` rows older than the retention window; return how many were removed.
+
+    Only transcript text is purged — the aggregated `sessions` rollup is untouched, so
+    per-client counts/tokens/ROI survive indefinitely while message content does not.
+
+    Ordering note: the nightly analyst (Layer 2) reads `turns` well inside this window and
+    persists its findings to `insights`, so purging old transcripts never costs an analysis.
+    """
+    days = _retention_days() if retention_days is None else retention_days
+    now = now or datetime.now()
+    cutoff = (now - timedelta(days=days)).isoformat(timespec="seconds")
+    try:
+        with _LOCK:
+            conn = _connect()
+            try:
+                cur = conn.execute("DELETE FROM turns WHERE ts < ?", (cutoff,))
+                conn.commit()
+                deleted = cur.rowcount
+            finally:
+                conn.close()
+        log.info("retention: purged %d transcript turn(s) older than %s", deleted, cutoff)
+        return deleted
+    except Exception as exc:
+        log.warning("retention purge failed: %s", exc)
+        return 0
+
+
 # --- read helpers (used by the selftest now; the digest/report will use these later) -----
 
 
@@ -197,3 +245,28 @@ def load_session(client: str, channel: str, user_id: str) -> dict[str, Any] | No
         return dict(zip(cols, row)) if row else None
     finally:
         conn.close()
+
+
+def _count_turns() -> int:
+    conn = _connect()
+    try:
+        return int(conn.execute("SELECT COUNT(*) FROM turns").fetchone()[0])
+    finally:
+        conn.close()
+
+
+# --- CLI: the cron/systemd-timer entry point for retention -------------------------------
+
+
+def main(argv: list[str]) -> int:
+    cmd = argv[1] if len(argv) > 1 else ""
+    if cmd == "purge":
+        deleted = purge_transcripts()
+        print(f"purged {deleted} transcript turn(s) older than {_retention_days()} days")
+        return 0
+    print("usage: python -m app.analytics purge")
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

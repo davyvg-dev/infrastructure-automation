@@ -1,0 +1,11 @@
+[Unit]
+Description=Klantkraan receptionist AVG retention purge (drop raw transcript text past the window)
+After=network-online.target ai-receptionist.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# app user: only touches data/analytics.db, never systemctl. ANALYTICS_RETENTION_DAYS from .env.
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.analytics purge

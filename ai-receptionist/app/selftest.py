@@ -247,6 +247,31 @@ def check_analytics() -> bool:
             if "+31600000000" in sess["session_key"]:
                 return _fail("raw phone number leaked into the store — must be hashed")
             _ok("channel user id is stored hashed, not in the clear")
+
+            # AVG retention: an old transcript turn is purged; the rollup + recent turns stay.
+            from datetime import datetime, timedelta
+
+            conn = analytics._connect()
+            try:
+                old_ts = (datetime.now() - timedelta(days=120)).isoformat(timespec="seconds")
+                conn.execute(
+                    "INSERT INTO turns (session_key, client, ts, user_text, reply) "
+                    "VALUES (?,?,?,?,?)",
+                    ("acme-loodgieter:web:x", "acme-loodgieter", old_ts, "old", "old"),
+                )
+                conn.commit()
+            finally:
+                conn.close()
+            before = analytics._count_turns()
+            deleted = analytics.purge_transcripts(retention_days=90)
+            after = analytics._count_turns()
+            if deleted != 1 or after != before - 1:
+                return _fail(f"retention should purge exactly the 1 old turn (deleted={deleted})")
+            if analytics._count_turns() < 2:
+                return _fail("retention purged recent turns — only >90d transcripts should go")
+            if analytics.load_session("acme-loodgieter", "web", "+31600000000") is None:
+                return _fail("retention deleted a session rollup — only raw turns should be purged")
+            _ok("retention purges >90d transcripts, keeps recent turns + the session rollup")
         finally:
             settings.DATA_DIR = orig_dir
     return True
