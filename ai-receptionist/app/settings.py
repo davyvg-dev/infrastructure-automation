@@ -113,5 +113,12 @@ def business() -> dict[str, Any]:
     return _load(str(config_path()))
 
 
+def config_for(slug: str) -> dict[str, Any] | None:
+    """Load a specific client's config by slug without switching the active tenant.
+    Returns None if the slug is invalid or has no config file (e.g. the default demo)."""
+    path = client_config_path(slug)
+    return _load(str(path)) if path else None
+
+
 def ensure_dirs() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)

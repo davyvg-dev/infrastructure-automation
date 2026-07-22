@@ -44,11 +44,14 @@ cp /opt/klantkraan/ops/hetzner/ai-receptionist-watchdog.timer /etc/systemd/syste
 # Retention: daily AVG purge of raw transcript text past the window (rollups kept).
 cp /opt/klantkraan/ops/hetzner/ai-receptionist-retention.service /etc/systemd/system/
 cp /opt/klantkraan/ops/hetzner/ai-receptionist-retention.timer /etc/systemd/system/
+# Digest: daily per-client oversight summary -> founder Telegram.
+cp /opt/klantkraan/ops/hetzner/ai-receptionist-digest.service /etc/systemd/system/
+cp /opt/klantkraan/ops/hetzner/ai-receptionist-digest.timer /etc/systemd/system/
 sed "s/__DEMO_HOST__/$DEMO_HOST/" /opt/klantkraan/ops/hetzner/Caddyfile.template > /etc/caddy/Caddyfile
 
 systemctl daemon-reload
 systemctl enable --now growth-engine ai-receptionist caddy \
-  ai-receptionist-watchdog.timer ai-receptionist-retention.timer
+  ai-receptionist-watchdog.timer ai-receptionist-retention.timer ai-receptionist-digest.timer
 systemctl restart growth-engine ai-receptionist
 systemctl reload caddy
 sleep 3

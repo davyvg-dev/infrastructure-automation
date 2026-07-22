@@ -1,0 +1,11 @@
+[Unit]
+Description=Klantkraan daily oversight digest (per-client conversations/leads/cost -> founder Telegram)
+After=network-online.target ai-receptionist.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# app user: reads data/analytics.db + the app .env (OWNER_TELEGRAM_CHAT_ID / notify token).
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.oversight digest

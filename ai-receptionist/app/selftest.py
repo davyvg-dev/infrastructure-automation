@@ -6,6 +6,7 @@
     python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
     python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
     python -m app.selftest analytics   # per-client capture store round-trip, no network
+    python -m app.selftest digest      # deterministic oversight digest, no network
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
     python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
     python -m app.selftest chat        # interactive terminal chat with the receptionist
@@ -277,6 +278,63 @@ def check_analytics() -> bool:
     return True
 
 
+def check_digest() -> bool:
+    print("• digest (deterministic oversight, no network)")
+    from datetime import datetime
+
+    from . import analytics, oversight
+
+    # cost model: 1M input + 1M output of Haiku = ($1 + $5) * 0.92 EUR
+    c = oversight.cost_eur({"claude-haiku-4-5": {"input": 1_000_000, "output": 1_000_000}})
+    if round(c, 2) != 5.52:
+        return _fail(f"cost model wrong: expected €5.52, got €{c:.2f}")
+    _ok("cost model: 1M+1M Haiku tokens ≈ €5.52 (rates × USD→EUR)")
+
+    orig_data, orig_clients = settings.DATA_DIR, settings.CLIENTS_DIR
+    with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as ctmp:
+        settings.DATA_DIR = Path(tmp)
+        settings.CLIENTS_DIR = Path(ctmp)
+        try:
+            (settings.CLIENTS_DIR / "acme-loodgieter.yaml").write_text(
+                'business:\n  name: "Acme Loodgieter"\n  type: "loodgieter"\n', encoding="utf-8")
+            (settings.CLIENTS_DIR / "smit-dak.yaml").write_text(
+                'business:\n  name: "Smit Dakwerken"\n  type: "dakdekker"\n', encoding="utf-8")
+            # Acme: an after-hours lead (message taken). Smit: a booking.
+            analytics.record_turn(
+                client="acme-loodgieter", channel="web", user_id="+31600000001",
+                user_text="hoi", reply="hallo", input_tokens=1000, output_tokens=200,
+                model="claude-opus-4-8",
+                tools=[{"name": "take_message", "input": {}, "output": '{"ok": true}'}],
+                after_hours=True)
+            analytics.record_turn(
+                client="smit-dak", channel="web", user_id="+31600000002",
+                user_text="afspraak", reply="geboekt", input_tokens=2000, output_tokens=400,
+                model="claude-opus-4-8",
+                tools=[{"name": "book_appointment", "input": {},
+                        "output": '{"ok": true, "confirmation": "X1"}'}],
+                after_hours=False)
+
+            text = oversight.build_digest(now=datetime.now(), today=True)
+            if "2/2 bots active" not in text:
+                return _fail(f"header should show 2/2 bots active:\n{text}")
+            if "2 conversations · 1 leads · 1 bookings" not in text:
+                return _fail(f"totals wrong:\n{text}")
+            _ok("header rolls up 2 active bots: 2 conversations, 1 lead, 1 booking")
+
+            if "Acme Loodgieter" not in text or "1 leads" not in text or "100% after-hours" not in text:
+                return _fail(f"Acme line missing lead / after-hours share:\n{text}")
+            if "Smit Dakwerken" not in text or "1 booked" not in text:
+                return _fail(f"Smit line missing its booking:\n{text}")
+            _ok("per-client lines show the lead, the booking, and the after-hours share by name")
+
+            if "NEEDS ATTENTION" in text:
+                return _fail(f"nothing should be flagged on a clean window:\n{text}")
+            _ok("no false attention items on a clean window")
+        finally:
+            settings.DATA_DIR, settings.CLIENTS_DIR = orig_data, orig_clients
+    return True
+
+
 def check_agent() -> bool:
     print("• agent (needs ANTHROPIC_API_KEY)")
     try:
@@ -376,10 +434,11 @@ CHECKS = {
     "calendar-google": check_calendar_google,
     "intake": check_intake,
     "analytics": check_analytics,
+    "digest": check_digest,
     "agent": check_agent,
     "scope": check_scope,
 }
-ORDER = ["config", "routing", "calendar", "intake", "analytics", "agent", "scope"]
+ORDER = ["config", "routing", "calendar", "intake", "analytics", "digest", "agent", "scope"]
 
 
 def main(argv: list[str]) -> int:

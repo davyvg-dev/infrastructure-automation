@@ -255,6 +255,67 @@ def _count_turns() -> int:
         conn.close()
 
 
+def active_clients(start_iso: str, end_iso: str) -> list[str]:
+    """Slugs with at least one captured turn in [start_iso, end_iso)."""
+    conn = _connect()
+    try:
+        rows = conn.execute(
+            "SELECT DISTINCT client FROM turns WHERE ts >= ? AND ts < ? ORDER BY client",
+            (start_iso, end_iso),
+        ).fetchall()
+        return [r[0] for r in rows]
+    finally:
+        conn.close()
+
+
+def daily_stats(client: str, start_iso: str, end_iso: str) -> dict[str, Any]:
+    """Aggregate one client's captured activity in [start_iso, end_iso) — the hard,
+    deterministic numbers behind the oversight digest and (later) the client ROI report.
+
+    A conversation is a distinct session in the window; leads/bookings are distinct sessions
+    whose strongest in-window outcome was a message / a booking. Tokens are split by model so
+    the caller can price them. Read-only; the analyst layer never touches this.
+    """
+    conn = _connect()
+    try:
+        rows = conn.execute(
+            "SELECT t.session_key, t.outcome, t.after_hours, t.input_tokens, t.output_tokens, "
+            "s.model FROM turns t LEFT JOIN sessions s ON t.session_key = s.session_key "
+            "WHERE t.client = ? AND t.ts >= ? AND t.ts < ?",
+            (client, start_iso, end_iso),
+        ).fetchall()
+    finally:
+        conn.close()
+
+    sessions: set[str] = set()
+    booked: set[str] = set()
+    messaged: set[str] = set()
+    after_hours = 0
+    token_by_model: dict[str, list[int]] = {}
+    for key, outcome, ah, in_tok, out_tok, model in rows:
+        sessions.add(key)
+        if ah:
+            after_hours += 1
+        if outcome == "booked":
+            booked.add(key)
+        elif outcome == "message":
+            messaged.add(key)
+        m = model or ""
+        slot = token_by_model.setdefault(m, [0, 0])
+        slot[0] += int(in_tok or 0)
+        slot[1] += int(out_tok or 0)
+
+    leads = messaged - booked  # a booked conversation is counted as a booking, not a lead
+    return {
+        "conversations": len(sessions),
+        "turns": len(rows),
+        "after_hours_turns": after_hours,
+        "leads": len(leads),
+        "bookings": len(booked),
+        "token_by_model": {m: {"input": v[0], "output": v[1]} for m, v in token_by_model.items()},
+    }
+
+
 # --- CLI: the cron/systemd-timer entry point for retention -------------------------------
 
 
