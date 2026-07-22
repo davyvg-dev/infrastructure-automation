@@ -65,6 +65,8 @@ def check_routing() -> bool:
                   name: "Acme Loodgieter"
                   type: "loodgieter"
                   timezone: "Europe/Amsterdam"
+                whatsapp:
+                  number: "+31 6 1234 5678"
                 """
             ),
             encoding="utf-8",
@@ -78,6 +80,13 @@ def check_routing() -> bool:
             if slug != "acme-loodgieter":
                 return _fail(f"host subdomain routing failed: got {slug!r}")
             _ok("unknown host -> default; traversal slug rejected; subdomain -> slug")
+
+            # WhatsApp routes by the destination number (Twilio's `To`), format-insensitive.
+            if settings.resolve_whatsapp_slug("whatsapp:+31612345678") != "acme-loodgieter":
+                return _fail("inbound WhatsApp number did not route to its client")
+            if settings.resolve_whatsapp_slug("whatsapp:+31699999999") is not None:
+                return _fail("an unknown WhatsApp number must fall back to the default")
+            _ok("WhatsApp destination number -> client slug (unknown number -> default)")
 
             token = settings.use_slug(slug)
             try:

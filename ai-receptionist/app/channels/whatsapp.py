@@ -16,6 +16,7 @@ import os
 from xml.sax.saxutils import escape
 
 from .. import sessions
+from ..settings import clear_slug, resolve_whatsapp_slug, use_slug
 
 log = logging.getLogger(__name__)
 
@@ -47,8 +48,15 @@ def handle(url: str, signature: str | None, params: dict[str, str]) -> tuple[str
     if not _signature_ok(url, signature, params):
         return _twiml(""), 403
     body = (params.get("Body") or "").strip()
-    sender = params.get("From") or "unknown"  # e.g. "whatsapp:+3161..."
+    sender = params.get("From") or "unknown"  # e.g. "whatsapp:+3161..." (the customer)
     if not body:
         return _twiml(""), 200
-    reply = sessions.respond("whatsapp", sender, body)
+    # Route to the client whose WhatsApp number this message was sent TO. Unknown/undeclared
+    # numbers fall back to the default config, so single-tenant setups are unchanged. Setting
+    # the tenant here namespaces the session, the analytics capture, and the lead recipient.
+    token = use_slug(resolve_whatsapp_slug(params.get("To")))
+    try:
+        reply = sessions.respond("whatsapp", sender, body)
+    finally:
+        clear_slug(token)
     return _twiml(reply), 200

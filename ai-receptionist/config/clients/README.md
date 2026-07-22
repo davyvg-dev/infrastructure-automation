@@ -15,6 +15,21 @@ at `https://van-dijk.klantkraan.nl`.
 - Config is cached per file at load; **restart the server** after editing a client's YAML.
 - Testing without DNS: add `?client=<slug>` or an `X-Client-Slug: <slug>` header to a request.
 
+### WhatsApp routing (a second routing dimension)
+
+A Twilio WhatsApp webhook has no Host to route on, so WhatsApp routes by the **business's own
+WhatsApp number** instead — the `To` field of the inbound message. Declare it in the client's
+config so their WhatsApp reaches their bot:
+
+```yaml
+whatsapp:
+  number: "+31 6 1234 5678"   # the client's WhatsApp Business (sender) number, E.164
+```
+
+The number is matched format-insensitively (spaces, dashes, and a leading `+` are ignored). An
+inbound message to a number no client declares falls back to `BUSINESS_CONFIG`, so single-tenant
+WhatsApp is unchanged. (Point Twilio's inbound webhook for that number at `POST /whatsapp`.)
+
 Each client's config is the exact same shape as `config/klantkraan-demo.yaml` (generate one with
 `python -m app.scaffold "<Bedrijf>"`, then move it here as `<slug>.yaml`). Per-tenant state — the
 session store and the `sim` provider's `data/bookings-<slug>.json` — is namespaced by slug, so

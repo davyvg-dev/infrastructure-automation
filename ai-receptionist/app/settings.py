@@ -103,6 +103,42 @@ def active_client() -> str:
     return _active_slug.get() or default_config_path().stem
 
 
+# --- WhatsApp routing: destination number -> client slug --------------------------------
+# The web widget routes by Host subdomain, but a Twilio WhatsApp webhook has no host to key
+# on — it carries the *business's own* WhatsApp number as `To`. Each client config declares
+# that number under `whatsapp.number` (E.164), so an inbound message reaches the right tenant.
+# Built fresh per lookup (WhatsApp volume is low and _load is cached per file); a new client
+# still needs a restart, matching the config cache.
+
+
+def _normalize_number(number: str) -> str:
+    """Reduce a phone/WhatsApp number to comparable digits — drops a 'whatsapp:' prefix, the
+    +, spaces and dashes — so '+31 6 1234 5678' and 'whatsapp:+31612345678' compare equal."""
+    return re.sub(r"\D", "", (number or "").split(":", 1)[-1])
+
+
+def _whatsapp_number_map() -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    for path in sorted(CLIENTS_DIR.glob("*.yaml")):
+        try:
+            cfg = _load(str(path))
+        except Exception:
+            continue
+        wa = cfg.get("whatsapp") if isinstance(cfg, dict) else None
+        number = wa.get("number") if isinstance(wa, dict) else None
+        if number:
+            mapping[_normalize_number(str(number))] = path.stem
+    return mapping
+
+
+def resolve_whatsapp_slug(to_number: str | None) -> str | None:
+    """The client slug that owns an inbound WhatsApp destination number, or None (=> default
+    config). None also covers the single-tenant setup where no client declares a number."""
+    if not to_number:
+        return None
+    return _whatsapp_number_map().get(_normalize_number(to_number))
+
+
 @lru_cache(maxsize=64)
 def _load(path_str: str) -> dict[str, Any]:
     with Path(path_str).open(encoding="utf-8") as fh:
