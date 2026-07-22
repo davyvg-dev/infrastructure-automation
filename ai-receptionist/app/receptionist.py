@@ -132,8 +132,17 @@ def greeting() -> str:
     return business().get("greeting", "Hi! How can I help?").strip()
 
 
-def run_turn(history: list[dict[str, Any]], user_message: str) -> tuple[str, list[dict[str, Any]]]:
-    """Append the user's message, run the tool-use loop to completion, return (reply, history)."""
+def run_turn(
+    history: list[dict[str, Any]],
+    user_message: str,
+    telemetry: dict[str, Any] | None = None,
+) -> tuple[str, list[dict[str, Any]]]:
+    """Append the user's message, run the tool-use loop to completion, return (reply, history).
+
+    If `telemetry` is passed (a dict with 'input_tokens'/'output_tokens'/'tools'/'model'),
+    it's filled in-place with token usage and the tool calls made this turn — the durable
+    capture in sessions.respond reads it. Passing None keeps the loop untouched.
+    """
     cfg = business()
     model_cfg = cfg["model"]
     client = _client()
@@ -149,6 +158,11 @@ def run_turn(history: list[dict[str, Any]], user_message: str) -> tuple[str, lis
             tools=tools.TOOLS,
             messages=history,
         )
+        if telemetry is not None:
+            usage = getattr(response, "usage", None)
+            telemetry["input_tokens"] += int(getattr(usage, "input_tokens", 0) or 0)
+            telemetry["output_tokens"] += int(getattr(usage, "output_tokens", 0) or 0)
+            telemetry["model"] = model_cfg["id"]
         history = history + [{"role": "assistant", "content": response.content}]
 
         if response.stop_reason == "tool_use":
@@ -159,6 +173,10 @@ def run_turn(history: list[dict[str, Any]], user_message: str) -> tuple[str, lis
                     # Observable tool trace — you'll want this when debugging "why did it
                     # book the wrong slot?" support questions.
                     log.info("tool %s(%s) -> %s", block.name, block.input, output)
+                    if telemetry is not None:
+                        telemetry["tools"].append(
+                            {"name": block.name, "input": block.input, "output": output}
+                        )
                     results.append({
                         "type": "tool_result",
                         "tool_use_id": block.id,

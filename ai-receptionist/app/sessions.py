@@ -16,8 +16,8 @@ from __future__ import annotations
 import threading
 from typing import Any
 
-from . import receptionist
-from .settings import active_client
+from . import analytics, receptionist
+from .settings import active_client, business
 
 # key = "<client>:<channel>:<user_id>"  ->  conversation history
 _STORE: dict[str, list[dict[str, Any]]] = {}
@@ -47,11 +47,27 @@ def _trim(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def respond(channel: str, user_id: str, text: str) -> str:
-    key = f"{active_client()}:{channel}:{user_id}"
+    client = active_client()
+    key = f"{client}:{channel}:{user_id}"
+    telemetry: dict[str, Any] = {"input_tokens": 0, "output_tokens": 0, "tools": [], "model": ""}
     with _lock_for(key):
         history = _STORE.get(key, [])
-        reply, history = receptionist.run_turn(history, text)
+        reply, history = receptionist.run_turn(history, text, telemetry=telemetry)
         _STORE[key] = _trim(history)
+    # Durable capture happens outside the conversation lock (its own store, its own lock) and
+    # never raises — a capture failure must not cost the customer a reply.
+    analytics.record_turn(
+        client=client,
+        channel=channel,
+        user_id=user_id,
+        user_text=text,
+        reply=reply,
+        input_tokens=telemetry["input_tokens"],
+        output_tokens=telemetry["output_tokens"],
+        model=telemetry["model"],
+        tools=telemetry["tools"],
+        after_hours=analytics.is_after_hours(business()),
+    )
     return reply
 
 

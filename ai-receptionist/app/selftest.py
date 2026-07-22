@@ -5,6 +5,7 @@
     python -m app.selftest calendar    # slot generation + a booking round-trip, no network
     python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
     python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
+    python -m app.selftest analytics   # per-client capture store round-trip, no network
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
     python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
     python -m app.selftest chat        # interactive terminal chat with the receptionist
@@ -203,6 +204,54 @@ def check_intake() -> bool:
     return True
 
 
+def check_analytics() -> bool:
+    print("• analytics (per-client capture store, no network)")
+    from . import analytics
+
+    # after-hours logic: a day with no configured hours is a closed day.
+    closed = analytics.is_after_hours({"business": {}, "hours": {}})
+    if not closed:
+        return _fail("a day with no opening hours should count as after-hours")
+    _ok("after-hours detection: a closed day is flagged after-hours")
+
+    orig_dir = settings.DATA_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        settings.DATA_DIR = Path(tmp)
+        try:
+            # Turn 1: a plain answered turn. Turn 2: a successful booking, same conversation.
+            analytics.record_turn(
+                client="acme-loodgieter", channel="web", user_id="+31600000000",
+                user_text="hi", reply="hello", input_tokens=100, output_tokens=20,
+                model="claude-opus-4-8", tools=[], after_hours=True,
+            )
+            analytics.record_turn(
+                client="acme-loodgieter", channel="web", user_id="+31600000000",
+                user_text="book me in", reply="booked!", input_tokens=200, output_tokens=40,
+                model="claude-opus-4-8",
+                tools=[{"name": "book_appointment", "input": {},
+                        "output": '{"ok": true, "confirmation": "AB12"}'}],
+                after_hours=False,
+            )
+            sess = analytics.load_session("acme-loodgieter", "web", "+31600000000")
+            if sess is None:
+                return _fail("session was not persisted")
+            if sess["turns"] != 2:
+                return _fail(f"expected 2 turns, got {sess['turns']}")
+            if sess["outcome"] != "booked":
+                return _fail(f"outcome should escalate to 'booked', got {sess['outcome']!r}")
+            if sess["input_tokens"] != 300 or sess["output_tokens"] != 60:
+                return _fail(f"token totals wrong: {sess['input_tokens']}/{sess['output_tokens']}")
+            if sess["after_hours_turns"] != 1:
+                return _fail(f"after-hours turn count wrong: {sess['after_hours_turns']}")
+            _ok("2 turns rolled up: outcome=booked, tokens=300/60, 1 after-hours turn")
+            if "+31600000000" in sess["session_key"]:
+                return _fail("raw phone number leaked into the store — must be hashed")
+            _ok("channel user id is stored hashed, not in the clear")
+        finally:
+            settings.DATA_DIR = orig_dir
+    return True
+
+
 def check_agent() -> bool:
     print("• agent (needs ANTHROPIC_API_KEY)")
     try:
@@ -301,10 +350,11 @@ CHECKS = {
     "calendar": check_calendar,
     "calendar-google": check_calendar_google,
     "intake": check_intake,
+    "analytics": check_analytics,
     "agent": check_agent,
     "scope": check_scope,
 }
-ORDER = ["config", "routing", "calendar", "intake", "agent", "scope"]
+ORDER = ["config", "routing", "calendar", "intake", "analytics", "agent", "scope"]
 
 
 def main(argv: list[str]) -> int:
