@@ -75,7 +75,7 @@ const serviceSchema = {
     name: company.tradeName,
     url: new URL('/es/', Astro.site).toString(),
   },
-  areaServed: { '@type': 'Country', name: 'Netherlands' },
+  areaServed: { '@type': 'Country', name: 'España' },
   offers: tiers.map((tier) => ({
     '@type': 'Offer',
     name: `${company.tradeName} ${tier.name}`,
