@@ -8,6 +8,7 @@
     python -m app.selftest analytics   # per-client capture store round-trip, no network
     python -m app.selftest digest      # deterministic oversight digest, no network
     python -m app.selftest insights    # analyst store + PII redaction + backlog, no network
+    python -m app.selftest pipeline    # prospect→client state machine + sign promotion, no network
     python -m app.selftest analyst     # live Haiku insight extraction (needs ANTHROPIC_API_KEY)
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
     python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
@@ -535,6 +536,69 @@ def check_scope() -> bool:
     return True
 
 
+def check_pipeline() -> bool:
+    print("• pipeline (prospect→client state machine + sign promotion, no network)")
+    from . import pipeline
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        saved = (pipeline.PIPELINE_DIR, pipeline.ROOT, pipeline.CLIENTS_DIR)
+        pipeline.PIPELINE_DIR = root / "data" / "pipeline"
+        pipeline.ROOT = root
+        pipeline.CLIENTS_DIR = root / "config" / "clients"
+        try:
+            pipeline.add("Proef BV", slug="proef-bv", email="info@proef.nl", entity="bv")
+            v = pipeline.qualify("proef-bv")
+            if v["decision"] != "qualified":
+                return _fail(f"a NL BV should qualify, got {v['decision']!r}")
+            _ok("add + qualify: NL BV moved lead → qualified")
+
+            # A staged demo config, go-live ready: real price + the art. 50 disclosure in the greeting.
+            staged = root / "config" / "proef-bv.yaml"
+            staged.parent.mkdir(parents=True, exist_ok=True)
+            ready = (
+                "business:\n  name: Proef BV\n"
+                'greeting: "Hallo, ik ben de digitale receptionist van Proef BV."\n'
+                'services:\n  - name: Spoed\n    price: "vanaf €90"\n'
+            )
+            staged.write_text(ready, encoding="utf-8")
+            pipeline.advance("proef-bv", "demo")
+            rec = pipeline.load("proef-bv")
+            rec["config"] = "config/proef-bv.yaml"
+            pipeline.save(rec)
+
+            # Readiness gate: a config that still has a PRIJS? placeholder is refused without force.
+            staged.write_text(ready.replace('"vanaf €90"', '"PRIJS?"'), encoding="utf-8")
+            try:
+                pipeline.sign("proef-bv")
+                return _fail("sign promoted a config that still had a PRIJS? placeholder")
+            except ValueError:
+                _ok("readiness gate: refused a config with an unfilled PRIJS? price")
+            staged.write_text(ready, encoding="utf-8")  # founder fills the price
+
+            out = pipeline.sign("proef-bv")
+            if out["status"] != "signed":
+                return _fail(f"sign should set status=signed, got {out['status']!r}")
+            if not (pipeline.CLIENTS_DIR / "proef-bv.yaml").exists():
+                return _fail("sign did not write config/clients/proef-bv.yaml")
+            if staged.exists():
+                return _fail("sign left a stale staging config behind (should move, not copy)")
+            rec = pipeline.load("proef-bv")
+            if rec["config"] != "config/clients/proef-bv.yaml":
+                return _fail(f"record config not repointed to config/clients/: {rec['config']!r}")
+            if not any("signed" in h.get("event", "") for h in rec["history"]):
+                return _fail("sign did not log the transition to history")
+            _ok("sign: demo → signed; config promoted to config/clients/; staging cleaned up")
+
+            out2 = pipeline.sign("proef-bv")
+            if out2["promoted"] or pipeline.load("proef-bv")["status"] != "signed":
+                return _fail("re-sign should finalize in place and keep status=signed")
+            _ok("re-sign: idempotent — finalized in place, status stays signed")
+            return True
+        finally:
+            pipeline.PIPELINE_DIR, pipeline.ROOT, pipeline.CLIENTS_DIR = saved
+
+
 def interactive_chat() -> bool:
     from . import receptionist
 
@@ -564,11 +628,12 @@ CHECKS = {
     "digest": check_digest,
     "insights": check_insights,
     "analyst": check_analyst,
+    "pipeline": check_pipeline,
     "agent": check_agent,
     "scope": check_scope,
 }
 ORDER = ["config", "routing", "calendar", "intake", "analytics", "digest", "insights",
-         "agent", "scope"]
+         "pipeline", "agent", "scope"]
 
 
 def main(argv: list[str]) -> int:

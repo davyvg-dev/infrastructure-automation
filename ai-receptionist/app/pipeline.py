@@ -26,7 +26,7 @@ from pathlib import Path
 
 import yaml
 
-from .settings import DATA_DIR
+from .settings import CLIENTS_DIR, DATA_DIR, ROOT
 
 PIPELINE_DIR = DATA_DIR / "pipeline"
 
@@ -332,6 +332,94 @@ def stage(slug: str, *, force: bool = False) -> dict:
     return {"config": rel, "status": record["status"]}
 
 
+# A staged demo config is go-live ready only when the founder has filled real prices (no scaffold
+# PRIJS? placeholder left — the receptionist never invents a price, CLAUDE.md) and the greeting
+# still carries the EU AI Act art. 50 disclosure. 'digital' is a substring of the NL ('digitale'),
+# EN ('digital') and ES ('digital') disclosures alike, so one check spans every language template.
+_PRICE_PLACEHOLDER = "PRIJS?"
+
+
+def _readiness_problems(config_text: str) -> list[str]:
+    """Reasons a config is not safe to put live — an empty list means go-live ready."""
+    problems: list[str] = []
+    if _PRICE_PLACEHOLDER in config_text:
+        problems.append(f"{_PRICE_PLACEHOLDER} price placeholder still present")
+    try:
+        cfg = yaml.safe_load(config_text) or {}
+    except yaml.YAMLError:
+        return problems + ["config is not valid YAML"]
+    if "digital" not in str(cfg.get("greeting") or "").lower():
+        problems.append("greeting missing the EU AI Act art. 50 disclosure")
+    return problems
+
+
+def sign(slug: str, *, force: bool = False) -> dict:
+    """Promote a signed prospect to a live client and advance the record to `signed`.
+
+    The slug is the through-line: the demo that sold them (config/<slug>.yaml) becomes the live,
+    routable client config (config/clients/<slug>.yaml), so <slug>.klantkraan.nl serves it. A config
+    already under config/clients/ is finalized in place (re-sign is idempotent).
+
+    Never re-scaffolds — that would discard the founder's hand-filled real prices. Refuses a config
+    that is not go-live ready (a PRIJS? placeholder, or a greeting missing the art. 50 disclosure)
+    unless force=True. Forward-only: never demotes a record already past `signed`.
+    """
+    record = load(slug)
+    if record is None:
+        raise FileNotFoundError(f"no pipeline record for {slug!r}")
+    rel = record.get("config")
+    if not rel:
+        raise FileNotFoundError(
+            f"{slug} has no staged config to promote — run `pipeline stage {slug}` first"
+        )
+
+    src = ROOT / rel
+    dest = CLIENTS_DIR / f"{slug}.yaml"
+    already_live = src.resolve() == dest.resolve()
+    if not src.exists():
+        raise FileNotFoundError(
+            f"{'live' if already_live else 'staged'} config {rel} not found on disk"
+        )
+
+    text = src.read_text(encoding="utf-8")
+    problems = _readiness_problems(text)
+    if problems and not force:
+        raise ValueError(
+            f"{slug} is not go-live ready: {'; '.join(problems)}. "
+            "Fix the config, or pass --force to promote anyway."
+        )
+
+    if not already_live:
+        if dest.exists() and not force:
+            raise FileExistsError(
+                f"config/clients/{slug}.yaml already exists; use --force to overwrite"
+            )
+        CLIENTS_DIR.mkdir(parents=True, exist_ok=True)
+        dest.write_text(text, encoding="utf-8")
+        src.unlink()  # a move, not a copy: no stale staging twin left to drift
+
+    try:
+        new_rel = str(dest.relative_to(ROOT))
+    except ValueError:
+        new_rel = str(dest)
+    record["config"] = new_rel
+
+    old = record.get("status")
+    moved = old in ("lead", "qualified", "staged", "demo")
+    if moved:
+        record["status"] = "signed"
+    verb = "finalized in place" if already_live else "promoted → config/clients/"
+    suffix = "" if moved else f" (status stays {old})"
+    record["history"].append({"ts": _now_ts(), "event": f"signed — config {verb}{suffix}"})
+    save(record)
+    return {
+        "config": new_rel,
+        "status": record["status"],
+        "promoted": not already_live,
+        "warnings": problems if force else [],
+    }
+
+
 def _fmt_contact(record: dict) -> str:
     c = record.get("contact") or {}
     parts = [c.get("email"), c.get("phone")]
@@ -395,6 +483,20 @@ def board_text() -> str:
 
 # --- cli ---------------------------------------------------------------------------------
 
+# The go-live checklist `sign` prints, mirroring docs/03-delivery/client-go-live-runbook.md §6 and
+# onboarding-playbook.md §9. Keep in sync with those docs.
+_GO_LIVE_CHECKLIST = """   go-live checklist for {slug}  (config/clients/{slug}.yaml):
+     1. config: real prices (no PRIJS?), hours, scope, greeting w/ the art. 50 disclosure,
+        locale, notify.telegram_chat_id (the client's own lead recipient)
+     2. routing: DNS A-record (grey cloud) + Caddy vhost + deploy.sh; /health returns THIS client
+     3. widget embedded on their site (or hosted link placed) AND a real test lead handled
+     4. WhatsApp (if used): sender registered, whatsapp.number set, webhook -> /whatsapp,
+        TWILIO_AUTH_TOKEN in .env, a test message routed to the right client
+     5. bookings (if used): calendar shared + calendar: block + `selftest calendar-google` green
+     6. lead alert: a take_message test reaches the client on their telegram_chat_id
+     7. oversight: the client appears in the daily digest once they have traffic
+   then advance as each is verified:  pipeline advance {slug} onboarding  ->  ...  ->  live"""
+
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(prog="app.pipeline", description="Prospect → client pipeline.")
@@ -428,6 +530,11 @@ def main(argv: list[str]) -> int:
     p_stage = sub.add_parser("stage", help="Build the branded demo config (scaffold) and mark staged.")
     p_stage.add_argument("slug")
     p_stage.add_argument("--force", action="store_true", help="Rebuild even if a config exists.")
+
+    p_sign = sub.add_parser("sign", help="Promote the demo config to a live client; mark signed.")
+    p_sign.add_argument("slug")
+    p_sign.add_argument("--force", action="store_true",
+                        help="Promote despite an existing client config or a failed readiness check.")
 
     p_note = sub.add_parser("note", help="Append a note to a record's history.")
     p_note.add_argument("slug")
@@ -477,6 +584,17 @@ def main(argv: list[str]) -> int:
             parser.error(str(exc))
         print(f"✅ {args.slug}: staged → {r['config']}  (status={r['status']})")
         print(f"   demo: BUSINESS_CONFIG={r['config']} python -m app.server")
+        return 0
+    if args.cmd == "sign":
+        try:
+            r = sign(args.slug, force=args.force)
+        except (FileNotFoundError, FileExistsError, ValueError) as exc:
+            parser.error(str(exc))
+        how = "promoted → " if r["promoted"] else "finalized: "
+        print(f"✅ {args.slug}: signed  ({how}{r['config']})  status={r['status']}")
+        for w in r["warnings"]:
+            print(f"   ⚠️  forced past: {w}")
+        print(_GO_LIVE_CHECKLIST.format(slug=args.slug))
         return 0
     if args.cmd == "note":
         try:
