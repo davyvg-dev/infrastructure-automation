@@ -7,6 +7,8 @@ is the through-line: it is the same slug that names the branded demo
 thing that sold them is the thing that goes live — no re-entry between sales and delivery.
 
     python -m app.pipeline add "Cool Global Mallorca" --email info@x.com --country ES --lang en
+    python -m app.pipeline qualify airco-mallorca
+    python -m app.pipeline advance airco-mallorca demo --note "close pack sent"
     python -m app.pipeline board
     python -m app.pipeline show airco-mallorca
 
@@ -52,6 +54,19 @@ NEXT_ACTION = {
 # Mirrors settings._SLUG_RE: one DNS-label-ish token, no path separators or dots, so a slug
 # can never traverse out of the pipeline dir or collide with a config path.
 _SLUG_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")
+
+# Entity gate for NL *cold* outreach: the BV-only rule is non-negotiable (CLAUDE.md § Forbidden).
+# A VOF / eenmanszaak / zzp may not be cold-emailed without opt-in; a BV may. Non-NL prospects
+# (a different opt-out regime) and inbound prospects (opt-in satisfied) bypass this gate — see
+# qualify().
+ENTITY_OK = {"bv"}
+ENTITY_BLOCKED = {"vof", "eenmanszaak", "zzp"}
+ENTITY_CHOICES = ["bv", "vof", "eenmanszaak", "zzp", "unknown"]
+
+# The CLI's local opt-out list (one entry per line: an email, an @domain, or a phone; `#`
+# comments allowed). Optional — a missing file means "nothing suppressed". The canonical
+# AVG store is Neon (`apps/api` isSuppressed); this file is the offline mirror for the CLI.
+SUPPRESSION_FILE = DATA_DIR / "suppression.txt"
 
 
 def slugify(name: str) -> str:
@@ -101,6 +116,61 @@ def all_records() -> list[dict]:
     return out
 
 
+# --- qualification helpers ---------------------------------------------------------------
+
+
+def infer_entity(name: str) -> str:
+    """Best-effort legal entity from the business name (Dutch trade names carry it: 'B.V.')."""
+    n = f" {(name or '').lower()} "
+    if "b.v." in n or " bv " in n:
+        return "bv"
+    if "v.o.f." in n or " vof " in n:
+        return "vof"
+    if "eenmanszaak" in n:
+        return "eenmanszaak"
+    if " zzp " in n:
+        return "zzp"
+    return "unknown"
+
+
+def _norm_phone(value: str | None) -> str:
+    return re.sub(r"\D", "", value or "")
+
+
+def _load_suppression() -> list[str]:
+    if not SUPPRESSION_FILE.exists():
+        return []
+    out = []
+    for line in SUPPRESSION_FILE.read_text(encoding="utf-8").splitlines():
+        line = line.split("#", 1)[0].strip()
+        if line:
+            out.append(line)
+    return out
+
+
+def suppressed_by(contact: dict) -> str | None:
+    """The matching opt-out entry if this contact is suppressed, else None. An entry matches a
+    full email, an `@domain` suffix, or a phone by digits (>=7, suffix match to survive
+    country-code formatting differences)."""
+    email = (contact.get("email") or "").strip().lower()
+    phone = _norm_phone(contact.get("phone"))
+    for entry in _load_suppression():
+        e = entry.strip().lower()
+        if not e:
+            continue
+        if e.startswith("@"):
+            if email and email.endswith(e):
+                return entry
+        elif "@" in e:
+            if email and email == e:
+                return entry
+        else:
+            ed = _norm_phone(entry)
+            if ed and len(ed) >= 7 and phone and phone.endswith(ed):
+                return entry
+    return None
+
+
 # --- commands ----------------------------------------------------------------------------
 
 
@@ -117,6 +187,7 @@ def add(
     status: str = "lead",
     config: str | None = None,
     inbound: bool = False,
+    entity: str | None = None,
     note: str | None = None,
     force: bool = False,
 ) -> dict:
@@ -141,11 +212,86 @@ def add(
         "type": type_,
         "contact": {"email": email, "phone": phone},
         "inbound": inbound,
+        "entity": entity,
         "config": config,
         "created": _now_date(),
         "updated": _now_date(),
         "history": history,
     }
+    save(record)
+    return record
+
+
+def qualify(slug: str, *, entity: str | None = None) -> dict:
+    """Run the AVG suppression check + the country-aware entity/BV gate, mutating the record.
+
+    Decision order: suppression → non-NL bypass → inbound/opt-in bypass → NL entity rule.
+    QUALIFIED advances a `lead` to `qualified` (a no-op for records already further along, so
+    re-running it audits the board). DISQUALIFIED pulls the prospect off the board. HOLD means
+    the entity is unknown — confirm a BV or an opt-in before contacting.
+    """
+    record = load(slug)
+    if record is None:
+        raise FileNotFoundError(f"no pipeline record for {slug!r}")
+
+    contact = record.get("contact") or {}
+    resolved = (entity or record.get("entity") or infer_entity(record.get("business", ""))).lower()
+    country = (record.get("country") or "NL").upper()
+    inbound = bool(record.get("inbound"))
+    hit = suppressed_by(contact)
+
+    if hit:
+        decision, reason = "disqualified", f"on the suppression list ({hit})"
+    elif country != "NL":
+        decision, reason = "qualified", f"{country}: Dutch BV opt-out regime N/A; keep a clear opt-out in outreach"
+    elif inbound:
+        decision, reason = "qualified", "inbound/opt-in: BV cold-outreach gate satisfied by their contact"
+    elif resolved in ENTITY_OK:
+        decision, reason = "qualified", "NL BV: meets the BV-only cold-outreach rule"
+    elif resolved in ENTITY_BLOCKED:
+        decision, reason = "disqualified", f"NL {resolved}: cold outreach without opt-in is forbidden (BV filter)"
+    else:
+        decision, reason = "hold", "NL entity unknown: confirm a BV (--entity bv) or an opt-in before contacting"
+
+    record["entity"] = resolved
+    verdict = {"decision": decision, "reason": reason, "entity": resolved}
+
+    if decision == "qualified":
+        if record.get("status") == "lead":
+            record["history"].append({"ts": _now_ts(), "event": f"qualified — {reason}"})
+            record["status"] = "qualified"
+            verdict["moved"] = "lead → qualified"
+        else:
+            verdict["moved"] = f"no status change (already at {record.get('status')})"
+    elif decision == "disqualified":
+        record["history"].append({"ts": _now_ts(), "event": f"disqualified — {reason}"})
+        record["status"] = "disqualified"
+        verdict["moved"] = "→ disqualified"
+    else:
+        verdict["moved"] = "no change (needs review)"
+    save(record)
+    return verdict
+
+
+def advance(slug: str, status: str, *, note: str | None = None) -> dict:
+    if status not in ALL_STATUSES:
+        raise ValueError(f"status must be one of {ALL_STATUSES}, not {status!r}")
+    record = load(slug)
+    if record is None:
+        raise FileNotFoundError(f"no pipeline record for {slug!r}")
+    old = record.get("status")
+    event = f"{old} → {status}" + (f": {note}" if note else "")
+    record["history"].append({"ts": _now_ts(), "event": event})
+    record["status"] = status
+    save(record)
+    return record
+
+
+def note(slug: str, text: str) -> dict:
+    record = load(slug)
+    if record is None:
+        raise FileNotFoundError(f"no pipeline record for {slug!r}")
+    record["history"].append({"ts": _now_ts(), "event": text})
     save(record)
     return record
 
@@ -160,11 +306,13 @@ def show_text(slug: str) -> str:
     record = load(slug)
     if record is None:
         return f"No pipeline record for {slug!r}. Add one with:  pipeline add \"<name>\""
+    entity = record.get("entity") or infer_entity(record.get("business", ""))
+    direction = "inbound" if record.get("inbound") else "outbound"
     lines = [
         f"{record['business']}  [{slug}]",
         f"  status    {record['status']}   → {NEXT_ACTION.get(record['status'], '?')}",
         f"  market    {record.get('country', '?')} / {record.get('lang', '?')}"
-        f"   ({'inbound' if record.get('inbound') else 'outbound'})",
+        f"   ({direction} · {entity})",
         f"  type      {record.get('type') or '—'}",
         f"  source    {record.get('source') or '—'}",
         f"  contact   {_fmt_contact(record)}",
@@ -177,6 +325,10 @@ def show_text(slug: str) -> str:
         for h in history:
             lines.append(f"    {h.get('ts', '?')}  {h.get('event', '')}")
     return "\n".join(lines)
+
+
+def _trunc(text: str, width: int) -> str:
+    return text if len(text) <= width else text[: width - 1] + "…"
 
 
 def board_text() -> str:
@@ -197,7 +349,8 @@ def board_text() -> str:
         for rec in sorted(group, key=lambda r: r.get("business", "")):
             tag = f"{rec.get('country', '?')}/{rec.get('lang', '?')}"
             src = rec.get("source") or "—"
-            lines.append(f"  {rec['slug']:<22} {rec.get('business', ''):<32} [{src}, {tag}]")
+            biz = _trunc(rec.get("business", ""), 32)
+            lines.append(f"  {rec['slug']:<22} {biz:<32} [{src}, {tag}]")
         lines.append("")
     counts = " · ".join(f"{s} {len(by_status.get(s, []))}" for s in STAGES)
     lines.append(f"({counts})")
@@ -223,8 +376,22 @@ def main(argv: list[str]) -> int:
     p_add.add_argument("--status", default="lead", choices=ALL_STATUSES)
     p_add.add_argument("--config", help="Path to an already-staged demo config, if any.")
     p_add.add_argument("--inbound", action="store_true", help="They replied/opted in (not cold).")
+    p_add.add_argument("--entity", choices=ENTITY_CHOICES, help="Legal entity (else inferred at qualify).")
     p_add.add_argument("--note", help="A free-text note for the history log.")
     p_add.add_argument("--force", action="store_true", help="Overwrite an existing record.")
+
+    p_qual = sub.add_parser("qualify", help="Run the suppression + entity/BV gate.")
+    p_qual.add_argument("slug")
+    p_qual.add_argument("--entity", choices=ENTITY_CHOICES, help="Override the entity for the gate.")
+
+    p_adv = sub.add_parser("advance", help="Move a record to a new status.")
+    p_adv.add_argument("slug")
+    p_adv.add_argument("status", choices=ALL_STATUSES)
+    p_adv.add_argument("--note", help="Why — logged with the move.")
+
+    p_note = sub.add_parser("note", help="Append a note to a record's history.")
+    p_note.add_argument("slug")
+    p_note.add_argument("text")
 
     p_show = sub.add_parser("show", help="Show one prospect record.")
     p_show.add_argument("slug")
@@ -239,13 +406,36 @@ def main(argv: list[str]) -> int:
                 args.name, slug=args.slug, email=args.email, phone=args.phone,
                 country=args.country, lang=args.lang, type_=args.type_, source=args.source,
                 status=args.status, config=args.config, inbound=args.inbound,
-                note=args.note, force=args.force,
+                entity=args.entity, note=args.note, force=args.force,
             )
         except (ValueError, FileExistsError) as exc:
             parser.error(str(exc))
         print(f"✅ {record_path(rec['slug']).relative_to(DATA_DIR.parent)}")
         print()
         print(show_text(rec["slug"]))
+        return 0
+    if args.cmd == "qualify":
+        try:
+            v = qualify(args.slug, entity=args.entity)
+        except FileNotFoundError as exc:
+            parser.error(str(exc))
+        icon = "✅" if v["decision"] == "qualified" else "⚠️ "
+        print(f"{icon} {args.slug}: {v['decision'].upper()} — {v['reason']}")
+        print(f"   entity={v['entity']}  ({v['moved']})")
+        return 0
+    if args.cmd == "advance":
+        try:
+            rec = advance(args.slug, args.status, note=args.note)
+        except (ValueError, FileNotFoundError) as exc:
+            parser.error(str(exc))
+        print(f"✅ {args.slug}: → {rec['status']}")
+        return 0
+    if args.cmd == "note":
+        try:
+            note(args.slug, args.text)
+        except FileNotFoundError as exc:
+            parser.error(str(exc))
+        print(f"✅ noted on {args.slug}")
         return 0
     if args.cmd == "show":
         print(show_text(args.slug))
