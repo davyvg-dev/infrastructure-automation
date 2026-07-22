@@ -416,6 +416,20 @@ def save_insight(session_key: str, client: str, model: str, ins: dict[str, Any],
         conn.close()
 
 
+_INSIGHT_JSON_COLS = ("topics_json", "unanswered_json", "out_of_scope_json", "upsell_json",
+                      "quality_json")
+
+
+def _decode_insight(cols: list[str], row: tuple) -> dict[str, Any]:
+    d = dict(zip(cols, row))
+    for key in _INSIGHT_JSON_COLS:
+        try:
+            d[key] = json.loads(d.get(key) or "[]")
+        except Exception:
+            d[key] = []
+    return d
+
+
 def insights_for_client(client: str, limit: int = 100) -> list[dict[str, Any]]:
     """Most-recent insight rows for one client, JSON columns decoded back to lists."""
     conn = _connect()
@@ -427,17 +441,23 @@ def insights_for_client(client: str, limit: int = 100) -> list[dict[str, Any]]:
         ).fetchall()
     finally:
         conn.close()
-    out = []
-    for row in rows:
-        d = dict(zip(cols, row))
-        for key in ("topics_json", "unanswered_json", "out_of_scope_json", "upsell_json",
-                    "quality_json"):
-            try:
-                d[key] = json.loads(d.get(key) or "[]")
-            except Exception:
-                d[key] = []
-        out.append(d)
-    return out
+    return [_decode_insight(cols, r) for r in rows]
+
+
+def insights_in_window(start_iso: str, end_iso: str) -> list[dict[str, Any]]:
+    """Insight rows for conversations that had a turn in [start_iso, end_iso) — lets the digest
+    surface what the analyst learned about the same conversations it counted."""
+    conn = _connect()
+    try:
+        cols = [c[1] for c in conn.execute("PRAGMA table_info(insights)").fetchall()]
+        rows = conn.execute(
+            "SELECT * FROM insights WHERE session_key IN "
+            "(SELECT DISTINCT session_key FROM turns WHERE ts >= ? AND ts < ?)",
+            (start_iso, end_iso),
+        ).fetchall()
+    finally:
+        conn.close()
+    return [_decode_insight(cols, r) for r in rows]
 
 
 # --- CLI: the cron/systemd-timer entry point for retention -------------------------------

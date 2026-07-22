@@ -139,6 +139,22 @@ def build_digest(now: datetime | None = None, today: bool = False) -> str:
     for slug in went_silent:
         attention.append(f"  ⚠ {_client_name(slug)} went quiet (had traffic yesterday, none now)")
 
+    # Layer 2: fold in what the analyst learned about the same conversations (if it has run).
+    quality: dict[str, int] = {}
+    unanswered: dict[str, int] = {}
+    upsell: dict[str, int] = {}
+    escalations = 0
+    for ins in analytics.insights_in_window(start, end):
+        escalations += 1 if ins.get("escalated") else 0
+        for q in ins["quality_json"]:
+            quality[q] = quality.get(q, 0) + 1
+        for q in ins["unanswered_json"]:
+            unanswered[q] = unanswered.get(q, 0) + 1
+        for u in ins["upsell_json"]:
+            upsell[u] = upsell.get(u, 0) + 1
+    for flag, n in sorted(quality.items(), key=lambda kv: -kv[1]):
+        attention.append(f"  ⚠ quality flag {n}×: {flag} (review the bot)")
+
     lines.append(
         f"{len(active)}/{_roster_size()} bots active · {tot_conv} conversations · "
         f"{tot_leads} leads · {tot_book} bookings · ~€{tot_cost:.2f}"
@@ -156,6 +172,21 @@ def build_digest(now: datetime | None = None, today: bool = False) -> str:
         lines.extend(attention)
     else:
         lines.append("No attention items.")
+
+    def _top(counter: dict[str, int]) -> list[str]:
+        return [f"  {n}× {k}" for k, n in sorted(counter.items(), key=lambda kv: -kv[1])[:5]]
+
+    if unanswered or upsell:
+        lines.append("")
+        lines.append("SIGNALS")
+        if escalations:
+            lines.append(f"  {escalations} escalation(s)")
+        if unanswered:
+            lines.append("  FAQ gaps (customers asked, bot couldn't answer):")
+            lines.extend(_top(unanswered))
+        if upsell:
+            lines.append("  upsell radar:")
+            lines.extend(_top(upsell))
     return "\n".join(lines)
 
 

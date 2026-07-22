@@ -282,7 +282,7 @@ def check_analytics() -> bool:
 
 def check_digest() -> bool:
     print("• digest (deterministic oversight, no network)")
-    from datetime import datetime
+    from datetime import datetime, timedelta
 
     from . import analytics, oversight
 
@@ -332,6 +332,27 @@ def check_digest() -> bool:
             if "NEEDS ATTENTION" in text:
                 return _fail(f"nothing should be flagged on a clean window:\n{text}")
             _ok("no false attention items on a clean window")
+
+            # Layer 2: an analyst insight on one conversation surfaces in the same digest.
+            future = (datetime.now() + timedelta(days=1)).isoformat(timespec="seconds")
+            acme_key = next(k for k, s in analytics.pending_for_analysis(future)
+                            if s == "acme-loodgieter")
+            analytics.save_insight(acme_key, "acme-loodgieter", "claude-haiku-4-5", {
+                "intent": "spoed", "topics": ["lekkage"], "resolved": False, "escalated": True,
+                "escalation_reason": "no slot", "unanswered_questions": ["Doen jullie spoed?"],
+                "out_of_scope_requests": [], "sentiment": "neu", "language": "nl",
+                "customer_type": "new", "lead_captured": True, "booking_made": False,
+                "est_job_value_eur": 0, "upsell_signals": ["after_hours_share_high"],
+                "quality_flags": ["refused_in_scope_job"],
+            })
+            enriched = oversight.build_digest(now=datetime.now(), today=True)
+            if "SIGNALS" not in enriched or "Doen jullie spoed?" not in enriched:
+                return _fail(f"digest didn't surface the FAQ gap:\n{enriched}")
+            if "after_hours_share_high" not in enriched:
+                return _fail(f"digest didn't surface the upsell signal:\n{enriched}")
+            if "refused_in_scope_job" not in enriched or "quality flag" not in enriched:
+                return _fail(f"digest didn't flag the quality issue:\n{enriched}")
+            _ok("analyst insights fold in: FAQ gap + upsell radar + a quality flag under attention")
         finally:
             settings.DATA_DIR, settings.CLIENTS_DIR = orig_data, orig_clients
     return True
