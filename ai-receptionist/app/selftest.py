@@ -7,6 +7,8 @@
     python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
     python -m app.selftest analytics   # per-client capture store round-trip, no network
     python -m app.selftest digest      # deterministic oversight digest, no network
+    python -m app.selftest insights    # analyst store + PII redaction + backlog, no network
+    python -m app.selftest analyst     # live Haiku insight extraction (needs ANTHROPIC_API_KEY)
     python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
     python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
     python -m app.selftest chat        # interactive terminal chat with the receptionist
@@ -335,6 +337,101 @@ def check_digest() -> bool:
     return True
 
 
+def check_insights() -> bool:
+    print("• insights (analyst store + redaction + backlog, no network)")
+    from datetime import datetime, timedelta
+
+    from . import analytics, oversight
+
+    # PII never reaches the analyst in the clear.
+    red = oversight.redact("bel 06-12345678 of mail jan@voorbeeld.nl")
+    if "06-12345678" in red or "jan@voorbeeld.nl" in red or "[phone]" not in red or "[email]" not in red:
+        return _fail(f"redaction left PII in place: {red!r}")
+    _ok("redaction masks phone + email before the transcript leaves for the analyst")
+
+    orig_dir = settings.DATA_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        settings.DATA_DIR = Path(tmp)
+        try:
+            analytics.record_turn(
+                client="demo-test", channel="web", user_id="+31600000009",
+                user_text="Doen jullie ook zonwering?", reply="Nee, dat is een andere vakman.",
+                input_tokens=50, output_tokens=10, model="claude-opus-4-8", tools=[])
+            future = (datetime.now() + timedelta(minutes=1)).isoformat(timespec="seconds")
+            pending = analytics.pending_for_analysis(future)
+            if len(pending) != 1 or pending[0][1] != "demo-test":
+                return _fail(f"a settled, un-analysed session should be pending: {pending}")
+            key = pending[0][0]
+            convo = analytics.transcript(key)
+            if not convo or "zonwering" not in convo[0]["user"]:
+                return _fail(f"transcript reconstruction wrong: {convo}")
+            _ok("a settled conversation is queued for analysis; its transcript reconstructs")
+
+            analytics.save_insight(key, "demo-test", "claude-haiku-4-5", {
+                "intent": "out-of-scope enquiry",
+                "topics": ["zonwering"],
+                "resolved": True, "escalated": False, "escalation_reason": "",
+                "unanswered_questions": [],
+                "out_of_scope_requests": ["zonwering"],
+                "sentiment": "neu", "language": "nl", "customer_type": "new",
+                "lead_captured": False, "booking_made": False, "est_job_value_eur": 0,
+                "upsell_signals": ["out_of_scope:zonwering"],
+                "quality_flags": [],
+            })
+            if analytics.pending_for_analysis(future):
+                return _fail("session still pending after its insight was saved")
+            rows = analytics.insights_for_client("demo-test")
+            if len(rows) != 1 or rows[0]["out_of_scope_json"] != ["zonwering"]:
+                return _fail(f"insight round-trip lost data: {rows}")
+            _ok("insight persists once, is de-queued, and JSON arrays round-trip")
+
+            view = oversight.backlog("demo-test")
+            if "out_of_scope:zonwering" not in view:
+                return _fail(f"backlog didn't surface the upsell signal:\n{view}")
+            _ok("backlog aggregates the upsell signal from the analysed conversation")
+        finally:
+            settings.DATA_DIR = orig_dir
+    return True
+
+
+def check_analyst() -> bool:
+    print("• analyst (live Haiku insight extraction; needs ANTHROPIC_API_KEY)")
+    try:
+        env("ANTHROPIC_API_KEY")
+    except MissingSetting as exc:
+        return _fail(str(exc))
+    from datetime import datetime, timedelta
+
+    from . import analytics, oversight
+
+    orig_dir = settings.DATA_DIR
+    with tempfile.TemporaryDirectory() as tmp:
+        settings.DATA_DIR = Path(tmp)
+        try:
+            analytics.record_turn(
+                client="demo-test", channel="web", user_id="+31600000010",
+                user_text="Kunnen jullie zaterdag om 10 uur een cv-ketel komen onderhouden?",
+                reply="Zeker, ik plan het in. Mag ik uw naam en telefoonnummer?",
+                input_tokens=80, output_tokens=20, model="claude-opus-4-8", tools=[])
+            try:
+                # now +2s so the just-recorded session counts as settled past the cutoff.
+                result = oversight.analyze_pending(
+                    now=datetime.now() + timedelta(seconds=2), idle_minutes=0)
+            except Exception as exc:
+                return _fail(f"analyst run failed: {exc}")
+            if result["analyzed"] != 1:
+                return _fail(f"expected 1 conversation analysed, got {result}")
+            rows = analytics.insights_for_client("demo-test")
+            if not rows or not rows[0].get("intent"):
+                return _fail(f"analyst produced no usable insight: {rows}")
+            print(f"    intent={rows[0]['intent']!r} sentiment={rows[0]['sentiment']!r} "
+                  f"lang={rows[0]['language']!r}")
+            _ok("live analyst turned a transcript into a structured insight row")
+        finally:
+            settings.DATA_DIR = orig_dir
+    return True
+
+
 def check_agent() -> bool:
     print("• agent (needs ANTHROPIC_API_KEY)")
     try:
@@ -435,10 +532,13 @@ CHECKS = {
     "intake": check_intake,
     "analytics": check_analytics,
     "digest": check_digest,
+    "insights": check_insights,
+    "analyst": check_analyst,
     "agent": check_agent,
     "scope": check_scope,
 }
-ORDER = ["config", "routing", "calendar", "intake", "analytics", "digest", "agent", "scope"]
+ORDER = ["config", "routing", "calendar", "intake", "analytics", "digest", "insights",
+         "agent", "scope"]
 
 
 def main(argv: list[str]) -> int:

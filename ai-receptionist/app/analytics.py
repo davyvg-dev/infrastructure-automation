@@ -84,6 +84,33 @@ def _connect() -> sqlite3.Connection:
         )"""
     )
     conn.execute("CREATE INDEX IF NOT EXISTS idx_turns_client ON turns(client, ts)")
+    # Layer 2: one row per analysed conversation. Derived by the nightly Claude "analyst"
+    # (oversight.analyze_pending); kept beyond the transcript retention window since it holds
+    # aggregated, lower-PII intelligence, not raw message text. See docs/client-intelligence.md.
+    conn.execute(
+        """CREATE TABLE IF NOT EXISTS insights (
+            session_key       TEXT PRIMARY KEY,
+            client            TEXT NOT NULL,
+            analyzed_at       TEXT NOT NULL,
+            analyst_model     TEXT,
+            intent            TEXT,
+            topics_json       TEXT,
+            resolved          INTEGER,
+            escalated         INTEGER,
+            escalation_reason TEXT,
+            unanswered_json   TEXT,
+            out_of_scope_json TEXT,
+            sentiment         TEXT,
+            language          TEXT,
+            customer_type     TEXT,
+            lead_captured     INTEGER,
+            booking_made      INTEGER,
+            est_job_value_eur REAL,
+            upsell_json       TEXT,
+            quality_json      TEXT
+        )"""
+    )
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_insights_client ON insights(client, analyzed_at)")
     return conn
 
 
@@ -314,6 +341,103 @@ def daily_stats(client: str, start_iso: str, end_iso: str) -> dict[str, Any]:
         "bookings": len(booked),
         "token_by_model": {m: {"input": v[0], "output": v[1]} for m, v in token_by_model.items()},
     }
+
+
+# --- Layer 2: transcripts in, insights out (the analyst reads/writes these) --------------
+
+_INSIGHT_COLS = (
+    "session_key", "client", "analyzed_at", "analyst_model", "intent", "topics_json",
+    "resolved", "escalated", "escalation_reason", "unanswered_json", "out_of_scope_json",
+    "sentiment", "language", "customer_type", "lead_captured", "booking_made",
+    "est_job_value_eur", "upsell_json", "quality_json",
+)
+
+
+def pending_for_analysis(settled_before_iso: str, limit: int = 200) -> list[tuple[str, str]]:
+    """(session_key, client) for settled sessions (last activity before the cutoff) that have
+    no insight row yet — the analyst's work list. Settled avoids analysing a live chat."""
+    conn = _connect()
+    try:
+        rows = conn.execute(
+            "SELECT s.session_key, s.client FROM sessions s "
+            "LEFT JOIN insights i ON s.session_key = i.session_key "
+            "WHERE i.session_key IS NULL AND s.updated_at < ? ORDER BY s.updated_at LIMIT ?",
+            (settled_before_iso, limit),
+        ).fetchall()
+        return [(r[0], r[1]) for r in rows]
+    finally:
+        conn.close()
+
+
+def transcript(session_key: str) -> list[dict[str, str]]:
+    """The ordered {user, reply} exchanges of one conversation (empty if already purged)."""
+    conn = _connect()
+    try:
+        rows = conn.execute(
+            "SELECT user_text, reply FROM turns WHERE session_key = ? ORDER BY id",
+            (session_key,),
+        ).fetchall()
+        return [{"user": r[0] or "", "reply": r[1] or ""} for r in rows]
+    finally:
+        conn.close()
+
+
+def save_insight(session_key: str, client: str, model: str, ins: dict[str, Any],
+                 now: datetime | None = None) -> None:
+    """Persist one analysed conversation. Arrays are stored as JSON; booleans as 0/1."""
+    now = (now or datetime.now()).isoformat(timespec="seconds")
+    values = (
+        session_key, client, now, model,
+        ins.get("intent", ""),
+        json.dumps(ins.get("topics", []), ensure_ascii=False),
+        1 if ins.get("resolved") else 0,
+        1 if ins.get("escalated") else 0,
+        ins.get("escalation_reason", ""),
+        json.dumps(ins.get("unanswered_questions", []), ensure_ascii=False),
+        json.dumps(ins.get("out_of_scope_requests", []), ensure_ascii=False),
+        ins.get("sentiment", ""),
+        ins.get("language", ""),
+        ins.get("customer_type", ""),
+        1 if ins.get("lead_captured") else 0,
+        1 if ins.get("booking_made") else 0,
+        float(ins.get("est_job_value_eur", 0) or 0),
+        json.dumps(ins.get("upsell_signals", []), ensure_ascii=False),
+        json.dumps(ins.get("quality_flags", []), ensure_ascii=False),
+    )
+    conn = _connect()
+    try:
+        placeholders = ",".join("?" * len(_INSIGHT_COLS))
+        conn.execute(
+            f"INSERT OR REPLACE INTO insights ({','.join(_INSIGHT_COLS)}) VALUES ({placeholders})",
+            values,
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def insights_for_client(client: str, limit: int = 100) -> list[dict[str, Any]]:
+    """Most-recent insight rows for one client, JSON columns decoded back to lists."""
+    conn = _connect()
+    try:
+        cols = [c[1] for c in conn.execute("PRAGMA table_info(insights)").fetchall()]
+        rows = conn.execute(
+            "SELECT * FROM insights WHERE client = ? ORDER BY analyzed_at DESC LIMIT ?",
+            (client, limit),
+        ).fetchall()
+    finally:
+        conn.close()
+    out = []
+    for row in rows:
+        d = dict(zip(cols, row))
+        for key in ("topics_json", "unanswered_json", "out_of_scope_json", "upsell_json",
+                    "quality_json"):
+            try:
+                d[key] = json.loads(d.get(key) or "[]")
+            except Exception:
+                d[key] = []
+        out.append(d)
+    return out
 
 
 # --- CLI: the cron/systemd-timer entry point for retention -------------------------------

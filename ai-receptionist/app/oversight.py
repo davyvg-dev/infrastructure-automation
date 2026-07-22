@@ -18,8 +18,10 @@ CLI (the cron / systemd-timer entry point):
 
 from __future__ import annotations
 
+import json
 import logging
 import os
+import re
 import sys
 from datetime import datetime, time as dtime, timedelta
 from typing import Any
@@ -162,19 +164,186 @@ def send_digest(now: datetime | None = None, today: bool = False) -> bool:
     return notify.owner(build_digest(now, today))
 
 
+# --- Layer 2: the analyst (a cheap nightly Claude pass over finished conversations) ------
+
+# One Haiku call per conversation extracts this structured intelligence. Kept in sync with the
+# `insights` table and docs/client-intelligence.md. additionalProperties:false + every field
+# required is what structured outputs needs; the model must fill each one.
+_INSIGHT_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "intent": {"type": "string"},
+        "topics": {"type": "array", "items": {"type": "string"}},
+        "resolved": {"type": "boolean"},
+        "escalated": {"type": "boolean"},
+        "escalation_reason": {"type": "string"},
+        "unanswered_questions": {"type": "array", "items": {"type": "string"}},
+        "out_of_scope_requests": {"type": "array", "items": {"type": "string"}},
+        "sentiment": {"type": "string", "enum": ["pos", "neu", "neg"]},
+        "language": {"type": "string"},
+        "customer_type": {"type": "string", "enum": ["new", "existing", "vendor", "spam"]},
+        "lead_captured": {"type": "boolean"},
+        "booking_made": {"type": "boolean"},
+        "est_job_value_eur": {"type": "number"},
+        "upsell_signals": {"type": "array", "items": {"type": "string"}},
+        "quality_flags": {"type": "array", "items": {"type": "string"}},
+    },
+    "required": [
+        "intent", "topics", "resolved", "escalated", "escalation_reason", "unanswered_questions",
+        "out_of_scope_requests", "sentiment", "language", "customer_type", "lead_captured",
+        "booking_made", "est_job_value_eur", "upsell_signals", "quality_flags",
+    ],
+}
+
+_ANALYST_SYSTEM = """You analyse one finished conversation between a customer and a business's \
+digital receptionist, and return structured intelligence for the business owner.
+
+The business: {name} — a {btype}. Services and prices it offers:
+{services}
+
+Rules:
+- Judge only from the transcript. Do not invent facts. Empty arrays are fine.
+- unanswered_questions: questions the bot could not answer (FAQ gaps to fix).
+- out_of_scope_requests: services the customer asked for that this trade does not list (upsell).
+- quality_flags: bot mistakes to review — use tags like refused_in_scope_job, quoted_price_it_shouldnt, \
+invented_slot, hallucinated_fact. Only flag what the transcript shows.
+- upsell_signals: short tags, e.g. after_hours_share_high, language_mismatch:de, booking_intent_no_calendar.
+- est_job_value_eur: a rough euro value of the job from the service prices above and the intent; 0 if unclear.
+- language: the customer's language (ISO code like nl, de, en)."""
+
+_EMAIL_RE = re.compile(r"\b[\w.+-]+@[\w-]+\.[\w.-]+\b")
+# 8+ digits allowing spaces/dashes/parens and an optional leading + — covers NL 06.., +31.., 0xx-.
+_PHONE_RE = re.compile(r"\+?\d[\d\s().\-]{7,}\d")
+
+
+def redact(text: str) -> str:
+    """Strip obvious PII (email, phone) before a transcript leaves for the analyst (AVG)."""
+    return _PHONE_RE.sub("[phone]", _EMAIL_RE.sub("[email]", text or ""))
+
+
+def _analyst_model() -> str:
+    # Haiku is the right tier for a cheap classification. It does NOT accept effort/adaptive
+    # thinking (4.6+ only), so the analyst call carries neither — just structured output.
+    return os.getenv("OVERSIGHT_ANALYST_MODEL", "claude-haiku-4-5-20251001")
+
+
+def _services_summary(cfg: dict[str, Any]) -> str:
+    lines = [
+        f"  - {s.get('name', '?')} ({s.get('price', 'ask')})"
+        for s in (cfg.get("services") or [])
+    ]
+    return "\n".join(lines) or "  (none listed)"
+
+
+def _analyze(client: Any, model: str, cfg: dict[str, Any],
+             turns: list[dict[str, str]]) -> dict[str, Any]:
+    """Run one structured-output call over a redacted transcript and return the parsed insight."""
+    b = cfg.get("business") or {}
+    system = _ANALYST_SYSTEM.format(
+        name=b.get("name", "the business"),
+        btype=b.get("type", "local business"),
+        services=_services_summary(cfg),
+    )
+    convo = "\n".join(
+        f"Customer: {redact(t['user'])}\nReceptionist: {redact(t['reply'])}" for t in turns
+    )
+    resp = client.messages.create(
+        model=model,
+        max_tokens=1024,
+        system=system,
+        output_config={"format": {"type": "json_schema", "schema": _INSIGHT_SCHEMA}},
+        messages=[{"role": "user", "content": convo}],
+    )
+    text = "".join(b.text for b in resp.content if b.type == "text")
+    return json.loads(text)
+
+
+def analyze_pending(now: datetime | None = None, idle_minutes: int = 30,
+                    limit: int = 200) -> dict[str, int]:
+    """Analyse every settled, not-yet-analysed conversation. Per-conversation failures are
+    logged and skipped so one bad transcript never stalls the batch. Needs ANTHROPIC_API_KEY."""
+    import anthropic
+
+    settings.env("ANTHROPIC_API_KEY")
+    now = now or datetime.now()
+    cutoff = (now - timedelta(minutes=idle_minutes)).isoformat(timespec="seconds")
+    pending = analytics.pending_for_analysis(cutoff, limit)
+    client = anthropic.Anthropic()
+    model = _analyst_model()
+    done = failed = 0
+    for session_key, slug in pending:
+        turns = analytics.transcript(session_key)
+        if not turns:
+            continue
+        try:
+            ins = _analyze(client, model, settings.config_for(slug) or {}, turns)
+            analytics.save_insight(session_key, slug, model, ins)
+            done += 1
+        except Exception as exc:  # a bad transcript must not stall the batch
+            log.warning("analyst failed for %s: %s", session_key, exc)
+            failed += 1
+    return {"analyzed": done, "failed": failed, "pending": len(pending)}
+
+
+def backlog(slug: str, limit: int = 100) -> str:
+    """A human-readable maintenance/upsell view for one client, mined from its insights."""
+    rows = analytics.insights_for_client(slug, limit)
+    if not rows:
+        return f"No insights yet for {slug} (run the analyst first)."
+    unanswered: dict[str, int] = {}
+    upsell: dict[str, int] = {}
+    quality: dict[str, int] = {}
+    escalations = neg = 0
+    for r in rows:
+        for q in r["unanswered_json"]:
+            unanswered[q] = unanswered.get(q, 0) + 1
+        for u in r["upsell_json"]:
+            upsell[u] = upsell.get(u, 0) + 1
+        for q in r["quality_json"]:
+            quality[q] = quality.get(q, 0) + 1
+        escalations += 1 if r.get("escalated") else 0
+        neg += 1 if r.get("sentiment") == "neg" else 0
+
+    def _top(counter: dict[str, int]) -> list[str]:
+        return [f"    {n}× {k}" for k, n in sorted(counter.items(), key=lambda kv: -kv[1])[:10]]
+
+    out = [f"{_client_name(slug)} — {len(rows)} analysed conversation(s)",
+           f"  escalations: {escalations} · negative sentiment: {neg}"]
+    if quality:
+        out.append("  quality flags (review the bot):")
+        out.extend(_top(quality))
+    if unanswered:
+        out.append("  unanswered questions (FAQ gaps):")
+        out.extend(_top(unanswered))
+    if upsell:
+        out.append("  upsell signals:")
+        out.extend(_top(upsell))
+    return "\n".join(out)
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) < 2 or argv[1] != "digest":
-        print("usage: python -m app.oversight digest [--dry] [--today]")
-        return 2
-    today = "--today" in argv
-    text = build_digest(today=today)
-    if "--dry" in argv:
+    cmd = argv[1] if len(argv) > 1 else ""
+    if cmd == "digest":
+        today = "--today" in argv
+        text = build_digest(today=today)
+        if "--dry" in argv:
+            print(text)
+            return 0
+        ok = send_digest(today=today)
         print(text)
+        print(f"\n[{'sent' if ok else 'NOT sent — configure OWNER_TELEGRAM_CHAT_ID'}]")
+        return 0 if ok else 1
+    if cmd == "analyze":
+        result = analyze_pending()
+        print(f"analyst: {result['analyzed']} analysed, {result['failed']} failed, "
+              f"{result['pending']} were pending")
         return 0
-    ok = send_digest(today=today)
-    print(text)
-    print(f"\n[{'sent' if ok else 'NOT sent — configure OWNER_TELEGRAM_CHAT_ID'}]")
-    return 0 if ok else 1
+    if cmd == "insights" and len(argv) > 2:
+        print(backlog(argv[2]))
+        return 0
+    print("usage: python -m app.oversight {digest [--dry] [--today] | analyze | insights <slug>}")
+    return 2
 
 
 if __name__ == "__main__":
