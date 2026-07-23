@@ -58,6 +58,15 @@ Goal: the site copy reads like a professional copywriter wrote it, not like AI. 
 - [ ] Deferred (not marketing prose): legal-page `<title>` "— Klantkraan" suffixes + DPA "Annex I —" headings, the `/r/[slug]` internal dashboard, and the now-unused LeadForm component.
 - [ ] Re-deploy after the Dutch pass (Cloudflare Pages, manual wrangler) and re-verify.
 
+### H. Site-wide visual redesign — "Het licht blijft aan" (BACK BURNER, added 2026-07-23)
+Founder LOVES the clean-sheet hero concept and wants the whole site to look like it. Explicitly NOT the current priority — sits behind sales/pilots/onboarding. Approved design reference: `docs/09-brand/redesign-concept-2026-07-23-light-stays-on.html` (open in a browser for the real fonts).
+- New visual system: "after-hours dispatch" — petrol-slate `#0f1c1e` base, sodium-streetlight amber `#ffb84d` as the single accent, warm chalk text, mint rationed to the "booked" stamp. Type: Bricolage Grotesque (display) / Hanken Grotesk (body) / Space Mono (ledger). Signature = the live dispatch-log hero; structure device = real clock-time ledger.
+- [ ] Redesign every page in this style using the **frontend-design** skill (home, prijzen, over, voor-wie, demo, rekentool, all 6 trade landings, `[stad]/[vak]`, gidsen/blog, legal)
+- [ ] Do it in **all three languages** — NL + EN (`/en/`) + ES (`/es/`) — keeping copy, art. 50 disclosure, no-founder-name, and price parity intact
+- [ ] Port the concept's tokens into the Astro brand system (`global.css` `@theme`) + self-host the three fonts (no Google CDN, per existing convention)
+- [ ] Audit each rebuilt page with the **web-design-guidelines** skill and fix findings before deploy
+- [ ] Redeploy (Cloudflare Pages, manual wrangler) + re-verify
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
