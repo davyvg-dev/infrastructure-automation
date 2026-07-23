@@ -1,6 +1,8 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** planning approved 2026-07-23. Not yet started building.
+**Status:** Phase 0 (foundation) + Phase 1 (home, all locales) complete 2026-07-23.
+Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev` (apex still old design).
+Next = Phase 2 (page groups).
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -128,9 +130,11 @@ Ralph gate for every page: **build → `astro check` → eyeball (Playwright scr
 - [x] 1.2 Audit with **web-design-guidelines** skill; fix findings. (commit cd83615)
 - [x] 1.3 Screenshot (desktop + 320px) for the founder. **Founder approval gate — APPROVED
       2026-07-23** ("That's all good"). The template is locked; safe to fan out.
-- [ ] 1.4 Build `/en/index.astro` + `/es/index.astro` twins (copy already exists). **← NEXT.**
-- [ ] 1.5 First **preview deploy**; record alias URL in the log; send to founder.
-- **■ Checkpoint 1** — commit "home NL/EN/ES + preview live", clear context.
+- [x] 1.4 Build `/en/index.astro` + `/es/index.astro` twins (reskin of the locked NL template).
+      (commit 4b9b33f)
+- [x] 1.5 First **preview deploy** — alias `https://redesign.klantkraan-marketing.pages.dev`.
+- **■ Checkpoint 1 — DONE 2026-07-23.** Home NL/EN/ES rebuilt + preview live. Safe to clear
+  context. Next session: Phase 2 (page groups) — start with **G1 trade landings**.
 
 ### Phase 2 — Page groups (parallel draft → serial verify)
 Design each page *type* once (NL), audit, commit; then replicate locale twins.
@@ -230,3 +234,25 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   `pnpm dlx wrangler@4 pages deploy ./dist --branch=redesign --project-name=klantkraan-marketing`),
   capture the alias URL wrangler prints and record it here, send to the founder. Apex stays on the
   old design (preview alias only).
+- **2026-07-23 — Phase 1.4 + 1.5 done → Checkpoint 1 (commit 4b9b33f + this).** EN + ES home twins
+  built by reskinning the locked NL `index.astro`: same section structure, scoped `<style>` and the
+  `astro:page-load` dispatch script carried **verbatim** (language-neutral kk-* classes + tokens);
+  only copy, `<Base>` lang/title/description, and locale hrefs (`/en/demo/`, `/es/demo/`) differ.
+  Section ids kept identical to NL (`nachtdienst`/`kosten`/`eerlijk`) — only the hero "how it works"
+  link uses `#nachtdienst`, and nothing outside the home references the others, so translating the ids
+  bought no safety and risked breakage. Invariants verified by grep + screenshot: art. 50 opens each
+  dispatch panel and transparency block (`digital assistant` / `asistente digital`), no founder name,
+  price parity €450 across NL/EN/ES, `article/artículo 50` with nbsp, no decorative em-dashes in copy
+  (the 3 em-dashes per file are in HTML comments copied from the NL template, not rendered), no
+  `kraan-*` left in either file. Build green (~1.7s), astro check 0/0. Eyeballed desktop + 320px for
+  both locales via Playwright against the built `dist/` — dispatch animation resolves to the
+  BOOKED/AGENDADA stamp, ES accents render (no tofu), no 320px horizontal overflow, sticky WhatsApp
+  CTA present. **First preview deploy** landed the alias `https://redesign.klantkraan-marketing.pages.dev`
+  (deployment `a15d0b3d`); all 3 home locales return 200 with the dispatch signature + art. 50 on the
+  alias; apex `klantkraan.nl` untouched (still old design). **Gotchas:** (1) wrangler is authenticated
+  on this machine via OAuth (`wrangler login`, davyvg98@gmail.com, `pages (write)`) — no CF token in
+  env or `.env`; a fresh session can deploy directly. (2) The preview is intentionally **half-migrated**:
+  home is redesigned, every other page is still the old light design (deprecated `kraan-*` tokens now
+  render broken on the dark base, as Phase 0 warned). Tell the founder to review the **home only** on
+  the alias; the rest lands in Phase 2. **NEXT = Phase 2, G1 trade landings** (redesign the shared
+  `components/dakdekkers/*` set once; all trade pages inherit).
