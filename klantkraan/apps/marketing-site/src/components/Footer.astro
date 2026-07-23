@@ -131,21 +131,21 @@ const branchLinks = branches.map((b) => ({
 const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' : '/en/voor-wie/'
 ---
 
-<footer class="border-t border-(--color-kraan-stone-300) bg-(--color-kraan-stone-100)">
+<footer class="border-t border-(--color-line)">
   <!-- Trust band — sits above the legal/branch grid. -->
-  <section class="border-b border-(--color-kraan-stone-300) bg-white" aria-label={t.trustAria}>
+  <section class="border-b border-(--color-line) bg-[rgba(0,0,0,0.14)]" aria-label={t.trustAria}>
     <div class="mx-auto max-w-5xl px-6 py-8 md:py-10">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-sodium)">
         {t.trustKicker}
       </p>
       <ul class="mt-5 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
         {
           trustBadges.map((b) => (
             <li class="flex items-start gap-3">
-              <Icon name={b.icon} class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+              <Icon name={b.icon} class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
               <div>
-                <p class="text-small font-medium text-(--color-kraan-ink)">{b.label}</p>
-                <p class="text-small text-(--color-kraan-stone-500)">{b.sub}</p>
+                <p class="text-small font-medium text-(--color-chalk)">{b.label}</p>
+                <p class="text-small text-(--color-dim)">{b.sub}</p>
               </div>
             </li>
           ))
@@ -154,10 +154,10 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
     </div>
   </section>
 
-  <div class="mx-auto max-w-5xl px-6 py-8 md:py-12 text-small text-(--color-kraan-stone-700)">
+  <div class="mx-auto max-w-5xl px-6 py-8 md:py-12 text-small text-(--color-dim)">
     <div class:list={['grid gap-6 md:gap-8', gridCols]}>
       <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">Klantkraan</p>
+        <p class="font-display text-h3 text-(--color-chalk)">Klantkraan</p>
         <p class="mt-2">{t.tagline}</p>
         <p class="mt-4 text-micro">
           {t.tradeNameNote} {company.legalName}.<br />
@@ -171,29 +171,35 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         </p>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">{t.branchesHead}</p>
+        <p class="font-display text-h3 text-(--color-chalk)">{t.branchesHead}</p>
         <ul class="mt-2">
           {branchLinks.map((item) => (
             <li>
-              <a href={item.href} class="block py-2">
+              <a
+                href={item.href}
+                class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+              >
                 {item.label}
               </a>
             </li>
           ))}
           <li>
-            <a href={hubHref} class="block py-2 text-(--color-kraan-blue)">
+            <a href={hubHref} class="block py-2 text-(--color-sodium) no-underline">
               {t.allBranches}
             </a>
           </li>
         </ul>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">{t.legalHead}</p>
+        <p class="font-display text-h3 text-(--color-chalk)">{t.legalHead}</p>
         <ul class="mt-2">
           {
             legal.map((item) => (
               <li>
-                <a href={item.href} class="block py-2">
+                <a
+                  href={item.href}
+                  class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+                >
                   {item.label}
                 </a>
               </li>
@@ -202,35 +208,49 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         </ul>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-kraan-ink)">{t.contactHead}</p>
+        <p class="font-display text-h3 text-(--color-chalk)">{t.contactHead}</p>
         <p>
-          <a href={waLink} target="_blank" rel="noopener" class="flex items-center gap-2 py-2">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener"
+            class="flex items-center gap-2 py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+          >
             <Icon name="message-circle" class="h-4 w-4 shrink-0" />
             <span>{t.whatsapp}</span>
           </a>
         </p>
         <p>
-          <a href={mailLink} class="flex items-center gap-2 py-2">
+          <a
+            href={mailLink}
+            class="flex items-center gap-2 py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+          >
             <Icon name="mail" class="h-4 w-4 shrink-0" />
             <span>{contact.email}</span>
           </a>
         </p>
         <p>
-          <a href={telLink} class="flex items-center gap-2 py-2">
+          <a
+            href={telLink}
+            class="flex items-center gap-2 py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+          >
             <Icon name="phone" class="h-4 w-4 shrink-0" />
             <span>{contact.phoneDisplay}</span>
           </a>
         </p>
-        <a href={overHref} class="mt-4 flex items-center gap-3 py-2">
+        <a
+          href={overHref}
+          class="mt-4 flex items-center gap-3 py-2 no-underline hover:text-(--color-chalk)"
+        >
           <span
-            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-kraan-stone-300) bg-(--color-kraan-cream) font-display text-h3 text-(--color-kraan-blue)"
+            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-line) bg-(--color-panel) font-display text-h3 text-(--color-sodium)"
             aria-hidden="true"
           >
             K
           </span>
           <span>
-            <span class="block text-(--color-kraan-ink)">{t.founder}</span>
-            <span class="block text-micro text-(--color-kraan-stone-500)">{t.founderSub}</span>
+            <span class="block text-(--color-chalk)">{t.founder}</span>
+            <span class="block text-micro text-(--color-dim)">{t.founderSub}</span>
           </span>
         </a>
       </div>

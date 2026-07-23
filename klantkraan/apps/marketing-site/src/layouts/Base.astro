@@ -125,14 +125,14 @@ const siteSchema = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="theme-color" content="#0F4C81" />
+    <meta name="theme-color" content="#0f1c1e" />
     <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
     <ClientRouter />
   </head>
   <body class={stickyCta ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-kraan-blue) focus:px-4 focus:py-2 focus:text-white focus:no-underline"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-sodium) focus:px-4 focus:py-2 focus:text-(--color-night) focus:no-underline"
     >
       {skipLabel}
     </a>

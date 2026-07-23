@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './fonts.css';
+@import './components.css';
 
 /*
  * Brand tokens — "Het licht blijft aan" / after-hours dispatch.
@@ -152,6 +153,21 @@
     outline: 2px solid var(--color-sodium);
     outline-offset: 3px;
     border-radius: 4px;
+  }
+}
+
+/* Shared keyframe: the "light stays on" pulse — a soft sodium halo that
+ * breathes outward. Used by the header lamp and the hero status/panel dots.
+ * Neutralised by the reduced-motion block below (runs once, instantly). */
+@keyframes kk-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 184, 77, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(255, 184, 77, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 184, 77, 0);
   }
 }
 

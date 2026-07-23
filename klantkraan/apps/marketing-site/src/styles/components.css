@@ -1,0 +1,66 @@
+/*
+ * Shared component primitives for the "light stays on" redesign.
+ * Only the UNIVERSAL pieces every page reuses live here (buttons, eyebrow) so
+ * the whole site — and the Phase 2 page-group work — shares one vocabulary.
+ * Page-specific signatures (dispatch log, ledger, receipt, duty cards) are
+ * built with their page. Values track redesign-concept-2026-07-23-*.html.
+ *
+ * @layer components sits below Tailwind's utilities layer, so a utility class
+ * (e.g. `px-6`) still overrides these defaults per-element when needed.
+ */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5625rem;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: var(--radius-button);
+    padding: 0.6875rem 1.125rem;
+    line-height: 1;
+    transition:
+      transform 0.12s ease,
+      background 0.15s ease,
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .btn-primary {
+    background: var(--color-sodium);
+    color: #241603; /* near-black warm ink — readable on sodium, matches concept */
+    box-shadow: 0 6px 24px -10px rgba(255, 184, 77, 0.7);
+  }
+  .btn-primary:hover {
+    background: var(--color-sodium-soft);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-chalk);
+    border-color: var(--color-line);
+  }
+  .btn-ghost:hover {
+    border-color: var(--color-dim);
+    transform: translateY(-1px);
+  }
+
+  .btn-lg {
+    font-size: 1.0625rem;
+    padding: 0.9375rem 1.625rem;
+    border-radius: 0.75rem;
+  }
+
+  /* Section eyebrow — mono, tracked, sodium. The kicker above a section head. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-sodium);
+  }
+}

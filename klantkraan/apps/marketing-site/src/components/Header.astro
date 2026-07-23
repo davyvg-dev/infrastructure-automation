@@ -107,10 +107,15 @@ const T = {
 const t = T[lang]
 ---
 
-<header class="border-b border-(--color-kraan-stone-300) bg-(--color-kraan-cream)">
+<header
+  class="sticky top-0 z-30 border-b border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] backdrop-blur-md"
+>
   <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-    <a href={homeHref} class="font-display text-h3 text-(--color-kraan-blue) no-underline">
-      klantkraan
+    <a
+      href={homeHref}
+      class="flex items-center gap-2.5 font-display text-h3 font-extrabold text-(--color-chalk) no-underline"
+    >
+      <span class="kk-lamp" aria-hidden="true"></span>klantkraan
     </a>
 
     <!-- Desktop nav -->
@@ -119,7 +124,7 @@ const t = T[lang]
         <li class="relative">
           <details class="group" data-branches-dropdown="desktop">
             <summary
-              class="flex cursor-pointer list-none items-center gap-1 text-(--color-kraan-ink) marker:hidden hover:underline"
+              class="flex cursor-pointer list-none items-center gap-1 text-(--color-dim) marker:hidden hover:text-(--color-chalk)"
               aria-label={t.forWhoAria}
             >
               <span>{t.forWho}</span>
@@ -128,21 +133,21 @@ const t = T[lang]
                 class="h-4 w-4 transition-transform group-open:rotate-180"
               />
             </summary>
-            <ul class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-2">
+            <ul class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-2">
               {branchLinks.map((b) => (
                 <li>
                   <a
                     href={b.href}
-                    class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)"
+                    class="block rounded-(--radius-button) px-3 py-2 text-(--color-chalk) no-underline hover:bg-(--color-panel-2)"
                   >
                     {b.label}
                   </a>
                 </li>
               ))}
-              <li class="mt-1 border-t border-(--color-kraan-stone-300) pt-1">
+              <li class="mt-1 border-t border-(--color-line) pt-1">
                 <a
                   href={hubHref}
-                  class="block rounded-(--radius-button) px-3 py-2 text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+                  class="block rounded-(--radius-button) px-3 py-2 text-(--color-sodium) no-underline hover:bg-(--color-panel-2)"
                 >
                   {t.allBranches}
                 </a>
@@ -153,7 +158,10 @@ const t = T[lang]
         {
           nav.map((item) => (
             <li>
-              <a href={item.href} class="text-(--color-kraan-ink) no-underline hover:underline">
+              <a
+                href={item.href}
+                class="text-(--color-dim) no-underline transition-colors hover:text-(--color-chalk)"
+              >
                 {item.label}
               </a>
             </li>
@@ -161,7 +169,7 @@ const t = T[lang]
         }
         <li>
           <div
-            class="inline-flex items-center overflow-hidden rounded-(--radius-button) border border-(--color-kraan-stone-300) font-mono text-micro"
+            class="inline-flex items-center overflow-hidden rounded-(--radius-button) border border-(--color-line) font-mono text-micro"
             role="group"
             aria-label={t.langSwitcher}
           >
@@ -170,8 +178,8 @@ const t = T[lang]
                 <span
                   aria-current="true"
                   class:list={[
-                    'px-2 py-1 bg-(--color-kraan-blue) text-white',
-                    i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                    'px-2 py-1 bg-(--color-sodium) font-bold text-(--color-night)',
+                    i > 0 && 'border-l border-(--color-line)',
                   ]}
                 >
                   {s.label}
@@ -183,8 +191,8 @@ const t = T[lang]
                   lang={s.code}
                   aria-label={s.aria}
                   class:list={[
-                    'px-2 py-1 text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)',
-                    i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                    'px-2 py-1 text-(--color-dim) no-underline hover:bg-(--color-panel) hover:text-(--color-chalk)',
+                    i > 0 && 'border-l border-(--color-line)',
                   ]}
                 >
                   {s.label}
@@ -199,7 +207,7 @@ const t = T[lang]
     <button
       id="mobile-menu-toggle"
       type="button"
-      class="flex h-11 w-11 items-center justify-center rounded-(--radius-button) text-(--color-kraan-ink) md:hidden"
+      class="flex h-11 w-11 items-center justify-center rounded-(--radius-button) text-(--color-chalk) md:hidden"
       aria-label={t.openMenu}
       aria-expanded="false"
       aria-controls="mobile-menu"
@@ -226,35 +234,35 @@ const t = T[lang]
   <!-- Mobile menu -->
   <nav
     id="mobile-menu"
-    class="hidden border-t border-(--color-kraan-stone-300) md:hidden"
+    class="hidden border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] backdrop-blur-md md:hidden"
     aria-label={t.mobileNav}
     hidden
   >
     <ul class="mx-auto flex max-w-5xl flex-col">
-      <li class="border-b border-(--color-kraan-stone-300)">
+      <li class="border-b border-(--color-line)">
         <details data-branches-dropdown="mobile" class="group">
-          <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-kraan-ink) marker:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-chalk) marker:hidden">
             <span>{t.forWho}</span>
             <Icon
               name="chevron-down"
               class="h-5 w-5 transition-transform group-open:rotate-180"
             />
           </summary>
-          <ul class="bg-(--color-kraan-cream)">
+          <ul class="bg-(--color-panel)">
             {branchLinks.map((b) => (
-              <li class="border-t border-(--color-kraan-stone-300)">
+              <li class="border-t border-(--color-line)">
                 <a
                   href={b.href}
-                  class="block px-10 py-3 text-body text-(--color-kraan-ink) no-underline"
+                  class="block px-10 py-3 text-body text-(--color-chalk) no-underline"
                 >
                   {b.label}
                 </a>
               </li>
             ))}
-            <li class="border-t border-(--color-kraan-stone-300)">
+            <li class="border-t border-(--color-line)">
               <a
                 href={hubHref}
-                class="block px-10 py-3 text-body text-(--color-kraan-blue) no-underline"
+                class="block px-10 py-3 text-body text-(--color-sodium) no-underline"
               >
                 {t.allBranches}
               </a>
@@ -264,19 +272,19 @@ const t = T[lang]
       </li>
       {
         nav.map((item) => (
-          <li class="border-b border-(--color-kraan-stone-300)">
+          <li class="border-b border-(--color-line)">
             <a
               href={item.href}
-              class="block px-6 py-4 text-body text-(--color-kraan-ink) no-underline"
+              class="block px-6 py-4 text-body text-(--color-chalk) no-underline"
             >
               {item.label}
             </a>
           </li>
         ))
       }
-      <li class="border-b border-(--color-kraan-stone-300) px-6 py-4 last:border-b-0">
+      <li class="border-b border-(--color-line) px-6 py-4 last:border-b-0">
         <div
-          class="flex overflow-hidden rounded-(--radius-button) border border-(--color-kraan-stone-300) font-mono text-small"
+          class="flex overflow-hidden rounded-(--radius-button) border border-(--color-line) font-mono text-small"
           role="group"
           aria-label={t.langSwitcher}
         >
@@ -285,8 +293,8 @@ const t = T[lang]
               <span
                 aria-current="true"
                 class:list={[
-                  'flex-1 py-2 text-center bg-(--color-kraan-blue) text-white',
-                  i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                  'flex-1 py-2 text-center bg-(--color-sodium) font-bold text-(--color-night)',
+                  i > 0 && 'border-l border-(--color-line)',
                 ]}
               >
                 {s.label}
@@ -296,8 +304,8 @@ const t = T[lang]
                 href={s.href}
                 aria-label={s.aria}
                 class:list={[
-                  'flex-1 py-2 text-center text-(--color-kraan-ink) no-underline hover:bg-(--color-kraan-stone-100)',
-                  i > 0 && 'border-l border-(--color-kraan-stone-300)',
+                  'flex-1 py-2 text-center text-(--color-chalk) no-underline hover:bg-(--color-panel)',
+                  i > 0 && 'border-l border-(--color-line)',
                 ]}
               >
                 {s.label}
@@ -309,6 +317,18 @@ const t = T[lang]
     </ul>
   </nav>
 </header>
+
+<style>
+  /* The "light stays on" lamp: a small sodium dot that breathes. */
+  .kk-lamp {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--color-sodium);
+    flex: none;
+    animation: kk-pulse 2.6s ease-out infinite;
+  }
+</style>
 
 <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
 <script src="/js/header-menu.js" type="module" is:inline></script>

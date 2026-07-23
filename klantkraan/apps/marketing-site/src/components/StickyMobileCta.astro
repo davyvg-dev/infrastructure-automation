@@ -33,13 +33,13 @@ const t = T[lang]
 
 <aside
   aria-label={t.actions}
-  class="fixed inset-x-0 bottom-0 z-40 border-t border-(--color-kraan-stone-300) bg-white px-4 py-3 md:hidden"
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_88%,transparent)] px-4 py-3 backdrop-blur-md md:hidden"
   style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem)"
 >
   <div class="mx-auto flex max-w-5xl items-center gap-3">
     <a
       href={telLink}
-      class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-(--radius-button) border border-(--color-kraan-blue) text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+      class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-(--radius-button) border border-(--color-line) text-(--color-sodium) no-underline hover:border-(--color-dim)"
       aria-label={t.call}
     >
       <Icon name="phone" class="h-5 w-5" />
@@ -48,7 +48,7 @@ const t = T[lang]
       href={waLink}
       target="_blank"
       rel="noopener"
-      class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-5 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+      class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-(--radius-button) bg-(--color-sodium) px-5 text-body font-semibold text-(--color-night) no-underline hover:bg-(--color-sodium-soft)"
     >
       <Icon name="message-circle" class="h-5 w-5" />
       <span>{t.whatsapp}</span>
