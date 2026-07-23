@@ -67,7 +67,10 @@ throughout); every page incl. reading variant for legal/blog/gidsen; foundation 
 then parallel-draft / serial-verify. Checkboxes below mirror the runbook phases.
 - [x] **Phase 0 — Foundation** (serial, DONE 2026-07-23, commits 9eb015b + 91bc019): self-hosted 3 fonts (18 woff2 subsets) → palette/type flipped in `global.css` `@theme` (old kraan-* kept, deprecated) → Header/Footer/StickyCta/Base rebuilt + screenshot-verified → universal .btn/.eyebrow primitives. Home-specific signatures deferred to Phase 1. Build green, astro check 0 errors.
 - [x] **Phase 1 — Home** (serial, DONE 2026-07-23): 1.1 NL `index.astro` rebuilt (faf1e29) + 1.2 web-design-guidelines fixes (cd83615) + 1.3 **founder APPROVED** + 1.4 EN/ES twins (4b9b33f) + 1.5 first preview deploy. **Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev`** (apex still old design). All 3 home locales verified 200 + art. 50 + dispatch panel. **NEXT = Phase 2 G1 trade landings.** ■
-- [ ] **Phase 2 — Groups** (parallel draft / serial verify): G1 trade landings (shared `dakdekkers/*` set) · G2 conversion (prijzen/rekentool/demo/voor-wie/over) · G3 `[stad]/[vak]` template · G4 reading variant (blog/gidsen/legal/404). ■ per group
+- [ ] **Phase 2 — Groups** (parallel draft / serial verify): ■ per group
+  - [x] **G1 trade landings** — DONE 2026-07-23 (ccf2ba3 + 332cacf). 26 files: shared `dakdekkers/*` set (9) + primitives Stat/RiskReversal/VerderLezen + 6 self-contained NL + 8 self-contained EN. NB "shared set, all inherit" was wrong — only `dakdekkers.astro` uses the set; every other trade page is self-contained. Locked token/pattern map in runbook §8 (reuse for G2-G4). 0 kraan- left in all 15 trade pages; build green, audit clean. Site-wide kraan- burn-down ~1998 → 1009.
+  - [ ] **G2 conversion** (prijzen/rekentool/demo/voor-wie/over — NL+EN+ES; `/demo` keeps live chatbot, restyle container only) — NEXT
+  - [ ] **G3** `[stad]/[vak]` template · [ ] **G4** reading variant (blog/gidsen/legal/404)
 - [ ] **Phase 3 — Audit + polish** (serial): whole-site web-design-guidelines pass; verify a11y, view-transitions, `/demo`, 320px, all locales, price parity, art. 50, `grep -r kraan- src` empty. ■
 - [ ] **Phase 4 — Cutover**: founder review on preview → production deploy → re-verify live → update memory.
 

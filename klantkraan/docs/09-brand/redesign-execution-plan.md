@@ -1,8 +1,8 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** Phase 0 (foundation) + Phase 1 (home, all locales) complete 2026-07-23.
+**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** complete 2026-07-23.
 Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev` (apex still old design).
-Next = Phase 2 (page groups).
+Next = Phase 2 **G2 (conversion pages)** — prijzen, rekentool, demo, voor-wie, over.
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -139,10 +139,14 @@ Ralph gate for every page: **build → `astro check` → eyeball (Playwright scr
 ### Phase 2 — Page groups (parallel draft → serial verify)
 Design each page *type* once (NL), audit, commit; then replicate locale twins.
 
-- [ ] **G1 Trade landings** — redesign the shared `components/dakdekkers/*` set once (Hero,
-      Features, Faq, PainStats, SocialProof, FinalCta, StormScenario, RoiSnippet, CityLinks);
-      all trade pages inherit. Pages: dakdekkers, loodgieters, elektricien, installateur,
-      schilder, aannemer, sportscholen, en/air-conditioning (+ EN twins).
+- [x] **G1 Trade landings** — DONE 2026-07-23 (commits ccf2ba3 gold ref + 332cacf twins).
+      Reskinned the shared `components/dakdekkers/*` set (only `dakdekkers.astro` uses it) +
+      shared primitives (Stat, RiskReversal, VerderLezen) + all self-contained pages. **NB the
+      "all trade pages inherit" assumption was wrong:** only `dakdekkers.astro` composes the
+      shared set; the other 6 NL pages + all 8 EN pages are self-contained 14 KB files that
+      each duplicate the section markup inline. So G1 = 9 shared components + 3 primitives + 6
+      self-contained NL + 8 self-contained EN = 26 files (no ES trade pages — cornerstones stay
+      nl+en). All clean of kraan-. Build green, audit clean, eyeballed.
 - [ ] **G2 Conversion pages** — prijzen, rekentool, demo, voor-wie, over (+ EN/ES twins).
       `/demo` keeps the live embedded chatbot; restyle its container only.
 - [ ] **G3 `[stad]/[vak]` template** — one file, the whole programmatic long tail.
@@ -256,3 +260,34 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   render broken on the dark base, as Phase 0 warned). Tell the founder to review the **home only** on
   the alias; the rest lands in Phase 2. **NEXT = Phase 2, G1 trade landings** (redesign the shared
   `components/dakdekkers/*` set once; all trade pages inherit).
+- **2026-07-23 — Phase 2 G1 complete (commits ccf2ba3 gold ref, 332cacf twins).** All trade
+  landings reskinned to the dispatch-dark language. **Structural reality that bit the runbook's
+  plan:** only `dakdekkers.astro` composes the shared `components/dakdekkers/*` set; the other 6
+  NL trade pages + all 8 EN pages are self-contained ~14 KB files that inline-duplicate the same
+  section markup. So "redesign the shared set once, all inherit" only covered 1 of 15 pages. G1
+  actually = 9 shared components + 3 shared primitives (Stat/RiskReversal/VerderLezen, used by
+  ~15 pages incl. all trades) + 6 self-contained NL + 8 self-contained EN = 26 files. No ES trade
+  pages (cornerstones stay nl+en). **Locked token/pattern map (reuse for G2-G4):** kraan-ink->chalk,
+  kraan-stone-700/500/100->dim, kraan-rust & kraan-blue->sodium, kraan-leaf->confirm, stone-300->line;
+  white cards->`bg-(--color-panel)`; alt "stone-100" sections + full-blue CTA bands->recessed
+  `border-y border-(--color-line) bg-[rgba(0,0,0,0.14)]`; inline blue/white button anchors->shared
+  `.btn btn-primary/btn-ghost btn-lg`; section kickers->`.eyebrow`; hero illustration wrapper->
+  text-sodium (reads as a warm neon sign — illustrations use currentColor, only the wrapper
+  changes); with/without compare card->"with" highlighted `border-sodium/40`+confirm label, "without"
+  dim label. **Method:** hand-built loodgieters + the shared set as gold references (frontend-design
+  fidelity + web-design-guidelines audit — contrast AA verified: dim 7.2:1/6.8:1, confirm 9.6:1;
+  Icon.astro auto-sets aria-hidden on decorative icons; global :focus-visible ring intact), then
+  applied ONE deterministic Python substring transform to the other 13 self-contained pages
+  (`scratchpad/reskin_trades.py`) — 5 uniform button strings + a fixed token table meant zero drift,
+  faster + more consistent than 13 subagents. Verified: 0 kraan-/bg-white/text-white/inline-btn left
+  in all 15 trade pages; build green (84 files, ~1.7s), astro check 0/0; eyeballed loodgieters,
+  dakdekkers, schilder, sportscholen, en/dakdekkers (desktop + 320px). **Gotchas:** (1) `grep`/`cd`
+  quirks — `grep` is aliased to `ugrep` which errors on an unquoted multi-file arg list; and a `cd`
+  as the first token of a compound Bash command sometimes doesn't stick (cwd reverts to repo root) —
+  prefer `cd X && cmd` or absolute paths, and use Python for multi-file scans. (2) Site-wide kraan-
+  burn-down: ~1998 -> **1009 refs across 34 files**. Remaining is G2 (en/es/base conversion pages),
+  G3 (`[stad]`, `/r`), G4 (6 legal + gidsen + blog + 404), plus deprecated `@theme` kraan tokens in
+  global.css + DashboardMock/LeadForm/RingingPhone-comment (later groups). **NEXT = G2 conversion
+  pages** (prijzen, rekentool, demo, voor-wie, over — NL + EN + ES; `/demo` keeps the live embedded
+  chatbot, restyle its container only). Preview alias NOT redeployed this session (still shows home-
+  only migration); redeploy at G2 end or when the founder wants to review trade pages.
