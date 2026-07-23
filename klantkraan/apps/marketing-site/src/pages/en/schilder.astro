@@ -113,10 +113,10 @@ const faqSchema = {
       class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
     >
       <div>
-        <h1 class="font-display text-hero text-(--color-kraan-ink)">
-          The <span class="text-(--color-kraan-rust)">customer engine</span> for painters.
+        <h1 class="font-display text-hero text-chalk">
+          The <span class="text-(--color-sodium)">customer engine</span> for painters.
         </h1>
-        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+        <p class="mt-6 max-w-2xl text-h3 text-dim">
           A digital receptionist on your website and WhatsApp that keeps quote requests,
           scheduling questions and suppliers apart. It catches the evening requests you miss now
           while you are up on the scaffolding. And the spring peak without you hiring extra people.
@@ -124,47 +124,47 @@ const faqSchema = {
         <div class="mt-10 flex flex-wrap gap-4">
           <a
             href="/en/demo/"
-            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+            class="btn btn-primary btn-lg"
           >
             Try the demo
           </a>
           <a
             href="/en/rekentool/"
-            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+            class="btn btn-ghost btn-lg"
           >
             Work out your ROI
           </a>
         </div>
       </div>
-      <div class="hidden text-(--color-kraan-blue) md:block">
+      <div class="hidden text-(--color-sodium) md:block">
         <PaintRoller class="h-64 w-64 lg:h-72 lg:w-72" />
       </div>
     </div>
     <div class="mx-auto max-w-5xl px-6">
       <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
         <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
-            <p class="text-small font-medium text-(--color-kraan-ink)">GDPR + AI Act art. 50</p>
-            <p class="text-small text-(--color-kraan-stone-500)">Disclosure on by default</p>
+            <p class="text-small font-medium text-chalk">GDPR + AI Act art. 50</p>
+            <p class="text-small text-dim">Disclosure on by default</p>
           </div>
         </li>
         <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
-            <p class="text-small font-medium text-(--color-kraan-ink)">Hosted in the EU</p>
-            <p class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</p>
+            <p class="text-small font-medium text-chalk">Hosted in the EU</p>
+            <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
           </div>
         </li>
         <li class="flex items-start gap-3">
-          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
-            <p class="text-small font-medium text-(--color-kraan-ink)">Natural conversation</p>
-            <p class="text-small text-(--color-kraan-stone-500)">Knows your per-m² rate + colour sample</p>
+            <p class="text-small font-medium text-chalk">Natural conversation</p>
+            <p class="text-small text-dim">Knows your per-m² rate + colour sample</p>
           </div>
         </li>
       </ul>
-      <p class="mt-8 text-small text-(--color-kraan-stone-500)">
+      <p class="mt-8 text-small text-dim">
         Cancel monthly · Done-for-you setup · First month 50% off
       </p>
     </div>
@@ -175,7 +175,7 @@ const faqSchema = {
 
   <!-- 2. Pain-stats trio (stone-100) -->
   <section
-    class="bg-(--color-kraan-stone-100) py-10 md:py-16"
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
     aria-label="What a missed quote request costs a painter"
   >
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
@@ -186,21 +186,21 @@ const faqSchema = {
   <!-- 3. Modules (cream, hairline rows) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Modules</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+      <p class="eyebrow">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">
         What Klantkraan does for painters.
       </h2>
-      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+      <p class="mt-4 max-w-2xl text-body text-dim">
         Three modules. One monthly price. Built for the painter who does not want to miss another evening call during the spring peak.
       </p>
-      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           features.map((feature) => (
             <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
               <div>
-                <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
-                <p class="mt-2 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
+                <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
+                <p class="mt-2 text-body text-dim">{feature.body}</p>
               </div>
             </article>
           ))
@@ -210,35 +210,35 @@ const faqSchema = {
   </section>
 
   <!-- 4. ROI snippet (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">The maths</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+      <p class="eyebrow">The maths</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">
         Do the maths.
       </h2>
-      <div class="mt-8 rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-6 md:p-10">
-        <p class="text-h3 text-(--color-kraan-ink)">
-          Miss 5 quote requests a month at €2,500 each? That is <strong class="text-(--color-kraan-rust)">around €50,000 in lost revenue a year</strong>.
+      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
+        <p class="text-h3 text-chalk">
+          Miss 5 quote requests a month at €2,500 each? That is <strong class="text-(--color-sodium)">around €50,000 in lost revenue a year</strong>.
         </p>
-        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+        <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One spring job you miss now to the evening callers pays for the whole
           subscription. The rest goes in your pocket instead of a competitor's.
         </p>
         <div class="mt-6 flex flex-wrap gap-4">
           <a
             href="/en/rekentool/"
-            class="inline-block rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+            class="btn btn-primary btn-lg"
           >
             Open the calculator
           </a>
           <a
             href="/en/prijzen/"
-            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+            class="btn btn-ghost btn-lg"
           >
             See the pricing
           </a>
         </div>
-        <p class="mt-6 text-micro text-(--color-kraan-stone-500)">
+        <p class="mt-6 text-micro text-dim">
           Amounts exclude 21% VAT. Example based on an industry-average €2,500 per interior
           painting job on a home (source: OnderhoudNL industry figures) and the assumption that
           roughly 1 in 3 missed requests would have become a paying job (33% conversion rate).
@@ -250,24 +250,24 @@ const faqSchema = {
   <!-- 5. FAQ (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Questions</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+      <p class="eyebrow">Questions</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">
         Frequently asked questions.
       </h2>
-      <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
             <details class="group py-4">
-              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-(--color-kraan-ink) marker:hidden">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-chalk marker:hidden">
                 <span class="flex items-start justify-between gap-4">
                   <span>{faq.q}</span>
                   <Icon
                     name="chevron-down"
-                    class="mt-1 h-5 w-5 shrink-0 text-(--color-kraan-blue) transition-transform group-open:rotate-180"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
                   />
                 </span>
               </summary>
-              <p class="mt-3 text-body text-(--color-kraan-stone-700)">{faq.a}</p>
+              <p class="mt-3 text-body text-dim">{faq.a}</p>
               {faq.href && faq.linkLabel && (
                 <p class="mt-3 text-small">
                   <a href={faq.href} class="underline">
@@ -283,25 +283,25 @@ const faqSchema = {
   </section>
 
   <!-- 6. Final CTA (blue) -->
-  <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h2 class="font-display text-h1 text-white">
+      <h2 class="font-display text-h1 text-chalk">
         Ready for the spring season?
       </h2>
-      <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-100)">
+      <p class="mt-4 max-w-2xl text-body text-dim">
         Try the live demo. You will see how it tells a per-m² question and a colour-sample question apart,
         and what it does when someone asks about spray work.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">
         <a
           href="/en/demo/"
-          class="inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+          class="btn btn-primary btn-lg"
         >
           Try the demo
         </a>
         <a
           href="/en/prijzen/"
-          class="inline-block rounded-(--radius-button) border border-white px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+          class="btn btn-ghost btn-lg"
         >
           See pricing
         </a>
