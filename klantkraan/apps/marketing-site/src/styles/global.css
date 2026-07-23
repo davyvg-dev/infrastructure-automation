@@ -56,21 +56,6 @@
 
   --radius-card: 0.6875rem; /* 11px, matches concept --r */
   --radius-button: 0.625rem; /* 10px */
-
-  /* --- DEPRECATED light-theme tokens (kraan-*) ---
-   * Kept only so pages not yet migrated to the dispatch palette still build.
-   * Remove in Phase 3 once `grep -r kraan- src` is empty. Do not use in new work. */
-  --color-kraan-blue: #0f4c81;
-  --color-kraan-blue-700: #0a3960;
-  --color-kraan-blue-300: #4d80ad;
-  --color-kraan-cream: #faf6ee;
-  --color-kraan-ink: #1a1a1a;
-  --color-kraan-rust: #c75a2b;
-  --color-kraan-leaf: #3f7f4a;
-  --color-kraan-stone-100: #f1ecdf;
-  --color-kraan-stone-300: #d9d2c0;
-  --color-kraan-stone-500: #8c8474;
-  --color-kraan-stone-700: #4a463d;
 }
 
 /* Base styling lives inside @layer base so Tailwind utilities (text-chalk,
