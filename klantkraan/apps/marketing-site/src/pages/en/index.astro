@@ -1,8 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro'
-import Icon from '../../components/Icon.astro'
-import Stat from '../../components/Stat.astro'
-import RingingPhone from '../../components/illustrations/RingingPhone.astro'
 import { waLink } from '../../data/contact'
 ---
 
@@ -12,100 +9,685 @@ import { waLink } from '../../data/contact'
   description="An AI receptionist on your website and WhatsApp: answers questions, books appointments and captures leads, day and night. Done-for-you setup. Cancel monthly."
   centered={false}
 >
-  <!-- 1. Hero (cream) -->
-  <section class="py-10 md:py-16">
-    <div
-      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
-    >
-      <div>
-        <h1 class="font-display text-hero text-(--color-kraan-ink)">
-          Every customer question <span class="text-(--color-kraan-rust)">answered</span>, day and night.
-        </h1>
-        <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
-          You're up a ladder or with a customer while your best lead has a question. Klantkraan's
-          digital receptionist answers it on your website and via WhatsApp, books the appointment
-          in your calendar and captures every callback request. Done-for-you setup. Cancel monthly.
-        </p>
-        <div class="mt-10 flex flex-wrap gap-4">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-6 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
-          >
-            <Icon name="message-circle" class="h-5 w-5" />
-            <span>WhatsApp us now</span>
-          </a>
-          <a
-            href="/en/demo/"
-            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
-          >
-            Try the demo
-          </a>
+  <!-- HERO — copy left, live dispatch panel right -->
+  <section class="pt-11 pb-0 md:pt-[4.5rem]">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="grid gap-10 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-14">
+        <!-- copy -->
+        <div>
+          <span class="kk-status">
+            <span class="kk-dot" aria-hidden="true"></span>
+            <span>ON &middot; answering now</span>
+            <span class="sep" aria-hidden="true">&middot;</span>
+            <span>SITE + WHATSAPP</span>
+          </span>
+
+          <h1 class="kk-h1">The light stays <span class="on">on.</span></h1>
+
+          <p class="kk-sub">
+            You're up a ladder, on a roof, or asleep. Your best customer has a question right now.
+            Klantkraan's digital receptionist answers it on your site and WhatsApp, books the
+            appointment and captures every callback request. Day and night.
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-3.5">
+            <a href="/en/demo/" class="btn btn-primary btn-lg">Try the demo</a>
+            <a href="#nachtdienst" class="btn btn-ghost btn-lg">How it works</a>
+          </div>
+          <p class="kk-trust">
+            Done-for-you setup &middot; cancel monthly &middot;
+            <span class="g">GDPR-compliant, EU-hosted</span>
+          </p>
         </div>
-        <p class="mt-3 text-small text-(--color-kraan-stone-500)">
-          Usually a reply within one working day, straight from the owner.
+
+        <!-- live dispatch panel (decorative: role=img + summary label) -->
+        <div class="kk-shell">
+          <div
+            id="kk-dispatch"
+            class="kk-panel"
+            role="img"
+            aria-label="Shift log: at 23:47 a customer with a leak asks a question, the digital receptionist books an appointment for Tuesday 09:00 and prepares a callback request for the owner."
+          >
+            <div class="kk-panel-top">
+              <span>SHIFT LOG &middot; TONIGHT</span>
+              <span class="on"><span class="kk-dot" aria-hidden="true"></span>ON</span>
+            </div>
+            <div class="kk-log" aria-hidden="true">
+              <div class="kk-row dim">
+                <span class="kk-ts">06:14</span>
+                <span class="kk-what">quote request</span>
+                <span class="kk-st">✓ answered</span>
+              </div>
+              <div class="kk-row dim">
+                <span class="kk-ts">12:40</span>
+                <span class="kk-what">appointment &middot; roof inspection</span>
+                <span class="kk-st">✓ booked</span>
+              </div>
+
+              <div class="kk-live">
+                <div class="kk-lts kk-reveal" style="animation-delay:.2s">
+                  23:47 &middot; incoming conversation
+                </div>
+                <div class="kk-disclosure kk-reveal" style="animation-delay:.5s">
+                  You're chatting with a digital assistant.
+                </div>
+
+                <div class="kk-msg kk-klant kk-reveal" style="animation-delay:.9s">
+                  <span class="who">Customer</span>
+                  <span>I've got a leak under the kitchen sink, can someone come tomorrow?</span>
+                </div>
+
+                <div id="kk-typing" class="kk-msg kk-recep kk-reveal" style="animation-delay:1.5s;padding:0">
+                  <span class="kk-typing" aria-hidden="true"><i></i><i></i><i></i></span>
+                </div>
+
+                <div id="kk-reply" class="kk-msg kk-recep" hidden>
+                  <span class="who">Klantkraan</span>
+                  <span>Sorry to hear that, we'll sort it. Tomorrow 09:00 is free. Shall I lock that in for you?</span>
+                </div>
+
+                <div id="kk-stamp" class="kk-stamp" hidden>
+                  <span class="tick" aria-hidden="true">✓</span>
+                  <span>
+                    <strong>BOOKED</strong>
+                    <span class="detail"> Tue 09:00 &middot; callback ready for the owner</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ledger strip: real times prove misses cluster at inconvenient hours -->
+    <div class="kk-ledger mt-[2.125rem]">
+      <div class="mx-auto max-w-5xl px-6">
+        <div class="kk-ledger-grid">
+          <div class="cell">
+            <div class="kk-cell-ts">06:14</div>
+            <div class="kk-cell-ev">Quote answered</div>
+            <div class="kk-cell-aside">before you woke up</div>
+          </div>
+          <div class="cell">
+            <div class="kk-cell-ts">12:40</div>
+            <div class="kk-cell-ev">Appointment booked</div>
+            <div class="kk-cell-aside">you were on the roof</div>
+          </div>
+          <div class="cell">
+            <div class="kk-cell-ts">23:47</div>
+            <div class="kk-cell-ev">Emergency leak → booked</div>
+            <div class="kk-cell-aside">you were asleep</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DUTIES — the night shift -->
+  <section id="nachtdienst" class="scroll-mt-24 py-[3.25rem] md:py-[4.875rem]">
+    <div class="mx-auto max-w-5xl px-6">
+      <span class="eyebrow">The night shift</span>
+      <h2 class="mt-3.5 max-w-[16em] font-display text-h2 text-balance">
+        What the receptionist takes over while you work.
+      </h2>
+      <div class="mt-10 grid gap-[18px] md:grid-cols-3">
+        <div class="kk-duty">
+          <span class="tag">answer</span>
+          <h3>Answers every question</h3>
+          <p>
+            Knows your rates, services and service area. No invented prices, only what you have
+            set.
+          </p>
+        </div>
+        <div class="kk-duty">
+          <span class="tag">calendar</span>
+          <h3>Books the appointment</h3>
+          <p>
+            Straight into your calendar, only in slots that are genuinely free. The customer picks a
+            slot, you see it at once.
+          </p>
+        </div>
+        <div class="kk-duty">
+          <span class="tag">callback</span>
+          <h3>Captures the callback</h3>
+          <p>
+            Can't take it right now? The receptionist notes the name, number and job. You call back
+            the ones that matter.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COST — a receipt, not a big-number-gradient -->
+  <section id="kosten" class="scroll-mt-24 border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-[3.25rem] md:py-[4.875rem]">
+    <div class="mx-auto grid max-w-5xl gap-8 px-6 md:grid-cols-[1.1fr_.9fr] md:items-center md:gap-11">
+      <div>
+        <span class="eyebrow">The bill for a dark evening</span>
+        <h2 class="mt-3.5 max-w-[16em] font-display text-h2 text-balance">
+          Every unanswered question is a job walking to your competitor.
+        </h2>
+        <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">
+          The numbers aren't meant to be dramatic. They're just the sum of a phone ringing while
+          your hands are full.
         </p>
       </div>
-      <div class="hidden text-(--color-kraan-blue) md:block">
-        <RingingPhone class="h-64 w-64 lg:h-72 lg:w-72" />
+      <div class="kk-receipt" aria-label="Cost overview">
+        <div class="line">
+          <span class="k">Missed calls</span>
+          <span class="v bad">28%</span>
+        </div>
+        <div class="line">
+          <span class="k">Value per missed enquiry</span>
+          <span class="v bad">€450</span>
+        </div>
+        <div class="line">
+          <span class="k">Hours you're unreachable</span>
+          <span class="v">most of them</span>
+        </div>
+        <div class="line total">
+          <span class="k">With the light on</span>
+          <span class="v">every question answered, 24/7</span>
+        </div>
       </div>
     </div>
-
-    <div class="mx-auto max-w-5xl px-6">
-      <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
-        <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
-          <div>
-            <p class="text-small font-medium text-(--color-kraan-ink)">GDPR + AI Act art. 50</p>
-            <p class="text-small text-(--color-kraan-stone-500)">Disclosure on by default</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
-          <div>
-            <p class="text-small font-medium text-(--color-kraan-ink)">Hosted in the EU</p>
-            <p class="text-small text-(--color-kraan-stone-500)">Cloudflare · Neon · Hetzner</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3">
-          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-blue)" />
-          <div>
-            <p class="text-small font-medium text-(--color-kraan-ink)">Natural conversation</p>
-            <p class="text-small text-(--color-kraan-stone-500)">Knows your rates + services</p>
-          </div>
-        </li>
-      </ul>
-    </div>
   </section>
 
-  <!-- 2. Stat band (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16" aria-label="The receptionist in numbers">
-    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
-      <Stat value="28%" label="of your calls go unanswered." />
-      <Stat value="24/7" label="the receptionist answers questions on your site and WhatsApp." />
-      <Stat value="€450" label="average value of a missed enquiry." />
-    </div>
-  </section>
-
-  <!-- 3. Transparency (cream) -->
-  <section class="py-10 md:py-16">
+  <!-- TRANSPARENCY / art. 50 -->
+  <section id="eerlijk" class="scroll-mt-24 py-[3.25rem] md:py-[4.875rem]">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Transparency</p>
-      <div class="mt-3 rounded-(--radius-card) border-l-4 border-(--color-kraan-rust) bg-(--color-kraan-stone-100) p-6 md:p-8">
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">
-          Honest about AI, from the very first second.
-        </h2>
-        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
-          At the start of every conversation your customer reads: "You're chatting with a digital
-          assistant." That's required under EU AI Act article 50, and it's good business too: open,
-          nothing to hide. No confusion for the customer, no fine from the regulator.
+      <span class="eyebrow">Honest about AI</span>
+      <h2 class="mt-3.5 max-w-[16em] font-display text-h2 text-balance">
+        The light is on. There's nothing to hide.
+      </h2>
+      <div class="kk-trans mt-6">
+        <span class="quote">&ldquo;You're chatting with a digital assistant.&rdquo;</span>
+        <p>
+          That's how every conversation starts, before anything else happens. Required under the EU
+          AI Act article&nbsp;50, and it fits running an open business. No confusion for the customer, no
+          fine from the regulator. Just an honest conversation, day and night.
         </p>
         <p class="mt-4 text-small">
-          <a href="/legal/ai-disclosure/" class="underline">Read the full disclosure</a>
+          <a href="/legal/ai-disclosure/">Read the full disclosure</a>
         </p>
       </div>
     </div>
   </section>
 
+  <!-- FINAL CTA -->
+  <section class="py-[5.625rem] text-center">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="kk-final-h2">Turn the light <span class="on">on.</span></h2>
+      <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">
+        Try the demo and ask the receptionist a question as if you were a customer. Like it? We
+        handle the setup, you build nothing.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3.5">
+        <a href="/en/demo/" class="btn btn-primary btn-lg">Try the demo</a>
+        <a href={waLink} target="_blank" rel="noopener" class="btn btn-ghost btn-lg">
+          Book an intro chat
+        </a>
+      </div>
+    </div>
+  </section>
 </Base>
+
+<style>
+  /* ---- hero copy ---- */
+  .kk-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--color-sodium-soft);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 6px 13px 6px 12px;
+    background: var(--color-panel);
+  }
+  .kk-status .sep {
+    color: var(--color-line);
+  }
+  .kk-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-sodium);
+    flex: none;
+    animation: kk-pulse 2.6s ease-out infinite;
+  }
+  .kk-h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-size: clamp(2.5rem, 6.4vw, 4.7rem);
+    line-height: 0.98;
+    margin: 22px 0 0;
+    text-wrap: balance;
+  }
+  .kk-h1 .on {
+    color: var(--color-sodium);
+  }
+  .kk-sub {
+    margin-top: 24px;
+    max-width: 33em;
+    font-size: clamp(1.02rem, 1.4vw, 1.18rem);
+    color: #cdd8d5;
+    line-height: 1.6;
+  }
+  .kk-trust {
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    color: var(--color-dim);
+  }
+  .kk-trust .g {
+    color: var(--color-confirm);
+  }
+
+  /* ---- dispatch panel (the signature) ---- */
+  .kk-shell {
+    position: relative;
+  }
+  .kk-shell::before {
+    content: '';
+    position: absolute;
+    inset: -14% -8% -18% -8%;
+    z-index: 0;
+    background: radial-gradient(closest-side, rgba(255, 184, 77, 0.22), transparent 72%);
+    filter: blur(6px);
+  }
+  .kk-panel {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.7);
+  }
+  .kk-panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--color-dim);
+    background: rgba(0, 0, 0, 0.14);
+  }
+  .kk-panel-top .on {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--color-sodium);
+  }
+  .kk-log {
+    padding: 8px 16px 18px;
+  }
+  .kk-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px dashed var(--color-line);
+    font-size: 14.5px;
+  }
+  .kk-row:last-child {
+    border-bottom: 0;
+  }
+  .kk-row.dim {
+    opacity: 0.5;
+  }
+  .kk-ts {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-sodium-soft);
+  }
+  .kk-what {
+    color: #cdd8d5;
+  }
+  .kk-st {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: var(--color-confirm);
+    white-space: nowrap;
+  }
+  .kk-live {
+    margin-top: 4px;
+    padding-top: 12px;
+  }
+  .kk-lts {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-sodium-soft);
+    letter-spacing: 0.04em;
+  }
+  .kk-disclosure {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-dim);
+    border: 1px dashed var(--color-line);
+    border-radius: 7px;
+    padding: 6px 9px;
+    margin: 10px 0 12px;
+  }
+  .kk-msg {
+    margin: 9px 0;
+    max-width: 82%;
+    padding: 9px 13px;
+    border-radius: 12px;
+    font-size: 14.5px;
+    line-height: 1.45;
+  }
+  .kk-msg .who {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    margin-bottom: 3px;
+  }
+  .kk-klant {
+    background: var(--color-panel-2);
+    border: 1px solid var(--color-line);
+    border-bottom-left-radius: 4px;
+  }
+  .kk-recep {
+    background: rgba(255, 184, 77, 0.12);
+    border: 1px solid rgba(255, 184, 77, 0.32);
+    color: #ffe9c7;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+  }
+  .kk-recep .who {
+    color: var(--color-sodium);
+  }
+  .kk-typing {
+    display: inline-flex;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+  .kk-typing i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-dim);
+    animation: kk-blink 1.1s infinite;
+  }
+  .kk-typing i:nth-child(2) {
+    animation-delay: 0.18s;
+  }
+  .kk-typing i:nth-child(3) {
+    animation-delay: 0.36s;
+  }
+  @keyframes kk-blink {
+    0%,
+    60%,
+    100% {
+      opacity: 0.25;
+    }
+    30% {
+      opacity: 1;
+    }
+  }
+  .kk-stamp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    padding: 11px 13px;
+    background: rgba(99, 211, 171, 0.1);
+    border: 1px solid rgba(99, 211, 171, 0.34);
+    border-radius: 10px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-confirm);
+  }
+  .kk-stamp .tick {
+    width: 19px;
+    height: 19px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-confirm);
+    color: var(--color-night);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .kk-stamp .detail {
+    color: #bfe7d7;
+  }
+
+  /* entrance for live rows (JS re-triggers .kk-rise on reveal) */
+  .kk-reveal,
+  .kk-rise {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: kk-rise 0.5s ease forwards;
+  }
+  @keyframes kk-rise {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  /* Hidden states must beat the base display of .kk-msg/.kk-stamp (higher specificity). */
+  .kk-msg[hidden],
+  .kk-stamp[hidden] {
+    display: none;
+  }
+
+  /* ---- ledger strip ---- */
+  .kk-ledger {
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+    background: rgba(0, 0, 0, 0.12);
+  }
+  .kk-ledger-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .kk-ledger-grid .cell {
+    padding: 26px 24px;
+    border-right: 1px solid var(--color-line);
+  }
+  .kk-ledger-grid .cell:last-child {
+    border-right: 0;
+  }
+  @media (max-width: 760px) {
+    .kk-ledger-grid {
+      grid-template-columns: 1fr;
+    }
+    .kk-ledger-grid .cell {
+      border-right: 0;
+      border-bottom: 1px solid var(--color-line);
+    }
+    .kk-ledger-grid .cell:last-child {
+      border-bottom: 0;
+    }
+  }
+  .kk-cell-ts {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    color: var(--color-sodium);
+    letter-spacing: -0.01em;
+  }
+  .kk-cell-ev {
+    margin-top: 6px;
+    font-weight: 600;
+    font-size: 15.5px;
+  }
+  .kk-cell-aside {
+    margin-top: 3px;
+    font-size: 14px;
+    color: var(--color-dim);
+  }
+
+  /* ---- duty cards ---- */
+  .kk-duty {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    padding: 24px;
+  }
+  .kk-duty .tag {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-sodium-soft);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .kk-duty h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.22rem;
+    margin: 14px 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .kk-duty p {
+    margin: 0;
+    color: var(--color-dim);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* ---- cost receipt ---- */
+  .kk-receipt {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    padding: 8px 22px;
+    font-family: var(--font-mono);
+  }
+  .kk-receipt .line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--color-line);
+  }
+  .kk-receipt .line:last-child {
+    border-bottom: 0;
+  }
+  .kk-receipt .k {
+    color: var(--color-dim);
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+  }
+  .kk-receipt .v {
+    font-size: 19px;
+    color: var(--color-chalk);
+  }
+  .kk-receipt .v.bad {
+    color: var(--color-sodium);
+  }
+  .kk-receipt .total {
+    padding: 18px 0;
+  }
+  .kk-receipt .total .k {
+    color: var(--color-chalk);
+    font-size: 14px;
+  }
+  .kk-receipt .total .v {
+    color: var(--color-confirm);
+    font-size: 16px;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  /* ---- transparency panel ---- */
+  .kk-trans {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-left: 3px solid var(--color-sodium);
+    border-radius: var(--radius-card);
+    padding: 30px 32px;
+    max-width: 760px;
+  }
+  .kk-trans .quote {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-sodium-soft);
+    border: 1px dashed var(--color-line);
+    border-radius: 8px;
+    padding: 10px 13px;
+    display: inline-block;
+    margin-bottom: 18px;
+  }
+  .kk-trans p {
+    color: #cdd8d5;
+  }
+
+  /* ---- final cta ---- */
+  .kk-final-h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-size: clamp(2.2rem, 5.6vw, 4rem);
+    line-height: 1;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .kk-final-h2 .on {
+    color: var(--color-sodium);
+  }
+</style>
+
+<script>
+  // Live dispatch panel: klant → typing → reply → INGEPLAND stamp.
+  // Bound to astro:page-load so it survives client-side (ClientRouter) nav and
+  // re-runs when the visitor returns to the home page. Reduced-motion jumps
+  // straight to the resting state. The panel is decorative (role=img with a
+  // summary label), so the no-JS state (typing shown, reply/stamp hidden)
+  // matches the approved concept.
+  function initDispatch() {
+    const panel = document.getElementById('kk-dispatch')
+    if (!panel) return
+    const typing = document.getElementById('kk-typing')
+    const reply = document.getElementById('kk-reply')
+    const stamp = document.getElementById('kk-stamp')
+    if (!typing || !reply || !stamp) return
+
+    const reduce =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const reveal = (el: HTMLElement) => {
+      el.hidden = false
+      el.classList.remove('kk-rise')
+      void el.offsetWidth // force reflow so the entrance animation restarts
+      el.classList.add('kk-rise')
+    }
+
+    if (reduce) {
+      typing.hidden = true
+      reply.hidden = false
+      stamp.hidden = false
+      return
+    }
+
+    // rewind to the start of the shift, then play it out
+    typing.hidden = false
+    reply.hidden = true
+    stamp.hidden = true
+    window.setTimeout(() => {
+      typing.hidden = true
+      reveal(reply)
+    }, 2400)
+    window.setTimeout(() => reveal(stamp), 3100)
+  }
+
+  document.addEventListener('astro:page-load', initDispatch)
+</script>
