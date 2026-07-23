@@ -1,8 +1,10 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** + **G2 (conversion pages)** + **G3 (`[stad]/[vak]` + `r/[slug]`)** complete 2026-07-23.
+**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** + **G2 (conversion pages)** + **G3 (`[stad]/[vak]` + `r/[slug]`)** + **G4 (reading variant)** complete 2026-07-23.
 Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev` (apex still old design).
-Next = Phase 2 **G4 (reading variant)** — blog/gidsen/legal/404 in the calm document layout.
+**Phase 2 is DONE — all page groups migrated.** Next = Phase 3 (cross-cutting audit + polish):
+migrate the 3 non-page components (DashboardMock/LeadForm/RingingPhone) + delete the deprecated
+`@theme` kraan tokens so `grep -r -- '--color-kraan' src` is empty, then the wholesale audit.
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -159,10 +161,17 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
       locked G1/G2 rule table -> same deterministic transform, RULES copied verbatim, zero new
       rules, zero residuals. Dashboard's `<script>` innerHTML classes migrated by the same
       substring pass. 65 + 40 kraan- -> 0. Build green, astro check 0/0, eyeballed.
-- [ ] **G4 Reading variant** — blog/[slug], blog/index, gidsen/[slug], gidsen/index, and the
-      6 legal pages (privacy, dpa, sla, voorwaarden, subprocessors, ai-disclosure) + 404.
-      Calm document layout in the dark palette, no animated hero.
+- [x] **G4 Reading variant** — DONE 2026-07-23 (commit a072182). blog/[slug], blog/index,
+      gidsen/[slug], gidsen/index, 404, and the 6 legal pages (privacy, dpa, sla, voorwaarden,
+      subprocessors, ai-disclosure) = 11 files. Calm document layout in the dark palette, no
+      animated hero (these pages had none to begin with). Same deterministic transform; 3
+      structural specials (alt stone-100 sections -> recessed band; bg-white/cream cards ->
+      panel; inline buttons -> `.btn` primitives), rest via the locked `--color-kraan-*` map.
+      Reading-variant restraint: dim kickers left muted, NOT upgraded to sodium eyebrows.
+      0 kraan-/bg-white/text-white in all 11; build green, astro check 0/0, eyeballed all 6
+      page types desktop + 320px.
 - **■ Checkpoint after each group** — commit, update log, clear context between groups.
+  **All Phase 2 groups (G1-G4) now DONE.**
 
 ### Phase 3 — Cross-cutting audit + polish (serial)
 - [ ] Run **web-design-guidelines** across the whole rebuilt site; fix findings.
@@ -383,3 +392,45 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   layout, no animated hero — blog/gidsen indexes + [slug] pages + 6 legal pages + 404). Preview
   alias NOT redeployed this session (still home-only) — redeploy at a group boundary when the
   founder wants to review the fuller migration.
+- **2026-07-23 — Phase 2 G4 complete (commit a072182) -> Phase 2 DONE.** The 11 reading-variant
+  pages migrated: blog/index, blog/[slug], gidsen/index, gidsen/[slug], 404, + 6 legal (privacy,
+  dpa, sla, voorwaarden, subprocessors, ai-disclosure). **These are already calm document layouts
+  (no hero, no animation), so "reading variant" = a straight token migration — no energy to
+  strip.** Same deterministic substring transform (`scratchpad/reskin_g4.py`); the locked
+  `--color-kraan-*` map handled the bulk (works identically on Tailwind arbitrary classes AND raw
+  `var(--color-kraan-*)` in blog/[slug]'s `<style is:global>` prose block). **3 structural specials,
+  run BEFORE the generic pass (they hold kraan tokens the generic map would otherwise rewrite):**
+  (1) full-width alt `stone-100` **sections** (gidsen/index card-grid band + gidsen/[slug]
+  article-card band) -> the locked recessed pattern `border-y border-(--color-line)
+  bg-[rgba(0,0,0,0.14)]`; small `stone-100` callouts/blockquotes/table-headers -> raised `panel`
+  (context split: sections recess, elements raise). (2) `bg-white`/`bg-cream` card surfaces ->
+  `panel`. (3) inline blue/white button anchors (404 x3, gidsen/[slug] x2) -> shared `.btn`
+  primitives (`btn-primary`/`btn-ghost`, +`btn-lg` on the two section CTAs) — this is what keeps
+  primary CTAs **night-on-sodium** and dodges the G2 white-on-amber trap (a blanket bg-blue->sodium
+  while keeping text-white would have failed contrast). **Reading-variant restraint (deliberate):**
+  the dim section kickers ("JURIDISCH", "FOUT 404", blog/gidsen meta) were left as muted micro
+  labels and NOT upgraded to sodium `.eyebrow`s — the runbook explicitly wants legal/blog/gidsen
+  *calm* vs the marketing pages' full energy. Copy untouched (class-only). `.prose-legal` turned
+  out to be a marker class with **no CSS rule** (all legal styling is inline Tailwind utilities on
+  each element), so nothing hidden there; `.prose-blog` DOES have a global `<style>` block, migrated
+  by the same substring pass. Invariants: 0 `kraan-`/`bg-white`/`text-white` in all 11 files; the
+  `Klantkraan-dienst`/`-receptionist` brand copy preserved (filter by `--color-kraan`, not bare
+  `kraan-`); no art.50 chat surface on any of these page types (ai-disclosure is the legal doc
+  *about* art.50 — content untouched); €299/€499 parity in blog/[slug]'s pricing table (copy
+  untouched); no founder name (footer "De oprichter"). Build green (84 files, ~1.8s), astro check
+  0/0. Eyeballed all 6 page types on the built `dist/`: 404 (buttons night-on-sodium + ghost),
+  blog/index + gidsen/index (panel cards; gidsen on the recessed band), blog/[slug] (wide 4-col
+  pricing table contained in a panel/line box, sodium links), gidsen/[slug] (recessed section +
+  panel article card + btn CTAs), legal/privacy (AVG table with `line` hairline dividers) —
+  desktop + 320px, zero horizontal overflow everywhere. **Gotcha:** the http.server must be pointed
+  at `dist/` (`--directory dist`) — serving from the marketing-site root returned python's own 404
+  for every path (the first screenshot pass captured that, not the pages). The Playwright script
+  still has to live in the marketing-site dir for ESM to resolve `playwright`. **Site-wide
+  `--color-kraan` burn-down: 266 -> 73**, and every remaining ref is now NON-PAGE:
+  `global.css` deprecated `@theme` tokens (11), `DashboardMock.astro` (31), `LeadForm.astro` (30),
+  `RingingPhone.astro` (1). **Phase 2 is fully done — all page groups migrated.** **NEXT = Phase 3**
+  (cross-cutting audit + polish): migrate those 3 non-page components + delete the 11 deprecated
+  `@theme` kraan tokens so `grep -r -- '--color-kraan' src` is empty (the 3 `Klantkraan-` brand-copy
+  hits stay), then the wholesale web-design-guidelines audit + the deferred site-wide gaps
+  (`text-wrap:balance` on headings, curly quotes / legal-copy em-dashes per TODO §G). Preview alias
+  still home-only — redeploy for the founder's fuller review at the start of Phase 3 / before cutover.
