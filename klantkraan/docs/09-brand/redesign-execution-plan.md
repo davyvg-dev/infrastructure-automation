@@ -126,10 +126,9 @@ Ralph gate for every page: **build → `astro check` → eyeball (Playwright scr
 - [x] 1.1 Rebuild `index.astro` (NL) to near-parity with the concept, on the foundation.
       frontend-design skill used for the hero fidelity. (commit faf1e29)
 - [x] 1.2 Audit with **web-design-guidelines** skill; fix findings. (commit cd83615)
-- [ ] 1.3 Screenshot (desktop + 320px) for the founder. **Founder approval gate** — this is
-      the template; do not fan out until approved. **← PAUSED HERE. Screenshots produced +
-      shown to the founder; awaiting the go before 1.4/1.5.**
-- [ ] 1.4 Build `/en/index.astro` + `/es/index.astro` twins (copy already exists).
+- [x] 1.3 Screenshot (desktop + 320px) for the founder. **Founder approval gate — APPROVED
+      2026-07-23** ("That's all good"). The template is locked; safe to fan out.
+- [ ] 1.4 Build `/en/index.astro` + `/es/index.astro` twins (copy already exists). **← NEXT.**
 - [ ] 1.5 First **preview deploy**; record alias URL in the log; send to founder.
 - **■ Checkpoint 1** — commit "home NL/EN/ES + preview live", clear context.
 
@@ -222,6 +221,12 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   by raising specificity via a `[data-astro-cid]` attribute — a scoped `.kk-stamp{display:flex}`
   beats the UA `[hidden]{display:none}`, so I hide with `.kk-msg[hidden],.kk-stamp[hidden]{display:none}`
   (higher specificity than the base rule). (2) No-JS state = concept's (typing shown, reply/stamp
-  hidden) — acceptable because the panel is decorative. **PAUSED at 1.3 (founder approval gate).**
-  Next session (after founder go): 1.4 EN/ES twins from `/en/index.astro` + `/es/index.astro` copy,
-  1.5 first preview deploy → `redesign` alias, record the alias URL here.
+  hidden) — acceptable because the panel is decorative. (3) SendUserFile rejects a full-page 320px
+  screenshot (668×12838, ~1:19 aspect) with a 400 — send a viewport-height crop instead.
+- **2026-07-23 — 1.3 founder approval gate PASSED.** Founder reviewed the desktop + mobile
+  screenshots and approved ("That's all good"). The home template is locked. **NEXT = 1.4:** build
+  `/en/index.astro` + `/es/index.astro` twins (EN/ES home copy already exists in those files — reskin
+  them to match the NL rebuild), then 1.5 first preview deploy (`pnpm build` →
+  `pnpm dlx wrangler@4 pages deploy ./dist --branch=redesign --project-name=klantkraan-marketing`),
+  capture the alias URL wrangler prints and record it here, send to the founder. Apex stays on the
+  old design (preview alias only).
