@@ -1,0 +1,21 @@
+Self-hosted webfont subsets — SIL Open Font License 1.1
+=======================================================
+
+The .woff2 files in this directory are latin + latin-ext subsets served by
+Google Fonts, redistributed here under the SIL Open Font License, Version 1.1.
+Each family is licensed OFL 1.1 by its authors; the full license text and the
+original sources are:
+
+  Bricolage Grotesque  — © Atelier Triay (Mathieu Triay)
+      https://github.com/ateliertriay/bricolage
+  Hanken Grotesk       — © Alfredo Marco Pradil
+      https://github.com/hanken-fonts/HankenGrotesk
+  Space Mono           — © Colophon Foundry (Google Fonts)
+      https://fonts.google.com/specimen/Space+Mono/about
+
+OFL 1.1 permits redistribution and use, including embedding, provided the fonts
+are not sold on their own and the license accompanies them. Full license text:
+https://openfontlicense.org/open-font-license-official-text/
+
+Files are named <family>-<weight>-<subset>.woff2 and wired up in
+src/styles/fonts.css. Regenerate with scratchpad/fetch_fonts.py if needed.
