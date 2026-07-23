@@ -123,12 +123,12 @@ Ralph gate for every page: **build → `astro check` → eyeball (Playwright scr
   Safe to clear context. Next session: Phase 1 (home).
 
 ### Phase 1 — Reference page: HOME (serial, main loop) — proves the whole system
-- [ ] 1.1 Rebuild `index.astro` (NL) to near-parity with the concept, on the foundation.
-      Invoke the **frontend-design** skill here — it owns the hero fidelity + any gaps the
-      concept leaves.
-- [ ] 1.2 Audit with **web-design-guidelines** skill; fix findings.
+- [x] 1.1 Rebuild `index.astro` (NL) to near-parity with the concept, on the foundation.
+      frontend-design skill used for the hero fidelity. (commit faf1e29)
+- [x] 1.2 Audit with **web-design-guidelines** skill; fix findings. (commit cd83615)
 - [ ] 1.3 Screenshot (desktop + 320px) for the founder. **Founder approval gate** — this is
-      the template; do not fan out until approved.
+      the template; do not fan out until approved. **← PAUSED HERE. Screenshots produced +
+      shown to the founder; awaiting the go before 1.4/1.5.**
 - [ ] 1.4 Build `/en/index.astro` + `/es/index.astro` twins (copy already exists).
 - [ ] 1.5 First **preview deploy**; record alias URL in the log; send to founder.
 - **■ Checkpoint 1** — commit "home NL/EN/ES + preview live", clear context.
@@ -209,3 +209,19 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   Next: Phase 1 — rebuild `index.astro` with the frontend-design skill, build the signature
   dispatch-log hero + ledger + receipt here, founder approval gate, then EN/ES twins + first
   preview deploy.
+- **2026-07-23 — Phase 1.1 + 1.2 done (commits faf1e29, cd83615).** NL `index.astro` rebuilt on
+  the foundation: live dispatch-log hero (klant → typing → reply → INGEPLAND stamp), ledger strip,
+  duty cards, cost receipt, art. 50 transparency panel, final CTA. Signatures in a scoped `<style>`
+  (kk-* classes, `--color-*`/`--font-*` tokens); universal chrome/buttons/eyebrow reused from
+  Phase 0. Copy de-AI'd on the way in (em-dashes → punctuation). Panel is decorative (role=img +
+  summary label); animation binds to `astro:page-load` (view-transition safe) and honours
+  reduced-motion (verified: jumps to resting state). web-design-guidelines audit fixes: scroll-mt
+  on jump-target sections, text-wrap:balance on headings, nbsp on "artikel 50", `color-scheme:dark`
+  on html (global.css), touch-action+tap-highlight on `.btn` (components.css). Build green, astro
+  check 0 errors, eyeballed desktop + 320px + reduced-motion. **Gotchas:** (1) Astro scopes `<style>`
+  by raising specificity via a `[data-astro-cid]` attribute — a scoped `.kk-stamp{display:flex}`
+  beats the UA `[hidden]{display:none}`, so I hide with `.kk-msg[hidden],.kk-stamp[hidden]{display:none}`
+  (higher specificity than the base rule). (2) No-JS state = concept's (typing shown, reply/stamp
+  hidden) — acceptable because the panel is decorative. **PAUSED at 1.3 (founder approval gate).**
+  Next session (after founder go): 1.4 EN/ES twins from `/en/index.astro` + `/es/index.astro` copy,
+  1.5 first preview deploy → `redesign` alias, record the alias URL here.
