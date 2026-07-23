@@ -1,8 +1,8 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** complete 2026-07-23.
+**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** + **G2 (conversion pages)** complete 2026-07-23.
 Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev` (apex still old design).
-Next = Phase 2 **G2 (conversion pages)** — prijzen, rekentool, demo, voor-wie, over.
+Next = Phase 2 **G3 (`[stad]/[vak]` template)** — the programmatic long tail (`[stad]/[vak]`, `r/[slug]`).
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -147,8 +147,12 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
       each duplicate the section markup inline. So G1 = 9 shared components + 3 primitives + 6
       self-contained NL + 8 self-contained EN = 26 files (no ES trade pages — cornerstones stay
       nl+en). All clean of kraan-. Build green, audit clean, eyeballed.
-- [ ] **G2 Conversion pages** — prijzen, rekentool, demo, voor-wie, over (+ EN/ES twins).
-      `/demo` keeps the live embedded chatbot; restyle its container only.
+- [x] **G2 Conversion pages** — DONE 2026-07-23 (commits 055b242 + 42609b9). prijzen,
+      rekentool, demo, voor-wie, over (NL + EN + ES = 15 files) + the linked
+      `demo/sportscholen` (NL, folded in so the demo click-through isn't half-migrated) =
+      16 files. Same deterministic transform as G1 (`scratchpad/reskin_conversion.py`),
+      locked token/pattern map. `/demo` + `/demo/sportscholen` keep the live embedded
+      chatbot + mobile overlay (restyled the shell only, iframe/overlay untouched).
 - [ ] **G3 `[stad]/[vak]` template** — one file, the whole programmatic long tail.
 - [ ] **G4 Reading variant** — blog/[slug], blog/index, gidsen/[slug], gidsen/index, and the
       6 legal pages (privacy, dpa, sla, voorwaarden, subprocessors, ai-disclosure) + 404.
@@ -291,3 +295,45 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   pages** (prijzen, rekentool, demo, voor-wie, over — NL + EN + ES; `/demo` keeps the live embedded
   chatbot, restyle its container only). Preview alias NOT redeployed this session (still shows home-
   only migration); redeploy at G2 end or when the founder wants to review trade pages.
+- **2026-07-23 — Phase 2 G2 complete (commits 055b242 conversion set, 42609b9 sportschool demo).**
+  All conversion pages reskinned to dispatch-dark: prijzen, rekentool, demo, voor-wie, over in
+  NL/EN/ES (15 files) + `demo/sportscholen` (NL, folded in — `/demo` links to it, so leaving it
+  light would break the click-through). **Method = G1's exact deterministic transform**
+  (`scratchpad/reskin_conversion.py`): compound/structural rules first (buttons->`.btn`
+  primitives, full-blue + stone-100 sections->recessed `border-y border-(--color-line)
+  bg-[rgba(0,0,0,0.14)]`, eyebrows, signature panels, form inputs, badges), generic token
+  catch-alls last (ink->chalk, stone->dim, blue/rust->sodium, stone-300->line, white->panel).
+  Confirmed the 5 page types are structurally analogous to trades; twins share identical
+  language-neutral class strings, so one rule table migrated all three locales at once (verified:
+  82 distinct kraan class strings, each appearing in 3s/6s/9s/12s/15s across locales). **Page-type
+  gaps the concept never designed, solved once each:** (1) rekentool form inputs -> dark inset
+  (`bg-[rgba(0,0,0,0.25)]` + explicit `text-(--color-chalk)` — native inputs don't inherit body
+  color); results aside keeps its highlight via `border-(--color-sodium)`; calculator JS untouched,
+  live results verified (582 / EUR86.427 / payback <1 mnd). (2) prijzen "aanrader" badge + over "K"
+  avatar -> `bg-(--color-sodium)` with `text-(--color-night)` (chalk-on-sodium ~1.3:1 fails; night-
+  on-sodium passes). (3) demo art.50 disclosure card -> the home `.kk-trans` signature (panel + 1px
+  line + 3px sodium left rail + mono dashed `sodium-soft` quote); live chat iframe + full-screen
+  mobile overlay (functional widget) left alone, only the shell restyled. web-design-guidelines
+  audit: global `:focus-visible` (sodium ring) + `color-scheme:dark` already cover the new form
+  surface; one fix applied = rekentool number inputs gained `inputmode="numeric"` +
+  `autocomplete="off"` (all 3 locales). `text-wrap:balance` on headings + curly quotes in body copy
+  are site-wide gaps -> deferred to Phase 3's wholesale pass (do them as single global rules, not
+  16-file churn). Invariants verified: art.50 disclosure intact (demo + sportschool, all locales),
+  price parity EUR299/EUR499 across NL/EN/ES, no founder name, no rendered em-dashes (transform is
+  class-only, copy untouched), zero kraan-/bg-white/text-white in all 16 files. Build green (84
+  files), astro check 0/0, eyeballed prijzen/rekentool/demo/sport-demo desktop + prijzen 320px +
+  es/prijzen (ES accents render, no tofu, no horizontal overflow). **Gotchas:** (1) RULE ORDERING
+  BIT ONCE — the CTA-inner `font-display text-h1 text-white`->chalk rule is a substring of the over
+  avatar's class string, so run first it turned the avatar chalk-on-sodium (contrast bug). Fix: the
+  badge/avatar rules (which need night text) MUST precede any `text-white` catch-all. Lesson for
+  G3/G4: order specific-with-shared-suffix rules before their generic suffix. (2) zsh does NOT
+  word-split unquoted `$VAR` (bash does) — passing a built-up file list via `$TWINS` sent the whole
+  string as one arg; list files explicitly or use `${=VAR}`. (3) Playwright scripts must live in the
+  marketing-site dir (ESM resolves `playwright` from local node_modules, not `/tmp`); serve `dist/`
+  with `python3 -m http.server`. **Site-wide kraan- burn-down: ~1009 -> 424 refs across 18 files.**
+  Remaining = G3 (`[stad]/[vak]` 65, `r/[slug]` 40), G4 (6 legal ~110, blog/[slug] 24 + index 10,
+  gidsen/[slug] 22 + index 9, 404 10), plus non-page components (DashboardMock 31, LeadForm 30,
+  RingingPhone 2) + deprecated `@theme` kraan tokens in global.css (13) — clean those with their
+  owning group / at final sweep. **NEXT = G3 `[stad]/[vak]` template** (one file drives the whole
+  programmatic city×trade long tail; also `r/[slug]`). Preview alias NOT redeployed this session
+  (still home-only) — redeploy at a group boundary when the founder wants to review.
