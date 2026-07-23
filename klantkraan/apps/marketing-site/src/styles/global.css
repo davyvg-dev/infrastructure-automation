@@ -83,6 +83,9 @@
     font-family: var(--font-sans);
     background-color: var(--color-night);
     color: var(--color-chalk);
+    /* The whole site is dark now, so native UI (scrollbars, form controls,
+     * the caret) should render dark too. */
+    color-scheme: dark;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     /* Mobile safety net: never let a stray wide element widen the layout
