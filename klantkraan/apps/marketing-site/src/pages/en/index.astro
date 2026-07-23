@@ -169,27 +169,32 @@ import { waLink } from '../../data/contact'
           Every unanswered question is a job walking to your competitor.
         </h2>
         <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">
-          The numbers aren't meant to be dramatic. They're just the sum of a phone ringing while
-          your hands are full.
+          This is an example. Run it on your own numbers and you'll see exactly what a month of
+          missed enquiries costs you.
         </p>
       </div>
-      <div class="kk-receipt" aria-label="Cost overview">
+      <div class="kk-receipt" aria-label="Example calculation of lost revenue">
+        <p class="kk-receipt-cap">Example · an average month</p>
         <div class="line">
-          <span class="k">Missed calls</span>
-          <span class="v bad">28%</span>
-        </div>
-        <div class="line">
-          <span class="k">Value per missed enquiry</span>
-          <span class="v bad">€450</span>
+          <span class="k">Enquiries per month</span>
+          <span class="v">20</span>
         </div>
         <div class="line">
-          <span class="k">Hours you're unreachable</span>
-          <span class="v">most of them</span>
+          <span class="k">Missed (1 in 4)</span>
+          <span class="v">5</span>
         </div>
-        <div class="line total">
-          <span class="k">With the light on</span>
-          <span class="v">every question answered, 24/7</span>
+        <div class="line">
+          <span class="k">× value per job</span>
+          <span class="v">€450</span>
         </div>
+        <div class="line result">
+          <span class="k">Lost revenue</span>
+          <span class="v bad">€2,250 /mo</span>
+        </div>
+        <a class="kk-receipt-cta" href="/en/rekentool/">
+          Run it on your own numbers
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -593,19 +598,48 @@ import { waLink } from '../../data/contact'
   .kk-receipt .v.bad {
     color: var(--color-sodium);
   }
-  .kk-receipt .total {
-    padding: 18px 0;
+  .kk-receipt-cap {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    padding-top: 14px;
+    margin: 0;
   }
-  .kk-receipt .total .k {
+  .kk-receipt .line.result {
+    border-bottom: 0;
+    padding-top: 18px;
+  }
+  .kk-receipt .line.result .k {
     color: var(--color-chalk);
     font-size: 14px;
   }
-  .kk-receipt .total .v {
-    color: var(--color-confirm);
-    font-size: 16px;
+  .kk-receipt .line.result .v {
+    font-size: 23px;
+    font-weight: 700;
+  }
+  .kk-receipt-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px dashed var(--color-line);
+    padding: 16px 0 8px;
     font-family: var(--font-sans);
+    font-size: 14px;
     font-weight: 600;
-    text-align: right;
+    color: var(--color-sodium);
+    text-decoration: none;
+  }
+  .kk-receipt-cta span {
+    transition: transform 0.15s ease;
+  }
+  .kk-receipt-cta:hover {
+    color: var(--color-sodium-soft);
+  }
+  .kk-receipt-cta:hover span {
+    transform: translateX(3px);
   }
 
   /* ---- transparency panel ---- */

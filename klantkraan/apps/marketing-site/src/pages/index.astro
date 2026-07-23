@@ -168,27 +168,32 @@ import { waLink } from '../data/contact'
           Elke onbeantwoorde vraag is een opdracht die naar de concurrent loopt.
         </h2>
         <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">
-          De cijfers zijn niet dramatisch bedoeld. Ze zijn gewoon de optelsom van een telefoon die
-          overgaat terwijl uw handen vol zitten.
+          Dit is een voorbeeld. Reken het na met uw eigen aantallen, dan ziet u precies wat een
+          maand gemiste aanvragen u kost.
         </p>
       </div>
-      <div class="kk-receipt" aria-label="Kostenoverzicht">
+      <div class="kk-receipt" aria-label="Voorbeeldberekening van misgelopen omzet">
+        <p class="kk-receipt-cap">Voorbeeld · een gemiddelde maand</p>
         <div class="line">
-          <span class="k">Gemiste oproepen</span>
-          <span class="v bad">28%</span>
-        </div>
-        <div class="line">
-          <span class="k">Waarde per gemiste aanvraag</span>
-          <span class="v bad">€450</span>
+          <span class="k">Aanvragen per maand</span>
+          <span class="v">20</span>
         </div>
         <div class="line">
-          <span class="k">Uren dat u onbereikbaar bent</span>
-          <span class="v">het grootste deel</span>
+          <span class="k">Gemist (1 op de 4)</span>
+          <span class="v">5</span>
         </div>
-        <div class="line total">
-          <span class="k">Met het licht aan</span>
-          <span class="v">elke vraag beantwoord, 24/7</span>
+        <div class="line">
+          <span class="k">× waarde per klus</span>
+          <span class="v">€450</span>
         </div>
+        <div class="line result">
+          <span class="k">Misgelopen omzet</span>
+          <span class="v bad">€2.250 /mnd</span>
+        </div>
+        <a class="kk-receipt-cta" href="/rekentool/">
+          Reken met uw eigen cijfers
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -592,19 +597,48 @@ import { waLink } from '../data/contact'
   .kk-receipt .v.bad {
     color: var(--color-sodium);
   }
-  .kk-receipt .total {
-    padding: 18px 0;
+  .kk-receipt-cap {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    padding-top: 14px;
+    margin: 0;
   }
-  .kk-receipt .total .k {
+  .kk-receipt .line.result {
+    border-bottom: 0;
+    padding-top: 18px;
+  }
+  .kk-receipt .line.result .k {
     color: var(--color-chalk);
     font-size: 14px;
   }
-  .kk-receipt .total .v {
-    color: var(--color-confirm);
-    font-size: 16px;
+  .kk-receipt .line.result .v {
+    font-size: 23px;
+    font-weight: 700;
+  }
+  .kk-receipt-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px dashed var(--color-line);
+    padding: 16px 0 8px;
     font-family: var(--font-sans);
+    font-size: 14px;
     font-weight: 600;
-    text-align: right;
+    color: var(--color-sodium);
+    text-decoration: none;
+  }
+  .kk-receipt-cta span {
+    transition: transform 0.15s ease;
+  }
+  .kk-receipt-cta:hover {
+    color: var(--color-sodium-soft);
+  }
+  .kk-receipt-cta:hover span {
+    transform: translateX(3px);
   }
 
   /* ---- transparency panel ---- */
