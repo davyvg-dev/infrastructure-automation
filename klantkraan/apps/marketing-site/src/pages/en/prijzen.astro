@@ -102,8 +102,8 @@ const serviceSchema = {
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-kraan-ink)">Pricing</h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+      <h1 class="font-display text-hero text-(--color-chalk)">Pricing</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
         Cancel monthly, first month 50% off. One-time setup €249 (waived for pilot customers).
         All amounts exclude 21% VAT.
       </p>
@@ -111,35 +111,35 @@ const serviceSchema = {
   </section>
 
   <!-- 2. Tier cards (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 md:grid-cols-2">
       {
         tiers.map((tier) => (
           <article
-            class={`rounded-(--radius-card) border p-5 md:p-6 ${tier.highlight ? 'border-(--color-kraan-blue) bg-white' : 'border-(--color-kraan-stone-300) bg-white'}`}
+            class={`rounded-(--radius-card) border p-5 md:p-6 ${tier.highlight ? 'border-(--color-sodium) bg-(--color-panel)' : 'border-(--color-line) bg-(--color-panel)'}`}
           >
             <header class="flex items-baseline justify-between">
-              <h2 class="font-display text-h2 text-(--color-kraan-ink)">{tier.name}</h2>
+              <h2 class="font-display text-h2 text-(--color-chalk)">{tier.name}</h2>
               {tier.highlight && (
-                <span class="rounded-(--radius-button) bg-(--color-kraan-rust) px-2 py-1 text-micro text-white">
+                <span class="rounded-(--radius-button) bg-(--color-sodium) px-2 py-1 text-micro text-(--color-night)">
                   recommended
                 </span>
               )}
             </header>
-            <p class="mt-4 font-display text-h1 text-(--color-kraan-blue)">
+            <p class="mt-4 font-display text-h1 text-(--color-sodium)">
               €{tier.price}
-              <span class="text-body text-(--color-kraan-stone-500)"> / mo</span>
+              <span class="text-body text-(--color-dim)"> / mo</span>
             </p>
-            <p class="mt-1 font-mono text-small text-(--color-kraan-stone-500)">
+            <p class="mt-1 font-mono text-small text-(--color-dim)">
               ≈ €{tier.dayPrice} per day
             </p>
             {tier.priceNote && (
-              <p class="mt-2 text-small text-(--color-kraan-stone-500)">{tier.priceNote}</p>
+              <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>
             )}
-            <p class="mt-3 text-body text-(--color-kraan-stone-700)">{tier.blurb}</p>
+            <p class="mt-3 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
               href="/en/demo/"
-              class={`mt-6 inline-block rounded-(--radius-button) px-5 py-3 text-body font-medium no-underline ${tier.highlight ? 'bg-(--color-kraan-blue) text-white hover:bg-(--color-kraan-blue-700)' : 'border border-(--color-kraan-blue) text-(--color-kraan-blue) hover:bg-(--color-kraan-stone-100)'}`}
+              class={`mt-6 btn btn-lg ${tier.highlight ? 'btn-primary' : 'btn-ghost'}`}
             >
               Try the demo
             </a>
@@ -152,23 +152,23 @@ const serviceSchema = {
   <!-- 3. Feature comparison (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">What's included</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">What's included in each plan</h2>
+      <p class="eyebrow">What's included</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">What's included in each plan</h2>
 
       <div class="mt-6 hidden md:block">
         <table class="w-full border-collapse text-body">
           <thead>
-            <tr class="border-b border-(--color-kraan-stone-300) text-left">
-              <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Feature</th>
-              <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Chat</th>
-              <th class="py-3 pr-4 font-display text-h3 text-(--color-kraan-ink)">Compleet</th>
+            <tr class="border-b border-(--color-line) text-left">
+              <th class="py-3 pr-4 font-display text-h3 text-(--color-chalk)">Feature</th>
+              <th class="py-3 pr-4 font-display text-h3 text-(--color-chalk)">Chat</th>
+              <th class="py-3 pr-4 font-display text-h3 text-(--color-chalk)">Compleet</th>
             </tr>
           </thead>
           <tbody>
             {
               features.map((row) => (
-                <tr class="border-b border-(--color-kraan-stone-300)">
-                  <td class="py-3 pr-4 text-(--color-kraan-stone-700)">{row.feature}</td>
+                <tr class="border-b border-(--color-line)">
+                  <td class="py-3 pr-4 text-(--color-dim)">{row.feature}</td>
                   <td class="py-3 pr-4">{row.chat}</td>
                   <td class="py-3 pr-4">{row.compleet}</td>
                 </tr>
@@ -181,16 +181,16 @@ const serviceSchema = {
       <ul class="mt-6 space-y-4 md:hidden">
         {
           features.map((row) => (
-            <li class="rounded-(--radius-card) border border-(--color-kraan-stone-300) bg-white p-5">
-              <p class="font-display text-h3 text-(--color-kraan-ink)">{row.feature}</p>
+            <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+              <p class="font-display text-h3 text-(--color-chalk)">{row.feature}</p>
               <div class="mt-3 grid grid-cols-2 gap-2 text-small">
                 <div>
-                  <p class="text-(--color-kraan-stone-500)">Chat</p>
-                  <p class="mt-1 text-(--color-kraan-ink)">{row.chat}</p>
+                  <p class="text-(--color-dim)">Chat</p>
+                  <p class="mt-1 text-(--color-chalk)">{row.chat}</p>
                 </div>
                 <div>
-                  <p class="text-(--color-kraan-stone-500)">Compleet</p>
-                  <p class="mt-1 text-(--color-kraan-ink)">{row.compleet}</p>
+                  <p class="text-(--color-dim)">Compleet</p>
+                  <p class="mt-1 text-(--color-chalk)">{row.compleet}</p>
                 </div>
               </div>
             </li>
@@ -201,11 +201,11 @@ const serviceSchema = {
   </section>
 
   <!-- 4. Every plan + discount (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-2">
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Every plan includes</h2>
-        <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <h2 class="font-display text-h2 text-(--color-chalk)">Every plan includes</h2>
+        <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>Done-for-you setup and tuning. We build and connect everything for you.</li>
           <li>Cancel monthly (30 days' notice).</li>
           <li>First month 50% off.</li>
@@ -213,8 +213,8 @@ const serviceSchema = {
         </ul>
       </div>
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Discount for paying up front</h2>
-        <ul class="mt-4 space-y-2 text-body text-(--color-kraan-stone-700)">
+        <h2 class="font-display text-h2 text-(--color-chalk)">Discount for paying up front</h2>
+        <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>6 months up front: 15% off.</li>
           <li>12 months up front: 20% off, price locked for the whole year.</li>
           <li>VAT rate 21% (reverse-charged for customers outside the Netherlands).</li>
@@ -224,17 +224,17 @@ const serviceSchema = {
   </section>
 
   <!-- 5. Final CTA (blue) -->
-  <section class="bg-(--color-kraan-blue) py-10 md:py-16 text-white">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-white/70">Ready?</p>
-      <h2 class="mt-3 font-display text-h1 text-white">Ready to get started?</h2>
-      <p class="mt-4 max-w-2xl text-body text-white/90">
+      <p class="eyebrow">Ready?</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Ready to get started?</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         In a 20-minute demo we'll show exactly how Klantkraan works in your situation. No sales
         pitch, just the maths on your own numbers.
       </p>
       <a
         href="/en/demo/"
-        class="mt-6 inline-block rounded-(--radius-button) bg-white px-6 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-(--color-kraan-stone-100)"
+        class="mt-6 btn btn-primary btn-lg"
       >
         Try the demo
       </a>

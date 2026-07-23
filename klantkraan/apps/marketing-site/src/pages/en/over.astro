@@ -14,8 +14,8 @@ import { company } from '../../data/company'
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-kraan-ink)">About <span class="text-(--color-kraan-rust)">Klantkraan</span></h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">
+      <h1 class="font-display text-hero text-(--color-chalk)">About <span class="text-(--color-sodium)">Klantkraan</span></h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
         A done-for-you subscription so Dutch business owners never miss a customer enquiry again.
         Built by a single IT entrepreneur, hosted in the Netherlands, with no outside investors.
       </p>
@@ -23,35 +23,35 @@ import { company } from '../../data/company'
   </section>
 
   <!-- 2. Company + what we stand for (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">The company</h2>
-        <dl class="mt-4 text-body text-(--color-kraan-stone-700)">
-          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Trading name</dt>
+        <h2 class="font-display text-h2 text-(--color-chalk)">The company</h2>
+        <dl class="mt-4 text-body text-(--color-dim)">
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Trading name</dt>
           <dd>Klantkraan</dd>
-          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Legal entity</dt>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Legal entity</dt>
           <dd>T4 Software Consulting BV</dd>
-          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Chamber of Commerce (KvK) number</dt>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Chamber of Commerce (KvK) number</dt>
           <dd class="font-mono break-all">{company.kvk}</dd>
           {
             company.btw && (
               <Fragment>
-                <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">VAT number</dt>
+                <dt class="mt-3 text-small text-(--color-dim) first:mt-0">VAT number</dt>
                 <dd class="font-mono break-all">{company.btw}</dd>
               </Fragment>
             )
           }
-          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Registered in</dt>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Registered in</dt>
           <dd>The Netherlands</dd>
-          <dt class="mt-3 text-small text-(--color-kraan-stone-500) first:mt-0">Contact</dt>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Contact</dt>
           <dd><a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a></dd>
         </dl>
       </div>
 
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">What we stand for</h2>
-        <ul class="mt-4 space-y-3 text-body text-(--color-kraan-stone-700)">
+        <h2 class="font-display text-h2 text-(--color-chalk)">What we stand for</h2>
+        <ul class="mt-4 space-y-3 text-body text-(--color-dim)">
           <li>
             <strong>Hosted in the Netherlands.</strong> Customer data lives with Cloudflare EU + Neon EU + Hetzner
             FSN1. No US data export.
@@ -76,18 +76,18 @@ import { company } from '../../data/company'
   <!-- 3. Who builds Klantkraan (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">The founder</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">Who builds Klantkraan</h2>
+      <p class="eyebrow">The founder</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Who builds Klantkraan</h2>
 
       <div class="mt-8 grid gap-6 md:gap-10 md:grid-cols-[auto_1fr] md:items-start">
         <div
-          class="flex h-24 w-24 items-center justify-center rounded-full bg-(--color-kraan-rust) font-display text-h1 text-white"
+          class="flex h-24 w-24 items-center justify-center rounded-full bg-(--color-sodium) font-display text-h1 text-(--color-night)"
           aria-hidden="true"
         >
           K
         </div>
 
-        <div class="max-w-2xl space-y-4 text-body text-(--color-kraan-stone-700)">
+        <div class="max-w-2xl space-y-4 text-body text-(--color-dim)">
           <p>
             Klantkraan is built by a single Dutch IT entrepreneur and registered as a trading name of
             <strong>T4 Software Consulting</strong> BV. No outside investors, no VC pressure, no growth
@@ -103,10 +103,10 @@ import { company } from '../../data/company'
             Klantkraan takes what works well for a single client and makes it repeatable for the trades:
             plumbers, roofers, electricians, installation engineers, contractors, painters.
           </p>
-          <p class="pt-2 text-small text-(--color-kraan-stone-500)">
+          <p class="pt-2 text-small text-(--color-dim)">
             <a
               href="mailto:hallo@klantkraan.nl"
-              class="text-(--color-kraan-blue) underline underline-offset-4 hover:no-underline"
+              class="text-(--color-sodium) underline underline-offset-4 hover:no-underline"
               >hallo@klantkraan.nl</a
             >
           </p>
@@ -118,9 +118,9 @@ import { company } from '../../data/company'
   <!-- 4. Why Klantkraan exists (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Why</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">Why Klantkraan exists</h2>
-      <div class="mt-6 max-w-3xl space-y-4 text-body text-(--color-kraan-stone-700)">
+      <p class="eyebrow">Why</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Why Klantkraan exists</h2>
+      <div class="mt-6 max-w-3xl space-y-4 text-body text-(--color-dim)">
         <p>
           Klantkraan grew out of a simple observation: the average Dutch plumber, roofer or installation
           engineer misses about 28% of their calls. Not out of unwillingness. They're up on the roof, on
@@ -144,36 +144,36 @@ import { company } from '../../data/company'
   </section>
 
   <!-- 5. Downloads + speak to the founder (stone-100) -->
-  <section class="bg-(--color-kraan-stone-100) py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 md:grid-cols-3">
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Data processing agreement</h2>
-        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+        <h2 class="font-display text-h2 text-(--color-chalk)">Data processing agreement</h2>
+        <p class="mt-4 text-body text-(--color-dim)">
           Our standard DPA, readable before you sign. Legally reviewed, no separate negotiation needed.
         </p>
         <a
           href="/legal/dpa/"
-          class="mt-4 inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-5 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
+          class="mt-4 btn btn-ghost"
         >
           View DPA
         </a>
       </div>
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Chamber of Commerce extract</h2>
-        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+        <h2 class="font-display text-h2 text-(--color-chalk)">Chamber of Commerce extract</h2>
+        <p class="mt-4 text-body text-(--color-dim)">
           Official business register extract for Klantkraan under T4 Software Consulting BV.
           For your own supplier file. Ask for it and it's in your inbox the same working day.
         </p>
         <a
           href="mailto:hallo@klantkraan.nl?subject=Request%20Chamber%20of%20Commerce%20extract"
-          class="mt-4 inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-5 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
+          class="mt-4 btn btn-ghost"
         >
           Request extract
         </a>
       </div>
       <div>
-        <h2 class="font-display text-h2 text-(--color-kraan-ink)">Speak to the founder</h2>
-        <p class="mt-4 text-body text-(--color-kraan-stone-700)">
+        <h2 class="font-display text-h2 text-(--color-chalk)">Speak to the founder</h2>
+        <p class="mt-4 text-body text-(--color-dim)">
           Questions that don't need a demo? Send a WhatsApp or an email. Usually a reply within one working
           day, straight from the owner.
         </p>
@@ -182,14 +182,14 @@ import { company } from '../../data/company'
             href={waLink}
             target="_blank"
             rel="noopener"
-            class="inline-flex items-center gap-2 rounded-(--radius-button) bg-(--color-kraan-blue) px-5 py-3 text-body font-medium text-white no-underline hover:bg-(--color-kraan-blue-700)"
+            class="btn btn-primary"
           >
             <Icon name="message-circle" class="h-5 w-5" />
             <span>WhatsApp</span>
           </a>
           <a
             href="mailto:hallo@klantkraan.nl"
-            class="inline-block rounded-(--radius-button) border border-(--color-kraan-blue) px-5 py-3 text-body font-medium text-(--color-kraan-blue) no-underline hover:bg-white"
+            class="btn btn-ghost"
           >
             Email
           </a>
