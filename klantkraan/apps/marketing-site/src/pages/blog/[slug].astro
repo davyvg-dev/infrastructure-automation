@@ -85,22 +85,22 @@ const pageTitle =
 <Base title={pageTitle} description={post.data.description} canonical={canonical}>
   <script type="application/ld+json" set:html={JSON.stringify(blogSchema)} />
   <article class="py-8">
-    <p class="text-micro uppercase tracking-wide text-(--color-kraan-stone-500)">
+    <p class="text-micro uppercase tracking-wide text-(--color-dim)">
       <a href="/blog/" class="no-underline hover:underline">Blog</a> · {
         verticalLabel(post.data.vertical)
       } · {dateFmt.format(post.data.pubDate)}
     </p>
-    <h1 class="mt-4 font-display text-hero text-(--color-kraan-ink)">{post.data.title}</h1>
-    <p class="mt-6 max-w-2xl text-h3 text-(--color-kraan-stone-700)">{post.data.description}</p>
+    <h1 class="mt-4 font-display text-hero text-(--color-chalk)">{post.data.title}</h1>
+    <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">{post.data.description}</p>
 
-    <div class="prose-blog mt-10 max-w-2xl text-body text-(--color-kraan-ink)">
+    <div class="prose-blog mt-10 max-w-2xl text-body text-(--color-chalk)">
       <Content />
     </div>
 
-    <aside class="mt-10 max-w-2xl text-body text-(--color-kraan-stone-700)">
+    <aside class="mt-10 max-w-2xl text-body text-(--color-dim)">
       <p>
         Meer voor {cornerstoneLabel}:
-        <a href={cornerstonePath} class="text-(--color-kraan-blue) underline">
+        <a href={cornerstonePath} class="text-(--color-sodium) underline">
           zo werkt de Klantkraan AI-receptionist voor {cornerstoneLabel}
         </a>.
       </p>
@@ -109,13 +109,13 @@ const pageTitle =
     {
       related.length > 0 && (
         <section class="mt-10 max-w-2xl">
-          <h2 class="font-display text-h3 text-(--color-kraan-ink)">Gerelateerde artikelen</h2>
+          <h2 class="font-display text-h3 text-(--color-chalk)">Gerelateerde artikelen</h2>
           <ul class="mt-3 space-y-2 text-body">
             {related.map((p) => (
               <li>
                 <a
                   href={`/blog/${postSlug(p)}/`}
-                  class="text-(--color-kraan-blue) underline hover:text-(--color-kraan-rust)"
+                  class="text-(--color-sodium) underline hover:text-(--color-sodium-soft)"
                 >
                   {p.data.title}
                 </a>
@@ -127,7 +127,7 @@ const pageTitle =
     }
 
     <footer
-      class="mt-12 border-t border-(--color-kraan-stone-300) pt-8 text-small text-(--color-kraan-stone-500)"
+      class="mt-12 border-t border-(--color-line) pt-8 text-small text-(--color-dim)"
     >
       Geschreven door {post.data.author}. Vragen of feedback?
       <a href="/demo/" class="no-underline hover:underline">Probeer de demo</a> of bekijk de
@@ -142,7 +142,7 @@ const pageTitle =
     font-size: var(--text-h2);
     line-height: var(--text-h2--line-height);
     font-weight: var(--text-h2--font-weight);
-    color: var(--color-kraan-ink);
+    color: var(--color-chalk);
     margin-top: 2.5rem;
     margin-bottom: 1rem;
   }
@@ -151,44 +151,44 @@ const pageTitle =
     font-size: var(--text-h3);
     line-height: var(--text-h3--line-height);
     font-weight: var(--text-h3--font-weight);
-    color: var(--color-kraan-ink);
+    color: var(--color-chalk);
     margin-top: 2rem;
     margin-bottom: 0.75rem;
   }
   .prose-blog p {
     margin-top: 0;
     margin-bottom: 1.25rem;
-    color: var(--color-kraan-stone-700);
+    color: var(--color-dim);
   }
   .prose-blog ul,
   .prose-blog ol {
     margin: 1rem 0 1.5rem 1.25rem;
     padding: 0;
-    color: var(--color-kraan-stone-700);
+    color: var(--color-dim);
   }
   .prose-blog li {
     margin-bottom: 0.5rem;
   }
   .prose-blog strong {
-    color: var(--color-kraan-ink);
+    color: var(--color-chalk);
     font-weight: 600;
   }
   .prose-blog blockquote {
     margin: 1.5rem 0;
     padding: 1rem 1.25rem;
-    border-left: 3px solid var(--color-kraan-blue);
-    background: var(--color-kraan-stone-100);
-    color: var(--color-kraan-stone-700);
+    border-left: 3px solid var(--color-sodium);
+    background: var(--color-panel);
+    color: var(--color-dim);
     font-style: italic;
   }
   .prose-blog a {
-    color: var(--color-kraan-blue);
+    color: var(--color-sodium);
     text-underline-offset: 0.2em;
     /* Long inline URLs must be able to break so they never widen the page. */
     overflow-wrap: break-word;
   }
   .prose-blog a:hover {
-    color: var(--color-kraan-rust);
+    color: var(--color-sodium-soft);
   }
   /* Markdown tables become their own horizontal scroll container so a wide
    * table (e.g. the 4-column one in cv-storing-januari-installateur.md) scrolls
@@ -206,14 +206,14 @@ const pageTitle =
   .prose-blog th,
   .prose-blog td {
     padding: 0.5rem 0.75rem;
-    border: 1px solid var(--color-kraan-stone-300);
+    border: 1px solid var(--color-line);
     text-align: left;
     vertical-align: top;
   }
   .prose-blog th {
     font-weight: 600;
-    color: var(--color-kraan-ink);
-    background: var(--color-kraan-stone-100);
+    color: var(--color-chalk);
+    background: var(--color-panel);
   }
   .prose-blog pre {
     overflow-x: auto;
