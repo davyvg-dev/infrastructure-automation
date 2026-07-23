@@ -58,14 +58,18 @@ Goal: the site copy reads like a professional copywriter wrote it, not like AI. 
 - [ ] Deferred (not marketing prose): legal-page `<title>` "— Klantkraan" suffixes + DPA "Annex I —" headings, the `/r/[slug]` internal dashboard, and the now-unused LeadForm component.
 - [ ] Re-deploy after the Dutch pass (Cloudflare Pages, manual wrangler) and re-verify.
 
-### H. Site-wide visual redesign — "Het licht blijft aan" (BACK BURNER, added 2026-07-23)
-Founder LOVES the clean-sheet hero concept and wants the whole site to look like it. Explicitly NOT the current priority — sits behind sales/pilots/onboarding. Approved design reference: `docs/09-brand/redesign-concept-2026-07-23-light-stays-on.html` (open in a browser for the real fonts).
-- New visual system: "after-hours dispatch" — petrol-slate `#0f1c1e` base, sodium-streetlight amber `#ffb84d` as the single accent, warm chalk text, mint rationed to the "booked" stamp. Type: Bricolage Grotesque (display) / Hanken Grotesk (body) / Space Mono (ledger). Signature = the live dispatch-log hero; structure device = real clock-time ledger.
-- [ ] Redesign every page in this style using the **frontend-design** skill (home, prijzen, over, voor-wie, demo, rekentool, all 6 trade landings, `[stad]/[vak]`, gidsen/blog, legal)
-- [ ] Do it in **all three languages** — NL + EN (`/en/`) + ES (`/es/`) — keeping copy, art. 50 disclosure, no-founder-name, and price parity intact
-- [ ] Port the concept's tokens into the Astro brand system (`global.css` `@theme`) + self-host the three fonts (no Google CDN, per existing convention)
-- [ ] Audit each rebuilt page with the **web-design-guidelines** skill and fix findings before deploy
-- [ ] Redeploy (Cloudflare Pages, manual wrangler) + re-verify
+### H. Site-wide visual redesign — "Het licht blijft aan" (STARTED planning 2026-07-23)
+Founder wants the whole site rebuilt in the clean-sheet hero concept. Full runbook (source of
+truth, survives context clears): **`docs/09-brand/redesign-execution-plan.md`**. Visual reference:
+`docs/09-brand/redesign-concept-2026-07-23-light-stays-on.html`.
+Approach approved 2026-07-23: preview alias + atomic cutover (apex stays live on the old design
+throughout); every page incl. reading variant for legal/blog/gidsen; foundation + home serial,
+then parallel-draft / serial-verify. Checkboxes below mirror the runbook phases.
+- [ ] **Phase 0 — Foundation** (serial): self-host 3 fonts (Latin-ext for NL/ES accents) → port palette/type into `global.css` `@theme` → rebuild Header/Footer/StickyCta/Base → signature component layer. ■ clear context
+- [ ] **Phase 1 — Home** (serial, **frontend-design** skill): rebuild `index.astro`, audit w/ **web-design-guidelines**, founder approval gate, then EN/ES twins, first preview deploy. ■
+- [ ] **Phase 2 — Groups** (parallel draft / serial verify): G1 trade landings (shared `dakdekkers/*` set) · G2 conversion (prijzen/rekentool/demo/voor-wie/over) · G3 `[stad]/[vak]` template · G4 reading variant (blog/gidsen/legal/404). ■ per group
+- [ ] **Phase 3 — Audit + polish** (serial): whole-site web-design-guidelines pass; verify a11y, view-transitions, `/demo`, 320px, all locales, price parity, art. 50, `grep -r kraan- src` empty. ■
+- [ ] **Phase 4 — Cutover**: founder review on preview → production deploy → re-verify live → update memory.
 
 ## Phase 0 — Planning docs
 
