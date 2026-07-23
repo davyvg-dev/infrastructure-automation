@@ -1,8 +1,8 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** + **G2 (conversion pages)** complete 2026-07-23.
+**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** + **G2 (conversion pages)** + **G3 (`[stad]/[vak]` + `r/[slug]`)** complete 2026-07-23.
 Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev` (apex still old design).
-Next = Phase 2 **G3 (`[stad]/[vak]` template)** — the programmatic long tail (`[stad]/[vak]`, `r/[slug]`).
+Next = Phase 2 **G4 (reading variant)** — blog/gidsen/legal/404 in the calm document layout.
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -153,7 +153,12 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
       16 files. Same deterministic transform as G1 (`scratchpad/reskin_conversion.py`),
       locked token/pattern map. `/demo` + `/demo/sportscholen` keep the live embedded
       chatbot + mobile overlay (restyled the shell only, iframe/overlay untouched).
-- [ ] **G3 `[stad]/[vak]` template** — one file, the whole programmatic long tail.
+- [x] **G3 `[stad]/[vak]` template** — DONE 2026-07-23 (commit 7f3255a). The programmatic
+      city×trade template (drives the whole `/[stad]/[vak]` long tail, 10 pages today) + the
+      noindex per-client `r/[slug]` KPI dashboard. Both used only tokens/patterns already in the
+      locked G1/G2 rule table -> same deterministic transform, RULES copied verbatim, zero new
+      rules, zero residuals. Dashboard's `<script>` innerHTML classes migrated by the same
+      substring pass. 65 + 40 kraan- -> 0. Build green, astro check 0/0, eyeballed.
 - [ ] **G4 Reading variant** — blog/[slug], blog/index, gidsen/[slug], gidsen/index, and the
       6 legal pages (privacy, dpa, sla, voorwaarden, subprocessors, ai-disclosure) + 404.
       Calm document layout in the dark palette, no animated hero.
@@ -337,3 +342,44 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   owning group / at final sweep. **NEXT = G3 `[stad]/[vak]` template** (one file drives the whole
   programmatic city×trade long tail; also `r/[slug]`). Preview alias NOT redeployed this session
   (still home-only) — redeploy at a group boundary when the founder wants to review.
+- **2026-07-23 — Phase 2 G3 complete (commit 7f3255a).** The last two page types on the light
+  palette migrated: `src/pages/[stad]/[vak].astro` (the programmatic city×trade template — one
+  file driving the whole `/[stad]/[vak]` long tail, 10 built pages today) + `src/pages/r/[slug].astro`
+  (the noindex per-client `/r/:slug` KPI dashboard). **This was the cleanest group yet:** both files
+  used ONLY tokens/patterns already in the locked G1/G2 rule table (verified up front — 65 + 40
+  kraan- refs, every `--color-kraan-*` token + all 6 button strings + all sections already covered),
+  so I copied the `reskin_conversion.py` RULES table **verbatim** into `scratchpad/reskin_g3.py` and
+  applied it — **zero new specific rules, zero residuals** (0 kraan-/bg-white/text-white/inline-btn
+  in both). The `[stad]/[vak]` page decomposes exactly like a trade landing (hero + sodium city span
+  -> recessed pijn-stat band -> modules w/ sodium icons -> panel ROI card -> FAQ -> internal-link
+  block -> recessed final CTA), so its output matches the `loodgieters.astro` gold reference class-
+  for-class. **New wrinkle handled by the generic catch-alls, no code needed:** `r/[slug]` holds
+  kraan- classes both in static markup AND inside the `<script>` innerHTML template strings
+  (calls/bookings/reviews/error rows) — a plain substring replace hits markup + JS alike, so all of
+  them migrated in one pass (KPI values -> sodium, cards -> panel/line, review stars -> sodium/amber
+  which actually reads *better* than the old rust, error alert -> sodium-bordered panel). **Design
+  note on the dashboard error box:** there is no red/danger colour in the dispatch-dark palette, so
+  rust->sodium (per the locked map) turns the alert into a warm amber-bordered panel; `role="alert"`
+  carries the semantics, so this is fine and consistent with every other rust->sodium migration.
+  Copy untouched (class-only; git shows insertions==deletions 92/92). Invariants: 0 kraan- both
+  files, EUR299 parity in the city page, no founder name, no art.50 chat surface on either page
+  type (so no disclosure to preserve). Build green (84 files, ~2s), astro check 0/0, eyeballed
+  `/amsterdam/loodgieter/` desktop + 320px (no horizontal overflow, sticky WhatsApp CTA present) +
+  `/r/example` (dark KPI shell + offline error state render correctly). **web-design-guidelines:**
+  not re-run for G3 — both page types are deterministic reskins of primitives already audited in
+  G1 (`[stad]/[vak]` == trade-landing structure) / reused card+list patterns; the wholesale audit
+  is Phase 3's job (§4). **Site-wide kraan- burn-down: measured 269 raw `kraan-` matches across 17
+  files** (down from ~424). **3 of those are false positives** — `Klantkraan-abonnement`/
+  `Klantkraan-klant` brand copy (`rekentool.astro:16`, `blog/cv-storing-januari-installateur.md`
+  x2) where the word "Klantkraan" is followed by a hyphen; those are NOT tokens, leave them. So
+  **266 real `--color-kraan-*` token refs remain**, all in G4 + non-page components:
+  G4 pages = legal voorwaarden 25 / dpa 25 / sla 20 / privacy 17 / ai-disclosure 17 / subprocessors
+  10 (=114) + blog/[slug] 24 + blog/index 10 + gidsen/[slug] 22 + gidsen/index 9 + 404 10 (≈189);
+  non-page components = DashboardMock 32 + LeadForm 30 + RingingPhone 2 (=64); deprecated `@theme`
+  kraan tokens in global.css = 13. **Final-sweep plan:** do G4, then migrate the 3 non-page
+  components + delete the 13 `@theme` tokens so `grep -r -- '--color-kraan' src` is empty (the 3
+  brand-copy hits stay — filter them by grepping `--color-kraan` not bare `kraan-`). **NEXT = G4
+  reading variant** (calm document
+  layout, no animated hero — blog/gidsen indexes + [slug] pages + 6 legal pages + 404). Preview
+  alias NOT redeployed this session (still home-only) — redeploy at a group boundary when the
+  founder wants to review the fuller migration.
