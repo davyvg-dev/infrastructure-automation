@@ -1,10 +1,10 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** Phase 0 + Phase 1 (home) + Phase 2 **G1 (trade landings)** + **G2 (conversion pages)** + **G3 (`[stad]/[vak]` + `r/[slug]`)** + **G4 (reading variant)** complete 2026-07-23.
-Preview alias LIVE: `https://redesign.klantkraan-marketing.pages.dev` (apex still old design).
-**Phase 2 is DONE — all page groups migrated.** Next = Phase 3 (cross-cutting audit + polish):
-migrate the 3 non-page components (DashboardMock/LeadForm/RingingPhone) + delete the deprecated
-`@theme` kraan tokens so `grep -r -- '--color-kraan' src` is empty, then the wholesale audit.
+**Status:** Phase 0 + Phase 1 (home) + Phase 2 (G1–G4) + **Phase 3 (cross-cutting audit + polish)**
+complete 2026-07-23. Preview alias LIVE + **redeployed with the FULL migrated site**:
+`https://redesign.klantkraan-marketing.pages.dev` (deployment `7f8d95f0`; apex still old design).
+**The whole site is now migrated and audited.** Next = **Phase 4 (cutover)**: founder reviews the
+preview alias, then the atomic production deploy (`--branch=production`).
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -173,12 +173,24 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
 - **■ Checkpoint after each group** — commit, update log, clear context between groups.
   **All Phase 2 groups (G1-G4) now DONE.**
 
-### Phase 3 — Cross-cutting audit + polish (serial)
-- [ ] Run **web-design-guidelines** across the whole rebuilt site; fix findings.
-- [ ] Verify: view-transition theme continuity, reduced-motion, keyboard nav, `/demo` widget,
-      320px mobile, all three locales, art. 50 present everywhere, price parity, no AI-tells,
-      `grep -r kraan- src` empty. Full local build green.
-- **■ Checkpoint 3** — commit "audit + polish", clear context before cutover.
+### Phase 3 — Cross-cutting audit + polish (serial) — DONE 2026-07-23
+- [x] Migrate the last 3 non-page components (DashboardMock/LeadForm/RingingPhone) + delete the
+      11 deprecated `@theme` kraan tokens. `grep -r -- '--color-kraan' src` is now empty (commit
+      da182ca). RingingPhone = comment-only (SVG uses currentColor); DashboardMock + LeadForm are
+      currently unimported dead code but migrated for consistency + eyeballed in isolation.
+- [x] Run **web-design-guidelines** across the whole rebuilt site; fix findings (commit beb42c8):
+      `text-wrap:balance` global rule, 2 critical-font preloads, ellipsis labels, deferred-de-AI
+      em-dashes (legal titles/DPA annex/LeadForm/`/r`). Structural rules already satisfied
+      per-group. **Curly quotes deferred** (documented — partial pass looks worse than none;
+      not founder-flagged).
+- [x] Verified: view-transition theme continuity (html bg = night on every page type),
+      reduced-motion (dispatch panel resting-state stamp shown), keyboard nav (sodium
+      `:focus-visible` ring), `/demo` widget (iframe + open button + art. 50 intact), 320px mobile,
+      all three locales, art. 50 present everywhere, €299/€499 price parity, no AI-tells,
+      `grep -r -- '--color-kraan' src` empty. Build green (84 files), astro check 0/0.
+- **■ Checkpoint 3 — DONE 2026-07-23.** Audit + polish committed, preview alias redeployed with the
+      full site (`7f8d95f0`). Safe to clear context. Next session: **Phase 4 — cutover** (founder
+      go on the preview → `--branch=production`).
 
 ### Phase 4 — Cutover (fresh session)
 - [ ] Founder final review on the preview alias.
@@ -434,3 +446,48 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   hits stay), then the wholesale web-design-guidelines audit + the deferred site-wide gaps
   (`text-wrap:balance` on headings, curly quotes / legal-copy em-dashes per TODO §G). Preview alias
   still home-only — redeploy for the founder's fuller review at the start of Phase 3 / before cutover.
+- **2026-07-23 — Phase 3 complete (commits da182ca components, beb42c8 audit) → Checkpoint 3.**
+  Two sub-steps. **(1) Component migration + token deletion (da182ca):** the last 3 non-page
+  components migrated so `grep -r -- '--color-kraan' src` is **empty** (only `Klantkraan-` brand copy
+  remains as bare `kraan-`). RingingPhone was comment-only (SVG uses `currentColor`; its live
+  consumer `en/air-conditioning` wraps it in `text-sodium`). DashboardMock + LeadForm turned out to
+  be **dead code — neither is imported anywhere** (the Phase 1 home rebuild dropped the mock; the
+  home lead form was replaced by WhatsApp-first capture). Migrated them anyway (locked token map)
+  for consistency + kept ready-to-use; **the founder may prefer to delete both** (LeadForm is still
+  wired to the live `/api/lead` Worker, so that's a product call, not cleanup). One deliberate
+  design decision, eyeballed via a throwaway isolation route: DashboardMock's 3-way call-log status
+  can't collapse `rust`+`blue`→`sodium` (states would look identical), so spoed→**sodium** (urgent),
+  routine→**dim** (muted), afgewerkt→**confirm** (mint ✓) — a semantically correct split in a
+  one-accent palette. Then deleted the 11 deprecated `@theme` kraan tokens from `global.css`.
+  **(2) Wholesale web-design-guidelines audit (beb42c8):** fetched the Web Interface Guidelines and
+  checked the rebuilt site. **Structural rules were already satisfied per-group** (focus-visible,
+  color-scheme:dark, theme-color, touch-action, reduced-motion, single h1, no div-onClick, no native
+  select, skip link; the Header hamburger is icon-only but already `aria-label`ed + `aria-hidden` SVG
+  — a grep artifact made it look unlabeled). **Fixes applied for the site-wide gaps:**
+  `text-wrap:balance` as one `@layer base` rule on h1/h2/h3 (even headline wraps site-wide, no orphan
+  regressions — eyeballed home/dpa/prijzen desktop + 320px); preload the two first-paint fonts
+  (Hanken 400 + Bricolage 800 latin, `crossorigin`) to cut the LCP text-hero swap flash; ellipsis
+  `Versturen...`/`Enviando...`→`…`; and the **deferred de-AI em-dashes (TODO §G)** — 6 legal
+  `<title> — Klantkraan`→`| Klantkraan` (now consistent with the marketing pages' pipe), DPA
+  `Annex I/II/III —`→`:`, LeadForm success copy→period, `/r` description + dynamic title→colon
+  (left the `/r` empty-state `'—'` glyphs — idiomatic no-value). **Curly quotes DEFERRED** with a
+  documented rationale: a partial pass on a NL/EN/ES site full of contractions + quoted examples
+  looks worse than none (inconsistent), a full safe conversion is a large copy task the founder
+  never flagged (his de-AI priority was em-dashes, now closed), and it's the lowest-severity
+  typographic guideline item. **Runtime verification (Playwright):** reduced-motion → dispatch panel
+  shows the resting `INGEPLAND` stamp (not mid-typing); keyboard → 3×Tab lands on "Voor wie?" with a
+  solid `rgb(255,184,77)` sodium `:focus-visible` outline; `/demo` → 1 live-chat iframe + open button
+  + 3× art. 50 disclosure; view-transition continuity → `html` bg = `rgb(15,28,30)` night on home /
+  prijzen / dpa / loodgieters (no white flash possible). Invariants: art. 50 on demo + home all
+  locales, €299/€499 parity NL/EN/ES, `--color-kraan` 0, build green (84 files), astro check 0/0.
+  **Preview alias REDEPLOYED with the full migrated site** — deployment `7f8d95f0`, alias
+  `https://redesign.klantkraan-marketing.pages.dev`; curl-verified 200 + dark `theme-color #0f1c1e`
+  on `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
+  `/amsterdam/loodgieter/` (all page types now dark; apex `klantkraan.nl` still the old design).
+  **Gotchas:** (1) `git add -A` swept in the untracked `.claude/skills/` + `skills-lock.json` from
+  session start — unstage those; the redesign commits touch only `apps/marketing-site/src`. (2) the
+  `<button aria-label>` grep returned 0 because the label sits on the line AFTER `<button` — verify
+  multi-line attributes by reading, not a single-line grep. **NEXT = Phase 4 cutover:** founder
+  reviews the preview alias (now the complete redesign, not home-only), then the single production
+  deploy `pnpm dlx wrangler@4 pages deploy ./dist --branch=production --project-name=klantkraan-marketing`,
+  then re-verify live + update memory + close TODO § H.
