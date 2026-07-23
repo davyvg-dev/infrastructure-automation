@@ -25,22 +25,22 @@ const features = [
 
 <section class="py-10 md:py-16">
   <div class="mx-auto max-w-5xl px-6">
-    <p class="font-mono text-micro uppercase tracking-widest text-(--color-kraan-stone-500)">Modules</p>
-    <h2 class="mt-3 font-display text-h1 text-(--color-kraan-ink)">
+    <p class="eyebrow">Modules</p>
+    <h2 class="mt-3 font-display text-h1 text-chalk">
       Wat Klantkraan doet voor dakdekkers.
     </h2>
-    <p class="mt-4 max-w-2xl text-body text-(--color-kraan-stone-700)">
+    <p class="mt-4 max-w-2xl text-body text-dim">
       Drie modules. Eén maandprijs. Geschreven na een avond meeluisteren met een dakdekker in Utrecht na storm Pia.
     </p>
 
-    <div class="mt-10 divide-y divide-(--color-kraan-stone-300) border-y border-(--color-kraan-stone-300)">
+    <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
       {
         features.map((feature) => (
           <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-            <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-kraan-blue)" />
+            <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
             <div>
-              <h3 class="font-display text-h3 text-(--color-kraan-ink)">{feature.title}</h3>
-              <p class="mt-2 text-body text-(--color-kraan-stone-700)">{feature.body}</p>
+              <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
+              <p class="mt-2 text-body text-dim">{feature.body}</p>
             </div>
           </article>
         ))

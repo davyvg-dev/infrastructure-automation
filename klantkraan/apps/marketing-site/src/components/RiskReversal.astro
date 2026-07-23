@@ -79,7 +79,7 @@ const sectionAria =
 ---
 
 <section
-  class="border-y border-(--color-kraan-rust)/30 bg-(--color-kraan-cream) py-8 md:py-10"
+  class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-8 md:py-10"
   aria-label={sectionAria}
 >
   <div class="mx-auto max-w-5xl px-6">
@@ -89,11 +89,11 @@ const sectionAria =
           <li class="flex items-start gap-3">
             <Icon
               name={p.icon}
-              class="mt-0.5 h-5 w-5 shrink-0 text-(--color-kraan-rust)"
+              class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)"
             />
             <div>
-              <p class="text-body font-medium text-(--color-kraan-ink)">{p.title}</p>
-              <p class="mt-1 text-small text-(--color-kraan-stone-700)">{p.body}</p>
+              <p class="text-body font-medium text-chalk">{p.title}</p>
+              <p class="mt-1 text-small text-dim">{p.body}</p>
             </div>
           </li>
         ))
