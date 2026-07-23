@@ -65,7 +65,7 @@ truth, survives context clears): **`docs/09-brand/redesign-execution-plan.md`**.
 Approach approved 2026-07-23: preview alias + atomic cutover (apex stays live on the old design
 throughout); every page incl. reading variant for legal/blog/gidsen; foundation + home serial,
 then parallel-draft / serial-verify. Checkboxes below mirror the runbook phases.
-- [ ] **Phase 0 — Foundation** (serial): self-host 3 fonts (Latin-ext for NL/ES accents) → port palette/type into `global.css` `@theme` → rebuild Header/Footer/StickyCta/Base → signature component layer. ■ clear context
+- [x] **Phase 0 — Foundation** (serial, DONE 2026-07-23, commits 9eb015b + 91bc019): self-hosted 3 fonts (18 woff2 subsets) → palette/type flipped in `global.css` `@theme` (old kraan-* kept, deprecated) → Header/Footer/StickyCta/Base rebuilt + screenshot-verified → universal .btn/.eyebrow primitives. Home-specific signatures deferred to Phase 1. Build green, astro check 0 errors.
 - [ ] **Phase 1 — Home** (serial, **frontend-design** skill): rebuild `index.astro`, audit w/ **web-design-guidelines**, founder approval gate, then EN/ES twins, first preview deploy. ■
 - [ ] **Phase 2 — Groups** (parallel draft / serial verify): G1 trade landings (shared `dakdekkers/*` set) · G2 conversion (prijzen/rekentool/demo/voor-wie/over) · G3 `[stad]/[vak]` template · G4 reading variant (blog/gidsen/legal/404). ■ per group
 - [ ] **Phase 3 — Audit + polish** (serial): whole-site web-design-guidelines pass; verify a11y, view-transitions, `/demo`, 320px, all locales, price parity, art. 50, `grep -r kraan- src` empty. ■

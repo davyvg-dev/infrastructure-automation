@@ -105,17 +105,22 @@ hero). Watch selector specificity on section padding/margins (frontend-design sk
 Ralph gate for every page: **build → `astro check` → eyeball (Playwright screenshot) → commit.**
 
 ### Phase 0 — Foundation (serial, main loop) — no page looks right until this is done
-- [ ] 0.1 Self-host the three fonts. Download Bricolage Grotesque (variable opsz+wght 600/700/800),
-      Hanken Grotesk (400–700), Space Mono (400/700). **Subset must include Latin-ext** for Dutch
-      (ë ï) and Spanish (ñ ¿ ¡ á í ó ú). `@font-face` with `font-display: swap`, files in
-      `public/fonts/`. Remove Google CDN links from the concept when porting.
-- [ ] 0.2 Port palette + type + base into `global.css` `@theme` (§ 3 map). Dark `html`/`body`,
-      `::selection`, focus-visible ring (sodium), reduced-motion block, ambient glow layer.
-- [ ] 0.3 Rebuild shared chrome: `Header.astro`, `Footer.astro`, `StickyMobileCta.astro`,
-      `Base.astro` main wrapper + `theme-color`. Preserve all head machinery (§ 2).
-- [ ] 0.4 Signature component layer: dispatch panel/log, clock-time ledger, receipt tally,
-      duty cards, transparency block, eyebrow/section headers, buttons, status pills.
-- **■ Checkpoint 0** — commit "foundation", clear context.
+- [x] 0.1 Self-host the three fonts. 18 latin + latin-ext woff2 subsets from Google Fonts CSS2
+      (Bricolage 600/700/800, Hanken 400/500/600/700, Space Mono 400/700) in `public/fonts/`,
+      `font-display:swap`, unicode-range preserved; `src/styles/fonts.css` + OFL notice. Regen
+      with `scratchpad/fetch_fonts.py`. (commit 9eb015b)
+- [x] 0.2 Palette + type + base ported into `global.css` `@theme` (§ 3 map). Dark `html`/`body`,
+      `::selection`, sodium focus ring, reduced-motion block, ambient glow via `body::before`.
+      Old `kraan-*` tokens kept (deprecated) so un-migrated pages still build. (commit 9eb015b)
+- [x] 0.3 Chrome rebuilt: `Header` (sticky blurred, lamp, dim nav, sodium switcher), `Footer`
+      (trust band + calm dim links), `StickyMobileCta` (sodium primary), `Base` (theme-color +
+      skip-link). Head machinery intact. Verified via Playwright screenshot. (commit 91bc019)
+- [x] 0.4 UNIVERSAL primitives only: `.btn/.btn-primary/.btn-ghost/.btn-lg` + `.eyebrow` in
+      `src/styles/components.css` (`@layer components`). **Home-specific signatures (dispatch
+      log, ledger, receipt, duty cards) deferred to Phase 1** — built + verified in context there,
+      then reused. (commit 91bc019)
+- **■ Checkpoint 0 — DONE 2026-07-23.** Foundation committed, build green, chrome eyeballed.
+  Safe to clear context. Next session: Phase 1 (home).
 
 ### Phase 1 — Reference page: HOME (serial, main loop) — proves the whole system
 - [ ] 1.1 Rebuild `index.astro` (NL) to near-parity with the concept, on the foundation.
@@ -192,3 +197,15 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
 
 - **2026-07-23** — Plan approved. Baseline build green (~8s, `astro build`). Toolchain:
   Astro 5, Tailwind v4, pnpm monorepo, Playwright + sharp available. No code changed yet.
+- **2026-07-23 — Phase 0 complete (commits 9eb015b, 91bc019).** Fonts self-hosted (18 woff2,
+  564 KB on disk but only ~118 KB latin loads on first paint), palette flipped, chrome rebuilt +
+  screenshot-verified, universal button/eyebrow primitives in place. Build green, `astro check`
+  0 errors. **Gotchas learned:** (1) old `kraan-*` tokens kept in `@theme` so un-migrated pages
+  still build — un-migrated content now shows chalk-inheriting body text (readable) + a few
+  broken explicit-color elements on dark; that's expected until each page's phase. (2) Playwright
+  screenshot scripts must run FROM the marketing-site dir (ESM can't resolve `playwright` from
+  the scratchpad); serve the built `dist/` with `python3 -m http.server` on a spare port. (3) All
+  NL/ES accents live in the `latin` subset (U+0000–00FF), so latin-ext is belt-and-suspenders.
+  Next: Phase 1 — rebuild `index.astro` with the frontend-design skill, build the signature
+  dispatch-log hero + ledger + receipt here, founder approval gate, then EN/ES twins + first
+  preview deploy.
