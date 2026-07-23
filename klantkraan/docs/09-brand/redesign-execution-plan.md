@@ -1,10 +1,12 @@
 # Site-wide redesign — execution plan ("Het licht blijft aan")
 
-**Status:** Phase 0 + Phase 1 (home) + Phase 2 (G1–G4) + **Phase 3 (cross-cutting audit + polish)**
-complete 2026-07-23. Preview alias LIVE + **redeployed with the FULL migrated site**:
-`https://redesign.klantkraan-marketing.pages.dev` (deployment `7f8d95f0`; apex still old design).
-**The whole site is now migrated and audited.** Next = **Phase 4 (cutover)**: founder reviews the
-preview alias, then the atomic production deploy (`--branch=production`).
+**Status: COMPLETE — SHIPPED 2026-07-23.** All phases done (0 foundation → 1 home → 2 groups
+G1–G4 → 3 audit+polish → 4 cutover). **`klantkraan.nl` is LIVE on the new "light stays on"
+design** (production deployment `22c89e15`, `--branch=production`). Verified live: all page types +
+locales return 200 with dark `theme-color #0f1c1e`, home renders correctly (fonts, dispatch panel,
+calc teaser, art. 50). Post-launch feedback already folded in: founder kept the sodium-amber accent
+and the home cost block was reworked into a calculator teaser (commit d119833). The redesign project
+is closed; further work is normal iteration, not a phase.
 **Visual reference (north star):** `redesign-concept-2026-07-23-light-stays-on.html` (this folder — open in a browser for the real fonts).
 **Progress mirror:** `klantkraan/TODO.md` § H (checkboxes there track the same phases).
 
@@ -192,11 +194,14 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
       full site (`7f8d95f0`). Safe to clear context. Next session: **Phase 4 — cutover** (founder
       go on the preview → `--branch=production`).
 
-### Phase 4 — Cutover (fresh session)
-- [ ] Founder final review on the preview alias.
-- [ ] Production deploy (`--branch=production`).
-- [ ] Re-verify live: curl 200s across locales, spot-check, optional squirrelscan re-audit.
-- [ ] Update memory + close TODO § H.
+### Phase 4 — Cutover — DONE 2026-07-23 (SHIPPED)
+- [x] Founder reviewed the preview alias + gave go ("deploy the site, make it live").
+- [x] Production deploy — `pnpm dlx wrangler@4 pages deploy ./dist --branch=production
+      --project-name=klantkraan-marketing` → deployment `22c89e15`. Flipped `klantkraan.nl`.
+- [x] Re-verified live: `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
+      `/amsterdam/loodgieter/`, `/demo/` all 200 + dark `theme-color #0f1c1e`; home renders the
+      dispatch panel + calc teaser + art. 50 with the correct self-hosted fonts (no tofu).
+- [x] Updated memory + TODO § H. **Redesign project closed.**
 
 ---
 
@@ -491,3 +496,24 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   reviews the preview alias (now the complete redesign, not home-only), then the single production
   deploy `pnpm dlx wrangler@4 pages deploy ./dist --branch=production --project-name=klantkraan-marketing`,
   then re-verify live + update memory + close TODO § H.
+- **2026-07-23 — Founder preview feedback folded in (commit d119833).** After reviewing the full
+  preview alias, the founder (1) **kept the sodium-amber accent** — I rendered 5 real-hero variants
+  (amber/honey/champagne/coral/cyan) via a one-token swap (trivial now that everything rides
+  `--color-sodium`) and recommended honey/brass, but he chose to keep `#ffb84d`; and (2) had the
+  home `#kosten` "receipt" reworked into a **calculator teaser** (worked example 20 aanvragen / 5
+  gemist (1 op 4) / × €450 = €2.250 misgelopen omzet, CTA "Reken met uw eigen cijfers →" routing to
+  the per-locale `/rekentool`), because the old block mixed hard numbers with a vague line and never
+  linked to the calculator. Applied to NL/EN/ES; the old confirm-green `.total` row + CSS replaced by
+  `.kk-receipt-cap`/`.line.result`/`.kk-receipt-cta`. Build green, eyeballed all 3 locales.
+- **2026-07-23 — Phase 4 cutover — SHIPPED.** Founder gave the go ("deploy the site, make it live").
+  Clean-tree check, fresh rebuild from HEAD (`d119833`), then `pnpm dlx wrangler@4 pages deploy
+  ./dist --branch=production --project-name=klantkraan-marketing` → deployment `22c89e15`. This
+  flipped `klantkraan.nl` from the old light design to the new dispatch-dark design. **Verified
+  live:** `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
+  `/amsterdam/loodgieter/`, `/demo/` all return 200 with dark `theme-color #0f1c1e` (old was
+  `#0F4C81`); home HTML carries the calc-teaser CTA (→ `/rekentool`) + art. 50 disclosure (2×); a
+  live Playwright screenshot confirms correct rendering — self-hosted fonts load (no tofu), amber
+  accent, live dispatch panel animating, ledger, night-on-sodium buttons. **The site-wide redesign
+  is complete and live.** No further phase; future work is normal iteration. (Optional cleanups left
+  on the table, non-blocking: delete the 2 dead components DashboardMock/LeadForm; a full
+  curly-quotes typography pass.)
