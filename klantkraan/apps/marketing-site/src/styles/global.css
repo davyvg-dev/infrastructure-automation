@@ -117,6 +117,10 @@
   h3 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+    /* Even out ragged headline line-breaks site-wide (Web Interface Guidelines
+     * typography). Only affects semantic headings; display-styled <p> hero
+     * lines that want manual breaks keep their own text-wrap. */
+    text-wrap: balance;
   }
 
   a {
