@@ -49,6 +49,22 @@ Focused fetch of the three closest rivals' live homepages. (Interactive demo beh
 - **Demo friction:** InstallatieTelefoniste's instant no-account browser demo and Voicelabs' phone + 7-day trial set the bar. The live Dutch **text** demo must be one click, no form.
 - **Loss-calculator converts:** Cowcierge leads with the loss figure + calculator — validates the home cost-block → calculator-teaser rework already shipped. Push it.
 
+### Interactive funnel test (2026-07-24, drove each demo as a buyer)
+
+Walked each rival's actual try-it funnel (no accounts created, no forms submitted, no calls placed).
+
+| Rival | How you "try" it | Friction | AI disclosed on-screen? |
+|---|---|---|---|
+| **InstallatieTelefoniste** | Instant in-browser voice call, **no account** | Lowest — one click, mic, talk | Yes — widget: *"AI-telefoniste demo"* |
+| **Voicelabs** | Callback form (**your phone number**) / "Bel met Robin" / 7-day trial | Medium — hands over a number or signs up | Yes — *"AI-telefoonassistent"* throughout |
+| **Cowcierge** | "Start Gratis" → **full signup wall** (naam/e-mail/wachtwoord) | Highest — account before you experience anything | Yes — but gated behind signup |
+
+**Sharp findings:**
+1. **The instant-demo bar is InstallatieTelefoniste's** — genuinely no-account, trade-configured (knows voorrijkosten/spoedtarieven, triages loodgieter/elektro/CV/zonnepanelen). But **none of the three offers a one-click self-serve *text* demo** — they're all voice, so two gate you behind a phone number or signup. **Klantkraan's opening: a one-click, no-account, Dutch *text* demo you can actually converse with beats all three on friction — the one modality they structurally can't match.**
+2. **Cowcierge oversells "free."** Copy says "Bouw 'm gratis" / "live in 15 minuten"; reality is a name/e-mail/password wall before you see anything. A genuinely instant Klantkraan demo makes that gap visible.
+3. **Quality tell at InstallatieTelefoniste:** demo subtitle reads *"net als een echte **patiënt** die belt"* — leftover healthcare copy from Flireo's fysiotelefoniste skin. These are thinly-adapted multi-vertical templates; genuinely vertical-native config is a felt quality edge.
+4. **The art.50 fight is invisible on their websites — it lives in the spoken call.** All three label "AI" in their marketing/demo UI; their anti-disclosure stance (*"klanten merken het verschil niet"*) is about what the **end customer hears on the phone**. That is where art.50 bites from 2 Aug 2026, and a prospect never sees it by browsing — so it is a point you must make loudly, not assume is understood.
+
 ## Where Klantkraan wins
 
 - **Text-first, two-way WhatsApp, "never a missed chat"** — nobody else owns this. Every Dutch rival leads with the phone and relegates messaging to one-way notifications.
