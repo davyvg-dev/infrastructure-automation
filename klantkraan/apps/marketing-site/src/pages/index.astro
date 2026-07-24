@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
 import { waLink } from '../data/contact'
 ---
 
@@ -30,11 +31,11 @@ import { waLink } from '../data/contact'
           </p>
 
           <div class="mt-8 flex flex-wrap gap-3.5">
-            <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
+            <a href="#demo" class="btn btn-primary btn-lg">Probeer de demo</a>
             <a href="#nachtdienst" class="btn btn-ghost btn-lg">Zo werkt het</a>
           </div>
           <p class="kk-trust">
-            Done-for-you setup &middot; per maand opzegbaar &middot;
+            Direct te proberen, geen account &middot; per maand opzegbaar &middot;
             <span class="g">AVG-proof, EU-gehost</span>
           </p>
         </div>
@@ -159,6 +160,61 @@ import { waLink } from '../data/contact'
     </div>
   </section>
 
+  <!-- LIVE DEMO — the one-click, no-account text chat no voicebot rival offers -->
+  <section id="demo" class="scroll-mt-24 py-[3.25rem] md:py-[4.875rem]">
+    <div class="mx-auto max-w-5xl px-6">
+      <span class="eyebrow">Probeer het zelf</span>
+      <h2 class="mt-3.5 max-w-[16em] font-display text-h2 text-balance">
+        Praat met de receptionist. Nu, zonder account.
+      </h2>
+      <p class="mt-4 max-w-[40em] text-[1.05rem] text-[#cdd8d5]">
+        Geen belrobot die klinkt als een collega. Gewoon tekst, op de plek waar uw klant al zit:
+        uw site en WhatsApp. Stel een vraag of plan een afspraak, precies zoals een klant zou doen.
+        Direct in uw browser.
+      </p>
+
+      <!-- Desktop: live embed inline. No on-screen keyboard, so the iframe sits happily inline. -->
+      <div class="mt-8 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4">
+        <iframe
+          src="https://demo-168-119-173-25.sslip.io/?embed=1"
+          title="Live chat met de digitale receptionist van Klantkraan"
+          loading="lazy"
+          width="800"
+          height="560"
+          class="block h-[560px] w-full rounded-(--radius-button) border border-(--color-line)"
+        ></iframe>
+      </div>
+
+      <!-- Mobile: one-tap full-screen. Reuses the /js/demo-embed.js overlay (same as /demo). -->
+      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden">
+        <div class="flex items-center gap-3">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel-2) text-(--color-sodium)">
+            <Icon name="message-square" class="h-5 w-5" />
+          </span>
+          <div class="min-w-0">
+            <p class="font-display text-h3 text-(--color-chalk)">Van Dijk Installatietechniek</p>
+            <p class="text-small text-(--color-dim)">Digitale assistent &middot; reageert direct</p>
+          </div>
+        </div>
+        <p class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)">
+          Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.
+        </p>
+        <button
+          type="button"
+          data-demo-open
+          class="mt-4 btn btn-primary btn-lg w-full justify-center"
+        >
+          <Icon name="message-circle" class="h-5 w-5" />
+          <span>Start de demo</span>
+        </button>
+      </div>
+
+      <p class="mt-3 kk-trust">
+        Voorbeeldbedrijf &middot; bij uw eigen receptionist staan uw diensten en tarieven ingesteld
+      </p>
+    </div>
+  </section>
+
   <!-- COST — a receipt, not a big-number-gradient -->
   <section id="kosten" class="scroll-mt-24 border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-[3.25rem] md:py-[4.875rem]">
     <div class="mx-auto grid max-w-5xl gap-8 px-6 md:grid-cols-[1.1fr_.9fr] md:items-center md:gap-11">
@@ -208,9 +264,11 @@ import { waLink } from '../data/contact'
       <div class="kk-trans mt-6">
         <span class="quote">&ldquo;U chat met een digitale assistent.&rdquo;</span>
         <p>
-          Zo begint elk gesprek, voordat er iets anders gebeurt. Wettelijk verplicht onder de EU AI
-          Act artikel&nbsp;50, en het past bij open ondernemen. Geen verwarring bij de klant, geen boete
-          van de toezichthouder. Gewoon een eerlijk gesprek, dag en nacht.
+          Zo begint elk gesprek, voordat er iets anders gebeurt. Vanaf 2&nbsp;augustus 2026 is die
+          melding verplicht voor elk bedrijf (EU AI Act, artikel&nbsp;50). Wij doen het nu al. Waar een
+          belrobot wordt verkocht met &ldquo;niemand hoort het verschil&rdquo;, zegt onze receptionist
+          gewoon wie hij is. Geen verwarring bij de klant, geen boete van de toezichthouder. Gewoon een
+          eerlijk gesprek, dag en nacht.
         </p>
         <p class="mt-4 text-small">
           <a href="/legal/ai-disclosure/">Lees de volledige disclosure</a>
@@ -235,6 +293,11 @@ import { waLink } from '../data/contact'
       </div>
     </div>
   </section>
+
+  <!-- Full-screen demo overlay (mobile). Injected iframe is sized to the visual
+       viewport by /js/demo-embed.js so the iOS keyboard never hides the chat. -->
+  <div id="demo-overlay" class="fixed inset-0 z-[70] hidden overflow-hidden" aria-hidden="true"></div>
+  <script src="/js/demo-embed.js?v=5" type="module" is:inline></script>
 </Base>
 
 <style>
@@ -676,6 +739,17 @@ import { waLink } from '../data/contact'
   }
   .kk-final-h2 .on {
     color: var(--color-sodium);
+  }
+
+  /* ---- mobile demo overlay backdrop (matches the chat's own bg) ---- */
+  #demo-overlay {
+    background: #f6f7f9;
+    overscroll-behavior: contain;
+  }
+  @media (prefers-color-scheme: dark) {
+    #demo-overlay {
+      background: #0f1216;
+    }
   }
 </style>
 
