@@ -1,5 +1,15 @@
-# Free-pilot offer (1-page Dutch)
+# Free-pilot offer (1-page Dutch) — SUPERSEDED
 
+> **Superseded 2026-07-24 by `02-sales/founding-member-offer.md`.** The first-clients research
+> (`klantkraan/research/first-clients-ops-playbook-2026-07.md`) refuted the free-pilot model:
+> a free B2B pilot rarely converts and anchors value low. The canonical first-client offer is now
+> the paid founding-member rate (€149/mnd × 6mo, 30-day money-back, no free clients). Kept for
+> reference; do not use as the live offer. Downstream docs that still describe the free pilot
+> (`pilot-to-paid.md`, `demo-outreach.md`, `28-day-sprint.md`, outreach batches) are pending
+> alignment to the founding-member model.
+>
+> ---
+>
 > The core ask of the 28-day sprint (`02-sales/28-day-sprint.md`). Customer-facing, Dutch, no
 > founder name. Usable three ways: (a) the offer you make after a scaffolded demo, (b) a section
 > on the site, (c) the substance behind every outreach message in `demo-outreach.md`.
