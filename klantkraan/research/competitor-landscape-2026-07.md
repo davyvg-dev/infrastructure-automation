@@ -31,6 +31,24 @@ Only **Synthflow** overlaps Klantkraan's positioning (non-technical SMBs / local
 
 > ⚠️ **Verification failures — do not cite:** the specific per-minute prices for Vapi/Retell/Bland/Synthflow were **refuted** (0–3), as was the claim that these platforms don't support Dutch. Their Dutch-language support is **unverified, not confirmed-absent** — a well-funded global player adding good Dutch TTS is a latent threat, and an open question worth a direct check.
 
+## Live teardown — homepages read as a buyer (2026-07-24)
+
+Focused fetch of the three closest rivals' live homepages. (Interactive demo behaviour — whether each bot discloses AI when you actually talk to it, Dutch quality, where it breaks — still pending a live browser session.)
+
+**Voicelabs "Robin"** — the polished one. *"Altijd bereikbaar met Robin… Elke oproep die je mist, is een klant die je concurrent belt."* Demo bar high: live phone **(+31) 23 207 70 96**, "Laat Robin mij bellen" callback form, **and** "Start 7 dagen gratis" (no card). No AI disclosure — markets *"klinkt als een collega, niet als een robot"*, "virtuele collega's" with names/avatars. Social proof: *"Al 50+ teams"* (smaller than Cowcierge's claim) and 11 logos that are **dentists, bowling, a gym, physios — not one loodgieter/dakdekker.** Trustpilot badge, no visible rating.
+
+**Cowcierge** — the ROI-calculator one. *"Nooit Meer Een Klant Missen"*, leads with a hard loss figure *"€2.852/maand · €34.000/jaar"* and a **"Bereken je verlies"** calculator. Demo = self-serve free build (*"Bouw 'm gratis" · "Binnen 15 minuten live"*); no live phone/chat demo on the homepage. No AI disclosure in sales copy. **WhatsApp/SMS are post-call confirmations, not two-way.** Testimonials: a dentist, a restaurant, a lawyer — despite claiming *"voorgetraind op de loodgietersbranche."* 200+ self-reported, no logos.
+
+**InstallatieTelefoniste (Flireo)** — the trades-native one. *"Mis nooit meer een klant of spoedklus"*, built for CV-storingen/lekkage/weekend-spoed. **Highest demo bar:** instant browser demo, *"Gratis · 2 minuten · geen account nodig"* — talk to the bot with zero friction. Sharpest anti-art.50 line found: *"Klanten merken het verschil vaak niet."* Weaknesses: **Dutch-only, phone-only, and zero social proof** (no testimonials/logos/reviews).
+
+### Two exploitable gaps this surfaced
+1. **Nobody proves with real trades.** Both "trades-focused" rivals prove with dentists, gyms, restaurants, lawyers. One real loodgieter/dakdekker case study with night-emergency numbers out-proves all three in the exact vertical — the strongest argument for the founding-member deal (you're buying proof nobody else has).
+2. **All three sell "you can't tell it's AI"** (InstallatieTelefoniste literally: *"klanten merken het verschil niet"*). Klantkraan is the mirror image — and **after 2 Aug 2026 the disclosing party is the compliant one.** Position art.50 as *"eerlijk tegen jouw klant — en straks verplicht voor iedereen."*
+
+### Two things to match
+- **Demo friction:** InstallatieTelefoniste's instant no-account browser demo and Voicelabs' phone + 7-day trial set the bar. The live Dutch **text** demo must be one click, no form.
+- **Loss-calculator converts:** Cowcierge leads with the loss figure + calculator — validates the home cost-block → calculator-teaser rework already shipped. Push it.
+
 ## Where Klantkraan wins
 
 - **Text-first, two-way WhatsApp, "never a missed chat"** — nobody else owns this. Every Dutch rival leads with the phone and relegates messaging to one-way notifications.
