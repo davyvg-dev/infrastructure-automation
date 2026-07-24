@@ -1,4 +1,9 @@
-# DPA / Verwerkersovereenkomst — Outline
+# DPA / Verwerkersovereenkomst — Outline (planning only)
+
+> **The signable NL template is `04-legal/verwerkersovereenkomst-template.md`.** Use that with
+> clients. This file is the older planning skeleton and its Annexen describe the **retired
+> voice stack** (Synthflow/ElevenLabs/CM.com, audio recordings, Neon/Mollie/Attio) — do not
+> hand its sub-processor list to a client. Kept for the art. 28 rationale.
 
 > AVG (GDPR) art. 28 requires a signed processing agreement before any personal data flows. Klantkraan is **processor (verwerker)**; the client (loodgieter/dakdekker) is **controller (verwerkingsverantwoordelijke)**. This DPA flows down to all our sub-processors.
 
