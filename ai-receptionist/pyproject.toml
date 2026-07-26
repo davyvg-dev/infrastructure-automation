@@ -1,0 +1,7 @@
+# Tool config only — this app ships as a plain module tree (see requirements.txt), not a
+# packaged distribution, so there is deliberately no [build-system] or [project] table.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]        # put the app-receptionist root on sys.path so `import app` resolves
+addopts = "-q"
