@@ -1,0 +1,57 @@
+name: CI
+
+# Runs the offline test suites for the two Python apps on every push and PR. Nothing here
+# needs a secret or the network: the receptionist tests are the no-network layers ported from
+# app/selftest.py, and the growth-engine checks are config/registry reads only. The live
+# checks that cost money (Claude drafting, X/Telegram auth) stay in `selftest`, run by hand.
+
+on: [push, pull_request]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  receptionist:
+    name: ai-receptionist (pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-receptionist
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ai-receptionist/requirements-dev.txt
+      - name: Install deps
+        run: pip install -r requirements-dev.txt
+      - name: Compile-check every module
+        run: python -m py_compile app/*.py app/channels/*.py
+      - name: Run offline test suite
+        run: python -m pytest
+
+  growth-engine:
+    name: growth-engine (compile + offline selftest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: growth-engine
+    env:
+      GROWTH_ENGINE_DRY_RUN: "1"   # belt-and-braces: never touch a live platform from CI
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: growth-engine/requirements.txt
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Compile-check every module
+        run: python -m py_compile src/*.py
+      - name: Offline selftest (config + platform registry)
+        run: |
+          python -m src.selftest config
+          python -m src.selftest platforms
