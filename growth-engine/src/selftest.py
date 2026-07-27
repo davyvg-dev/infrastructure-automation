@@ -297,8 +297,10 @@ def check_telegram() -> bool:
 def check_x() -> bool:
     print("• x (auth only — does NOT post)")
     try:
-        env("X_API_KEY"); env("X_API_SECRET")
-        env("X_ACCESS_TOKEN"); env("X_ACCESS_TOKEN_SECRET")
+        env("X_API_KEY")
+        env("X_API_SECRET")
+        env("X_ACCESS_TOKEN")
+        env("X_ACCESS_TOKEN_SECRET")
     except MissingSetting as exc:
         return _fail(str(exc))
     import tweepy

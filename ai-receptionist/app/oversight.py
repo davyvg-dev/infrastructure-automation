@@ -23,7 +23,8 @@ import logging
 import os
 import re
 import sys
-from datetime import datetime, time as dtime, timedelta
+from datetime import datetime, timedelta
+from datetime import time as dtime
 from typing import Any
 
 from . import analytics, notify, settings

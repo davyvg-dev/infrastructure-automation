@@ -129,9 +129,11 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
     token = _activate(request)
     try:
         reply = sessions.respond("web", session_id, body.message)
-    except Exception:
+    except Exception as exc:
         log.exception("chat turn failed (session %s)", session_id)
-        raise HTTPException(status_code=503, detail="The receptionist is temporarily unavailable.")
+        raise HTTPException(
+            status_code=503, detail="The receptionist is temporarily unavailable."
+        ) from exc
     finally:
         clear_slug(token)
     return ChatOut(session_id=session_id, reply=reply)

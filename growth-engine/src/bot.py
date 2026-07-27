@@ -18,7 +18,6 @@ from zoneinfo import ZoneInfo
 import httpx
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.constants import ParseMode
-from telegram.request import HTTPXRequest
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
@@ -27,12 +26,21 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+from telegram.request import HTTPXRequest
 
-from . import (buildlog, formatting, generate, media, pagekit, platforms,
-               publish_meta, publish_tiktok, store)
+from . import (
+    buildlog,
+    formatting,
+    generate,
+    media,
+    pagekit,
+    platforms,
+    publish_meta,
+    publish_tiktok,
+    store,
+)
 from .publish_x import post as post_to_x
 from .settings import active_cadence, data_dir, env, strategy
-
 
 # --------------------------------------------------------------------------- #
 # Sending drafts

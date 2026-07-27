@@ -19,8 +19,8 @@ import subprocess
 import sys
 import tempfile
 import wave
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from .settings import ROOT
 
@@ -166,7 +166,7 @@ def build_soundtrack(out_path: Path, duration: float,
     if bed.strip():
         bed_buf = _bed_samples(bed.strip(), n, bed_gain_db)
         if bed_buf:
-            buf = [a + b for a, b in zip(buf, bed_buf)]
+            buf = [a + b for a, b in zip(buf, bed_buf, strict=False)]
     # Overlapping SFX can sum past full scale — normalize down instead of hard-clipping.
     peak = max((abs(s) for s in buf), default=0.0)
     if peak > 0.98:

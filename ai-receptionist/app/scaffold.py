@@ -358,7 +358,7 @@ def main(argv: list[str]) -> int:
         print("     scraped services / hours / region too.")
     else:
         print(f"  1. Open {rel} and edit services / hours / FAQ to match the prospect.")
-    print(f"  2. Run their branded demo:")
+    print("  2. Run their branded demo:")
     print(f"       BUSINESS_CONFIG={rel} python -m app.server")
     print("     then open http://127.0.0.1:8000")
     print("  3. Record a 30-sec booking clip for your Loom / to send them.")

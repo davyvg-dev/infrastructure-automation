@@ -220,7 +220,7 @@ def render(scenario: list[dict[str, str]], business: str, greeting: str,
 
     def plan(char_frames: int, dwells: list[int]) -> int:
         total = _COLD_FRAMES + suspense
-        for turn, dw in zip(played, dwells):
+        for turn, dw in zip(played, dwells, strict=False):
             if turn["from"] == "klant":
                 total += len(turn["text"]) * char_frames + _SEND_FRAMES
             total += dw
@@ -248,7 +248,7 @@ def render(scenario: list[dict[str, str]], business: str, greeting: str,
     p.emit(len(turns) - 1, "", -1, 4)
     sound("pop")
     p.emit(len(turns), "", -1, _COLD_FRAMES - 4)
-    for i, (turn, dw) in enumerate(zip(played, dwells)):
+    for i, (turn, dw) in enumerate(zip(played, dwells, strict=False)):
         shown = base + i  # bubbles on screen before this turn lands
         final = i == len(played) - 1
         if turn["from"] == "klant":

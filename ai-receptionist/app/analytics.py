@@ -26,7 +26,8 @@ import os
 import sqlite3
 import sys
 import threading
-from datetime import datetime, time as dtime, timedelta
+from datetime import datetime, timedelta
+from datetime import time as dtime
 from typing import Any
 
 from . import settings
@@ -269,7 +270,7 @@ def load_session(client: str, channel: str, user_id: str) -> dict[str, Any] | No
     try:
         cols = [c[1] for c in conn.execute("PRAGMA table_info(sessions)").fetchall()]
         row = conn.execute("SELECT * FROM sessions WHERE session_key=?", (key,)).fetchone()
-        return dict(zip(cols, row)) if row else None
+        return dict(zip(cols, row, strict=True)) if row else None
     finally:
         conn.close()
 
@@ -421,7 +422,7 @@ _INSIGHT_JSON_COLS = ("topics_json", "unanswered_json", "out_of_scope_json", "up
 
 
 def _decode_insight(cols: list[str], row: tuple) -> dict[str, Any]:
-    d = dict(zip(cols, row))
+    d = dict(zip(cols, row, strict=True))
     for key in _INSIGHT_JSON_COLS:
         try:
             d[key] = json.loads(d.get(key) or "[]")
