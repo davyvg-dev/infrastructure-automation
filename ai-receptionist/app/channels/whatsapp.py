@@ -15,7 +15,7 @@ import logging
 import os
 from xml.sax.saxutils import escape
 
-from .. import sessions
+from .. import notify, sessions
 from ..settings import clear_slug, resolve_whatsapp_slug, use_slug
 
 log = logging.getLogger(__name__)
@@ -60,6 +60,12 @@ def handle(url: str, signature: str | None, params: dict[str, str]) -> tuple[str
     token = use_slug(resolve_whatsapp_slug(params.get("To")))
     try:
         reply = sessions.respond("whatsapp", sender, body)
+    except Exception as exc:
+        # Report to the founder, then degrade gracefully: a friendly 200 (no Twilio retry
+        # storm) beats a 500 that leaves the customer with silence.
+        log.exception("whatsapp turn failed")
+        notify.owner_exception(exc, context="whatsapp")
+        reply = "Sorry, er ging even iets mis. Probeer het zo nog eens."
     finally:
         clear_slug(token)
     return _twiml(reply), 200

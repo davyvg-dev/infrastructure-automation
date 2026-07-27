@@ -23,6 +23,8 @@ from __future__ import annotations
 import json
 import os
 import threading
+import time
+import traceback
 import urllib.request
 from datetime import datetime
 from typing import Any
@@ -71,6 +73,66 @@ def owner(text: str, chat_id: str | None = None) -> bool:
         return True
     except Exception as exc:  # never let a notification failure break the conversation
         print(f"[notify:owner] send failed ({exc}); message was: {text}")
+        return False
+
+
+# --- Error reporting: PII-scrubbed stack traces to the founder ---------------------------
+# When the receptionist hits an unhandled error, send the founder the stack trace (exception
+# type + message + frames, NEVER local-variable values — that omission is the privacy win
+# over Sentry) through the same owner() Telegram seam. €0, no new vendor, no GDPR
+# sub-processor. Kept behind this one helper so a later swap to Sentry/GlitchTip, if error
+# volume ever justifies it, is a small change.
+
+# Dedup so a crash loop can't spam Telegram. Signature = exc type + the innermost frame's
+# location; the same error is suppressed for this many seconds after it first fires.
+_ERR_DEDUP_SECONDS = int(os.getenv("NOTIFY_ERROR_DEDUP_SECONDS", "600"))
+_err_lock = threading.Lock()
+_err_last_sent: dict[str, float] = {}
+
+
+def _error_signature(exc: BaseException) -> str:
+    """Stable key for an error: its type + the file:line where it was raised. Two crashes at
+    the same site with the same type dedup together; a crash elsewhere still gets through."""
+    tb = exc.__traceback__
+    innermost = None
+    while tb is not None:
+        innermost = tb
+        tb = tb.tb_next
+    where = f"{innermost.tb_frame.f_code.co_filename}:{innermost.tb_lineno}" if innermost else "?"
+    return f"{type(exc).__name__}@{where}"
+
+
+def _dedup_ok(signature: str) -> bool:
+    """True (and records now) if this signature hasn't fired inside the dedup window."""
+    now = time.monotonic()
+    with _err_lock:
+        if len(_err_last_sent) > 1000:  # crude memory bound against many distinct crash sites
+            _err_last_sent.clear()
+        last = _err_last_sent.get(signature)
+        if last is not None and now - last < _ERR_DEDUP_SECONDS:
+            return False
+        _err_last_sent[signature] = now
+        return True
+
+
+def owner_exception(exc: BaseException, *, context: str = "") -> bool:
+    """Report an unhandled receptionist error to the founder as a PII-scrubbed stack trace.
+
+    Formats type + message + stack (never local-variable values), masks any phone/email that
+    leaked into the text, and dedups so a crash loop can't spam Telegram. Never raises — a
+    reporting failure must not break the conversation that triggered it.
+    """
+    try:
+        if not _dedup_ok(_error_signature(exc)):
+            return False
+        trace = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+        # Lazy import: oversight imports notify, so importing it at module top is circular.
+        from .oversight import redact
+
+        header = f"⚠ receptionist error [{context}]" if context else "⚠ receptionist error"
+        return owner(f"{header}\n{redact(trace)}")
+    except Exception as report_exc:  # reporting must never break a conversation
+        print(f"[notify:owner_exception] failed to report ({report_exc})")
         return False
 
 

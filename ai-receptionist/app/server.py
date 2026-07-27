@@ -15,11 +15,11 @@ from collections import deque
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 from starlette.concurrency import run_in_threadpool
 
-from . import sessions
+from . import notify, sessions
 from .channels import whatsapp
 from .settings import business, clear_slug, ensure_dirs, resolve_slug, use_slug
 
@@ -131,6 +131,7 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
         reply = sessions.respond("web", session_id, body.message)
     except Exception as exc:
         log.exception("chat turn failed (session %s)", session_id)
+        notify.owner_exception(exc, context="chat")
         raise HTTPException(
             status_code=503, detail="The receptionist is temporarily unavailable."
         ) from exc
@@ -146,6 +147,14 @@ async def whatsapp_webhook(request: Request) -> Response:
     signature = request.headers.get("X-Twilio-Signature")
     body, status = await run_in_threadpool(whatsapp.handle, str(request.url), signature, params)
     return Response(content=body, media_type="application/xml", status_code=status)
+
+
+@app.exception_handler(Exception)
+async def _report_unhandled(request: Request, exc: Exception) -> Response:
+    # Backstop for any route that doesn't report on its own. HTTPException keeps its default
+    # handler, so /chat's 503 (already reported above) never reaches here — no double-fire.
+    notify.owner_exception(exc, context=request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Internal server error."})
 
 
 def main() -> None:
