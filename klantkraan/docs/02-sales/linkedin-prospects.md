@@ -15,6 +15,9 @@ Manual LinkedIn outreach list. Two sources folded together:
 3. Send a **connection request** with a light, human note — no pitch. Template below.
 4. Flip `☐ → ✔` as you go.
 
+**Wave 1 sent 2026-07-27:** all 16 Tier A + first 20 Tier B (36 requests — a full week's
+budget; next wave not before 2026-08-03 unless acceptance is strong).
+
 **Compliance — read once:** a manual LinkedIn connection request is the allowed co-pilot motion
 (no automation, no auto-DMs — CLAUDE.md). **Do NOT bulk cold-email the Apollo contacts:** their
 legal entity is unverified, many are ZZP/eenmanszaak (cold email forbidden without opt-in), and a
@@ -39,47 +42,47 @@ cleared for cold *email*; `⚠` rows need a KvK check first.
 
 | ☐ | Naam | Titel | Bedrijf | E-mail / tel |
 |---|------|-------|---------|--------------|
-| ☐ | Alex Hammer | Loodgieter/Eigenaar | Hammer Loodgieters & Installateurs | +31 6 40961235 |
-| ☐ | Silvain Maliepaard | DGA | Maliepaard Loodgieters B.V. | silvain@maliepaard.nl |
-| ☐ | Marco | Directeur | Installatiebedrijf Bek | marco@bekbv.nl |
-| ☐ | Hein Veen | Loodgieter | Loodgietersbedrijf H. Veen | +31 6 24768794 |
-| ☐ | Eric Zeeuwen | Loodgieter | Zeeuwen Loodgietersbedrijf | — |
-| ☐ | Mike Miedema | Loodgieter | Miedema Loodgieters & Vastgoedonderhoud | — |
-| ☐ | Ewan Woodley | Loodgieter | Woodley Techniek | — |
-| ☐ | Max Verhoef | W-installateur | Verhoef Techniek & Onderhoud | — |
-| ☐ | Martijn Spitsbaard | Loodgieter | Spitsbaard Installatiebedrijf | mspitsbaard@brigroep.nl |
-| ☐ | Marinus Verkerk | Loodgieter | Zelfstandig / Eigenaar | marinus@vossebelt.org |
-| ☐ | Cornelis Van Der Weerd | Loodgieter | Zelfstandig / Eigenaar | — |
-| ☐ | Rafal Konopka | Zelfstandig Loodgieter (ZZP) | Konopka Onderhoud | +31 6 47584359 |
-| ☐ | Michael Dom | Loodgieter ZZP | Loodgietersbedrijf Waterproef | — |
-| ☐ | Ashanti Wespel | Zzp loodgieter | Goflowinstall | — |
-| ☐ | Omar Alkurdi | Loodgieter | Alkurdi Installaties | — |
-| ☐ | Dennis Rie | Loodgieter | de Rie Dakwerken | dennis@jobsebv.nl |
+| ✔ | Alex Hammer | Loodgieter/Eigenaar | Hammer Loodgieters & Installateurs | +31 6 40961235 |
+| ✔ | Silvain Maliepaard | DGA | Maliepaard Loodgieters B.V. | silvain@maliepaard.nl |
+| ✔ | Marco | Directeur | Installatiebedrijf Bek | marco@bekbv.nl |
+| ✔ | Hein Veen | Loodgieter | Loodgietersbedrijf H. Veen | +31 6 24768794 |
+| ✔ | Eric Zeeuwen | Loodgieter | Zeeuwen Loodgietersbedrijf | — |
+| ✔ | Mike Miedema | Loodgieter | Miedema Loodgieters & Vastgoedonderhoud | — |
+| ✔ | Ewan Woodley | Loodgieter | Woodley Techniek | — |
+| ✔ | Max Verhoef | W-installateur | Verhoef Techniek & Onderhoud | — |
+| ✔ | Martijn Spitsbaard | Loodgieter | Spitsbaard Installatiebedrijf | mspitsbaard@brigroep.nl |
+| ✔ | Marinus Verkerk | Loodgieter | Zelfstandig / Eigenaar | marinus@vossebelt.org |
+| ✔ | Cornelis Van Der Weerd | Loodgieter | Zelfstandig / Eigenaar | — |
+| ✔ | Rafal Konopka | Zelfstandig Loodgieter (ZZP) | Konopka Onderhoud | +31 6 47584359 |
+| ✔ | Michael Dom | Loodgieter ZZP | Loodgietersbedrijf Waterproef | — |
+| ✔ | Ashanti Wespel | Zzp loodgieter | Goflowinstall | — |
+| ✔ | Omar Alkurdi | Loodgieter | Alkurdi Installaties | — |
+| ✔ | Dennis Rie | Loodgieter | de Rie Dakwerken | dennis@jobsebv.nl |
 
 ### B — Loodgieter bij een bedrijf (check op LinkedIn: eigenaar of monteur? bedrijf = de prospect)
 
 | ☐ | Naam | Titel | Bedrijf | E-mail / tel |
 |---|------|-------|---------|--------------|
-| ☐ | Faissal Amhaj | Loodgieter | AMJ Installatietechniek | — |
-| ☐ | Samuel Dam | Loodgieter | AVW Installatie BV | +31 6 40747012 |
-| ☐ | Sharief Sewbalak | Servicemonteur | Bokhorst Installatie Groep | sharief.sewbalak@bokhorst.com |
-| ☐ | George Mhanna | Loodgieter | Bol B.V. Installatietechniek | g.mhanna@bol-vermeulen.nl |
-| ☐ | Tom Van Poppelen | Loodgieter / zinkwerker | Cazdak Dakbedekkingen BV | t.vanpoppelen@cazdak.nl |
-| ☐ | Ruben Ravestein | Loodgieter | Celsius Installatietechniek | ruben@celsiusloodgieters.nl |
-| ☐ | Courtney Bromfield | Plumber/Tiler/Handyman | Cool Plumbings | +31 6 52875088 |
-| ☐ | Chakir Zecri | Loodgieter | CZ Installaties | +31 6 44177604 |
-| ☐ | Boy Nederpel | Loodgieter | De Combinatie Installatie B.V. | bnederpel@dcinstallatie.nl |
-| ☐ | Vince Mollemans | Loodgieter | De Groot Installaties | +31 6 12161382 |
-| ☐ | L. Taghlaoui | Loodgieter | DUTECO Installatiegroep BV | l.taghlaoui@duteco.nl |
-| ☐ | Steven Timmer | Loodgieter | Engberink Technische Installaties | stimmer@engberink.nl |
-| ☐ | Faris Halilovic | Loodgieter | Giesbers InstallatieGroep | faris.halilovic@giesbers.com |
-| ☐ | Grzegorz Zurek | Loodgieter | Hanab Installation Technology | +31 78 641 7222 |
-| ☐ | Sam Scheltinga | Loodgieter | Hoekstra Installatietechniek | s.scheltinga@hoekstra-heerenveen.nl |
-| ☐ | Rick Vermeulen | Voorman loodgieter | IBW Installatiebedrijf Werkendam | r.vermeulen@ibw-wdam.nl |
-| ☐ | Mehmet Arkan | Loodgieter | Installatie Maatschappij H.Ek. B.V. | +31 73 649 6400 |
-| ☐ | Kadir A. | Loodgieter | Installatie Techniek AK | — |
-| ☐ | Jerry Prins | Loodgieter | Installatiebedrijf Fien | — |
-| ☐ | Marco Schenkenberg | Loodgieter | Installatiebedrijf Gijsbertsen | 0341-35138 |
+| ✔ | Faissal Amhaj | Loodgieter | AMJ Installatietechniek | — |
+| ✔ | Samuel Dam | Loodgieter | AVW Installatie BV | +31 6 40747012 |
+| ✔ | Sharief Sewbalak | Servicemonteur | Bokhorst Installatie Groep | sharief.sewbalak@bokhorst.com |
+| ✔ | George Mhanna | Loodgieter | Bol B.V. Installatietechniek | g.mhanna@bol-vermeulen.nl |
+| ✔ | Tom Van Poppelen | Loodgieter / zinkwerker | Cazdak Dakbedekkingen BV | t.vanpoppelen@cazdak.nl |
+| ✔ | Ruben Ravestein | Loodgieter | Celsius Installatietechniek | ruben@celsiusloodgieters.nl |
+| ✔ | Courtney Bromfield | Plumber/Tiler/Handyman | Cool Plumbings | +31 6 52875088 |
+| ✔ | Chakir Zecri | Loodgieter | CZ Installaties | +31 6 44177604 |
+| ✔ | Boy Nederpel | Loodgieter | De Combinatie Installatie B.V. | bnederpel@dcinstallatie.nl |
+| ✔ | Vince Mollemans | Loodgieter | De Groot Installaties | +31 6 12161382 |
+| ✔ | L. Taghlaoui | Loodgieter | DUTECO Installatiegroep BV | l.taghlaoui@duteco.nl |
+| ✔ | Steven Timmer | Loodgieter | Engberink Technische Installaties | stimmer@engberink.nl |
+| ✔ | Faris Halilovic | Loodgieter | Giesbers InstallatieGroep | faris.halilovic@giesbers.com |
+| ✔ | Grzegorz Zurek | Loodgieter | Hanab Installation Technology | +31 78 641 7222 |
+| ✔ | Sam Scheltinga | Loodgieter | Hoekstra Installatietechniek | s.scheltinga@hoekstra-heerenveen.nl |
+| ✔ | Rick Vermeulen | Voorman loodgieter | IBW Installatiebedrijf Werkendam | r.vermeulen@ibw-wdam.nl |
+| ✔ | Mehmet Arkan | Loodgieter | Installatie Maatschappij H.Ek. B.V. | +31 73 649 6400 |
+| ✔ | Kadir A. | Loodgieter | Installatie Techniek AK | — |
+| ✔ | Jerry Prins | Loodgieter | Installatiebedrijf Fien | — |
+| ✔ | Marco Schenkenberg | Loodgieter | Installatiebedrijf Gijsbertsen | 0341-35138 |
 | ☐ | Stefan Den Uijl | Loodgieter | Installatiebedrijf Kruit B.V. | +31 6 55367305 |
 | ☐ | Dennis Van Zoest | Loodgieter | Installatiebedrijf ter Beek B.V. | +31 33 298 0145 |
 | ☐ | Roland Peters | Loodgieter / monteur | Intec Installatietechniek | +31 11 378 3000 |
