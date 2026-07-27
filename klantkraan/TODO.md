@@ -35,6 +35,7 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 - [ ] Upload real KvK-uittreksel PDF → `public/downloads/`
 - [x] Attach `klantkraan.nl` custom domain — NS propagation completed; apex + www both serve the site over Cloudflare (verified 2026-07-13, HTTP 200)
 - [ ] Moneybird trial + Mollie account (walkthrough prepped; needed before first invoice)
+- [ ] Liability insurance — get the Hiscox beroepsaansprakelijkheidsverzekering ICT quote (€500k cover, ~€40–80/mo, master plan § 5 item 7) and ask for bedrijfsaansprakelijkheid (AVB) in the same bundle; in place before the first paying client goes live
 - [ ] Point `/demo` at the live text demo (web chat) instead of the TODO phone number — text demo works today, no CM.com dependency
 
 ### E. First pilot (the gate everything else waits behind)
