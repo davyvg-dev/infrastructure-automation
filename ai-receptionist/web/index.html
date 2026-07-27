@@ -5,17 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Digitale receptionist</title>
   <style>
+    /* Klantkraan dispatch palette — must match the marketing site tokens
+     * (klantkraan/apps/marketing-site/src/styles/global.css @theme). One look,
+     * no light/dark swap: the brand is the dark panel. */
     :root {
-      --bg: #f6f7f9; --panel: #ffffff; --ink: #1c2430; --muted: #6b7683;
-      --bot: #eef1f5; --me: #2f6df6; --me-ink: #ffffff; --line: #e4e8ee;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1216; --panel: #171b21; --ink: #e8ecf1; --muted: #9aa5b1;
-        --bot: #222831; --me: #2f6df6; --me-ink: #ffffff; --line: #2a3038;
-      }
+      --bg: #0f1c1e; --panel: #16292b; --ink: #f4efe6; --muted: #93a6a2;
+      --bot: #1c3335; --me: #ffb84d; --me-ink: #0f1c1e; --line: #26403f;
+      --ok: #63d3ab;
     }
     * { box-sizing: border-box; }
+    html { color-scheme: dark; }
     html, body { height: 100%; margin: 0; width: 100%; max-width: 100%; overflow-x: hidden; }
     body {
       background: var(--bg); color: var(--ink);
@@ -26,7 +25,7 @@
       width: 100%; max-width: min(440px, 100%); height: min(680px, 92vh);
       background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
       display: flex; flex-direction: column; overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0,0,0,.08);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
     }
     /* Embedded in the widget iframe: fill it edge-to-edge, the bubble/panel is the frame. */
     body.embed { padding: 0; background: transparent; display: block; }
@@ -37,7 +36,7 @@
       padding: 14px 16px; border-bottom: 1px solid var(--line);
       display: flex; align-items: center; gap: 10px;
     }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: #35c46a; flex: none; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); flex: none; }
     header .who { flex: 1; min-width: 0; }
     header h1 { font-size: 15px; margin: 0; font-weight: 600; }
     header span { color: var(--muted); font-size: 12px; }
@@ -58,9 +57,11 @@
       flex: 1; min-width: 0; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
       background: var(--bg); color: var(--ink); font-size: 15px;
     }
+    input::placeholder { color: var(--muted); }
+    input:focus { outline: 2px solid var(--me); outline-offset: 1px; }
     button.send {
       padding: 0 16px; border: 0; border-radius: 10px; background: var(--me);
-      color: #fff; font-weight: 600; cursor: pointer;
+      color: var(--me-ink); font-weight: 600; cursor: pointer;
     }
     button.send:disabled { opacity: .5; cursor: default; }
     /* When the chat fills the whole screen (widget/iframe embed), pad the input

@@ -3,7 +3,7 @@
  *
  * A client pastes ONE line on their own site:
  *   <script src="https://<client>.klantkraan.nl/widget.js" defer
- *           data-label="Chat" data-color="#2f6df6" data-position="right"></script>
+ *           data-label="Chat" data-color="#ffb84d" data-position="right"></script>
  *
  * This script runs on the client's page but only touches the DOM: it injects a floating
  * bubble and, on first open, an <iframe> pointing back at OUR origin (derived from this
@@ -35,15 +35,18 @@
   }
 
   var ds = (script && script.dataset) || {};
-  var color = ds.color || "#2f6df6";
+  // Brand default: Klantkraan sodium-amber bubble with petrol-dark icon. A client
+  // can still override both via data-color / data-ink to match their own site.
+  var color = ds.color || "#ffb84d";
+  var ink = ds.ink || "#0f1c1e";
   var label = ds.label || "Chat";
   var side = ds.position === "left" ? "left" : "right";
   var frameSrc = origin + "/?embed=1";
 
   var CHAT_ICON =
-    '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg>';
+    '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="' + ink + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.38 8.38 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg>';
   var CLOSE_ICON =
-    '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="' + ink + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 
   function build() {
     var host = document.createElement("div");
@@ -60,7 +63,7 @@
       "display:flex;align-items:center;justify-content:center;padding:0;transition:transform .15s ease}",
       ".kk-bubble:hover{transform:scale(1.06)}",
       ".kk-panel{bottom:92px;width:min(400px,calc(100vw - 40px));height:min(640px,calc(100vh - 120px));",
-      "border:0;border-radius:16px;overflow:hidden;background:#fff;",
+      "border:0;border-radius:16px;overflow:hidden;background:#0f1c1e;",
       "box-shadow:0 16px 48px rgba(0,0,0,.28);opacity:0;transform:translateY(12px) scale(.98);",
       "pointer-events:none;transition:opacity .18s ease,transform .18s ease}",
       ".kk-panel.kk-open{opacity:1;transform:none;pointer-events:auto}",
