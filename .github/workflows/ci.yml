@@ -12,6 +12,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lint:
+    name: ruff (lint + format check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ruff
+        run: pip install ruff==0.16.0   # keep in lockstep with requirements-dev.txt
+      - name: Lint
+        run: |
+          ruff check ai-receptionist/app ai-receptionist/tests
+          ruff check growth-engine/src
+      - name: Format check
+        run: |
+          ruff format --check ai-receptionist/app ai-receptionist/tests
+          ruff format --check growth-engine/src
+
   receptionist:
     name: ai-receptionist (pytest)
     runs-on: ubuntu-latest
