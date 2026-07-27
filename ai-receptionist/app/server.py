@@ -144,9 +144,7 @@ async def whatsapp_webhook(request: Request) -> Response:
     form = await request.form()
     params = {k: str(v) for k, v in form.items()}
     signature = request.headers.get("X-Twilio-Signature")
-    body, status = await run_in_threadpool(
-        whatsapp.handle, str(request.url), signature, params
-    )
+    body, status = await run_in_threadpool(whatsapp.handle, str(request.url), signature, params)
     return Response(content=body, media_type="application/xml", status_code=status)
 
 

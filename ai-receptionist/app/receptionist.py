@@ -44,7 +44,8 @@ def build_system_prompt() -> str:
     scope_does_not_line = (
         f"\n- Out of scope (a different trade): {scope_does_not}. For these, don't pretend to "
         "help — take a message or point them to the right kind of company."
-        if scope_does_not else ""
+        if scope_does_not
+        else ""
     )
 
     # On-site trades (a plumber/electrician who comes to the customer) must know WHERE to go,
@@ -66,15 +67,15 @@ def build_system_prompt() -> str:
     # Prescriptive, labeled sections with the most load-bearing rules at the top and the
     # "never do this" list at the bottom — where models attend most reliably.
     return f"""# Role
-You are {p['name']}, the virtual receptionist for {b['name']}, a {b['type']} in \
-{b.get('address', '')} ({b['timezone']} timezone). Today is {date.today():%A, %Y-%m-%d}.
+You are {p["name"]}, the virtual receptionist for {b["name"]}, a {b["type"]} in \
+{b.get("address", "")} ({b["timezone"]} timezone). Today is {date.today():%A, %Y-%m-%d}.
 
 # Tone
-{p['tone']} Keep every reply short and natural — you're chatting, not writing an email.
+{p["tone"]} Keep every reply short and natural — you're chatting, not writing an email.
 Ask at most one question per reply.
 
 # Goals
-{p['goals']}
+{p["goals"]}
 
 # Booking flow (follow exactly)
 1. Call check_availability to find real open slots before offering any time. NEVER invent a slot.
@@ -85,14 +86,14 @@ Ask at most one question per reply.
 
 # What you know
 Services (common jobs and their prices — a starting point, not the limit of what you do):
-{services or '  (none listed)'}
+{services or "  (none listed)"}
 Opening hours (days not listed are CLOSED):
 {hours}
 FAQ:
-{faq or '  (none)'}
+{faq or "  (none)"}
 
 # What we do (scope of work)
-{b['name']} is a {b['type']}. You confidently handle the FULL range of work that trade covers —
+{b["name"]} is a {b["type"]}. You confidently handle the FULL range of work that trade covers —
 not only the specific services priced above.{scope_does_line}
 - If a customer describes a job that fits this trade — even a large, unusual, or commercial one,
   and even if it isn't in the list above — say yes, we can help, and move toward booking. Never
@@ -104,7 +105,7 @@ not only the specific services priced above.{scope_does_line}
 This means a job for a DIFFERENT trade, a complaint, or a special request you genuinely can't
 resolve — NOT an in-scope job (see scope above). For those, collect the customer's name + contact
 and call take_message so a human follows up. For anything urgent, give the phone number:
-{b.get('phone', '(not provided)')}.
+{b.get("phone", "(not provided)")}.
 
 # What you do NOT know — never guess these (these are facts, not the scope of your trade)
 - Exact prices for jobs not in the list above — offer an inspection/offerte instead of quoting.
@@ -116,7 +117,7 @@ consultation. Do not make up an answer. Lacking a fact is never a reason to turn
 fits our trade — book an inspection instead.
 
 # Hard rules
-{p['guardrails']}
+{p["guardrails"]}
 - Never invent slots, prices, confirmations, or facts. If unsure, use a tool or take a message.
 - Never turn away a job that fits our trade — confirm it and book an inspection or offerte.
 - When you have enough information to act, act. When you've answered or booked, stop —
@@ -177,11 +178,13 @@ def run_turn(
                         telemetry["tools"].append(
                             {"name": block.name, "input": block.input, "output": output}
                         )
-                    results.append({
-                        "type": "tool_result",
-                        "tool_use_id": block.id,
-                        "content": output,
-                    })
+                    results.append(
+                        {
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "content": output,
+                        }
+                    )
             history = history + [{"role": "user", "content": results}]
             continue
 
@@ -192,6 +195,8 @@ def run_turn(
         return text or "(no response)", history
 
     log.warning("receptionist hit the turn cap without finishing")
-    notify.owner("⚠️ The receptionist got stuck on a conversation and couldn't finish. "
-                 "A customer may need a callback.")
+    notify.owner(
+        "⚠️ The receptionist got stuck on a conversation and couldn't finish. "
+        "A customer may need a callback."
+    )
     return "Sorry — I got stuck. Please call us and we'll help right away.", history

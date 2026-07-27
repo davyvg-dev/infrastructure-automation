@@ -62,7 +62,5 @@ def draft_platforms() -> list[str]:
 def spec(name: str) -> dict[str, Any]:
     reg = registry()
     if name not in reg:
-        raise KeyError(
-            f"unknown or disabled platform '{name}' (enabled: {', '.join(reg)})"
-        )
+        raise KeyError(f"unknown or disabled platform '{name}' (enabled: {', '.join(reg)})")
     return reg[name]

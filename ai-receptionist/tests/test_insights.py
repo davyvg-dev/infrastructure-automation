@@ -7,20 +7,36 @@ from datetime import datetime, timedelta
 from app import analytics, oversight
 
 _ZONWERING_INSIGHT = {
-    "intent": "out-of-scope enquiry", "topics": ["zonwering"],
-    "resolved": True, "escalated": False, "escalation_reason": "",
-    "unanswered_questions": [], "out_of_scope_requests": ["zonwering"],
-    "sentiment": "neu", "language": "nl", "customer_type": "new",
-    "lead_captured": False, "booking_made": False, "est_job_value_eur": 0,
-    "upsell_signals": ["out_of_scope:zonwering"], "quality_flags": [],
+    "intent": "out-of-scope enquiry",
+    "topics": ["zonwering"],
+    "resolved": True,
+    "escalated": False,
+    "escalation_reason": "",
+    "unanswered_questions": [],
+    "out_of_scope_requests": ["zonwering"],
+    "sentiment": "neu",
+    "language": "nl",
+    "customer_type": "new",
+    "lead_captured": False,
+    "booking_made": False,
+    "est_job_value_eur": 0,
+    "upsell_signals": ["out_of_scope:zonwering"],
+    "quality_flags": [],
 }
 
 
 def _record_zonwering_turn():
     analytics.record_turn(
-        client="demo-test", channel="web", user_id="+31600000009",
-        user_text="Doen jullie ook zonwering?", reply="Nee, dat is een andere vakman.",
-        input_tokens=50, output_tokens=10, model="claude-opus-4-8", tools=[])
+        client="demo-test",
+        channel="web",
+        user_id="+31600000009",
+        user_text="Doen jullie ook zonwering?",
+        reply="Nee, dat is een andere vakman.",
+        input_tokens=50,
+        output_tokens=10,
+        model="claude-opus-4-8",
+        tools=[],
+    )
 
 
 def test_redaction_masks_phone_and_email():

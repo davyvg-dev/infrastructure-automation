@@ -71,19 +71,24 @@ def _access_token() -> str:
             info = json.load(fh)
         signer = crypt.RSASigner.from_service_account_info(info)
         issued = int(now)
-        assertion = jwt.encode(signer, {
-            "iss": info["client_email"],
-            "scope": _SCOPE,
-            "aud": info["token_uri"],
-            "iat": issued,
-            "exp": issued + 3600,
-        })
+        assertion = jwt.encode(
+            signer,
+            {
+                "iss": info["client_email"],
+                "scope": _SCOPE,
+                "aud": info["token_uri"],
+                "iat": issued,
+                "exp": issued + 3600,
+            },
+        )
         if isinstance(assertion, bytes):
             assertion = assertion.decode("utf-8")
-        data = urllib.parse.urlencode({
-            "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-            "assertion": assertion,
-        }).encode()
+        data = urllib.parse.urlencode(
+            {
+                "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                "assertion": assertion,
+            }
+        ).encode()
         with urllib.request.urlopen(
             urllib.request.Request(info["token_uri"], data=data), timeout=15
         ) as resp:
@@ -125,12 +130,16 @@ def _to_local(rfc: str) -> datetime:
 
 def _busy_intervals(start: datetime, end: datetime) -> list[tuple[datetime, datetime]]:
     cid = _calendar_id()
-    resp = _api("POST", "/freeBusy", body={
-        "timeMin": _rfc3339(start),
-        "timeMax": _rfc3339(end),
-        "timeZone": _tz(),
-        "items": [{"id": cid}],
-    })
+    resp = _api(
+        "POST",
+        "/freeBusy",
+        body={
+            "timeMin": _rfc3339(start),
+            "timeMax": _rfc3339(end),
+            "timeZone": _tz(),
+            "items": [{"id": cid}],
+        },
+    )
     cal = resp.get("calendars", {}).get(cid, {})
     if cal.get("errors"):
         raise RuntimeError(f"free/busy error for {cid}: {cal['errors']}")
@@ -186,7 +195,9 @@ def book(
 
     minutes = calendar_store.slot_minutes()
     # Re-check against the live calendar to narrow the double-booking window.
-    if not _is_free(slot, minutes, _busy_intervals(slot_start, slot_start + timedelta(minutes=minutes))):
+    if not _is_free(
+        slot, minutes, _busy_intervals(slot_start, slot_start + timedelta(minutes=minutes))
+    ):
         return {"ok": False, "error": "That slot was just taken. Please pick another."}
 
     confirmation = f"BK-{uuid.uuid4().hex[:6].upper()}"
@@ -195,8 +206,7 @@ def book(
         "summary": f"{service} — {customer_name}",
         "description": description,
         "start": {"dateTime": _rfc3339(slot_start), "timeZone": _tz()},
-        "end": {"dateTime": _rfc3339(slot_start + timedelta(minutes=minutes)),
-                "timeZone": _tz()},
+        "end": {"dateTime": _rfc3339(slot_start + timedelta(minutes=minutes)), "timeZone": _tz()},
     }
     # For an on-site visit, put the address in `location` so it's tappable-to-navigate in the
     # calendar app, and repeat it in the description where it's always visible.

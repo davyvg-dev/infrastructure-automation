@@ -28,6 +28,7 @@ Usage:
   python -m app.watchdog --check  # liveness once, print, no restart/alert/state
   python -m app.watchdog --deep   # force a /chat probe, print, no alert/state
 """
+
 from __future__ import annotations
 
 import json
@@ -106,7 +107,9 @@ def deep_probe() -> tuple[bool, str]:
 def restart_service() -> str:
     """Best-effort `systemctl restart`. Returns a short outcome string."""
     try:
-        subprocess.run(["systemctl", "restart", SERVICE], check=True, capture_output=True, timeout=60)
+        subprocess.run(
+            ["systemctl", "restart", SERVICE], check=True, capture_output=True, timeout=60
+        )
         return f"restarted {SERVICE}"
     except Exception as exc:  # noqa: BLE001
         return f"restart FAILED ({type(exc).__name__}: {exc})"
@@ -155,9 +158,14 @@ def main() -> int:
     now = "up" if ok else "down"
     if now != state.get("status", "up"):
         if now == "down":
-            _alert(f"\U0001f534 Chatbot DOWN — {HEALTH_URL}\n{detail}\nself-heal: {healed or 'n/a'}")
+            _alert(
+                f"\U0001f534 Chatbot DOWN — {HEALTH_URL}\n{detail}\nself-heal: {healed or 'n/a'}"
+            )
         else:
-            _alert(f"\U0001f7e2 Chatbot back UP — {HEALTH_URL}" + (f" (after {healed})" if healed else ""))
+            _alert(
+                f"\U0001f7e2 Chatbot back UP — {HEALTH_URL}"
+                + (f" (after {healed})" if healed else "")
+            )
     state["status"], state["detail"] = now, detail
 
     # 2. Deep answer probe — only when live, and only every DEEP_INTERVAL. A dead

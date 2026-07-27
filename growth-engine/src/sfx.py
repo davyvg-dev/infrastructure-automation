@@ -90,10 +90,12 @@ def _write_wav(path: Path, samples: list[float]) -> None:
         w.setnchannels(1)
         w.setsampwidth(2)
         w.setframerate(RATE)
-        w.writeframes(struct.pack(
-            f"<{len(samples)}h",
-            *(int(max(-1.0, min(1.0, s)) * 32767) for s in samples),
-        ))
+        w.writeframes(
+            struct.pack(
+                f"<{len(samples)}h",
+                *(int(max(-1.0, min(1.0, s)) * 32767) for s in samples),
+            )
+        )
 
 
 def _read_wav(path: Path) -> list[float]:
@@ -103,7 +105,7 @@ def _read_wav(path: Path) -> list[float]:
         if width != 2:
             raise ValueError(f"{path}: only 16-bit WAV supported, got {8 * width}-bit")
         raw = struct.unpack(f"<{n * ch}h", w.readframes(n))
-    mono = [sum(raw[i * ch:(i + 1) * ch]) / ch / 32768.0 for i in range(n)]
+    mono = [sum(raw[i * ch : (i + 1) * ch]) / ch / 32768.0 for i in range(n)]
     if sr == RATE or not mono:
         return mono
     return [mono[min(int(i * sr / RATE), n - 1)] for i in range(int(n * RATE / sr))]
@@ -130,9 +132,25 @@ def _bed_samples(bed: str, n: int, gain_db: float) -> list[float] | None:
         with tempfile.TemporaryDirectory() as tmp:
             decoded = Path(tmp) / "bed.wav"
             subprocess.run(
-                ["ffmpeg", "-y", "-v", "error", "-i", str(path),
-                 "-ac", "1", "-ar", str(RATE), "-c:a", "pcm_s16le", str(decoded)],
-                check=True, capture_output=True, text=True, timeout=120,
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-v",
+                    "error",
+                    "-i",
+                    str(path),
+                    "-ac",
+                    "1",
+                    "-ar",
+                    str(RATE),
+                    "-c:a",
+                    "pcm_s16le",
+                    str(decoded),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=120,
             )
             samples = _read_wav(decoded)
     except Exception as exc:
@@ -148,9 +166,13 @@ def _bed_samples(bed: str, n: int, gain_db: float) -> list[float] | None:
     return out
 
 
-def build_soundtrack(out_path: Path, duration: float,
-                     events: Iterable[tuple[float, str]],
-                     bed: str = "", bed_gain_db: float = -24.0) -> None:
+def build_soundtrack(
+    out_path: Path,
+    duration: float,
+    events: Iterable[tuple[float, str]],
+    bed: str = "",
+    bed_gain_db: float = -24.0,
+) -> None:
     """Mix (time, sfx-name) events — plus an optional ambient bed — into one mono WAV
     of exactly `duration` seconds (sfx tails past the end are truncated)."""
     events = list(events)

@@ -41,13 +41,17 @@ def check_config() -> bool:
         return _fail(f"could not load config: {exc}")
     if s["model"]["id"] != "claude-opus-4-8":
         _ok(f"model override in use: {s['model']['id']}")
-    _ok(f"vertical: {settings.vertical()} (config: {settings.CONFIG_PATH.name}, "
-        f"data: {settings.data_dir().relative_to(settings.ROOT)})")
+    _ok(
+        f"vertical: {settings.vertical()} (config: {settings.CONFIG_PATH.name}, "
+        f"data: {settings.data_dir().relative_to(settings.ROOT)})"
+    )
     _ok(f"offer: {s['brand']['offer'][:60]}…")
     _ok(f"pillars: {', '.join(p['key'] for p in s['pillars'])}")
-    _ok(f"cadence '{strategy()['cadence']['active']}': "
+    _ok(
+        f"cadence '{strategy()['cadence']['active']}': "
         f"{cad['runs_per_day']} run(s)/day × {cad['drafts_per_run']} drafts "
-        f"→ {cad['platforms_per_draft']}")
+        f"→ {cad['platforms_per_draft']}"
+    )
     return True
 
 
@@ -71,8 +75,10 @@ def check_platforms() -> bool:
     if "x" in reg and reg["x"]["char_limit"] != 280:
         return _fail(f"x char_limit must be 280, got {reg['x']['char_limit']}")
     _ok(f"enabled: {', '.join(platforms.enabled_platforms())}")
-    _ok(f"auto: {', '.join(platforms.auto_platforms()) or '(none)'} — "
-        f"assisted: {', '.join(platforms.assisted_platforms()) or '(none)'}")
+    _ok(
+        f"auto: {', '.join(platforms.auto_platforms()) or '(none)'} — "
+        f"assisted: {', '.join(platforms.assisted_platforms()) or '(none)'}"
+    )
     return True
 
 
@@ -103,11 +109,12 @@ def check_media() -> bool:
                     expected = {"square": (1080, 1080), "story": (1080, 1920)}[rec["aspect"]]
                     if img.size != expected:
                         return _fail(f"{rec['aspect']} rendered {img.size}, want {expected}")
-                _ok(f"{rec['aspect']}: {expected[0]}×{expected[1]} → targets {rec['platform_targets']}")
+                _ok(
+                    f"{rec['aspect']}: {expected[0]}×{expected[1]} → targets {rec['platform_targets']}"
+                )
             # Every scheme must render (a bad hex value should fail here, not at 11:00).
             for i, scheme in enumerate(brand.schemes()):
-                media._render("Schemacheck", "", (540, 540), Path(tmp) / f"s{i}.png",
-                              scheme, None)
+                media._render("Schemacheck", "", (540, 540), Path(tmp) / f"s{i}.png", scheme, None)
             _ok(f"{len(brand.schemes())} scheme(s) render")
     except Exception as exc:
         return _fail(f"card render failed: {exc}")
@@ -116,8 +123,10 @@ def check_media() -> bool:
     stock = brand.stock()
     if stock["enabled"]:
         has_key = bool(os.getenv("PEXELS_API_KEY", "").strip())
-        _ok(f"stock photos: every {stock['every']}th card — "
-            f"PEXELS_API_KEY {'set' if has_key else 'NOT set (flat fallback)'}")
+        _ok(
+            f"stock photos: every {stock['every']}th card — "
+            f"PEXELS_API_KEY {'set' if has_key else 'NOT set (flat fallback)'}"
+        )
     return True
 
 
@@ -148,20 +157,44 @@ def check_reel() -> bool:
             # 4×/s from 2s-6s, like a keyboard in use), and two hard full-frame
             # changes (messages popping in at 6s and 9s). All three frame classes.
             subprocess.run(
-                ["ffmpeg", "-y", "-v", "error",
-                 "-f", "lavfi", "-i", "color=c=Gray:size=390x844:rate=30:duration=6",
-                 "-f", "lavfi", "-i", "color=c=White:size=90x60:rate=30:duration=6",
-                 "-f", "lavfi", "-i", "color=c=Blue:size=390x844:rate=30:duration=3",
-                 "-f", "lavfi", "-i", "color=c=Yellow:size=390x844:rate=30:duration=3",
-                 "-filter_complex",
-                 "[0][1]overlay=x=150:y=650:"
-                 "enable='between(t,2,6)*lt(mod(t,0.5),0.25)'[a];"
-                 "[a][2][3]concat=n=3:v=1:a=0",
-                 "-pix_fmt", "yuv420p", str(raw)],
-                check=True, capture_output=True, text=True,
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-v",
+                    "error",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=Gray:size=390x844:rate=30:duration=6",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=White:size=90x60:rate=30:duration=6",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=Blue:size=390x844:rate=30:duration=3",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=Yellow:size=390x844:rate=30:duration=3",
+                    "-filter_complex",
+                    "[0][1]overlay=x=150:y=650:"
+                    "enable='between(t,2,6)*lt(mod(t,0.5),0.25)'[a];"
+                    "[a][2][3]concat=n=3:v=1:a=0",
+                    "-pix_fmt",
+                    "yuv420p",
+                    str(raw),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
             )
             record = media.build_reel(
-                raw, "selftest", "Testkop voor de reel", "Een sublijn.",
+                raw,
+                "selftest",
+                "Testkop voor de reel",
+                "Een sublijn.",
                 out_dir=Path(tmp),
             )
             w, h, duration = media._probe(Path(record["path"]))
@@ -176,35 +209,64 @@ def check_reel() -> bool:
                 # changes: 3 pop holds (3×dwell) + 4s of typing at typing_speed +
                 # cold open (1s) + suspense beat. Above the band = idle survived;
                 # below the holds+cold+beat floor = typing was cut, not sped up.
-                floor = 3 * float(cfg["dwell_seconds"]) + 1.0 + \
-                    float(cfg["suspense_seconds"])
+                floor = 3 * float(cfg["dwell_seconds"]) + 1.0 + float(cfg["suspense_seconds"])
                 expected = floor + 4.0 / float(cfg["typing_speed"])
                 if demo > expected + 1.2:
-                    return _fail(f"idle not cut: {demo:.1f}s demo from 12s raw "
-                                 f"(expected ~{expected:.1f}s)")
+                    return _fail(
+                        f"idle not cut: {demo:.1f}s demo from 12s raw (expected ~{expected:.1f}s)"
+                    )
                 if demo < floor + 0.4:
-                    return _fail(f"typing was cut, not sped up: {demo:.1f}s demo "
-                                 f"(holds + cold open + beat alone are ~{floor:.1f}s)")
-            _ok(f"reel: 1080×1920, {duration:.1f}s from a 12s raw (cold open + "
+                    return _fail(
+                        f"typing was cut, not sped up: {demo:.1f}s demo "
+                        f"(holds + cold open + beat alone are ~{floor:.1f}s)"
+                    )
+            _ok(
+                f"reel: 1080×1920, {duration:.1f}s from a 12s raw (cold open + "
                 f"hook-on-footage, idle cut, typing {cfg['typing_speed']}×, "
-                f"suspense beat, CTA freeze) → {record['platform_targets']}")
-            _ok(f"crop_top {cfg['crop_top']} · cap {cfg['target_seconds']}s · "
-                f"dwell ≤{cfg['dwell_seconds']}s · max speed {cfg['max_speed']}×")
+                f"suspense beat, CTA freeze) → {record['platform_targets']}"
+            )
+            _ok(
+                f"crop_top {cfg['crop_top']} · cap {cfg['target_seconds']}s · "
+                f"dwell ≤{cfg['dwell_seconds']}s · max speed {cfg['max_speed']}×"
+            )
             # Sound layer: the reel must carry a real audio stream with actual
             # content (SFX beats) — a silent track means the layer regressed.
             import re as _re
+
             streams = subprocess.run(
-                ["ffprobe", "-v", "error", "-show_entries", "stream=codec_type",
-                 "-of", "csv=p=0", record["path"]],
-                check=True, capture_output=True, text=True,
+                [
+                    "ffprobe",
+                    "-v",
+                    "error",
+                    "-show_entries",
+                    "stream=codec_type",
+                    "-of",
+                    "csv=p=0",
+                    record["path"],
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
             ).stdout.split()
             if cfg["audio"]["enabled"]:
                 if streams.count("video") != 1 or streams.count("audio") != 1:
                     return _fail(f"want 1 video + 1 audio stream, got {streams}")
                 vd = subprocess.run(
-                    ["ffmpeg", "-hide_banner", "-i", record["path"], "-map", "0:a:0",
-                     "-af", "volumedetect", "-f", "null", "-"],
-                    capture_output=True, text=True,
+                    [
+                        "ffmpeg",
+                        "-hide_banner",
+                        "-i",
+                        record["path"],
+                        "-map",
+                        "0:a:0",
+                        "-af",
+                        "volumedetect",
+                        "-f",
+                        "null",
+                        "-",
+                    ],
+                    capture_output=True,
+                    text=True,
                 )
                 m = _re.search(r"mean_volume:\s*(-?[\d.]+) dB", vd.stderr)
                 if not m:
@@ -212,9 +274,11 @@ def check_reel() -> bool:
                 mean = float(m.group(1))
                 if mean <= -80.0:
                     return _fail(f"audio is effectively silent (mean {mean:.1f} dB)")
-                _ok(f"audio: aac stream present, mean {mean:.1f} dB (sfx "
+                _ok(
+                    f"audio: aac stream present, mean {mean:.1f} dB (sfx "
                     f"{'on' if cfg['audio']['sfx'] else 'off'}, bed "
-                    f"{cfg['audio']['bed'] or 'none'})")
+                    f"{cfg['audio']['bed'] or 'none'})"
+                )
             else:
                 if "audio" in streams:
                     return _fail("media.reel.audio disabled but reel has an audio stream")
@@ -223,20 +287,21 @@ def check_reel() -> bool:
             # construction — must render the same 9:16 under the same cap.
             demo_cfg = cfg["demo"]
             if demo_cfg["enabled"] and demo_cfg["scenarios"]:
-                rec = media.build_chat_reel("selftest-demo", "Testkop demo",
-                                            out_dir=Path(tmp))
+                rec = media.build_chat_reel("selftest-demo", "Testkop demo", out_dir=Path(tmp))
                 w, h, d = media._probe(Path(rec["path"]))
                 if (w, h) != (1080, 1920):
                     return _fail(f"chat-demo reel rendered {w}×{h}, want 1080×1920")
                 if d > cap:
-                    return _fail(f"chat-demo reel is {d:.1f}s, cap is "
-                                 f"{cfg['target_seconds']}s")
+                    return _fail(f"chat-demo reel is {d:.1f}s, cap is {cfg['target_seconds']}s")
                 scs = demo_cfg["scenarios"]
                 _, biz, _ = media._demo_scenario(
-                    scs[media._pick("selftest-demo:demo", len(scs))], demo_cfg)
-                _ok(f"chat-demo reel: 1080×1920, {d:.1f}s from a scripted scenario "
+                    scs[media._pick("selftest-demo:demo", len(scs))], demo_cfg
+                )
+                _ok(
+                    f"chat-demo reel: 1080×1920, {d:.1f}s from a scripted scenario "
                     f"({len(scs)} scenario(s), each its own business; this one "
-                    f"{biz!r})")
+                    f"{biz!r})"
+                )
             else:
                 _ok("media.reel.demo disabled — reels come from 🎬 recordings only")
     except subprocess.CalledProcessError as exc:

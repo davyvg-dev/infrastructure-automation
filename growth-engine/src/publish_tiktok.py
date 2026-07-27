@@ -42,11 +42,13 @@ class TikTokPublishError(RuntimeError):
 def _client_creds() -> tuple[str, str]:
     key = (env("TIKTOK_CLIENT_KEY", required=False) or "").strip()
     secret = (env("TIKTOK_CLIENT_SECRET", required=False) or "").strip()
-    missing = [n for n, v in (("TIKTOK_CLIENT_KEY", key),
-                              ("TIKTOK_CLIENT_SECRET", secret)) if not v]
+    missing = [
+        n for n, v in (("TIKTOK_CLIENT_KEY", key), ("TIKTOK_CLIENT_SECRET", secret)) if not v
+    ]
     if missing:
         raise TikTokPublishError(
-            "missing env: " + ", ".join(missing)
+            "missing env: "
+            + ", ".join(missing)
             + " — fill .env per docs/AUTOPUBLISH.md (TikTok section)."
         )
     return key, secret
@@ -55,6 +57,7 @@ def _client_creds() -> tuple[str, str]:
 # --------------------------------------------------------------------------- #
 # Token lifecycle (data/<vertical>/tiktok_token.json)
 # --------------------------------------------------------------------------- #
+
 
 def _token_path() -> Path:
     return data_dir() / "tiktok_token.json"
@@ -115,12 +118,16 @@ def _refresh(tok: dict[str, Any]) -> dict[str, Any]:
             "--code flow from docs/AUTOPUBLISH.md."
         )
     key, secret = _client_creds()
-    return _save_token(_oauth_call({
-        "client_key": key,
-        "client_secret": secret,
-        "grant_type": "refresh_token",
-        "refresh_token": tok["refresh_token"],
-    }))
+    return _save_token(
+        _oauth_call(
+            {
+                "client_key": key,
+                "client_secret": secret,
+                "grant_type": "refresh_token",
+                "refresh_token": tok["refresh_token"],
+            }
+        )
+    )
 
 
 def _fresh_token(force_refresh: bool = False) -> dict[str, Any]:
@@ -139,31 +146,42 @@ def auth_url() -> str:
             "missing env: TIKTOK_REDIRECT_URI — must exactly match the redirect URI "
             "registered on the TikTok app (docs/AUTOPUBLISH.md)."
         )
-    return _AUTHORIZE_URL + "?" + urllib.parse.urlencode({
-        "client_key": key,
-        "scope": _SCOPE,
-        "response_type": "code",
-        "redirect_uri": redirect,
-        "state": secrets.token_hex(8),
-    })
+    return (
+        _AUTHORIZE_URL
+        + "?"
+        + urllib.parse.urlencode(
+            {
+                "client_key": key,
+                "scope": _SCOPE,
+                "response_type": "code",
+                "redirect_uri": redirect,
+                "state": secrets.token_hex(8),
+            }
+        )
+    )
 
 
 def exchange_code(code: str) -> dict[str, Any]:
     """Trade the ?code= from the redirect for tokens and persist them."""
     key, secret = _client_creds()
     redirect = (env("TIKTOK_REDIRECT_URI", required=False) or "").strip()
-    return _save_token(_oauth_call({
-        "client_key": key,
-        "client_secret": secret,
-        "grant_type": "authorization_code",
-        "code": urllib.parse.unquote(code),
-        "redirect_uri": redirect,
-    }))
+    return _save_token(
+        _oauth_call(
+            {
+                "client_key": key,
+                "client_secret": secret,
+                "grant_type": "authorization_code",
+                "code": urllib.parse.unquote(code),
+                "redirect_uri": redirect,
+            }
+        )
+    )
 
 
 # --------------------------------------------------------------------------- #
 # Upload
 # --------------------------------------------------------------------------- #
+
 
 def _api(url: str, payload: dict[str, Any], access_token: str) -> dict[str, Any]:
     req = urllib.request.Request(
@@ -194,22 +212,23 @@ def _api(url: str, payload: dict[str, Any], access_token: str) -> dict[str, Any]
     return body.get("data") or {}
 
 
-def _put_chunk(upload_url: str, blob: bytes, start: int, end: int,
-               total: int, mime: str) -> None:
-    req = urllib.request.Request(upload_url, data=blob, method="PUT", headers={
-        "Content-Type": mime,
-        "Content-Range": f"bytes {start}-{end}/{total}",
-    })
+def _put_chunk(upload_url: str, blob: bytes, start: int, end: int, total: int, mime: str) -> None:
+    req = urllib.request.Request(
+        upload_url,
+        data=blob,
+        method="PUT",
+        headers={
+            "Content-Type": mime,
+            "Content-Range": f"bytes {start}-{end}/{total}",
+        },
+    )
     try:
         with urllib.request.urlopen(req, timeout=600) as resp:
             if resp.status not in (200, 201, 206):
-                raise TikTokPublishError(
-                    f"chunk upload got unexpected HTTP {resp.status}"
-                )
+                raise TikTokPublishError(f"chunk upload got unexpected HTTP {resp.status}")
     except urllib.error.HTTPError as exc:
         raise TikTokPublishError(
-            f"chunk upload failed (HTTP {exc.code}): "
-            f"{exc.read().decode('utf-8', 'replace')[:300]}"
+            f"chunk upload failed (HTTP {exc.code}): {exc.read().decode('utf-8', 'replace')[:300]}"
         ) from None
 
 
@@ -250,8 +269,12 @@ def upload_draft(draft: dict[str, Any], media: dict[str, Any]) -> str:
     """
     if dry_run():
         return "(dry-run: not actually uploaded)"
-    if not media or media.get("type") != "video" or media.get("status") != "ready" \
-            or not media.get("path"):
+    if (
+        not media
+        or media.get("type") != "video"
+        or media.get("status") != "ready"
+        or not media.get("path")
+    ):
         raise TikTokPublishError("TikTok needs a ready reel; this draft has none.")
     path = Path(media["path"])
     if not path.exists():
@@ -264,12 +287,18 @@ def upload_draft(draft: dict[str, Any], media: dict[str, Any]) -> str:
     count = max(size // chunk, 1)
 
     tok = _fresh_token()
-    init = _api(_INIT_URL, {"source_info": {
-        "source": "FILE_UPLOAD",
-        "video_size": size,
-        "chunk_size": chunk,
-        "total_chunk_count": count,
-    }}, tok["access_token"])
+    init = _api(
+        _INIT_URL,
+        {
+            "source_info": {
+                "source": "FILE_UPLOAD",
+                "video_size": size,
+                "chunk_size": chunk,
+                "total_chunk_count": count,
+            }
+        },
+        tok["access_token"],
+    )
     publish_id, upload_url = init.get("publish_id"), init.get("upload_url")
     if not publish_id or not upload_url:
         raise TikTokPublishError(f"init returned no upload_url: {init}")
@@ -292,16 +321,20 @@ def _main(argv: list[str]) -> int:
     try:
         if "--auth-url" in argv:
             print(auth_url())
-            print("Open this in a browser, log in as the founder's TikTok account, "
-                  "then run: python -m src.publish_tiktok --code <code-from-redirect>")
+            print(
+                "Open this in a browser, log in as the founder's TikTok account, "
+                "then run: python -m src.publish_tiktok --code <code-from-redirect>"
+            )
             return 0
         if "--code" in argv:
             idx = argv.index("--code")
             if idx + 1 >= len(argv):
                 raise TikTokPublishError("usage: python -m src.publish_tiktok --code <code>")
             tok = exchange_code(argv[idx + 1])
-            print(f"token saved to {_token_path()} (open_id {tok.get('open_id')}, "
-                  f"scope '{tok.get('scope')}')")
+            print(
+                f"token saved to {_token_path()} (open_id {tok.get('open_id')}, "
+                f"scope '{tok.get('scope')}')"
+            )
             return 0
         # default / --check: report credential state (never uploads)
         print(verify_auth())

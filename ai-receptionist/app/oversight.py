@@ -102,8 +102,10 @@ def build_digest(now: datetime | None = None, today: bool = False) -> str:
     now = now or datetime.now()
     start, end, label = _day_window(now, today)
     # Prior window of equal length, for the "went silent" signal.
-    prev_start = (datetime.fromisoformat(start) - (datetime.fromisoformat(end) -
-                  datetime.fromisoformat(start))).isoformat(timespec="seconds")
+    prev_start = (
+        datetime.fromisoformat(start)
+        - (datetime.fromisoformat(end) - datetime.fromisoformat(start))
+    ).isoformat(timespec="seconds")
 
     active = analytics.active_clients(start, end)
     prev_active = set(analytics.active_clients(prev_start, start))
@@ -222,9 +224,21 @@ _INSIGHT_SCHEMA = {
         "quality_flags": {"type": "array", "items": {"type": "string"}},
     },
     "required": [
-        "intent", "topics", "resolved", "escalated", "escalation_reason", "unanswered_questions",
-        "out_of_scope_requests", "sentiment", "language", "customer_type", "lead_captured",
-        "booking_made", "est_job_value_eur", "upsell_signals", "quality_flags",
+        "intent",
+        "topics",
+        "resolved",
+        "escalated",
+        "escalation_reason",
+        "unanswered_questions",
+        "out_of_scope_requests",
+        "sentiment",
+        "language",
+        "customer_type",
+        "lead_captured",
+        "booking_made",
+        "est_job_value_eur",
+        "upsell_signals",
+        "quality_flags",
     ],
 }
 
@@ -262,14 +276,14 @@ def _analyst_model() -> str:
 
 def _services_summary(cfg: dict[str, Any]) -> str:
     lines = [
-        f"  - {s.get('name', '?')} ({s.get('price', 'ask')})"
-        for s in (cfg.get("services") or [])
+        f"  - {s.get('name', '?')} ({s.get('price', 'ask')})" for s in (cfg.get("services") or [])
     ]
     return "\n".join(lines) or "  (none listed)"
 
 
-def _analyze(client: Any, model: str, cfg: dict[str, Any],
-             turns: list[dict[str, str]]) -> dict[str, Any]:
+def _analyze(
+    client: Any, model: str, cfg: dict[str, Any], turns: list[dict[str, str]]
+) -> dict[str, Any]:
     """Run one structured-output call over a redacted transcript and return the parsed insight."""
     b = cfg.get("business") or {}
     system = _ANALYST_SYSTEM.format(
@@ -291,8 +305,9 @@ def _analyze(client: Any, model: str, cfg: dict[str, Any],
     return json.loads(text)
 
 
-def analyze_pending(now: datetime | None = None, idle_minutes: int = 30,
-                    limit: int = 200) -> dict[str, int]:
+def analyze_pending(
+    now: datetime | None = None, idle_minutes: int = 30, limit: int = 200
+) -> dict[str, int]:
     """Analyse every settled, not-yet-analysed conversation. Per-conversation failures are
     logged and skipped so one bad transcript never stalls the batch. Needs ANTHROPIC_API_KEY."""
     import anthropic
@@ -340,8 +355,10 @@ def backlog(slug: str, limit: int = 100) -> str:
     def _top(counter: dict[str, int]) -> list[str]:
         return [f"    {n}× {k}" for k, n in sorted(counter.items(), key=lambda kv: -kv[1])[:10]]
 
-    out = [f"{_client_name(slug)} — {len(rows)} analysed conversation(s)",
-           f"  escalations: {escalations} · negative sentiment: {neg}"]
+    out = [
+        f"{_client_name(slug)} — {len(rows)} analysed conversation(s)",
+        f"  escalations: {escalations} · negative sentiment: {neg}",
+    ]
     if quality:
         out.append("  quality flags (review the bot):")
         out.extend(_top(quality))
@@ -368,8 +385,10 @@ def main(argv: list[str]) -> int:
         return 0 if ok else 1
     if cmd == "analyze":
         result = analyze_pending()
-        print(f"analyst: {result['analyzed']} analysed, {result['failed']} failed, "
-              f"{result['pending']} were pending")
+        print(
+            f"analyst: {result['analyzed']} analysed, {result['failed']} failed, "
+            f"{result['pending']} were pending"
+        )
         return 0
     if cmd == "insights" and len(argv) > 2:
         print(backlog(argv[2]))

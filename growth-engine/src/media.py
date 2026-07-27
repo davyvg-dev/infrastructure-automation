@@ -50,9 +50,15 @@ def _pick(key: str, n: int) -> int:
     return int(hashlib.sha1(key.encode()).hexdigest(), 16) % n
 
 
-def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
-          max_width: int, tracking: float = 0.0) -> list[str]:
+def _wrap(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    max_width: int,
+    tracking: float = 0.0,
+) -> list[str]:
     """Greedy word-wrap by measured pixel width (Pillow has no built-in wrapping)."""
+
     def width(s: str) -> float:
         return draw.textlength(s, font=font) + tracking * font.size * max(len(s) - 1, 0)
 
@@ -70,8 +76,14 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
     return lines
 
 
-def _tracked_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str,
-                  font: ImageFont.FreeTypeFont, fill: str, tracking: float) -> None:
+def _tracked_text(
+    draw: ImageDraw.ImageDraw,
+    xy: tuple[int, int],
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    fill: str,
+    tracking: float,
+) -> None:
     """Draw text with letter-spacing (Pillow has no native tracking)."""
     x, y = xy
     step = tracking * font.size
@@ -94,9 +106,7 @@ _UA = "klantkraan-growth-engine/1.0"
 
 
 def _search(query: str, orientation: str, key: str) -> list[dict[str, Any]]:
-    params = urllib.parse.urlencode(
-        {"query": query, "orientation": orientation, "per_page": 5}
-    )
+    params = urllib.parse.urlencode({"query": query, "orientation": orientation, "per_page": 5})
     req = urllib.request.Request(
         f"https://api.pexels.com/v1/search?{params}",
         headers={"Authorization": key, "User-Agent": _UA},
@@ -137,8 +147,14 @@ def _stock_photo(query: str, orientation: str, variant: int = 0) -> Path | None:
         return None
 
 
-def _render(headline: str, sub: str, size: tuple[int, int], out_path: Path,
-            scheme: dict[str, Any], photo: Path | None) -> None:
+def _render(
+    headline: str,
+    sub: str,
+    size: tuple[int, int],
+    out_path: Path,
+    scheme: dict[str, Any],
+    photo: Path | None,
+) -> None:
     b = brand.brand()
     if photo is not None:
         img = _cover(Image.open(photo).convert("RGB"), size)
@@ -164,9 +180,8 @@ def _render(headline: str, sub: str, size: tuple[int, int], out_path: Path,
         head_font = ImageFont.truetype(str(b["font_bold"]), pt)
         head_lines = _wrap(draw, headline, head_font, text_width, _TRACKING)
         head_step = int(pt * 1.14)
-        block_height = (
-            len(head_lines) * head_step
-            + (48 + len(sub_lines) * sub_step if sub_lines else 0)
+        block_height = len(head_lines) * head_step + (
+            48 + len(sub_lines) * sub_step if sub_lines else 0
         )
         if len(head_lines) <= 6 and top_min + block_height <= bottom:
             break
@@ -207,8 +222,14 @@ def _photo_turn() -> bool:
     return n % int(stock_cfg["every"]) == 0
 
 
-def render_cards(headline: str, sub: str, stem: str, out_dir: Path | None = None,
-                 photo_query: str = "", use_photo: bool = False) -> list[dict[str, Any]]:
+def render_cards(
+    headline: str,
+    sub: str,
+    stem: str,
+    out_dir: Path | None = None,
+    photo_query: str = "",
+    use_photo: bool = False,
+) -> list[dict[str, Any]]:
     """Render one card per aspect; returns media records for the draft.
 
     The stem is the variation key for the color scheme; the photo decision is the
@@ -219,8 +240,7 @@ def render_cards(headline: str, sub: str, stem: str, out_dir: Path | None = None
     scheme = schemes[_pick(stem, len(schemes))]
     use_photo = use_photo and bool(photo_query)
     image_platforms = [
-        name for name, desc in platforms.registry().items()
-        if desc["media"] in ("image", "both")
+        name for name, desc in platforms.registry().items() if desc["media"] in ("image", "both")
     ]
     variant = _pick(stem, 5)
     records = []
@@ -228,14 +248,16 @@ def render_cards(headline: str, sub: str, stem: str, out_dir: Path | None = None
         photo = _stock_photo(photo_query, orientation, variant) if use_photo else None
         path = out_dir / f"{stem}-{aspect}.png"
         _render(headline, sub, (w, h), path, scheme, photo)
-        records.append({
-            "type": "image",
-            "path": str(path),
-            "aspect": aspect,
-            "style": "photo" if photo else "flat",
-            "platform_targets": image_platforms,
-            "status": "ready",
-        })
+        records.append(
+            {
+                "type": "image",
+                "path": str(path),
+                "aspect": aspect,
+                "style": "photo" if photo else "flat",
+                "platform_targets": image_platforms,
+                "status": "ready",
+            }
+        )
     return records
 
 
@@ -264,9 +286,16 @@ def attach_cards(draft: dict[str, Any]) -> None:
 # the single card. Square only (the feed aspect); one flat brand slide per point.
 # --------------------------------------------------------------------------- #
 
-def _render_slide(index: int, total: int, headline: str, body: str,
-                  size: tuple[int, int], out_path: Path,
-                  scheme: dict[str, Any]) -> None:
+
+def _render_slide(
+    index: int,
+    total: int,
+    headline: str,
+    body: str,
+    size: tuple[int, int],
+    out_path: Path,
+    scheme: dict[str, Any],
+) -> None:
     """One carousel slide: slide counter, accent bar, big headline, one sub-line.
     A swipe hint rides every slide but the last; the last carries the brand footer."""
     b = brand.brand()
@@ -278,8 +307,7 @@ def _render_slide(index: int, total: int, headline: str, body: str,
     is_last = index == total - 1
 
     counter_font = ImageFont.truetype(str(b["font_bold"]), 36)
-    draw.text((_PAD, _PAD), f"{index + 1:02d} / {total:02d}",
-              font=counter_font, fill=muted_color)
+    draw.text((_PAD, _PAD), f"{index + 1:02d} / {total:02d}", font=counter_font, fill=muted_color)
 
     top_min = _PAD + 120
     bottom = height - _PAD - (120 if is_last and b["footer"] else 96)
@@ -292,9 +320,8 @@ def _render_slide(index: int, total: int, headline: str, body: str,
         head_font = ImageFont.truetype(str(b["font_bold"]), pt)
         head_lines = _wrap(draw, headline, head_font, text_width, _TRACKING)
         head_step = int(pt * 1.12)
-        block_height = (
-            len(head_lines) * head_step
-            + (44 + len(sub_lines) * sub_step if sub_lines else 0)
+        block_height = len(head_lines) * head_step + (
+            44 + len(sub_lines) * sub_step if sub_lines else 0
         )
         if len(head_lines) <= 6 and top_min + block_height <= bottom:
             break
@@ -319,15 +346,15 @@ def _render_slide(index: int, total: int, headline: str, body: str,
         hint_font = ImageFont.truetype(str(b["font_bold"]), 46)
         hint = "›››"
         hw = draw.textlength(hint, font=hint_font)
-        draw.text((width - _PAD - hw, height - _PAD - 48), hint,
-                  font=hint_font, fill=accent)
+        draw.text((width - _PAD - hw, height - _PAD - 48), hint, font=hint_font, fill=accent)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(out_path, "PNG")
 
 
-def render_carousel(slides: list[dict[str, str]], stem: str,
-                    out_dir: Path | None = None) -> list[dict[str, Any]]:
+def render_carousel(
+    slides: list[dict[str, str]], stem: str, out_dir: Path | None = None
+) -> list[dict[str, Any]]:
     """Render an ordered set of square slides; returns media records for the draft.
 
     The stem picks one color scheme for the whole set (a carousel reads as one unit,
@@ -337,25 +364,25 @@ def render_carousel(slides: list[dict[str, str]], stem: str,
     scheme = schemes[_pick(stem, len(schemes))]
     w, h, _ = _SIZES["square"]
     image_platforms = [
-        name for name, desc in platforms.registry().items()
-        if desc["media"] in ("image", "both")
+        name for name, desc in platforms.registry().items() if desc["media"] in ("image", "both")
     ]
     total = len(slides)
     records = []
     for i, slide in enumerate(slides):
         path = out_dir / f"{stem}-slide-{i + 1:02d}.png"
-        _render_slide(i, total, slide["headline"], slide.get("body", ""),
-                      (w, h), path, scheme)
-        records.append({
-            "type": "image",
-            "path": str(path),
-            "aspect": "square",
-            "style": "carousel",
-            "slide": i + 1,
-            "slides": total,
-            "platform_targets": image_platforms,
-            "status": "ready",
-        })
+        _render_slide(i, total, slide["headline"], slide.get("body", ""), (w, h), path, scheme)
+        records.append(
+            {
+                "type": "image",
+                "path": str(path),
+                "aspect": "square",
+                "style": "carousel",
+                "slide": i + 1,
+                "slides": total,
+                "platform_targets": image_platforms,
+                "status": "ready",
+            }
+        )
     return records
 
 
@@ -369,14 +396,13 @@ def attach_carousel(draft: dict[str, Any]) -> bool:
     if not cfg.get("enabled", True):
         return False
     slides = [
-        {"headline": (s.get("headline") or "").strip(),
-         "body": (s.get("body") or "").strip()}
+        {"headline": (s.get("headline") or "").strip(), "body": (s.get("body") or "").strip()}
         for s in (draft.get("carousel") or [])
         if (s.get("headline") or "").strip()
     ]
     if len(slides) < int(cfg["min_slides"]):
         return False
-    draft["media"] = render_carousel(slides[:int(cfg["max_slides"])], draft["id"])
+    draft["media"] = render_carousel(slides[: int(cfg["max_slides"])], draft["id"])
     return True
 
 
@@ -408,9 +434,7 @@ def attach_reel_task(draft: dict[str, Any], requested: list[str]) -> None:
     if not cfg["enabled"]:
         return
     reg = platforms.registry()
-    targets = [
-        p for p in requested if reg.get(p, {}).get("media") in ("video", "both")
-    ]
+    targets = [p for p in requested if reg.get(p, {}).get("media") in ("video", "both")]
     if not targets:
         return
     demo_cfg = cfg["demo"]
@@ -423,28 +447,42 @@ def attach_reel_task(draft: dict[str, Any], requested: list[str]) -> None:
             draft.setdefault("media", []).append(record)
         except Exception as exc:  # degrade to the 🎬 upload path, but say so
             print(f"chat-demo reel failed ({draft['id']}): {exc}", file=sys.stderr)
-    draft.setdefault("media", []).append({
-        "type": "video",
-        "status": "pending_recording",
-        "platform_targets": targets,
-    })
+    draft.setdefault("media", []).append(
+        {
+            "type": "video",
+            "status": "pending_recording",
+            "platform_targets": targets,
+        }
+    )
 
 
 def _probe(path: Path) -> tuple[int, int, float]:
     """Source video (width, height, duration in seconds) via ffprobe."""
     out = subprocess.run(
-        ["ffprobe", "-v", "error", "-select_streams", "v:0",
-         "-show_entries", "stream=width,height", "-show_entries", "format=duration",
-         "-of", "json", str(path)],
-        capture_output=True, text=True, check=True,
+        [
+            "ffprobe",
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "json",
+            str(path),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
     )
     info = json.loads(out.stdout)
     stream = info["streams"][0]
     return int(stream["width"]), int(stream["height"]), float(info["format"]["duration"])
 
 
-def _render_stage(out_path: Path, scheme: dict[str, Any],
-                  hole: tuple[int, int]) -> None:
+def _render_stage(out_path: Path, scheme: dict[str, Any], hole: tuple[int, int]) -> None:
     """Frame laid OVER the demo footage: brand surround with a rounded phone window
     (soft drop shadow + thin accent bezel, no logo lockups)."""
     img = Image.new("RGBA", _REEL_SIZE, scheme["bg"])
@@ -455,18 +493,17 @@ def _render_stage(out_path: Path, scheme: dict[str, Any],
     # Painted before the hole is punched, so only the spill outside the window stays.
     shadow = Image.new("RGBA", _REEL_SIZE, (0, 0, 0, 0))
     ImageDraw.Draw(shadow).rounded_rectangle(
-        (x0 - 8, y0 + 4, x0 + hw + 8, y0 + hh + 22), radius=52, fill=(0, 0, 0, 92))
+        (x0 - 8, y0 + 4, x0 + hw + 8, y0 + hh + 22), radius=52, fill=(0, 0, 0, 92)
+    )
     img = Image.alpha_composite(img, shadow.filter(ImageFilter.GaussianBlur(24)))
     mask = Image.new("L", _REEL_SIZE, 255)
     ImageDraw.Draw(mask).rounded_rectangle(box, radius=44, fill=0)
     img.putalpha(mask)
-    ImageDraw.Draw(img).rounded_rectangle(box, radius=44, outline=scheme["accent"],
-                                          width=4)
+    ImageDraw.Draw(img).rounded_rectangle(box, radius=44, outline=scheme["accent"], width=4)
     img.save(out_path, "PNG")
 
 
-def _render_footer(out_path: Path, scheme: dict[str, Any],
-                   enabled: bool = True) -> None:
+def _render_footer(out_path: Path, scheme: dict[str, Any], enabled: bool = True) -> None:
     """The footer URL as its own overlay — a light watermark pill in the safe zone.
 
     Separate from the stage so it can cross-fade out when the CTA (which repeats the
@@ -482,15 +519,15 @@ def _render_footer(out_path: Path, scheme: dict[str, Any],
         tick = 20  # accent square before the URL — same lockup as the cards' footer
         bx = (_REEL_SIZE[0] - (tw + tick + 16)) / 2
         by = _REEL_SIZE[1] - _SAFE_BOTTOM - 76  # above the platform caption zone
-        draw.rounded_rectangle((bx - 22, by - 12, bx + tick + 16 + tw + 22, by + 46),
-                               radius=14, fill=(10, 10, 10, 176))
+        draw.rounded_rectangle(
+            (bx - 22, by - 12, bx + tick + 16 + tw + 22, by + 46), radius=14, fill=(10, 10, 10, 176)
+        )
         draw.rectangle((bx, by + 8, bx + tick, by + 8 + tick), fill=scheme["accent"])
         draw.text((bx + tick + 16, by), b["footer"], font=font, fill="#FAF6EE")
     img.save(out_path, "PNG")
 
 
-def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path,
-                    accent: str) -> None:
+def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path, accent: str) -> None:
     """Text on a near-opaque scrim, overlaid on moving footage (hook / end CTA).
 
     Sized for 35-55 eyes on a phone: ≥44px, ≤3 lines, high contrast; the box stays
@@ -516,14 +553,21 @@ def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path,
     if sub:
         widths.append(draw.textlength(sub, font=sub_font))
     bw = max(widths) + 2 * pad
-    bh = (pad + bar_h + bar_gap + len(lines) * step + (66 if sub else 0)
-          + pad - (step - size))
+    bh = pad + bar_h + bar_gap + len(lines) * step + (66 if sub else 0) + pad - (step - size)
     x0 = (_REEL_SIZE[0] - bw) / 2
-    draw.rounded_rectangle((x0, y_top, x0 + bw, y_top + bh), radius=24,
-                           fill=(18, 18, 18, 250), outline=accent, width=3)
+    draw.rounded_rectangle(
+        (x0, y_top, x0 + bw, y_top + bh), radius=24, fill=(18, 18, 18, 250), outline=accent, width=3
+    )
     bar_w = 88
-    draw.rectangle(((_REEL_SIZE[0] - bar_w) / 2, y_top + pad,
-                    (_REEL_SIZE[0] + bar_w) / 2, y_top + pad + bar_h), fill=accent)
+    draw.rectangle(
+        (
+            (_REEL_SIZE[0] - bar_w) / 2,
+            y_top + pad,
+            (_REEL_SIZE[0] + bar_w) / 2,
+            y_top + pad + bar_h,
+        ),
+        fill=accent,
+    )
     y = y_top + pad + bar_h + bar_gap
     for ln in lines:
         lw = draw.textlength(ln, font=font)
@@ -531,8 +575,7 @@ def _render_overlay(headline: str, sub: str, y_top: int, out_path: Path,
         y += step
     if sub:
         lw = draw.textlength(sub, font=sub_font)
-        draw.text(((_REEL_SIZE[0] - lw) / 2, y + 8), sub, font=sub_font,
-                  fill="#D9D2C0")
+        draw.text(((_REEL_SIZE[0] - lw) / 2, y + 8), sub, font=sub_font, fill="#D9D2C0")
     img.save(out_path, "PNG")
 
 
@@ -544,11 +587,23 @@ def _frame_scores(raw: Path, crop: str) -> list[tuple[float, float]]:
     or the status-bar clock stays near zero.
     """
     result = subprocess.run(
-        ["ffmpeg", "-hide_banner", "-nostats", "-v", "info", "-i", str(raw),
-         "-vf", f"{crop},select='gte(scene,0)',"
-                "metadata=mode=print:key=lavfi.scene_score",
-         "-f", "null", "-"],
-        capture_output=True, text=True, timeout=180,
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-nostats",
+            "-v",
+            "info",
+            "-i",
+            str(raw),
+            "-vf",
+            f"{crop},select='gte(scene,0)',metadata=mode=print:key=lavfi.scene_score",
+            "-f",
+            "null",
+            "-",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=180,
     )
     frames: list[tuple[float, float]] = []
     t: float | None = None
@@ -564,8 +619,9 @@ def _frame_scores(raw: Path, crop: str) -> list[tuple[float, float]]:
     return frames
 
 
-def _subtract(run: tuple[float, float],
-              holds: list[tuple[float, float]]) -> list[tuple[float, float]]:
+def _subtract(
+    run: tuple[float, float], holds: list[tuple[float, float]]
+) -> list[tuple[float, float]]:
     """Pieces of `run` not covered by any hold."""
     pieces = [run]
     for hs, he in holds:
@@ -582,8 +638,9 @@ def _subtract(run: tuple[float, float],
     return [(s, e) for s, e in pieces if e - s > 0.1]
 
 
-def _classify(frames: list[tuple[float, float]], bottom: list[tuple[float, float]],
-              cfg: dict[str, Any]) -> tuple[list[float], list[float]]:
+def _classify(
+    frames: list[tuple[float, float]], bottom: list[tuple[float, float]], cfg: dict[str, Any]
+) -> tuple[list[float], list[float]]:
     """(message times, keystroke times) from per-frame scene scores.
 
     A message is a frame whose full-frame change clears an ADAPTIVE threshold — at
@@ -626,9 +683,9 @@ def _classify(frames: list[tuple[float, float]], bottom: list[tuple[float, float
     return msgs, keys
 
 
-def _cut_plan(msgs: list[float], keys: list[float], duration: float,
-              cfg: dict[str, Any], usable: float
-              ) -> list[tuple[float, float, float]] | None:
+def _cut_plan(
+    msgs: list[float], keys: list[float], duration: float, cfg: dict[str, Any], usable: float
+) -> list[tuple[float, float, float]] | None:
     """(start, end, speed) segments: pops hold at 1×, typing runs fast, idle is cut.
 
     A pop (big change — a message appearing) holds `dwell` so it can be read; the
@@ -665,8 +722,9 @@ def _cut_plan(msgs: list[float], keys: list[float], duration: float,
     return sorted(segs)
 
 
-def _slice_args(raw: Path, segs: list[tuple[float, float, float]],
-                crop: str, first_idx: int) -> tuple[list[str], str]:
+def _slice_args(
+    raw: Path, segs: list[tuple[float, float, float]], crop: str, first_idx: int
+) -> tuple[list[str], str]:
     """One seeked input per segment (may play out of source order — cold open).
 
     Input-level -ss/-t decodes only each segment's window; a single decode fanned
@@ -676,20 +734,24 @@ def _slice_args(raw: Path, segs: list[tuple[float, float, float]],
     parts: list[str] = []
     for i, (s, e, v) in enumerate(segs):
         args += ["-ss", f"{s:.3f}", "-t", f"{e - s:.3f}", "-i", str(raw)]
-        parts.append(
-            f"[{first_idx + i}:v]{crop},setpts=(PTS-STARTPTS)/{v:.2f}[t{i}];"
-        )
-    parts.append("".join(f"[t{i}]" for i in range(len(segs)))
-                 + f"concat=n={len(segs)}:v=1:a=0[cut];")
+        parts.append(f"[{first_idx + i}:v]{crop},setpts=(PTS-STARTPTS)/{v:.2f}[t{i}];")
+    parts.append(
+        "".join(f"[t{i}]" for i in range(len(segs))) + f"concat=n={len(segs)}:v=1:a=0[cut];"
+    )
     return args, "".join(parts)
 
 
 _MIN_TICK_GAP = 0.06  # sped-up keystrokes closer than this merge into one tick
 
 
-def _sound_events(plan: list[tuple[float, float, float]] | None, kinds: list[str],
-                  speed: float, out_dur: float,
-                  msgs: list[float], keys: list[float]) -> list[tuple[float, str]]:
+def _sound_events(
+    plan: list[tuple[float, float, float]] | None,
+    kinds: list[str],
+    speed: float,
+    out_dur: float,
+    msgs: list[float],
+    keys: list[float],
+) -> list[tuple[float, str]]:
     """(output-time, sfx-name) beats — each one an actual on-screen event, mapped
     from source time through the cut plan into output time.
 
@@ -703,8 +765,7 @@ def _sound_events(plan: list[tuple[float, float, float]] | None, kinds: list[str
         return [(0.0, "pop"), (max(out_dur - 0.8, 0.0), "ding")]
     hold_idxs = [i for i, k in enumerate(kinds) if k == "hold"]
     if not msgs and not keys:  # explicit beats: no detected events, mark segment starts
-        events = [(sum((e - s) / v / speed for s, e, v in plan[:i]), "pop")
-                  for i in hold_idxs]
+        events = [(sum((e - s) / v / speed for s, e, v in plan[:i]), "pop") for i in hold_idxs]
         if events:
             events[-1] = (events[-1][0], "ding")
         return events or [(max(out_dur - 0.8, 0.0), "ding")]
@@ -731,9 +792,14 @@ def _sound_events(plan: list[tuple[float, float, float]] | None, kinds: list[str
     return sorted(events)
 
 
-def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
-               beats: list[tuple[float, float]] | None = None,
-               out_dir: Path | None = None) -> dict[str, Any]:
+def build_reel(
+    raw: Path,
+    stem: str,
+    headline: str,
+    sub: str = "",
+    beats: list[tuple[float, float]] | None = None,
+    out_dir: Path | None = None,
+) -> dict[str, Any]:
     """Cut a raw screen recording into a branded 1080×1920 reel; returns a media record.
 
     With `pop_cuts` (default) each frame is classified by how much the screen changes:
@@ -771,8 +837,7 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     if plan is None and cfg["pop_cuts"]:
         band = float(cfg["keys_band"])
         keyboard_crop = f"{crop},crop=iw:ih*{band:.2f}:0:ih*{1 - band:.2f}"
-        msgs, keys = _classify(_frame_scores(raw, crop),
-                               _frame_scores(raw, keyboard_crop), cfg)
+        msgs, keys = _classify(_frame_scores(raw, crop), _frame_scores(raw, keyboard_crop), cfg)
         plan = _cut_plan(msgs, keys, duration, cfg, usable)
     # kinds mirrors plan: what each segment IS (hold = message on screen, typing,
     # wait = the suspense beat) — drives the sound layer, not the video.
@@ -805,13 +870,22 @@ def build_reel(raw: Path, stem: str, headline: str, sub: str = "",
     else:
         slice_args, cut, n_vid = ["-i", str(raw)], f"[1:v]{crop}[cut];", 1
     events = _sound_events(plan, kinds, speed, out_dur, msgs, keys)
-    return _compose(slice_args, cut, n_vid, vid_w, speed, out_dur, events, stem,
-                    headline, out_path)
+    return _compose(slice_args, cut, n_vid, vid_w, speed, out_dur, events, stem, headline, out_path)
 
 
-def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
-             out_dur: float, events: list[tuple[float, str]], stem: str,
-             headline: str, out_path: Path, footer: bool = True) -> dict[str, Any]:
+def _compose(
+    footage: list[str],
+    cut: str,
+    n_vid: int,
+    vid_w: int,
+    speed: float,
+    out_dur: float,
+    events: list[tuple[float, str]],
+    stem: str,
+    headline: str,
+    out_path: Path,
+    footer: bool = True,
+) -> dict[str, Any]:
     """Assemble footage into the branded reel — stage with the phone window,
     hook/CTA/footer overlays on alpha fades, CTA freeze, synthesized soundtrack
     at the given events. Shared by the recorded path (build_reel) and the
@@ -823,13 +897,13 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
     cta_headline = str(cfg["cta_headline"]).strip() or b["footer"] or headline
     with tempfile.TemporaryDirectory() as tmp:
         stage_png, hook_png, cta_png, foot_png = (
-            Path(tmp) / n for n in ("stage.png", "hook.png", "cta.png", "foot.png"))
+            Path(tmp) / n for n in ("stage.png", "hook.png", "cta.png", "foot.png")
+        )
         _render_stage(stage_png, scheme, (vid_w, _VID_H))
         # Hook sits below the phone's own header so the branding stays visible
         # above it; CTA rides the mid-frame over the freeze.
         _render_overlay(headline, "", _SAFE_TOP + 100, hook_png, scheme["accent"])
-        _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png,
-                        scheme["accent"])
+        _render_overlay(cta_headline, str(cfg["cta_sub"]).strip(), 640, cta_png, scheme["accent"])
         _render_footer(foot_png, scheme, enabled=footer)
 
         bg = str(scheme["bg"]).replace("#", "0x")
@@ -842,13 +916,15 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
         audio_out = ["-an"]
         if audio_cfg["enabled"]:
             track = Path(tmp) / "soundtrack.wav"
-            sfx.build_soundtrack(track, out_dur + float(cfg["cta_seconds"]),
-                                 events if audio_cfg["sfx"] else [],
-                                 bed=str(audio_cfg["bed"]),
-                                 bed_gain_db=float(audio_cfg["bed_gain_db"]))
+            sfx.build_soundtrack(
+                track,
+                out_dur + float(cfg["cta_seconds"]),
+                events if audio_cfg["sfx"] else [],
+                bed=str(audio_cfg["bed"]),
+                bed_gain_db=float(audio_cfg["bed_gain_db"]),
+            )
             audio_in = ["-i", str(track)]
-            audio_out = ["-map", f"{n_vid + 4}:a", "-c:a", "aac", "-b:a", "128k",
-                         "-shortest"]
+            audio_out = ["-map", f"{n_vid + 4}:a", "-c:a", "aac", "-b:a", "128k", "-shortest"]
         # Overlays fade instead of snapping: the hook dissolves out at the end of its
         # window, and the footer watermark cross-fades into the CTA (which repeats
         # the URL) over the freeze. Full at t=0 (hook, footer) and at the video's
@@ -856,8 +932,7 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
         fade = 0.35
         hook_out = max(float(cfg["hook_seconds"]) - fade, 0.0)
         graph = (
-            cut +
-            f"[cut]setpts=PTS/{speed:.4f},scale={vid_w}:{_VID_H},fps={_FPS},"
+            cut + f"[cut]setpts=PTS/{speed:.4f},scale={vid_w}:{_VID_H},fps={_FPS},"
             f"pad={_REEL_SIZE[0]}:{_REEL_SIZE[1]}:(ow-iw)/2:(oh-ih)/2:color={bg},"
             f"tpad=stop_mode=clone:stop_duration={float(cfg['cta_seconds']):.2f}"
             f"[base];"
@@ -877,24 +952,49 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
             f"setsar=1,fps={_FPS},format=yuv420p[out]"
         )
         cmd = [
-            "ffmpeg", "-y", "-v", "error",
-            "-loop", "1", "-i", str(stage_png),
+            "ffmpeg",
+            "-y",
+            "-v",
+            "error",
+            "-loop",
+            "1",
+            "-i",
+            str(stage_png),
             *footage,
-            "-loop", "1", "-i", str(hook_png),
-            "-loop", "1", "-i", str(cta_png),
-            "-loop", "1", "-i", str(foot_png),
+            "-loop",
+            "1",
+            "-i",
+            str(hook_png),
+            "-loop",
+            "1",
+            "-i",
+            str(cta_png),
+            "-loop",
+            "1",
+            "-i",
+            str(foot_png),
             *audio_in,
-            "-filter_complex", graph, "-map", "[out]", *audio_out,
-            "-c:v", "libx264", "-preset", "medium", "-crf", "20",
-            "-movflags", "+faststart", str(out_path),
+            "-filter_complex",
+            graph,
+            "-map",
+            "[out]",
+            *audio_out,
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "20",
+            "-movflags",
+            "+faststart",
+            str(out_path),
         ]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
         if result.returncode != 0:
             raise RuntimeError(f"ffmpeg failed: {result.stderr.strip()[-400:]}")
 
     video_platforms = [
-        name for name, desc in platforms.registry().items()
-        if desc["media"] in ("video", "both")
+        name for name, desc in platforms.registry().items() if desc["media"] in ("video", "both")
     ]
     return {
         "type": "video",
@@ -908,12 +1008,14 @@ def _compose(footage: list[str], cut: str, n_vid: int, vid_w: int, speed: float,
 # Digital-assistant disclosure (EU AI Act art. 50) baked into a demo greeting when a
 # scenario doesn't supply its own — so every reel, whatever the business, still opens
 # by disclosing it's an assistant. The chat header carries the disclosure too.
-_DEMO_DISCLOSURE = ("Goedendag! U chat met de digitale assistent van {business}. "
-                    "Waarmee kan ik u helpen?")
+_DEMO_DISCLOSURE = (
+    "Goedendag! U chat met de digitale assistent van {business}. Waarmee kan ik u helpen?"
+)
 
 
-def _demo_scenario(scenario: Any, demo_cfg: dict[str, Any]
-                   ) -> tuple[list[dict[str, str]], str, str]:
+def _demo_scenario(
+    scenario: Any, demo_cfg: dict[str, Any]
+) -> tuple[list[dict[str, str]], str, str]:
     """Resolve one config scenario to (chat turns, business, greeting).
 
     A scenario is either a bare list of turns (uses the demo-block defaults) or a
@@ -934,8 +1036,7 @@ def _demo_scenario(scenario: Any, demo_cfg: dict[str, Any]
     return chat, business, greeting
 
 
-def build_chat_reel(stem: str, headline: str,
-                    out_dir: Path | None = None) -> dict[str, Any]:
+def build_chat_reel(stem: str, headline: str, out_dir: Path | None = None) -> dict[str, Any]:
     """Render a scripted chat-demo reel — no recording, no detection.
 
     The demo is drawn frame by frame from a config scenario (`media.reel.demo`),
@@ -957,13 +1058,21 @@ def build_chat_reel(stem: str, headline: str,
     out_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         seq_dir, events, out_dur = chatdemo.render(
-            chat, business, greeting,
-            Path(tmp), (_DEMO_W, _VID_H), cfg)
+            chat, business, greeting, Path(tmp), (_DEMO_W, _VID_H), cfg
+        )
         return _compose(
             ["-framerate", str(_FPS), "-i", str(seq_dir / "%05d.png")],
-            "[1:v]setpts=PTS-STARTPTS[cut];", 1, _DEMO_W, 1.0, out_dur, events,
-            stem, headline, out_dir / f"{stem}-reel.mp4",
+            "[1:v]setpts=PTS-STARTPTS[cut];",
+            1,
+            _DEMO_W,
+            1.0,
+            out_dur,
+            events,
+            stem,
+            headline,
+            out_dir / f"{stem}-reel.mp4",
             # No persistent watermark: a chat fills the whole frame, so any footer
             # pill overlaps a bubble. The header stays clean business identity and
             # klantkraan.nl lands on the CTA end-card (seen every loop) instead.
-            footer=False)
+            footer=False,
+        )

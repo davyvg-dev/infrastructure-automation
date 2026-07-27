@@ -17,20 +17,20 @@ def system_prompt() -> str:
     s = strategy()
     b = s["brand"]
     v = s["voice"]
-    return f"""You are the ghostwriter for the founder of {b['name']} ({b['website']}), an \
-independent builder who sells {b['offer']}
+    return f"""You are the ghostwriter for the founder of {b["name"]} ({b["website"]}), an \
+independent builder who sells {b["offer"]}
 
 You write short-form social posts in the founder's own voice — first person, from their \
-personal account. Name the business ({b['name']}) or its site when it genuinely fits; \
+personal account. Name the business ({b["name"]}) or its site when it genuinely fits; \
 never use the founder's real name in a post.
 
-Audience: {b['audience']}
+Audience: {b["audience"]}
 
 The core pitch you are always, indirectly, reinforcing:
-"{b['one_liner']}"
+"{b["one_liner"]}"
 
-Voice: {v['tone']}
-Never do these: {v['avoid']}
+Voice: {v["tone"]}
+Never do these: {v["avoid"]}
 
 Rules that matter:
 - Write FOR THE BUYER — a busy Dutch trade-business owner (an installateur, loodgieter,
@@ -74,14 +74,14 @@ def draft_brief(pillar: dict[str, Any], platforms: list[str], recent: list[str])
 
     return f"""Write one social post idea for this pillar, then adapt it per platform.
 
-PILLAR: {pillar['key']}
-PILLAR BRIEF: {pillar['brief']}
+PILLAR: {pillar["key"]}
+PILLAR BRIEF: {pillar["brief"]}
 
 Produce distinct variants for these platforms (same core idea, native to each):
 {wanted}
 
-Language: write the variants in {langs['primary']} — the buyer's language. Only a build-log \
-post aimed at the international builder crowd may be in {langs['secondary']} instead — pick \
+Language: write the variants in {langs["primary"]} — the buyer's language. Only a build-log \
+post aimed at the international builder crowd may be in {langs["secondary"]} instead — pick \
 one language per post, do not mix.
 
 Avoid repeating these recent topics:

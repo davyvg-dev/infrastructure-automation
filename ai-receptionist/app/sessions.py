@@ -29,6 +29,7 @@ def _lock_for(key: str) -> threading.Lock:
     with _meta_lock:
         return _locks.setdefault(key, threading.Lock())
 
+
 # Keep memory (and token cost) bounded on long-running channels. Trims to a safe boundary
 # so we never split a tool_use / tool_result pair.
 _MAX_MESSAGES = 40

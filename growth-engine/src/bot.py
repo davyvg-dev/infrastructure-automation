@@ -46,16 +46,19 @@ from .settings import active_cadence, data_dir, env, strategy
 # Sending drafts
 # --------------------------------------------------------------------------- #
 
+
 def _keyboard(draft_id: str, pending_reel: bool = False) -> InlineKeyboardMarkup:
-    rows = [[
-        InlineKeyboardButton("✅ Approve", callback_data=f"approve:{draft_id}"),
-        InlineKeyboardButton("✏️ Rewrite", callback_data=f"rewrite:{draft_id}"),
-        InlineKeyboardButton("❌ Skip", callback_data=f"skip:{draft_id}"),
-    ]]
+    rows = [
+        [
+            InlineKeyboardButton("✅ Approve", callback_data=f"approve:{draft_id}"),
+            InlineKeyboardButton("✏️ Rewrite", callback_data=f"rewrite:{draft_id}"),
+            InlineKeyboardButton("❌ Skip", callback_data=f"skip:{draft_id}"),
+        ]
+    ]
     if pending_reel:
-        rows.append([InlineKeyboardButton(
-            "🎬 Send recording → reel", callback_data=f"record:{draft_id}"
-        )])
+        rows.append(
+            [InlineKeyboardButton("🎬 Send recording → reel", callback_data=f"record:{draft_id}")]
+        )
     return InlineKeyboardMarkup(rows)
 
 
@@ -68,9 +71,7 @@ async def _send_media_previews(app: Application, chat_id: int, draft: dict) -> N
                 )
         elif record["type"] == "video" and record["status"] == "ready":
             with open(record["path"], "rb") as fh:
-                await app.bot.send_video(
-                    chat_id, fh, caption="🎬 reel — save & attach"
-                )
+                await app.bot.send_video(chat_id, fh, caption="🎬 reel — save & attach")
 
 
 async def _deliver_draft(app: Application, chat_id: int, draft: dict) -> None:
@@ -94,6 +95,7 @@ async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
 # --------------------------------------------------------------------------- #
 # Scheduled jobs
 # --------------------------------------------------------------------------- #
+
 
 async def generation_job(context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = context.job.chat_id
@@ -152,8 +154,7 @@ def schedule_jobs(app: Application, chat_id: int) -> None:
     jq.run_repeating(
         reddit_job,
         interval=dt.timedelta(days=every_days),
-        first=dt.datetime.now(tz).replace(hour=11, minute=0, second=0)
-        + dt.timedelta(days=1),
+        first=dt.datetime.now(tz).replace(hour=11, minute=0, second=0) + dt.timedelta(days=1),
         chat_id=chat_id,
         name="reddit",
     )
@@ -162,6 +163,7 @@ def schedule_jobs(app: Application, chat_id: int) -> None:
 # --------------------------------------------------------------------------- #
 # Commands
 # --------------------------------------------------------------------------- #
+
 
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
@@ -194,11 +196,11 @@ async def cmd_buildlog(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         await update.message.reply_text(f"⚠️ Build-log failed: {exc}")
         return
     if draft is None:
-        await update.message.reply_text("No new commits since your last build-log. Ship something first 🙂")
+        await update.message.reply_text(
+            "No new commits since your last build-log. Ship something first 🙂"
+        )
         return
-    await update.message.reply_text(
-        f"From {len(draft.get('source_commits', []))} commit(s):"
-    )
+    await update.message.reply_text(f"From {len(draft.get('source_commits', []))} commit(s):")
     await _send_draft(context.application, update.effective_chat.id, draft)
 
 
@@ -228,6 +230,7 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # --------------------------------------------------------------------------- #
 # Button + note handling
 # --------------------------------------------------------------------------- #
+
 
 async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
@@ -263,7 +266,8 @@ def _media_for(draft: dict, platform: str) -> dict | None:
     """Best ready media record for a platform: the reel wins over a card; for
     images the square card beats the story (feeds crop 9:16)."""
     records = [
-        m for m in draft.get("media") or []
+        m
+        for m in draft.get("media") or []
         if m.get("status") == "ready" and platform in (m.get("platform_targets") or [])
     ]
     for match in (
@@ -320,14 +324,11 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
                 publisher, draft, variants[platform], _media_for(draft, platform)
             )
             store.update_draft(draft["id"], status="posted", **{f"{platform}_url": url})
-            await context.bot.send_message(
-                chat_id, f"✅ Posted to {platform.title()}: {url}"
-            )
+            await context.bot.send_message(chat_id, f"✅ Posted to {platform.title()}: {url}")
         except Exception as exc:
             await context.bot.send_message(
                 chat_id,
-                f"⚠️ {platform.title()} post failed ({exc}). "
-                f"Here it is to post by hand:",
+                f"⚠️ {platform.title()} post failed ({exc}). Here it is to post by hand:",
             )
             await context.bot.send_message(chat_id, variants[platform])
 
@@ -342,9 +343,7 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
                 raise RuntimeError(f"no draft-uploader wired up for {platform}")
             if media_rec is None or media_rec["type"] != "video":
                 raise RuntimeError("no ready reel on this draft")
-            note = await asyncio.to_thread(
-                publish_tiktok.upload_draft, draft, media_rec
-            )
+            note = await asyncio.to_thread(publish_tiktok.upload_draft, draft, media_rec)
             await context.bot.send_message(
                 chat_id,
                 f"📥 {platform.title()}: reel is in your in-app inbox ({note}).\n"
@@ -353,8 +352,7 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
         except Exception as exc:
             await context.bot.send_message(
                 chat_id,
-                f"⚠️ {platform.title()} draft upload failed ({exc}). "
-                f"Post by hand — caption below:",
+                f"⚠️ {platform.title()} draft upload failed ({exc}). Post by hand — caption below:",
             )
         await context.bot.send_message(chat_id, variants[platform])
 
@@ -428,9 +426,7 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         return
     # Real footage supersedes the whole video story: the pending task it fulfills
     # AND any scripted demo reel attached at generation time.
-    media_list = [
-        m for m in draft.get("media", []) if m["type"] != "video"
-    ] + [record]
+    media_list = [m for m in draft.get("media", []) if m["type"] != "video"] + [record]
     draft = store.update_draft(draft_id, media=media_list) or draft
     with open(record["path"], "rb") as fh:
         await msg.reply_video(fh, caption="🎬 reel — save & attach")
@@ -452,6 +448,7 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 # --------------------------------------------------------------------------- #
 # App wiring
 # --------------------------------------------------------------------------- #
+
 
 def _ipv4_request(pool_size: int) -> HTTPXRequest:
     # Home IPv6 routes to api.telegram.org can silently break (TLS ConnectError on
@@ -487,8 +484,7 @@ async def _post_init(app: Application) -> None:
         "next scheduled run.",
     )
     stuck = [
-        d for d in store.load_queue()
-        if d["status"] == "pending" and not d.get("delivered_at")
+        d for d in store.load_queue() if d["status"] == "pending" and not d.get("delivered_at")
     ]
     if stuck:
         await app.bot.send_message(

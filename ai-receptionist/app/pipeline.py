@@ -243,15 +243,27 @@ def qualify(slug: str, *, entity: str | None = None) -> dict:
     if hit:
         decision, reason = "disqualified", f"on the suppression list ({hit})"
     elif country != "NL":
-        decision, reason = "qualified", f"{country}: Dutch BV opt-out regime N/A; keep a clear opt-out in outreach"
+        decision, reason = (
+            "qualified",
+            f"{country}: Dutch BV opt-out regime N/A; keep a clear opt-out in outreach",
+        )
     elif inbound:
-        decision, reason = "qualified", "inbound/opt-in: BV cold-outreach gate satisfied by their contact"
+        decision, reason = (
+            "qualified",
+            "inbound/opt-in: BV cold-outreach gate satisfied by their contact",
+        )
     elif resolved in ENTITY_OK:
         decision, reason = "qualified", "NL BV: meets the BV-only cold-outreach rule"
     elif resolved in ENTITY_BLOCKED:
-        decision, reason = "disqualified", f"NL {resolved}: cold outreach without opt-in is forbidden (BV filter)"
+        decision, reason = (
+            "disqualified",
+            f"NL {resolved}: cold outreach without opt-in is forbidden (BV filter)",
+        )
     else:
-        decision, reason = "hold", "NL entity unknown: confirm a BV (--entity bv) or an opt-in before contacting"
+        decision, reason = (
+            "hold",
+            "NL entity unknown: confirm a BV (--entity bv) or an opt-in before contacting",
+        )
 
     record["entity"] = resolved
     verdict = {"decision": decision, "reason": reason, "entity": resolved}
@@ -307,7 +319,9 @@ def stage(slug: str, *, force: bool = False) -> dict:
     if record is None:
         raise FileNotFoundError(f"no pipeline record for {slug!r}")
     if record.get("config") and not force:
-        raise FileExistsError(f"{slug} already points at {record['config']}; use --force to rebuild")
+        raise FileExistsError(
+            f"{slug} already points at {record['config']}; use --force to rebuild"
+        )
 
     from . import scaffold  # lazy: scaffold pulls in the Anthropic SDK via extract
 
@@ -429,7 +443,7 @@ def _fmt_contact(record: dict) -> str:
 def show_text(slug: str) -> str:
     record = load(slug)
     if record is None:
-        return f"No pipeline record for {slug!r}. Add one with:  pipeline add \"<name>\""
+        return f'No pipeline record for {slug!r}. Add one with:  pipeline add "<name>"'
     entity = record.get("entity") or infer_entity(record.get("business", ""))
     direction = "inbound" if record.get("inbound") else "outbound"
     lines = [
@@ -458,7 +472,7 @@ def _trunc(text: str, width: int) -> str:
 def board_text() -> str:
     records = all_records()
     if not records:
-        return "PIPELINE — empty. Add a prospect with:  pipeline add \"<name>\""
+        return 'PIPELINE — empty. Add a prospect with:  pipeline add "<name>"'
 
     by_status: dict[str, list[dict]] = {}
     for rec in records:
@@ -504,7 +518,9 @@ def main(argv: list[str]) -> int:
 
     p_add = sub.add_parser("add", help="Add a prospect record.")
     p_add.add_argument("name", help="The prospect's business name.")
-    p_add.add_argument("--slug", help="Override the derived slug (must match the demo config name).")
+    p_add.add_argument(
+        "--slug", help="Override the derived slug (must match the demo config name)."
+    )
     p_add.add_argument("--email")
     p_add.add_argument("--phone")
     p_add.add_argument("--country", default="NL", help="ISO country (default NL).")
@@ -514,27 +530,36 @@ def main(argv: list[str]) -> int:
     p_add.add_argument("--status", default="lead", choices=ALL_STATUSES)
     p_add.add_argument("--config", help="Path to an already-staged demo config, if any.")
     p_add.add_argument("--inbound", action="store_true", help="They replied/opted in (not cold).")
-    p_add.add_argument("--entity", choices=ENTITY_CHOICES, help="Legal entity (else inferred at qualify).")
+    p_add.add_argument(
+        "--entity", choices=ENTITY_CHOICES, help="Legal entity (else inferred at qualify)."
+    )
     p_add.add_argument("--note", help="A free-text note for the history log.")
     p_add.add_argument("--force", action="store_true", help="Overwrite an existing record.")
 
     p_qual = sub.add_parser("qualify", help="Run the suppression + entity/BV gate.")
     p_qual.add_argument("slug")
-    p_qual.add_argument("--entity", choices=ENTITY_CHOICES, help="Override the entity for the gate.")
+    p_qual.add_argument(
+        "--entity", choices=ENTITY_CHOICES, help="Override the entity for the gate."
+    )
 
     p_adv = sub.add_parser("advance", help="Move a record to a new status.")
     p_adv.add_argument("slug")
     p_adv.add_argument("status", choices=ALL_STATUSES)
     p_adv.add_argument("--note", help="Why — logged with the move.")
 
-    p_stage = sub.add_parser("stage", help="Build the branded demo config (scaffold) and mark staged.")
+    p_stage = sub.add_parser(
+        "stage", help="Build the branded demo config (scaffold) and mark staged."
+    )
     p_stage.add_argument("slug")
     p_stage.add_argument("--force", action="store_true", help="Rebuild even if a config exists.")
 
     p_sign = sub.add_parser("sign", help="Promote the demo config to a live client; mark signed.")
     p_sign.add_argument("slug")
-    p_sign.add_argument("--force", action="store_true",
-                        help="Promote despite an existing client config or a failed readiness check.")
+    p_sign.add_argument(
+        "--force",
+        action="store_true",
+        help="Promote despite an existing client config or a failed readiness check.",
+    )
 
     p_note = sub.add_parser("note", help="Append a note to a record's history.")
     p_note.add_argument("slug")
@@ -550,10 +575,20 @@ def main(argv: list[str]) -> int:
     if args.cmd == "add":
         try:
             rec = add(
-                args.name, slug=args.slug, email=args.email, phone=args.phone,
-                country=args.country, lang=args.lang, type_=args.type_, source=args.source,
-                status=args.status, config=args.config, inbound=args.inbound,
-                entity=args.entity, note=args.note, force=args.force,
+                args.name,
+                slug=args.slug,
+                email=args.email,
+                phone=args.phone,
+                country=args.country,
+                lang=args.lang,
+                type_=args.type_,
+                source=args.source,
+                status=args.status,
+                config=args.config,
+                inbound=args.inbound,
+                entity=args.entity,
+                note=args.note,
+                force=args.force,
             )
         except (ValueError, FileExistsError) as exc:
             parser.error(str(exc))

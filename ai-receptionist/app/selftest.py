@@ -1,19 +1,19 @@
 """Isolated checks + an interactive terminal chat — test each layer before the web UI.
 
-    python -m app.selftest config      # config loads, no network
-    python -m app.selftest routing     # multi-tenant slug -> config resolution, no network
-    python -m app.selftest calendar    # slot generation + a booking round-trip, no network
-    python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
-    python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
-    python -m app.selftest analytics   # per-client capture store round-trip, no network
-    python -m app.selftest digest      # deterministic oversight digest, no network
-    python -m app.selftest insights    # analyst store + PII redaction + backlog, no network
-    python -m app.selftest pipeline    # prospect→client state machine + sign promotion, no network
-    python -m app.selftest analyst     # live Haiku insight extraction (needs ANTHROPIC_API_KEY)
-    python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
-    python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
-    python -m app.selftest chat        # interactive terminal chat with the receptionist
-    python -m app.selftest all         # config + calendar + agent + scope, in order
+python -m app.selftest config      # config loads, no network
+python -m app.selftest routing     # multi-tenant slug -> config resolution, no network
+python -m app.selftest calendar    # slot generation + a booking round-trip, no network
+python -m app.selftest calendar-google  # live Google Calendar (needs creds + provider: google)
+python -m app.selftest intake      # scrape→draft merge: prices never inferred, no network
+python -m app.selftest analytics   # per-client capture store round-trip, no network
+python -m app.selftest digest      # deterministic oversight digest, no network
+python -m app.selftest insights    # analyst store + PII redaction + backlog, no network
+python -m app.selftest pipeline    # prospect→client state machine + sign promotion, no network
+python -m app.selftest analyst     # live Haiku insight extraction (needs ANTHROPIC_API_KEY)
+python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
+python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
+python -m app.selftest chat        # interactive terminal chat with the receptionist
+python -m app.selftest all         # config + calendar + agent + scope, in order
 """
 
 from __future__ import annotations
@@ -136,7 +136,9 @@ def check_calendar_google() -> bool:
     print("• google calendar (needs calendar.provider: google + GOOGLE_CALENDAR_SA_JSON)")
     provider = str((business().get("calendar") or {}).get("provider", "sim")).lower()
     if provider != "google":
-        _ok(f"provider is '{provider}', not google — skipping. Set calendar.provider: google to test.")
+        _ok(
+            f"provider is '{provider}', not google — skipping. Set calendar.provider: google to test."
+        )
         return True
     try:
         env("GOOGLE_CALENDAR_SA_JSON")
@@ -153,7 +155,9 @@ def check_calendar_google() -> bool:
         _ok("connected to Google Calendar; no open days in the horizon (fully busy or closed?)")
         return True
     first_day, slots = next(iter(days.items()))
-    _ok(f"connected to Google Calendar; {len(days)} open day(s); {first_day} has {len(slots)} slots")
+    _ok(
+        f"connected to Google Calendar; {len(days)} open day(s); {first_day} has {len(slots)} slots"
+    )
     return True
 
 
@@ -166,7 +170,9 @@ def check_intake() -> bool:
     # 1. Schema-level invariant: a price can NEVER be extracted (structural, not prompt-based).
     schema_blob = _json.dumps(extract._SCHEMA).lower()
     if "price" in schema_blob or "prijs" in schema_blob or "tarief" in schema_blob:
-        return _fail("extraction schema references a price field — prices must be human-entered only")
+        return _fail(
+            "extraction schema references a price field — prices must be human-entered only"
+        )
     _ok("extraction schema has no price field (invented prices are structurally impossible)")
 
     fixture = {
@@ -174,10 +180,18 @@ def check_intake() -> bool:
         "phone": {"value": "+31 30 123 4567", "snippet": "Bel ons: 030 123 4567"},
         "region": {"value": "", "snippet": ""},  # uncited -> must fall back to a safe default
         "services": [
-            {"name": "Lekkage verhelpen", "category": "lekkage-reparatie",
-             "snippet": "lekkage snel verholpen", "confidence": "high"},
-            {"name": "Verzonnen dienst", "category": "overig",
-             "snippet": "", "confidence": "low"},  # uncited -> dropped
+            {
+                "name": "Lekkage verhelpen",
+                "category": "lekkage-reparatie",
+                "snippet": "lekkage snel verholpen",
+                "confidence": "high",
+            },
+            {
+                "name": "Verzonnen dienst",
+                "category": "overig",
+                "snippet": "",
+                "confidence": "low",
+            },  # uncited -> dropped
         ],
         "hours": {
             "monday": {"open": "08:00", "close": "17:00", "snippet": "ma 08:00-17:00"},
@@ -188,7 +202,9 @@ def check_intake() -> bool:
 
     for svc in cfg["services"]:
         if svc.get("price") != "PRIJS?":
-            return _fail(f"service {svc['name']!r} has a non-placeholder price {svc.get('price')!r}")
+            return _fail(
+                f"service {svc['name']!r} has a non-placeholder price {svc.get('price')!r}"
+            )
     _ok(f"{len(cfg['services'])} service(s), every price is PRIJS? (no price ever inferred)")
 
     names = [s["name"] for s in cfg["services"]]
@@ -233,16 +249,33 @@ def check_analytics() -> bool:
         try:
             # Turn 1: a plain answered turn. Turn 2: a successful booking, same conversation.
             analytics.record_turn(
-                client="acme-loodgieter", channel="web", user_id="+31600000000",
-                user_text="hi", reply="hello", input_tokens=100, output_tokens=20,
-                model="claude-opus-4-8", tools=[], after_hours=True,
+                client="acme-loodgieter",
+                channel="web",
+                user_id="+31600000000",
+                user_text="hi",
+                reply="hello",
+                input_tokens=100,
+                output_tokens=20,
+                model="claude-opus-4-8",
+                tools=[],
+                after_hours=True,
             )
             analytics.record_turn(
-                client="acme-loodgieter", channel="web", user_id="+31600000000",
-                user_text="book me in", reply="booked!", input_tokens=200, output_tokens=40,
+                client="acme-loodgieter",
+                channel="web",
+                user_id="+31600000000",
+                user_text="book me in",
+                reply="booked!",
+                input_tokens=200,
+                output_tokens=40,
                 model="claude-opus-4-8",
-                tools=[{"name": "book_appointment", "input": {},
-                        "output": '{"ok": true, "confirmation": "AB12"}'}],
+                tools=[
+                    {
+                        "name": "book_appointment",
+                        "input": {},
+                        "output": '{"ok": true, "confirmation": "AB12"}',
+                    }
+                ],
                 after_hours=False,
             )
             sess = analytics.load_session("acme-loodgieter", "web", "+31600000000")
@@ -308,23 +341,42 @@ def check_digest() -> bool:
         settings.CLIENTS_DIR = Path(ctmp)
         try:
             (settings.CLIENTS_DIR / "acme-loodgieter.yaml").write_text(
-                'business:\n  name: "Acme Loodgieter"\n  type: "loodgieter"\n', encoding="utf-8")
+                'business:\n  name: "Acme Loodgieter"\n  type: "loodgieter"\n', encoding="utf-8"
+            )
             (settings.CLIENTS_DIR / "smit-dak.yaml").write_text(
-                'business:\n  name: "Smit Dakwerken"\n  type: "dakdekker"\n', encoding="utf-8")
+                'business:\n  name: "Smit Dakwerken"\n  type: "dakdekker"\n', encoding="utf-8"
+            )
             # Acme: an after-hours lead (message taken). Smit: a booking.
             analytics.record_turn(
-                client="acme-loodgieter", channel="web", user_id="+31600000001",
-                user_text="hoi", reply="hallo", input_tokens=1000, output_tokens=200,
+                client="acme-loodgieter",
+                channel="web",
+                user_id="+31600000001",
+                user_text="hoi",
+                reply="hallo",
+                input_tokens=1000,
+                output_tokens=200,
                 model="claude-opus-4-8",
                 tools=[{"name": "take_message", "input": {}, "output": '{"ok": true}'}],
-                after_hours=True)
+                after_hours=True,
+            )
             analytics.record_turn(
-                client="smit-dak", channel="web", user_id="+31600000002",
-                user_text="afspraak", reply="geboekt", input_tokens=2000, output_tokens=400,
+                client="smit-dak",
+                channel="web",
+                user_id="+31600000002",
+                user_text="afspraak",
+                reply="geboekt",
+                input_tokens=2000,
+                output_tokens=400,
                 model="claude-opus-4-8",
-                tools=[{"name": "book_appointment", "input": {},
-                        "output": '{"ok": true, "confirmation": "X1"}'}],
-                after_hours=False)
+                tools=[
+                    {
+                        "name": "book_appointment",
+                        "input": {},
+                        "output": '{"ok": true, "confirmation": "X1"}',
+                    }
+                ],
+                after_hours=False,
+            )
 
             text = oversight.build_digest(now=datetime.now(), today=True)
             if "2/2 bots active" not in text:
@@ -333,7 +385,11 @@ def check_digest() -> bool:
                 return _fail(f"totals wrong:\n{text}")
             _ok("header rolls up 2 active bots: 2 conversations, 1 lead, 1 booking")
 
-            if "Acme Loodgieter" not in text or "1 leads" not in text or "100% after-hours" not in text:
+            if (
+                "Acme Loodgieter" not in text
+                or "1 leads" not in text
+                or "100% after-hours" not in text
+            ):
                 return _fail(f"Acme line missing lead / after-hours share:\n{text}")
             if "Smit Dakwerken" not in text or "1 booked" not in text:
                 return _fail(f"Smit line missing its booking:\n{text}")
@@ -345,16 +401,31 @@ def check_digest() -> bool:
 
             # Layer 2: an analyst insight on one conversation surfaces in the same digest.
             future = (datetime.now() + timedelta(days=1)).isoformat(timespec="seconds")
-            acme_key = next(k for k, s in analytics.pending_for_analysis(future)
-                            if s == "acme-loodgieter")
-            analytics.save_insight(acme_key, "acme-loodgieter", "claude-haiku-4-5", {
-                "intent": "spoed", "topics": ["lekkage"], "resolved": False, "escalated": True,
-                "escalation_reason": "no slot", "unanswered_questions": ["Doen jullie spoed?"],
-                "out_of_scope_requests": [], "sentiment": "neu", "language": "nl",
-                "customer_type": "new", "lead_captured": True, "booking_made": False,
-                "est_job_value_eur": 0, "upsell_signals": ["after_hours_share_high"],
-                "quality_flags": ["refused_in_scope_job"],
-            })
+            acme_key = next(
+                k for k, s in analytics.pending_for_analysis(future) if s == "acme-loodgieter"
+            )
+            analytics.save_insight(
+                acme_key,
+                "acme-loodgieter",
+                "claude-haiku-4-5",
+                {
+                    "intent": "spoed",
+                    "topics": ["lekkage"],
+                    "resolved": False,
+                    "escalated": True,
+                    "escalation_reason": "no slot",
+                    "unanswered_questions": ["Doen jullie spoed?"],
+                    "out_of_scope_requests": [],
+                    "sentiment": "neu",
+                    "language": "nl",
+                    "customer_type": "new",
+                    "lead_captured": True,
+                    "booking_made": False,
+                    "est_job_value_eur": 0,
+                    "upsell_signals": ["after_hours_share_high"],
+                    "quality_flags": ["refused_in_scope_job"],
+                },
+            )
             enriched = oversight.build_digest(now=datetime.now(), today=True)
             if "SIGNALS" not in enriched or "Doen jullie spoed?" not in enriched:
                 return _fail(f"digest didn't surface the FAQ gap:\n{enriched}")
@@ -376,7 +447,12 @@ def check_insights() -> bool:
 
     # PII never reaches the analyst in the clear.
     red = oversight.redact("bel 06-12345678 of mail jan@voorbeeld.nl")
-    if "06-12345678" in red or "jan@voorbeeld.nl" in red or "[phone]" not in red or "[email]" not in red:
+    if (
+        "06-12345678" in red
+        or "jan@voorbeeld.nl" in red
+        or "[phone]" not in red
+        or "[email]" not in red
+    ):
         return _fail(f"redaction left PII in place: {red!r}")
     _ok("redaction masks phone + email before the transcript leaves for the analyst")
 
@@ -385,9 +461,16 @@ def check_insights() -> bool:
         settings.DATA_DIR = Path(tmp)
         try:
             analytics.record_turn(
-                client="demo-test", channel="web", user_id="+31600000009",
-                user_text="Doen jullie ook zonwering?", reply="Nee, dat is een andere vakman.",
-                input_tokens=50, output_tokens=10, model="claude-opus-4-8", tools=[])
+                client="demo-test",
+                channel="web",
+                user_id="+31600000009",
+                user_text="Doen jullie ook zonwering?",
+                reply="Nee, dat is een andere vakman.",
+                input_tokens=50,
+                output_tokens=10,
+                model="claude-opus-4-8",
+                tools=[],
+            )
             future = (datetime.now() + timedelta(minutes=1)).isoformat(timespec="seconds")
             pending = analytics.pending_for_analysis(future)
             if len(pending) != 1 or pending[0][1] != "demo-test":
@@ -398,17 +481,28 @@ def check_insights() -> bool:
                 return _fail(f"transcript reconstruction wrong: {convo}")
             _ok("a settled conversation is queued for analysis; its transcript reconstructs")
 
-            analytics.save_insight(key, "demo-test", "claude-haiku-4-5", {
-                "intent": "out-of-scope enquiry",
-                "topics": ["zonwering"],
-                "resolved": True, "escalated": False, "escalation_reason": "",
-                "unanswered_questions": [],
-                "out_of_scope_requests": ["zonwering"],
-                "sentiment": "neu", "language": "nl", "customer_type": "new",
-                "lead_captured": False, "booking_made": False, "est_job_value_eur": 0,
-                "upsell_signals": ["out_of_scope:zonwering"],
-                "quality_flags": [],
-            })
+            analytics.save_insight(
+                key,
+                "demo-test",
+                "claude-haiku-4-5",
+                {
+                    "intent": "out-of-scope enquiry",
+                    "topics": ["zonwering"],
+                    "resolved": True,
+                    "escalated": False,
+                    "escalation_reason": "",
+                    "unanswered_questions": [],
+                    "out_of_scope_requests": ["zonwering"],
+                    "sentiment": "neu",
+                    "language": "nl",
+                    "customer_type": "new",
+                    "lead_captured": False,
+                    "booking_made": False,
+                    "est_job_value_eur": 0,
+                    "upsell_signals": ["out_of_scope:zonwering"],
+                    "quality_flags": [],
+                },
+            )
             if analytics.pending_for_analysis(future):
                 return _fail("session still pending after its insight was saved")
             rows = analytics.insights_for_client("demo-test")
@@ -440,14 +534,21 @@ def check_analyst() -> bool:
         settings.DATA_DIR = Path(tmp)
         try:
             analytics.record_turn(
-                client="demo-test", channel="web", user_id="+31600000010",
+                client="demo-test",
+                channel="web",
+                user_id="+31600000010",
                 user_text="Kunnen jullie zaterdag om 10 uur een cv-ketel komen onderhouden?",
                 reply="Zeker, ik plan het in. Mag ik uw naam en telefoonnummer?",
-                input_tokens=80, output_tokens=20, model="claude-opus-4-8", tools=[])
+                input_tokens=80,
+                output_tokens=20,
+                model="claude-opus-4-8",
+                tools=[],
+            )
             try:
                 # now +2s so the just-recorded session counts as settled past the cutoff.
                 result = oversight.analyze_pending(
-                    now=datetime.now() + timedelta(seconds=2), idle_minutes=0)
+                    now=datetime.now() + timedelta(seconds=2), idle_minutes=0
+                )
             except Exception as exc:
                 return _fail(f"analyst run failed: {exc}")
             if result["analyzed"] != 1:
@@ -455,8 +556,10 @@ def check_analyst() -> bool:
             rows = analytics.insights_for_client("demo-test")
             if not rows or not rows[0].get("intent"):
                 return _fail(f"analyst produced no usable insight: {rows}")
-            print(f"    intent={rows[0]['intent']!r} sentiment={rows[0]['sentiment']!r} "
-                  f"lang={rows[0]['language']!r}")
+            print(
+                f"    intent={rows[0]['intent']!r} sentiment={rows[0]['sentiment']!r} "
+                f"lang={rows[0]['language']!r}"
+            )
             _ok("live analyst turned a transcript into a structured insight row")
         finally:
             settings.DATA_DIR = orig_dir
@@ -494,12 +597,23 @@ def check_agent() -> bool:
 _SCOPE_CONFIG = "config/klantkraan-demo.yaml"
 _SCOPE_REQUEST = "Goedemiddag, kunnen jullie bij ons in de woonkamer vloerverwarming aanleggen?"
 _REFUSAL_MARKERS = (
-    "kan ik u niet helpen", "kan ik niet helpen", "kunnen wij niet helpen",
-    "kunnen we u niet helpen", "dat doen wij niet", "dat doen we niet",
-    "niet mogelijk", "helaas kunnen we",
+    "kan ik u niet helpen",
+    "kan ik niet helpen",
+    "kunnen wij niet helpen",
+    "kunnen we u niet helpen",
+    "dat doen wij niet",
+    "dat doen we niet",
+    "niet mogelijk",
+    "helaas kunnen we",
 )
 _HELP_MARKERS = (
-    "offerte", "inspectie", "afspraak", "inplann", "beschikbaar", "langskomen", "opmeten",
+    "offerte",
+    "inspectie",
+    "afspraak",
+    "inplann",
+    "beschikbaar",
+    "langskomen",
+    "opmeten",
 )
 
 
@@ -632,8 +746,18 @@ CHECKS = {
     "agent": check_agent,
     "scope": check_scope,
 }
-ORDER = ["config", "routing", "calendar", "intake", "analytics", "digest", "insights",
-         "pipeline", "agent", "scope"]
+ORDER = [
+    "config",
+    "routing",
+    "calendar",
+    "intake",
+    "analytics",
+    "digest",
+    "insights",
+    "pipeline",
+    "agent",
+    "scope",
+]
 
 
 def main(argv: list[str]) -> int:

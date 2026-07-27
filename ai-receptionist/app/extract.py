@@ -224,7 +224,7 @@ def fetch_place(name: str, near: str | None = None, *, timeout: int = 10) -> dic
             },
         )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            places = (json.loads(resp.read()).get("places") or [])
+            places = json.loads(resp.read()).get("places") or []
     except Exception:
         return None
     if not places or not places[0].get("id"):
@@ -310,10 +310,14 @@ def main(argv: list[str]) -> int:
     args = parser.parse_args(argv[1:])
 
     data = extract(args.name, url=args.url, near=args.near)
-    grounded = any(
-        (isinstance(v, dict) and v.get("snippet"))
-        for v in (data.get("business_type"), data.get("phone"), data.get("region"))
-    ) or bool(data.get("services")) or bool(data.get("hours"))
+    grounded = (
+        any(
+            (isinstance(v, dict) and v.get("snippet"))
+            for v in (data.get("business_type"), data.get("phone"), data.get("region"))
+        )
+        or bool(data.get("services"))
+        or bool(data.get("hours"))
+    )
     if not grounded:
         print(
             "⚠️  No usable sources found — nothing to extract. Use the 3-field Tally fallback "

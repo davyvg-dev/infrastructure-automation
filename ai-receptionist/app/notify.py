@@ -98,13 +98,15 @@ def _save_message(client: str, customer: str, contact: str, message: str) -> boo
             if path.exists():
                 with path.open(encoding="utf-8") as fh:
                     messages = json.load(fh)
-            messages.append({
-                "at": datetime.now().isoformat(timespec="seconds"),
-                "client": client,
-                "customer_name": customer,
-                "contact": contact,
-                "message": message,
-            })
+            messages.append(
+                {
+                    "at": datetime.now().isoformat(timespec="seconds"),
+                    "client": client,
+                    "customer_name": customer,
+                    "contact": contact,
+                    "message": message,
+                }
+            )
             tmp = path.with_suffix(".json.tmp")
             with tmp.open("w", encoding="utf-8") as fh:
                 json.dump(messages, fh, ensure_ascii=False, indent=2)

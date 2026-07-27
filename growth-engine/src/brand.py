@@ -12,10 +12,10 @@ from typing import Any
 from .settings import ROOT, strategy
 
 _DEFAULTS = {
-    "bg": "#0F4C81",        # kraan-blue
-    "text": "#FAF6EE",      # kraan-cream
-    "accent": "#C75A2B",    # kraan-rust
-    "muted": "#4D80AD",     # kraan-blue-300
+    "bg": "#0F4C81",  # kraan-blue
+    "text": "#FAF6EE",  # kraan-cream
+    "accent": "#C75A2B",  # kraan-rust
+    "muted": "#4D80AD",  # kraan-blue-300
     "footer": "",
     "font_bold": "assets/fonts/Inter-Bold.ttf",
     "font_regular": "assets/fonts/Inter-Regular.ttf",
@@ -68,43 +68,43 @@ def reel() -> dict[str, Any]:
     which change pixel dimensions but not proportions)."""
     values = {
         "enabled": False,
-        "crop_top": 0.0,        # iOS status bar — device-specific, tune once
-        "crop_bottom": 0.0,     # home indicator, usually fine to keep
-        "target_seconds": 15,   # max length of the FINISHED reel, cards included
-        "max_speed": 4.0,       # never faster than this (unreadable beyond it)
-        "pop_cuts": True,       # classify every frame: message pops hold at 1×, typing
-                                # plays fast, waiting (typing dots, dead air) is cut
+        "crop_top": 0.0,  # iOS status bar — device-specific, tune once
+        "crop_bottom": 0.0,  # home indicator, usually fine to keep
+        "target_seconds": 15,  # max length of the FINISHED reel, cards included
+        "max_speed": 4.0,  # never faster than this (unreadable beyond it)
+        "pop_cuts": True,  # classify every frame: message pops hold at 1×, typing
+        # plays fast, waiting (typing dots, dead air) is cut
         "scene_threshold": 0.08,  # CEILING for "a message appeared"; the working
-                                  # threshold adapts to each clip (6% of its biggest
-                                  # frame change), so this only caps runaway clips
+        # threshold adapts to each clip (6% of its biggest
+        # frame change), so this only caps runaway clips
         "typing_threshold": 0.0006,  # keystroke floor, measured in the keyboard band
-        "keys_band": 0.45,      # bottom fraction of the frame where typing happens
-                                # (keyboard + input bar); changes concentrated here
-                                # are keystrokes, changes above it are not
-        "typing_speed": 3.0,    # typing stays visible, just this much faster
-        "dwell_seconds": 1.4,   # max hold on each pop before jumping to the next
-        "cold_open": True,      # open on the payoff message, then replay the chat
+        "keys_band": 0.45,  # bottom fraction of the frame where typing happens
+        # (keyboard + input bar); changes concentrated here
+        # are keystrokes, changes above it are not
+        "typing_speed": 3.0,  # typing stays visible, just this much faster
+        "dwell_seconds": 1.4,  # max hold on each pop before jumping to the next
+        "cold_open": True,  # open on the payoff message, then replay the chat
         "suspense_seconds": 0.6,  # one "..." beat of real waiting before the payoff
-        "hook_seconds": 2.5,    # hook text rides the opening footage — no title card
-        "cta_seconds": 1.0,     # CTA rides a freeze of the last frame — no end card
-        "cta_headline": "",     # CTA text; falls back to brand footer
+        "hook_seconds": 2.5,  # hook text rides the opening footage — no title card
+        "cta_seconds": 1.0,  # CTA rides a freeze of the last frame — no end card
+        "cta_headline": "",  # CTA text; falls back to brand footer
         "cta_sub": "",
     }
     audio_defaults = {
-        "enabled": True,        # baked-in sound design (silent reels feel broken)
-        "sfx": True,            # pops on messages, ticks while typing, ding on payoff
-        "bed": "",              # founder-supplied licensed/CC0 ambient file; "" = none.
-                                # NEVER commercial music — that stays in-app (REELS.md)
-        "bed_gain_db": -24.0,   # bed sits far under the SFX
+        "enabled": True,  # baked-in sound design (silent reels feel broken)
+        "sfx": True,  # pops on messages, ticks while typing, ding on payoff
+        "bed": "",  # founder-supplied licensed/CC0 ambient file; "" = none.
+        # NEVER commercial music — that stays in-app (REELS.md)
+        "bed_gain_db": -24.0,  # bed sits far under the SFX
     }
     demo_defaults = {
-        "enabled": False,       # scripted chat-demo reels: drawn from `scenarios`,
-                                # perfectly synced by construction — no recording,
-                                # no detection; the 🎬 upload stays as the override
-        "business": "Demo",     # fictional business name in the demo chat header
-        "greeting": "",         # widget greeting already on screen at the start —
-                                # the natural home for the assistant disclosure
-        "scenarios": [],        # list of conversations: [{from: klant|ai, text}]
+        "enabled": False,  # scripted chat-demo reels: drawn from `scenarios`,
+        # perfectly synced by construction — no recording,
+        # no detection; the 🎬 upload stays as the override
+        "business": "Demo",  # fictional business name in the demo chat header
+        "greeting": "",  # widget greeting already on screen at the start —
+        # the natural home for the assistant disclosure
+        "scenarios": [],  # list of conversations: [{from: klant|ai, text}]
     }
     values.update((strategy().get("media") or {}).get("reel") or {})
     # Nested merge so a partial (or absent) audio block keeps the other defaults.

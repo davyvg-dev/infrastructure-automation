@@ -184,8 +184,18 @@ def record_turn(
                     "INSERT INTO turns (session_key, client, ts, user_text, reply, tools_json, "
                     "input_tokens, output_tokens, after_hours, outcome) "
                     "VALUES (?,?,?,?,?,?,?,?,?,?)",
-                    (key, client, now, user_text, reply, json.dumps(tools, ensure_ascii=False),
-                     int(input_tokens), int(output_tokens), 1 if after_hours else 0, outcome),
+                    (
+                        key,
+                        client,
+                        now,
+                        user_text,
+                        reply,
+                        json.dumps(tools, ensure_ascii=False),
+                        int(input_tokens),
+                        int(output_tokens),
+                        1 if after_hours else 0,
+                        outcome,
+                    ),
                 )
                 row = conn.execute(
                     "SELECT outcome, input_tokens, output_tokens FROM sessions WHERE session_key=?",
@@ -196,8 +206,20 @@ def record_turn(
                         "INSERT INTO sessions (session_key, client, channel, user_ref, started_at, "
                         "updated_at, turns, after_hours_turns, outcome, input_tokens, output_tokens, "
                         "model) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                        (key, client, channel, user_ref, now, now, 1, 1 if after_hours else 0,
-                         outcome, int(input_tokens), int(output_tokens), model),
+                        (
+                            key,
+                            client,
+                            channel,
+                            user_ref,
+                            now,
+                            now,
+                            1,
+                            1 if after_hours else 0,
+                            outcome,
+                            int(input_tokens),
+                            int(output_tokens),
+                            model,
+                        ),
                     )
                 else:
                     best = outcome if _OUTCOME_RANK[outcome] > _OUTCOME_RANK[row[0]] else row[0]
@@ -205,8 +227,15 @@ def record_turn(
                         "UPDATE sessions SET updated_at=?, turns=turns+1, "
                         "after_hours_turns=after_hours_turns+?, outcome=?, input_tokens=?, "
                         "output_tokens=?, model=? WHERE session_key=?",
-                        (now, 1 if after_hours else 0, best, row[1] + int(input_tokens),
-                         row[2] + int(output_tokens), model, key),
+                        (
+                            now,
+                            1 if after_hours else 0,
+                            best,
+                            row[1] + int(input_tokens),
+                            row[2] + int(output_tokens),
+                            model,
+                            key,
+                        ),
                     )
                 conn.commit()
             finally:
@@ -347,10 +376,25 @@ def daily_stats(client: str, start_iso: str, end_iso: str) -> dict[str, Any]:
 # --- Layer 2: transcripts in, insights out (the analyst reads/writes these) --------------
 
 _INSIGHT_COLS = (
-    "session_key", "client", "analyzed_at", "analyst_model", "intent", "topics_json",
-    "resolved", "escalated", "escalation_reason", "unanswered_json", "out_of_scope_json",
-    "sentiment", "language", "customer_type", "lead_captured", "booking_made",
-    "est_job_value_eur", "upsell_json", "quality_json",
+    "session_key",
+    "client",
+    "analyzed_at",
+    "analyst_model",
+    "intent",
+    "topics_json",
+    "resolved",
+    "escalated",
+    "escalation_reason",
+    "unanswered_json",
+    "out_of_scope_json",
+    "sentiment",
+    "language",
+    "customer_type",
+    "lead_captured",
+    "booking_made",
+    "est_job_value_eur",
+    "upsell_json",
+    "quality_json",
 )
 
 
@@ -383,12 +427,16 @@ def transcript(session_key: str) -> list[dict[str, str]]:
         conn.close()
 
 
-def save_insight(session_key: str, client: str, model: str, ins: dict[str, Any],
-                 now: datetime | None = None) -> None:
+def save_insight(
+    session_key: str, client: str, model: str, ins: dict[str, Any], now: datetime | None = None
+) -> None:
     """Persist one analysed conversation. Arrays are stored as JSON; booleans as 0/1."""
     now = (now or datetime.now()).isoformat(timespec="seconds")
     values = (
-        session_key, client, now, model,
+        session_key,
+        client,
+        now,
+        model,
         ins.get("intent", ""),
         json.dumps(ins.get("topics", []), ensure_ascii=False),
         1 if ins.get("resolved") else 0,
@@ -417,8 +465,13 @@ def save_insight(session_key: str, client: str, model: str, ins: dict[str, Any],
         conn.close()
 
 
-_INSIGHT_JSON_COLS = ("topics_json", "unanswered_json", "out_of_scope_json", "upsell_json",
-                      "quality_json")
+_INSIGHT_JSON_COLS = (
+    "topics_json",
+    "unanswered_json",
+    "out_of_scope_json",
+    "upsell_json",
+    "quality_json",
+)
 
 
 def _decode_insight(cols: list[str], row: tuple) -> dict[str, Any]:

@@ -34,9 +34,7 @@ Then adapt it per platform:
 
 
 def _git(repo: str, *args: str) -> str:
-    result = subprocess.run(
-        ["git", "-C", repo, *args], capture_output=True, text=True
-    )
+    result = subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True)
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or "git command failed")
     return result.stdout
@@ -68,12 +66,14 @@ def _recent_commits(repo: str, since_sha: str | None, max_commits: int) -> list[
         if not record:
             continue
         sha, subject, body = (record.split("\x1f") + ["", "", ""])[:3]
-        commits.append({
-            "sha": sha.strip(),
-            "subject": subject.strip(),
-            "body": body.strip(),
-            "files": _files_for(repo, sha.strip()),
-        })
+        commits.append(
+            {
+                "sha": sha.strip(),
+                "subject": subject.strip(),
+                "body": body.strip(),
+                "files": _files_for(repo, sha.strip()),
+            }
+        )
     commits.reverse()  # oldest -> newest
     return commits
 
@@ -98,7 +98,9 @@ def build_draft(platforms: list[str]) -> dict[str, Any] | None:
     if not commits:
         return None
 
-    brief = _BRIEF.format(material=_format(commits), platforms=prompts.platform_instructions(platforms))
+    brief = _BRIEF.format(
+        material=_format(commits), platforms=prompts.platform_instructions(platforms)
+    )
     draft = generate.generate_from_brief("build_log", brief, platforms)
     draft["source_commits"] = [c["sha"][:8] for c in commits]
     store.set_state("buildlog_last_sha", commits[-1]["sha"])  # newest processed

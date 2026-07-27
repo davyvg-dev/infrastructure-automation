@@ -14,10 +14,13 @@ _FIXTURE = {
     "phone": {"value": "+31 30 123 4567", "snippet": "Bel ons: 030 123 4567"},
     "region": {"value": "", "snippet": ""},
     "services": [
-        {"name": "Lekkage verhelpen", "category": "lekkage-reparatie",
-         "snippet": "lekkage snel verholpen", "confidence": "high"},
-        {"name": "Verzonnen dienst", "category": "overig",
-         "snippet": "", "confidence": "low"},
+        {
+            "name": "Lekkage verhelpen",
+            "category": "lekkage-reparatie",
+            "snippet": "lekkage snel verholpen",
+            "confidence": "high",
+        },
+        {"name": "Verzonnen dienst", "category": "overig", "snippet": "", "confidence": "low"},
     ],
     "hours": {
         "monday": {"open": "08:00", "close": "17:00", "snippet": "ma 08:00-17:00"},
@@ -45,7 +48,9 @@ def test_merge_drops_uncited_keeps_cited():
     assert "Verzonnen dienst" not in names
     assert "Lekkage verhelpen" in names
     assert cfg["business"]["phone"] == "+31 30 123 4567"
-    assert cfg["business"]["address"], "uncited region should fall back to a safe default, not blank"
+    assert cfg["business"]["address"], (
+        "uncited region should fall back to a safe default, not blank"
+    )
     assert cfg["hours"] == {"monday": ["08:00", "17:00"]}
 
 

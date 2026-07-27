@@ -23,13 +23,19 @@ def preview(draft: dict[str, Any]) -> str:
         lines.append(_esc(text))
         lines.append("")
     if pending_reel(draft):
-        if any(m.get("type") == "video" and m.get("status") == "ready"
-               for m in draft.get("media", [])):
-            lines.append("🎬 " + _esc("Reel: demo attached — tap 🎬 to swap in "
-                                      "your own screen recording."))
+        if any(
+            m.get("type") == "video" and m.get("status") == "ready" for m in draft.get("media", [])
+        ):
+            lines.append(
+                "🎬 " + _esc("Reel: demo attached — tap 🎬 to swap in your own screen recording.")
+            )
         else:
-            lines.append("🎬 " + _esc("Reel: waiting for your screen recording — "
-                                      "tap the 🎬 button and send the clip."))
+            lines.append(
+                "🎬 "
+                + _esc(
+                    "Reel: waiting for your screen recording — tap the 🎬 button and send the clip."
+                )
+            )
     return "\n".join(lines).strip()
 
 

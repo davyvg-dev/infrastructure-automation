@@ -25,11 +25,11 @@ from PIL import Image, ImageDraw, ImageFont
 from . import brand
 
 FPS = 30
-_CHAR_FRAMES = 2        # one typed character every 2 frames (~15 chars/s on screen)
-_SEND_FRAMES = 4        # beat between the last keystroke and the message popping
-_MIN_DWELL = 18         # a message never holds shorter than this (0.6s)
-_COLD_FRAMES = 34       # cold open: 4 pre-pop frames + 1s of the payoff on screen
-_HEAD_H = 150           # chat header band height
+_CHAR_FRAMES = 2  # one typed character every 2 frames (~15 chars/s on screen)
+_SEND_FRAMES = 4  # beat between the last keystroke and the message popping
+_MIN_DWELL = 18  # a message never holds shorter than this (0.6s)
+_COLD_FRAMES = 34  # cold open: 4 pre-pop frames + 1s of the payoff on screen
+_HEAD_H = 150  # chat header band height
 
 # Widget palette — the product's web-chat look on brand tokens.
 _BG = "#F1ECDF"
@@ -40,8 +40,9 @@ _MUTED = "#A79F8E"
 _LINE = "#DED7C6"
 
 
-def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
-          max_width: int) -> list[str]:
+def _wrap(
+    draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: int
+) -> list[str]:
     lines: list[str] = []
     current = ""
     for word in text.split():
@@ -60,8 +61,9 @@ class _Painter:
     """Renders one chat state to an image; caches by state so only unique frames
     cost a Pillow render — repeats become hard links in the sequence."""
 
-    def __init__(self, size: tuple[int, int], business: str,
-                 turns: list[dict[str, str]], tmp: Path):
+    def __init__(
+        self, size: tuple[int, int], business: str, turns: list[dict[str, str]], tmp: Path
+    ):
         self.w, self.h = size
         self.business = business
         self.turns = turns
@@ -98,9 +100,12 @@ class _Painter:
         img = Image.new("RGBA", (bw, bh), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
         ai = turn["from"] == "ai"
-        d.rounded_rectangle((0, 0, bw - 1, bh - 1), radius=24,
-                            fill="#FFFFFF" if ai else _BLUE,
-                            outline=_LINE if ai else None)
+        d.rounded_rectangle(
+            (0, 0, bw - 1, bh - 1),
+            radius=24,
+            fill="#FFFFFF" if ai else _BLUE,
+            outline=_LINE if ai else None,
+        )
         y = 20
         for ln in lines:
             d.text((26, y), ln, font=self.font, fill=_INK if ai else _CREAM)
@@ -119,8 +124,9 @@ class _Painter:
         ax, ay = 28, (_HEAD_H - av) // 2
         d.ellipse((ax, ay, ax + av, ay + av), fill="#4D80AD")
         initial = (self.business or "K")[0].upper()
-        d.text((ax + av / 2, ay + av / 2 - 2), initial, font=self.font_bold,
-               fill=_CREAM, anchor="mm")
+        d.text(
+            (ax + av / 2, ay + av / 2 - 2), initial, font=self.font_bold, fill=_CREAM, anchor="mm"
+        )
 
         tx = ax + av + 24  # text column, right of the avatar
         name_asc, name_desc = self.name_font.getmetrics()
@@ -133,16 +139,19 @@ class _Painter:
         dot = 15
         cy = sy + stat_asc * 0.58  # dot centered on the lowercase status text
         d.ellipse((tx, cy - dot / 2, tx + dot, cy + dot / 2), fill="#8FD49A")
-        d.text((tx + dot + 14, sy), "digitale assistent • online",
-               font=self.font_small, fill="#BCD2E4")
+        d.text(
+            (tx + dot + 14, sy), "digitale assistent • online", font=self.font_small, fill="#BCD2E4"
+        )
         # Input bar, above it the bubble stack (newest at the bottom).
         bar_top = self.h - 124
-        d.rounded_rectangle((24, bar_top, self.w - 118, self.h - 40), radius=40,
-                            fill="#FFFFFF", outline=_LINE)
-        d.ellipse((self.w - 104, bar_top, self.w - 24, bar_top + 80),
-                  fill=self.accent)
-        d.polygon([(self.w - 80, bar_top + 26), (self.w - 44, bar_top + 40),
-                   (self.w - 80, bar_top + 54)], fill=_CREAM)
+        d.rounded_rectangle(
+            (24, bar_top, self.w - 118, self.h - 40), radius=40, fill="#FFFFFF", outline=_LINE
+        )
+        d.ellipse((self.w - 104, bar_top, self.w - 24, bar_top + 80), fill=self.accent)
+        d.polygon(
+            [(self.w - 80, bar_top + 26), (self.w - 44, bar_top + 40), (self.w - 80, bar_top + 54)],
+            fill=_CREAM,
+        )
         if typed:
             shown = typed
             while d.textlength(shown, font=self.font) > self.w - 118 - 24 - 76:
@@ -151,12 +160,10 @@ class _Painter:
             cx = 52 + d.textlength(shown, font=self.font) + 6
             d.rectangle((cx, bar_top + 16, cx + 4, bar_top + 62), fill=self.accent)
         else:
-            d.text((52, bar_top + 18), "Typ een bericht…", font=self.font,
-                   fill=_MUTED)
+            d.text((52, bar_top + 18), "Typ een bericht…", font=self.font, fill=_MUTED)
         y = bar_top - 28
         if indicator >= 0:
-            d.rounded_rectangle((24, y - 72, 156, y), radius=24, fill="#FFFFFF",
-                                outline=_LINE)
+            d.rounded_rectangle((24, y - 72, 156, y), radius=24, fill="#FFFFFF", outline=_LINE)
             for i in range(3):
                 c = "#5A5A5A" if i == indicator else "#C9C2B2"
                 d.ellipse((48 + i * 30, y - 44, 64 + i * 30, y - 28), fill=c)
@@ -189,9 +196,14 @@ def _dwell(text: str, cap: int) -> int:
     return max(_MIN_DWELL, min(int((0.55 + 0.032 * len(text)) * FPS), cap))
 
 
-def render(scenario: list[dict[str, str]], business: str, greeting: str,
-           tmp: Path, size: tuple[int, int], cfg: dict[str, Any]
-           ) -> tuple[Path, list[tuple[float, str]], float]:
+def render(
+    scenario: list[dict[str, str]],
+    business: str,
+    greeting: str,
+    tmp: Path,
+    size: tuple[int, int],
+    cfg: dict[str, Any],
+) -> tuple[Path, list[tuple[float, str]], float]:
     """Scenario -> (frame-sequence dir, (time, sfx) events, duration in seconds).
 
     Timeline: cold open on the payoff message, then replay — the widget's
@@ -201,10 +213,10 @@ def render(scenario: list[dict[str, str]], business: str, greeting: str,
     the payoff (ding). Budget-fits `target_seconds` by shrinking dwells, then
     typing pace, exactly like the recorded-footage cut plan would.
     """
-    turns = [{"from": str(t.get("from", "")), "text": str(t.get("text", "")).strip()}
-             for t in scenario]
-    if not turns or any(t["from"] not in ("klant", "ai") or not t["text"]
-                        for t in turns):
+    turns = [
+        {"from": str(t.get("from", "")), "text": str(t.get("text", "")).strip()} for t in scenario
+    ]
+    if not turns or any(t["from"] not in ("klant", "ai") or not t["text"] for t in turns):
         raise ValueError("demo scenario turns need from: klant|ai and a text")
     if turns[-1]["from"] != "ai":
         raise ValueError("demo scenario must end with an ai turn (the payoff)")
@@ -232,8 +244,7 @@ def render(scenario: list[dict[str, str]], business: str, greeting: str,
         over = plan(char_frames, dwells) - budget
         room = sum(dw - _MIN_DWELL for dw in dwells)
         scale = max(1.0 - over / room, 0.0) if room else 0.0
-        dwells = [max(_MIN_DWELL, int(_MIN_DWELL + (dw - _MIN_DWELL) * scale))
-                  for dw in dwells]
+        dwells = [max(_MIN_DWELL, int(_MIN_DWELL + (dw - _MIN_DWELL) * scale)) for dw in dwells]
     if plan(char_frames, dwells) > budget:
         char_frames = 1  # then type faster; config scenarios should stay short
 
@@ -254,7 +265,7 @@ def render(scenario: list[dict[str, str]], business: str, greeting: str,
         if turn["from"] == "klant":
             for j in range(len(turn["text"])):
                 sound("tick")
-                p.emit(shown, turn["text"][:j + 1], -1, char_frames)
+                p.emit(shown, turn["text"][: j + 1], -1, char_frames)
             p.emit(shown, turn["text"], -1, _SEND_FRAMES)
         if final:
             for phase in range(3):  # one "..." beat of real waiting

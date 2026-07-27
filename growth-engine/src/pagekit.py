@@ -35,8 +35,8 @@ _TRACKING = -0.02  # headline letter-spacing, fraction of font size (brand: -0.0
 # and overlays its caption on the bottom ~270px (docs/REELS.md §4). The centered
 # 1080x1080 square is the only region every surface shows — all content stays inside.
 _PORTRAIT = (1080, 1920)
-_SQUARE_TOP = (_PORTRAIT[1] - _PORTRAIT[0]) // 2          # 420
-_SQUARE_BOTTOM = _SQUARE_TOP + _PORTRAIT[0]               # 1500
+_SQUARE_TOP = (_PORTRAIT[1] - _PORTRAIT[0]) // 2  # 420
+_SQUARE_BOTTOM = _SQUARE_TOP + _PORTRAIT[0]  # 1500
 
 
 # Tiny helpers duplicated from media.py (they are private there, by design).
@@ -45,9 +45,15 @@ def _pick(key: str, n: int) -> int:
     return int(hashlib.sha1(key.encode()).hexdigest(), 16) % n
 
 
-def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
-          max_width: int, tracking: float = 0.0) -> list[str]:
+def _wrap(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    max_width: int,
+    tracking: float = 0.0,
+) -> list[str]:
     """Greedy word-wrap by measured pixel width."""
+
     def width(s: str) -> float:
         return draw.textlength(s, font=font) + tracking * font.size * max(len(s) - 1, 0)
 
@@ -65,8 +71,14 @@ def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont,
     return lines
 
 
-def _tracked_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str,
-                  font: ImageFont.FreeTypeFont, fill: str, tracking: float) -> None:
+def _tracked_text(
+    draw: ImageDraw.ImageDraw,
+    xy: tuple[int, int],
+    text: str,
+    font: ImageFont.FreeTypeFont,
+    fill: str,
+    tracking: float,
+) -> None:
     """Draw text with letter-spacing (Pillow has no native tracking)."""
     x, y = xy
     step = tracking * font.size
@@ -82,14 +94,20 @@ def _font(bold: bool, size: int) -> ImageFont.FreeTypeFont:
 def _drop(draw: ImageDraw.ImageDraw, cx: int, cy: int, r: int, fill: str) -> None:
     """Teardrop: a circle with a triangular apex on top — the water-drop brand motif."""
     draw.ellipse((cx - r, cy - r, cx + r, cy + r), fill=fill)
-    draw.polygon([(cx, cy - 2 * r),
-                  (cx - int(0.74 * r), cy - int(0.62 * r)),
-                  (cx + int(0.74 * r), cy - int(0.62 * r))], fill=fill)
+    draw.polygon(
+        [
+            (cx, cy - 2 * r),
+            (cx - int(0.74 * r), cy - int(0.62 * r)),
+            (cx + int(0.74 * r), cy - int(0.62 * r)),
+        ],
+        fill=fill,
+    )
 
 
 # --------------------------------------------------------------------------- #
 # Avatar
 # --------------------------------------------------------------------------- #
+
 
 def render_avatar(out_dir: Path) -> Path:
     """1080x1080 profile mark: a stylized tap ("kraan") with one accent drop.
@@ -135,6 +153,7 @@ def render_avatar_preview(avatar: Path, out_dir: Path) -> Path:
 # Facebook cover
 # --------------------------------------------------------------------------- #
 
+
 def render_fb_cover(out_dir: Path) -> Path:
     """820x312 Facebook page cover; all content inside the centered 640x312
     mobile-safe area (phones crop the sides off the desktop canvas)."""
@@ -142,7 +161,7 @@ def render_fb_cover(out_dir: Path) -> Path:
     width, height = 820, 312
     img = Image.new("RGB", (width, height), b["bg"])
     d = ImageDraw.Draw(img)
-    x = (width - 640) // 2 + 36                     # safe area + inner padding
+    x = (width - 640) // 2 + 36  # safe area + inner padding
     max_w = 640 - 2 * 36
     head_font = _font(bold=True, size=44)
     lines = _wrap(d, "Elk bericht direct beantwoord. 24/7.", head_font, max_w, _TRACKING)
@@ -157,8 +176,7 @@ def render_fb_cover(out_dir: Path) -> Path:
         y += step
     y += 18
     d.rectangle((x, y + 6, x + 20, y + 26), fill=b["accent"])
-    d.text((x + 34, y), b["footer"] or b.get("website", ""), font=url_font,
-           fill=b["muted"])
+    d.text((x + 34, y), b["footer"] or b.get("website", ""), font=url_font, fill=b["muted"])
     path = out_dir / "fb-cover.png"
     img.save(path, "PNG")
     return path
@@ -168,12 +186,12 @@ def render_fb_cover(out_dir: Path) -> Path:
 # Instagram highlight covers
 # --------------------------------------------------------------------------- #
 
+
 def _glyph_demo(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str, bg: str) -> None:
     d.polygon([(cx - 62, cy - 96), (cx + 108, cy), (cx - 62, cy + 96)], fill=accent)
 
 
-def _glyph_resultaten(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str,
-                      bg: str) -> None:
+def _glyph_resultaten(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str, bg: str) -> None:
     bar_w, gap = 56, 32
     x = cx - (3 * bar_w + 2 * gap) // 2
     base = cy + 100
@@ -182,18 +200,15 @@ def _glyph_resultaten(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str,
         x += bar_w + gap
 
 
-def _glyph_uitleg(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str,
-                  bg: str) -> None:
+def _glyph_uitleg(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str, bg: str) -> None:
     d.rounded_rectangle((cx - 130, cy - 95, cx + 130, cy + 55), radius=42, fill=accent)
-    d.polygon([(cx - 70, cy + 45), (cx - 10, cy + 45), (cx - 92, cy + 118)],
-              fill=accent)
+    d.polygon([(cx - 70, cy + 45), (cx - 10, cy + 45), (cx - 92, cy + 118)], fill=accent)
     for i, w in enumerate((150, 100)):
         y = cy - 48 + i * 44
         d.rounded_rectangle((cx - 92, y, cx - 92 + w, y + 18), radius=9, fill=bg)
 
 
-def _glyph_over_ons(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str,
-                    bg: str) -> None:
+def _glyph_over_ons(d: ImageDraw.ImageDraw, cx: int, cy: int, accent: str, bg: str) -> None:
     _drop(d, cx, cy + 38, 88, accent)
 
 
@@ -217,16 +232,15 @@ def render_highlights(out_dir: Path) -> list[Path]:
         img = Image.new("RGB", _PORTRAIT, b["bg"])
         d = ImageDraw.Draw(img)
         cx, cy = 540, 900
-        d.ellipse((cx - 220, cy - 220, cx + 220, cy + 220), outline=b["text"],
-                  width=14)
+        d.ellipse((cx - 220, cy - 220, cx + 220, cy + 220), outline=b["text"], width=14)
         glyph(d, cx, cy, b["accent"], b["bg"])
         label = name.upper()
         label_font = _font(bold=True, size=54)
         tracking = 0.12
-        lw = (d.textlength(label, font=label_font)
-              + tracking * label_font.size * max(len(label) - 1, 0))
-        _tracked_text(d, (int((1080 - lw) / 2), 1190), label, label_font,
-                      b["text"], tracking)
+        lw = d.textlength(label, font=label_font) + tracking * label_font.size * max(
+            len(label) - 1, 0
+        )
+        _tracked_text(d, (int((1080 - lw) / 2), 1190), label, label_font, b["text"], tracking)
         path = out_dir / f"highlight-{name.lower().replace(' ', '-')}.png"
         img.save(path, "PNG")
         paths.append(path)
@@ -237,14 +251,17 @@ def render_highlights(out_dir: Path) -> list[Path]:
 # Pinned intro card
 # --------------------------------------------------------------------------- #
 
+
 def render_pinned(out_dir: Path) -> Path:
     """1080x1350 (4:5) intro card in the media.py card style — the profile's anchor
     post, so it uses the base brand scheme, not a rotated one."""
     b = brand.brand()
     headline = "Elk bericht direct beantwoord. Elke proefles meteen geboekt."
-    sub = ("Klantkraan bouwt de AI-ledenassistent voor sportclubs: leden en leads "
-           "krijgen 24/7 direct antwoord en de proefles staat meteen in de agenda. "
-           "Hier zie je hem werken — echte gesprekken, echte boekingen.")
+    sub = (
+        "Klantkraan bouwt de AI-ledenassistent voor sportclubs: leden en leads "
+        "krijgen 24/7 direct antwoord en de proefles staat meteen in de agenda. "
+        "Hier zie je hem werken — echte gesprekken, echte boekingen."
+    )
     size = (1080, 1350)
     img = Image.new("RGB", size, b["bg"])
     d = ImageDraw.Draw(img)
@@ -289,6 +306,7 @@ def render_pinned(out_dir: Path) -> Path:
 # Reel cover — the reusable piece (wired into the reel flow later)
 # --------------------------------------------------------------------------- #
 
+
 def render_cover(headline: str, stem: str) -> Path:
     """1080x1920 reel cover with all content inside the centered 1080x1080 square.
 
@@ -304,8 +322,8 @@ def render_cover(headline: str, stem: str) -> Path:
     text_w = _PORTRAIT[0] - 2 * _PAD
 
     footer_font = _font(bold=True, size=40)
-    fy = _SQUARE_BOTTOM - 60 - 48                    # footer stays inside the square
-    top = _SQUARE_TOP + 60 + 100                     # room for the accent bar
+    fy = _SQUARE_BOTTOM - 60 - 48  # footer stays inside the square
+    top = _SQUARE_TOP + 60 + 100  # room for the accent bar
     bottom = fy - 40
     for pt in (112, 96, 84, 72, 62, 54):
         head_font = _font(bold=True, size=pt)
@@ -331,6 +349,7 @@ def render_cover(headline: str, stem: str) -> Path:
 
 
 # --------------------------------------------------------------------------- #
+
 
 def main() -> None:
     out_dir = data_dir() / "pagekit"

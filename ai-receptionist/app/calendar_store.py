@@ -147,15 +147,17 @@ def _sim_book(
         if slot not in slots_for_day(day):
             return {"ok": False, "error": "That time isn't a bookable slot."}
         confirmation = f"BK-{uuid.uuid4().hex[:6].upper()}"
-        bookings.append({
-            "confirmation": confirmation,
-            "customer_name": customer_name,
-            "contact": contact,
-            "service": service,
-            "slot": slot,
-            "address": address,
-            "created_at": datetime.now().isoformat(timespec="seconds"),
-        })
+        bookings.append(
+            {
+                "confirmation": confirmation,
+                "customer_name": customer_name,
+                "contact": contact,
+                "service": service,
+                "slot": slot,
+                "address": address,
+                "created_at": datetime.now().isoformat(timespec="seconds"),
+            }
+        )
         _save(bookings)
         return {"ok": True, "confirmation": confirmation, "slot": slot, "service": service}
 

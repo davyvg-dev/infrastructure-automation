@@ -81,17 +81,21 @@ def execute(name: str, tool_input: dict[str, Any]) -> str:
     if name == "check_availability":
         return json.dumps(calendar_store.availability(tool_input.get("date")))
     if name == "book_appointment":
-        return json.dumps(calendar_store.book(
-            customer_name=tool_input.get("customer_name", ""),
-            contact=tool_input.get("contact", ""),
-            service=tool_input.get("service", ""),
-            slot=tool_input.get("slot", ""),
-            address=tool_input.get("address", ""),
-        ))
+        return json.dumps(
+            calendar_store.book(
+                customer_name=tool_input.get("customer_name", ""),
+                contact=tool_input.get("contact", ""),
+                service=tool_input.get("service", ""),
+                slot=tool_input.get("slot", ""),
+                address=tool_input.get("address", ""),
+            )
+        )
     if name == "take_message":
-        return json.dumps(notify.take_message(
-            customer=tool_input.get("customer_name", "unknown"),
-            contact=tool_input.get("contact", "no contact"),
-            message=tool_input.get("message", ""),
-        ))
+        return json.dumps(
+            notify.take_message(
+                customer=tool_input.get("customer_name", "unknown"),
+                contact=tool_input.get("contact", "no contact"),
+                message=tool_input.get("message", ""),
+            )
+        )
     return json.dumps({"error": f"Unknown tool: {name}"})

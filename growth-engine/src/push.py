@@ -30,9 +30,7 @@ async def _main() -> None:
         for _ in range(int(cadence["drafts_per_run"])):
             draft = await asyncio.to_thread(generate.generate_draft, platforms)
             store.save_draft(draft)
-            await bot.send_message(
-                chat_id, f"— {draft['pillar']} · {draft['topic']} —"
-            )
+            await bot.send_message(chat_id, f"— {draft['pillar']} · {draft['topic']} —")
             for record in draft.get("media", []):
                 if record["type"] == "image":
                     with open(record["path"], "rb") as fh:

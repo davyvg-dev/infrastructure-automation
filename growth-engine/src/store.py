@@ -82,6 +82,7 @@ def get_draft(draft_id: str) -> dict[str, Any] | None:
 
 # --- lightweight state (e.g. pillar rotation cursor, last reddit date) ---
 
+
 def get_state(key: str, default: Any = None) -> Any:
     with _lock:
         state = _read(_state_path()) or {}

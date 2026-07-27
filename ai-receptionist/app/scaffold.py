@@ -85,13 +85,19 @@ _TEMPLATE: dict = {
     },
     "booking": {"slot_minutes": 60, "horizon_days": 14},
     "faq": [
-        {"q": "Doen jullie spoedklussen?",
-         "a": "Ja — we houden elke dag spoedslots vrij. Ik kan direct de eerstvolgende tijd voor u nakijken."},
-        {"q": "Rekenen jullie voorrijkosten?",
-         "a": "Spoedservice vanaf €90; offertes en inspecties zijn gratis."},
+        {
+            "q": "Doen jullie spoedklussen?",
+            "a": "Ja — we houden elke dag spoedslots vrij. Ik kan direct de eerstvolgende tijd voor u nakijken.",
+        },
+        {
+            "q": "Rekenen jullie voorrijkosten?",
+            "a": "Spoedservice vanaf €90; offertes en inspecties zijn gratis.",
+        },
         {"q": "In welke regio werken jullie?", "a": "We werken in de regio en omgeving."},
-        {"q": "Hoe snel kan er iemand komen?",
-         "a": "Dat hangt van de dag af — ik kan nu de beschikbaarheid voor u nakijken."},
+        {
+            "q": "Hoe snel kan er iemand komen?",
+            "a": "Dat hangt van de dag af — ik kan nu de beschikbaarheid voor u nakijken.",
+        },
     ],
     "greeting": "",  # generated from name + persona
     "model": {"id": "claude-opus-4-8", "effort": "low"},
@@ -140,7 +146,11 @@ _EN_TEMPLATE: dict = {
         ),
     },
     "services": [
-        {"name": "Emergency call-out", "price": "call-out fee applies, confirmed on site", "duration_min": 60},
+        {
+            "name": "Emergency call-out",
+            "price": "call-out fee applies, confirmed on site",
+            "duration_min": 60,
+        },
         {"name": "Standard service visit", "price": "confirmed on site", "duration_min": 60},
         {"name": "Repair / breakdown visit", "price": "confirmed on site", "duration_min": 60},
         {"name": "Quote / site survey", "price": "free", "duration_min": 30},
@@ -155,14 +165,22 @@ _EN_TEMPLATE: dict = {
     },
     "booking": {"slot_minutes": 60, "horizon_days": 14},
     "faq": [
-        {"q": "Do you handle emergencies?",
-         "a": "Yes — we keep room each day for urgent jobs. I can check the soonest time for you right now."},
-        {"q": "Which areas do you cover?",
-         "a": "We cover the local area and around it. Tell me your town and I'll check it's within our range."},
-        {"q": "How soon can someone come?",
-         "a": "It depends on the day — I can check availability for you now."},
-        {"q": "What does a visit cost?",
-         "a": "A call-out fee applies and the engineer confirms the exact price on site; a quote or survey is free. I can book you in whenever suits."},
+        {
+            "q": "Do you handle emergencies?",
+            "a": "Yes — we keep room each day for urgent jobs. I can check the soonest time for you right now.",
+        },
+        {
+            "q": "Which areas do you cover?",
+            "a": "We cover the local area and around it. Tell me your town and I'll check it's within our range.",
+        },
+        {
+            "q": "How soon can someone come?",
+            "a": "It depends on the day — I can check availability for you now.",
+        },
+        {
+            "q": "What does a visit cost?",
+            "a": "A call-out fee applies and the engineer confirms the exact price on site; a quote or survey is free. I can book you in whenever suits.",
+        },
     ],
     "greeting": "",  # generated from name + persona
     "model": {"id": "claude-opus-4-8", "effort": "low"},
@@ -226,12 +244,18 @@ _TIME_RE = re.compile(r"^\d{2}:\d{2}$")
 # where a wrong price would be quoted. A from-json draft gets this price-free FAQ instead; the
 # founder adds real answers during the confirm-in-chat step.
 _PRICE_FREE_FAQ = [
-    {"q": "Doen jullie spoedklussen?",
-     "a": "Ja — we houden elke dag ruimte vrij voor spoed. Ik kan direct de eerstvolgende tijd voor u nakijken."},
-    {"q": "In welke regio werken jullie?",
-     "a": "We werken in de regio en omgeving. Geef uw plaats door, dan kijk ik of het binnen ons gebied valt."},
-    {"q": "Hoe snel kan er iemand komen?",
-     "a": "Dat hangt van de dag af — ik kan nu de beschikbaarheid voor u nakijken."},
+    {
+        "q": "Doen jullie spoedklussen?",
+        "a": "Ja — we houden elke dag ruimte vrij voor spoed. Ik kan direct de eerstvolgende tijd voor u nakijken.",
+    },
+    {
+        "q": "In welke regio werken jullie?",
+        "a": "We werken in de regio en omgeving. Geef uw plaats door, dan kijk ik of het binnen ons gebied valt.",
+    },
+    {
+        "q": "Hoe snel kan er iemand komen?",
+        "a": "Dat hangt van de dag af — ik kan nu de beschikbaarheid voor u nakijken.",
+    },
 ]
 
 
@@ -311,17 +335,26 @@ def write_config(cfg: dict, path: Path) -> None:
 
 
 def main(argv: list[str]) -> int:
-    parser = argparse.ArgumentParser(prog="app.scaffold", description="Scaffold a prospect demo config.")
+    parser = argparse.ArgumentParser(
+        prog="app.scaffold", description="Scaffold a prospect demo config."
+    )
     parser.add_argument("name", nargs="?", help="The prospect's business name.")
     parser.add_argument("--type", help="Business type (default: installatiebedrijf).")
     parser.add_argument("--phone")
     parser.add_argument("--address")
     parser.add_argument("--timezone")
     parser.add_argument("--persona", help="Receptionist name (default: Fleur).")
-    parser.add_argument("--lang", default="nl", choices=("nl", "en"),
-                        help="Template language (default nl). --from-json is Dutch-only.")
-    parser.add_argument("--from-json", dest="from_json",
-                        help="An app.extract extraction JSON; merges cited values over the template.")
+    parser.add_argument(
+        "--lang",
+        default="nl",
+        choices=("nl", "en"),
+        help="Template language (default nl). --from-json is Dutch-only.",
+    )
+    parser.add_argument(
+        "--from-json",
+        dest="from_json",
+        help="An app.extract extraction JSON; merges cited values over the template.",
+    )
     parser.add_argument("--force", action="store_true", help="Overwrite if the config exists.")
     args = parser.parse_args(argv[1:])
 
@@ -337,8 +370,11 @@ def main(argv: list[str]) -> int:
         return 1
 
     over = dict(
-        type=args.type, phone=args.phone, address=args.address,
-        timezone=args.timezone, persona=args.persona,
+        type=args.type,
+        phone=args.phone,
+        address=args.address,
+        timezone=args.timezone,
+        persona=args.persona,
     )
     if args.from_json:
         try:

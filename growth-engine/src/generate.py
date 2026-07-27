@@ -45,20 +45,20 @@ _DRAFT_SCHEMA = {
                 "headline": {
                     "type": "string",
                     "description": "Image-card headline: the post's sharpest claim, max "
-                                   "90 chars, in the post's language. Empty string if no "
-                                   "card fits this post.",
+                    "90 chars, in the post's language. Empty string if no "
+                    "card fits this post.",
                 },
                 "sub": {
                     "type": "string",
                     "description": "One supporting line for the card, max 110 chars, or "
-                                   "empty string.",
+                    "empty string.",
                 },
                 "photo_query": {
                     "type": "string",
                     "description": "2-4 English keywords for a stock photo of a concrete "
-                                   "scene in the buyer's industry that backs the claim "
-                                   "(e.g. 'plumber repairing boiler'). Always fill this "
-                                   "when headline is set.",
+                    "scene in the buyer's industry that backs the claim "
+                    "(e.g. 'plumber repairing boiler'). Always fill this "
+                    "when headline is set.",
                 },
             },
             "required": ["headline", "sub", "photo_query"],
@@ -66,11 +66,11 @@ _DRAFT_SCHEMA = {
         "carousel": {
             "type": "array",
             "description": "3-6 slides ONLY when the post's angle is naturally a list "
-                           "or a short step sequence (e.g. '5 momenten dat een klus "
-                           "wegloopt', '3 stappen naar...'); otherwise an EMPTY array. "
-                           "Slide 1 is a scroll-stopping hook, each middle slide carries "
-                           "one concrete point, the last slide is a soft CTA. Same "
-                           "language as the post.",
+            "or a short step sequence (e.g. '5 momenten dat een klus "
+            "wegloopt', '3 stappen naar...'); otherwise an EMPTY array. "
+            "Slide 1 is a scroll-stopping hook, each middle slide carries "
+            "one concrete point, the last slide is a soft CTA. Same "
+            "language as the post.",
             "items": {
                 "type": "object",
                 "additionalProperties": False,
@@ -113,11 +113,13 @@ def generate_draft(platforms: list[str]) -> dict[str, Any]:
             "effort": model_cfg.get("effort", "medium"),
             "format": {"type": "json_schema", "schema": _DRAFT_SCHEMA},
         },
-        system=[{
-            "type": "text",
-            "text": prompts.system_prompt(),
-            "cache_control": {"type": "ephemeral"},
-        }],
+        system=[
+            {
+                "type": "text",
+                "text": prompts.system_prompt(),
+                "cache_control": {"type": "ephemeral"},
+            }
+        ],
         messages=[{"role": "user", "content": prompts.draft_brief(pillar, platforms, recent)}],
     )
 
@@ -159,18 +161,18 @@ def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> di
             "effort": model_cfg.get("effort", "medium"),
             "format": {"type": "json_schema", "schema": _DRAFT_SCHEMA},
         },
-        system=[{
-            "type": "text",
-            "text": prompts.system_prompt(),
-            "cache_control": {"type": "ephemeral"},
-        }],
+        system=[
+            {
+                "type": "text",
+                "text": prompts.system_prompt(),
+                "cache_control": {"type": "ephemeral"},
+            }
+        ],
         messages=[{"role": "user", "content": brief}],
     )
     payload = _extract_json(response)
     variants = {
-        k: v.strip()
-        for k, v in payload["variants"].items()
-        if v and v.strip() and k in platforms
+        k: v.strip() for k, v in payload["variants"].items() if v and v.strip() and k in platforms
     }
     draft = {
         "id": f"{date.today():%Y%m%d}-{uuid.uuid4().hex[:4]}",
@@ -198,14 +200,16 @@ def regenerate_variant(draft: dict[str, Any], platform: str, note: str) -> str:
         thinking={"type": "adaptive"},
         output_config={"effort": model_cfg.get("effort", "medium")},
         system=[{"type": "text", "text": prompts.system_prompt()}],
-        messages=[{
-            "role": "user",
-            "content": (
-                f"Here is a {platform} post I drafted:\n\n{current}\n\n"
-                f"Rewrite it with this feedback: {note}\n\n"
-                f"Return ONLY the rewritten post text, nothing else."
-            ),
-        }],
+        messages=[
+            {
+                "role": "user",
+                "content": (
+                    f"Here is a {platform} post I drafted:\n\n{current}\n\n"
+                    f"Rewrite it with this feedback: {note}\n\n"
+                    f"Return ONLY the rewritten post text, nothing else."
+                ),
+            }
+        ],
     )
     return "".join(b.text for b in response.content if b.type == "text").strip()
 

@@ -26,14 +26,17 @@ def _signature_ok(url: str, signature: str | None, params: dict[str, str]) -> bo
     if not token:
         if os.getenv("WHATSAPP_ALLOW_UNSIGNED") == "1":
             return True
-        log.warning("Rejected /whatsapp request: TWILIO_AUTH_TOKEN not set "
-                    "(set WHATSAPP_ALLOW_UNSIGNED=1 for local dev)")
+        log.warning(
+            "Rejected /whatsapp request: TWILIO_AUTH_TOKEN not set "
+            "(set WHATSAPP_ALLOW_UNSIGNED=1 for local dev)"
+        )
         return False
     try:
         from twilio.request_validator import RequestValidator
     except ModuleNotFoundError:
-        log.warning("Rejected /whatsapp request: twilio package not installed, "
-                    "cannot validate signature")
+        log.warning(
+            "Rejected /whatsapp request: twilio package not installed, cannot validate signature"
+        )
         return False
     return RequestValidator(token).validate(url, params, signature or "")
 
