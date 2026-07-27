@@ -33,13 +33,7 @@ Voice: {v["tone"]}
 Never do these: {v["avoid"]}
 
 Rules that matter:
-- Write FOR THE BUYER — a busy Dutch trade-business owner (an installateur, loodgieter,
-  elektricien) — not for other developers or the tech crowd. Lead with their money and their
-  pain, not the tech.
-- Never lead with "AI" or jargon. Say what it does for them ("answers every call 24/7 and
-  books the job") — not how it's built. Anchor value in their numbers (missed calls = lost
-  jobs/bookings).
-- Write like a real builder talking to prospects, not a marketer.
+{v["audience_rules"]}
 - Be specific and concrete. Real numbers, real scenarios, real decisions beat vague claims.
 - One idea per post. Earn the read; no engagement-bait.
 - This account is BUILD-IN-PUBLIC: there is no past client roster to cite. Frame proof as \
@@ -69,6 +63,10 @@ def platform_instructions(platforms: list[str]) -> str:
 def draft_brief(pillar: dict[str, Any], platforms: list[str], recent: list[str]) -> str:
     s = strategy()
     langs = s["languages"]
+    lang_rule = langs.get("rule") or (
+        f"write the variants in {langs['primary']} — the buyer's language. Only a build-log "
+        f"post aimed at the international builder crowd may be in {langs['secondary']} instead"
+    )
     avoid = "\n".join(f"- {t}" for t in recent) if recent else "(none yet)"
     wanted = platform_instructions(platforms)
 
@@ -80,9 +78,7 @@ PILLAR BRIEF: {pillar["brief"]}
 Produce distinct variants for these platforms (same core idea, native to each):
 {wanted}
 
-Language: write the variants in {langs["primary"]} — the buyer's language. Only a build-log \
-post aimed at the international builder crowd may be in {langs["secondary"]} instead — pick \
-one language per post, do not mix.
+Language: {lang_rule} — pick one language per post, do not mix.
 
 Avoid repeating these recent topics:
 {avoid}

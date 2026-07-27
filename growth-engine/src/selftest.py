@@ -46,6 +46,10 @@ def check_config() -> bool:
         f"data: {settings.data_dir().relative_to(settings.ROOT)})"
     )
     _ok(f"offer: {s['brand']['offer'][:60]}…")
+    if not (s["voice"].get("audience_rules") or "").strip():
+        return _fail(
+            "voice.audience_rules is missing — the per-vertical prompt rules live in config"
+        )
     _ok(f"pillars: {', '.join(p['key'] for p in s['pillars'])}")
     _ok(
         f"cadence '{strategy()['cadence']['active']}': "

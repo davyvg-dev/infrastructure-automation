@@ -26,6 +26,16 @@ voice:
     no emoji spam, no 'in today's fast-paced world' filler. Short sentences."
   avoid: "Corporate buzzwords, engagement-bait questions with no substance, hashtag walls,
     fake urgency, 'game-changer', 'unlock', 'in this thread I'll'."
+  # Injected verbatim into the system prompt under "Rules that matter" — the
+  # per-vertical part of the voice (who the reader is, what to lead with).
+  audience_rules: |-
+    - Write FOR THE BUYER — a busy Dutch trade-business owner (an installateur, loodgieter,
+      elektricien) — not for other developers or the tech crowd. Lead with their money and their
+      pain, not the tech.
+    - Never lead with "AI" or jargon. Say what it does for them ("answers every call 24/7 and
+      books the job") — not how it's built. Anchor value in their numbers (missed calls = lost
+      jobs/bookings).
+    - Write like a real builder talking to prospects, not a marketer.
 
 languages:
   primary: "Dutch"        # the buyer's language — customer-facing posts are Dutch
