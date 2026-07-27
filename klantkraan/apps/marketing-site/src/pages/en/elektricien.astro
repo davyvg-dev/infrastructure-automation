@@ -16,7 +16,7 @@ interface PainStat {
 const painStats: PainStat[] = [
   { value: '34%', caption: 'of your calls after 5pm go unanswered.' },
   { value: '€375', caption: 'average value of a power-outage call.' },
-  { value: '0', caption: "reviews per job you're not asking for right now." },
+  { value: '0', caption: "reviews for every job you don't pick up." },
 ]
 
 interface Feature {
@@ -28,18 +28,18 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: 'message-square',
-    title: 'Talks short circuits in the trade’s own terms',
-    body: 'Answers customer questions on your website and via WhatsApp, in natural, fluent conversation, after 5pm and at weekends too. It only quotes your own short-circuit emergency rate, hourly rate and weekend surcharge. Never a price you haven’t set in advance.',
+    title: "Talks short circuits in the trade's own terms",
+    body: "Answers customer questions on your website and via WhatsApp, in natural, fluent conversation, after 5pm and at weekends too. It only quotes your own short-circuit emergency rate, hourly rate and weekend surcharge. Never a price you haven't set in advance.",
   },
   {
     icon: 'calendar-check',
     title: 'Appointments straight into your calendar',
-    body: 'Fault and installation appointments are booked straight into your calendar, only in the slots you’ve opened up yourself. No phone tag, no back-and-forth email.',
+    body: "Fault and installation appointments are booked straight into your calendar, only in the slots you've opened up yourself. No phone tag, no back-and-forth email.",
   },
   {
     icon: 'phone',
     title: 'Leads and callback requests on your phone',
-    body: 'Power cut after closing time? The receptionist takes the report and sends it straight to your phone as a message, with name, number and the question. No customer walks to the competitor while you’re on another job.',
+    body: "Power cut after closing time? The receptionist takes the report and sends it straight to your phone as a message, with name, number and the question. No customer walks to the competitor while you're on another job.",
   },
 ]
 
@@ -53,31 +53,31 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: 'With one small script that we install for you. You don’t have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.',
+    a: "With one small script that we install for you. You don't have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
   },
   {
-    q: 'And if I’m on an installation and can’t respond?',
-    a: 'That’s exactly what this is built for. The receptionist answers the question (short-circuit emergency, new job, existing customer, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back once the consumer unit is closed up again.',
+    q: "And if I'm on an installation and can't respond?",
+    a: "That's exactly what this is built for. The receptionist answers the question (short-circuit emergency, new job, existing customer, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back once the consumer unit is closed up again.",
   },
   {
-    q: 'Can the customer tell it’s AI?',
-    a: 'Yes. Every conversation opens by telling your customer they’re chatting with a digital assistant, on behalf of your business. That isn’t a marketing choice but a legal requirement under the European AI Act (article 50). The disclosure always stays on.',
+    q: "Can the customer tell it's AI?",
+    a: "Yes. Every conversation opens by telling your customer they're chatting with a digital assistant, on behalf of your business. That isn't a marketing choice but a legal requirement under the EU AI Act (article 50). The disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
   {
     q: 'What if the AI says something wrong about my rates?',
-    a: 'That can’t happen. The assistant only quotes rates you’ve set in your system yourself: call-out charge, hourly rate, emergency surcharge, EV charge-point extra. Unknown prices are never made up; the customer gets a callback request instead. We test every configuration before you go live.',
+    a: "That can't happen. The assistant only quotes rates you've set in your system yourself: call-out charge, hourly rate, emergency surcharge, EV charge-point extra. Unknown prices are never made up; the customer gets a callback request instead. We test every configuration before you go live.",
   },
   {
     q: 'What happens to the customer data?',
-    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you’d prefer shorter. The full supplier list is public in our sub-processor register.',
+    a: "We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you'd prefer shorter. The full supplier list is public in our sub-processor register.",
     href: '/legal/dpa/',
     linkLabel: 'View the DPA and privacy statement',
   },
   {
     q: 'Cancel monthly, really?',
-    a: 'Yes. No annual contract, no hidden renewal. You cancel by email; the notice period is one month. If you’d rather pay 6 or 12 months up front there’s a discount (15% and 20% respectively).',
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email; the notice period is one month. If you'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively).",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -99,7 +99,7 @@ const faqSchema = {
 
 <Base
   lang="en"
-  title="Win electrician customers: AI receptionist for emergencies and EV"
+  title="Win electrician customers: AI receptionist for emergencies and EV | Klantkraan"
   description="AI receptionist for electricians, cancel monthly. Knows your emergency rate and EV charge-point extra, books appointments and captures leads, 24/7."
   centered={false}
 >
@@ -114,8 +114,8 @@ const faqSchema = {
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-dim">
           A digital receptionist on your website and WhatsApp that explains to your customer what a
-          short-circuit emergency rate is. Or an EV charge-point extra. It answers questions 24/7,
-          seven days a week. Appointments and callback requests come in the same subscription.
+          short-circuit emergency rate is. Or an EV charge-point extra. It answers questions 24/7.
+          Appointments and callback requests come in the same subscription.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
           <a
@@ -214,7 +214,7 @@ const faqSchema = {
       </h2>
       <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
         <p class="text-h3 text-chalk">
-          Miss 8 calls a week at €375? That’s <strong class="text-(--color-sodium)">over €51,000 of lost revenue a year</strong>.
+          Miss 8 calls a week at €375? That's <strong class="text-(--color-sodium)">over €51,000 of lost revenue a year</strong>.
         </p>
         <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One short-circuit emergency a month pays for the
@@ -231,7 +231,7 @@ const faqSchema = {
             href="/en/prijzen/"
             class="btn btn-ghost btn-lg"
           >
-            See the rates
+            See pricing
           </a>
         </div>
         <p class="mt-6 text-micro text-dim">
@@ -286,7 +286,7 @@ const faqSchema = {
         Ready to stop missing short-circuit emergencies?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Try the live demo. You’ll see how it quotes your short-circuit emergency rate and what it does when
+        Try the live demo. You'll see how it quotes your short-circuit emergency rate and what it does when
         someone asks a question about an EV charge point.
       </p>
       <div class="mt-8 flex flex-wrap gap-4">

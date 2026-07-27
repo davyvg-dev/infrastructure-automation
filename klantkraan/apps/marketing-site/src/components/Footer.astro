@@ -68,10 +68,11 @@ const trustBadgesByLang: Record<'nl' | 'en' | 'es', TrustBadge[]> = {
     { icon: 'shield-check', label: 'Conforme al RGPD', sub: 'Contrato de tratamiento estándar' },
     { icon: 'shield-check', label: 'Reglamento de IA de la UE art. 50', sub: 'La declaración no se puede desactivar' },
     { icon: 'check', label: 'Alojado en la UE', sub: 'Cloudflare · Neon · Hetzner FSN1' },
-    { icon: 'clock', label: 'Cancele cada mes', sub: 'Sin permanencia ni costes ocultos' },
+    { icon: 'clock', label: 'Cancelación mensual', sub: 'Sin permanencia ni costes ocultos' },
   ],
 }
 const trustBadges = trustBadgesByLang[lang]
+const btwLabel = lang === 'es' ? 'IVA' : lang === 'en' ? 'VAT' : 'BTW'
 
 const T = {
   nl: {
@@ -164,7 +165,7 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
           KvK: <span class="font-mono">{company.kvk}</span>{
             company.btw && (
               <>
-                {' '}· BTW: <span class="font-mono">{company.btw}</span>
+                {' '}· {btwLabel}: <span class="font-mono">{company.btw}</span>
               </>
             )
           }

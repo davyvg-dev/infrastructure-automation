@@ -67,8 +67,8 @@ const features: FeatureRow[] = [
 const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: `${company.tradeName} AI receptionist`,
-  serviceType: 'AI receptionist for local businesses',
+  name: `Recepcionista con IA de ${company.tradeName}`,
+  serviceType: 'Recepcionista con IA para negocios locales',
   url: new URL('/es/prijzen/', Astro.site).toString(),
   provider: {
     '@type': 'Organization',
@@ -86,7 +86,7 @@ const serviceSchema = {
       '@type': 'UnitPriceSpecification',
       price: String(tier.price),
       priceCurrency: 'EUR',
-      unitText: 'per month',
+      unitText: 'al mes',
     },
   })),
 }
@@ -95,7 +95,7 @@ const serviceSchema = {
 <Base
   lang="es"
   title="Precios de la recepcionista con IA: Chat 299 € o Compleet 499 € | Klantkraan"
-  description="Dos planes: Chat 299 € y Compleet 499 € al mes. Instalación 249 € (gratis para clientes piloto), cancele cada mes, primer mes al 50%."
+  description="Dos planes: Chat 299 € y Compleet 499 € al mes. Instalación 249 € (gratis para clientes piloto), cancelación mensual, primer mes al 50%."
   centered={false}
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -104,8 +104,8 @@ const serviceSchema = {
     <div class="mx-auto max-w-5xl px-6">
       <h1 class="font-display text-hero text-(--color-chalk)">Precios</h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
-        Cancele cada mes, primer mes al 50%. Instalación única de 249 € (gratis para clientes
-        piloto). Todos los importes no incluyen el 21% de IVA.
+        Cancelación mensual, primer mes al 50%. Instalación única de 249 € (gratis para clientes
+        piloto). Los importes no incluyen el 21% de IVA.
       </p>
     </div>
   </section>
@@ -207,7 +207,7 @@ const serviceSchema = {
         <h2 class="font-display text-h2 text-(--color-chalk)">Todos los planes incluyen</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>Instalación y ajuste llave en mano. Lo montamos y lo conectamos todo por usted.</li>
-          <li>Cancele cada mes (30 días de preaviso).</li>
+          <li>Cancelación mensual (30 días de preaviso).</li>
           <li>Primer mes al 50%.</li>
           <li>Garantía de satisfacción de 30 días. ¿No le convence? Le devolvemos el dinero.</li>
         </ul>
@@ -230,7 +230,7 @@ const serviceSchema = {
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">¿Listo para empezar?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         En una demo de 20 minutos le mostramos exactamente cómo funciona Klantkraan en su caso. Sin
-        discursos de venta, solo los números sobre sus propias cifras.
+        discursos de venta, solo los cálculos con sus propias cifras.
       </p>
       <a
         href="/es/demo/"
