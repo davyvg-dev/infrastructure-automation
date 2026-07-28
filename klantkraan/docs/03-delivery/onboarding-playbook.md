@@ -58,6 +58,112 @@ number-porting/forwarding lead time is gone.
 
 ---
 
+## 1b. The self-serve payer — someone paid without a call
+
+§1 above assumes a founder-led close: we knew the prospect, we pre-built, then they signed. Since
+the Mollie checkout went live (2026-07-28) a **second entry point exists and it is unattended**.
+A stranger can hit `/aanmelden`, pay €299, and have a running SEPA subscription at 03:00 on a
+Sunday. `billing.handle_webhook` creates the subscription and fires one Telegram ping. After that
+ping, nothing in this playbook applied. This section is that missing path.
+
+**What we have at the moment the money lands:** `naam`, `bedrijf`, `telefoon`, `email`, `vak`,
+`plan`, `bericht`. No website URL, no region, no calendar, no signed contract, no accepted terms
+(see §11 — all three are open engineering gaps). What we owe them: a working receptionist.
+
+**The clock starts at the payment, not at our first free moment.** For a <€5k-ARR product the
+benchmark median time-to-value is minutes, not days (see Sources). We cannot hit minutes with a
+human in the loop, so we do the next best thing: **acknowledge in minutes, deliver in one working
+day, and say so out loud.** An unanswered payment is the worst first impression this business can
+make, and it is the one failure mode that is entirely ours.
+
+### The three steps, in order
+
+**1 — Within minutes, automatic: acknowledge and set the clock.**
+The `/bedankt/` page already confirms the payment. That is a receipt, not a welcome. Add an
+immediate WhatsApp/e-mail on the paid webhook, in Dutch, saying exactly three things: we got it,
+what happens next, and when. Promise **one working day**, because that is what a ~15-minute
+pre-build plus founder sleep actually supports. Do not promise "direct".
+
+> Welkom bij Klantkraan. Je betaling is binnen.
+> Wij bouwen nu jouw digitale receptionist. Binnen één werkdag krijg je een link waarmee je zelf
+> met hem kunt praten. Klopt er iets niet, dan pas je het in één bericht aan.
+> Vragen? App dit nummer, je krijgt dezelfde dag antwoord.
+
+**2 — Within one working day, founder: qualify, then pre-build.**
+Taking money at the door means the qualification that a discovery call used to do never happened.
+Do it now, before building, because it is cheaper to refund on day 1 than to off-board on day 40.
+Four checks, ~3 minutes:
+
+| Check | Pass | Fail → |
+|---|---|---|
+| Legal form | BV (or a foreign equivalent we serve) | Decline path below. The BV filter is non-negotiable (CLAUDE.md) |
+| Country/language | NL/BE, or a language we run a config in | Decline, or quote as a custom build |
+| Trade | In scope, and the guardrails cover it | Decline if the work is regulated advice we must not automate |
+| Same-person duplicate | Not already a client under another slug | Refund the second subscription, merge |
+
+Passing that, run the normal §2 pre-build. The scrape needs a website; if `bedrijf` + `vak` do
+not resolve to a real site or Maps listing in ~2 minutes, **stop guessing and ask one question**
+over WhatsApp: *"Wat is de link naar je website?"* One question beats a wrong receptionist.
+
+**3 — Rejoin §1 at "Day 0–1".** From the confirm-the-draft step onward the self-serve path and
+the founder-led path are the same playbook. The only lasting difference: a self-serve client never
+had a kickoff booked, so §5's kickoff is an *offer* ("wil je 15 minuten samen doorlopen?"), never a
+gate. If they decline the call, do the calendar share async with the §3 verbatim steps and go live
+on their say-so.
+
+### Decline path — when we cannot serve someone who already paid
+
+This must be fast, written, and generous. A refunded stranger tells nobody; a stuck one posts
+about it.
+
+1. Same working day, in writing: what we cannot do and why, in one paragraph, no jargon.
+2. **Refund the first payment in full and cancel the subscription.** Never let a mandate keep
+   running on someone we declined.
+3. If it is a near miss (right trade, wrong legal form; right business, wrong country), offer the
+   waitlist rather than a hard no.
+4. Log the reason. Repeated declines of the same shape are either a site-copy problem (we are
+   attracting the wrong buyer) or a roadmap signal.
+
+**Today this needs the Mollie dashboard**, because `app/billing.py` has no cancel or refund
+function. That is a gap (§11) and it is the wrong tool for this founder: it is exactly the
+dashboard-not-CLI friction that gets deferred, and a deferred refund is the one that turns into a
+chargeback.
+
+---
+
+## 1c. Scope boundary — what €299 includes, and what it does not
+
+The productized-service literature is blunt about this: an offer without a written "this is not
+included" becomes a custom retainer within two client cycles. At €299/mo with one founder, two
+cycles is all the margin there is. Write it once, send it with the welcome, and point at it when
+a request lands outside.
+
+**Inbegrepen (elke maand, geen meerkosten):**
+- De receptionist zelf: webchat + WhatsApp, 24/7, onbeperkt aantal gesprekken binnen normaal gebruik.
+- Hosting, updates en verbeteringen aan het onderliggende model. Je krijgt ze automatisch.
+- **Tekstwijzigingen: prijzen, openingstijden, diensten, FAQ, spoedbeleid, persona.** Eén bericht,
+  wij passen het aan. Dit is de kern van de belofte, houd hem ruim.
+- Eén agenda-koppeling en één website-plaatsing.
+- Maandelijkse samenvatting van wat hij heeft opgevangen.
+- Support via WhatsApp, dezelfde werkdag antwoord.
+
+**Niet inbegrepen (apart offreren, of doorverwijzen):**
+- Een tweede vestiging, tweede merk of tweede taal als eigen receptionist. Dat is een nieuwe config,
+  dus een nieuw abonnement.
+- Koppelingen met je boekhouding, offertepakket of veldsoftware. Staat op de roadmap, is geen
+  onderdeel van dit abonnement.
+- Telefonie en voice. Dat is Klantkraan Compleet (€499).
+- Wij bouwen of onderhouden je website niet. Wij plaatsen eenmalig het snippet.
+- De receptionist geeft geen technisch advies, geen diagnose en geen prijs die jij niet hebt
+  opgegeven. Dat is een bewuste grens, geen beperking die we wegnemen.
+
+**The rule for the founder:** anything on the first list is done same-day and never invoiced,
+because that responsiveness *is* the retention product. Anything on the second list gets a price
+before any work starts, even for a client you like. The moment one client's second location is
+free, it is free for everyone.
+
+---
+
 ## 2. Intake — scrape-first, confirm-in-chat
 
 **Do-it-for-them beats any form.** Confirming a pre-filled draft is an order of magnitude less
@@ -273,12 +379,54 @@ The gap between "signed" and "live on the client's site booking into their calen
 4. **Client-facing lead/booking notification** — `notify.owner()` targets the founder's Telegram only; needs a per-client destination (WhatsApp/e-mail).
 5. **Scrape→draft pipeline** (`app/extract.py` + `scaffold.py --from-json` + `selftest intake`) — **DONE** (commit 2d11e72). Site + Google Places (New) → Claude cited-extraction JSON via structured outputs; prices are structurally absent from the schema (never inferred), citation-or-blank, merged over the template with every service stamped `PRIJS?`. Live extraction verified offline only (needs `ANTHROPIC_API_KEY`; `GOOGLE_PLACES_API_KEY` optional).
 
+### Opened by the self-serve checkout (§1b) — all four are unbuilt
+
+6. **Terms + DPA acceptance at checkout** — **OPEN, and the most serious of the four.**
+   `/aanmelden` collects no acceptance of anything. A buyer today starts a €299/mo SEPA
+   subscription without accepting the algemene voorwaarden and without a verwerkersovereenkomst,
+   while we go on to process their customers' personal data. AVG art. 28 requires that agreement
+   in writing before processing, and unaccepted terms make the 30-day notice, the liability cap
+   and the AI-Act clauses hard to lean on. Fix: one required checkbox linking
+   `/legal/voorwaarden` + `/legal/dpa`, with the accepted version and a UTC timestamp persisted
+   next to the lead. Small change, and it is the difference between having a contract and hoping
+   for one.
+7. **Website URL on the signup form** — **OPEN.** The entire scrape-first pre-build (§2) runs on
+   the client's website, and the one field that would supply it is the one we do not ask for. One
+   optional input turns a 03:00 payment into a build that can start before the founder wakes up.
+8. **`billing.cancel` / `billing.refund` CLI** — **OPEN.** The decline path (§1b) and every
+   off-boarding currently require the Mollie dashboard. Needed as `python -m app.billing` verbs,
+   matching how the rest of this business is operated.
+9. **Paid-webhook welcome message** — **OPEN.** `handle_webhook` notifies the founder but never
+   the customer. Step 1 of §1b is a message that does not exist yet; until it does, the first
+   thing a paying stranger hears from us is silence.
+
 ---
 
 ## Sources
 
 Synthesised from the 2026-07-13 onboarding deep-dive (internal audit · best-practices · technical
-integration · intake minimisation). Google Calendar sharing/ACL:
+integration · intake minimisation), extended 2026-07-29 with §1b/§1c and a benchmark pass.
+
+**2026-07 benchmarks used for the §1b timings and the §7 targets:**
+- Time-to-value scales with contract size: the <$5k-ARR band shows a median TTV of ~11 minutes,
+  $5–25k ~2.4 days. Klantkraan at €299/mo is €3.6k/yr, i.e. the *fastest* band. Our 5-day go-live
+  is defensible only because the pre-built demo delivers the first "oh, it works" moment on day 0
+  to 1; the day-5 date is the go-live, not the first value. Keep those two apart when we quote a
+  timeline. https://productquant.dev/blog/saas-activation-benchmarks-by-industry-2026/
+- **B2B services has the lowest median activation rate of any category (~29%)**, against 38% for
+  B2B SaaS. Assume roughly two in three self-serve payers will not activate on their own. That is
+  the whole argument for §1b step 2 being a founder action rather than an e-mail sequence.
+  https://getperspective.ai/blog/2026-customer-onboarding-benchmark-activation-rates-by-industry
+- Activation and churn move together at roughly 1:2 — each point of activation is worth about two
+  points of churn. The activation metric in §7 is therefore the retention metric; do not track
+  them as separate programmes.
+- Productized-service delivery: pay → automatic welcome → intake → queue, with no manual step
+  between payment and the client knowing what happens next, is the standard shape (§1b step 1).
+  The same literature is where §1c comes from: without a written exclusion list, a fixed-price
+  service becomes a custom retainer within about two client cycles.
+  https://manyrequests.com/blog/productized-service-guide
+
+Google Calendar sharing/ACL:
 https://developers.google.com/workspace/calendar/api/concepts/sharing · Places Data Fields:
 https://developers.google.com/maps/documentation/places/web-service/data-fields · TTV / activation
 benchmarks (Chameleon, Userpilot, Message Valley) and white-glove-vs-self-serve economics

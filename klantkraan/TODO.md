@@ -45,11 +45,17 @@ Text-first pivot is the product: `ai-receptionist/` is what we sell — plug-and
 
 ### F. Onboarding + maintenance process — research + harden (added 2026-07-21)
 Goal: make onboarding frictionless for BOTH sides, so the product works smoothly from day one and stays that way. Not a from-scratch build — audit/harden the existing `docs/03-delivery/onboarding-playbook.md` + `churn-prevention.md` against the text-first + Synthflow reality and the first real client (Mallorca airco).
-- [ ] Research/benchmark how comparable done-for-you providers onboard trades with minimal client effort (intake → build → go-live → handover)
-- [ ] Map the end-to-end flow: close → one-time intake → build config → deploy/route → client test & sign-off → go-live → maintenance
-- [ ] Define the minimal client-side intake collected ONCE (services, hours, FAQ, calendar access, phone/WhatsApp) — a single checklist/form, not back-and-forth
-- [ ] Define the post-go-live upkeep loop (monitoring, monthly tune, change requests, who owns what) — extend churn-prevention.md
-- [ ] Output: one smooth, repeatable playbook the founder runs per client
+- [x] Research/benchmark how comparable done-for-you providers onboard trades with minimal client effort (intake → build → go-live → handover) — 2026-07-29, cited in playbook Sources. Load-bearing findings: <$5k-ARR band expects TTV in *minutes* (we are €3.6k/yr); B2B services has the **lowest** activation of any category (~29%), so assume 2 in 3 self-serve payers never activate alone; activation:churn couples ~1:2; pay → auto-welcome → intake → queue with no manual gap is the standard productized shape.
+- [x] Map the end-to-end flow: close → one-time intake → build config → deploy/route → client test & sign-off → go-live → maintenance — founder-led path already existed (playbook §1). **Added the path that was missing entirely: §1b, the self-serve payer.** Since Mollie went live a stranger can subscribe at 03:00 and the playbook had no answer past the founder's Telegram ping.
+- [x] Define the minimal client-side intake collected ONCE — playbook §2 (scrape-first, one confirmation + four questions) held up; §1b adds the self-serve variant and the "ask one question, don't guess" rule when the scrape has no site to work from.
+- [x] Define the post-go-live upkeep loop (monitoring, monthly tune, change requests, who owns what) — `churn-prevention.md` rewritten: §1 cadence table (~35 min/client/month steady state) against the 4 deployed timers, §2 monthly tune, §3 change-request rule, §4 ownership split. Voice-era leftovers (daily stats SMS, "recovered calls", Attio) removed.
+- [x] Output: one smooth, repeatable playbook the founder runs per client — playbook + churn doc now meet at go-live with no gap. Also added playbook §1c, the written scope boundary (inbegrepen vs meerwerk), which did not exist.
+- [ ] **Follow-ups this opened (see playbook §11 items 6–9), in severity order:**
+  - [ ] **Terms + DPA acceptance at checkout** — `/aanmelden` collects no acceptance of anything. A buyer starts a €299/mo SEPA subscription without accepting the voorwaarden and with no verwerkersovereenkomst, while we process their customers' personal data (AVG art. 28 wants that in writing *before* processing). Fix = one required checkbox + persisted version/timestamp.
+  - [ ] **Website URL field on the signup form** — the whole scrape-first pre-build runs on the client's site and it is the one field we never ask for.
+  - [ ] **`billing.cancel` / `billing.refund` CLI** — the decline path and every off-boarding need the Mollie dashboard today.
+  - [ ] **Paid-webhook welcome message** — `handle_webhook` pings the founder, never the customer. First thing a paying stranger hears from us is silence.
+  - [ ] **Wire `OWNER_TELEGRAM_CHAT_ID` + dedicated bot token** — digest/analyst timers run but deliver nowhere, so NEEDS ATTENTION is dark. Highest-value hour of ops work outstanding.
 
 ### G. Website copy — de-AI / professional-copywriter pass (added 2026-07-21)
 Goal: the site copy reads like a professional copywriter wrote it, not like AI. Founder specifically flagged em-dashes and AI-tell writing. Cut them; keep dashes/punctuation only when genuinely relevant.
