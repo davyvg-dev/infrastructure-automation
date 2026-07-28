@@ -5,6 +5,7 @@ import Duties from '../../components/home/Duties.astro'
 import FinalCta from '../../components/home/FinalCta.astro'
 import Hero from '../../components/home/Hero.astro'
 import HowItWorks from '../../components/home/HowItWorks.astro'
+import Roadmap from '../../components/home/Roadmap.astro'
 import Transparency from '../../components/home/Transparency.astro'
 import { waLink } from '../../data/contact'
 
@@ -113,6 +114,33 @@ const starten = {
   note: 'Cancelación mensual. Sin contrato anual ni renovación oculta; se cancela por correo, sin preaviso.',
 }
 
+const roadmap = {
+  eyebrow: 'Hacia dónde va',
+  heading: 'Hoy la puerta. Mañana la oficina.',
+  sub:
+    'La recepcionista es el principio, no el final. Se ocupa de la puerta: todo lo que entra ' +
+    'mientras usted trabaja. Detrás está el papeleo que ahora hace de noche en la mesa de la ' +
+    'cocina. Hacia ahí vamos, junto con los primeros clientes.',
+  nowLabel: 'Lo que hace ahora',
+  now: [
+    'Responde preguntas en su web y en WhatsApp, de día y de noche',
+    'Agenda citas directamente en su propio calendario',
+    'Recoge solicitudes de devolución de llamada con nombre, número y trabajo',
+    'Dice que es un asistente digital, en cada conversación',
+  ],
+  laterLabel: 'Lo que estamos construyendo',
+  laterNote: 'Todavía no está disponible. No forma parte de su suscripción y no lo está pagando.',
+  later: [
+    'Presupuestos que se recuerdan solos cuando el cliente no responde',
+    'Recordatorios de cita, para que nadie se desplace en balde',
+    'Peticiones de reseña justo cuando el trabajo acaba de terminar',
+    'Recordatorios de factura para lo que sigue pendiente',
+  ],
+  footnote:
+    'Cuál de estas llega primero lo deciden los clientes que haya entonces, no nosotros. ¿Pide ' +
+    'algo que no está incluido? Se lo decimos, y le decimos cuándo lo estará.',
+}
+
 const finalCta = {
   h2a: 'Encienda la',
   h2on: 'luz.',
@@ -137,6 +165,7 @@ const finalCta = {
   <Duties t={duties} />
   <CostReceipt t={kosten} />
   <Transparency t={eerlijk} />
+  <Roadmap t={roadmap} />
   <HowItWorks t={starten} />
   <FinalCta t={finalCta} />
 </Base>

@@ -6,6 +6,7 @@ import Duties from '../components/home/Duties.astro'
 import FinalCta from '../components/home/FinalCta.astro'
 import Hero from '../components/home/Hero.astro'
 import HowItWorks from '../components/home/HowItWorks.astro'
+import Roadmap from '../components/home/Roadmap.astro'
 import Transparency from '../components/home/Transparency.astro'
 import { waLink } from '../data/contact'
 
@@ -135,6 +136,33 @@ const starten = {
   note: 'Per maand opzegbaar. Geen jaarcontract, geen verborgen verlenging; opzeggen per mail, geen opzegtermijn.',
 }
 
+const roadmap = {
+  eyebrow: 'Waar dit heen gaat',
+  heading: 'Vandaag de voordeur. Straks het kantoor.',
+  sub:
+    'De receptionist is het begin, niet het eindpunt. Hij neemt de voordeur over: alles wat ' +
+    'binnenkomt terwijl u werkt. Daarachter zit het papierwerk dat u nu ’s avonds aan de ' +
+    'keukentafel doet. Daar werken we naartoe, samen met de eerste klanten.',
+  nowLabel: 'Wat hij nu doet',
+  now: [
+    'Beantwoordt vragen op uw site en WhatsApp, dag en nacht',
+    'Plant afspraken in uw eigen agenda',
+    'Vangt terugbelverzoeken met naam, nummer en klus',
+    'Meldt zichzelf als digitale assistent, in elk gesprek',
+  ],
+  laterLabel: 'Wat we bouwen',
+  laterNote: 'Nog niet beschikbaar. Dit zit niet in uw abonnement en u betaalt er nu niet voor.',
+  later: [
+    'Offertes die zichzelf opvolgen als de klant niet reageert',
+    'Afspraakherinneringen, zodat er niemand voor niets uitrijdt',
+    'Reviewverzoeken op het moment dat de klus net klaar is',
+    'Factuurherinneringen voor wat blijft openstaan',
+  ],
+  footnote:
+    'Welke van deze als eerste komt, bepalen de klanten die er dan zijn, niet wij. Vraagt u iets ' +
+    'wat er niet in zit? Dan zeggen we dat, en wanneer het er wel is.',
+}
+
 const finalCta = {
   h2a: 'Zet het licht',
   h2on: 'aan.',
@@ -159,6 +187,7 @@ const finalCta = {
   <DemoSection t={demo} />
   <CostReceipt t={kosten} />
   <Transparency t={eerlijk} />
+  <Roadmap t={roadmap} />
   <HowItWorks t={starten} />
   <FinalCta t={finalCta} />
 </Base>

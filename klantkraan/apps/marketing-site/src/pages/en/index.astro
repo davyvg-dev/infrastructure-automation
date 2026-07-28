@@ -5,6 +5,7 @@ import Duties from '../../components/home/Duties.astro'
 import FinalCta from '../../components/home/FinalCta.astro'
 import Hero from '../../components/home/Hero.astro'
 import HowItWorks from '../../components/home/HowItWorks.astro'
+import Roadmap from '../../components/home/Roadmap.astro'
 import Transparency from '../../components/home/Transparency.astro'
 import { waLink } from '../../data/contact'
 
@@ -113,6 +114,33 @@ const start = {
   note: "Cancel monthly. No annual contract, no hidden renewal; cancel by email, no notice period.",
 }
 
+const roadmap = {
+  eyebrow: 'Where this is going',
+  heading: 'The front desk today. The office next.',
+  sub:
+    'The receptionist is the start, not the finish. It takes the front door: everything that ' +
+    'arrives while you are working. Behind that sits the paperwork you currently do at the ' +
+    'kitchen table at night. That is where we are heading, with the first clients.',
+  nowLabel: 'What it does now',
+  now: [
+    'Answers questions on your site and WhatsApp, day and night',
+    'Books appointments straight into your own calendar',
+    'Takes callback requests with name, number and job',
+    'Says it is a digital assistant, in every conversation',
+  ],
+  laterLabel: 'What we are building',
+  laterNote: 'Not available yet. It is not part of your subscription and you are not paying for it.',
+  later: [
+    'Quotes that follow themselves up when the customer goes quiet',
+    'Appointment reminders, so nobody drives out for nothing',
+    'Review requests at the moment the job is finished',
+    'Invoice reminders for whatever stays unpaid',
+  ],
+  footnote:
+    'Which of these lands first is decided by the clients who are here at the time, not by us. ' +
+    'Ask for something that is not in there and we will say so, and say when it will be.',
+}
+
 const finalCta = {
   h2a: 'Turn the light',
   h2on: 'on.',
@@ -137,6 +165,7 @@ const finalCta = {
   <Duties t={duties} />
   <CostReceipt t={cost} />
   <Transparency t={honest} />
+  <Roadmap t={roadmap} />
   <HowItWorks t={start} />
   <FinalCta t={finalCta} />
 </Base>
