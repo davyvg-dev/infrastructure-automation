@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro'
+---
+
+<Base
+  title="Thank you | Klantkraan"
+  description="Thank you for your payment. We'll be in touch within one working day to set up your AI receptionist."
+  centered={false}
+  noindex
+>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">Thank you</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Your payment was processed by Mollie. As soon as it clears, your subscription starts
+        automatically and we get to work for you.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start">
+      <div class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6">
+        <h2 class="font-display text-h2 text-(--color-chalk)">What happens next</h2>
+        <ol class="mt-4 space-y-3 text-body text-(--color-dim)">
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">1.</span>
+            We call within one working day to go through your services, rates and calendar.
+          </li>
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">2.</span>
+            We build and connect your receptionist. Done for you; you only supply the knowledge.
+          </li>
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">3.</span>
+            You test it yourself, give the go-ahead, and it goes live on your site and WhatsApp.
+          </li>
+        </ol>
+        <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+          Cancel monthly; cancel by email, one month's notice.
+        </p>
+      </div>
+
+      <aside class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+        <h2 class="font-display text-h2 text-(--color-chalk)">Payment cancelled or failed?</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          No problem: your payment link stays valid, so you can try again later. If it keeps
+          failing, email
+          <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>
+          and we'll sort it out together.
+        </p>
+        <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+          Questions about your subscription or invoice? Email us; we reply within one working day.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>

@@ -68,9 +68,9 @@ def _webhook_url() -> str:
 
 
 def _redirect_url() -> str:
-    # Where the customer lands after checkout. klantkraan.nl has no /bedankt/ page yet, so
-    # the default is the homepage; set MOLLIE_REDIRECT_URL once a thank-you page ships.
-    return os.getenv("MOLLIE_REDIRECT_URL", "https://klantkraan.nl/")
+    # Where the customer lands after checkout — note Mollie sends them here on paid,
+    # canceled AND failed alike; /bedankt/ copy handles all three.
+    return os.getenv("MOLLIE_REDIRECT_URL", "https://klantkraan.nl/bedankt/")
 
 
 def _eur(amount: str | float | Decimal) -> str:
