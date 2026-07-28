@@ -14,6 +14,7 @@ import time
 import uuid
 from collections import deque
 from pathlib import Path
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -185,6 +186,50 @@ def lead(body: LeadIn, request: Request) -> dict[str, bool]:
         # Neither disk nor Telegram took the lead — the caller must get its mailto fallback.
         raise HTTPException(status_code=503, detail="Could not save your request.")
     return {"ok": True}
+
+
+class CheckoutIn(LeadIn):
+    """The buy path. Mollie needs a billing email, and chat is the only plan that can be
+    bought self-serve (compleet is sold by hand once voice ships)."""
+
+    email: str = Field(min_length=3, max_length=200)
+    plan: Literal["chat"] = "chat"
+
+    @model_validator(mode="after")
+    def _billing_email(self) -> CheckoutIn:
+        if not self.email.strip():
+            raise ValueError("email is verplicht voor betaling")
+        return self
+
+
+@app.post("/api/checkout")
+def checkout(body: CheckoutIn, request: Request) -> dict[str, object]:
+    """One POST from /aanmelden: save the lead, then hand back a Mollie checkout URL so the
+    site can redirect the buyer straight into payment. The lead always lands first — Mollie
+    trouble degrades to checkout_url=None and the site falls back to "we bellen u"."""
+    if not _rate_ok(f"lead:{_client_ip(request)}"):
+        raise HTTPException(status_code=429, detail="Too many requests — try again in a minute.")
+    if body.website.strip():
+        return {"ok": True, "checkout_url": None}  # honeypot tripped: pretend success
+    lead = body.model_dump(exclude={"website"})
+    lead["checkout"] = True  # persisted in leads.jsonl so paid/abandoned can be cross-checked
+    result = notify.site_lead(lead)
+    if not result["ok"]:
+        raise HTTPException(status_code=503, detail="Could not save your request.")
+    try:
+        customer_id = billing.create_customer(
+            body.bedrijf.strip() or body.naam.strip(), body.email.strip()
+        )
+        checkout_url = billing.create_first_payment(
+            customer_id, billing.FIRST_MONTH_EUR, "Klantkraan Chat eerste maand", body.plan
+        )
+    except Exception as exc:
+        # The founder still got the lead ping above; this extra one says "send the payment
+        # link by hand" (python -m app.billing checkout).
+        log.exception("checkout creation failed for lead %s", body.naam)
+        notify.owner_exception(exc, context="checkout")
+        return {"ok": True, "checkout_url": None}
+    return {"ok": True, "checkout_url": checkout_url}
 
 
 # Mollie payment ids only — anything else is not a webhook we ever asked for.

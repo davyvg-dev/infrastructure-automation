@@ -41,6 +41,9 @@ MOLLIE_API = "https://api.mollie.com/v2"
 # founding-member first month is 149.50); the subscription always charges the plan price.
 PLAN_MONTHLY = {"chat": "299.00", "compleet": "499.00"}
 DEFAULT_PLAN = "chat"
+# Founding offer: first month 50% off €299. The site's /aanmelden copy quotes this number —
+# change them together.
+FIRST_MONTH_EUR = "149.50"
 
 _EVENTS_LOCK = threading.Lock()
 
@@ -305,8 +308,8 @@ def main(argv: list[str]) -> int:
     p_co.add_argument("email", help="The client's billing email.")
     p_co.add_argument(
         "--amount",
-        default="149.50",
-        help="First payment in EUR (default 149.50: first month 50%% off).",
+        default=FIRST_MONTH_EUR,
+        help=f"First payment in EUR (default {FIRST_MONTH_EUR}: first month 50%% off).",
     )
     p_co.add_argument(
         "--plan",
