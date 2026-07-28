@@ -1,0 +1,133 @@
+---
+/*
+ * The missed-revenue receipt: mono on purpose (it is a receipt), one worked
+ * example, one CTA to the calculator. Numbers must match /rekentool's model.
+ */
+
+interface Line {
+  k: string
+  v: string
+}
+
+interface Props {
+  t: {
+    eyebrow: string
+    heading: string
+    sub: string
+    ariaLabel: string
+    cap: string
+    lines: Line[]
+    resultK: string
+    resultV: string
+    ctaLabel: string
+    ctaHref: string
+  }
+}
+
+const { t } = Astro.props
+---
+
+<section id="kosten" class="scroll-mt-24 py-10 md:py-16">
+  <div class="mx-auto grid max-w-5xl gap-8 px-6 md:grid-cols-[1.1fr_.9fr] md:items-center md:gap-11">
+    <div>
+      <span class="eyebrow">{t.eyebrow}</span>
+      <h2 class="mt-3.5 max-w-[16em] font-display text-h2 text-balance">{t.heading}</h2>
+      <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">{t.sub}</p>
+    </div>
+    <div class="kk-receipt" aria-label={t.ariaLabel}>
+      <p class="kk-receipt-cap">{t.cap}</p>
+      {
+        t.lines.map((line) => (
+          <div class="line">
+            <span class="k">{line.k}</span>
+            <span class="v">{line.v}</span>
+          </div>
+        ))
+      }
+      <div class="line result">
+        <span class="k">{t.resultK}</span>
+        <span class="v bad">{t.resultV}</span>
+      </div>
+      <a class="kk-receipt-cta" href={t.ctaHref}>
+        {t.ctaLabel}
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .kk-receipt {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    padding: 8px 22px;
+    font-family: var(--font-mono);
+  }
+  .kk-receipt .line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--color-line);
+  }
+  .kk-receipt .line:last-child {
+    border-bottom: 0;
+  }
+  .kk-receipt .k {
+    color: var(--color-dim);
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+  }
+  .kk-receipt .v {
+    font-size: 19px;
+    color: var(--color-chalk);
+  }
+  .kk-receipt .v.bad {
+    color: var(--color-sodium);
+  }
+  .kk-receipt-cap {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    padding-top: 14px;
+    margin: 0;
+  }
+  .kk-receipt .line.result {
+    border-bottom: 0;
+    padding-top: 18px;
+  }
+  .kk-receipt .line.result .k {
+    color: var(--color-chalk);
+    font-size: 14px;
+  }
+  .kk-receipt .line.result .v {
+    font-size: 23px;
+    font-weight: 700;
+  }
+  .kk-receipt-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px dashed var(--color-line);
+    padding: 16px 0 8px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-sodium);
+    text-decoration: none;
+  }
+  .kk-receipt-cta span {
+    transition: transform 0.15s ease;
+  }
+  .kk-receipt-cta:hover {
+    color: var(--color-sodium-soft);
+  }
+  .kk-receipt-cta:hover span {
+    transform: translateX(3px);
+  }
+</style>

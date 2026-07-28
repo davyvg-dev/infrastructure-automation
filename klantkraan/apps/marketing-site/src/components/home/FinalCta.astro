@@ -1,0 +1,61 @@
+---
+/*
+ * Closing band: one buy button first, demo and a human conversation as the
+ * lower-commitment alternatives.
+ */
+
+interface Cta {
+  label: string
+  href: string
+  external?: boolean
+}
+
+interface Props {
+  t: {
+    h2a: string
+    h2on: string
+    sub: string
+    primary: Cta
+    ghosts: Cta[]
+  }
+}
+
+const { t } = Astro.props
+---
+
+<section class="py-[5.625rem] text-center">
+  <div class="mx-auto max-w-5xl px-6">
+    <h2 class="kk-final-h2">{t.h2a} <span class="on">{t.h2on}</span></h2>
+    <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">{t.sub}</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3.5">
+      <a href={t.primary.href} class="btn btn-primary btn-lg">{t.primary.label}</a>
+      {
+        t.ghosts.map((cta) => (
+          <a
+            href={cta.href}
+            class="btn btn-ghost btn-lg"
+            target={cta.external ? '_blank' : undefined}
+            rel={cta.external ? 'noopener' : undefined}
+          >
+            {cta.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .kk-final-h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-size: clamp(2.2rem, 5.6vw, 4rem);
+    line-height: 1;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .kk-final-h2 .on {
+    color: var(--color-sodium);
+  }
+</style>
