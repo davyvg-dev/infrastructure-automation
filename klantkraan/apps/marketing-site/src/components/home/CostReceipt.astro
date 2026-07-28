@@ -1,7 +1,9 @@
 ---
 /*
- * The missed-revenue receipt: mono on purpose (it is a receipt), one worked
- * example, one CTA to the calculator. Numbers must match /rekentool's model.
+ * The missed-revenue receipt: one worked example, one CTA to the calculator.
+ * Numbers must match /rekentool's model. Set in the display face rather than
+ * mono — a receipt is money, not console output, and the mono made this read
+ * as a debug dump.
  */
 
 interface Line {
@@ -33,6 +35,10 @@ const { t } = Astro.props
       <span class="eyebrow">{t.eyebrow}</span>
       <h2 class="mt-3.5 max-w-[16em] font-display text-h2 text-balance">{t.heading}</h2>
       <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">{t.sub}</p>
+      <a class="btn btn-ghost mt-7" href={t.ctaHref}>
+        {t.ctaLabel}
+        <span aria-hidden="true">&rarr;</span>
+      </a>
     </div>
     <div class="kk-receipt" aria-label={t.ariaLabel}>
       <p class="kk-receipt-cap">{t.cap}</p>
@@ -48,10 +54,6 @@ const { t } = Astro.props
         <span class="k">{t.resultK}</span>
         <span class="v bad">{t.resultV}</span>
       </div>
-      <a class="kk-receipt-cta" href={t.ctaHref}>
-        {t.ctaLabel}
-        <span aria-hidden="true">→</span>
-      </a>
     </div>
   </div>
 </section>
@@ -60,74 +62,63 @@ const { t } = Astro.props
   .kk-receipt {
     background: var(--color-panel);
     border: 1px solid var(--color-line);
-    border-radius: var(--radius-card);
-    padding: 8px 22px;
-    font-family: var(--font-mono);
+    border-radius: 1rem;
+    padding: 0.5rem 1.5rem;
   }
   .kk-receipt .line {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px dashed var(--color-line);
+    gap: 1rem;
+    padding: 0.9375rem 0;
+    border-bottom: 1px solid var(--color-line);
   }
   .kk-receipt .line:last-child {
     border-bottom: 0;
   }
   .kk-receipt .k {
+    font-size: 0.9375rem;
     color: var(--color-dim);
-    font-size: 13.5px;
-    letter-spacing: 0.02em;
   }
   .kk-receipt .v {
-    font-size: 19px;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
     color: var(--color-chalk);
+    font-variant-numeric: tabular-nums;
   }
   .kk-receipt .v.bad {
     color: var(--color-sodium);
   }
   .kk-receipt-cap {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
     color: var(--color-dim);
-    padding-top: 14px;
+    padding-top: 1rem;
     margin: 0;
   }
   .kk-receipt .line.result {
     border-bottom: 0;
-    padding-top: 18px;
+    border-top: 1px solid var(--color-line);
+    margin-top: 0.25rem;
+    padding: 1.125rem 0 1.25rem;
   }
   .kk-receipt .line.result .k {
     color: var(--color-chalk);
-    font-size: 14px;
+    font-weight: 600;
   }
   .kk-receipt .line.result .v {
-    font-size: 23px;
-    font-weight: 700;
+    font-size: clamp(1.6rem, 6.5vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    /* "± €7.200/mnd" must never break across lines — it did on a 390px screen,
+     * stranding the ± on a line of its own. */
+    white-space: nowrap;
   }
-  .kk-receipt-cta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-top: 1px dashed var(--color-line);
-    padding: 16px 0 8px;
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-sodium);
-    text-decoration: none;
-  }
-  .kk-receipt-cta span {
-    transition: transform 0.15s ease;
-  }
-  .kk-receipt-cta:hover {
-    color: var(--color-sodium-soft);
-  }
-  .kk-receipt-cta:hover span {
-    transform: translateX(3px);
+  /* Narrow screens: the total gets its own line rather than fighting the label. */
+  @media (max-width: 26rem) {
+    .kk-receipt .line.result {
+      display: grid;
+      gap: 0.25rem;
+    }
   }
 </style>

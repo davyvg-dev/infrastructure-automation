@@ -9,8 +9,7 @@ import Transparency from '../../components/home/Transparency.astro'
 import { waLink } from '../../data/contact'
 
 const hero = {
-  status: 'ACTIVO · responde ahora',
-  statusChannels: 'WEB + WHATSAPP',
+  status: 'Responde ahora en su web y WhatsApp',
   h1a: 'La luz sigue',
   h1on: 'encendida.',
   sub:
@@ -21,21 +20,18 @@ const hero = {
   ctaPrimaryHref: '/es/aanmelden/',
   ctaGhost: 'Pruebe la demo',
   ctaGhostHref: '/es/demo/',
-  trustHtml:
-    'Instalación llave en mano &middot; cancelación mensual &middot; <span class="text-(--color-confirm)">conforme al RGPD, alojado en la UE</span>',
-  panelAria:
-    'Registro de turno: a las 23:47 un cliente con una fuga hace una pregunta, la recepcionista digital agenda una cita para el martes a las 09:00 y deja preparada una solicitud de llamada para el propietario.',
-  panelTop: 'REGISTRO · ESTA NOCHE',
-  panelOn: 'ACTIVO',
-  rows: [
-    { ts: '06:14', what: 'solicitud de presupuesto', st: '✓ respondida' },
-    { ts: '12:40', what: 'cita · inspección de tejado', st: '✓ agendada' },
+  proof: [
+    { icon: 'message-circle' as const, label: 'Instalación llave en mano' },
+    { icon: 'calendar-check' as const, label: 'Cancelación mensual' },
+    { icon: 'shield-check' as const, label: 'Conforme al RGPD, alojado en la UE' },
   ],
-  liveTs: '23:47 · conversación entrante',
+  panelAria:
+    'Conversación a las 23:47: un cliente con una fuga hace una pregunta, la recepcionista digital agenda una cita para el martes a las 09:00 y deja preparada una solicitud de llamada para el propietario.',
+  threadName: 'Klantkraan',
+  threadSub: 'Responde al instante',
+  liveTs: 'Esta noche 23:47',
   disclosure: 'Está hablando con un asistente digital.',
-  customerWho: 'Cliente',
   customerMsg: 'Tengo una fuga bajo el fregadero, ¿puede venir alguien mañana?',
-  recepWho: 'Klantkraan',
   recepMsg: 'Lamento oírlo, nos encargamos. Mañana a las 09:00 está libre. ¿Se lo reservo?',
   stampStrong: 'AGENDADA',
   stampDetail: 'mar 09:00 · llamada preparada para el propietario',
@@ -44,7 +40,7 @@ const hero = {
 const duties = {
   eyebrow: 'El turno de noche',
   heading: 'Lo que la recepcionista asume mientras usted trabaja.',
-  photoAlt: 'Profesional junto a su furgoneta abierta al final de la jornada',
+  photoAlt: 'Instalador revisando una unidad exterior con una linterna',
   items: [
     {
       icon: 'message-square' as const,

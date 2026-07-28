@@ -10,8 +10,7 @@ import Transparency from '../components/home/Transparency.astro'
 import { waLink } from '../data/contact'
 
 const hero = {
-  status: 'AAN · antwoordt nu',
-  statusChannels: 'SITE + WHATSAPP',
+  status: 'Antwoordt nu op site en WhatsApp',
   h1a: 'Het licht blijft',
   h1on: 'aan.',
   sub:
@@ -22,30 +21,27 @@ const hero = {
   ctaPrimaryHref: '/aanmelden/',
   ctaGhost: 'Probeer de demo',
   ctaGhostHref: '#demo',
-  trustHtml:
-    'Direct te proberen, geen account &middot; per maand opzegbaar &middot; <span class="text-(--color-confirm)">AVG-proof, EU-gehost</span>',
-  panelAria:
-    'Dienstlog: om 23:47 stelt een klant met een lekkage een vraag, de digitale receptionist plant een afspraak op dinsdag 09:00 en zet een terugbelverzoek klaar voor de eigenaar.',
-  panelTop: 'DIENSTLOG · VANNACHT',
-  panelOn: 'AAN',
-  rows: [
-    { ts: '06:14', what: 'offerteaanvraag', st: '✓ beantwoord' },
-    { ts: '12:40', what: 'afspraak · dakinspectie', st: '✓ ingepland' },
+  proof: [
+    { icon: 'message-circle' as const, label: 'Direct te proberen, geen account' },
+    { icon: 'calendar-check' as const, label: 'Per maand opzegbaar' },
+    { icon: 'shield-check' as const, label: 'AVG-proof, EU-gehost' },
   ],
-  liveTs: '23:47 · binnenkomend gesprek',
+  panelAria:
+    'Gesprek om 23:47: een klant met een lekkage stelt een vraag, de digitale receptionist plant een afspraak op dinsdag 09:00 en zet een terugbelverzoek klaar voor de eigenaar.',
+  threadName: 'Klantkraan',
+  threadSub: 'Reageert direct',
+  liveTs: 'Vannacht 23:47',
   disclosure: 'U chat met een digitale assistent.',
-  customerWho: 'Klant',
   customerMsg: 'Ik heb een lekkage onder de gootsteen, kan er morgen iemand komen?',
-  recepWho: 'Klantkraan',
   recepMsg: 'Vervelend, dat pakken we op. Morgen 09:00 is vrij. Zal ik dat voor u vastzetten?',
   stampStrong: 'INGEPLAND',
-  stampDetail: 'di 09:00 · terugbel klaar voor de eigenaar',
+  stampDetail: 'di 09:00 · terugbelverzoek klaar voor de eigenaar',
 }
 
 const duties = {
   eyebrow: 'De nachtdienst',
   heading: 'Wat de receptionist overneemt terwijl u werkt.',
-  photoAlt: 'Vakvrouw bij haar geopende bus aan het einde van de werkdag',
+  photoAlt: 'Installateur die met een zaklamp een buitenunit nakijkt',
   items: [
     {
       icon: 'message-square' as const,
@@ -72,6 +68,12 @@ const demo = {
     'Geen belrobot die klinkt als een collega, maar tekst op de plek waar uw klant al zit: ' +
     'uw site en WhatsApp. Stel een vraag of plan een afspraak, precies zoals een klant zou ' +
     'doen, direct in uw browser.',
+  asksLabel: 'Stel bijvoorbeeld:',
+  asks: [
+    'Wat kost het vervangen van een kraan?',
+    'Kan er morgenochtend iemand langskomen?',
+    'Werken jullie ook in Haarlem?',
+  ],
   iframeTitle: 'Live chat met de digitale receptionist van Klantkraan',
   mobileName: 'Van Dijk Installatietechniek',
   mobileTag: 'Digitale assistent · reageert direct',

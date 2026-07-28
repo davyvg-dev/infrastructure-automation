@@ -1,7 +1,9 @@
 ---
 /*
- * "What the receptionist takes over": brand-treated photo left, icon rows right —
- * the same hairline-divided rows /demo uses, instead of three lookalike cards.
+ * "What the receptionist takes over": the photo bleeds off the left edge and the
+ * duties sit in hairline-divided rows on the right. The bleed is deliberate — it
+ * is the one place the page breaks the max-w-5xl column, so the eye gets a rest
+ * between the hero and the demo.
  */
 import Icon from '../Icon.astro'
 
@@ -23,39 +25,111 @@ interface Props {
 const { t } = Astro.props
 ---
 
-<section id="nachtdienst" class="scroll-mt-24 py-10 md:py-16">
-  <div class="mx-auto max-w-5xl px-6">
+<section id="nachtdienst" class="kk-duties scroll-mt-24">
+  <div class="kk-duties-photo">
+    <img
+      src="/photos/installateurs.jpg"
+      srcset="/photos/installateurs-sm.jpg 700w, /photos/installateurs.jpg 1400w"
+      sizes="(min-width: 768px) 50vw, 100vw"
+      width="1400"
+      height="900"
+      loading="lazy"
+      decoding="async"
+      alt={t.photoAlt}
+    />
+  </div>
+
+  <div class="kk-duties-body">
     <span class="eyebrow">{t.eyebrow}</span>
-    <h2 class="mt-3.5 max-w-[18em] font-display text-h2 text-balance">{t.heading}</h2>
+    <h2 class="mt-3.5 font-display text-h2 text-balance">{t.heading}</h2>
 
-    <div class="mt-10 grid gap-8 md:grid-cols-[.95fr_1.05fr] md:items-center md:gap-12">
-      <img
-        src="/photos/home-hero.jpg"
-        srcset="/photos/home-hero-sm.jpg 700w, /photos/home-hero.jpg 1400w"
-        sizes="(min-width: 768px) 45vw, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt={t.photoAlt}
-        class="w-full rounded-(--radius-card) border border-(--color-line) object-cover"
-      />
-
-      <ul class="divide-y divide-(--color-line)" role="list">
-        {
-          t.items.map((duty) => (
-            <li class="grid grid-cols-[auto_1fr] gap-4 py-5 first:pt-0 last:pb-0">
-              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-(--color-panel-2) text-(--color-sodium)">
-                <Icon name={duty.icon} class="h-5 w-5" />
-              </span>
-              <div>
-                <h3 class="font-display text-h3 text-(--color-chalk)">{duty.title}</h3>
-                <p class="mt-1.5 text-body text-(--color-dim)">{duty.text}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
+    <ul class="mt-8 divide-y divide-(--color-line)" role="list">
+      {
+        t.items.map((duty) => (
+          <li class="grid grid-cols-[auto_1fr] gap-4 py-5 first:pt-0 last:pb-0">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-(--color-panel-2) text-(--color-sodium)">
+              <Icon name={duty.icon} class="h-5 w-5" />
+            </span>
+            <div>
+              <h3 class="font-display text-h3 text-(--color-chalk)">{duty.title}</h3>
+              <p class="mt-1.5 text-body text-(--color-dim)">{duty.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
+
+<style>
+  .kk-duties {
+    display: grid;
+    gap: 2.25rem;
+    padding: 2.5rem 0;
+  }
+  @media (min-width: 768px) {
+    .kk-duties {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: stretch;
+      gap: 3.5rem;
+      padding: 4.5rem 0;
+    }
+  }
+
+  .kk-duties-photo {
+    position: relative;
+    height: 14rem;
+    overflow: hidden;
+  }
+  .kk-duties-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+    filter: brightness(0.86) saturate(0.85);
+  }
+  /* Feather the trailing edge into the page so the photo reads as part of the
+   * night, not a bright rectangle pasted onto it. */
+  .kk-duties-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(15, 28, 30, 0.15) 0%,
+      transparent 35%,
+      rgba(15, 28, 30, 0.75) 100%
+    );
+  }
+  @media (min-width: 768px) {
+    .kk-duties-photo::after {
+      background: linear-gradient(
+        to right,
+        rgba(15, 28, 30, 0.25) 0%,
+        transparent 40%,
+        rgba(15, 28, 30, 0.7) 100%
+      );
+    }
+  }
+  @media (min-width: 768px) {
+    .kk-duties-photo {
+      height: 100%;
+      min-height: 25rem;
+      border-radius: 0 1.25rem 1.25rem 0;
+      border: 1px solid var(--color-line);
+      border-left: 0;
+    }
+  }
+
+  .kk-duties-body {
+    align-self: center;
+    padding: 0 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .kk-duties-body {
+      max-width: 30rem;
+      padding: 0 1.5rem 0 0;
+    }
+  }
+</style>

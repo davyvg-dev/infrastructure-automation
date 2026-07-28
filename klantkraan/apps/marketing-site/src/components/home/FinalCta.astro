@@ -23,8 +23,8 @@ interface Props {
 const { t } = Astro.props
 ---
 
-<section class="py-[5.625rem] text-center">
-  <div class="mx-auto max-w-5xl px-6">
+<section class="px-6 py-14 md:py-20">
+  <div class="kk-final">
     <h2 class="kk-final-h2">{t.h2a} <span class="on">{t.h2on}</span></h2>
     <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">{t.sub}</p>
     <div class="mt-8 flex flex-wrap justify-center gap-3.5">
@@ -46,6 +46,34 @@ const { t } = Astro.props
 </section>
 
 <style>
+  /* The page closes on a lit panel rather than more flat night — the last thing
+   * on screen should look like the light it is selling. */
+  .kk-final {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 64rem;
+    padding: 3.5rem 1.5rem 4rem;
+    text-align: center;
+    border: 1px solid var(--color-line);
+    border-radius: 1.5rem;
+    background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
+  }
+  .kk-final::before {
+    content: '';
+    position: absolute;
+    inset: -60% 20% auto;
+    height: 130%;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgba(255, 184, 77, 0.22), transparent 70%);
+  }
+  @media (min-width: 768px) {
+    .kk-final {
+      padding: 4.5rem 3rem 5rem;
+    }
+  }
+
   .kk-final-h2 {
     font-family: var(--font-display);
     font-weight: 800;

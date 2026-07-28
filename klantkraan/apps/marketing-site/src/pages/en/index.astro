@@ -9,8 +9,7 @@ import Transparency from '../../components/home/Transparency.astro'
 import { waLink } from '../../data/contact'
 
 const hero = {
-  status: 'ON · answering now',
-  statusChannels: 'SITE + WHATSAPP',
+  status: 'Answering now on site and WhatsApp',
   h1a: 'The light stays',
   h1on: 'on.',
   sub:
@@ -21,21 +20,18 @@ const hero = {
   ctaPrimaryHref: '/en/aanmelden/',
   ctaGhost: 'Try the demo',
   ctaGhostHref: '/en/demo/',
-  trustHtml:
-    'Done-for-you setup &middot; cancel monthly &middot; <span class="text-(--color-confirm)">GDPR-compliant, EU-hosted</span>',
-  panelAria:
-    'Shift log: at 23:47 a customer with a leak asks a question, the digital receptionist books an appointment for Tuesday 09:00 and prepares a callback request for the owner.',
-  panelTop: 'SHIFT LOG · TONIGHT',
-  panelOn: 'ON',
-  rows: [
-    { ts: '06:14', what: 'quote request', st: '✓ answered' },
-    { ts: '12:40', what: 'appointment · roof inspection', st: '✓ booked' },
+  proof: [
+    { icon: 'message-circle' as const, label: 'Done-for-you setup' },
+    { icon: 'calendar-check' as const, label: 'Cancel monthly' },
+    { icon: 'shield-check' as const, label: 'GDPR-compliant, EU-hosted' },
   ],
-  liveTs: '23:47 · incoming conversation',
+  panelAria:
+    'Conversation at 23:47: a customer with a leak asks a question, the digital receptionist books an appointment for Tuesday 09:00 and prepares a callback request for the owner.',
+  threadName: 'Klantkraan',
+  threadSub: 'Replies instantly',
+  liveTs: 'Tonight 23:47',
   disclosure: "You're chatting with a digital assistant.",
-  customerWho: 'Customer',
   customerMsg: "I've got a leak under the kitchen sink, can someone come tomorrow?",
-  recepWho: 'Klantkraan',
   recepMsg: "Sorry to hear that, we'll sort it. Tomorrow 09:00 is free. Shall I lock that in for you?",
   stampStrong: 'BOOKED',
   stampDetail: 'Tue 09:00 · callback ready for the owner',
@@ -44,7 +40,7 @@ const hero = {
 const duties = {
   eyebrow: 'The night shift',
   heading: 'What the receptionist takes over while you work.',
-  photoAlt: 'Tradeswoman at her open van at the end of the day',
+  photoAlt: 'Heating engineer checking an outdoor unit by torchlight',
   items: [
     {
       icon: 'message-square' as const,
