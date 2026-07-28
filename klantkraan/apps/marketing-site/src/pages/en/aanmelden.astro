@@ -36,10 +36,13 @@ const inputClass =
   <!-- 2. Form + next steps -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start">
+      <!-- method+action are the zero-JS fallback: if the page script can't run, the browser
+           posts the form itself and the API answers with a 303 straight into Mollie. -->
       <form
         id="lead-form"
+        method="POST"
+        action="https://demo.klantkraan.nl/api/checkout"
         class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
-        novalidate
       >
         <div class="space-y-6">
           <div>
@@ -63,7 +66,7 @@ const inputClass =
               <label for="email" class="block text-body font-medium text-(--color-chalk)">
                 Email
               </label>
-              <input id="email" name="email" type="email" autocomplete="email" class={inputClass} />
+              <input id="email" name="email" type="email" required autocomplete="email" class={inputClass} />
             </div>
           </div>
           <p id="contact-hint" class="-mt-3 text-small text-(--color-dim)">
@@ -188,6 +191,7 @@ const inputClass =
     needName: 'Please fill in your name.',
     needEmail: 'Please fill in your email address. The payment confirmation goes there.',
     needContact: 'Please fill in a phone number or email address.',
+    invalid: 'Something went wrong with your sign-up. Please check your details and try again.',
     sendFailed:
       'Sending failed. Email us at <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a> and we will take it from there.',
   }
@@ -211,8 +215,11 @@ const inputClass =
       form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value === 'chat'
 
     // Chat buys now (checkout); Compleet files interest (lead). Button + hints follow.
+    // Email is only a hard requirement when paying (Mollie needs it for the confirmation).
+    const emailInput = document.getElementById('email') as HTMLInputElement
     const sync = () => {
       submitBtn.textContent = isChat() ? COPY.payButton : COPY.leadButton
+      emailInput.required = isChat()
       const hint = document.getElementById('contact-hint')
       if (hint) hint.textContent = isChat() ? COPY.payHint : COPY.leadHint
       document.getElementById('pay-note')?.classList.toggle('hidden', !isChat())
@@ -228,6 +235,9 @@ const inputClass =
       submitBtn.disabled = false
       sync()
     }
+
+    // A native (no-JS) post that bounced on validation lands back here with ?fout=1.
+    if (new URLSearchParams(window.location.search).has('fout')) fail(COPY.invalid)
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault()
