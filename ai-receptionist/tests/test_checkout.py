@@ -19,6 +19,8 @@ _BUYER = {
     "vak": "installateur",
     "plan": "chat",
     "bericht": "Graag deze week starten.",
+    # A buyer always accepts the voorwaarden + DPA; the checkout refuses to run without it.
+    "akkoord": "ja",
 }
 
 _CHECKOUT_URL = "https://www.mollie.com/checkout/select-method/abc123"
@@ -122,6 +124,43 @@ def test_honeypot_pretends_success_but_stores_nothing(
 def test_email_is_required(client: TestClient) -> None:
     assert client.post("/api/checkout", json={**_BUYER, "email": ""}).status_code == 422
     assert client.post("/api/checkout", json={**_BUYER, "email": "   "}).status_code == 422
+
+
+def test_terms_acceptance_is_required_to_buy(client: TestClient, data_dir, sent, mollie) -> None:
+    """No acceptance, no SEPA mandate. AVG art. 28 wants the processor agreement in writing
+    before we touch the client's end-customer data, and unaccepted voorwaarden make the
+    notice period and liability cap hard to lean on. Fail closed, and reach no Mollie."""
+    for missing in ({**_BUYER, "akkoord": ""}, {k: v for k, v in _BUYER.items() if k != "akkoord"}):
+        assert client.post("/api/checkout", json=missing).status_code == 422
+    assert not mollie["customers"], "a declined signup must never reach Mollie"
+    assert not (data_dir / "leads.jsonl").exists(), "and must not be stored as a buyer"
+
+
+def test_native_checkbox_value_is_accepted(client: TestClient, data_dir, sent, mollie) -> None:
+    """A no-JS form post sends the browser default `on`, not our `ja`. Both must pass, or
+    the degraded path that exists precisely for broken JS would reject every real buyer."""
+    resp = client.post(
+        "/api/checkout", data={**_BUYER, "akkoord": "on"}, headers=_REFERER, follow_redirects=False
+    )
+    assert resp.status_code == 303 and resp.headers["location"] == _CHECKOUT_URL
+
+
+def test_acceptance_is_recorded_with_version_and_timestamp(
+    client: TestClient, data_dir, sent, mollie
+) -> None:
+    """The checkbox proves nothing later without evidence of *what* was accepted and when."""
+    client.post("/api/checkout", json=_BUYER)
+    record = json.loads((data_dir / "leads.jsonl").read_text(encoding="utf-8"))
+    assert record["akkoord_versie"] == server.TERMS_VERSION
+    assert record["akkoord_op"].endswith("+00:00"), "stamped in UTC"
+
+
+def test_interest_lead_needs_no_acceptance(client: TestClient, data_dir, sent) -> None:
+    """An interest lead agrees to nothing and must not be gated behind a contract."""
+    resp = client.post("/api/lead", json={"naam": "Jan de Vries", "telefoon": "+31612345678"})
+    assert resp.status_code == 200
+    record = json.loads((data_dir / "leads.jsonl").read_text(encoding="utf-8"))
+    assert "akkoord_versie" not in record
 
 
 def test_only_the_chat_plan_can_be_bought(client: TestClient) -> None:

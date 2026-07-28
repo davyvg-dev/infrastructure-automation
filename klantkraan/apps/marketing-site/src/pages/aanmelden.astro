@@ -120,6 +120,26 @@ const inputClass =
             </label>
             <textarea id="bericht" name="bericht" rows="3" class={inputClass}></textarea>
           </div>
+          <!-- Only shown on the paying plan: an interest lead agrees to nothing, but nobody
+               starts a SEPA mandate without accepting the contract that governs it. -->
+          <div id="akkoord-row">
+            <label class="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="akkoord"
+                name="akkoord"
+                value="ja"
+                required
+                class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)"
+              />
+              <span class="text-small text-(--color-dim)">
+                Ik ga akkoord met de
+                <a href="/legal/voorwaarden/" class="underline">algemene voorwaarden</a>
+                en de
+                <a href="/legal/dpa/" class="underline">verwerkersovereenkomst</a>.
+              </span>
+            </label>
+          </div>
           <div class="hp" aria-hidden="true">
             <label for="website">Website</label>
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
@@ -208,6 +228,7 @@ const inputClass =
     needName: 'Vul uw naam in.',
     needEmail: 'Vul uw e-mailadres in. Daar sturen we de betaalbevestiging heen.',
     needContact: 'Vul een telefoonnummer of e-mailadres in.',
+    needTerms: 'Zet even een vinkje bij de voorwaarden en de verwerkersovereenkomst.',
     badEmail: 'Dat e-mailadres lijkt niet te kloppen. Controleer het even.',
     badPhone: 'Dat telefoonnummer lijkt niet te kloppen. Controleer het even.',
     invalid: 'Er ging iets mis met uw aanmelding. Controleer uw gegevens en probeer het opnieuw.',
@@ -236,12 +257,17 @@ const inputClass =
     // Chat buys now (checkout); Compleet files interest (lead). Button + hints follow.
     // Email is only a hard requirement when paying (Mollie needs it for the confirmation).
     const emailInput = document.getElementById('email') as HTMLInputElement
+    const akkoordInput = document.getElementById('akkoord') as HTMLInputElement | null
     const sync = () => {
       submitBtn.textContent = isChat() ? COPY.payButton : COPY.leadButton
       emailInput.required = isChat()
       const hint = document.getElementById('contact-hint')
       if (hint) hint.textContent = isChat() ? COPY.payHint : COPY.leadHint
       document.getElementById('pay-note')?.classList.toggle('hidden', !isChat())
+      // Terms acceptance rides with the paying plan, so a `required` checkbox can never
+      // block an interest lead that does not need it.
+      document.getElementById('akkoord-row')?.classList.toggle('hidden', !isChat())
+      if (akkoordInput) akkoordInput.required = isChat()
     }
     form
       .querySelectorAll<HTMLInputElement>('input[name="plan"]')
@@ -273,6 +299,7 @@ const inputClass =
         return fail(COPY.badEmail)
       if (value('telefoon') && !/^\+?[0-9]{8,15}$/.test(value('telefoon').replace(/[\s().-]/g, '')))
         return fail(COPY.badPhone)
+      if (paying && !value('akkoord')) return fail(COPY.needTerms)
 
       submitBtn.disabled = true
       try {
@@ -287,6 +314,7 @@ const inputClass =
             vak: value('vak'),
             plan: value('plan'),
             bericht: value('bericht'),
+            akkoord: value('akkoord'),
             website: value('website'),
           }),
         })

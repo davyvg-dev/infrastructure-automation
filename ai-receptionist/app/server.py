@@ -13,6 +13,7 @@ import threading
 import time
 import uuid
 from collections import deque
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 from urllib.parse import urlsplit
@@ -163,6 +164,11 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
 _EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
 _PHONE_RE = re.compile(r"^\+?[0-9]{8,15}$")
 
+# Which version of /legal/voorwaarden + /legal/dpa a buyer accepted. Mirrors `lastUpdated`
+# on both pages; bump it here in the same commit that changes either document, or the
+# acceptance record starts pointing at text nobody agreed to.
+TERMS_VERSION = "2026-05-20"
+
 
 class LeadIn(BaseModel):
     naam: str = Field(min_length=1, max_length=200)
@@ -254,6 +260,9 @@ async def _signup(request: Request, buy: bool) -> Response:
     lead = body.model_dump(exclude={"website"})
     if buy:
         lead["checkout"] = True  # persisted so paid/abandoned can be cross-checked
+        # What was accepted, and when. Without this the checkbox proves nothing later.
+        lead["akkoord_versie"] = TERMS_VERSION
+        lead["akkoord_op"] = datetime.now(UTC).isoformat(timespec="seconds")
     result = await run_in_threadpool(notify.site_lead, lead)
     if not result["ok"]:
         # Neither disk nor Telegram took the lead — the caller must get its fallback.
@@ -295,11 +304,23 @@ class CheckoutIn(LeadIn):
 
     email: str = Field(min_length=3, max_length=200)
     plan: Literal["chat"] = "chat"
+    # Acceptance of the voorwaarden + DPA. Required here and NOT on LeadIn on purpose: an
+    # interest lead agrees to nothing, but nobody starts a SEPA mandate without a contract.
+    akkoord: str = Field(default="", max_length=20)
 
     @model_validator(mode="after")
     def _billing_email(self) -> CheckoutIn:
         if not self.email.strip():
             raise ValueError("email is verplicht voor betaling")
+        return self
+
+    @model_validator(mode="after")
+    def _accepted_terms(self) -> CheckoutIn:
+        # AVG art. 28 wants the processor agreement in writing BEFORE we process the client's
+        # end-customer data, and unaccepted voorwaarden make the notice period, the liability
+        # cap and the AI-Act clauses hard to lean on. Fail closed: no acceptance, no payment.
+        if self.akkoord.strip().lower() not in ("ja", "on", "true", "1"):
+            raise ValueError("akkoord met de voorwaarden en verwerkersovereenkomst is verplicht")
         return self
 
 
