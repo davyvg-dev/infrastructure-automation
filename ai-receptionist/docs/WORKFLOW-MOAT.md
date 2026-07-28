@@ -59,11 +59,107 @@ template gate. Never let this become marketing — outbound is transactional onl
 
 ---
 
+## Who sets the status — the owner channel (build this second)
+
+The spine above has a hole: **nothing sets most of the statuses.** The bot can set `lead`
+(`record_lead`) and `scheduled` (`book_appointment`). It has no way to know a quote went out, a
+job got finished, an invoice was sent, or money arrived. Every module downstream of `scheduled`
+triggers on state the bot cannot observe. Solve this before building any of them.
+
+Three possible sources of truth, cheapest first:
+
+| Source | Covers | Cost to the client | Verdict |
+|---|---|---|---|
+| Infer from the calendar | `completed` (slot has passed) | zero | Too unreliable to act on — a cancelled visit becomes "hoe ging het?". Use it to *ask*, never to assert. |
+| **The owner tells the bot** | everything | one WhatsApp reply a day | **Primary.** |
+| Boekhouding API (Moneybird) | `invoiced`, `paid` | integration | Upgrade, per client, stage #6. |
+
+**The design: the owner talks to the same bot, from their own number.**
+
+The client already has WhatsApp open all day. Give them no dashboard, no app, no login — just the
+same thread, in the other direction. Each afternoon the worker sends the owner today's jobs and
+takes plain-language replies:
+
+```
+17:30  Klantkraan → owner
+       2 klussen vandaag. Klaar?
+       1. Van Ostadestraat 44 — lekkage keuken
+       2. Bilderdijkkade 12 — cv-onderhoud
+
+17:52  owner → Klantkraan
+       1 klaar, factuur 340. 2 niet gelukt, klant was niet thuis
+
+17:52  Klantkraan → owner
+       Genoteerd. Van Ostadestraat op factuur €340, reviewverzoek gaat morgen.
+       Bilderdijkkade terug op de planning — zal ik een nieuwe tijd voorstellen?
+```
+
+Why this is the right shape:
+
+- **Zero adoption cost.** No new tool for someone who does not want new tools. The channel is the
+  one they already answer.
+- **It reuses the whole stack.** `sessions.respond()` unchanged, `whatsapp.py` unchanged apart from
+  a role check, tenant routing unchanged.
+- **It fills the data asset for free.** Every job gets an outcome labeled by the person who did it,
+  in one sentence, with no data entry. That is the proprietary-data moat writing itself.
+- **It is the retention surface.** The client hears from Klantkraan every working day, doing office
+  work. That is a very different cancellation decision than a bot they never see.
+
+Shape:
+
+```yaml
+# config/clients/<slug>.yaml
+owner:
+  whatsapp: "+3161..."          # inbound from this number = owner role
+  daily_closeout: "17:30"       # when the worker asks; omit to disable
+```
+
+- `channels/whatsapp.py` — after resolving the tenant from `To`, if `From` matches `owner.whatsapp`,
+  call `sessions.respond("whatsapp-owner", ...)`. One branch.
+- `receptionist.py` — `build_system_prompt(role="customer" | "owner")`. The owner prompt is short
+  and terse: no art. 50 pitch, no sales tone, no booking flow.
+- `tools.py` — split into `TOOLS_CUSTOMER` and `TOOLS_OWNER` (`list_jobs`, `update_job_status`,
+  `pause_followups`, `reschedule_appointment`). **The owner tool list must be selected by role, not
+  requested by the prompt** — a customer session must be structurally unable to reach
+  `update_job_status`, not merely told not to. Enforce at the tool-list level.
+- Session keys already namespace by channel, so `whatsapp-owner` gets its own history for free.
+
+- [ ] `owner:` block in config + `settings` accessor; role resolution in `whatsapp.py`.
+- [ ] `TOOLS_OWNER` + role-parameterised system prompt; assert in a test that a customer role
+      cannot see owner tools.
+- [ ] Daily closeout in the worker; `selftest owner` offline (seed jobs → run closeout with the
+      `dev` provider → assert the prompt lists exactly today's jobs).
+
+---
+
+## One job, end to end
+
+What stages 0–4 look like in the client's actual life. Tuesday.
+
+| When | Who | What happens | State |
+|---|---|---|---|
+| 07:12 | customer → WhatsApp | "Goedemorgen, ik heb een lekkage onder de gootsteen" | `record_lead` → `lead` |
+| 07:12 | bot | triages as spoed, checks the postcode against `service_area`, offers 11:00 | |
+| 07:14 | bot | books it, notifies the owner on Telegram as today | `scheduled` |
+| 11:40 | owner → bot | (at closeout) "klaar, offerte voor nieuwe kraan 285" | `completed` + quote opened |
+| 12:00 | worker | sends the review request | `reviewed` |
+| Thu | worker | quote is 2 days old, no answer: one utility template nudge | attempt 1 |
+| Sun | worker | 5 days: second nudge | attempt 2 |
+| next Wed | worker | no reply after 3 attempts — stops, tells the owner to call | escalated |
+| next Wed | owner | calls, wins the job | `scheduled` again |
+
+The receptionist alone delivers row 1–3 — the front desk. Rows 4–9 are the office. **That gap is
+the entire €299 → €599 argument**, and it is the part no €99 answering bot reaches, because it
+requires a job record and a relationship with the owner, not a better voice.
+
+---
+
 ## Build order (the answer)
 
 | # | Stage | Add | Kind | Effort | Moat |
 |---|-------|-----|------|--------|------|
 | 0 | Spine | `job_store.py`, `messaging.py` | foundation | M | data asset + every integration |
+| 0b | Owner channel | role split + `TOOLS_OWNER` + daily closeout | foundation | M | **sets the state everything else triggers on**; daily client contact |
 | 1 | Intake & triage | `record_lead` tool + triage prompt; WhatsApp media | conversational | S–M | fills the data asset |
 | 2 | Review & repeat | `request_review` action; recurring reminders | event + background | S | cheap, visible ROI (grows their leads) |
 | 3 | Offerte record | `quote_store.py` + `create_quote_request` tool | conversational | M | starts the money stage |
@@ -108,6 +204,44 @@ build it only once a client is committed.
 
 ---
 
+## Outbound economics — what WhatsApp charges (checked 2026-07-28)
+
+Business-initiated messages are metered, and the meter shapes the copy. Meta moved to per-message
+pricing on 1 July 2025: every delivered template is billed by **category** and **recipient country**.
+
+| Category | NL rate | Applies to |
+|---|---|---|
+| Utility | typically **under $0.03** (DE, the top of the band, is $0.055) | transaction follow-up: quote nudge, appointment reminder, invoice chase |
+| Marketing | **~$0.16–0.18** — among the highest in the world | anything with promotional intent |
+| Service (free-form, inside the 24h window) | free today, **charged from 1 Oct 2026** | the receptionist's own replies |
+
+Three consequences, in order of how much they matter:
+
+1. **Every follow-up must qualify as utility, and the Dutch copy decides that.** Meta draws the
+   line at promotional intent. *"Zullen we de offerte doorzetten?"* is utility — it concerns an
+   existing transaction. Add *"deze week 10% korting"* and the same message becomes marketing at
+   roughly five times the price, in a country where marketing is the most expensive rate on earth.
+   Write every template as a transaction status, never as an offer. This is also what keeps
+   outbound on the right side of the Forbidden list.
+2. **Module cost per client is negligible — say so when pricing.** A trade doing ~40 jobs/month
+   sends roughly 45 quote nudges + 40 reminders + 40 review requests ≈ 125 utility messages ≈
+   **€3–5/month**. The €599 tier is not exposed to messaging cost.
+3. **From 1 Oct 2026 Meta charges per business message including service replies inside the 24-hour
+   window.** This hits the **core €299 product**, not the modules. At ~200 conversations × ~8
+   replies a client sends ~1,600 service messages a month; the gross-margin claim of ~97% needs
+   re-modelling once the service rate is published. **Do not guess it — check the rate and redo
+   `07-finance/` before 1 October.**
+
+**Get templates approved once, generically.** Templates are submitted to Meta for approval and
+approval is not instant. Do not create per-client templates or every onboarding is gated on Meta.
+Approve ~5 generic Dutch utility templates with variable slots (`{{1}}` business name, `{{2}}` job,
+`{{3}}` amount) and reuse them across the whole client base. Twilio's surface is the Content API:
+`client.messages.create(from_=..., to=..., content_sid=..., content_variables=json.dumps({...}))`
+— `content_sid` is the approved template, so `messaging.send(template=...)` maps to it directly.
+*(Twilio Content API + WhatsApp quickstart via context7 `/llmstxt/twilio_llms_txt`, 2026-07-28.)*
+
+---
+
 ## Cross-cutting
 
 - **The worker is one process, many jobs.** `followup.py` does the chase (#4), reminders (#5), and
@@ -125,6 +259,10 @@ build it only once a client is committed.
   marketing.
 
 ## First concrete task when resuming
-Build **the spine** (`job_store.py` + namespacing fix + `selftest jobstore`), commit, then #1
-(`record_lead`). Everything else hangs off those. Ralph loop: small step → build → selftest →
-eyeball → commit.
+Build **the spine** (`job_store.py` + namespacing fix + `selftest jobstore`), commit, then **0b the
+owner channel** — without it stages 2–6 have no trigger — then #1 (`record_lead`). Ralph loop:
+small step → build → selftest → eyeball → commit.
+
+**Gate:** none of this starts before the receptionist has paying clients (`klantkraan/TODO.md`
+item E is still open). Build order is settled; build *timing* is ~5 paying clients, and module N+1
+waits for three clients to ask. Rationale in `klantkraan/research/automation-expansion-2026-07.md`.
