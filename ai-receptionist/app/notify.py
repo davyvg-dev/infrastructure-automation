@@ -151,6 +151,47 @@ def take_message(customer: str, contact: str, message: str) -> dict[str, Any]:
     return {"ok": saved or notified, "saved": saved, "notified": notified}
 
 
+def site_lead(lead: dict[str, Any]) -> dict[str, Any]:
+    """Persist a marketing-site signup lead, then ping the founder. Same contract as
+    take_message: returns {"ok", "saved", "notified"} so the caller can be honest.
+
+    Leads append to data/leads.jsonl (one JSON object per line) — append-only, so a
+    concurrent write can never truncate the file the way a rewrite-in-place could.
+    """
+    record = {"at": datetime.now().isoformat(timespec="seconds"), **lead}
+    saved = _save_lead(record)
+    lines = [f"Nieuwe aanmelding via klantkraan.nl — plan: {lead.get('plan', '?')}"]
+    for label, key in (
+        ("Naam", "naam"),
+        ("Bedrijf", "bedrijf"),
+        ("Telefoon", "telefoon"),
+        ("E-mail", "email"),
+        ("Vak", "vak"),
+        ("Bericht", "bericht"),
+    ):
+        if lead.get(key):
+            lines.append(f"{label}: {lead[key]}")
+    try:
+        notified = owner("\n".join(lines))
+    except Exception as exc:  # notify must never decide the request's fate
+        print(f"[notify:site_lead] notify failed ({exc})")
+        notified = False
+    return {"ok": saved or notified, "saved": saved, "notified": notified}
+
+
+def _save_lead(record: dict[str, Any]) -> bool:
+    try:
+        with _LOCK:
+            ensure_dirs()
+            path = settings.DATA_DIR / "leads.jsonl"
+            with path.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(record, ensure_ascii=False) + "\n")
+        return True
+    except Exception as exc:
+        print(f"[notify:site_lead] persist failed ({exc})")
+        return False
+
+
 def _save_message(client: str, customer: str, contact: str, message: str) -> bool:
     try:
         with _LOCK:

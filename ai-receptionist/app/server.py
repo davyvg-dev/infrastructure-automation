@@ -15,8 +15,9 @@ from collections import deque
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from starlette.concurrency import run_in_threadpool
 
 from . import notify, sessions
@@ -27,6 +28,20 @@ log = logging.getLogger(__name__)
 
 app = FastAPI(title="AI Receptionist demo")
 _WEB = Path(__file__).resolve().parent.parent / "web"
+
+# The marketing site (klantkraan.nl) posts signup leads here cross-origin; the chat widget
+# never needs CORS (it runs same-origin inside an iframe), so this allowlist exists only
+# for /api/lead. Pages deploy previews match via the regex so a deploy can be verified
+# before DNS points at it.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.getenv(
+        "CORS_ALLOW_ORIGINS", "https://klantkraan.nl,https://www.klantkraan.nl"
+    ).split(","),
+    allow_origin_regex=r"https://[a-z0-9-]+\.klantkraan-marketing\.pages\.dev",
+    allow_methods=["GET", "POST"],
+    allow_headers=["content-type"],
+)
 
 # Per-IP sliding-window rate limit on /chat: every request is a paid Claude call, so an
 # open endpoint is a token-cost hole. Behind Caddy/nginx the client IP comes from
@@ -138,6 +153,37 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
     finally:
         clear_slug(token)
     return ChatOut(session_id=session_id, reply=reply)
+
+
+class LeadIn(BaseModel):
+    naam: str = Field(min_length=1, max_length=200)
+    bedrijf: str = Field(default="", max_length=200)
+    telefoon: str = Field(default="", max_length=50)
+    email: str = Field(default="", max_length=200)
+    vak: str = Field(default="", max_length=100)
+    plan: str = Field(default="", max_length=50)
+    bericht: str = Field(default="", max_length=2000)
+    # Honeypot: a hidden field humans never see. Bots that fill it get a silent 200.
+    website: str = Field(default="", max_length=500)
+
+    @model_validator(mode="after")
+    def _reachable(self) -> LeadIn:
+        if not (self.telefoon.strip() or self.email.strip()):
+            raise ValueError("telefoon of email is verplicht")
+        return self
+
+
+@app.post("/api/lead")
+def lead(body: LeadIn, request: Request) -> dict[str, bool]:
+    if not _rate_ok(f"lead:{_client_ip(request)}"):
+        raise HTTPException(status_code=429, detail="Too many requests — try again in a minute.")
+    if body.website.strip():
+        return {"ok": True}  # honeypot tripped: pretend success, store nothing
+    result = notify.site_lead(body.model_dump(exclude={"website"}))
+    if not result["ok"]:
+        # Neither disk nor Telegram took the lead — the caller must get its mailto fallback.
+        raise HTTPException(status_code=503, detail="Could not save your request.")
+    return {"ok": True}
 
 
 @app.post("/whatsapp")
