@@ -164,10 +164,10 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
 _EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
 _PHONE_RE = re.compile(r"^\+?[0-9]{8,15}$")
 
-# Which version of /legal/voorwaarden + /legal/dpa a buyer accepted. Mirrors `lastUpdated`
-# on both pages; bump it here in the same commit that changes either document, or the
+# Which version of /legal/voorwaarden + /legal/dpa a buyer accepted: the later `lastUpdated`
+# of the two pages. Bump it in the same commit that changes either document, or the
 # acceptance record starts pointing at text nobody agreed to.
-TERMS_VERSION = "2026-05-20"
+TERMS_VERSION = "2026-07-29"
 
 
 class LeadIn(BaseModel):

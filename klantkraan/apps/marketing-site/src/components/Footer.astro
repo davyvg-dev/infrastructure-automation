@@ -56,19 +56,19 @@ const trustBadgesByLang: Record<'nl' | 'en' | 'es', TrustBadge[]> = {
     { icon: 'shield-check', label: 'AVG-conform', sub: 'Standaard verwerkersovereenkomst' },
     { icon: 'shield-check', label: 'EU AI Act art. 50', sub: 'Disclosure niet uitschakelbaar' },
     { icon: 'check', label: 'EU-gehost', sub: 'Cloudflare · Neon · Hetzner FSN1' },
-    { icon: 'clock', label: 'Per maand opzegbaar', sub: 'Eén mail, opzegtermijn één maand' },
+    { icon: 'clock', label: 'Per maand opzegbaar', sub: 'Eén mail, geen opzegtermijn' },
   ],
   en: [
     { icon: 'shield-check', label: 'GDPR-compliant', sub: 'Standard data processing agreement' },
     { icon: 'shield-check', label: 'EU AI Act art. 50', sub: "Disclosure can't be switched off" },
     { icon: 'check', label: 'EU-hosted', sub: 'Cloudflare · Neon · Hetzner FSN1' },
-    { icon: 'clock', label: 'Cancel monthly', sub: "One email, one month's notice" },
+    { icon: 'clock', label: 'Cancel monthly', sub: 'One email, no notice period' },
   ],
   es: [
     { icon: 'shield-check', label: 'Conforme al RGPD', sub: 'Contrato de tratamiento estándar' },
     { icon: 'shield-check', label: 'Reglamento de IA de la UE art. 50', sub: 'La declaración no se puede desactivar' },
     { icon: 'check', label: 'Alojado en la UE', sub: 'Cloudflare · Neon · Hetzner FSN1' },
-    { icon: 'clock', label: 'Cancelación mensual', sub: 'Un correo, un mes de preaviso' },
+    { icon: 'clock', label: 'Cancelación mensual', sub: 'Un correo, sin preaviso' },
   ],
 }
 const trustBadges = trustBadgesByLang[lang]
