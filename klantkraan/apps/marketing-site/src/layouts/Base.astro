@@ -131,7 +131,9 @@ const siteSchema = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0f1c1e" />
-    <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />
+    {/* Structured data describes a page to search engines, so emitting it on a page we
+        told them not to index is a contradiction they flag rather than resolve. */}
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />}
     <ClientRouter />
   </head>
   <body class={stickyCta ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
