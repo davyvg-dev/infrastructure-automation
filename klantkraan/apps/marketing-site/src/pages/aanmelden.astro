@@ -60,7 +60,15 @@ const inputClass =
               <label for="telefoon" class="block text-body font-medium text-(--color-chalk)">
                 Telefoon
               </label>
-              <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" class={inputClass} />
+              <input
+                id="telefoon"
+                name="telefoon"
+                type="tel"
+                autocomplete="tel"
+                pattern={"\\+?[\\d \\-\\(\\)\\.]{8,20}"}
+                title="Minimaal 8 cijfers, spaties en streepjes mogen"
+                class={inputClass}
+              />
             </div>
             <div>
               <label for="email" class="block text-body font-medium text-(--color-chalk)">
@@ -192,6 +200,8 @@ const inputClass =
     needName: 'Vul uw naam in.',
     needEmail: 'Vul uw e-mailadres in. Daar sturen we de betaalbevestiging heen.',
     needContact: 'Vul een telefoonnummer of e-mailadres in.',
+    badEmail: 'Dat e-mailadres lijkt niet te kloppen. Controleer het even.',
+    badPhone: 'Dat telefoonnummer lijkt niet te kloppen. Controleer het even.',
     invalid: 'Er ging iets mis met uw aanmelding. Controleer uw gegevens en probeer het opnieuw.',
     sendFailed:
       'Versturen is niet gelukt. Mail ons op <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>, dan pakken wij het direct op.',
@@ -250,6 +260,11 @@ const inputClass =
       if (!value('naam')) return fail(COPY.needName)
       if (paying && !value('email')) return fail(COPY.needEmail)
       if (!paying && !value('telefoon') && !value('email')) return fail(COPY.needContact)
+      // Same format gates as the API (server.py LeadIn): loose on purpose, catches typos.
+      if (value('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value('email')))
+        return fail(COPY.badEmail)
+      if (value('telefoon') && !/^\+?[0-9]{8,15}$/.test(value('telefoon').replace(/[\s().-]/g, '')))
+        return fail(COPY.badPhone)
 
       submitBtn.disabled = true
       try {

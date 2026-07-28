@@ -61,7 +61,15 @@ const inputClass =
               <label for="telefoon" class="block text-body font-medium text-(--color-chalk)">
                 Teléfono
               </label>
-              <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" class={inputClass} />
+              <input
+                id="telefoon"
+                name="telefoon"
+                type="tel"
+                autocomplete="tel"
+                pattern={"\\+?[\\d \\-\\(\\)\\.]{8,20}"}
+                title="Al menos 8 cifras, se admiten espacios y guiones"
+                class={inputClass}
+              />
             </div>
             <div>
               <label for="email" class="block text-body font-medium text-(--color-chalk)">
@@ -195,6 +203,8 @@ const inputClass =
     needName: 'Escriba su nombre.',
     needEmail: 'Escriba su dirección de correo. Ahí enviamos la confirmación del pago.',
     needContact: 'Escriba un número de teléfono o una dirección de correo.',
+    badEmail: 'Esa dirección de correo no parece correcta. Revísela, por favor.',
+    badPhone: 'Ese número de teléfono no parece correcto. Revíselo, por favor.',
     invalid: 'Algo ha fallado con su alta. Revise sus datos e inténtelo de nuevo.',
     sendFailed:
       'No se ha podido enviar. Escríbanos a <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a> y lo gestionamos desde ahí.',
@@ -253,6 +263,11 @@ const inputClass =
       if (!value('naam')) return fail(COPY.needName)
       if (paying && !value('email')) return fail(COPY.needEmail)
       if (!paying && !value('telefoon') && !value('email')) return fail(COPY.needContact)
+      // Same format gates as the API (server.py LeadIn): loose on purpose, catches typos.
+      if (value('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value('email')))
+        return fail(COPY.badEmail)
+      if (value('telefoon') && !/^\+?[0-9]{8,15}$/.test(value('telefoon').replace(/[\s().-]/g, '')))
+        return fail(COPY.badPhone)
 
       submitBtn.disabled = true
       try {

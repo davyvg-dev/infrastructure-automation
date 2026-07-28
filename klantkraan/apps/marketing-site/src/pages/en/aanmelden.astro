@@ -61,7 +61,15 @@ const inputClass =
               <label for="telefoon" class="block text-body font-medium text-(--color-chalk)">
                 Phone
               </label>
-              <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" class={inputClass} />
+              <input
+                id="telefoon"
+                name="telefoon"
+                type="tel"
+                autocomplete="tel"
+                pattern={"\\+?[\\d \\-\\(\\)\\.]{8,20}"}
+                title="At least 8 digits, spaces and dashes are fine"
+                class={inputClass}
+              />
             </div>
             <div>
               <label for="email" class="block text-body font-medium text-(--color-chalk)">
@@ -192,6 +200,8 @@ const inputClass =
     needName: 'Please fill in your name.',
     needEmail: 'Please fill in your email address. The payment confirmation goes there.',
     needContact: 'Please fill in a phone number or email address.',
+    badEmail: "That email address doesn't look right. Please check it.",
+    badPhone: "That phone number doesn't look right. Please check it.",
     invalid: 'Something went wrong with your sign-up. Please check your details and try again.',
     sendFailed:
       'Sending failed. Email us at <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a> and we will take it from there.',
@@ -250,6 +260,11 @@ const inputClass =
       if (!value('naam')) return fail(COPY.needName)
       if (paying && !value('email')) return fail(COPY.needEmail)
       if (!paying && !value('telefoon') && !value('email')) return fail(COPY.needContact)
+      // Same format gates as the API (server.py LeadIn): loose on purpose, catches typos.
+      if (value('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value('email')))
+        return fail(COPY.badEmail)
+      if (value('telefoon') && !/^\+?[0-9]{8,15}$/.test(value('telefoon').replace(/[\s().-]/g, '')))
+        return fail(COPY.badPhone)
 
       submitBtn.disabled = true
       try {
