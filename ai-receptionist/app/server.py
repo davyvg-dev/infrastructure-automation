@@ -20,7 +20,7 @@ from urllib.parse import urlsplit
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
-from pydantic import BaseModel, Field, ValidationError, model_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 from starlette.concurrency import run_in_threadpool
 
 from . import billing, notify, sessions
@@ -158,6 +158,12 @@ def chat(body: ChatIn, request: Request) -> ChatOut:
     return ChatOut(session_id=session_id, reply=reply)
 
 
+# Format gates, mirrored in the /aanmelden page script. Deliberately loose: enough to
+# catch typos ("jan@devries", "06-12"), not to referee every national numbering plan.
+_EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
+_PHONE_RE = re.compile(r"^\+?[0-9]{8,15}$")
+
+
 class LeadIn(BaseModel):
     naam: str = Field(min_length=1, max_length=200)
     bedrijf: str = Field(default="", max_length=200)
@@ -168,6 +174,21 @@ class LeadIn(BaseModel):
     bericht: str = Field(default="", max_length=2000)
     # Honeypot: a hidden field humans never see. Bots that fill it get a silent 200.
     website: str = Field(default="", max_length=500)
+
+    @field_validator("email")
+    @classmethod
+    def _email_shape(cls, v: str) -> str:
+        if v.strip() and not _EMAIL_RE.match(v.strip()):
+            raise ValueError("ongeldig e-mailadres")
+        return v
+
+    @field_validator("telefoon")
+    @classmethod
+    def _phone_shape(cls, v: str) -> str:
+        digits = re.sub(r"[\s().\-]", "", v)
+        if digits and not _PHONE_RE.match(digits):
+            raise ValueError("ongeldig telefoonnummer")
+        return v
 
     @model_validator(mode="after")
     def _reachable(self) -> LeadIn:

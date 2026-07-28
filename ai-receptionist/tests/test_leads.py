@@ -79,6 +79,24 @@ def test_needs_phone_or_email(client: TestClient, data_dir) -> None:
     assert client.post("/api/lead", json=phone_only).status_code == 200
 
 
+def test_malformed_email_is_rejected(client: TestClient) -> None:
+    for bad in ("jan", "jan@devries", "jan @devries.nl", "@devries.nl", "jan@.n"):
+        resp = client.post("/api/lead", json={**_LEAD, "email": bad})
+        assert resp.status_code == 422, f"email {bad!r} must be rejected"
+
+
+def test_malformed_phone_is_rejected(client: TestClient) -> None:
+    for bad in ("06-12", "bel mij", "0612345678901234", "+31 6 12 phone"):
+        resp = client.post("/api/lead", json={**_LEAD, "telefoon": bad})
+        assert resp.status_code == 422, f"phone {bad!r} must be rejected"
+
+
+def test_formatted_phone_numbers_pass(client: TestClient, data_dir) -> None:
+    for ok in ("+31 6 1234 5678", "06-12345678", "(020) 123 4567", "0034612345678"):
+        resp = client.post("/api/lead", json={**_LEAD, "telefoon": ok})
+        assert resp.status_code == 200, f"phone {ok!r} must be accepted"
+
+
 def test_notify_failure_never_fails_the_request(
     client: TestClient, data_dir, monkeypatch: pytest.MonkeyPatch
 ) -> None:
