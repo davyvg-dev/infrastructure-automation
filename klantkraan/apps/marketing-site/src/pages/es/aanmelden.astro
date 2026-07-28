@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro'
+import { waLink } from '../../data/contact'
 
 const trades = [
   { value: 'loodgieter', label: 'Fontanero' },
@@ -21,6 +22,7 @@ const inputClass =
   title="Alta: empiece con su recepcionista con IA | Klantkraan"
   description="Dé de alta su negocio en Klantkraan Chat (299 € al mes). Le contactamos en un día laborable y nos encargamos de toda la instalación."
   centered={false}
+  stickyCta={false}
 >
   <!-- 1. Hero -->
   <section class="py-10 md:py-16">
@@ -134,6 +136,12 @@ const inputClass =
           <p class="text-small text-(--color-dim)">
             Solo usamos sus datos para ponernos en contacto con usted. Consulte nuestra
             <a href="/legal/privacy/" class="underline">política de privacidad</a> (en neerlandés).
+          </p>
+          <!-- The escape hatch the sticky bar used to be, now inline and quiet: on this
+               page a floating amber button sat next to an identical amber pay button. -->
+          <p class="text-small text-(--color-dim)">
+            ¿Prefiere comentarlo antes?
+            <a href={waLink} target="_blank" rel="noopener" class="underline">Escríbanos por WhatsApp</a>.
           </p>
         </div>
       </form>

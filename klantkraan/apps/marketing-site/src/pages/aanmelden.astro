@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import { waLink } from '../data/contact'
 
 const trades = [
   { value: 'loodgieter', label: 'Loodgieter' },
@@ -20,6 +21,7 @@ const inputClass =
   title="Aanmelden: start met uw AI-receptionist | Klantkraan"
   description="Meld uw bedrijf aan voor Klantkraan Chat (€299 per maand). Wij nemen binnen één werkdag contact op en verzorgen de volledige setup."
   centered={false}
+  stickyCta={false}
 >
   <!-- 1. Hero -->
   <section class="py-10 md:py-16">
@@ -133,6 +135,12 @@ const inputClass =
           <p class="text-small text-(--color-dim)">
             Wij gebruiken uw gegevens alleen om contact op te nemen. Zie ons
             <a href="/legal/privacy/" class="underline">privacybeleid</a>.
+          </p>
+          <!-- The escape hatch the sticky bar used to be, now inline and quiet: on this
+               page a floating amber button sat next to an identical amber pay button. -->
+          <p class="text-small text-(--color-dim)">
+            Liever eerst even overleggen?
+            <a href={waLink} target="_blank" rel="noopener" class="underline">WhatsApp ons</a>.
           </p>
         </div>
       </form>
