@@ -65,8 +65,8 @@ const inputClass =
               <input id="email" name="email" type="email" autocomplete="email" class={inputClass} />
             </div>
           </div>
-          <p class="-mt-3 text-small text-(--color-dim)">
-            Telefoon of e-mail is genoeg, allebei mag ook.
+          <p id="contact-hint" class="-mt-3 text-small text-(--color-dim)">
+            E-mail is nodig voor de betaalbevestiging, telefoon mag erbij.
           </p>
           <div>
             <label for="vak" class="block text-body font-medium text-(--color-chalk)">
@@ -84,7 +84,8 @@ const inputClass =
                 <span class="text-body text-(--color-chalk)">
                   Chat
                   <span class="block text-small text-(--color-dim)">
-                    €299 per maand &middot; websitechat + WhatsApp &middot; maandelijks opzegbaar
+                    eerste maand €149,50, daarna €299 per maand &middot; websitechat + WhatsApp
+                    &middot; maandelijks opzegbaar
                   </span>
                 </span>
               </label>
@@ -111,8 +112,12 @@ const inputClass =
           </div>
           <p id="lead-error" class="hidden text-small text-(--color-sodium)" role="alert"></p>
           <button type="submit" id="lead-submit" class="btn btn-primary btn-lg w-full justify-center">
-            Verstuur aanmelding
+            Aanmelden en betalen
           </button>
+          <p id="pay-note" class="text-small text-(--color-dim)">
+            U betaalt veilig via Mollie, onder meer met iDEAL. Na de betaling nemen wij contact
+            op voor de setup.
+          </p>
           <p class="text-small text-(--color-dim)">
             Wij gebruiken uw gegevens alleen om contact op te nemen. Zie ons
             <a href="/legal/privacy/" class="underline">privacybeleid</a>.
@@ -173,7 +178,19 @@ const inputClass =
 </style>
 
 <script>
-  const ENDPOINT = 'https://demo.klantkraan.nl/api/lead'
+  const API = 'https://demo.klantkraan.nl'
+  const COPY = {
+    payButton: 'Aanmelden en betalen',
+    leadButton: 'Verstuur aanmelding',
+    payHint: 'E-mail is nodig voor de betaalbevestiging, telefoon mag erbij.',
+    leadHint: 'Telefoon of e-mail is genoeg, allebei mag ook.',
+    redirecting: 'Doorsturen naar de betaalpagina…',
+    needName: 'Vul uw naam in.',
+    needEmail: 'Vul uw e-mailadres in. Daar sturen we de betaalbevestiging heen.',
+    needContact: 'Vul een telefoonnummer of e-mailadres in.',
+    sendFailed:
+      'Versturen is niet gelukt. Mail ons op <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>, dan pakken wij het direct op.',
+  }
 
   function initLeadForm() {
     const form = document.getElementById('lead-form') as HTMLFormElement | null
@@ -190,11 +207,26 @@ const inputClass =
 
     const errorEl = document.getElementById('lead-error') as HTMLElement
     const submitBtn = document.getElementById('lead-submit') as HTMLButtonElement
+    const isChat = () =>
+      form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value === 'chat'
+
+    // Chat buys now (checkout); Compleet files interest (lead). Button + hints follow.
+    const sync = () => {
+      submitBtn.textContent = isChat() ? COPY.payButton : COPY.leadButton
+      const hint = document.getElementById('contact-hint')
+      if (hint) hint.textContent = isChat() ? COPY.payHint : COPY.leadHint
+      document.getElementById('pay-note')?.classList.toggle('hidden', !isChat())
+    }
+    form
+      .querySelectorAll<HTMLInputElement>('input[name="plan"]')
+      .forEach((radio) => radio.addEventListener('change', sync))
+    sync()
 
     const fail = (html: string) => {
       errorEl.innerHTML = html
       errorEl.classList.remove('hidden')
       submitBtn.disabled = false
+      sync()
     }
 
     form.addEventListener('submit', async (event) => {
@@ -202,14 +234,15 @@ const inputClass =
       errorEl.classList.add('hidden')
       const data = new FormData(form)
       const value = (name: string) => String(data.get(name) ?? '').trim()
+      const paying = isChat()
 
-      if (!value('naam')) return fail('Vul uw naam in.')
-      if (!value('telefoon') && !value('email'))
-        return fail('Vul een telefoonnummer of e-mailadres in.')
+      if (!value('naam')) return fail(COPY.needName)
+      if (paying && !value('email')) return fail(COPY.needEmail)
+      if (!paying && !value('telefoon') && !value('email')) return fail(COPY.needContact)
 
       submitBtn.disabled = true
       try {
-        const resp = await fetch(ENDPOINT, {
+        const resp = await fetch(paying ? `${API}/api/checkout` : `${API}/api/lead`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -224,13 +257,19 @@ const inputClass =
           }),
         })
         if (!resp.ok) throw new Error(String(resp.status))
+        const body = await resp.json().catch(() => ({}))
+        if (body.checkout_url) {
+          // Straight into Mollie; /bedankt/ catches the return. The lead is already saved,
+          // so a buyer who bails out of checkout is a follow-up call, not a loss.
+          submitBtn.textContent = COPY.redirecting
+          window.location.assign(body.checkout_url)
+          return
+        }
         form.classList.add('hidden')
         document.getElementById('lead-steps')?.classList.add('hidden')
         document.getElementById('lead-success')?.classList.remove('hidden')
       } catch {
-        fail(
-          'Versturen is niet gelukt. Mail ons op <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>, dan pakken wij het direct op.'
-        )
+        fail(COPY.sendFailed)
       }
     })
   }
