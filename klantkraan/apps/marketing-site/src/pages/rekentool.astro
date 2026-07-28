@@ -136,8 +136,9 @@ import Base from '../layouts/Base.astro'
       <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
         <li>Gemiste oproepen per jaar = oproepen per week × 52 × (% gemist / 100).</li>
         <li>
-          Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans (zonder
-          terugbel-automatisering haakt het gros af).
+          Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans. We tellen
+          dus maar 1 op de 3 gemiste oproepen als verloren klus; zonder terugbel-automatisering
+          haakt het gros af.
         </li>
         <li>
           Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12). Hoe groter de bak
