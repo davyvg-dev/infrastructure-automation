@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import threading
 import time
 import uuid
@@ -20,9 +21,9 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field, model_validator
 from starlette.concurrency import run_in_threadpool
 
-from . import notify, sessions
+from . import billing, notify, sessions
 from .channels import whatsapp
-from .settings import business, clear_slug, ensure_dirs, resolve_slug, use_slug
+from .settings import MissingSetting, business, clear_slug, ensure_dirs, resolve_slug, use_slug
 
 log = logging.getLogger(__name__)
 
@@ -183,6 +184,36 @@ def lead(body: LeadIn, request: Request) -> dict[str, bool]:
     if not result["ok"]:
         # Neither disk nor Telegram took the lead — the caller must get its mailto fallback.
         raise HTTPException(status_code=503, detail="Could not save your request.")
+    return {"ok": True}
+
+
+# Mollie payment ids only — anything else is not a webhook we ever asked for.
+_MOLLIE_ID_RE = re.compile(r"^tr_[A-Za-z0-9]+$")
+
+
+@app.post("/api/mollie/webhook")
+async def mollie_webhook(request: Request) -> dict[str, bool]:
+    """Mollie pings this with a form-encoded `id=tr_...`; billing fetches the payment back
+    from the API for truth. Mollie retries on any non-200, so: handled or hopeless -> 200
+    fast; Mollie itself unreachable (or the key not configured yet) -> 503 to keep the
+    retry train alive until we can fetch truth."""
+    if not _rate_ok(f"mollie:{_client_ip(request)}"):
+        raise HTTPException(status_code=429, detail="Too many requests — try again in a minute.")
+    form = await request.form()
+    payment_id = str(form.get("id") or "")
+    if not _MOLLIE_ID_RE.match(payment_id):
+        raise HTTPException(status_code=400, detail="Invalid payment id.")
+    try:
+        result = await run_in_threadpool(billing.handle_webhook, payment_id)
+        log.info("mollie webhook %s -> %s", payment_id, result.get("action"))
+    except (billing.MollieUnreachable, MissingSetting) as exc:
+        log.warning("mollie webhook %s deferred: %s", payment_id, exc)
+        raise HTTPException(status_code=503, detail="Temporarily unavailable.") from exc
+    except Exception as exc:
+        # A broken payment stays broken — 200 so Mollie stops retrying, but the founder hears
+        # about it (the event may involve real money).
+        log.exception("mollie webhook %s failed", payment_id)
+        notify.owner_exception(exc, context="mollie-webhook")
     return {"ok": True}
 
 
