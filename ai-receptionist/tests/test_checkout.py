@@ -127,3 +127,92 @@ def test_email_is_required(client: TestClient) -> None:
 def test_only_the_chat_plan_can_be_bought(client: TestClient) -> None:
     resp = client.post("/api/checkout", json={**_BUYER, "plan": "compleet"})
     assert resp.status_code == 422, "compleet is not self-serve until voice ships"
+
+
+# --- Native form posts: the zero-JS fallback. The browser is navigating, so every answer
+# --- must be a 303 — into Mollie on success, back to the form on bad input.
+
+_REFERER = {"referer": "https://klantkraan.nl/aanmelden/"}
+
+
+def test_native_form_post_redirects_into_mollie(client: TestClient, data_dir, sent, mollie) -> None:
+    resp = client.post("/api/checkout", data=_BUYER, headers=_REFERER, follow_redirects=False)
+
+    assert resp.status_code == 303 and resp.headers["location"] == _CHECKOUT_URL
+    record = json.loads((data_dir / "leads.jsonl").read_text(encoding="utf-8"))
+    assert record["naam"] == "Jan de Vries" and record["checkout"] is True
+
+
+def test_native_interest_plan_is_a_lead_not_a_buy(
+    client: TestClient, data_dir, sent, mollie
+) -> None:
+    payload = {**_BUYER, "plan": "compleet-interesse", "email": ""}
+    resp = client.post("/api/checkout", data=payload, headers=_REFERER, follow_redirects=False)
+
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "https://klantkraan.nl/bedankt/"
+    assert not mollie["customers"], "interest-only never touches Mollie"
+    record = json.loads((data_dir / "leads.jsonl").read_text(encoding="utf-8"))
+    assert record["plan"] == "compleet-interesse" and "checkout" not in record
+
+
+def test_native_invalid_input_bounces_back_to_the_form(
+    client: TestClient, data_dir, mollie
+) -> None:
+    resp = client.post(
+        "/api/checkout",
+        data={**_BUYER, "email": ""},
+        headers={"referer": "https://klantkraan.nl/en/aanmelden/"},
+        follow_redirects=False,
+    )
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "https://klantkraan.nl/en/aanmelden/?fout=1"
+    assert not (data_dir / "leads.jsonl").exists()
+
+
+def test_native_locale_thanks_page_follows_the_referer(client: TestClient, sent, mollie) -> None:
+    resp = client.post(
+        "/api/checkout",
+        data={**_BUYER, "plan": "compleet-interesse"},
+        headers={"referer": "https://klantkraan.nl/es/aanmelden/"},
+        follow_redirects=False,
+    )
+    assert resp.headers["location"] == "https://klantkraan.nl/es/bedankt/"
+
+
+def test_native_foreign_referer_is_never_echoed(client: TestClient, sent, mollie) -> None:
+    resp = client.post(
+        "/api/checkout",
+        data={**_BUYER, "email": ""},
+        headers={"referer": "https://evil.example/aanmelden/"},
+        follow_redirects=False,
+    )
+    assert resp.headers["location"] == "https://klantkraan.nl/aanmelden/?fout=1"
+
+
+def test_native_honeypot_redirects_to_thanks_but_stores_nothing(
+    client: TestClient, data_dir, sent, mollie
+) -> None:
+    resp = client.post(
+        "/api/checkout",
+        data={**_BUYER, "website": "https://spam.example"},
+        headers=_REFERER,
+        follow_redirects=False,
+    )
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "https://klantkraan.nl/bedankt/"
+    assert not (data_dir / "leads.jsonl").exists() and not mollie["customers"]
+
+
+def test_native_mollie_down_still_lands_on_thanks(
+    client: TestClient, data_dir, sent, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def boom(name: str, email: str) -> str:
+        raise billing.MollieUnreachable("mollie down")
+
+    monkeypatch.setattr(billing, "create_customer", boom)
+    resp = client.post("/api/checkout", data=_BUYER, headers=_REFERER, follow_redirects=False)
+
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "https://klantkraan.nl/bedankt/"
+    assert (data_dir / "leads.jsonl").exists(), "the lead survives a Mollie outage"

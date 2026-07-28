@@ -15,11 +15,12 @@ import uuid
 from collections import deque
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel, Field, model_validator
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from pydantic import BaseModel, Field, ValidationError, model_validator
 from starlette.concurrency import run_in_threadpool
 
 from . import billing, notify, sessions
@@ -175,17 +176,96 @@ class LeadIn(BaseModel):
         return self
 
 
-@app.post("/api/lead")
-def lead(body: LeadIn, request: Request) -> dict[str, bool]:
+# The signup form posts here two ways: fetch() with JSON (the enhanced path) and, whenever
+# that script cannot run (blocked, stale HTML referencing a purged bundle, JS off), the
+# browser submits the form natively as form-encoded. The native caller is *navigating*, so
+# it must get 303 redirects — into Mollie on success, back to the form on bad input.
+_SITE_ORIGIN_RE = re.compile(
+    r"^https://(www\.)?klantkraan\.nl$|^https://[a-z0-9-]+\.klantkraan-marketing\.pages\.dev$"
+)
+
+
+async def _lead_payload(request: Request) -> tuple[dict[str, object], bool]:
+    """Return (fields, native): JSON from the site's fetch path, form-encoded otherwise."""
+    if (request.headers.get("content-type") or "").lower().startswith("application/json"):
+        raw = await request.json()
+        return (raw if isinstance(raw, dict) else {}), False
+    form = await request.form()
+    return {k: str(v) for k, v in form.items()}, True
+
+
+def _form_urls(request: Request) -> tuple[str, str]:
+    """(thanks_url, retry_url) for a native form poster, locale-aware via the Referer.
+    Only allowlisted site origins are echoed back — anything else gets the defaults."""
+    ref = urlsplit(request.headers.get("referer") or "")
+    origin = f"{ref.scheme}://{ref.netloc}"
+    path = ref.path or "/aanmelden/"
+    if not _SITE_ORIGIN_RE.match(origin):
+        origin, path = "https://klantkraan.nl", "/aanmelden/"
+    prefix = next((p for p in ("/en", "/es") if path.startswith(p + "/")), "")
+    return f"{origin}{prefix}/bedankt/", f"{origin}{path}?fout=1"
+
+
+async def _signup(request: Request, buy: bool) -> Response:
+    """Shared body of /api/lead and /api/checkout. The lead ALWAYS persists before any
+    Mollie call, and Mollie trouble degrades to no checkout — never to a lost lead."""
+    data, native = await _lead_payload(request)
+    thanks, retry = _form_urls(request)
+
+    def reject(status: int, detail: str) -> Response:
+        if native:
+            return RedirectResponse(retry, status_code=303)
+        raise HTTPException(status_code=status, detail=detail)
+
     if not _rate_ok(f"lead:{_client_ip(request)}"):
-        raise HTTPException(status_code=429, detail="Too many requests — try again in a minute.")
-    if body.website.strip():
-        return {"ok": True}  # honeypot tripped: pretend success, store nothing
-    result = notify.site_lead(body.model_dump(exclude={"website"}))
+        return reject(429, "Too many requests — try again in a minute.")
+    if buy and native and (data.get("plan") or "chat") != "chat":
+        buy = False  # the no-JS form posts every plan to /api/checkout; interest-only = lead
+    try:
+        body = CheckoutIn.model_validate(data) if buy else LeadIn.model_validate(data)
+    except ValidationError:
+        return reject(422, "Invalid input.")
+
+    ok_body: dict[str, object] = {"ok": True, "checkout_url": None} if buy else {"ok": True}
+    if body.website.strip():  # honeypot tripped: pretend success, store nothing
+        return RedirectResponse(thanks, status_code=303) if native else JSONResponse(ok_body)
+
+    lead = body.model_dump(exclude={"website"})
+    if buy:
+        lead["checkout"] = True  # persisted so paid/abandoned can be cross-checked
+    result = await run_in_threadpool(notify.site_lead, lead)
     if not result["ok"]:
-        # Neither disk nor Telegram took the lead — the caller must get its mailto fallback.
-        raise HTTPException(status_code=503, detail="Could not save your request.")
-    return {"ok": True}
+        # Neither disk nor Telegram took the lead — the caller must get its fallback.
+        return reject(503, "Could not save your request.")
+    if not buy:
+        return RedirectResponse(thanks, status_code=303) if native else JSONResponse(ok_body)
+
+    def create_checkout() -> str | None:
+        try:
+            customer_id = billing.create_customer(
+                body.bedrijf.strip() or body.naam.strip(), body.email.strip()
+            )
+            return billing.create_first_payment(
+                customer_id, billing.FIRST_MONTH_EUR, "Klantkraan Chat eerste maand", body.plan
+            )
+        except Exception as exc:
+            # The founder already got the lead ping above; this extra one says "send the
+            # payment link by hand" (python -m app.billing checkout).
+            log.exception("checkout creation failed for lead %s", body.naam)
+            notify.owner_exception(exc, context="checkout")
+            return None
+
+    checkout_url = await run_in_threadpool(create_checkout)
+    if native:
+        # No checkout URL means the lead is safe but Mollie is not reachable — the thanks
+        # page's "wij nemen contact op" copy covers exactly that.
+        return RedirectResponse(checkout_url or thanks, status_code=303)
+    return JSONResponse({"ok": True, "checkout_url": checkout_url})
+
+
+@app.post("/api/lead")
+async def lead(request: Request) -> Response:
+    return await _signup(request, buy=False)
 
 
 class CheckoutIn(LeadIn):
@@ -203,33 +283,10 @@ class CheckoutIn(LeadIn):
 
 
 @app.post("/api/checkout")
-def checkout(body: CheckoutIn, request: Request) -> dict[str, object]:
-    """One POST from /aanmelden: save the lead, then hand back a Mollie checkout URL so the
-    site can redirect the buyer straight into payment. The lead always lands first — Mollie
-    trouble degrades to checkout_url=None and the site falls back to "we bellen u"."""
-    if not _rate_ok(f"lead:{_client_ip(request)}"):
-        raise HTTPException(status_code=429, detail="Too many requests — try again in a minute.")
-    if body.website.strip():
-        return {"ok": True, "checkout_url": None}  # honeypot tripped: pretend success
-    lead = body.model_dump(exclude={"website"})
-    lead["checkout"] = True  # persisted in leads.jsonl so paid/abandoned can be cross-checked
-    result = notify.site_lead(lead)
-    if not result["ok"]:
-        raise HTTPException(status_code=503, detail="Could not save your request.")
-    try:
-        customer_id = billing.create_customer(
-            body.bedrijf.strip() or body.naam.strip(), body.email.strip()
-        )
-        checkout_url = billing.create_first_payment(
-            customer_id, billing.FIRST_MONTH_EUR, "Klantkraan Chat eerste maand", body.plan
-        )
-    except Exception as exc:
-        # The founder still got the lead ping above; this extra one says "send the payment
-        # link by hand" (python -m app.billing checkout).
-        log.exception("checkout creation failed for lead %s", body.naam)
-        notify.owner_exception(exc, context="checkout")
-        return {"ok": True, "checkout_url": None}
-    return {"ok": True, "checkout_url": checkout_url}
+async def checkout(request: Request) -> Response:
+    """One POST from /aanmelden: save the lead, then send the buyer into Mollie checkout.
+    JSON callers get {ok, checkout_url}; native form posts get a 303 straight to Mollie."""
+    return await _signup(request, buy=True)
 
 
 # Mollie payment ids only — anything else is not a webhook we ever asked for.
