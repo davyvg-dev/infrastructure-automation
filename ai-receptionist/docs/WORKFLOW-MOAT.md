@@ -225,7 +225,11 @@ Three consequences, in order of how much they matter:
    outbound on the right side of the Forbidden list.
 2. **Module cost per client is negligible — say so when pricing.** A trade doing ~40 jobs/month
    sends roughly 45 quote nudges + 40 reminders + 40 review requests ≈ 125 utility messages ≈
-   **€3–5/month**. The €599 tier is not exposed to messaging cost.
+   **€3–5/month**. The €599 tier is not exposed to messaging cost. *(Correction 2026-07-29: the 40
+   review requests should not be assumed utility. Asking a customer for a review is persuasive
+   intent by Meta's published criteria, so expect that template to bill as marketing — about €5/mo
+   more per client. Still negligible; the number above is the floor, not the ceiling. See
+   `whatsapp-templates.md` §2.4.)*
 3. **From 1 Oct 2026 Meta charges per business message including service replies inside the 24-hour
    window.** This hits the **core €299 product**, not the modules. At ~200 conversations × ~8
    replies a client sends ~1,600 service messages a month; the gross-margin claim of ~97% needs
