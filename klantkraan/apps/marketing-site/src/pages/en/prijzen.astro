@@ -12,6 +12,10 @@ interface Tier {
   priceNote?: string
   blurb: string
   highlight: boolean
+  /** Mono badge in the card header (e.g. "coming soon" on Compleet). */
+  badge?: string
+  cta: string
+  ctaHref: string
 }
 
 const tiers: Tier[] = [
@@ -23,6 +27,8 @@ const tiers: Tier[] = [
     blurb:
       'AI receptionist via website chat + WhatsApp: answers questions, books appointments and captures callback requests, 24/7. Our pick.',
     highlight: true,
+    cta: 'Start with Chat',
+    ctaHref: '/en/aanmelden/?plan=chat',
   },
   {
     id: 'compleet',
@@ -31,8 +37,11 @@ const tiers: Tier[] = [
     dayPrice: '16.63',
     priceNote: 'incl. 750 call minutes/mo, then €0.40/min',
     blurb:
-      'Everything in Chat, plus an AI phone agent on your own Dutch number (coming soon).',
+      'Everything in Chat, plus an AI phone agent on your own Dutch number. Not orderable yet; leave your details and you hear it first.',
     highlight: false,
+    badge: 'coming soon',
+    cta: 'Keep me posted',
+    ctaHref: '/en/aanmelden/?plan=compleet-interesse',
   },
 ]
 
@@ -125,10 +134,15 @@ const serviceSchema = {
                   recommended
                 </span>
               )}
+              {tier.badge && (
+                <span class="rounded-(--radius-button) border border-(--color-line) px-2 py-1 font-mono text-micro text-(--color-dim)">
+                  {tier.badge}
+                </span>
+              )}
             </header>
-            <p class="mt-4 font-display text-h1 text-(--color-sodium)">
+            <p class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}>
               €{tier.price}
-              <span class="text-body text-(--color-dim)"> / mo</span>
+              <span class="text-body text-(--color-dim)">/mo</span>
             </p>
             <p class="mt-1 font-mono text-small text-(--color-dim)">
               ≈ €{tier.dayPrice} per day
@@ -138,11 +152,18 @@ const serviceSchema = {
             )}
             <p class="mt-3 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
-              href="/en/demo/"
+              href={tier.ctaHref}
               class={`mt-6 btn btn-lg ${tier.highlight ? 'btn-primary' : 'btn-ghost'}`}
             >
-              Try the demo
+              {tier.cta}
             </a>
+            {tier.highlight && (
+              <p class="mt-3 text-small">
+                <a href="/en/demo/" class="text-(--color-dim) underline">
+                  Rather try it first? See the demo
+                </a>
+              </p>
+            )}
           </article>
         ))
       }
@@ -207,7 +228,7 @@ const serviceSchema = {
         <h2 class="font-display text-h2 text-(--color-chalk)">Every plan includes</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>Done-for-you setup and tuning. We build and connect everything for you.</li>
-          <li>Cancel monthly (30 days' notice).</li>
+          <li>Cancel monthly; cancel by email, one month's notice.</li>
           <li>First month 50% off.</li>
           <li>30-day satisfaction guarantee. Not happy? Money back.</li>
         </ul>
@@ -229,15 +250,13 @@ const serviceSchema = {
       <p class="eyebrow">Ready?</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Ready to get started?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        In a 20-minute demo we'll show exactly how Klantkraan works in your situation. No sales
-        pitch, just the maths on your own numbers.
+        Sign up and we call within one working day to plan the setup. Rather see how it works
+        first? Try the demo, right in your browser.
       </p>
-      <a
-        href="/en/demo/"
-        class="mt-6 btn btn-primary btn-lg"
-      >
-        Try the demo
-      </a>
+      <div class="mt-6 flex flex-wrap gap-3.5">
+        <a href="/en/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start with Chat</a>
+        <a href="/en/demo/" class="btn btn-ghost btn-lg">Try the demo</a>
+      </div>
     </div>
   </section>
 </Base>

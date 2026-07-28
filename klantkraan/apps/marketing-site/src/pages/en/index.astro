@@ -35,8 +35,7 @@ import { waLink } from '../../data/contact'
             <a href="#nachtdienst" class="btn btn-ghost btn-lg">How it works</a>
           </div>
           <p class="kk-trust">
-            Done-for-you setup &middot; cancel monthly &middot;
-            <span class="g">GDPR-compliant, EU-hosted</span>
+            Done-for-you setup &middot; cancel monthly &middot; <span class="g">GDPR-compliant, EU-hosted</span>
           </p>
         </div>
 
@@ -170,18 +169,22 @@ import { waLink } from '../../data/contact'
         </h2>
         <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">
           This is an example. Run it on your own numbers and you'll see exactly what a month of
-          missed enquiries costs you.
+          missed calls costs you.
         </p>
       </div>
       <div class="kk-receipt" aria-label="Example calculation of lost revenue">
-        <p class="kk-receipt-cap">Example · an average month</p>
+        <p class="kk-receipt-cap">Example · 40 calls a week</p>
         <div class="line">
-          <span class="k">Enquiries per month</span>
-          <span class="v">20</span>
+          <span class="k">Calls per month</span>
+          <span class="v">173</span>
         </div>
         <div class="line">
-          <span class="k">Missed (1 in 4)</span>
-          <span class="v">5</span>
+          <span class="k">Missed (industry estimate: 28%)</span>
+          <span class="v">48</span>
+        </div>
+        <div class="line">
+          <span class="k">Would have become jobs (1 in 3)</span>
+          <span class="v">16</span>
         </div>
         <div class="line">
           <span class="k">× value per job</span>
@@ -189,7 +192,7 @@ import { waLink } from '../../data/contact'
         </div>
         <div class="line result">
           <span class="k">Lost revenue</span>
-          <span class="v bad">€2,250 /mo</span>
+          <span class="v bad">± €7,200/mo</span>
         </div>
         <a class="kk-receipt-cta" href="/en/rekentool/">
           Run it on your own numbers
@@ -226,11 +229,12 @@ import { waLink } from '../../data/contact'
     <div class="mx-auto max-w-5xl px-6">
       <h2 class="kk-final-h2">Turn the light <span class="on">on.</span></h2>
       <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">
-        Try the demo and ask the receptionist a question as if you were a customer. Like it? We
-        handle the setup, you build nothing.
+        Try the demo and ask the receptionist a question as if you were a customer. Like it? Sign
+        up and we take care of the rest, you build nothing.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3.5">
-        <a href="/en/demo/" class="btn btn-primary btn-lg">Try the demo</a>
+        <a href="/en/aanmelden/" class="btn btn-primary btn-lg">Start today</a>
+        <a href="/en/demo/" class="btn btn-ghost btn-lg">Try the demo</a>
         <a href={waLink} target="_blank" rel="noopener" class="btn btn-ghost btn-lg">
           Book an intro chat
         </a>

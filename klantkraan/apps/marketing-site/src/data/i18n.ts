@@ -23,6 +23,7 @@ export interface LocalePair {
 export const localePairs: LocalePair[] = [
   { nl: '/', en: '/en/', es: '/es/' },
   { nl: '/prijzen/', en: '/en/prijzen/', es: '/es/prijzen/' },
+  { nl: '/aanmelden/', en: '/en/aanmelden/', es: '/es/aanmelden/' },
   { nl: '/demo/', en: '/en/demo/', es: '/es/demo/' },
   { nl: '/over/', en: '/en/over/', es: '/es/over/' },
   { nl: '/voor-wie/', en: '/en/voor-wie/', es: '/es/voor-wie/' },

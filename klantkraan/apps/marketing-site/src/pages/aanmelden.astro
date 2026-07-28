@@ -1,0 +1,239 @@
+---
+import Base from '../layouts/Base.astro'
+
+const trades = [
+  { value: 'loodgieter', label: 'Loodgieter' },
+  { value: 'dakdekker', label: 'Dakdekker' },
+  { value: 'installateur', label: 'Installateur' },
+  { value: 'elektricien', label: 'Elektricien' },
+  { value: 'aannemer', label: 'Aannemer' },
+  { value: 'schilder', label: 'Schilder' },
+  { value: 'sportschool', label: 'Sportschool' },
+  { value: 'anders', label: 'Anders' },
+]
+
+const inputClass =
+  'mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)'
+---
+
+<Base
+  title="Aanmelden: start met uw AI-receptionist | Klantkraan"
+  description="Meld uw bedrijf aan voor Klantkraan Chat (€299 per maand). Wij nemen binnen één werkdag contact op en verzorgen de volledige setup."
+  centered={false}
+>
+  <!-- 1. Hero -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">Aan de slag</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Laat hieronder uw gegevens achter. Wij bellen u binnen één werkdag om uw diensten,
+        tarieven en agenda door te nemen. De setup doen wij, u hoeft niets te bouwen.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Form + next steps -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start">
+      <form
+        id="lead-form"
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        novalidate
+      >
+        <div class="space-y-6">
+          <div>
+            <label for="naam" class="block text-body font-medium text-(--color-chalk)">Naam</label>
+            <input id="naam" name="naam" type="text" required autocomplete="name" class={inputClass} />
+          </div>
+          <div>
+            <label for="bedrijf" class="block text-body font-medium text-(--color-chalk)">
+              Bedrijfsnaam
+            </label>
+            <input id="bedrijf" name="bedrijf" type="text" autocomplete="organization" class={inputClass} />
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2 sm:gap-4">
+            <div>
+              <label for="telefoon" class="block text-body font-medium text-(--color-chalk)">
+                Telefoon
+              </label>
+              <input id="telefoon" name="telefoon" type="tel" autocomplete="tel" class={inputClass} />
+            </div>
+            <div>
+              <label for="email" class="block text-body font-medium text-(--color-chalk)">
+                E-mail
+              </label>
+              <input id="email" name="email" type="email" autocomplete="email" class={inputClass} />
+            </div>
+          </div>
+          <p class="-mt-3 text-small text-(--color-dim)">
+            Telefoon of e-mail is genoeg, allebei mag ook.
+          </p>
+          <div>
+            <label for="vak" class="block text-body font-medium text-(--color-chalk)">
+              Vak of branche
+            </label>
+            <select id="vak" name="vak" class={inputClass}>
+              {trades.map((t) => <option value={t.value}>{t.label}</option>)}
+            </select>
+          </div>
+          <fieldset>
+            <legend class="block text-body font-medium text-(--color-chalk)">Abonnement</legend>
+            <div class="mt-2 space-y-2">
+              <label class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3">
+                <input type="radio" name="plan" value="chat" checked class="mt-1 accent-(--color-sodium)" />
+                <span class="text-body text-(--color-chalk)">
+                  Chat
+                  <span class="block text-small text-(--color-dim)">
+                    €299 per maand &middot; websitechat + WhatsApp &middot; maandelijks opzegbaar
+                  </span>
+                </span>
+              </label>
+              <label class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3">
+                <input type="radio" name="plan" value="compleet-interesse" class="mt-1 accent-(--color-sodium)" />
+                <span class="text-body text-(--color-chalk)">
+                  Interesse in Compleet
+                  <span class="block text-small text-(--color-dim)">
+                    met AI-telefonist, binnenkort beschikbaar &middot; wij houden u op de hoogte
+                  </span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <div>
+            <label for="bericht" class="block text-body font-medium text-(--color-chalk)">
+              Bericht <span class="font-normal text-(--color-dim)">(optioneel)</span>
+            </label>
+            <textarea id="bericht" name="bericht" rows="3" class={inputClass}></textarea>
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <p id="lead-error" class="hidden text-small text-(--color-sodium)" role="alert"></p>
+          <button type="submit" id="lead-submit" class="btn btn-primary btn-lg w-full justify-center">
+            Verstuur aanmelding
+          </button>
+          <p class="text-small text-(--color-dim)">
+            Wij gebruiken uw gegevens alleen om contact op te nemen. Zie ons
+            <a href="/legal/privacy/" class="underline">privacybeleid</a>.
+          </p>
+        </div>
+      </form>
+
+      <div>
+        <aside
+          id="lead-success"
+          class="hidden rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+        >
+          <h2 class="font-display text-h2 text-(--color-chalk)">Aanmelding ontvangen</h2>
+          <p class="mt-3 text-body text-(--color-dim)">
+            Bedankt. Wij nemen binnen één werkdag contact met u op om de volgende stap in te
+            plannen.
+          </p>
+        </aside>
+        <aside
+          id="lead-steps"
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
+          <h2 class="font-display text-h2 text-(--color-chalk)">Wat er daarna gebeurt</h2>
+          <ol class="mt-4 space-y-3 text-body text-(--color-dim)">
+            <li>
+              <span class="font-mono text-small text-(--color-sodium)">1.</span>
+              Wij bellen binnen één werkdag en nemen uw diensten, tarieven en agenda door.
+            </li>
+            <li>
+              <span class="font-mono text-small text-(--color-sodium)">2.</span>
+              Wij bouwen en koppelen uw receptionist. Done-for-you, u levert alleen de kennis.
+            </li>
+            <li>
+              <span class="font-mono text-small text-(--color-sodium)">3.</span>
+              U test hem zelf, geeft akkoord en de receptionist gaat live op uw site en WhatsApp.
+            </li>
+          </ol>
+          <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+            Aanmelden verplicht u tot niets. Wij nemen eerst contact op om alles door te nemen.
+            Maandelijks opzegbaar, eerste maand 50% korting.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Honeypot: parked off-screen so humans never see it; bots that fill it are dropped. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const ENDPOINT = 'https://demo.klantkraan.nl/api/lead'
+
+  function initLeadForm() {
+    const form = document.getElementById('lead-form') as HTMLFormElement | null
+    if (!form || form.dataset.bound) return
+    form.dataset.bound = '1'
+
+    // ?plan=chat | ?plan=compleet-interesse (or plain "compleet") preselects the radio.
+    const wanted = new URLSearchParams(window.location.search).get('plan')
+    const plan = wanted === 'compleet' ? 'compleet-interesse' : wanted
+    if (plan) {
+      const radio = form.querySelector<HTMLInputElement>(`input[name="plan"][value="${plan}"]`)
+      if (radio) radio.checked = true
+    }
+
+    const errorEl = document.getElementById('lead-error') as HTMLElement
+    const submitBtn = document.getElementById('lead-submit') as HTMLButtonElement
+
+    const fail = (html: string) => {
+      errorEl.innerHTML = html
+      errorEl.classList.remove('hidden')
+      submitBtn.disabled = false
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault()
+      errorEl.classList.add('hidden')
+      const data = new FormData(form)
+      const value = (name: string) => String(data.get(name) ?? '').trim()
+
+      if (!value('naam')) return fail('Vul uw naam in.')
+      if (!value('telefoon') && !value('email'))
+        return fail('Vul een telefoonnummer of e-mailadres in.')
+
+      submitBtn.disabled = true
+      try {
+        const resp = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            naam: value('naam'),
+            bedrijf: value('bedrijf'),
+            telefoon: value('telefoon'),
+            email: value('email'),
+            vak: value('vak'),
+            plan: value('plan'),
+            bericht: value('bericht'),
+            website: value('website'),
+          }),
+        })
+        if (!resp.ok) throw new Error(String(resp.status))
+        form.classList.add('hidden')
+        document.getElementById('lead-steps')?.classList.add('hidden')
+        document.getElementById('lead-success')?.classList.remove('hidden')
+      } catch {
+        fail(
+          'Versturen is niet gelukt. Mail ons op <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>, dan pakken wij het direct op.'
+        )
+      }
+    })
+  }
+
+  document.addEventListener('astro:page-load', initLeadForm)
+</script>

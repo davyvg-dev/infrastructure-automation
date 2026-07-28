@@ -12,6 +12,10 @@ interface Tier {
   priceNote?: string
   blurb: string
   highlight: boolean
+  /** Mono badge in the card header (e.g. "binnenkort beschikbaar" on Compleet). */
+  badge?: string
+  cta: string
+  ctaHref: string
 }
 
 const tiers: Tier[] = [
@@ -23,6 +27,8 @@ const tiers: Tier[] = [
     blurb:
       'AI-receptionist via websitechat + WhatsApp: beantwoordt vragen, plant afspraken en vangt terugbelverzoeken, 24/7. Onze aanrader.',
     highlight: true,
+    cta: 'Start met Chat',
+    ctaHref: '/aanmelden/?plan=chat',
   },
   {
     id: 'compleet',
@@ -31,8 +37,11 @@ const tiers: Tier[] = [
     dayPrice: '16,63',
     priceNote: 'incl. 750 belminuten/mnd, daarna €0,40/min',
     blurb:
-      'Alles van Chat, plus een AI-telefonist op een eigen Nederlands nummer (binnenkort beschikbaar).',
+      'Alles van Chat, plus een AI-telefonist op een eigen Nederlands nummer. Nog niet te bestellen; laat uw gegevens achter en u hoort het als eerste.',
     highlight: false,
+    badge: 'binnenkort beschikbaar',
+    cta: 'Hou me op de hoogte',
+    ctaHref: '/aanmelden/?plan=compleet-interesse',
   },
 ]
 
@@ -124,10 +133,15 @@ const serviceSchema = {
                   aanrader
                 </span>
               )}
+              {tier.badge && (
+                <span class="rounded-(--radius-button) border border-(--color-line) px-2 py-1 font-mono text-micro text-(--color-dim)">
+                  {tier.badge}
+                </span>
+              )}
             </header>
-            <p class="mt-4 font-display text-h1 text-(--color-sodium)">
+            <p class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}>
               €{tier.price}
-              <span class="text-body text-(--color-dim)"> / mnd</span>
+              <span class="text-body text-(--color-dim)">/mnd</span>
             </p>
             <p class="mt-1 font-mono text-small text-(--color-dim)">
               ≈ €{tier.dayPrice} per dag
@@ -137,11 +151,18 @@ const serviceSchema = {
             )}
             <p class="mt-3 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
-              href="/demo/"
+              href={tier.ctaHref}
               class={`mt-6 btn btn-lg ${tier.highlight ? 'btn-primary' : 'btn-ghost'}`}
             >
-              Probeer de demo
+              {tier.cta}
             </a>
+            {tier.highlight && (
+              <p class="mt-3 text-small">
+                <a href="/demo/" class="text-(--color-dim) underline">
+                  Liever eerst proberen? Bekijk de demo
+                </a>
+              </p>
+            )}
           </article>
         ))
       }
@@ -206,7 +227,7 @@ const serviceSchema = {
         <h2 class="font-display text-h2 text-(--color-chalk)">Alle abonnementen bevatten</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>Done-for-you setup en tuning. Wij bouwen en koppelen alles voor u.</li>
-          <li>Maandelijks opzegbaar (30 dagen opzegtermijn).</li>
+          <li>Maandelijks opzegbaar; opzeggen per mail, opzegtermijn één maand.</li>
           <li>Eerste maand 50% korting.</li>
           <li>30 dagen tevredenheidsgarantie. Niet tevreden? Geld terug.</li>
         </ul>
@@ -228,15 +249,13 @@ const serviceSchema = {
       <p class="eyebrow">Klaar?</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Klaar om te starten?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        In een demo van 20 minuten laten wij precies zien hoe Klantkraan in uw situatie werkt. Geen
-        verkooppraatje, wel een rekensom op uw cijfers.
+        Meld u aan en wij bellen binnen één werkdag om de setup in te plannen. Liever eerst zien
+        hoe het werkt? Probeer de demo, direct in uw browser.
       </p>
-      <a
-        href="/demo/"
-        class="mt-6 btn btn-primary btn-lg"
-      >
-        Probeer de demo
-      </a>
+      <div class="mt-6 flex flex-wrap gap-3.5">
+        <a href="/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start met Chat</a>
+        <a href="/demo/" class="btn btn-ghost btn-lg">Probeer de demo</a>
+      </div>
     </div>
   </section>
 </Base>

@@ -35,8 +35,7 @@ import { waLink } from '../data/contact'
             <a href="#nachtdienst" class="btn btn-ghost btn-lg">Zo werkt het</a>
           </div>
           <p class="kk-trust">
-            Direct te proberen, geen account &middot; per maand opzegbaar &middot;
-            <span class="g">AVG-proof, EU-gehost</span>
+            Direct te proberen, geen account &middot; per maand opzegbaar &middot; <span class="g">AVG-proof, EU-gehost</span>
           </p>
         </div>
 
@@ -225,18 +224,22 @@ import { waLink } from '../data/contact'
         </h2>
         <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">
           Dit is een voorbeeld. Reken het na met uw eigen aantallen, dan ziet u precies wat een
-          maand gemiste aanvragen u kost.
+          maand gemiste oproepen u kost.
         </p>
       </div>
       <div class="kk-receipt" aria-label="Voorbeeldberekening van misgelopen omzet">
-        <p class="kk-receipt-cap">Voorbeeld · een gemiddelde maand</p>
+        <p class="kk-receipt-cap">Voorbeeld · 40 oproepen per week</p>
         <div class="line">
-          <span class="k">Aanvragen per maand</span>
-          <span class="v">20</span>
+          <span class="k">Oproepen per maand</span>
+          <span class="v">173</span>
         </div>
         <div class="line">
-          <span class="k">Gemist (1 op de 4)</span>
-          <span class="v">5</span>
+          <span class="k">Gemist (brancheschatting 28%)</span>
+          <span class="v">48</span>
+        </div>
+        <div class="line">
+          <span class="k">Was een klus geworden (1 op 3)</span>
+          <span class="v">16</span>
         </div>
         <div class="line">
           <span class="k">× waarde per klus</span>
@@ -244,7 +247,7 @@ import { waLink } from '../data/contact'
         </div>
         <div class="line result">
           <span class="k">Misgelopen omzet</span>
-          <span class="v bad">€2.250 /mnd</span>
+          <span class="v bad">± €7.200/mnd</span>
         </div>
         <a class="kk-receipt-cta" href="/rekentool/">
           Reken met uw eigen cijfers
@@ -265,7 +268,7 @@ import { waLink } from '../data/contact'
         <span class="quote">&ldquo;U chat met een digitale assistent.&rdquo;</span>
         <p>
           Zo begint elk gesprek, voordat er iets anders gebeurt. Vanaf 2&nbsp;augustus 2026 is die
-          melding verplicht voor elk bedrijf (EU AI Act, artikel&nbsp;50). Wij doen het nu al. Waar een
+          melding verplicht voor elk bedrijf, onder artikel&nbsp;50 van de EU AI Act. Wij doen het nu al. Waar een
           belrobot wordt verkocht met &ldquo;niemand hoort het verschil&rdquo;, zegt onze receptionist
           gewoon wie hij is. Uw klant weet waar hij aan toe is, u riskeert geen boete van de
           toezichthouder, en het gesprek blijft eerlijk, dag en nacht.
@@ -282,11 +285,12 @@ import { waLink } from '../data/contact'
     <div class="mx-auto max-w-5xl px-6">
       <h2 class="kk-final-h2">Zet het licht <span class="on">aan.</span></h2>
       <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">
-        Probeer de demo en stel de receptionist een vraag alsof u een klant bent. Bevalt het? De
-        setup doen wij, u hoeft niets te bouwen.
+        Probeer de demo en stel de receptionist een vraag alsof u een klant bent. Bevalt het? Meld
+        u aan en wij regelen de rest, u hoeft niets te bouwen.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-3.5">
-        <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
+        <a href="/aanmelden/" class="btn btn-primary btn-lg">Start vandaag</a>
+        <a href="/demo/" class="btn btn-ghost btn-lg">Probeer de demo</a>
         <a href={waLink} target="_blank" rel="noopener" class="btn btn-ghost btn-lg">
           Plan een kennismaking
         </a>
