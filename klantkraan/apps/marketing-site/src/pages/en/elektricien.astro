@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import Plug from '../../components/illustrations/Plug.astro'
 import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // Elektricien landing page. Follows the /loodgieters template structure.
 // Trade-specific copy: kortsluiting, groepenkast, EV-laadpunt, stroomstoring.
@@ -117,7 +118,7 @@ const faqSchema = {
           short-circuit emergency rate is. Or an EV charge-point extra. It answers questions 24/7.
           Appointments and callback requests come in the same subscription.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -166,20 +167,12 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/elektriciens.jpg"
-        srcset="/photos/elektriciens-sm.jpg 700w, /photos/elektriciens.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Electrician at work in a switchboard"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="elektriciens"
+      alt="Electrician at work in a switchboard"
+      caption="Inside the panel. Your receptionist still answers."
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -236,7 +229,7 @@ const faqSchema = {
           Klantkraan Chat is €299 a month. One short-circuit emergency a month pays for the
           subscription. Everything that comes in after that no longer goes to the competitor down the road.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/en/rekentool/"
             class="btn btn-primary btn-lg"
@@ -305,7 +298,7 @@ const faqSchema = {
         Try the live demo. You'll see how it quotes your short-circuit emergency rate and what it does when
         someone asks a question about an EV charge point.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"

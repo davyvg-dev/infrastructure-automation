@@ -4,6 +4,7 @@ import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
 import Dumbbell from '../components/illustrations/Dumbbell.astro'
 import RiskReversal from '../components/RiskReversal.astro'
+import PhotoBand from '../components/PhotoBand.astro'
 
 // Sportscholen landing page — first non-trades vertical. Follows the /loodgieters
 // template structure; copy per klantkraan/docs/09-brand/voice-and-tone.md (u-form,
@@ -123,7 +124,7 @@ const faqSchema = {
           tarieven paraat. 's Avonds, weekend, feestdagen. De proefles staat direct in uw
           agenda.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/demo/sportscholen/"
             class="btn btn-primary btn-lg"
@@ -172,20 +173,13 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/sportscholen.jpg"
-        srcset="/photos/sportscholen-sm.jpg 700w, /photos/sportscholen.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Lid meldt zich bij de balie van de sportschool"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="sportscholen"
+      alt="Lid meldt zich bij de balie van de sportschool"
+      caption="Druk aan de balie. Uw receptionist antwoordt wél."
+      focus="50% 40%"
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -244,7 +238,7 @@ const faqSchema = {
           Klantkraan Chat is €299 per maand. Eén extra lid per maand en u staat quitte. Elk lid
           daarna is uw marge.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/demo/sportscholen/"
             class="btn btn-primary btn-lg"
@@ -312,7 +306,7 @@ const faqSchema = {
         Probeer de live demo van een sportschool-receptionist. In één gesprek ziet u hoe een
         vraag over het abonnement eindigt als geplande proefles in de agenda.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/demo/sportscholen/"
           class="btn btn-primary btn-lg"

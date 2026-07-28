@@ -23,11 +23,11 @@ interface Props {
 const { t } = Astro.props
 ---
 
-<section class="px-6 py-14 md:py-20">
+<section class="kk-final-sec">
   <div class="kk-final">
     <h2 class="kk-final-h2">{t.h2a} <span class="on">{t.h2on}</span></h2>
     <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">{t.sub}</p>
-    <div class="mt-8 flex flex-wrap justify-center gap-3.5">
+    <div class="mt-8 btn-row justify-center">
       <a href={t.primary.href} class="btn btn-primary btn-lg">{t.primary.label}</a>
       {
         t.ghosts.map((cta) => (
@@ -46,8 +46,21 @@ const { t } = Astro.props
 </section>
 
 <style>
+  /* Full-bleed on a phone, a framed panel from tablet up: at 390px a card inset
+   * inside the gutter turns the closing image into a thumbnail. */
+  .kk-final-sec {
+    padding: 3.5rem 0 4rem;
+  }
+  @media (min-width: 768px) {
+    .kk-final-sec {
+      padding: 5rem 1.5rem;
+    }
+  }
+
   /* The page closes on a lit panel rather than more flat night — the last thing
-   * on screen should look like the light it is selling. */
+   * on screen should look like the light it is selling. Deliberately photo-free:
+   * a picture behind centred copy drops the sub-line's contrast and the close is
+   * the one place nothing may compete with the button. */
   .kk-final {
     position: relative;
     isolation: isolate;
@@ -56,8 +69,7 @@ const { t } = Astro.props
     max-width: 64rem;
     padding: 3.5rem 1.5rem 4rem;
     text-align: center;
-    border: 1px solid var(--color-line);
-    border-radius: 1.5rem;
+    border-block: 1px solid var(--color-line);
     background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
   }
   .kk-final::before {
@@ -71,6 +83,8 @@ const { t } = Astro.props
   @media (min-width: 768px) {
     .kk-final {
       padding: 4.5rem 3rem 5rem;
+      border: 1px solid var(--color-line);
+      border-radius: 1.5rem;
     }
   }
 

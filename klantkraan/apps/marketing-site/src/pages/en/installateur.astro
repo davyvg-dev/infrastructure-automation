@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import Radiator from '../../components/illustrations/Radiator.astro'
 import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // Heating-engineer landing page. Follows the /loodgieters template structure.
 // Trade-specific copy: boiler breakdown, servicing, water heater, cold-snap peak.
@@ -121,7 +122,7 @@ const faqSchema = {
           won't mistake it for a scheduling question about the annual service. Catches the January
           peak and the October servicing rush. Evenings and weekends included.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -170,20 +171,12 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/installateurs.jpg"
-        srcset="/photos/installateurs-sm.jpg 700w, /photos/installateurs.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Technician checking the outdoor unit of a heat pump"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="installateurs"
+      alt="Technician checking the outdoor unit of a heat pump"
+      caption="Out at the unit. Your receptionist still answers."
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -240,7 +233,7 @@ const faqSchema = {
           Klantkraan Chat is €299 a month. One extra emergency boiler call from the January peak covers the subscription. Everything that
           comes in after that is revenue. And the customer isn't sat in a cold house for three hours.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/en/rekentool/"
             class="btn btn-primary btn-lg"
@@ -308,7 +301,7 @@ const faqSchema = {
         Try the live demo. After that you'll know whether it spots a boiler breakdown and how it separates one
         from a question about the annual service.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"

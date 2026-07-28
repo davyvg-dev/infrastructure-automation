@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import Dumbbell from '../../components/illustrations/Dumbbell.astro'
 import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // Gyms landing page (English twin of /sportscholen/). Follows the /en/loodgieters
 // template structure; copy per klantkraan/docs/09-brand/voice-and-tone.md (you-form,
@@ -124,7 +125,7 @@ const faqSchema = {
           rates to hand. Evenings, weekends, public holidays. The trial class goes straight into
           your calendar.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -173,20 +174,13 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/sportscholen.jpg"
-        srcset="/photos/sportscholen-sm.jpg 700w, /photos/sportscholen.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Member checking in at the gym front desk"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="sportscholen"
+      alt="Member checking in at the gym front desk"
+      caption="Busy at the desk. Your receptionist still answers."
+      focus="50% 40%"
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -245,7 +239,7 @@ const faqSchema = {
           Klantkraan Chat is €299 a month. One extra member a month and you break even. Every member
           after that is your margin.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -313,7 +307,7 @@ const faqSchema = {
         Try the live demo of a gym receptionist. In one conversation you'll see how a question about
         a membership ends as a booked trial class in the calendar.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"

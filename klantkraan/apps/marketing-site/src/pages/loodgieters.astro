@@ -5,6 +5,7 @@ import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
 import TapValve from '../components/illustrations/TapValve.astro'
 import RiskReversal from '../components/RiskReversal.astro'
+import PhotoBand from '../components/PhotoBand.astro'
 
 // Loodgieters landing page.
 // Copy follows klantkraan/docs/09-brand/voice-and-tone.md (u-form, no fluff,
@@ -119,7 +120,7 @@ const faqSchema = {
           's Avonds, weekend, vakantie. Hetzelfde verhaal. Afspraken en terugbelverzoeken zitten
           in hetzelfde abonnement.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
           <a href="/rekentool/" class="btn btn-ghost btn-lg">Bereken uw ROI</a>
         </div>
@@ -158,20 +159,12 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/loodgieters.jpg"
-        srcset="/photos/loodgieters-sm.jpg 700w, /photos/loodgieters.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Loodgieter draait een koppeling vast onder de gootsteen"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="loodgieters"
+      alt="Loodgieter draait een koppeling vast onder de gootsteen"
+      caption="Onder de gootsteen. Uw receptionist antwoordt wél."
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -228,7 +221,7 @@ const faqSchema = {
           Klantkraan Chat is €299 per maand. Eén extra spoedklus per maand en u staat quitte. Wat
           erna binnenkomt is uw marge.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a href="/rekentool/" class="btn btn-primary btn-lg">Open de rekentool</a>
           <a href="/prijzen/" class="btn btn-ghost btn-lg">Bekijk de tarieven</a>
         </div>
@@ -312,7 +305,7 @@ const faqSchema = {
         Probeer de live demo. In één gesprek ziet u hoe de receptionist een vraag over voorrijkosten
         beantwoordt en een afspraak in de agenda zet.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
         <a href="/prijzen/" class="btn btn-ghost btn-lg">Bekijk prijzen</a>
       </div>

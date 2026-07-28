@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import TapValve from '../../components/illustrations/TapValve.astro'
 import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // Plumbers (loodgieters) landing page, English.
 // Faithful translation of ../loodgieters.astro. Voice mirrors en/index.astro
@@ -119,7 +120,7 @@ const faqSchema = {
           Evenings, weekends, holidays. Same story. Appointments and callback requests come with the
           same subscription.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -168,20 +169,12 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/loodgieters.jpg"
-        srcset="/photos/loodgieters-sm.jpg 700w, /photos/loodgieters.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Plumber tightening a coupling under the sink"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="loodgieters"
+      alt="Plumber tightening a coupling under the sink"
+      caption="Under the sink. Your receptionist still answers."
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -238,7 +231,7 @@ const faqSchema = {
           Klantkraan Chat is €299 a month. One extra emergency job a month and you break even.
           Everything after that is your margin.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/en/rekentool/"
             class="btn btn-primary btn-lg"
@@ -306,7 +299,7 @@ const faqSchema = {
         Try the live demo. In one conversation you'll see how the receptionist answers a question
         about call-out charges and puts an appointment in the calendar.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"

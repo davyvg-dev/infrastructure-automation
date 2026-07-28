@@ -10,6 +10,7 @@ import Faq from '../components/dakdekkers/Faq.astro'
 import CityLinks from '../components/dakdekkers/CityLinks.astro'
 import FinalCta from '../components/dakdekkers/FinalCta.astro'
 import RiskReversal from '../components/RiskReversal.astro'
+import PhotoBand from '../components/PhotoBand.astro'
 ---
 
 <Base
@@ -19,20 +20,13 @@ import RiskReversal from '../components/RiskReversal.astro'
 >
   <Hero />
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/dakdekkers.jpg"
-        srcset="/photos/dakdekkers-sm.jpg 700w, /photos/dakdekkers.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Dakdekker aan het werk op een hellend dak"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="dakdekkers"
+      alt="Dakdekker aan het werk op een hellend dak"
+      caption="Boven op het dak. Uw receptionist antwoordt wél."
+      focus="50% 38%"
+    />
   </section>
 
   <RiskReversal />

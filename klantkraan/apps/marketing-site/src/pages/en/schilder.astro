@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import PaintRoller from '../../components/illustrations/PaintRoller.astro'
 import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // Painter landing page. Follows the /loodgieters template structure.
 // Trade-specific copy: quote requests, spring peak, per-m² rate, colour sample.
@@ -121,7 +122,7 @@ const faqSchema = {
           scheduling questions and suppliers apart. It catches the evening requests you miss now
           while you're up on the scaffolding. And the spring peak without you hiring extra people.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -170,20 +171,12 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/schilders.jpg"
-        srcset="/photos/schilders-sm.jpg 700w, /photos/schilders.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Painter on a stepladder rolling paint onto a wall"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="schilders"
+      alt="Painter on a stepladder rolling paint onto a wall"
+      caption="Up the ladder. Your receptionist still answers."
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -240,7 +233,7 @@ const faqSchema = {
           Klantkraan Chat is €299 a month. One spring job you currently lose to the evening callers pays for the whole
           subscription. The rest goes in your pocket instead of a competitor's.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/en/rekentool/"
             class="btn btn-primary btn-lg"
@@ -308,7 +301,7 @@ const faqSchema = {
         Try the live demo. You'll see how it tells a per-m² question and a colour-sample question apart,
         and what it does when someone asks about spray work.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"

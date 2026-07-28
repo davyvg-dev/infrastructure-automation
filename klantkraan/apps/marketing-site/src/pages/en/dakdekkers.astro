@@ -4,6 +4,7 @@ import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import StormCloud from '../../components/illustrations/StormCloud.astro'
 import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // English roofers (dakdekkers) landing page. Inlined from the Dutch section
 // components (Hero, PainStats, Features, StormScenario, RoiSnippet, Faq,
@@ -100,7 +101,7 @@ const faqSchema = {
           channel that answers naturally. Inspection and quote appointments booked straight into your
           calendar.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -149,20 +150,13 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/dakdekkers.jpg"
-        srcset="/photos/dakdekkers-sm.jpg 700w, /photos/dakdekkers.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Roofer at work on a pitched roof"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="dakdekkers"
+      alt="Roofer at work on a pitched roof"
+      caption="Up on the roof. Your receptionist still answers."
+      focus="50% 38%"
+    />
   </section>
 
   <!-- 1b. Risk-reversal -->
@@ -352,7 +346,7 @@ const faqSchema = {
         One subscription that takes the storm peak. No annual contract. We set everything up for you.
         First month half price.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"

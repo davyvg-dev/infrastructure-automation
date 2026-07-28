@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro'
 import Icon from '../../components/Icon.astro'
 import Stat from '../../components/Stat.astro'
 import RingingPhone from '../../components/illustrations/RingingPhone.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
 
 // English landing page for the air-conditioning / HVAC ICP. Follows the Dutch
 // /installateur template structure; self-contained (no Dutch-copy components).
@@ -120,7 +121,7 @@ const faqSchema = {
           call and doesn't confuse it with a routine service booking. Catches the summer rush and the
           after-hours enquiries. Evenings and weekends included.
         </p>
-        <div class="mt-10 flex flex-wrap gap-4">
+        <div class="mt-10 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -169,20 +170,12 @@ const faqSchema = {
     </div>
   </section>
 
-  <section aria-hidden="false" class="pb-10 md:pb-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <img
-        src="/photos/installateurs.jpg"
-        srcset="/photos/installateurs-sm.jpg 700w, /photos/installateurs.jpg 1400w"
-        sizes="(min-width: 1024px) 960px, calc(100vw - 3rem)"
-        width="1400"
-        height="900"
-        loading="lazy"
-        decoding="async"
-        alt="Technician checking an outdoor air-conditioning unit"
-        class="h-56 w-full rounded-(--radius-card) border border-(--color-line) object-cover md:h-72"
-      />
-    </div>
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="installateurs"
+      alt="Technician checking an outdoor air-conditioning unit"
+      caption="Out at the unit. Your receptionist still answers."
+    />
   </section>
 
   <!-- 2. Pain-stats trio (stone-100) -->
@@ -238,7 +231,7 @@ const faqSchema = {
           subscription for months. Everything after that is revenue, and your customer isn't
           sweating through a 40°C afternoon waiting for a callback.
         </p>
-        <div class="mt-6 flex flex-wrap gap-4">
+        <div class="mt-6 btn-row">
           <a
             href="/en/demo/"
             class="btn btn-primary btn-lg"
@@ -306,7 +299,7 @@ const faqSchema = {
         Try the live demo. Then you'll know whether it recognises an urgent no-cooling call and how
         it tells that apart from a routine service question.
       </p>
-      <div class="mt-8 flex flex-wrap gap-4">
+      <div class="mt-8 btn-row">
         <a
           href="/en/demo/"
           class="btn btn-primary btn-lg"
