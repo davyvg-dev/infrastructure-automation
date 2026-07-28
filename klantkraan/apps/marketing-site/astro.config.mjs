@@ -28,6 +28,13 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // The CSP in public/_headers is script-src 'self' (no inline). Below this
+      // limit Vite inlines bundled page scripts into the HTML, where the browser
+      // refuses to run them — 0 forces every script into an external /_astro/ file.
+      // context7: Astro 5 vite.build.assetsInlineLimit (2026-07-28)
+      assetsInlineLimit: 0,
+    },
     server: {
       allowedHosts: ['.trycloudflare.com'],
     },
