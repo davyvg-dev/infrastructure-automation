@@ -66,6 +66,52 @@ No API keys needed — these are **assisted**: the engine drafts and hands you t
 paste. This is deliberate (their ToS forbid automated posting, and native posts perform
 better anyway). Just be logged in on your phone/desktop when you approve.
 
+## 4b. Google Search Console (what we actually rank for)
+
+Optional, and nothing else depends on it. This is read-only access to *Google's* data
+about our own site — no visitor tracking, so no cookie banner, no new sub-processor and
+nothing to add to the DPA. The property is already verified via the meta tag in
+`Base.astro`.
+
+Four steps, once. Only the last one is a dashboard:
+
+1. Create a Google Cloud project and enable the Search Console API:
+   ```bash
+   gcloud projects create klantkraan-seo --name="Klantkraan SEO"
+   gcloud config set project klantkraan-seo
+   gcloud services enable searchconsole.googleapis.com
+   ```
+2. Make a service account and download its key:
+   ```bash
+   gcloud iam service-accounts create gsc-reader --display-name="Search Console reader"
+   gcloud iam service-accounts keys create ~/.config/klantkraan/gsc.json \
+     --iam-account=gsc-reader@klantkraan-seo.iam.gserviceaccount.com
+   ```
+3. Point the engine at it, in `.env`:
+   ```
+   GSC_SERVICE_ACCOUNT_JSON=/Users/you/.config/klantkraan/gsc.json
+   GSC_SITE_URL=https://klantkraan.nl/
+   ```
+4. Grant the service account access — this one has no CLI. In
+   [Search Console](https://search.google.com/search-console) → Settings → Users and
+   permissions → Add user, paste
+   `gsc-reader@klantkraan-seo.iam.gserviceaccount.com` and give it **Full**.
+
+Then:
+
+```bash
+python -m src.seo report          # last 28 days, with change vs the 28 before
+python -m src.seo report --send   # same, pushed to Telegram
+```
+
+The report leads with clicks, impressions, CTR and average position against the previous
+window, then three lists worth acting on: the top queries, everything sitting at position
+11–20 (page two — the cheapest wins on the site), and anything shown often but never
+clicked (the ranking is fine; the title or description is not).
+
+Search Console finalises a day's data 2–3 days late, so the window always ends three days
+ago. A same-day number would read like a traffic collapse.
+
 ## 5. Run it
 
 Dry-run first (generates and messages you, but never actually posts to X):

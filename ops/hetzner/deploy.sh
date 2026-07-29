@@ -50,6 +50,11 @@ cp /opt/klantkraan/ops/hetzner/ai-receptionist-analyst.timer /etc/systemd/system
 # Digest: daily per-client oversight summary -> founder Telegram (reads the analyst's insights).
 cp /opt/klantkraan/ops/hetzner/ai-receptionist-digest.service /etc/systemd/system/
 cp /opt/klantkraan/ops/hetzner/ai-receptionist-digest.timer /etc/systemd/system/
+# SEO: weekly Search Console report -> founder Telegram. Copied but NOT auto-enabled;
+# it needs GSC_* in growth-engine/.env first (docs/SETUP.md §4b), and a timer that fails
+# every Monday is worse than one that was never started.
+cp /opt/klantkraan/ops/hetzner/growth-engine-seo.service /etc/systemd/system/
+cp /opt/klantkraan/ops/hetzner/growth-engine-seo.timer /etc/systemd/system/
 sed "s/__DEMO_HOST__/$DEMO_HOST/" /opt/klantkraan/ops/hetzner/Caddyfile.template > /etc/caddy/Caddyfile
 
 systemctl daemon-reload

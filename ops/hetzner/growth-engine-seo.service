@@ -1,0 +1,14 @@
+[Unit]
+Description=Klantkraan weekly Search Console report (queries, page-two wins -> founder Telegram)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Needs GSC_SERVICE_ACCOUNT_JSON + GSC_SITE_URL in growth-engine/.env, and the service
+# account granted access on the property in Search Console. Without them src.seo exits 1
+# and `systemctl status` shows the unit failed, which is the point: a silent SEO report is
+# the same as no SEO report.
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/growth-engine
+ExecStart=/opt/klantkraan/growth-engine/.venv/bin/python -m src.seo report --send

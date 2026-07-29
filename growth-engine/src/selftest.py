@@ -17,6 +17,7 @@ safe to gate a TASK.md step on it.
 
 from __future__ import annotations
 
+import os
 import sys
 
 from . import settings
@@ -315,6 +316,55 @@ def check_reel() -> bool:
     return True
 
 
+def check_seo() -> bool:
+    """Offline: the report the founder reads, rendered from known rows. No key, no network.
+
+    Credentials are reported separately -- an unconfigured Search Console must not fail the
+    whole suite, because everything else in the engine runs without it.
+    """
+    print("• seo")
+    from . import seo
+
+    rows = [
+        {"keys": ["ai telefoniste loodgieter"], "clicks": 4, "impressions": 120, "position": 7.2},
+        {"keys": ["receptionist bouwbedrijf"], "clicks": 2, "impressions": 90, "position": 12.4},
+        {"keys": ["telefoon aannemer missen"], "clicks": 0, "impressions": 64, "position": 18.9},
+    ]
+    prev = [
+        {"keys": ["ai telefoniste loodgieter"], "clicks": 1, "impressions": 40, "position": 11.0}
+    ]
+    pages = [{"keys": ["https://klantkraan.nl/loodgieters/"], "clicks": 4, "impressions": 160}]
+
+    totals = seo._totals(rows)
+    # Impression-weighted, not a mean of means: a rarely-seen query must not weigh the same
+    # as one shown a hundred times. Pinned against the naive average, which is what a
+    # regression here would silently fall back to.
+    naive = sum(r["position"] for r in rows) / len(rows)  # 12.83
+    if abs(totals["position"] - 11.64) > 0.01:
+        return _fail(f"weighted average position is wrong (got {totals['position']:.2f})")
+    if abs(totals["position"] - naive) < 0.5:
+        return _fail("average position looks unweighted")
+
+    text = seo.format_report(
+        start="2026-06-29", end="2026-07-26", days=28, queries=rows, pages=pages, prev=prev
+    )
+    for needle in ("TOP QUERIES", "ONE PAGE OFF", "SEEN BUT NOT CLICKED", "better"):
+        if needle not in text:
+            return _fail(f"report is missing '{needle}'")
+    _ok("report renders: totals with deltas, top queries, page-two wins, unclicked listings")
+
+    empty = seo.format_report(start="a", end="b", days=28, queries=[], pages=[], prev=[])
+    if "not being shown" not in empty:
+        return _fail("an empty window must say so, not print an empty table")
+    _ok("empty window says the site is not being shown yet")
+
+    if os.getenv("GSC_SERVICE_ACCOUNT_JSON") and os.getenv("GSC_SITE_URL"):
+        _ok("Search Console credentials present — run: python -m src.seo report")
+    else:
+        _ok("Search Console not connected yet (GSC_* unset) — see docs/SETUP.md")
+    return True
+
+
 def check_generate() -> bool:
     print("• generate (Claude)")
     try:
@@ -420,6 +470,7 @@ CHECKS = {
     "platforms": check_platforms,
     "media": check_media,
     "reel": check_reel,
+    "seo": check_seo,
     "generate": check_generate,
     "telegram": check_telegram,
     "x": check_x,
@@ -428,7 +479,7 @@ CHECKS = {
 }
 # Offline checks first, so a broken render can't waste an API call. meta/tiktok
 # stay out of 'all' until their creds exist (docs/AUTOPUBLISH.md) — run by name.
-ORDER = ["config", "platforms", "media", "reel", "generate", "telegram", "x"]
+ORDER = ["config", "platforms", "media", "reel", "seo", "generate", "telegram", "x"]
 
 
 def main(argv: list[str]) -> int:
