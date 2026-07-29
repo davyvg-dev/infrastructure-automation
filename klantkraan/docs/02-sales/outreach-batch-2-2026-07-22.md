@@ -1,5 +1,9 @@
 # Outreach batch 2 — 13 branded demos, ready to send (2026-07-22)
 
+> **SUPERSEDED — do not send.** These mails pitch the free 14-day pilot at €299/mnd, retired by
+> `founding-member-offer.md` on 2026-07-24. The same 13 prospects are rewritten onto the
+> founding-member offer in `outreach-batch-3-2026-07-29.md`.
+
 The second outreach wave. Thirteen more confirmed-**BV** Randstad prospects from
 `prospects/prospects-randstad-2026-06-08.csv`, none overlapping batch 1, each with:
 

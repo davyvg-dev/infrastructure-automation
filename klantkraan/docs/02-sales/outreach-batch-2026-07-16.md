@@ -1,5 +1,10 @@
 # Outreach batch — 10 branded demos, ready to send (2026-07-16)
 
+> **SUPERSEDED — do not send.** These mails pitch the free 14-day pilot at €299/mnd, retired by
+> `founding-member-offer.md` on 2026-07-24. The same 10 prospects are rewritten onto the
+> founding-member offer in `outreach-batch-3-2026-07-29.md`. Kept for the demo links and the
+> LinkedIn track below.
+
 The first concrete outreach wave of the 28-day sprint. Ten confirmed-BV prospects from
 `prospects/prospects-randstad-2026-06-08.csv`, each with:
 
