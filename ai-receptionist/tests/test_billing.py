@@ -9,7 +9,7 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-from app import billing, notify, server
+from app import billing, mailer, notify, server
 from app.settings import MissingSetting
 
 _PAYMENT_ID = "tr_test1"
@@ -26,15 +26,22 @@ class FakeMollie:
         sequence_type: str = "first",
         subscriptions: list[dict[str, Any]] | None = None,
         metadata: dict[str, Any] | None = None,
+        customer: dict[str, Any] | None = None,
     ) -> None:
         self.calls: list[tuple[str, str, dict[str, Any] | None]] = []
         self.subscriptions = subscriptions if subscriptions is not None else []
+        self.customer = (
+            customer
+            if customer is not None
+            else {"name": "Jan de Vries BV", "email": "jan@devries.nl"}
+        )
         self.payment = {
             "resource": "payment",
             "id": _PAYMENT_ID,
             "status": status,
             "sequenceType": sequence_type,
             "customerId": _CUSTOMER_ID,
+            "amount": {"currency": "EUR", "value": "149.50"},
             "metadata": metadata
             if metadata is not None
             else {"plan": "chat", "monthly_eur": "299.00"},
@@ -46,6 +53,8 @@ class FakeMollie:
             return self.payment
         if method == "GET" and path.startswith("/payments/"):
             raise billing.MollieError("Mollie 404 on GET " + path)
+        if method == "GET" and path == f"/customers/{_CUSTOMER_ID}":
+            return {"resource": "customer", "id": _CUSTOMER_ID, **self.customer}
         if method == "GET" and path == f"/customers/{_CUSTOMER_ID}/subscriptions":
             return {
                 "count": len(self.subscriptions),
@@ -75,7 +84,20 @@ def sent(monkeypatch: pytest.MonkeyPatch) -> list[str]:
 
 
 @pytest.fixture
-def client(data_dir, sent) -> TestClient:
+def mailed(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
+    """Capture the customer-facing mail instead of putting it on the wire."""
+    captured: list[dict[str, Any]] = []
+
+    def fake_send(to, subject, text, *, reply_to=None, idempotency_key=None):
+        captured.append({"to": to, "subject": subject, "text": text, "key": idempotency_key})
+        return True
+
+    monkeypatch.setattr(mailer, "send", fake_send)
+    return captured
+
+
+@pytest.fixture
+def client(data_dir, sent, mailed) -> TestClient:
     server._hits.clear()  # each test starts with a fresh rate-limit window
     return TestClient(server.app)
 
@@ -191,6 +213,74 @@ def test_mollie_unreachable_returns_503_so_mollie_retries(
 
     assert client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID}).status_code == 503
     assert _webhook_events(data_dir) == [], "an unfetched event is not logged as handled"
+
+
+def test_paying_customer_gets_a_welcome_mail(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    (mail,) = mailed
+    assert mail["to"] == "jan@devries.nl"
+    assert mail["subject"] == billing.WELCOME_SUBJECT
+    assert "binnen één werkdag" in mail["text"].lower(), "the one-working-day promise (1b step 1)"
+    assert "€ 299,00 per maand" in mail["text"]
+    assert "€ 149,50" in mail["text"], "the first month actually charged"
+    assert mail["key"] == f"welcome-{_CUSTOMER_ID}", "Resend must dedupe a webhook replay"
+    assert "Welkomstmail verstuurd" in sent[0], "the founder ping says the customer heard from us"
+
+
+def test_welcome_is_sent_once_even_if_mollie_retries(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert len(mailed) == 1, "the second webhook is already_subscribed: no second welcome"
+
+
+def test_welcome_skips_the_website_question_when_the_form_already_asked(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    notify.site_lead({"naam": "Jan de Vries", "email": "jan@devries.nl", "site": "devries.nl"})
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    (mail,) = mailed
+    assert mail["text"].startswith("Hoi Jan,"), "greet the person, not the BV"
+    assert "link naar uw website" not in mail["text"]
+
+
+def test_a_failed_welcome_does_not_fail_the_webhook_but_alerts_the_founder(
+    client: TestClient, data_dir, sent, monkeypatch
+) -> None:
+    _mollie(monkeypatch, FakeMollie())
+    monkeypatch.setattr(mailer, "send", lambda *a, **k: False)
+    monkeypatch.setattr(mailer, "configured", lambda: False)
+
+    resp = client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert resp.status_code == 200, "the money moved; a mail problem cannot fail the webhook"
+    (event,) = _webhook_events(data_dir)
+    assert event["action"] == "subscription_created" and event["welcome_sent"] is False
+    assert "GEEN welkomstmail" in sent[0] and "python -m app.billing welcome" in sent[0]
+
+
+def test_customer_without_an_email_is_reported_not_crashed(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    _mollie(monkeypatch, FakeMollie(customer={"name": "Jan de Vries BV"}))
+
+    resp = client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert resp.status_code == 200 and mailed == []
+    (event,) = _webhook_events(data_dir)
+    assert "no e-mail" in event["welcome_reason"]
 
 
 def test_missing_api_key_raises_a_clear_error(monkeypatch: pytest.MonkeyPatch) -> None:

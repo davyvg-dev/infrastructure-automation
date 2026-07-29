@@ -396,9 +396,15 @@ The gap between "signed" and "live on the client's site booking into their calen
 8. **`billing.cancel` / `billing.refund` CLI** — **OPEN.** The decline path (§1b) and every
    off-boarding currently require the Mollie dashboard. Needed as `python -m app.billing` verbs,
    matching how the rest of this business is operated.
-9. **Paid-webhook welcome message** — **OPEN.** `handle_webhook` notifies the founder but never
-   the customer. Step 1 of §1b is a message that does not exist yet; until it does, the first
-   thing a paying stranger hears from us is silence.
+9. **Paid-webhook welcome message** — **DONE.** `handle_webhook` now mails the buyer on the
+   paid first payment, via `app/mailer.py` (Resend, already in the sub-processor register).
+   Copy lives in `billing.welcome_text`; preview it with `python -m app.billing welcome`, and
+   re-send by hand with `python -m app.billing welcome cst_... --send`. Written in "u" to match
+   the site, not the "je" drafted in §1b above. It promises **one working day**, skips the
+   website question when the signup form already supplied it, and is idempotent twice over
+   (the once-per-customer subscription branch, plus a Resend idempotency key). If the mail
+   cannot go out, the founder's Telegram ping says so and names the fallback command.
+   **Needs `RESEND_API_KEY` on the ops server, or every buyer still gets silence.**
 
 ---
 

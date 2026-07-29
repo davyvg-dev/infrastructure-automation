@@ -7,6 +7,10 @@ subscription on that customer. Mollie webhooks POST a form-encoded `id=tr_...` o
 we fetch the payment back from the API for truth — that fetch-back IS the security
 model (classic Mollie webhooks carry no HMAC).
 
+On that same paid-first-payment event the customer gets their welcome e-mail (mailer.py):
+the founder's Telegram ping is not a reply to the buyer, and a self-serve payer who hears
+nothing is the one failure mode that is entirely ours.
+
 All Mollie knowledge lives here; server.py only owns the thin webhook route. The API
 key (MOLLIE_API_KEY) is optional at boot: the app runs fine without it, billing calls
 raise a clear MissingSetting instead. Every webhook event is appended to
@@ -17,6 +21,8 @@ Sell from the terminal:
     python -m app.billing checkout "Jan de Vries BV" jan@devries.nl
     python -m app.billing checkout "Jan de Vries BV" jan@devries.nl --amount 299.00 --plan chat
     python -m app.billing status
+    python -m app.billing welcome                  # preview the welcome copy, offline
+    python -m app.billing welcome cst_123 --send   # re-send it by hand
 """
 
 from __future__ import annotations
@@ -32,7 +38,7 @@ from typing import Any
 
 import httpx
 
-from . import notify, settings
+from . import mailer, notify, settings
 from .settings import MissingSetting, ensure_dirs
 
 MOLLIE_API = "https://api.mollie.com/v2"
@@ -173,12 +179,128 @@ def fetch_payment(payment_id: str) -> dict[str, Any]:
     return _request("GET", f"/payments/{payment_id}")
 
 
+def fetch_customer(customer_id: str) -> dict[str, Any]:
+    """Name + e-mail of a Mollie customer. Mollie is the source of truth for who paid, so
+    the welcome goes to the address that is actually on the mandate."""
+    return _request("GET", f"/customers/{customer_id}")
+
+
 def _has_live_subscription(customer_id: str) -> bool:
     """Idempotency check against Mollie itself (survives local disk loss): does this
     customer already have a subscription that isn't canceled/completed?"""
     listing = _request("GET", f"/customers/{customer_id}/subscriptions")
     subs = (listing.get("_embedded") or {}).get("subscriptions") or []
     return any(sub.get("status") not in ("canceled", "completed") for sub in subs)
+
+
+# --- Welcome -----------------------------------------------------------------------------
+# The customer's first word from us after paying. Until this existed, a stranger could start
+# a EUR 299/mo SEPA subscription at 03:00 and hear nothing back: /bedankt/ is a receipt, not
+# a welcome. Onboarding playbook 1b step 1 wants exactly three things said (we have it, what
+# happens next, and when) and one promise: ONE WORKING DAY, never "direct" — that is what a
+# pre-build plus founder sleep actually supports.
+#
+# Written in "u", like the rest of klantkraan.nl. The playbook drafted it in "je"; the site
+# is formal throughout, and a welcome in the wrong register reads like a different company.
+
+WELCOME_SUBJECT = "Welkom bij Klantkraan, uw betaling is binnen"
+
+
+def _eur_nl(amount: str) -> str:
+    """Mollie's '149.50' as a Dutch reader expects it: '€ 149,50'."""
+    return "€ " + str(amount).replace(".", ",")
+
+
+def welcome_text(
+    *,
+    person: str,
+    plan: str,
+    monthly_eur: str,
+    first_amount_eur: str | None = None,
+    ask_website: bool = True,
+) -> str:
+    """The welcome body. Pure function of what we know, so it is readable in a test and
+    previewable from the CLI before a real buyer ever gets it."""
+    greeting = f"Hoi {person.split()[0]}," if person.strip() else "Hoi,"
+    needs = []
+    if ask_website:
+        needs.append("De link naar uw website.")
+    needs.append("Waar nieuwe aanvragen naartoe moeten: e-mail of WhatsApp.")
+    needs.append("Welke agenda hij mag inplannen, als u afspraken wilt laten boeken.")
+    needs_block = "\n".join(f"{i}. {item}" for i, item in enumerate(needs, start=1))
+
+    first_line = ""
+    if first_amount_eur and first_amount_eur != monthly_eur:
+        first_line = f"De eerste maand is {_eur_nl(first_amount_eur)} gerekend.\n"
+
+    return f"""{greeting}
+
+Uw betaling is binnen. Dank u wel.
+
+WAT ER NU GEBEURT
+Wij bouwen uw digitale receptionist. Binnen één werkdag krijgt u een link waarmee u zelf
+met hem kunt praten: u stelt hem vragen zoals een klant dat zou doen. Klopt er iets niet,
+een dienst, een werkgebied, de toon, dan past u dat aan in één bericht terug.
+
+WAT WIJ NOG VAN U NODIG HEBBEN
+{needs_block}
+
+Antwoord gewoon op deze mail. Wat u vandaag stuurt, zit in de eerste versie.
+
+UW ABONNEMENT
+Klantkraan {_plan_label(plan)}, {_eur_nl(monthly_eur)} per maand.
+{first_line}Maandelijks opzegbaar: één mail naar hallo@klantkraan.nl en er wordt niets meer
+geïncasseerd. De facturen komen van Mollie.
+
+Klantkraan
+hallo@klantkraan.nl
+"""
+
+
+def send_welcome(
+    customer_id: str, plan: str, monthly_eur: str, first_amount_eur: str | None = None
+) -> dict[str, Any]:
+    """Mail the paying customer their welcome. Returns {"sent", "to", "reason"}.
+
+    Never raises: the money has already moved by the time this runs, so a mail problem is
+    something the founder must hear about, not something that fails the webhook.
+    """
+    result: dict[str, Any] = {"sent": False, "to": None, "reason": ""}
+    try:
+        customer = fetch_customer(customer_id)
+    except (MollieError, MissingSetting) as exc:
+        result["reason"] = f"could not fetch customer: {exc}"
+        return result
+
+    email = str(customer.get("email") or "").strip()
+    if not email:
+        result["reason"] = "customer has no e-mail address on file"
+        return result
+    result["to"] = email
+
+    lead = notify.find_lead(email) or {}
+    person = str(lead.get("naam") or customer.get("name") or "")
+    # Don't ask for something they already typed into the signup form.
+    ask_website = not str(lead.get("site") or "").strip()
+
+    body = welcome_text(
+        person=person,
+        plan=plan,
+        monthly_eur=monthly_eur,
+        first_amount_eur=first_amount_eur,
+        ask_website=ask_website,
+    )
+    # Keyed on the customer, so a webhook replay inside Resend's 24h window cannot send a
+    # second copy even if our own idempotency check ever regressed.
+    sent = mailer.send(email, WELCOME_SUBJECT, body, idempotency_key=f"welcome-{customer_id}")
+    result["sent"] = sent
+    if not sent:
+        result["reason"] = (
+            "RESEND_API_KEY not configured"
+            if not mailer.configured()
+            else "Resend refused the send"
+        )
+    return result
 
 
 # --- Webhook -----------------------------------------------------------------------------
@@ -225,6 +347,14 @@ def handle_webhook(payment_id: str) -> dict[str, Any]:
             result["subscription_id"] = subscription.get("id")
             result["plan"] = plan
             result["monthly_eur"] = _eur(monthly)
+            # First word to the customer. Deliberately after the subscription exists: this
+            # branch runs once per customer, so the welcome inherits that idempotency.
+            paid = (payment.get("amount") or {}).get("value")
+            welcome = send_welcome(customer_id, plan, _eur(monthly), paid)
+            result["welcome_sent"] = welcome["sent"]
+            result["welcome_to"] = welcome["to"]
+            if not welcome["sent"]:
+                result["welcome_reason"] = welcome["reason"]
     elif status == "paid":
         result["action"] = "recurring_paid" if sequence_type == "recurring" else "paid"
 
@@ -238,13 +368,27 @@ def _notify(result: dict[str, Any]) -> None:
     try:
         action = result.get("action")
         if action == "subscription_created":
+            # Whether the customer heard from us is the actionable half of this ping: if the
+            # welcome did not go out, the founder is the fallback and must know immediately.
+            if result.get("welcome_sent"):
+                welcome_line = f"Welkomstmail verstuurd naar {result.get('welcome_to')}."
+            else:
+                welcome_line = (
+                    "GEEN welkomstmail verstuurd ({reason}) — stuur zelf een bericht naar "
+                    "{to}, of draai: python -m app.billing welcome {cust}".format(
+                        reason=result.get("welcome_reason") or "onbekend",
+                        to=result.get("welcome_to") or "de klant",
+                        cust=result.get("customer_id"),
+                    )
+                )
             notify.owner(
                 "[billing] Eerste betaling binnen ({payment}) — maandabonnement gestart: "
-                "{sub} ({plan}, €{monthly}/maand)".format(
+                "{sub} ({plan}, €{monthly}/maand)\n{welcome}".format(
                     payment=result.get("payment_id"),
                     sub=result.get("subscription_id"),
                     plan=result.get("plan"),
                     monthly=result.get("monthly_eur"),
+                    welcome=welcome_line,
                 )
             )
         elif action in ("recurring_paid", "paid", "already_subscribed"):
@@ -321,6 +465,22 @@ def main(argv: list[str]) -> int:
     p_status = sub.add_parser("status", help="List recent billing events from data/billing.jsonl.")
     p_status.add_argument("--limit", type=int, default=20)
 
+    p_wel = sub.add_parser(
+        "welcome",
+        help="Preview the welcome mail, or re-send it to a paying customer (--send).",
+    )
+    p_wel.add_argument(
+        "customer_id",
+        nargs="?",
+        help="Mollie customer id (cst_...). Omit to preview the copy offline with sample data.",
+    )
+    p_wel.add_argument("--plan", default=DEFAULT_PLAN, choices=sorted(PLAN_MONTHLY))
+    p_wel.add_argument(
+        "--send",
+        action="store_true",
+        help="Actually send it. Without this the mail is only printed.",
+    )
+
     args = parser.parse_args(argv[1:])
 
     if args.cmd == "checkout":
@@ -356,6 +516,46 @@ def main(argv: list[str]) -> int:
                 f"{event.get('payment_id') or '-':16}  {extra}"
             )
         return 0
+    if args.cmd == "welcome":
+        monthly = PLAN_MONTHLY[args.plan]
+        if not args.customer_id:
+            print(f"Onderwerp: {WELCOME_SUBJECT}\n")
+            print(
+                welcome_text(
+                    person="Jan de Vries",
+                    plan=args.plan,
+                    monthly_eur=monthly,
+                    first_amount_eur=FIRST_MONTH_EUR,
+                )
+            )
+            print("(voorbeeld — geef een cst_... mee om de echte mail te zien of te sturen)")
+            return 0
+        if not args.send:
+            try:
+                customer = fetch_customer(args.customer_id)
+            except (MollieError, MissingSetting) as exc:
+                print(f"❌ {exc}")
+                return 1
+            lead = notify.find_lead(str(customer.get("email") or "")) or {}
+            print(f"Aan: {customer.get('email')}")
+            print(f"Onderwerp: {WELCOME_SUBJECT}\n")
+            print(
+                welcome_text(
+                    person=str(lead.get("naam") or customer.get("name") or ""),
+                    plan=args.plan,
+                    monthly_eur=monthly,
+                    first_amount_eur=FIRST_MONTH_EUR,
+                    ask_website=not str(lead.get("site") or "").strip(),
+                )
+            )
+            print("(niet verstuurd — voeg --send toe om te sturen)")
+            return 0
+        result = send_welcome(args.customer_id, args.plan, monthly, FIRST_MONTH_EUR)
+        if result["sent"]:
+            print(f"✅ welkomstmail verstuurd naar {result['to']}")
+            return 0
+        print(f"❌ niet verstuurd ({result['reason']}); klant: {result['to'] or args.customer_id}")
+        return 1
     return 0
 
 

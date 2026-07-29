@@ -179,6 +179,31 @@ def site_lead(lead: dict[str, Any]) -> dict[str, Any]:
     return {"ok": saved or notified, "saved": saved, "notified": notified}
 
 
+def find_lead(email: str) -> dict[str, Any] | None:
+    """The most recent signup lead for this e-mail, or None. Billing uses it to avoid asking
+    a paying customer for something they already typed into the form. Never raises — a
+    missing or corrupt lead log means "we don't know", not a failed webhook."""
+    wanted = email.strip().lower()
+    if not wanted:
+        return None
+    try:
+        path = settings.DATA_DIR / "leads.jsonl"
+        if not path.exists():
+            return None
+        found = None
+        for line in path.read_text(encoding="utf-8").splitlines():
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if str(record.get("email", "")).strip().lower() == wanted:
+                found = record  # keep scanning: the last match is the current one
+        return found
+    except Exception as exc:
+        print(f"[notify:find_lead] lookup failed ({exc})")
+        return None
+
+
 def _save_lead(record: dict[str, Any]) -> bool:
     try:
         with _LOCK:
