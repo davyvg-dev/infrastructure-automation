@@ -126,10 +126,15 @@ about it.
 4. Log the reason. Repeated declines of the same shape are either a site-copy problem (we are
    attracting the wrong buyer) or a roadmap signal.
 
-**Today this needs the Mollie dashboard**, because `app/billing.py` has no cancel or refund
-function. That is a gap (§11) and it is the wrong tool for this founder: it is exactly the
-dashboard-not-CLI friction that gets deferred, and a deferred refund is the one that turns into a
-chargeback.
+Steps 1 and 2 are one command, no dashboard:
+
+```
+python -m app.billing subs cst_123        # check what is actually running first
+python -m app.billing offboard cst_123    # cancel every live subscription, then refund in full
+```
+
+It asks for confirmation before it moves money, and it cancels before it refunds. Step 1, the
+written explanation, is still yours to send — the command prints a reminder.
 
 ---
 
@@ -399,9 +404,14 @@ The gap between "signed" and "live on the client's site booking into their calen
    field must not be able to fail a €299 checkout, so anything unrecognisable is kept verbatim
    for the founder to read. The field is `site`, not `website`: `website` is the honeypot and
    stays that way.
-8. **`billing.cancel` / `billing.refund` CLI** — **OPEN.** The decline path (§1b) and every
-   off-boarding currently require the Mollie dashboard. Needed as `python -m app.billing` verbs,
-   matching how the rest of this business is operated.
+8. **`billing.cancel` / `billing.refund` CLI** — **DONE.** Four verbs on `python -m app.billing`:
+   `subs` (what is running and what was paid), `cancel`, `refund`, and `offboard` — the whole
+   decline path in one command. Every money-moving verb prompts first and refuses to run
+   unattended without `--yes`. A refund with no `--amount` refunds what Mollie says was actually
+   charged, so a €149,50 founding-member first month is never refunded as €299. `offboard`
+   cancels before it refunds: a refunded customer left on a live mandate is the outcome that
+   becomes a chargeback. Cancel tries DELETE then POST, because Mollie's REST reference and
+   their own Python SDK disagree on the verb.
 9. **Paid-webhook welcome message** — **DONE.** `handle_webhook` now mails the buyer on the
    paid first payment, via `app/mailer.py` (Resend, already in the sub-processor register).
    Copy lives in `billing.welcome_text`; preview it with `python -m app.billing welcome`, and

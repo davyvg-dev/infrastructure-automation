@@ -23,6 +23,13 @@ Sell from the terminal:
     python -m app.billing status
     python -m app.billing welcome                  # preview the welcome copy, offline
     python -m app.billing welcome cst_123 --send   # re-send it by hand
+
+Stop selling from the terminal too — the playbook's decline path, without the dashboard:
+
+    python -m app.billing subs cst_123             # what is running, what was paid
+    python -m app.billing cancel cst_123           # stop the charges, refund nothing
+    python -m app.billing refund tr_abc            # refund in full
+    python -m app.billing offboard cst_123         # cancel AND refund the first payment
 """
 
 from __future__ import annotations
@@ -185,12 +192,110 @@ def fetch_customer(customer_id: str) -> dict[str, Any]:
     return _request("GET", f"/customers/{customer_id}")
 
 
+def list_subscriptions(customer_id: str) -> list[dict[str, Any]]:
+    listing = _request("GET", f"/customers/{customer_id}/subscriptions")
+    return (listing.get("_embedded") or {}).get("subscriptions") or []
+
+
+def list_customer_payments(customer_id: str) -> list[dict[str, Any]]:
+    listing = _request("GET", f"/customers/{customer_id}/payments")
+    return (listing.get("_embedded") or {}).get("payments") or []
+
+
+def first_paid_payment(customer_id: str) -> dict[str, Any] | None:
+    """The sequenceType=first payment that started this customer's mandate — the one the
+    decline path refunds. Mollie lists newest first, so the last match is the original."""
+    firsts = [
+        p
+        for p in list_customer_payments(customer_id)
+        if p.get("sequenceType") == "first" and p.get("status") == "paid"
+    ]
+    return firsts[-1] if firsts else None
+
+
+def cancel_subscription(customer_id: str, subscription_id: str) -> dict[str, Any]:
+    """Stop an ongoing monthly charge. Nothing is refunded; the mandate simply stops.
+
+    Mollie's own docs disagree on the verb: the classic v2 REST reference documents DELETE
+    on this path, while their generated Python SDK documents POST. Rather than bet the
+    off-boarding path on which one this account speaks, try DELETE and fall back to POST on
+    a method error — a cancel that silently does not happen is money we keep taking.
+    """
+    path = f"/customers/{customer_id}/subscriptions/{subscription_id}"
+    try:
+        return _request("DELETE", path)
+    except MollieUnreachable:
+        raise
+    except MollieError as exc:
+        if "405" not in str(exc) and "404" not in str(exc):
+            raise
+        return _request("POST", path)
+
+
+def refund_payment(
+    payment_id: str, amount_eur: str | float | Decimal | None = None, description: str = ""
+) -> dict[str, Any]:
+    """Refund a payment. Without an amount this refunds the full amount that was charged,
+    read back from Mollie rather than assumed, so a founding-member EUR 149.50 first month
+    is never accidentally refunded as EUR 299."""
+    payment = fetch_payment(payment_id)
+    charged = (payment.get("amount") or {}).get("value")
+    body: dict[str, Any] = {
+        "amount": {"currency": "EUR", "value": _eur(amount_eur if amount_eur else charged)},
+        "description": description or "Klantkraan terugbetaling",
+    }
+    refund = _request("POST", f"/payments/{payment_id}/refunds", body)
+    _log_event(
+        {
+            "event": "refund",
+            "payment_id": payment_id,
+            "refund_id": refund.get("id"),
+            "amount_eur": body["amount"]["value"],
+            "charged_eur": charged,
+            "description": body["description"],
+        }
+    )
+    return refund
+
+
+def _is_live(subscription: dict[str, Any]) -> bool:
+    return subscription.get("status") not in ("canceled", "completed")
+
+
 def _has_live_subscription(customer_id: str) -> bool:
     """Idempotency check against Mollie itself (survives local disk loss): does this
     customer already have a subscription that isn't canceled/completed?"""
-    listing = _request("GET", f"/customers/{customer_id}/subscriptions")
-    subs = (listing.get("_embedded") or {}).get("subscriptions") or []
-    return any(sub.get("status") not in ("canceled", "completed") for sub in subs)
+    return any(_is_live(sub) for sub in list_subscriptions(customer_id))
+
+
+def offboard(customer_id: str, refund: bool = True) -> dict[str, Any]:
+    """The playbook's decline path in one call: stop every live subscription, then refund
+    the first payment in full.
+
+    Cancel before refund on purpose. If the refund fails we have at least stopped taking
+    money; the reverse order can leave a refunded customer on a live mandate, which is the
+    one outcome that turns into a chargeback.
+    """
+    result: dict[str, Any] = {"customer_id": customer_id, "canceled": [], "refund": None}
+    for sub in list_subscriptions(customer_id):
+        if _is_live(sub):
+            cancel_subscription(customer_id, sub["id"])
+            result["canceled"].append(sub["id"])
+    _log_event({"event": "offboard", "customer_id": customer_id, "canceled": result["canceled"]})
+    if refund:
+        payment = first_paid_payment(customer_id)
+        if not payment:
+            result["refund"] = {"error": "no paid first payment found to refund"}
+        else:
+            refunded = refund_payment(
+                payment["id"], description="Klantkraan volledige terugbetaling"
+            )
+            result["refund"] = {
+                "payment_id": payment["id"],
+                "refund_id": refunded.get("id"),
+                "amount_eur": (payment.get("amount") or {}).get("value"),
+            }
+    return result
 
 
 # --- Welcome -----------------------------------------------------------------------------
@@ -439,6 +544,17 @@ def recent_events(limit: int = 20) -> list[dict[str, Any]]:
 # --- CLI ---------------------------------------------------------------------------------
 
 
+def _confirm(assume_yes: bool, question: str) -> bool:
+    """Ask before moving real money. A non-interactive caller (cron, a script) must pass
+    --yes explicitly rather than have a prompt silently auto-answer itself."""
+    if assume_yes:
+        return True
+    if not sys.stdin.isatty():
+        print(f"❌ {question}\n   Niet-interactief: voeg --yes toe als je dit echt wilt.")
+        return False
+    return input(f"{question} [j/N] ").strip().lower() in ("j", "ja", "y", "yes")
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(
         prog="app.billing", description="Mollie billing: sell a subscription from the terminal."
@@ -480,6 +596,38 @@ def main(argv: list[str]) -> int:
         action="store_true",
         help="Actually send it. Without this the mail is only printed.",
     )
+
+    p_subs = sub.add_parser("subs", help="List a customer's subscriptions and paid payments.")
+    p_subs.add_argument("customer_id", help="Mollie customer id (cst_...).")
+
+    p_cancel = sub.add_parser(
+        "cancel", help="Cancel a subscription. Stops future charges; refunds nothing."
+    )
+    p_cancel.add_argument("customer_id", help="Mollie customer id (cst_...).")
+    p_cancel.add_argument(
+        "--subscription", default="", help="One sub_... id. Default: every live subscription."
+    )
+    p_cancel.add_argument("--yes", action="store_true", help="Skip the confirmation prompt.")
+
+    p_refund = sub.add_parser(
+        "refund", help="Refund a payment, in full unless --amount says otherwise."
+    )
+    p_refund.add_argument("payment_id", help="Mollie payment id (tr_...).")
+    p_refund.add_argument(
+        "--amount", default="", help="Partial refund in EUR. Default: the full amount charged."
+    )
+    p_refund.add_argument(
+        "--reason", default="", help="Description on the refund (visible in Mollie)."
+    )
+    p_refund.add_argument("--yes", action="store_true", help="Skip the confirmation prompt.")
+
+    p_off = sub.add_parser(
+        "offboard",
+        help="Decline path: cancel every live subscription AND refund the first payment.",
+    )
+    p_off.add_argument("customer_id", help="Mollie customer id (cst_...).")
+    p_off.add_argument("--no-refund", action="store_true", help="Cancel only; keep the money.")
+    p_off.add_argument("--yes", action="store_true", help="Skip the confirmation prompt.")
 
     args = parser.parse_args(argv[1:])
 
@@ -556,6 +704,110 @@ def main(argv: list[str]) -> int:
             return 0
         print(f"❌ niet verstuurd ({result['reason']}); klant: {result['to'] or args.customer_id}")
         return 1
+    if args.cmd == "subs":
+        try:
+            subs = list_subscriptions(args.customer_id)
+            payments = list_customer_payments(args.customer_id)
+        except (MollieError, MissingSetting) as exc:
+            print(f"❌ {exc}")
+            return 1
+        if not subs:
+            print("geen abonnementen")
+        for s in subs:
+            live = "LIVE  " if _is_live(s) else "      "
+            amount = (s.get("amount") or {}).get("value", "?")
+            print(
+                f"{live}{s.get('id', '?'):16} {s.get('status', '?'):10} €{amount:>8} "
+                f"{s.get('interval', '?'):10} volgende: {s.get('nextPaymentDate') or '-'}"
+            )
+        for p in payments:
+            if p.get("status") == "paid":
+                amount = (p.get("amount") or {}).get("value", "?")
+                print(
+                    f"      {p.get('id', '?'):16} {p.get('status', '?'):10} €{amount:>8} "
+                    f"{p.get('sequenceType', '?'):10} {p.get('paidAt', '')[:10]}"
+                )
+        return 0
+    if args.cmd == "cancel":
+        try:
+            subs = [s for s in list_subscriptions(args.customer_id) if _is_live(s)]
+        except (MollieError, MissingSetting) as exc:
+            print(f"❌ {exc}")
+            return 1
+        if args.subscription:
+            subs = [s for s in subs if s.get("id") == args.subscription]
+        if not subs:
+            print("niets te annuleren (geen lopend abonnement)")
+            return 0
+        what = ", ".join(
+            f"{s['id']} (€{(s.get('amount') or {}).get('value', '?')}/mnd)" for s in subs
+        )
+        if not _confirm(args.yes, f"Abonnement stopzetten voor {args.customer_id}: {what}?"):
+            return 1
+        for s in subs:
+            try:
+                cancel_subscription(args.customer_id, s["id"])
+            except (MollieError, MissingSetting) as exc:
+                print(f"❌ {s['id']}: {exc}")
+                return 1
+            print(f"✅ gestopt: {s['id']}")
+        _log_event(
+            {
+                "event": "cancel",
+                "customer_id": args.customer_id,
+                "canceled": [s["id"] for s in subs],
+            }
+        )
+        return 0
+    if args.cmd == "refund":
+        try:
+            payment = fetch_payment(args.payment_id)
+        except (MollieError, MissingSetting) as exc:
+            print(f"❌ {exc}")
+            return 1
+        charged = (payment.get("amount") or {}).get("value", "?")
+        try:
+            amount = _eur(args.amount) if args.amount else charged
+        except ValueError as exc:
+            parser.error(str(exc))
+        if payment.get("status") != "paid":
+            print(
+                f"❌ {args.payment_id} heeft status {payment.get('status')}; alleen een betaalde betaling kan terug"
+            )
+            return 1
+        if not _confirm(
+            args.yes, f"€{amount} terugbetalen van {args.payment_id} (betaald: €{charged})?"
+        ):
+            return 1
+        try:
+            refunded = refund_payment(args.payment_id, amount, args.reason)
+        except (MollieError, MissingSetting) as exc:
+            print(f"❌ {exc}")
+            return 1
+        print(f"✅ terugbetaald: €{amount} ({refunded.get('id')})")
+        return 0
+    if args.cmd == "offboard":
+        want_refund = not args.no_refund
+        action = "stopzetten en volledig terugbetalen" if want_refund else "alleen stopzetten"
+        if not _confirm(args.yes, f"Klant {args.customer_id} {action}?"):
+            return 1
+        try:
+            result = offboard(args.customer_id, refund=want_refund)
+        except (MollieError, MissingSetting) as exc:
+            print(f"❌ {exc}")
+            return 1
+        if result["canceled"]:
+            print(f"✅ gestopt: {', '.join(result['canceled'])}")
+        else:
+            print("   geen lopend abonnement om te stoppen")
+        refund_result = result.get("refund") or {}
+        if refund_result.get("error"):
+            print(f"⚠  niet terugbetaald: {refund_result['error']} — controleer handmatig")
+            return 1
+        if refund_result:
+            print(f"✅ terugbetaald: €{refund_result['amount_eur']} ({refund_result['refund_id']})")
+        print("   Stuur de klant vandaag nog een schriftelijke uitleg (playbook §1b decline path).")
+        return 0
     return 0
 
 

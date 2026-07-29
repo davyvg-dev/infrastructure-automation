@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from typing import Any
 
 import pytest
@@ -27,7 +28,9 @@ class FakeMollie:
         subscriptions: list[dict[str, Any]] | None = None,
         metadata: dict[str, Any] | None = None,
         customer: dict[str, Any] | None = None,
+        cancel_405: bool = False,
     ) -> None:
+        self.cancel_405 = cancel_405
         self.calls: list[tuple[str, str, dict[str, Any] | None]] = []
         self.subscriptions = subscriptions if subscriptions is not None else []
         self.customer = (
@@ -64,13 +67,29 @@ class FakeMollie:
             sub = {"resource": "subscription", "id": "sub_new", "status": "active", **(data or {})}
             self.subscriptions.append(sub)
             return sub
+        if method == "GET" and path == f"/customers/{_CUSTOMER_ID}/payments":
+            return {"_embedded": {"payments": [self.payment]}}
+        if method == "POST" and path == f"/payments/{_PAYMENT_ID}/refunds":
+            return {"resource": "refund", "id": "re_1", **(data or {})}
+        if method in ("DELETE", "POST") and path.startswith(
+            f"/customers/{_CUSTOMER_ID}/subscriptions/"
+        ):
+            if self.cancel_405 and method == "DELETE":
+                raise billing.MollieError("Mollie 405 on DELETE " + path)
+            sub_id = path.rsplit("/", 1)[-1]
+            for existing in self.subscriptions:
+                if existing.get("id") == sub_id:
+                    existing["status"] = "canceled"
+                    return existing
+            raise billing.MollieError("Mollie 404 on " + path)
         raise AssertionError(f"unexpected Mollie call: {method} {path}")
 
     def subscription_creates(self) -> list[dict[str, Any] | None]:
+        # Endswith, not "in": a cancel can also POST to .../subscriptions/<id>.
         return [
             data
             for method, path, data in self.calls
-            if method == "POST" and "subscriptions" in path
+            if method == "POST" and path.endswith("/subscriptions")
         ]
 
 
@@ -281,6 +300,76 @@ def test_customer_without_an_email_is_reported_not_crashed(
     assert resp.status_code == 200 and mailed == []
     (event,) = _webhook_events(data_dir)
     assert "no e-mail" in event["welcome_reason"]
+
+
+# --- Off-boarding: the decline path without the Mollie dashboard -------------------------
+
+_LIVE_SUB = {"resource": "subscription", "id": "sub_live", "status": "active"}
+
+
+def test_cancel_stops_a_live_subscription(data_dir, monkeypatch) -> None:
+    fake = _mollie(monkeypatch, FakeMollie(subscriptions=[dict(_LIVE_SUB)]))
+
+    billing.cancel_subscription(_CUSTOMER_ID, "sub_live")
+
+    assert fake.subscriptions[0]["status"] == "canceled"
+    assert not billing._has_live_subscription(_CUSTOMER_ID)
+
+
+def test_cancel_falls_back_to_post_when_delete_is_refused(data_dir, monkeypatch) -> None:
+    """Mollie's REST reference documents DELETE, their Python SDK documents POST. Whichever
+    this account speaks, a cancel that silently does not happen keeps charging the customer."""
+    fake = _mollie(monkeypatch, FakeMollie(subscriptions=[dict(_LIVE_SUB)], cancel_405=True))
+
+    billing.cancel_subscription(_CUSTOMER_ID, "sub_live")
+
+    verbs = [m for m, p, _ in fake.calls if "subscriptions/sub_live" in p]
+    assert verbs == ["DELETE", "POST"]
+    assert fake.subscriptions[0]["status"] == "canceled"
+
+
+def test_refund_without_an_amount_refunds_what_was_actually_charged(data_dir, monkeypatch) -> None:
+    """The founding-member first month is €149.50, not €299. Read the charge, never assume."""
+    fake = _mollie(monkeypatch, FakeMollie())
+
+    billing.refund_payment(_PAYMENT_ID)
+
+    (refund,) = [d for m, p, d in fake.calls if p.endswith("/refunds")]
+    assert refund["amount"] == {"currency": "EUR", "value": "149.50"}
+    (event,) = [e for e in _webhook_events(data_dir) if e["event"] == "refund"]
+    assert event["amount_eur"] == "149.50" and event["refund_id"] == "re_1"
+
+
+def test_offboard_cancels_before_it_refunds(data_dir, monkeypatch) -> None:
+    """A refunded customer left on a live mandate is the outcome that becomes a chargeback."""
+    fake = _mollie(monkeypatch, FakeMollie(subscriptions=[dict(_LIVE_SUB)]))
+
+    result = billing.offboard(_CUSTOMER_ID)
+
+    order = [p for m, p, _ in fake.calls if "subscriptions/sub_live" in p or p.endswith("/refunds")]
+    assert order[0].endswith("subscriptions/sub_live") and order[-1].endswith("/refunds")
+    assert result["canceled"] == ["sub_live"]
+    assert result["refund"]["amount_eur"] == "149.50"
+
+
+def test_offboard_without_a_first_payment_reports_instead_of_crashing(
+    data_dir, monkeypatch
+) -> None:
+    fake = FakeMollie(subscriptions=[dict(_LIVE_SUB)])
+    fake.payment["status"] = "failed"  # nothing refundable on this customer
+    _mollie(monkeypatch, fake)
+
+    result = billing.offboard(_CUSTOMER_ID)
+
+    assert result["canceled"] == ["sub_live"], "the mandate still had to stop"
+    assert "no paid first payment" in result["refund"]["error"]
+
+
+def test_money_moving_verbs_refuse_to_run_unattended_without_yes(monkeypatch) -> None:
+    monkeypatch.setattr(sys.stdin, "isatty", lambda: False)
+
+    assert billing._confirm(False, "€299 terugbetalen?") is False
+    assert billing._confirm(True, "€299 terugbetalen?") is True
 
 
 def test_missing_api_key_raises_a_clear_error(monkeypatch: pytest.MonkeyPatch) -> None:
