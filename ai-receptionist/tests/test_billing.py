@@ -10,7 +10,7 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-from app import billing, mailer, notify, server
+from app import billing, mail_layout, mailer, notify, server
 from app.settings import MissingSetting
 
 _PAYMENT_ID = "tr_test1"
@@ -107,8 +107,10 @@ def mailed(monkeypatch: pytest.MonkeyPatch) -> list[dict[str, Any]]:
     """Capture the customer-facing mail instead of putting it on the wire."""
     captured: list[dict[str, Any]] = []
 
-    def fake_send(to, subject, text, *, reply_to=None, idempotency_key=None):
-        captured.append({"to": to, "subject": subject, "text": text, "key": idempotency_key})
+    def fake_send(to, subject, text, *, html=None, reply_to=None, idempotency_key=None):
+        captured.append(
+            {"to": to, "subject": subject, "text": text, "html": html, "key": idempotency_key}
+        )
         return True
 
     monkeypatch.setattr(mailer, "send", fake_send)
@@ -249,6 +251,43 @@ def test_paying_customer_gets_a_welcome_mail(
     assert "€ 149,50" in mail["text"], "the first month actually charged"
     assert mail["key"] == f"welcome-{_CUSTOMER_ID}", "Resend must dedupe a webhook replay"
     assert "Welkomstmail verstuurd" in sent[0], "the founder ping says the customer heard from us"
+
+
+def test_the_welcome_goes_out_branded_and_as_text(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    """Both parts, from one description of the message. The text part is not optional:
+    it is what plain-text clients render and what spam filters read."""
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    (mail,) = mailed
+    assert mail["html"] and mail["html"].startswith("<!doctype html>")
+    assert "https://klantkraan.nl/email/logo.png" in mail["html"], "logo must be an absolute URL"
+    assert "€ 299,00 per maand" in mail["html"], "the price cannot differ between the parts"
+    assert "<table" in mail["html"], "tables, not flexbox -- Outlook renders through Word"
+
+
+def test_the_welcome_reads_complete_with_images_blocked(mailed) -> None:
+    """Most clients block images until asked. Nothing may live only in a picture."""
+    blocks = billing.welcome_blocks(person="Jan", plan="chat", monthly_eur="299.00")
+    photos = [b for b in blocks if isinstance(b, mail_layout.Photo)]
+
+    assert photos, "the welcome carries a photo"
+    assert all(p.alt.strip() for p in photos), "every photo describes itself"
+    text = mail_layout.to_text(blocks)
+    assert all(p.src not in text for p in photos), "the text part invents no image caption"
+
+
+def test_a_customer_name_cannot_break_out_of_the_html(mailed) -> None:
+    """The name comes from a signup form, so it is attacker-controlled."""
+    html = billing.welcome_html(
+        person="<script>alert(1)</script> Vries", plan="chat", monthly_eur="299.00"
+    )
+
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
 
 
 def test_welcome_is_sent_once_even_if_mollie_retries(

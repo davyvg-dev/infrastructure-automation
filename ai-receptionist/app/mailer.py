@@ -2,10 +2,11 @@
 
 Resend is already the declared transactional-email sub-processor in the register
 (klantkraan.nl/legal/subprocessors), so this adds no vendor and no legal-page change. The
-REST surface used here was verified against current Resend docs via context7 (2026-07-29):
-POST https://api.resend.com/emails with a Bearer key and {from, to[], subject, text,
-reply_to}, plus an optional `Idempotency-Key` header that de-duplicates identical sends for
-24 hours.
+REST surface used here was verified against current Resend docs via context7 (2026-07-29,
+/websites/resend): POST https://api.resend.com/emails with a Bearer key and {from, to[],
+subject, text, html, reply_to} -- html and text may both be sent, and Resend assembles the
+multipart message -- plus an optional `Idempotency-Key` header that de-duplicates identical
+sends for 24 hours.
 
 This module is transport only — it knows how to put a message on the wire, never what the
 message says. Callers own the copy (billing.py owns the welcome).
@@ -43,10 +44,16 @@ def send(
     subject: str,
     text: str,
     *,
+    html: str | None = None,
     reply_to: str | None = None,
     idempotency_key: str | None = None,
 ) -> bool:
-    """Send one plain-text e-mail. True only if Resend accepted it.
+    """Send one e-mail. True only if Resend accepted it.
+
+    `text` is always required, even when `html` is given: Resend puts both parts in one
+    multipart message, and the text part is what plain-text clients render and what spam
+    filters read. A mail with no text alternative delivers worse. mail_layout.py renders
+    the pair from one description so they cannot disagree.
 
     `idempotency_key` makes a retried caller (a Mollie webhook replay, a re-run CLI) safe:
     Resend returns the original result instead of sending a second copy.
@@ -54,6 +61,7 @@ def send(
     api_key = os.getenv("RESEND_API_KEY")
     if not (api_key and to.strip()):
         # Dev fallback, and the honest path on a server without the key: show, don't send.
+        # Prints the text part, which is the one a human can read in a terminal.
         print(f"[mailer] (not sent — RESEND_API_KEY unset) to={to} subject={subject}\n{text}")
         return False
 
@@ -64,6 +72,8 @@ def send(
         "text": text,
         "reply_to": reply_to or os.getenv("MAIL_REPLY_TO", DEFAULT_REPLY_TO),
     }
+    if html:
+        payload["html"] = html
     headers = {"Authorization": f"Bearer {api_key}"}
     if idempotency_key:
         headers["Idempotency-Key"] = idempotency_key[:256]

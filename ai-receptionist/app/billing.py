@@ -41,11 +41,12 @@ import sys
 import threading
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
+from pathlib import Path
 from typing import Any
 
 import httpx
 
-from . import mailer, notify, settings
+from . import mail_layout, mailer, notify, settings
 from .settings import MissingSetting, ensure_dirs
 
 MOLLIE_API = "https://api.mollie.com/v2"
@@ -316,50 +317,89 @@ def _eur_nl(amount: str) -> str:
     return "€ " + str(amount).replace(".", ",")
 
 
-def welcome_text(
+WELCOME_PREHEADER = "Wij bouwen uw receptionist. Binnen één werkdag praat u zelf met hem."
+
+# A closing image band, the way the site runs photos: full-bleed and decorative. Nothing in
+# the mail depends on the reader seeing it -- most clients block images until asked.
+WELCOME_PHOTO = mail_layout.Photo(
+    src=f"{mail_layout.SITE}/photos/home-hero-sm.jpg",
+    alt="Een vakvrouw bij haar bestelbus.",
+)
+
+
+def welcome_blocks(
     *,
     person: str,
     plan: str,
     monthly_eur: str,
     first_amount_eur: str | None = None,
     ask_website: bool = True,
-) -> str:
-    """The welcome body. Pure function of what we know, so it is readable in a test and
-    previewable from the CLI before a real buyer ever gets it."""
+) -> list[mail_layout.Block]:
+    """The welcome, as blocks. Pure function of what we know, so it is readable in a test
+    and previewable from the CLI before a real buyer ever gets it. mail_layout turns this
+    into the branded HTML and the plain-text alternative, from this one description."""
     greeting = f"Hoi {person.split()[0]}," if person.strip() else "Hoi,"
     needs = []
     if ask_website:
         needs.append("De link naar uw website.")
     needs.append("Waar nieuwe aanvragen naartoe moeten: e-mail of WhatsApp.")
     needs.append("Welke agenda hij mag inplannen, als u afspraken wilt laten boeken.")
-    needs_block = "\n".join(f"{i}. {item}" for i, item in enumerate(needs, start=1))
 
-    first_line = ""
+    plan_lines = [f"Klantkraan {_plan_label(plan)}, {_eur_nl(monthly_eur)} per maand."]
     if first_amount_eur and first_amount_eur != monthly_eur:
-        first_line = f"De eerste maand is {_eur_nl(first_amount_eur)} gerekend.\n"
+        plan_lines.append(f"De eerste maand is {_eur_nl(first_amount_eur)} gerekend.")
 
-    return f"""{greeting}
+    return [
+        mail_layout.Para(greeting),
+        mail_layout.Para("Uw betaling is binnen. Dank u wel."),
+        mail_layout.Heading("Wat er nu gebeurt"),
+        mail_layout.Para(
+            "Wij bouwen uw digitale receptionist. Binnen één werkdag krijgt u een link "
+            "waarmee u zelf met hem kunt praten: u stelt hem vragen zoals een klant dat "
+            "zou doen. Klopt er iets niet, een dienst, een werkgebied, de toon, dan past "
+            "u dat aan in één bericht terug."
+        ),
+        mail_layout.Heading("Wat wij nog van u nodig hebben"),
+        mail_layout.Steps(needs),
+        mail_layout.Para(
+            "Antwoord gewoon op deze mail. Wat u vandaag stuurt, zit in de eerste versie."
+        ),
+        # The mail asks for three things; this makes answering one tap instead of a
+        # copied address. It opens a reply -- it never leads anywhere they have to log in.
+        mail_layout.Button(
+            "Stuur uw gegevens",
+            "mailto:hallo@klantkraan.nl?subject=Mijn%20gegevens%20voor%20Klantkraan",
+        ),
+        mail_layout.Heading("Uw abonnement"),
+        mail_layout.Panel(plan_lines),
+        mail_layout.Para(
+            "Maandelijks opzegbaar: één mail naar hallo@klantkraan.nl en er wordt niets "
+            "meer geïncasseerd. De facturen komen van Mollie."
+        ),
+        WELCOME_PHOTO,
+        mail_layout.Signoff("Klantkraan", "hallo@klantkraan.nl"),
+    ]
 
-Uw betaling is binnen. Dank u wel.
 
-WAT ER NU GEBEURT
-Wij bouwen uw digitale receptionist. Binnen één werkdag krijgt u een link waarmee u zelf
-met hem kunt praten: u stelt hem vragen zoals een klant dat zou doen. Klopt er iets niet,
-een dienst, een werkgebied, de toon, dan past u dat aan in één bericht terug.
+def welcome_text(**kwargs: Any) -> str:
+    """The plain-text part, kept as its own name because the CLI preview and the founder's
+    terminal fallback both read this one."""
+    return mail_layout.to_text(welcome_blocks(**kwargs))
 
-WAT WIJ NOG VAN U NODIG HEBBEN
-{needs_block}
 
-Antwoord gewoon op deze mail. Wat u vandaag stuurt, zit in de eerste versie.
+def welcome_html(**kwargs: Any) -> str:
+    return mail_layout.to_html(
+        welcome_blocks(**kwargs), subject=WELCOME_SUBJECT, preheader=WELCOME_PREHEADER
+    )
 
-UW ABONNEMENT
-Klantkraan {_plan_label(plan)}, {_eur_nl(monthly_eur)} per maand.
-{first_line}Maandelijks opzegbaar: één mail naar hallo@klantkraan.nl en er wordt niets meer
-geïncasseerd. De facturen komen van Mollie.
 
-Klantkraan
-hallo@klantkraan.nl
-"""
+def _write_html_preview(path: str, html: str) -> None:
+    """Drop the HTML part on disk so it can be opened and looked at. The images point at
+    klantkraan.nl, so a local preview shows exactly what a reader gets -- provided the
+    assets are deployed."""
+    target = Path(path).expanduser()
+    target.write_text(html, encoding="utf-8")
+    print(f"HTML: {target}")
 
 
 def send_welcome(
@@ -388,16 +428,22 @@ def send_welcome(
     # Don't ask for something they already typed into the signup form.
     ask_website = not str(lead.get("site") or "").strip()
 
-    body = welcome_text(
-        person=person,
-        plan=plan,
-        monthly_eur=monthly_eur,
-        first_amount_eur=first_amount_eur,
-        ask_website=ask_website,
-    )
+    copy = {
+        "person": person,
+        "plan": plan,
+        "monthly_eur": monthly_eur,
+        "first_amount_eur": first_amount_eur,
+        "ask_website": ask_website,
+    }
     # Keyed on the customer, so a webhook replay inside Resend's 24h window cannot send a
     # second copy even if our own idempotency check ever regressed.
-    sent = mailer.send(email, WELCOME_SUBJECT, body, idempotency_key=f"welcome-{customer_id}")
+    sent = mailer.send(
+        email,
+        WELCOME_SUBJECT,
+        welcome_text(**copy),
+        html=welcome_html(**copy),
+        idempotency_key=f"welcome-{customer_id}",
+    )
     result["sent"] = sent
     if not sent:
         result["reason"] = (
@@ -596,6 +642,11 @@ def main(argv: list[str]) -> int:
         action="store_true",
         help="Actually send it. Without this the mail is only printed.",
     )
+    p_wel.add_argument(
+        "--html",
+        metavar="PATH",
+        help="Write the branded HTML part to a file and open it in a browser to check it.",
+    )
 
     p_subs = sub.add_parser("subs", help="List a customer's subscriptions and paid payments.")
     p_subs.add_argument("customer_id", help="Mollie customer id (cst_...).")
@@ -667,15 +718,16 @@ def main(argv: list[str]) -> int:
     if args.cmd == "welcome":
         monthly = PLAN_MONTHLY[args.plan]
         if not args.customer_id:
+            copy = {
+                "person": "Jan de Vries",
+                "plan": args.plan,
+                "monthly_eur": monthly,
+                "first_amount_eur": FIRST_MONTH_EUR,
+            }
             print(f"Onderwerp: {WELCOME_SUBJECT}\n")
-            print(
-                welcome_text(
-                    person="Jan de Vries",
-                    plan=args.plan,
-                    monthly_eur=monthly,
-                    first_amount_eur=FIRST_MONTH_EUR,
-                )
-            )
+            print(welcome_text(**copy))
+            if args.html:
+                _write_html_preview(args.html, welcome_html(**copy))
             print("(voorbeeld — geef een cst_... mee om de echte mail te zien of te sturen)")
             return 0
         if not args.send:
@@ -685,17 +737,18 @@ def main(argv: list[str]) -> int:
                 print(f"❌ {exc}")
                 return 1
             lead = notify.find_lead(str(customer.get("email") or "")) or {}
+            copy = {
+                "person": str(lead.get("naam") or customer.get("name") or ""),
+                "plan": args.plan,
+                "monthly_eur": monthly,
+                "first_amount_eur": FIRST_MONTH_EUR,
+                "ask_website": not str(lead.get("site") or "").strip(),
+            }
             print(f"Aan: {customer.get('email')}")
             print(f"Onderwerp: {WELCOME_SUBJECT}\n")
-            print(
-                welcome_text(
-                    person=str(lead.get("naam") or customer.get("name") or ""),
-                    plan=args.plan,
-                    monthly_eur=monthly,
-                    first_amount_eur=FIRST_MONTH_EUR,
-                    ask_website=not str(lead.get("site") or "").strip(),
-                )
-            )
+            print(welcome_text(**copy))
+            if args.html:
+                _write_html_preview(args.html, welcome_html(**copy))
             print("(niet verstuurd — voeg --send toe om te sturen)")
             return 0
         result = send_welcome(args.customer_id, args.plan, monthly, FIRST_MONTH_EUR)

@@ -40,6 +40,16 @@ from html import escape
 SITE = "https://klantkraan.nl"
 LOGO = f"{SITE}/email/logo.png"
 
+# The legal foot every mail carries. Transactional mail needs no unsubscribe -- it is not
+# marketing -- but it does need to say who is writing and where the terms live. KvK from
+# marketing-site/src/data/company.ts; the BTW number is still pending, and the site hides
+# that field while it is empty, so this does too rather than print "BTW ".
+_COMPANY = "Klantkraan is een handelsnaam van T4 Software Consulting BV — KvK 90232135"
+_FOOTER_LINKS = [
+    ("Privacy", f"{SITE}/legal/privacy/"),
+    ("Voorwaarden", f"{SITE}/legal/voorwaarden/"),
+]
+
 _BAND = "#0f1c1e"  # header, same night as the site
 _WRAP = "#e9eeed"  # page behind the card
 _CARD = "#ffffff"
@@ -126,15 +136,17 @@ def _cell(inner: str, *, top: int = 0, pad: int = _PAD) -> str:
     )
 
 
-def _block_html(block: Block, first: bool) -> str:
-    top = 0 if first else 22
+def _block_html(block: Block, *, first: bool, after_heading: bool) -> str:
+    # A heading and the block it titles are one unit; the gap between them is smaller than
+    # the gap between sections, or the heading floats between two paragraphs.
+    top = 0 if first else 14 if after_heading else 24
 
     if isinstance(block, Heading):
         return _cell(
             f'<div style="font-size:17px;font-weight:700;color:{_INK};'
             f'letter-spacing:-0.01em;">{escape(block.text)}</div>'
-            f'<div style="height:1px;background:{_RULE};margin-top:10px;"></div>',
-            top=top + 6,
+            f'<div style="height:1px;background:{_RULE};margin-top:9px;"></div>',
+            top=top + 8,
         )
 
     if isinstance(block, Para):
@@ -193,13 +205,17 @@ def _block_html(block: Block, first: bool) -> str:
     raise TypeError(f"unknown block: {block!r}")
 
 
-def _footer_html(footer_lines: list[str]) -> str:
-    lines = "".join(f"<div>{escape(line)}</div>" for line in footer_lines)
+def _footer_html() -> str:
+    links = ' <span style="color:#c3cecc;">·</span> '.join(
+        f'<a href="{escape(href, quote=True)}" style="color:{_MUTED};'
+        f'text-decoration:underline;">{escape(label)}</a>'
+        for label, href in _FOOTER_LINKS
+    )
     return (
         f'<tr><td style="padding:26px {_PAD}px 24px {_PAD}px;">'
         f'<div style="height:1px;background:{_RULE};margin-bottom:18px;"></div>'
         f'<div style="font-family:{_FONT};font-size:12px;line-height:1.7;color:{_MUTED};">'
-        f"{lines}</div></td></tr>"
+        f"<div>{escape(_COMPANY)}</div><div>{links}</div></div></td></tr>"
     )
 
 
@@ -208,7 +224,6 @@ def to_html(
     *,
     subject: str,
     preheader: str,
-    footer_lines: list[str],
     lang: str = "nl",
 ) -> str:
     """Render the branded HTML part.
@@ -217,7 +232,11 @@ def to_html(
     scrape it from the body and show "Hoi Jan, Uw betaling" -- a wasted line of the only
     preview a reader gets before deciding to open.
     """
-    body = "".join(_block_html(b, first=(i == 0)) for i, b in enumerate(blocks))
+    body = ""
+    after_heading = False
+    for i, block in enumerate(blocks):
+        body += _block_html(block, first=(i == 0), after_heading=after_heading)
+        after_heading = isinstance(block, Heading)
     return (
         "<!doctype html>"
         f'<html lang="{escape(lang, quote=True)}"><head><meta charset="utf-8">'
@@ -242,7 +261,7 @@ def to_html(
         f'style="display:block;border:0;width:163px;height:21px;"></td></tr>'
         f'<tr><td style="padding-top:{_PAD}px;"></td></tr>'
         f"{body}"
-        f"{_footer_html(footer_lines)}"
+        f"{_footer_html()}"
         "</table></td></tr></table></body></html>"
     )
 
@@ -264,7 +283,12 @@ def _block_text(block: Block) -> str | None:
     if isinstance(block, Panel):
         return "\n".join(_wrap(line) for line in block.lines)
     if isinstance(block, Button):
-        return f"{block.label}: {block.href}"
+        # A text reader cannot click anything, so give them the destination itself. A
+        # mailto is an address, not a URL: "mailto:x@y?subject=Mijn%20gegevens" is noise.
+        target = block.href
+        if target.startswith("mailto:"):
+            target = target[len("mailto:") :].split("?", 1)[0]
+        return f"{block.label}: {target}"
     if isinstance(block, Photo):
         return None  # a picture has no plain-text equivalent worth inventing
     if isinstance(block, Signoff):
@@ -272,7 +296,7 @@ def _block_text(block: Block) -> str | None:
     raise TypeError(f"unknown block: {block!r}")
 
 
-def to_text(blocks: list[Block], *, footer_lines: list[str]) -> str:
+def to_text(blocks: list[Block]) -> str:
     """Render the plain-text alternative. Headings shout, because that is the only
     typography a text mail has, and they stay tight against the paragraph they title."""
     out = ""
@@ -286,6 +310,6 @@ def to_text(blocks: list[Block], *, footer_lines: list[str]) -> str:
         out += rendered
         after_heading = isinstance(block, Heading)
 
-    if footer_lines:
-        out += "\n\n" + "-" * 40 + "\n" + "\n".join(footer_lines)
-    return out + "\n"
+    # A text reader has no hyperlinks, so the footer spells its destinations out.
+    footer = [_COMPANY] + [f"{label}: {href}" for label, href in _FOOTER_LINKS]
+    return out + "\n\n" + "-" * 40 + "\n" + "\n".join(footer) + "\n"
