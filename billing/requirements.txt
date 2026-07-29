@@ -1,5 +1,0 @@
-# Mollie is called over stdlib urllib (no SDK dependency).
-# PyYAML   — read ai-receptionist client configs for the customer's name/email.
-# dotenv   — optional convenience for loading .env (a stdlib fallback exists).
-PyYAML>=6,<7
-python-dotenv>=1,<2

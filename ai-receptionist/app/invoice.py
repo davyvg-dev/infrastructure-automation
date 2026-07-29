@@ -2,8 +2,9 @@
 
 A Dutch B2B customer needs a factuur for every charge, not just a welcome mail — it is what
 their bookkeeper puts in the administration and what lets them reclaim the BTW. Until this
-existed the invoice renderer lived in the separate, undeployed `billing/` app and had never
-been connected to a real payment, so nobody who paid us ever received one.
+existed the invoice renderer lived in a second, never-deployed billing app that no live code
+imported, so nobody who paid us ever received one. That app has since been deleted: two
+implementations of the same billing is how a BTW bug survived unnoticed in one of them.
 
 Three things this owes the Belastingdienst, and how each is met:
 
