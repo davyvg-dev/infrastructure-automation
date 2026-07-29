@@ -55,9 +55,17 @@ from datetime import UTC, datetime
 from email.message import EmailMessage
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 
 from scripts.outreach_mail import PROSPECTS, render  # noqa: E402
+
+try:  # same optional-dotenv contract as app/settings.py, which this script does not import.
+    from dotenv import load_dotenv
+
+    load_dotenv(ROOT / ".env")
+except ModuleNotFoundError:
+    pass
 
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 587
@@ -119,6 +127,12 @@ def main() -> None:
     ap.add_argument("--delay", type=float, default=DEFAULT_DELAY, help="seconds between sends")
     ap.add_argument("--dump", action="store_true", help="write .eml files instead of sending")
     ap.add_argument("--resend", action="store_true", help="ignore the sent log (dangerous)")
+    ap.add_argument(
+        "--test-to",
+        metavar="ADDRESS",
+        help="send ONE mail to this address instead of the prospect, and do not record it. "
+        "Proves credentials, MIME and link integrity without touching the prospect list.",
+    )
     args = ap.parse_args()
 
     by_slug = {p.slug: p for p in PROSPECTS}
@@ -127,10 +141,15 @@ def main() -> None:
 
     chosen = [by_slug[args.slug]] if args.slug else list(PROSPECTS)
     sent = {} if args.resend else load_sent()
-    queue = [p for p in chosen if p.slug not in sent]
-    skipped = len(chosen) - len(queue)
-    if args.limit:
-        queue = queue[: args.limit]
+    if args.test_to:
+        # A rehearsal, not a send: one mail, to the tester, never written to the sent log --
+        # so the real prospect still gets their mail later.
+        queue, skipped, sent = chosen[:1], 0, dict(sent)
+    else:
+        queue = [p for p in chosen if p.slug not in sent]
+        skipped = len(chosen) - len(queue)
+        if args.limit:
+            queue = queue[: args.limit]
 
     if args.dump:
         OUT.mkdir(parents=True, exist_ok=True)
@@ -148,7 +167,7 @@ def main() -> None:
     if not args.send:
         print(f"DRY RUN -- {len(queue)} mail(s) would go out, {skipped} already sent:")
         for p in queue:
-            print(f"  {p.slug:28} -> {p.email}")
+            print(f"  {p.slug:28} -> {args.test_to or p.email}")
         print("\nre-run with --send to actually send")
         return
 
@@ -164,9 +183,13 @@ def main() -> None:
             smtp.starttls(context=ssl.create_default_context())
             smtp.login(sender, password)
             for i, p in enumerate(queue):
-                smtp.send_message(build(render(p), sender))
-                record_sent(sent, p.slug)
-                print(f"sent {p.slug} -> {p.email}")
+                mail = render(p)
+                if args.test_to:
+                    mail = {**mail, "to": args.test_to}
+                smtp.send_message(build(mail, sender))
+                if not args.test_to:
+                    record_sent(sent, p.slug)
+                print(f"sent {p.slug} -> {mail['to']}")
                 if i < len(queue) - 1:
                     time.sleep(args.delay)
     except smtplib.SMTPAuthenticationError as exc:
@@ -178,7 +201,10 @@ def main() -> None:
         # Whatever left is already in sent.json; the rest can be picked up by re-running.
         sys.exit(f"SMTP failed after {len(sent)} recorded send(s): {exc}")
 
-    print(f"\n{len(queue)} sent, recorded in {SENT_LOG}")
+    if args.test_to:
+        print(f"\ntest mail sent to {args.test_to}; nothing recorded, no prospect was mailed")
+    else:
+        print(f"\n{len(queue)} sent, recorded in {SENT_LOG}")
 
 
 if __name__ == "__main__":
