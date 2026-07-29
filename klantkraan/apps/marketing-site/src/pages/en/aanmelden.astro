@@ -91,6 +91,25 @@ const inputClass =
               {trades.map((t) => <option value={t.value}>{t.label}</option>)}
             </select>
           </div>
+          <!-- type="text", not type="url": the browser would reject "yourcompany.com" for
+               want of a scheme and block the submit. The API normalises it instead. -->
+          <div>
+            <label for="site" class="block text-body font-medium text-(--color-chalk)">
+              Website <span class="font-normal text-(--color-dim)">(optional)</span>
+            </label>
+            <input
+              id="site"
+              name="site"
+              type="text"
+              inputmode="url"
+              placeholder="yourcompany.com"
+              autocomplete="url"
+              class={inputClass}
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              So we know your services and service area before you have to explain them.
+            </p>
+          </div>
           <fieldset>
             <legend class="block text-body font-medium text-(--color-chalk)">Plan</legend>
             <div class="mt-2 space-y-2">
@@ -312,6 +331,7 @@ const inputClass =
             telefoon: value('telefoon'),
             email: value('email'),
             vak: value('vak'),
+            site: value('site'),
             plan: value('plan'),
             bericht: value('bericht'),
             akkoord: value('akkoord'),

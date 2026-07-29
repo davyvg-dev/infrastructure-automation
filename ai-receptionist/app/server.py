@@ -178,8 +178,26 @@ class LeadIn(BaseModel):
     vak: str = Field(default="", max_length=100)
     plan: str = Field(default="", max_length=50)
     bericht: str = Field(default="", max_length=2000)
+    # The client's own website: what the scrape-first pre-build runs on (onboarding playbook
+    # §2). Optional, because a trade without a site is still a customer, and a required field
+    # here costs more signups than it saves build minutes. NOT called `website` — that name
+    # belongs to the honeypot below and always has.
+    site: str = Field(default="", max_length=300)
     # Honeypot: a hidden field humans never see. Bots that fill it get a silent 200.
     website: str = Field(default="", max_length=500)
+
+    @field_validator("site")
+    @classmethod
+    def _site_shape(cls, v: str) -> str:
+        """Normalise to something scrapeable, and never reject. A typo'd website must not be
+        able to fail a €299 checkout, so anything that doesn't look like a host is kept
+        verbatim for the founder to read rather than thrown away or 422'd."""
+        raw = v.strip()
+        if not raw or " " in raw or "." not in raw:
+            return raw
+        if not raw.lower().startswith(("http://", "https://")):
+            raw = "https://" + raw
+        return raw[:300]
 
     @field_validator("email")
     @classmethod

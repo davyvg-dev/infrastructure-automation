@@ -167,6 +167,7 @@ def site_lead(lead: dict[str, Any]) -> dict[str, Any]:
         ("Telefoon", "telefoon"),
         ("E-mail", "email"),
         ("Vak", "vak"),
+        ("Website", "site"),
         ("Bericht", "bericht"),
     ):
         if lead.get(key):

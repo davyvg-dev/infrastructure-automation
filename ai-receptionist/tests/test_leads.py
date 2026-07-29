@@ -66,6 +66,36 @@ def test_honeypot_pretends_success_but_stores_nothing(client: TestClient, data_d
     assert not sent
 
 
+def test_website_is_captured_and_normalised(client: TestClient, data_dir, sent) -> None:
+    client.post("/api/lead", json={**_LEAD, "site": "devries.nl"})
+
+    record = json.loads((data_dir / "leads.jsonl").read_text(encoding="utf-8").splitlines()[0])
+    assert record["site"] == "https://devries.nl", "the scrape needs a fetchable URL"
+    assert "Website: https://devries.nl" in sent[0], "the founder ping shows it"
+
+
+@pytest.mark.parametrize(
+    ("typed", "stored"),
+    [
+        ("https://devries.nl", "https://devries.nl"),  # already a URL: left alone
+        ("www.devries.nl", "https://www.devries.nl"),
+        ("HTTP://devries.nl", "HTTP://devries.nl"),  # scheme in caps is still a scheme
+        ("", ""),
+        ("  ", ""),
+        ("nog geen website", "nog geen website"),  # kept verbatim, never guessed at
+        ("weetiknietmeer", "weetiknietmeer"),
+    ],
+)
+def test_website_input_never_blocks_a_signup(
+    client: TestClient, data_dir, sent, typed: str, stored: str
+) -> None:
+    resp = client.post("/api/lead", json={**_LEAD, "site": typed})
+
+    assert resp.status_code == 200, "a typo in an optional field cannot cost us the signup"
+    record = json.loads((data_dir / "leads.jsonl").read_text(encoding="utf-8").splitlines()[0])
+    assert record["site"] == stored
+
+
 def test_missing_name_is_rejected(client: TestClient) -> None:
     payload = {k: v for k, v in _LEAD.items() if k != "naam"}
     assert client.post("/api/lead", json=payload).status_code == 422

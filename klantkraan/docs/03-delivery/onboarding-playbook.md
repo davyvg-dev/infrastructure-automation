@@ -67,8 +67,9 @@ Sunday. `billing.handle_webhook` creates the subscription and fires one Telegram
 ping, nothing in this playbook applied. This section is that missing path.
 
 **What we have at the moment the money lands:** `naam`, `bedrijf`, `telefoon`, `email`, `vak`,
-`plan`, `bericht`. No website URL, no region, no calendar, no signed contract, no accepted terms
-(see §11 — all three are open engineering gaps). What we owe them: a working receptionist.
+`plan`, `bericht`, `site` (their website, optional), and a timestamped acceptance of the
+voorwaarden + DPA. No region, no calendar, no signed contract. What we owe them: a working
+receptionist.
 
 **The clock starts at the payment, not at our first free moment.** For a <€5k-ARR product the
 benchmark median time-to-value is minutes, not days (see Sources). We cannot hit minutes with a
@@ -101,9 +102,10 @@ Four checks, ~3 minutes:
 | Trade | In scope, and the guardrails cover it | Decline if the work is regulated advice we must not automate |
 | Same-person duplicate | Not already a client under another slug | Refund the second subscription, merge |
 
-Passing that, run the normal §2 pre-build. The scrape needs a website; if `bedrijf` + `vak` do
-not resolve to a real site or Maps listing in ~2 minutes, **stop guessing and ask one question**
-over WhatsApp: *"Wat is de link naar je website?"* One question beats a wrong receptionist.
+Passing that, run the normal §2 pre-build on the `site` the form captured. If they left it blank
+and `bedrijf` + `vak` do not resolve to a real site or Maps listing in ~2 minutes, **stop guessing
+and ask one question** over WhatsApp: *"Wat is de link naar uw website?"* One question beats a
+wrong receptionist. (The welcome mail already asks, but only when the form came in without it.)
 
 **3 — Rejoin §1 at "Day 0–1".** From the confirm-the-draft step onward the self-serve path and
 the founder-led path are the same playbook. The only lasting difference: a self-serve client never
@@ -390,9 +392,13 @@ The gap between "signed" and "live on the client's site booking into their calen
    `/legal/voorwaarden` + `/legal/dpa`, with the accepted version and a UTC timestamp persisted
    next to the lead. Small change, and it is the difference between having a contract and hoping
    for one.
-7. **Website URL on the signup form** — **OPEN.** The entire scrape-first pre-build (§2) runs on
-   the client's website, and the one field that would supply it is the one we do not ask for. One
-   optional input turns a 03:00 payment into a build that can start before the founder wakes up.
+7. **Website URL on the signup form** — **DONE.** `/aanmelden` (NL, EN, ES) now has an optional
+   Website field, posted as `site` and persisted with the lead. It is `type="text"`, not
+   `type="url"`, so "uwbedrijf.nl" submits rather than tripping browser validation; the API
+   normalises it to a fetchable URL and, deliberately, never rejects it — a typo in an optional
+   field must not be able to fail a €299 checkout, so anything unrecognisable is kept verbatim
+   for the founder to read. The field is `site`, not `website`: `website` is the honeypot and
+   stays that way.
 8. **`billing.cancel` / `billing.refund` CLI** — **OPEN.** The decline path (§1b) and every
    off-boarding currently require the Mollie dashboard. Needed as `python -m app.billing` verbs,
    matching how the rest of this business is operated.

@@ -91,6 +91,25 @@ const inputClass =
               {trades.map((t) => <option value={t.value}>{t.label}</option>)}
             </select>
           </div>
+          <!-- type="text", not type="url": el navegador rechazaría "suempresa.es" por no
+               llevar esquema y bloquearía el envío. La API lo normaliza. -->
+          <div>
+            <label for="site" class="block text-body font-medium text-(--color-chalk)">
+              Sitio web <span class="font-normal text-(--color-dim)">(opcional)</span>
+            </label>
+            <input
+              id="site"
+              name="site"
+              type="text"
+              inputmode="url"
+              placeholder="suempresa.es"
+              autocomplete="url"
+              class={inputClass}
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              Así conocemos sus servicios y su zona antes de que tenga que explicarlos.
+            </p>
+          </div>
           <fieldset>
             <legend class="block text-body font-medium text-(--color-chalk)">Plan</legend>
             <div class="mt-2 space-y-2">
@@ -316,6 +335,7 @@ const inputClass =
             telefoon: value('telefoon'),
             email: value('email'),
             vak: value('vak'),
+            site: value('site'),
             plan: value('plan'),
             bericht: value('bericht'),
             akkoord: value('akkoord'),
