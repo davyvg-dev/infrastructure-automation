@@ -72,7 +72,7 @@ def test_checkout_saves_lead_and_returns_mollie_url(
     # Mollie got the business name (fallback: person's name) and the founding-offer amount.
     assert mollie["customers"] == [("De Vries Installatietechniek BV", "jan@devries.nl")]
     assert mollie["payments"] == [
-        ("cst_test", billing.FIRST_MONTH_EUR, "Klantkraan Chat eerste maand", "chat")
+        ("cst_test", billing.FIRST_MONTH_NET_EUR, "Klantkraan Chat eerste maand", "chat")
     ]
 
 

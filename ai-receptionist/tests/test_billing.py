@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
+from decimal import Decimal
 from typing import Any
 
 import pytest
@@ -459,9 +460,14 @@ def test_create_first_payment_sends_the_stateless_metadata(
     assert url == "https://pay.example/x"
     ((method, path, body),) = calls
     assert (method, path) == ("POST", "/payments")
-    assert body["amount"] == {"currency": "EUR", "value": "149.50"}, "amounts are 2-decimal strings"
+    # 149.50 net is what we advertise; 180.90 is what the bank account sees.
+    assert body["amount"] == {"currency": "EUR", "value": "180.90"}
     assert body["sequenceType"] == "first" and body["customerId"] == _CUSTOMER_ID
-    assert body["metadata"] == {"plan": "chat", "monthly_eur": "299.00"}
+    assert body["metadata"] == {
+        "plan": "chat",
+        "monthly_eur": "361.79",
+        "monthly_net_eur": "299.00",
+    }
     assert body["webhookUrl"].endswith("/api/mollie/webhook") and body["redirectUrl"]
     (event,) = _webhook_events(data_dir)
     assert event["event"] == "checkout_created" and event["payment_id"] == "tr_new1"
@@ -484,5 +490,32 @@ def test_a_test_checkout_makes_the_subscription_cheap_too(
     )
 
     (body,) = calls
-    assert body["amount"] == {"currency": "EUR", "value": "1.00"}
-    assert body["metadata"]["monthly_eur"] == "1.00", "the webhook bills what this says"
+    assert body["amount"] == {"currency": "EUR", "value": "1.21"}
+    assert body["metadata"]["monthly_eur"] == "1.21", "the webhook bills what this says"
+    assert body["metadata"]["monthly_net_eur"] == "1.00"
+
+
+# --- BTW ---------------------------------------------------------------------------------
+# The advertised price is ex-BTW (klantkraan.nl/prijzen says so), so the charge is grossed
+# up and the factuur splits that same gross back. These pin both directions.
+
+
+@pytest.mark.parametrize(
+    ("net", "gross"),
+    [("299.00", "361.79"), ("149.50", "180.90"), ("1.00", "1.21"), ("499.00", "603.79")],
+)
+def test_the_advertised_price_is_grossed_up_for_the_charge(net: str, gross: str) -> None:
+    assert billing.gross_eur(net) == gross
+
+
+@pytest.mark.parametrize("gross", ["361.79", "180.90", "1.21", "0.01", "299.00"])
+def test_net_plus_btw_always_sums_back_to_what_was_charged(gross: str) -> None:
+    """The factuur must add up to the cent against the customer's bank statement."""
+    net, btw = billing.split_gross(gross)
+    assert Decimal(net) + Decimal(btw) == Decimal(gross)
+
+
+def test_the_btw_treatment_is_switchable(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The founder may decide 299 is the gross after all; one env var, no code change."""
+    monkeypatch.setenv("PRICES_INCLUDE_BTW", "1")
+    assert billing.gross_eur("299.00") == "299.00", "the advertised price IS the charge"

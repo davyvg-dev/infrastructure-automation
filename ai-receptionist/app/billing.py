@@ -40,7 +40,7 @@ import os
 import sys
 import threading
 from datetime import datetime
-from decimal import Decimal, InvalidOperation
+from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
@@ -51,13 +51,23 @@ from .settings import MissingSetting, ensure_dirs
 
 MOLLIE_API = "https://api.mollie.com/v2"
 
-# Monthly price per plan (EUR, Mollie string format). The first payment can differ (the
-# founding-member first month is 149.50); the subscription always charges the plan price.
-PLAN_MONTHLY = {"chat": "299.00", "compleet": "499.00"}
+# --- Money -------------------------------------------------------------------------------
+# Every price in this module is the NET (ex-BTW) price, because that is what we advertise:
+# klantkraan.nl/prijzen says "Alle bedragen excl. 21% BTW", and the buyers are BV's that
+# reclaim the BTW, so ex-BTW is the normal B2B quote. Mollie has no concept of BTW — it
+# charges one number — so the gross is computed at the Mollie boundary and nowhere else, and
+# the factuur splits that same gross back into net + BTW so the two can never disagree.
+#
+# Setting PRICES_INCLUDE_BTW=1 treats the advertised price as the gross instead. Nothing else
+# has to change: the charge and the invoice split both follow from this one switch.
+BTW_RATE = Decimal("0.21")
+# Monthly NET price per plan. The first payment can differ (the founding-member first month
+# is half); the subscription always charges the plan price.
+PLAN_MONTHLY_NET = {"chat": "299.00", "compleet": "499.00"}
 DEFAULT_PLAN = "chat"
-# Founding offer: first month 50% off €299. The site's /aanmelden copy quotes this number —
-# change them together.
-FIRST_MONTH_EUR = "149.50"
+# Founding offer: first month 50% off €299 net. The site's /aanmelden copy quotes this
+# number — change them together.
+FIRST_MONTH_NET_EUR = "149.50"
 
 _EVENTS_LOCK = threading.Lock()
 
@@ -91,11 +101,43 @@ def _redirect_url() -> str:
 
 
 def _eur(amount: str | float | Decimal) -> str:
-    """Mollie wants amounts as exact two-decimal strings ('149.50')."""
+    """Mollie wants amounts as exact two-decimal strings ('149.50').
+
+    Rounds half-UP, not Python's default half-even: this is money on a legal document, and
+    half-even would settle a 180.895 gross to a different cent than any accountant expects.
+    """
     try:
-        return str(Decimal(str(amount)).quantize(Decimal("0.01")))
+        return str(Decimal(str(amount)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
     except InvalidOperation as exc:
         raise ValueError(f"not an amount: {amount!r}") from exc
+
+
+def prices_include_btw() -> bool:
+    """False (the default) means the advertised price is ex-BTW and gets grossed up."""
+    return os.getenv("PRICES_INCLUDE_BTW", "").strip().lower() in ("1", "true", "ja", "yes")
+
+
+def gross_eur(net_eur: str | float | Decimal) -> str:
+    """The amount Mollie actually charges for an advertised (net) price."""
+    if prices_include_btw():
+        return _eur(net_eur)
+    return _eur(Decimal(str(net_eur)) * (Decimal("1") + BTW_RATE))
+
+
+def split_gross(gross: str | float | Decimal) -> tuple[str, str]:
+    """A charged gross back into (net, btw), which always sum to the gross exactly.
+
+    Derived from the gross rather than recomputed from the list price on purpose: the
+    factuur must add up to what actually left the customer's account, including for a
+    discounted or test amount that no list price would reproduce.
+    """
+    total = Decimal(_eur(gross))
+    net = Decimal(_eur(total / (Decimal("1") + BTW_RATE)))
+    return _eur(net), _eur(total - net)
+
+
+def plan_monthly_gross(plan: str) -> str:
+    return gross_eur(PLAN_MONTHLY_NET.get(plan, PLAN_MONTHLY_NET[DEFAULT_PLAN]))
 
 
 def _plan_label(plan: str) -> str:
@@ -131,37 +173,49 @@ def create_customer(name: str, email: str) -> str:
 
 def create_first_payment(
     customer_id: str,
-    amount_eur: str | float | Decimal,
+    net_amount_eur: str | float | Decimal,
     description: str,
     plan: str,
-    monthly_eur: str | float | Decimal | None = None,
+    monthly_net_eur: str | float | Decimal | None = None,
 ) -> str:
     """Create the sequenceType=first payment that both charges the first month AND creates
     the mandate for the subscription. Returns the checkout URL to send to the client.
 
-    The plan + monthly price ride along as payment metadata, so the webhook can create the
-    subscription statelessly — no local pending-checkout state to lose.
+    Both amounts are NET (ex-BTW) and are grossed up here — this is the only place a charge
+    is computed, so no caller can forget the BTW.
 
-    monthly_eur overrides the plan price for THIS checkout only. It exists so a test
+    The plan and both monthly figures ride along as payment metadata, so the webhook can
+    create the subscription AND invoice statelessly — no local pending-checkout state to lose.
+
+    monthly_net_eur overrides the plan price for THIS checkout only. It exists so a test
     checkout can charge cents on both legs: without it a EUR 1 first payment still starts a
     EUR 299/month subscription, because the webhook reads the monthly off this metadata.
     """
-    if monthly_eur:
-        monthly = _eur(monthly_eur)
-    else:
-        monthly = PLAN_MONTHLY.get(plan, PLAN_MONTHLY[DEFAULT_PLAN])
+    monthly_net = (
+        _eur(monthly_net_eur)
+        if monthly_net_eur
+        else PLAN_MONTHLY_NET.get(plan, PLAN_MONTHLY_NET[DEFAULT_PLAN])
+    )
+    monthly_gross = gross_eur(monthly_net)
+    charged = gross_eur(net_amount_eur)
     payment = _request(
         "POST",
         "/payments",
         {
-            "amount": {"currency": "EUR", "value": _eur(amount_eur)},
+            "amount": {"currency": "EUR", "value": charged},
             "description": description,
             "customerId": customer_id,
             "sequenceType": "first",
             "redirectUrl": _redirect_url(),
             "webhookUrl": _webhook_url(),
             "locale": "nl_NL",
-            "metadata": {"plan": plan, "monthly_eur": monthly},
+            # monthly_eur stays the GROSS: it is what the subscription must charge. The net
+            # rides along beside it for the factuur and the welcome copy.
+            "metadata": {
+                "plan": plan,
+                "monthly_eur": monthly_gross,
+                "monthly_net_eur": monthly_net,
+            },
         },
     )
     checkout_url = payment["_links"]["checkout"]["href"]
@@ -170,9 +224,11 @@ def create_first_payment(
             "event": "checkout_created",
             "payment_id": payment.get("id"),
             "customer_id": customer_id,
-            "amount_eur": _eur(amount_eur),
+            "amount_eur": charged,
+            "net_amount_eur": _eur(net_amount_eur),
             "plan": plan,
-            "monthly_eur": monthly,
+            "monthly_eur": monthly_gross,
+            "monthly_net_eur": monthly_net,
             "checkout_url": checkout_url,
         }
     )
@@ -501,7 +557,7 @@ def handle_webhook(payment_id: str) -> dict[str, Any]:
         else:
             metadata = payment.get("metadata") or {}
             plan = str(metadata.get("plan") or DEFAULT_PLAN)
-            monthly = metadata.get("monthly_eur") or PLAN_MONTHLY.get(plan, PLAN_MONTHLY["chat"])
+            monthly = metadata.get("monthly_eur") or plan_monthly_gross(plan)
             subscription = create_subscription(
                 customer_id, monthly, f"Klantkraan {_plan_label(plan)} maandabonnement"
             )
@@ -625,19 +681,20 @@ def main(argv: list[str]) -> int:
     p_co.add_argument("email", help="The client's billing email.")
     p_co.add_argument(
         "--amount",
-        default=FIRST_MONTH_EUR,
-        help=f"First payment in EUR (default {FIRST_MONTH_EUR}: first month 50%% off).",
+        default=FIRST_MONTH_NET_EUR,
+        help=f"First payment in EUR EX BTW (default {FIRST_MONTH_NET_EUR}: first month 50%% "
+        f"off). BTW is added on top, so this is what the factuur says, not what is charged.",
     )
     p_co.add_argument(
         "--plan",
         default=DEFAULT_PLAN,
-        choices=sorted(PLAN_MONTHLY),
-        help="Plan for the ongoing subscription (default chat, €299/month).",
+        choices=sorted(PLAN_MONTHLY_NET),
+        help="Plan for the ongoing subscription (default chat, €299/month ex BTW).",
     )
     p_co.add_argument(
         "--monthly",
         default="",
-        help="Override the monthly subscription price in EUR for this checkout only. "
+        help="Override the monthly subscription price (EX BTW) for this checkout only. "
         "Use with --amount to run a live end-to-end test for cents "
         "(--amount 1.00 --monthly 1.00); the public /aanmelden price is unaffected.",
     )
@@ -654,7 +711,7 @@ def main(argv: list[str]) -> int:
         nargs="?",
         help="Mollie customer id (cst_...). Omit to preview the copy offline with sample data.",
     )
-    p_wel.add_argument("--plan", default=DEFAULT_PLAN, choices=sorted(PLAN_MONTHLY))
+    p_wel.add_argument("--plan", default=DEFAULT_PLAN, choices=sorted(PLAN_MONTHLY_NET))
     p_wel.add_argument(
         "--send",
         action="store_true",
@@ -704,7 +761,7 @@ def main(argv: list[str]) -> int:
         label = _plan_label(args.plan)
         try:
             amount = _eur(args.amount)
-            monthly = _eur(args.monthly) if args.monthly else PLAN_MONTHLY[args.plan]
+            monthly = _eur(args.monthly) if args.monthly else PLAN_MONTHLY_NET[args.plan]
         except ValueError as exc:
             parser.error(str(exc))
         try:
@@ -715,17 +772,20 @@ def main(argv: list[str]) -> int:
         except (MollieError, MissingSetting) as exc:
             print(f"❌ {exc}")
             return 1
+        btw_note = "incl. BTW" if prices_include_btw() else f"incl. {BTW_RATE:.0%} BTW"
         print(f"✅ klant aangemaakt: {customer_id}")
-        print(f"   checkout (€{amount}): {checkout_url}")
+        print(f"   checkout: {checkout_url}")
+        print(f"   eerste betaling: €{gross_eur(amount)} ({btw_note}) — €{amount} ex BTW")
         print(
             f"   Stuur deze link naar de klant. Na betaling start het abonnement "
-            f"Klantkraan {label} (€{monthly}/maand) automatisch."
+            f"Klantkraan {label}: €{gross_eur(monthly)} per maand ({btw_note}), "
+            f"€{monthly} ex BTW."
         )
-        if monthly != PLAN_MONTHLY[args.plan]:
+        if monthly != PLAN_MONTHLY_NET[args.plan]:
             # A test checkout is a REAL mandate on REAL money — say so, and hand over the
             # cleanup command now, while the customer id is still on screen.
             print(
-                f"   ⚠️  TEST: €{monthly}/maand in plaats van €{PLAN_MONTHLY[args.plan]}. "
+                f"   ⚠️  TEST: €{monthly}/maand in plaats van €{PLAN_MONTHLY_NET[args.plan]}. "
                 f"Dit is een echte incasso.\n"
                 f"       Opruimen na de test: python -m app.billing offboard {customer_id}"
             )
@@ -743,13 +803,13 @@ def main(argv: list[str]) -> int:
             )
         return 0
     if args.cmd == "welcome":
-        monthly = PLAN_MONTHLY[args.plan]
+        monthly = PLAN_MONTHLY_NET[args.plan]
         if not args.customer_id:
             copy = {
                 "person": "Jan de Vries",
                 "plan": args.plan,
                 "monthly_eur": monthly,
-                "first_amount_eur": FIRST_MONTH_EUR,
+                "first_amount_eur": FIRST_MONTH_NET_EUR,
             }
             print(f"Onderwerp: {WELCOME_SUBJECT}\n")
             print(welcome_text(**copy))
@@ -768,7 +828,7 @@ def main(argv: list[str]) -> int:
                 "person": str(lead.get("naam") or customer.get("name") or ""),
                 "plan": args.plan,
                 "monthly_eur": monthly,
-                "first_amount_eur": FIRST_MONTH_EUR,
+                "first_amount_eur": FIRST_MONTH_NET_EUR,
                 "ask_website": not str(lead.get("site") or "").strip(),
             }
             print(f"Aan: {customer.get('email')}")
@@ -778,7 +838,7 @@ def main(argv: list[str]) -> int:
                 _write_html_preview(args.html, welcome_html(**copy))
             print("(niet verstuurd — voeg --send toe om te sturen)")
             return 0
-        result = send_welcome(args.customer_id, args.plan, monthly, FIRST_MONTH_EUR)
+        result = send_welcome(args.customer_id, args.plan, monthly, FIRST_MONTH_NET_EUR)
         if result["sent"]:
             print(f"✅ welkomstmail verstuurd naar {result['to']}")
             return 0

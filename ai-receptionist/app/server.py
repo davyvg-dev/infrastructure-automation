@@ -294,7 +294,7 @@ async def _signup(request: Request, buy: bool) -> Response:
                 body.bedrijf.strip() or body.naam.strip(), body.email.strip()
             )
             return billing.create_first_payment(
-                customer_id, billing.FIRST_MONTH_EUR, "Klantkraan Chat eerste maand", body.plan
+                customer_id, billing.FIRST_MONTH_NET_EUR, "Klantkraan Chat eerste maand", body.plan
             )
         except Exception as exc:
             # The founder already got the lead ping above; this extra one says "send the
