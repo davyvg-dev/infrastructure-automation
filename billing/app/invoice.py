@@ -106,53 +106,113 @@ def build(
     )
 
 
+# --- Rendering ---------------------------------------------------------------
+# The factuur is both an e-mail and the archived record, so it is built the way
+# mail has to be built: nested tables and inline styles. The previous version used
+# a <head> stylesheet and flexbox, neither of which Outlook honours -- the two
+# address columns collapsed into one and the totals lost their rule. It also still
+# carried the pre-redesign navy, so the invoice looked like a different company
+# from the site the client had just bought from.
+#
+# Palette mirrors ai-receptionist/app/mail_layout.py. Duplicated rather than
+# imported: these are two independently deployed apps with separate requirements,
+# and a shared Python package for six colour constants is not worth the coupling.
+
+_BAND = "#0f1c1e"
+_INK = "#16292b"
+_BODY = "#35474a"
+_MUTED = "#5f7371"
+_RULE = "#e2e8e7"
+_FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"
+_LOGO = "https://klantkraan.nl/email/logo.png"
+
+
 def render_html(inv: Invoice) -> str:
     e = html.escape
 
     def euro(v: Decimal) -> str:
         return f"&euro; {v:.2f}".replace(".", ",")
 
-    seller_lines = "<br>".join(
-        e(x) for x in [
-            inv.seller["name"], inv.seller["address"],
-            f"KvK {inv.seller['kvk']}", f"BTW {inv.seller['btw']}",
-        ] if x
-    )
-    buyer_lines = "<br>".join(
-        e(str(x)) for x in [inv.buyer.get("name"), inv.buyer.get("address"),
-                            inv.buyer.get("email")] if x
-    )
+    def party(label: str, lines: list) -> str:
+        rows = "<br>".join(e(str(x)) for x in lines if x)
+        return (
+            f'<td width="50%" valign="top" style="font-family:{_FONT};font-size:14px;'
+            f'line-height:1.6;color:{_BODY};padding-right:16px;">'
+            f'<div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;'
+            f'color:{_MUTED};padding-bottom:6px;">{e(label)}</div>{rows}</td>'
+        )
+
+    def total(label: str, value: str, *, grand: bool = False) -> str:
+        weight = "700" if grand else "400"
+        border = f"border-top:2px solid {_INK};" if grand else ""
+        colour = _INK if grand else _BODY
+        return (
+            f'<tr><td style="font-family:{_FONT};font-size:14px;color:{colour};'
+            f'font-weight:{weight};padding:8px 8px 8px 0;{border}">{label}</td>'
+            f'<td align="right" style="font-family:{_FONT};font-size:14px;color:{colour};'
+            f'font-weight:{weight};padding:8px 0;{border}">{value}</td></tr>'
+        )
+
     btw_pct = f"{(inv.btw_rate * 100).quantize(Decimal('1'))}%"
+    paid = "Betaald via automatische incasso (Mollie)"
+    if inv.payment_id:
+        paid += f" &middot; ref {e(inv.payment_id)}"
+    iban = f"IBAN {e(inv.seller['iban'])}" if inv.seller.get("iban") else ""
+
+    th = (
+        f'font-family:{_FONT};font-size:11px;letter-spacing:0.08em;'
+        f"text-transform:uppercase;color:{_MUTED};padding:0 8px 8px 0;"
+        f"border-bottom:1px solid {_RULE};text-align:left;"
+    )
+    td = f"font-family:{_FONT};font-size:14px;color:{_BODY};padding:14px 8px 14px 0;"
+
     return f"""<!doctype html>
-<html lang="nl"><head><meta charset="utf-8"><title>Factuur {e(inv.number)}</title>
-<style>
-  body{{font-family:-apple-system,Segoe UI,Roboto,sans-serif;color:#1a2b3c;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.5}}
-  h1{{font-size:24px;margin:0 0 4px}} .muted{{color:#6b7684}}
-  .row{{display:flex;justify-content:space-between;gap:24px;margin-top:24px}}
-  table{{width:100%;border-collapse:collapse;margin-top:28px}}
-  th,td{{text-align:left;padding:10px 8px;border-bottom:1px solid #e3e8ee}}
-  td.n,th.n{{text-align:right}} .totals td{{border:0;padding:4px 8px}}
-  .totals .grand{{font-weight:700;border-top:2px solid #1a2b3c}}
-</style></head><body>
-  <h1>Factuur</h1>
-  <div class="muted">Factuurnummer {e(inv.number)} &middot; Factuurdatum {inv.invoice_date.strftime('%d-%m-%Y')}</div>
-  <div class="row">
-    <div><strong>Van</strong><br>{seller_lines}</div>
-    <div><strong>Aan</strong><br>{buyer_lines}</div>
-  </div>
-  <table>
-    <thead><tr><th>Omschrijving</th><th>Periode</th><th class="n">Bedrag (excl. BTW)</th></tr></thead>
-    <tbody><tr><td>{e(inv.description)}</td><td>{e(inv.period)}</td><td class="n">{euro(inv.net)}</td></tr></tbody>
-  </table>
-  <table class="totals">
-    <tr><td>Subtotaal (excl. BTW)</td><td class="n">{euro(inv.net)}</td></tr>
-    <tr><td>BTW {btw_pct}</td><td class="n">{euro(inv.btw)}</td></tr>
-    <tr class="grand"><td>Totaal</td><td class="n">{euro(inv.gross)}</td></tr>
-  </table>
-  <p class="muted" style="margin-top:28px">
-    Betaald via automatische incasso (Mollie){f' &middot; ref {e(inv.payment_id)}' if inv.payment_id else ''}.
-    {('IBAN ' + e(inv.seller['iban'])) if inv.seller.get('iban') else ''}
-  </p>
+<html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Factuur {e(inv.number)}</title></head>
+<body style="margin:0;padding:0;background:#e9eeed;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#e9eeed;">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:640px;max-width:100%;background:#ffffff;border-radius:14px;overflow:hidden;">
+  <tr><td style="background:{_BAND};padding:26px 32px;">
+    <img src="{_LOGO}" width="163" height="21" alt="Klantkraan" style="display:block;border:0;width:163px;height:21px;">
+  </td></tr>
+  <tr><td style="padding:32px 32px 0 32px;">
+    <div style="font-family:{_FONT};font-size:24px;font-weight:700;color:{_INK};">Factuur</div>
+    <div style="font-family:{_FONT};font-size:13px;color:{_MUTED};padding-top:4px;">
+      Factuurnummer {e(inv.number)} &middot; Factuurdatum {inv.invoice_date.strftime('%d-%m-%Y')}
+    </div>
+  </td></tr>
+  <tr><td style="padding:26px 32px 0 32px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      {party("Van", [inv.seller["name"], inv.seller["address"], f"KvK {inv.seller['kvk']}", f"BTW {inv.seller['btw']}"])}
+      {party("Aan", [inv.buyer.get("name"), inv.buyer.get("address"), inv.buyer.get("email")])}
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding:30px 32px 0 32px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr><th style="{th}">Omschrijving</th><th style="{th}">Periode</th>
+          <th style="{th}text-align:right;padding-right:0;">Bedrag (excl. BTW)</th></tr>
+      <tr><td style="{td}">{e(inv.description)}</td><td style="{td}">{e(inv.period)}</td>
+          <td align="right" style="{td}padding-right:0;">{euro(inv.net)}</td></tr>
+    </table>
+  </td></tr>
+  <tr><td style="padding:10px 32px 0 32px;">
+    <table role="presentation" width="260" cellpadding="0" cellspacing="0" border="0" align="right" style="width:260px;">
+      {total("Subtotaal (excl. BTW)", euro(inv.net))}
+      {total(f"BTW {btw_pct}", euro(inv.btw))}
+      {total("Totaal", euro(inv.gross), grand=True)}
+    </table>
+  </td></tr>
+  <tr><td style="padding:34px 32px 28px 32px;">
+    <div style="height:1px;background:{_RULE};margin-bottom:16px;"></div>
+    <div style="font-family:{_FONT};font-size:12px;line-height:1.7;color:{_MUTED};">
+      {paid}.<br>{iban}
+    </div>
+  </td></tr>
+</table>
+</td></tr></table>
 </body></html>"""
 
 
