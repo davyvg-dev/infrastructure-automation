@@ -117,7 +117,7 @@ def followup_text(p: Prospect, touch: int) -> str:
             f"Even zonder verkooppraatje, ik ben gewoon benieuwd: wie neemt bij "
             f"{p.short} op als jullie allemaal op een klus zitten en de telefoon gaat?\n\n"
             f"Als het antwoord voicemail is, weet ik waar ik jullie mee kan helpen. "
-            f"Is het al goed geregeld, dan hoor ik dat ook graag -- dan laat ik het hierbij.\n\n"
+            f"Is het al goed geregeld, dan hoor ik dat ook graag. Dan laat ik het hierbij.\n\n"
             f"{SIGNOFF_NAME}\n{SIGNOFF_EMAIL}\n\n"
             f"{OPT_OUT}\n"
         )
