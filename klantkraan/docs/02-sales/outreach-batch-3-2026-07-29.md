@@ -42,14 +42,27 @@ single biggest lever on close rate.
 klaargezet`. Run the first ten with that, and if opens disappoint, switch the second half to
 `{bedrijf}: wie neemt op als jij op een dak staat?` and compare.
 
-**All 23 are staged as Gmail drafts in `davy@klantkraan.nl`** (created 2026-07-29, signed "Davy").
-Open, check, send.
+**Send with `python -m scripts.outreach_send --send --limit 6`** from `ai-receptionist/`, over
+Gmail SMTP as `davy@klantkraan.nl`. Dry run is the default; `--send` is the only thing that opens
+a socket, already-sent prospects are skipped from `build/outreach/sent.json`, and `--dump` writes
+`.eml` files to eyeball first. Needs `GMAIL_USER` + `GMAIL_APP_PASSWORD` in `.env`.
 
-> **Gotcha for any future batch:** creating a draft from plain text makes Gmail auto-linkify the
-> URL and paste its own `https://www.google.com/url?q=…&source=gmail` wrapper into the **visible
-> body**. In a cold mail that reads as phishing. Always supply an explicit HTML body with the
-> anchor text set to the real URL (`<a href="https://demo.klantkraan.nl/?client=x">https://demo.klantkraan.nl/?client=x</a>`)
-> alongside the plain-text alternative. Verified in the Gmail UI, not just via the API.
+> **Do not stage this batch as Gmail drafts.** The 23 drafts created on 2026-07-29 are stale and
+> should be deleted: they carry the retired six-month offer, and every link in them is wrapped in
+> `https://www.google.com/url?q=…&source=gmail&ust=…`, which in a cold mail reads as phishing.
+>
+> An earlier note here claimed an explicit HTML anchor fixed that. It does not. The wrapper is
+> applied by Gmail *after* our HTML is handed over, to the `href` itself, and there is no flag to
+> turn it off — supplying an anchor only changes what the link *says*, not where it points. Proof
+> it is Gmail and not our renderer: a Resend mail read back through the same API keeps its hrefs
+> intact, and `scripts/outreach_mail.py` emits `href="https://demo.klantkraan.nl/?client=<slug>"`
+> clean every time.
+>
+> It also matters beyond looks. The wrapper percent-encodes the `=` in `?client%3D<slug>`, the one
+> parameter that selects the branded demo, and a mangled `?client=` silently loads the *default*
+> business — a bug this project has already shipped once (fixed in ec01a38).
+>
+> The rule for any future batch: render the MIME, send it over SMTP, never compose in Gmail.
 
 ---
 
