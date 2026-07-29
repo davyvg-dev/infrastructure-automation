@@ -198,6 +198,9 @@ def blocks(inv: Invoice) -> list[mail_layout.Block]:
         paid += f" IBAN {current['iban']}."
 
     return [
+        # The archived copy is opened on its own, outside any mail subject, so the document
+        # has to name itself.
+        mail_layout.Heading("Factuur"),
         mail_layout.Para(
             f"Factuurnummer {inv.number} · Factuurdatum {inv.invoice_date.strftime('%d-%m-%Y')}"
         ),

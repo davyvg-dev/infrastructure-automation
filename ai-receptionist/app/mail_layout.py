@@ -58,6 +58,12 @@ _BODY = "#35474a"  # body copy
 _MUTED = "#5f7371"  # footer, captions
 _RULE = "#e2e8e7"
 _SODIUM = "#ffb84d"
+# Amber at 8% and 22% over white. The accent is a signal colour, not a surface: a full-
+# strength sodium panel is a highlighter pen, and amber text on white is unreadable at
+# about 1.9:1. These two carry the brand as a tint while every glyph stays ink.
+_TINT = "#fdf6ea"
+_TINT_EDGE = "#f2e3c8"
+_CHIP = "#fbecd2"
 
 # Brand faces are web fonts; no mail client will load them. This stack is what the
 # reader's OS already has, in the order that looks closest to Hanken Grotesk.
@@ -98,6 +104,31 @@ class Panel:
     reader comes back to this later looking for exactly these numbers."""
 
     lines: list[str]
+
+
+@dataclass(frozen=True)
+class Amount:
+    """The confirmation hero: what was received, in type you cannot miss.
+
+    A payment mail's whole job in the first two seconds is "how much, for what". As a
+    sentence in the body that answers itself only after the reader has parsed a paragraph,
+    so it gets its own tinted card at the top.
+    """
+
+    label: str
+    value: str
+    note: str = ""
+
+
+@dataclass(frozen=True)
+class KeyValues:
+    """Label/value rows, hairline-separated — the terms of a subscription.
+
+    Prose is the wrong shape for numbers the reader comes back to check. A Panel of
+    sentences makes them hunt; a two-column table lets them scan the left edge.
+    """
+
+    rows: list[tuple[str, str]]
 
 
 @dataclass(frozen=True)
@@ -153,7 +184,20 @@ class Signoff:
     email: str
 
 
-Block = Heading | Para | Steps | Panel | Columns | Table | Totals | Button | Photo | Signoff
+Block = (
+    Heading
+    | Para
+    | Steps
+    | Panel
+    | Amount
+    | KeyValues
+    | Columns
+    | Table
+    | Totals
+    | Button
+    | Photo
+    | Signoff
+)
 
 
 # --- HTML -------------------------------------------------------------------------------
@@ -172,22 +216,80 @@ def _block_html(block: Block, *, first: bool, after_heading: bool) -> str:
     top = 0 if first else 14 if after_heading else 24
 
     if isinstance(block, Heading):
+        # A short amber bar instead of the full-width hairline that used to sit under every
+        # heading: the rule made each section look like a spec sheet, and three of them made
+        # a welcome mail look like documentation. The bar carries the brand and gives the
+        # page rhythm without cutting it into slices. Built as a table cell, not a styled
+        # div -- Outlook honours width/height/bgcolor on a <td> and little else.
         return _cell(
-            f'<div style="font-size:17px;font-weight:700;color:{_INK};'
-            f'letter-spacing:-0.01em;">{escape(block.text)}</div>'
-            f'<div style="height:1px;background:{_RULE};margin-top:9px;"></div>',
-            top=top + 8,
+            '<table role="presentation" cellpadding="0" cellspacing="0" border="0">'
+            f'<tr><td width="26" height="3" bgcolor="{_SODIUM}" style="width:26px;height:3px;'
+            f'background:{_SODIUM};font-size:0;line-height:0;">&nbsp;</td></tr></table>'
+            f'<div style="font-size:19px;font-weight:700;color:{_INK};letter-spacing:-0.015em;'
+            f'padding-top:12px;">{escape(block.text)}</div>',
+            top=top + 10,
         )
 
     if isinstance(block, Para):
         return _cell(f"<div>{escape(block.text)}</div>", top=top)
 
     if isinstance(block, Steps):
-        items = "".join(
-            f'<li style="margin:0 0 6px 0;padding-left:4px;">{escape(item)}</li>'
-            for item in block.items
+        # Numbered chips rather than <ol>: list markers cannot be styled reliably across
+        # clients, and Outlook indents them unpredictably. The numeral stays ink on a pale
+        # amber chip -- amber numerals on white fall to about 1.9:1, which is not a contrast
+        # ratio you put a number the reader has to read at.
+        rows = "".join(
+            f'<tr><td width="28" valign="top" style="padding:0 12px 10px 0;">'
+            f'<table role="presentation" cellpadding="0" cellspacing="0" border="0">'
+            f'<tr><td width="26" height="26" align="center" bgcolor="{_CHIP}" '
+            f'style="width:26px;height:26px;background:{_CHIP};border-radius:7px;'
+            f"font-family:{_FONT};font-size:13px;font-weight:700;color:{_INK};"
+            f'line-height:26px;">{i}</td></tr></table></td>'
+            f'<td valign="top" style="padding:0 0 10px 0;font-family:{_FONT};font-size:16px;'
+            f'line-height:1.55;color:{_BODY};">{escape(item)}</td></tr>'
+            for i, item in enumerate(block.items, start=1)
         )
-        return _cell(f'<ol style="margin:0;padding-left:22px;">{items}</ol>', top=top)
+        return _cell(
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'border="0">{rows}</table>',
+            top=top,
+        )
+
+    if isinstance(block, Amount):
+        return _cell(
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'border="0"><tr><td bgcolor="{_TINT}" style="background:{_TINT};'
+            f"border:1px solid {_TINT_EDGE};border-radius:12px;padding:22px 24px;"
+            f'font-family:{_FONT};">'
+            f'<div style="font-size:11px;letter-spacing:0.09em;text-transform:uppercase;'
+            f'color:{_MUTED};">{escape(block.label)}</div>'
+            f'<div style="font-size:30px;font-weight:700;color:{_INK};letter-spacing:-0.02em;'
+            f'padding-top:6px;line-height:1.2;">{escape(block.value)}</div>'
+            + (
+                f'<div style="font-size:13px;color:{_MUTED};padding-top:6px;">'
+                f"{escape(block.note)}</div>"
+                if block.note
+                else ""
+            )
+            + "</td></tr></table>",
+            top=top,
+        )
+
+    if isinstance(block, KeyValues):
+        rows = ""
+        for i, (label, value) in enumerate(block.rows):
+            edge = "" if i == 0 else f"border-top:1px solid {_RULE};"
+            rows += (
+                f'<tr><td valign="top" style="{edge}padding:11px 12px 11px 0;font-family:{_FONT};'
+                f'font-size:14px;color:{_MUTED};">{escape(label)}</td>'
+                f'<td valign="top" align="right" style="{edge}padding:11px 0;font-family:{_FONT};'
+                f'font-size:14px;font-weight:600;color:{_INK};">{escape(value)}</td></tr>'
+            )
+        return _cell(
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'border="0">{rows}</table>',
+            top=top,
+        )
 
     if isinstance(block, Panel):
         lines = "".join(
@@ -389,6 +491,14 @@ def _block_text(block: Block) -> str | None:
         return "\n".join(f"{i}. {item}" for i, item in enumerate(block.items, start=1))
     if isinstance(block, Panel):
         return "\n".join(_wrap(line) for line in block.lines)
+    if isinstance(block, Amount):
+        # The tinted card has no plain-text equivalent, so the emphasis comes from putting
+        # the number on its own line under its label rather than inside a sentence.
+        out = f"{block.label.upper()}\n{block.value}"
+        return f"{out}\n{block.note}" if block.note else out
+    if isinstance(block, KeyValues):
+        width = max((len(label) for label, _ in block.rows), default=0)
+        return "\n".join(f"{label.ljust(width)}  {value}" for label, value in block.rows)
     if isinstance(block, Columns):
         left = "\n".join(str(x) for x in block.left_lines if x)
         right = "\n".join(str(x) for x in block.right_lines if x)

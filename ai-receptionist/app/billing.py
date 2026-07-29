@@ -416,13 +416,31 @@ def welcome_blocks(
     needs.append("Waar nieuwe aanvragen naartoe moeten: e-mail of WhatsApp.")
     needs.append("Welke agenda hij mag inplannen, als u afspraken wilt laten boeken.")
 
-    plan_lines = [f"Klantkraan {_plan_label(plan)}, {_eur_nl(monthly_eur)} per maand."]
+    # Both figures the customer's bank will show, and the ex-BTW number the site quotes.
+    # Stating only one of them is how a €299 offer turns into a €361,79 debit and a support
+    # mail: the gross is what leaves the account, the net is what they were sold.
+    monthly_net, _ = split_gross(monthly_eur)
+    charged = first_amount_eur or monthly_eur
+    label = _plan_label(plan)
+
+    terms: list[tuple[str, str]] = [
+        ("Abonnement", f"Klantkraan {label}"),
+        ("Prijs", f"{_eur_nl(monthly_net)} per maand, excl. btw"),
+        ("Maandelijkse incasso", f"{_eur_nl(monthly_eur)}, incl. {BTW_RATE:.0%} btw"),
+    ]
     if first_amount_eur and first_amount_eur != monthly_eur:
-        plan_lines.append(f"De eerste maand is {_eur_nl(first_amount_eur)} gerekend.")
+        terms.append(("Eerste maand", f"{_eur_nl(first_amount_eur)}, incl. btw"))
+    terms.append(("Opzegtermijn", "maandelijks opzegbaar"))
 
     return [
         mail_layout.Para(greeting),
-        mail_layout.Para("Uw betaling is binnen. Dank u wel."),
+        mail_layout.Amount(
+            "Betaling ontvangen",
+            _eur_nl(charged),
+            f"Klantkraan {label}"
+            + (" · eerste maand" if first_amount_eur and first_amount_eur != monthly_eur else ""),
+        ),
+        mail_layout.Para("Dank u wel. Hieronder staat wat er nu gebeurt."),
         mail_layout.Heading("Wat er nu gebeurt"),
         mail_layout.Para(
             "Wij bouwen uw digitale receptionist. Binnen één werkdag krijgt u een link "
@@ -442,10 +460,11 @@ def welcome_blocks(
             "mailto:hallo@klantkraan.nl?subject=Mijn%20gegevens%20voor%20Klantkraan",
         ),
         mail_layout.Heading("Uw abonnement"),
-        mail_layout.Panel(plan_lines),
+        mail_layout.KeyValues(terms),
         mail_layout.Para(
-            "Maandelijks opzegbaar: één mail naar hallo@klantkraan.nl en er wordt niets "
-            "meer geïncasseerd. De facturen komen van Mollie."
+            "De factuur voor deze betaling krijgt u apart per e-mail, en daarna elke maand "
+            "één bij de incasso. Opzeggen kan met één mail naar hallo@klantkraan.nl; er "
+            "wordt dan niets meer geïncasseerd."
         ),
         WELCOME_PHOTO,
         mail_layout.Signoff("Klantkraan", "hallo@klantkraan.nl"),

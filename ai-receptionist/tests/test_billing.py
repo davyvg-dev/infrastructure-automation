@@ -45,10 +45,11 @@ class FakeMollie:
             "status": status,
             "sequenceType": sequence_type,
             "customerId": _CUSTOMER_ID,
-            "amount": {"currency": "EUR", "value": "149.50"},
+            # 149.50 net first month, grossed up; the monthly is 299.00 net -> 361.79.
+            "amount": {"currency": "EUR", "value": "180.90"},
             "metadata": metadata
             if metadata is not None
-            else {"plan": "chat", "monthly_eur": "299.00"},
+            else {"plan": "chat", "monthly_eur": "361.79", "monthly_net_eur": "299.00"},
         }
 
     def __call__(self, method: str, path: str, data: dict[str, Any] | None = None):
@@ -145,7 +146,7 @@ def test_paid_first_payment_creates_the_subscription(
 
     assert resp.status_code == 200 and resp.json() == {"ok": True}
     (create,) = fake.subscription_creates()
-    assert create["amount"] == {"currency": "EUR", "value": "299.00"}
+    assert create["amount"] == {"currency": "EUR", "value": "361.79"}, "the gross, not the net"
     assert create["interval"] == "1 month"
     assert create["description"] == "Klantkraan Chat maandabonnement"
     (event,) = _webhook_events(data_dir)
@@ -256,8 +257,9 @@ def test_paying_customer_gets_a_welcome_mail(
     assert mail["to"] == "jan@devries.nl"
     assert mail["subject"] == billing.WELCOME_SUBJECT
     assert "binnen één werkdag" in mail["text"].lower(), "the one-working-day promise (1b step 1)"
-    assert "€ 299,00 per maand" in mail["text"]
-    assert "€ 149,50" in mail["text"], "the first month actually charged"
+    assert "€ 299,00 per maand, excl. btw" in mail["text"], "the price the site quotes"
+    assert "€ 361,79" in mail["text"], "and the amount the bank will actually debit"
+    assert "€ 180,90" in mail["text"], "the first month actually charged"
     assert mail["key"] == f"welcome-{_CUSTOMER_ID}", "Resend must dedupe a webhook replay"
     assert "Welkomstmail verstuurd" in sent[0], "the founder ping says the customer heard from us"
 
@@ -274,7 +276,7 @@ def test_the_welcome_goes_out_branded_and_as_text(
     mail = _welcome(mailed)
     assert mail["html"] and mail["html"].startswith("<!doctype html>")
     assert "https://klantkraan.nl/email/logo.png" in mail["html"], "logo must be an absolute URL"
-    assert "€ 299,00 per maand" in mail["html"], "the price cannot differ between the parts"
+    assert "€ 299,00 per maand, excl. btw" in mail["html"], "price identical in both parts"
     assert "<table" in mail["html"], "tables, not flexbox -- Outlook renders through Word"
 
 
@@ -384,9 +386,9 @@ def test_refund_without_an_amount_refunds_what_was_actually_charged(data_dir, mo
     billing.refund_payment(_PAYMENT_ID)
 
     (refund,) = [d for m, p, d in fake.calls if p.endswith("/refunds")]
-    assert refund["amount"] == {"currency": "EUR", "value": "149.50"}
+    assert refund["amount"] == {"currency": "EUR", "value": "180.90"}, "the gross that was taken"
     (event,) = [e for e in _webhook_events(data_dir) if e["event"] == "refund"]
-    assert event["amount_eur"] == "149.50" and event["refund_id"] == "re_1"
+    assert event["amount_eur"] == "180.90" and event["refund_id"] == "re_1"
 
 
 def test_offboard_cancels_before_it_refunds(data_dir, monkeypatch) -> None:
@@ -398,7 +400,7 @@ def test_offboard_cancels_before_it_refunds(data_dir, monkeypatch) -> None:
     order = [p for m, p, _ in fake.calls if "subscriptions/sub_live" in p or p.endswith("/refunds")]
     assert order[0].endswith("subscriptions/sub_live") and order[-1].endswith("/refunds")
     assert result["canceled"] == ["sub_live"]
-    assert result["refund"]["amount_eur"] == "149.50"
+    assert result["refund"]["amount_eur"] == "180.90", "refund the gross, BTW included"
 
 
 def test_offboard_without_a_first_payment_reports_instead_of_crashing(
@@ -552,8 +554,8 @@ def test_a_paid_first_payment_gets_a_factuur_as_well_as_a_welcome(
     assert factuur["to"] == "jan@devries.nl"
     assert factuur["subject"] == "Factuur 2026-0001 van Klantkraan"
     assert "eerste maand" in factuur["text"], "the first payment is not a normal month"
-    # 149.50 charged splits into 123.55 + 25.95.
-    assert "€ 123,55" in factuur["text"] and "€ 25,95" in factuur["text"]
+    # 180.90 charged splits into 149.50 + 31.40.
+    assert "€ 149,50" in factuur["text"] and "€ 31,40" in factuur["text"]
     assert (data_dir / "invoices" / "factuur-2026-0001.html").exists(), "archived for 7 years"
 
 
