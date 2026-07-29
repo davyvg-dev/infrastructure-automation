@@ -30,6 +30,15 @@ single biggest lever on close rate.
 klaargezet`. Run the first ten with that, and if opens disappoint, switch the second half to
 `{bedrijf}: wie neemt op als jij op een dak staat?` and compare.
 
+**All 23 are staged as Gmail drafts in `davy@klantkraan.nl`** (created 2026-07-29, signed "Davy").
+Open, check, send.
+
+> **Gotcha for any future batch:** creating a draft from plain text makes Gmail auto-linkify the
+> URL and paste its own `https://www.google.com/url?q=…&source=gmail` wrapper into the **visible
+> body**. In a cold mail that reads as phishing. Always supply an explicit HTML body with the
+> anchor text set to the real URL (`<a href="https://demo.klantkraan.nl/?client=x">https://demo.klantkraan.nl/?client=x</a>`)
+> alongside the plain-text alternative. Verified in the Gmail UI, not just via the API.
+
 ---
 
 ## The 23 at a glance
