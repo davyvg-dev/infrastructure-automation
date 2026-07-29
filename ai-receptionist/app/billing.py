@@ -130,15 +130,26 @@ def create_customer(name: str, email: str) -> str:
 
 
 def create_first_payment(
-    customer_id: str, amount_eur: str | float | Decimal, description: str, plan: str
+    customer_id: str,
+    amount_eur: str | float | Decimal,
+    description: str,
+    plan: str,
+    monthly_eur: str | float | Decimal | None = None,
 ) -> str:
     """Create the sequenceType=first payment that both charges the first month AND creates
     the mandate for the subscription. Returns the checkout URL to send to the client.
 
     The plan + monthly price ride along as payment metadata, so the webhook can create the
     subscription statelessly — no local pending-checkout state to lose.
+
+    monthly_eur overrides the plan price for THIS checkout only. It exists so a test
+    checkout can charge cents on both legs: without it a EUR 1 first payment still starts a
+    EUR 299/month subscription, because the webhook reads the monthly off this metadata.
     """
-    monthly = PLAN_MONTHLY.get(plan, PLAN_MONTHLY[DEFAULT_PLAN])
+    if monthly_eur:
+        monthly = _eur(monthly_eur)
+    else:
+        monthly = PLAN_MONTHLY.get(plan, PLAN_MONTHLY[DEFAULT_PLAN])
     payment = _request(
         "POST",
         "/payments",
@@ -623,6 +634,13 @@ def main(argv: list[str]) -> int:
         choices=sorted(PLAN_MONTHLY),
         help="Plan for the ongoing subscription (default chat, €299/month).",
     )
+    p_co.add_argument(
+        "--monthly",
+        default="",
+        help="Override the monthly subscription price in EUR for this checkout only. "
+        "Use with --amount to run a live end-to-end test for cents "
+        "(--amount 1.00 --monthly 1.00); the public /aanmelden price is unaffected.",
+    )
 
     p_status = sub.add_parser("status", help="List recent billing events from data/billing.jsonl.")
     p_status.add_argument("--limit", type=int, default=20)
@@ -686,12 +704,13 @@ def main(argv: list[str]) -> int:
         label = _plan_label(args.plan)
         try:
             amount = _eur(args.amount)
+            monthly = _eur(args.monthly) if args.monthly else PLAN_MONTHLY[args.plan]
         except ValueError as exc:
             parser.error(str(exc))
         try:
             customer_id = create_customer(args.name, args.email)
             checkout_url = create_first_payment(
-                customer_id, amount, f"Klantkraan {label} eerste maand", args.plan
+                customer_id, amount, f"Klantkraan {label} eerste maand", args.plan, monthly
             )
         except (MollieError, MissingSetting) as exc:
             print(f"❌ {exc}")
@@ -700,8 +719,16 @@ def main(argv: list[str]) -> int:
         print(f"   checkout (€{amount}): {checkout_url}")
         print(
             f"   Stuur deze link naar de klant. Na betaling start het abonnement "
-            f"Klantkraan {label} (€{PLAN_MONTHLY[args.plan]}/maand) automatisch."
+            f"Klantkraan {label} (€{monthly}/maand) automatisch."
         )
+        if monthly != PLAN_MONTHLY[args.plan]:
+            # A test checkout is a REAL mandate on REAL money — say so, and hand over the
+            # cleanup command now, while the customer id is still on screen.
+            print(
+                f"   ⚠️  TEST: €{monthly}/maand in plaats van €{PLAN_MONTHLY[args.plan]}. "
+                f"Dit is een echte incasso.\n"
+                f"       Opruimen na de test: python -m app.billing offboard {customer_id}"
+            )
         return 0
     if args.cmd == "status":
         events = recent_events(args.limit)

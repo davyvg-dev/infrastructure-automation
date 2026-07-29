@@ -465,3 +465,24 @@ def test_create_first_payment_sends_the_stateless_metadata(
     assert body["webhookUrl"].endswith("/api/mollie/webhook") and body["redirectUrl"]
     (event,) = _webhook_events(data_dir)
     assert event["event"] == "checkout_created" and event["payment_id"] == "tr_new1"
+
+
+def test_a_test_checkout_makes_the_subscription_cheap_too(
+    data_dir, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A EUR 1 first payment must not leave a EUR 299/month subscription behind it."""
+    calls: list[dict[str, Any] | None] = []
+
+    def fake(method: str, path: str, data=None):
+        calls.append(data)
+        return {"id": "tr_new1", "_links": {"checkout": {"href": "https://pay.example/x"}}}
+
+    monkeypatch.setattr(billing, "_request", fake)
+
+    billing.create_first_payment(
+        _CUSTOMER_ID, "1.00", "Klantkraan Chat eerste maand", "chat", "1.00"
+    )
+
+    (body,) = calls
+    assert body["amount"] == {"currency": "EUR", "value": "1.00"}
+    assert body["metadata"]["monthly_eur"] == "1.00", "the webhook bills what this says"
