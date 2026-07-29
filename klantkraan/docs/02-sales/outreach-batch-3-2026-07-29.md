@@ -1,5 +1,17 @@
 # Outreach batch 3 — 23 cold emails on the founding-member offer (2026-07-29)
 
+> **In flux, do not treat the bodies below as final.** Two changes landed after this was
+> written, both on the founder's call:
+> 1. **Price: first *month* at €149, not the first six.** The plain-text bodies below still
+>    say six months.
+> 2. **The mails are now generated**, branded, from `ai-receptionist/scripts/outreach_mail.py`
+>    (same `mail_layout` blocks as the welcome mail), not hand-written plain text. That script
+>    is the source of what actually gets sent; this file is its human-readable twin.
+>
+> Also parked: the "maandelijks opzegbaar" line is **removed** from the generated mails until
+> the cancellation term is decided. `founding-member-offer.md` still describes the six-month
+> rate and monthly cancellation, so it and this batch currently disagree. Resolve before send.
+
 **This supersedes batches 1 and 2. Do not send those.** Both pitch the free 14-day pilot at
 €299/mnd, which `founding-member-offer.md` retired on 2026-07-24. Same 23 prospects, same
 branded demos, new offer: **€149/mnd de eerste 6 maanden, geen opstartkosten, 30 dagen

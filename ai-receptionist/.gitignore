@@ -10,3 +10,4 @@ config/prospects/*.yaml
 config/clients/*.yaml
 # ...except the fictional fitness showcase (a symlink to fitness-demo.yaml, no PII).
 !config/clients/fitness.yaml
+build/

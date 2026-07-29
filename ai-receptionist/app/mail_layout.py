@@ -205,17 +205,18 @@ def _block_html(block: Block, *, first: bool, after_heading: bool) -> str:
     raise TypeError(f"unknown block: {block!r}")
 
 
-def _footer_html() -> str:
+def _footer_html(note: str | None = None) -> str:
     links = ' <span style="color:#c3cecc;">·</span> '.join(
         f'<a href="{escape(href, quote=True)}" style="color:{_MUTED};'
         f'text-decoration:underline;">{escape(label)}</a>'
         for label, href in _FOOTER_LINKS
     )
+    extra = f"<div>{escape(note)}</div>" if note else ""
     return (
         f'<tr><td style="padding:26px {_PAD}px 24px {_PAD}px;">'
         f'<div style="height:1px;background:{_RULE};margin-bottom:18px;"></div>'
         f'<div style="font-family:{_FONT};font-size:12px;line-height:1.7;color:{_MUTED};">'
-        f"<div>{escape(_COMPANY)}</div><div>{links}</div></div></td></tr>"
+        f"<div>{escape(_COMPANY)}</div><div>{links}</div>{extra}</div></td></tr>"
     )
 
 
@@ -225,12 +226,17 @@ def to_html(
     subject: str,
     preheader: str,
     lang: str = "nl",
+    footer_note: str | None = None,
 ) -> str:
     """Render the branded HTML part.
 
     `preheader` is the grey line the inbox shows next to the subject. Left unset, clients
     scrape it from the body and show "Hoi Jan, Uw betaling" -- a wasted line of the only
     preview a reader gets before deciding to open.
+
+    `footer_note` appends one line under the legal foot. Transactional mail leaves it unset;
+    cold sales mail puts the opt-out there, which Telecommunicatiewet art. 11.7 requires and
+    the transactional footer deliberately has no room for.
     """
     body = ""
     after_heading = False
@@ -261,7 +267,7 @@ def to_html(
         f'style="display:block;border:0;width:163px;height:21px;"></td></tr>'
         f'<tr><td style="padding-top:{_PAD}px;"></td></tr>'
         f"{body}"
-        f"{_footer_html()}"
+        f"{_footer_html(footer_note)}"
         "</table></td></tr></table></body></html>"
     )
 
@@ -296,7 +302,7 @@ def _block_text(block: Block) -> str | None:
     raise TypeError(f"unknown block: {block!r}")
 
 
-def to_text(blocks: list[Block]) -> str:
+def to_text(blocks: list[Block], *, footer_note: str | None = None) -> str:
     """Render the plain-text alternative. Headings shout, because that is the only
     typography a text mail has, and they stay tight against the paragraph they title."""
     out = ""
@@ -312,4 +318,6 @@ def to_text(blocks: list[Block]) -> str:
 
     # A text reader has no hyperlinks, so the footer spells its destinations out.
     footer = [_COMPANY] + [f"{label}: {href}" for label, href in _FOOTER_LINKS]
+    if footer_note:
+        footer.append(footer_note)
     return out + "\n\n" + "-" * 40 + "\n" + "\n".join(footer) + "\n"
