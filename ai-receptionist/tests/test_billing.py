@@ -237,6 +237,14 @@ def test_mollie_unreachable_returns_503_so_mollie_retries(
     assert _webhook_events(data_dir) == [], "an unfetched event is not logged as handled"
 
 
+def _welcome(mailed: list[dict[str, Any]]) -> dict[str, Any]:
+    """The welcome, out of everything the webhook sent. A paid first payment now also sends
+    a factuur, so "the mail" is no longer unambiguous."""
+    welcomes = [m for m in mailed if m["subject"] == billing.WELCOME_SUBJECT]
+    assert len(welcomes) == 1, f"expected exactly one welcome, got {[m['subject'] for m in mailed]}"
+    return welcomes[0]
+
+
 def test_paying_customer_gets_a_welcome_mail(
     client: TestClient, data_dir, sent, mailed, monkeypatch
 ) -> None:
@@ -244,7 +252,7 @@ def test_paying_customer_gets_a_welcome_mail(
 
     client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
 
-    (mail,) = mailed
+    mail = _welcome(mailed)
     assert mail["to"] == "jan@devries.nl"
     assert mail["subject"] == billing.WELCOME_SUBJECT
     assert "binnen één werkdag" in mail["text"].lower(), "the one-working-day promise (1b step 1)"
@@ -263,7 +271,7 @@ def test_the_welcome_goes_out_branded_and_as_text(
 
     client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
 
-    (mail,) = mailed
+    mail = _welcome(mailed)
     assert mail["html"] and mail["html"].startswith("<!doctype html>")
     assert "https://klantkraan.nl/email/logo.png" in mail["html"], "logo must be an absolute URL"
     assert "€ 299,00 per maand" in mail["html"], "the price cannot differ between the parts"
@@ -299,7 +307,8 @@ def test_welcome_is_sent_once_even_if_mollie_retries(
     client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
     client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
 
-    assert len(mailed) == 1, "the second webhook is already_subscribed: no second welcome"
+    welcomes = [m for m in mailed if m["subject"] == billing.WELCOME_SUBJECT]
+    assert len(welcomes) == 1, "the second webhook is already_subscribed: no second welcome"
 
 
 def test_welcome_skips_the_website_question_when_the_form_already_asked(
@@ -310,7 +319,7 @@ def test_welcome_skips_the_website_question_when_the_form_already_asked(
 
     client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
 
-    (mail,) = mailed
+    mail = _welcome(mailed)
     assert mail["text"].startswith("Hoi Jan,"), "greet the person, not the BV"
     assert "link naar uw website" not in mail["text"]
 
@@ -519,3 +528,118 @@ def test_the_btw_treatment_is_switchable(monkeypatch: pytest.MonkeyPatch) -> Non
     """The founder may decide 299 is the gross after all; one env var, no code change."""
     monkeypatch.setenv("PRICES_INCLUDE_BTW", "1")
     assert billing.gross_eur("299.00") == "299.00", "the advertised price IS the charge"
+
+
+# --- Factuur -----------------------------------------------------------------------------
+# Which payments get invoiced, and what the founder is told. The document itself (numbering,
+# the BTW split, rendering) is covered offline in test_invoice.py.
+
+
+def _factuur(mailed: list[dict[str, Any]]) -> dict[str, Any] | None:
+    return next((m for m in mailed if m["subject"].startswith("Factuur ")), None)
+
+
+def test_a_paid_first_payment_gets_a_factuur_as_well_as_a_welcome(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    """The gap this closes: the welcome went out, the factuur never did."""
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    factuur = _factuur(mailed)
+    assert factuur is not None, "a paying customer gets an invoice"
+    assert factuur["to"] == "jan@devries.nl"
+    assert factuur["subject"] == "Factuur 2026-0001 van Klantkraan"
+    assert "eerste maand" in factuur["text"], "the first payment is not a normal month"
+    # 149.50 charged splits into 123.55 + 25.95.
+    assert "€ 123,55" in factuur["text"] and "€ 25,95" in factuur["text"]
+    assert (data_dir / "invoices" / "factuur-2026-0001.html").exists(), "archived for 7 years"
+
+
+def test_a_recurring_charge_is_invoiced_too(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    """Month two is the one the client's bookkeeper chases us for."""
+    _mollie(monkeypatch, FakeMollie(sequence_type="recurring", subscriptions=[{"id": "sub_1"}]))
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    factuur = _factuur(mailed)
+    assert factuur is not None
+    assert "maandabonnement" in factuur["text"]
+    assert not [m for m in mailed if m["subject"] == billing.WELCOME_SUBJECT], "no second welcome"
+
+
+def test_a_webhook_replay_does_not_issue_a_second_factuur(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    facturen = [m for m in mailed if m["subject"].startswith("Factuur ")]
+    assert len(facturen) == 1, "the replay is already_subscribed and re-invoices nothing"
+    assert facturen[0]["key"] == f"factuur-{_PAYMENT_ID}", "Resend dedupes it as well"
+
+
+def test_an_unpaid_payment_is_never_invoiced(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    _mollie(monkeypatch, FakeMollie(status="open"))
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert _factuur(mailed) is None, "an invoice states that money was received"
+
+
+def test_the_founder_is_warned_the_factuur_is_not_yet_legally_valid(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    """A placeholder BTW-id makes the document invalid; that warning repeats every time."""
+    monkeypatch.delenv("BILLING_SELLER_BTW", raising=False)
+    monkeypatch.delenv("BILLING_SELLER_ADDRESS", raising=False)
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert "NIET RECHTSGELDIG" in sent[0]
+    assert "BILLING_SELLER_BTW" in sent[0]
+
+
+def test_the_warning_stops_once_the_real_details_are_set(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    monkeypatch.setenv("BILLING_SELLER_BTW", "NL863455324B01")
+    monkeypatch.setenv("BILLING_SELLER_ADDRESS", "Voorbeeldstraat 1, 1234 AB Amsterdam")
+    _mollie(monkeypatch, FakeMollie())
+
+    client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert "NIET RECHTSGELDIG" not in sent[0]
+    assert "Factuur 2026-0001 verstuurd" in sent[0]
+
+
+def test_a_failing_factuur_does_not_fail_the_paid_webhook(
+    client: TestClient, data_dir, sent, mailed, monkeypatch
+) -> None:
+    """Mollie retries a non-200. Retrying a payment we already banked helps nobody.
+
+    Stronger than a 200: the failure must be contained INSIDE handle_webhook, or it skips
+    the event log and the founder ping that says a subscription just started.
+    """
+    from app import invoice
+
+    monkeypatch.setattr(invoice, "send", lambda **kw: 1 / 0)
+    fake = _mollie(monkeypatch, FakeMollie())
+
+    resp = client.post("/api/mollie/webhook", data={"id": _PAYMENT_ID})
+
+    assert resp.status_code == 200
+    assert len(fake.subscription_creates()) == 1, "the subscription still happened"
+    (event,) = _webhook_events(data_dir)
+    assert event["action"] == "subscription_created", "the event was still logged"
+    assert event["invoice_reason"].startswith("ZeroDivisionError")
+    assert "abonnement gestart" in sent[0], "the founder still hears about the subscription"
+    assert "GEEN factuur verstuurd" in sent[0], "and about the factuur that did not go out"

@@ -101,6 +101,36 @@ class Panel:
 
 
 @dataclass(frozen=True)
+class Columns:
+    """Two labelled address blocks side by side — the Van/Aan head of a factuur. Built as
+    two 50% table cells, which is also what makes them stack on a phone without a media
+    query: the cells simply run out of room."""
+
+    left_label: str
+    left_lines: list[str]
+    right_label: str
+    right_lines: list[str]
+
+
+@dataclass(frozen=True)
+class Table:
+    """Line items. The last column is money and is right-aligned in both renderers, because
+    a column of amounts that does not line up on the decimal is unreadable."""
+
+    headers: list[str]
+    rows: list[list[str]]
+
+
+@dataclass(frozen=True)
+class Totals:
+    """The sum block under a Table. `grand` is set apart with a rule above it — the one
+    number the reader is actually looking for."""
+
+    lines: list[tuple[str, str]]
+    grand: tuple[str, str]
+
+
+@dataclass(frozen=True)
 class Button:
     label: str
     href: str
@@ -123,7 +153,7 @@ class Signoff:
     email: str
 
 
-Block = Heading | Para | Steps | Panel | Button | Photo | Signoff
+Block = Heading | Para | Steps | Panel | Columns | Table | Totals | Button | Photo | Signoff
 
 
 # --- HTML -------------------------------------------------------------------------------
@@ -169,6 +199,77 @@ def _block_html(block: Block, *, first: bool, after_heading: bool) -> str:
             f'border="0"><tr><td style="background:#f4f7f6;border:1px solid {_RULE};'
             f"border-radius:10px;padding:16px 18px;font-family:{_FONT};font-size:15px;"
             f'line-height:1.6;color:{_BODY};">{lines}</td></tr></table>',
+            top=top,
+        )
+
+    if isinstance(block, Columns):
+
+        def column(label: str, lines: list[str], pad_right: int) -> str:
+            body = "<br>".join(escape(str(line)) for line in lines if line)
+            return (
+                f'<td width="50%" valign="top" style="font-family:{_FONT};font-size:14px;'
+                f'line-height:1.6;color:{_BODY};padding-right:{pad_right}px;">'
+                f'<div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;'
+                f'color:{_MUTED};padding-bottom:6px;">{escape(label)}</div>{body}</td>'
+            )
+
+        return _cell(
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'border="0"><tr>{column(block.left_label, block.left_lines, 16)}'
+            f"{column(block.right_label, block.right_lines, 0)}</tr></table>",
+            top=top,
+        )
+
+    if isinstance(block, Table):
+        th = (
+            f"font-family:{_FONT};font-size:11px;letter-spacing:0.08em;text-transform:uppercase;"
+            f"color:{_MUTED};padding:0 8px 8px 0;border-bottom:1px solid {_RULE};text-align:left;"
+        )
+        td = f"font-family:{_FONT};font-size:14px;color:{_BODY};padding:14px 8px 14px 0;"
+        head = "".join(
+            f'<th style="{th}{"text-align:right;padding-right:0;" if i == len(block.headers) - 1 else ""}">'
+            f"{escape(h)}</th>"
+            for i, h in enumerate(block.headers)
+        )
+        body = ""
+        for row in block.rows:
+            cells = "".join(
+                (
+                    f'<td align="right" style="{td}padding-right:0;">{escape(str(c))}</td>'
+                    if i == len(row) - 1
+                    else f'<td style="{td}">{escape(str(c))}</td>'
+                )
+                for i, c in enumerate(row)
+            )
+            body += f"<tr>{cells}</tr>"
+        return _cell(
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+            f'border="0"><tr>{head}</tr>{body}</table>',
+            top=top,
+        )
+
+    if isinstance(block, Totals):
+
+        def total_row(label: str, value: str, *, grand: bool) -> str:
+            weight = "700" if grand else "400"
+            border = f"border-top:2px solid {_INK};" if grand else ""
+            colour = _INK if grand else _BODY
+            style = (
+                f"font-family:{_FONT};font-size:{'16px' if grand else '14px'};color:{colour};"
+                f"font-weight:{weight};{border}"
+            )
+            return (
+                f'<tr><td style="{style}padding:9px 8px 9px 0;">{escape(label)}</td>'
+                f'<td align="right" style="{style}padding:9px 0;">{escape(value)}</td></tr>'
+            )
+
+        rows = "".join(total_row(k, v, grand=False) for k, v in block.lines)
+        rows += total_row(block.grand[0], block.grand[1], grand=True)
+        # Right-aligned 280px stack: the totals belong under the amount column, not spanning
+        # the full width, or the eye has to travel back across the page to pair them up.
+        return _cell(
+            '<table role="presentation" width="280" cellpadding="0" cellspacing="0" border="0" '
+            f'align="right" style="width:280px;">{rows}</table>',
             top=top,
         )
 
@@ -288,6 +389,32 @@ def _block_text(block: Block) -> str | None:
         return "\n".join(f"{i}. {item}" for i, item in enumerate(block.items, start=1))
     if isinstance(block, Panel):
         return "\n".join(_wrap(line) for line in block.lines)
+    if isinstance(block, Columns):
+        left = "\n".join(str(x) for x in block.left_lines if x)
+        right = "\n".join(str(x) for x in block.right_lines if x)
+        return f"{block.left_label.upper()}\n{left}\n\n{block.right_label.upper()}\n{right}"
+    if isinstance(block, Table):
+        # Pad every column to its widest cell so the amounts line up in a fixed-width font;
+        # the money column is right-aligned, same as the HTML.
+        grid = [list(map(str, block.headers))] + [list(map(str, r)) for r in block.rows]
+        widths = [max(len(row[i]) for row in grid) for i in range(len(grid[0]))]
+        last = len(widths) - 1
+        lines = []
+        for r, row in enumerate(grid):
+            cells = [
+                cell.rjust(widths[i]) if i == last else cell.ljust(widths[i])
+                for i, cell in enumerate(row)
+            ]
+            lines.append("  ".join(cells).rstrip())
+            if r == 0:
+                lines.append("-" * len("  ".join(cells).rstrip()))
+        return "\n".join(lines)
+    if isinstance(block, Totals):
+        pairs = list(block.lines) + [block.grand]
+        width = max(len(label) for label, _ in pairs)
+        body = [f"{label.ljust(width)}  {value}" for label, value in block.lines]
+        grand = f"{block.grand[0].ljust(width)}  {block.grand[1]}"
+        return "\n".join(body + ["-" * len(grand), grand])
     if isinstance(block, Button):
         # A text reader cannot click anything, so give them the destination itself. A
         # mailto is an address, not a URL: "mailto:x@y?subject=Mijn%20gegevens" is noise.

@@ -11,6 +11,10 @@ On that same paid-first-payment event the customer gets their welcome e-mail (ma
 the founder's Telegram ping is not a reply to the buyer, and a self-serve payer who hears
 nothing is the one failure mode that is entirely ours.
 
+Every paid payment — the first one AND each recurring month — also gets a factuur
+(invoice.py). A Dutch B2B client needs one per charge to reclaim the BTW, and month two is
+the one their bookkeeper chases us for.
+
 All Mollie knowledge lives here; server.py only owns the thin webhook route. The API
 key (MOLLIE_API_KEY) is optional at boot: the app runs fine without it, billing calls
 raise a clear MissingSetting instead. Every webhook event is appended to
@@ -521,6 +525,68 @@ def send_welcome(
     return result
 
 
+# --- Factuur -----------------------------------------------------------------------------
+
+
+def _invoice_paid_payment(payment: dict[str, Any], plan: str, result: dict[str, Any]) -> None:
+    """Send the factuur for a payment that is already paid, recording the outcome on `result`.
+
+    Never raises and never changes `action`: the subscription and the welcome are the
+    webhook's real work, and a factuur that fails is something the founder must hear about,
+    not something that makes Mollie retry a payment we have already banked.
+    """
+    try:
+        _invoice_paid_payment_inner(payment, plan, result)
+    except Exception as exc:  # noqa: BLE001
+        # Deliberately swallowed HERE rather than at the route: an escape would skip
+        # _log_event and _notify below it, so a factuur bug would also cost the founder the
+        # ping telling him a subscription just started.
+        result["invoice_sent"] = False
+        result["invoice_reason"] = f"{type(exc).__name__}: {exc}"
+
+
+def _invoice_paid_payment_inner(payment: dict[str, Any], plan: str, result: dict[str, Any]) -> None:
+    from . import invoice  # local: invoice imports billing back for the BTW split
+
+    customer_id = str(payment.get("customerId") or "")
+    gross = (payment.get("amount") or {}).get("value")
+    if not (customer_id and gross):
+        result["invoice_reason"] = "payment has no customer or amount"
+        return
+    try:
+        customer = fetch_customer(customer_id)
+    except (MollieError, MissingSetting) as exc:
+        result["invoice_reason"] = f"could not fetch customer: {exc}"
+        return
+
+    # Invoice-date the payment, not the webhook: a retry days later must not shift the date
+    # on a document that is already in someone's bookkeeping.
+    on = None
+    paid_at = str(payment.get("paidAt") or "")[:10]
+    if paid_at:
+        try:
+            on = datetime.strptime(paid_at, "%Y-%m-%d").date()
+        except ValueError:
+            on = None
+
+    first = payment.get("sequenceType") == "first"
+    label = _plan_label(plan)
+    outcome = invoice.send(
+        payment_id=str(payment.get("id") or ""),
+        gross_eur=str(gross),
+        to=str(customer.get("email") or ""),
+        buyer_name=str(customer.get("name") or ""),
+        description=f"Klantkraan {label} {'eerste maand' if first else 'maandabonnement'}",
+        on=on,
+    )
+    result["invoice_sent"] = outcome["sent"]
+    result["invoice_number"] = outcome["number"]
+    if outcome["placeholder_identity"]:
+        result["invoice_placeholder_identity"] = outcome["placeholder_identity"]
+    if not outcome["sent"]:
+        result["invoice_reason"] = outcome["reason"]
+
+
 # --- Webhook -----------------------------------------------------------------------------
 
 
@@ -573,12 +639,40 @@ def handle_webhook(payment_id: str) -> dict[str, Any]:
             result["welcome_to"] = welcome["to"]
             if not welcome["sent"]:
                 result["welcome_reason"] = welcome["reason"]
+            _invoice_paid_payment(payment, plan, result)
     elif status == "paid":
         result["action"] = "recurring_paid" if sequence_type == "recurring" else "paid"
+        # Every charge needs its own factuur, not just the first: month two is what the
+        # client's bookkeeper chases us for, and nobody is watching a recurring SEPA debit.
+        if customer_id:
+            metadata = payment.get("metadata") or {}
+            _invoice_paid_payment(payment, str(metadata.get("plan") or DEFAULT_PLAN), result)
 
     _log_event({"event": "webhook", **result})
     _notify(result)
     return result
+
+
+def _invoice_line(result: dict[str, Any]) -> str:
+    """One line about the factuur for the founder ping. A placeholder BTW-id is called out
+    every single time on purpose: it is the one thing that makes the document invalid, and a
+    warning that only appears once is a warning that gets missed."""
+    if "invoice_sent" not in result and "invoice_reason" not in result:
+        return "Geen factuur voor deze gebeurtenis."
+    if result.get("invoice_sent"):
+        line = f"Factuur {result.get('invoice_number')} verstuurd."
+    else:
+        line = (
+            f"GEEN factuur verstuurd ({result.get('invoice_reason') or 'onbekend'}) — "
+            f"nummer {result.get('invoice_number') or 'niet toegekend'}."
+        )
+    placeholders = result.get("invoice_placeholder_identity") or []
+    if placeholders:
+        line += (
+            f"\n⚠️ NIET RECHTSGELDIG: {', '.join(placeholders)} staat nog op een placeholder. "
+            f"Zet de echte waarde in .env op de server."
+        )
+    return line
 
 
 def _notify(result: dict[str, Any]) -> None:
@@ -601,18 +695,20 @@ def _notify(result: dict[str, Any]) -> None:
                 )
             notify.owner(
                 "[billing] Eerste betaling binnen ({payment}) — maandabonnement gestart: "
-                "{sub} ({plan}, €{monthly}/maand)\n{welcome}".format(
+                "{sub} ({plan}, €{monthly}/maand)\n{welcome}\n{factuur}".format(
                     payment=result.get("payment_id"),
                     sub=result.get("subscription_id"),
                     plan=result.get("plan"),
                     monthly=result.get("monthly_eur"),
                     welcome=welcome_line,
+                    factuur=_invoice_line(result),
                 )
             )
         elif action in ("recurring_paid", "paid", "already_subscribed"):
             notify.owner(
                 f"[billing] Betaling ontvangen: {result.get('payment_id')} "
-                f"({result.get('sequence_type')}, klant {result.get('customer_id')})"
+                f"({result.get('sequence_type')}, klant {result.get('customer_id')})\n"
+                f"{_invoice_line(result)}"
             )
     except Exception as exc:
         print(f"[billing:notify] failed ({exc}); event was: {result}")
