@@ -193,9 +193,15 @@ def build_digest(now: datetime | None = None, today: bool = False) -> str:
     return "\n".join(lines)
 
 
-def send_digest(now: datetime | None = None, today: bool = False) -> bool:
-    """Build the digest and push it to the founder (OWNER_TELEGRAM_CHAT_ID). True on delivery."""
-    return notify.owner(build_digest(now, today))
+def send_digest(now: datetime | None = None, today: bool = False) -> dict[str, bool]:
+    """Build the digest and push it to the founder: Telegram if configured, else e-mail.
+
+    Returns which channels took it. A nightly timer whose output goes nowhere is worse than
+    no timer, so the caller can tell the difference between delivered and merely printed.
+    """
+    text = build_digest(now, today)
+    subject = f"Klantkraan dagrapport {(now or datetime.now()).date().isoformat()}"
+    return notify.owner_report(subject, text)
 
 
 # --- Layer 2: the analyst (a cheap nightly Claude pass over finished conversations) ------
@@ -379,10 +385,17 @@ def main(argv: list[str]) -> int:
         if "--dry" in argv:
             print(text)
             return 0
-        ok = send_digest(today=today)
+        delivered = send_digest(today=today)
         print(text)
-        print(f"\n[{'sent' if ok else 'NOT sent — configure OWNER_TELEGRAM_CHAT_ID'}]")
-        return 0 if ok else 1
+        took = [channel for channel, ok in delivered.items() if ok]
+        if took:
+            print(f"\n[sent via {', '.join(took)}]")
+            return 0
+        print(
+            "\n[NOT sent — nowhere to deliver it. Set OWNER_TELEGRAM_CHAT_ID "
+            "(python -m app.notify chatid), or OWNER_EMAIL + RESEND_API_KEY.]"
+        )
+        return 1
     if cmd == "analyze":
         result = analyze_pending()
         print(

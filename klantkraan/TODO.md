@@ -50,12 +50,13 @@ Goal: make onboarding frictionless for BOTH sides, so the product works smoothly
 - [x] Define the minimal client-side intake collected ONCE — playbook §2 (scrape-first, one confirmation + four questions) held up; §1b adds the self-serve variant and the "ask one question, don't guess" rule when the scrape has no site to work from.
 - [x] Define the post-go-live upkeep loop (monitoring, monthly tune, change requests, who owns what) — `churn-prevention.md` rewritten: §1 cadence table (~35 min/client/month steady state) against the 4 deployed timers, §2 monthly tune, §3 change-request rule, §4 ownership split. Voice-era leftovers (daily stats SMS, "recovered calls", Attio) removed.
 - [x] Output: one smooth, repeatable playbook the founder runs per client — playbook + churn doc now meet at go-live with no gap. Also added playbook §1c, the written scope boundary (inbegrepen vs meerwerk), which did not exist.
-- [ ] **Follow-ups this opened (see playbook §11 items 6–9), in severity order:**
-  - [ ] **Terms + DPA acceptance at checkout** — `/aanmelden` collects no acceptance of anything. A buyer starts a €299/mo SEPA subscription without accepting the voorwaarden and with no verwerkersovereenkomst, while we process their customers' personal data (AVG art. 28 wants that in writing *before* processing). Fix = one required checkbox + persisted version/timestamp.
-  - [ ] **Website URL field on the signup form** — the whole scrape-first pre-build runs on the client's site and it is the one field we never ask for.
-  - [ ] **`billing.cancel` / `billing.refund` CLI** — the decline path and every off-boarding need the Mollie dashboard today.
-  - [ ] **Paid-webhook welcome message** — `handle_webhook` pings the founder, never the customer. First thing a paying stranger hears from us is silence.
-  - [ ] **Wire `OWNER_TELEGRAM_CHAT_ID` + dedicated bot token** — digest/analyst timers run but deliver nowhere, so NEEDS ATTENTION is dark. Highest-value hour of ops work outstanding.
+- [x] **Follow-ups this opened (see playbook §11 items 6–9) — all five closed 2026-07-29:**
+  - [x] **Terms + DPA acceptance at checkout** — required checkbox + persisted `akkoord_versie`/`akkoord_op` (4ce359d).
+  - [x] **Paid-webhook welcome message** — the buyer now gets a Dutch welcome the moment the first payment lands, via `app/mailer.py` (Resend). Promises one working day, skips the website question when the form supplied it, idempotent against webhook replays; if it cannot send, the founder ping says so and names the fallback command (d5f7984).
+  - [x] **Website URL field on the signup form** — optional `site` field on `/aanmelden` NL/EN/ES; normalised server-side, never rejected, so a typo cannot fail a €299 checkout (4bc60e8).
+  - [x] **`billing.cancel` / `billing.refund` CLI** — `subs` / `cancel` / `refund` / `offboard`; the decline path is one command and the Mollie dashboard is out of the loop (8c262aa).
+  - [x] **Digest delivering nowhere** — no longer gated on `OWNER_TELEGRAM_CHAT_ID`: the daily digest falls back to `OWNER_EMAIL` over Resend, and exits 1 (visible failed unit) when neither channel is configured instead of quietly writing to the journal. `python -m app.notify chatid` now prints the chat id, so wiring Telegram is one command whenever the founder wants the upgrade.
+  - [ ] **FOUNDER: set `RESEND_API_KEY` + `OWNER_EMAIL` in the prod `.env`.** Both the welcome mail and the digest fallback are dark without it — the code is deployed-ready, the key is the only thing missing.
 
 ### G. Website copy — de-AI / professional-copywriter pass (added 2026-07-21)
 Goal: the site copy reads like a professional copywriter wrote it, not like AI. Founder specifically flagged em-dashes and AI-tell writing. Cut them; keep dashes/punctuation only when genuinely relevant.

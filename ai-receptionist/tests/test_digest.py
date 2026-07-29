@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-from app import analytics, oversight
+from app import analytics, mailer, notify, oversight
 
 
 def test_cost_model_matches_published_rates():
@@ -93,3 +93,75 @@ def test_analyst_insight_surfaces_in_digest(data_dir, clients_dir):
     assert "SIGNALS" in enriched and "Doen jullie spoed?" in enriched, "FAQ gap should surface"
     assert "after_hours_share_high" in enriched, "upsell signal should surface"
     assert "refused_in_scope_job" in enriched and "quality flag" in enriched
+
+
+# --- Delivery: a nightly report nobody receives is the same as no report ------------------
+
+
+def _capture(monkeypatch, telegram_ok: bool, mail_ok: bool = True):
+    """Stub both channels; return the lists they captured."""
+    pings: list[str] = []
+    mails: list[tuple[str, str]] = []
+
+    def fake_owner(text, chat_id=None):
+        pings.append(text)
+        return telegram_ok
+
+    def fake_send(to, subject, text, **kwargs):
+        mails.append((to, subject))
+        return mail_ok
+
+    monkeypatch.setattr(notify, "owner", fake_owner)
+    monkeypatch.setattr(mailer, "send", fake_send)
+    return pings, mails
+
+
+def test_digest_goes_to_telegram_when_it_is_configured(monkeypatch, data_dir, clients_dir):
+    monkeypatch.setenv("OWNER_EMAIL", "davy@klantkraan.nl")
+    pings, mails = _capture(monkeypatch, telegram_ok=True)
+
+    assert oversight.send_digest() == {"telegram": True, "email": False}
+    assert len(pings) == 1
+    assert mails == [], "a working chat id must not also produce an e-mail"
+
+
+def test_digest_falls_back_to_email_when_telegram_is_not_configured(
+    monkeypatch, data_dir, clients_dir
+):
+    """The founder deferred the Telegram chat id, so the timers were delivering nowhere."""
+    monkeypatch.setenv("OWNER_EMAIL", "davy@klantkraan.nl")
+    pings, mails = _capture(monkeypatch, telegram_ok=False)
+
+    assert oversight.send_digest() == {"telegram": False, "email": True}
+    assert mails[0][0] == "davy@klantkraan.nl"
+    assert mails[0][1].startswith("Klantkraan dagrapport")
+
+
+def test_digest_reports_failure_when_neither_channel_is_configured(
+    monkeypatch, data_dir, clients_dir
+):
+    monkeypatch.delenv("OWNER_EMAIL", raising=False)
+    _capture(monkeypatch, telegram_ok=False)
+
+    assert oversight.send_digest() == {"telegram": False, "email": False}
+
+
+def test_a_report_too_long_for_telegram_goes_by_email_instead(monkeypatch):
+    monkeypatch.setenv("OWNER_EMAIL", "davy@klantkraan.nl")
+    pings, mails = _capture(monkeypatch, telegram_ok=True)
+
+    result = notify.owner_report("lang rapport", "x" * (notify._TELEGRAM_LIMIT + 1))
+
+    assert result == {"telegram": False, "email": True}
+    assert pings == [], "Telegram would reject it outright; do not even try"
+
+
+def test_an_over_long_report_is_truncated_rather_than_dropped(monkeypatch):
+    """No mailbox configured and too long to send whole: a cut-off digest beats silence."""
+    monkeypatch.delenv("OWNER_EMAIL", raising=False)
+    pings, _ = _capture(monkeypatch, telegram_ok=True)
+
+    result = notify.owner_report("lang rapport", "x" * (notify._TELEGRAM_LIMIT + 500))
+
+    assert result["telegram"] is True
+    assert len(pings[0]) <= notify._TELEGRAM_LIMIT and "afgekapt" in pings[0]

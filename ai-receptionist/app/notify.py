@@ -11,8 +11,10 @@ the founder's OWNER_TELEGRAM_CHAT_ID. Either way the message is prefixed with th
 name so a multi-client founder always knows which bot fired.
 
 Config (in .env):
-  OWNER_TELEGRAM_CHAT_ID   your personal chat id (message the bot once, then get it)
+  OWNER_TELEGRAM_CHAT_ID   your personal chat id — message the bot once, then run
+                           `python -m app.notify chatid` and paste what it prints
   NOTIFY_TELEGRAM_TOKEN    optional; defaults to TELEGRAM_BOT_TOKEN (the receptionist bot)
+  OWNER_EMAIL              fallback inbox for long reports when Telegram is unconfigured
 Per-client override (in config/clients/<slug>.yaml):
   notify:
     telegram_chat_id: "..."   # this client's own recipient for their leads/bookings
@@ -22,6 +24,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 import threading
 import time
 import traceback
@@ -29,7 +32,7 @@ import urllib.request
 from datetime import datetime
 from typing import Any
 
-from . import settings
+from . import mailer, settings
 from .settings import active_client, business, ensure_dirs
 
 _LOCK = threading.Lock()
@@ -74,6 +77,38 @@ def owner(text: str, chat_id: str | None = None) -> bool:
     except Exception as exc:  # never let a notification failure break the conversation
         print(f"[notify:owner] send failed ({exc}); message was: {text}")
         return False
+
+
+# --- Long-form ops reports: Telegram first, e-mail as the fallback -----------------------
+# The nightly digest timers were delivering into a void: without OWNER_TELEGRAM_CHAT_ID,
+# owner() prints to stdout and systemd swallows it into the journal, where nobody looks. A
+# report nobody reads is the same as no report. Now that mailer.py exists, e-mail is the
+# fallback, so one Resend key (which the welcome mail needs anyway) is enough to make the
+# timers real — the Telegram chat id becomes an upgrade instead of a prerequisite.
+
+_TELEGRAM_LIMIT = 4096  # Telegram rejects longer sendMessage bodies outright
+
+
+def owner_report(subject: str, text: str) -> dict[str, bool]:
+    """Deliver a long report to the founder. Returns which channels took it.
+
+    Telegram first, because that is where he actually reads things. E-mail only when
+    Telegram did not take it, so a working chat id does not produce two of everything.
+    """
+    result = {"telegram": False, "email": False}
+    if len(text) <= _TELEGRAM_LIMIT:
+        result["telegram"] = owner(text)
+    if result["telegram"]:
+        return result
+
+    recipient = os.getenv("OWNER_EMAIL", "").strip()
+    if recipient:
+        result["email"] = mailer.send(recipient, subject, text)
+    if not result["email"] and len(text) > _TELEGRAM_LIMIT:
+        # Too long for Telegram and no mailbox to fall back to. A cut-off digest still
+        # beats silence, so send what fits rather than nothing.
+        result["telegram"] = owner(text[: _TELEGRAM_LIMIT - 60] + "\n\n[afgekapt: te lang]")
+    return result
 
 
 # --- Error reporting: PII-scrubbed stack traces to the founder ---------------------------
@@ -244,3 +279,58 @@ def _save_message(client: str, customer: str, contact: str, message: str) -> boo
     except Exception as exc:
         print(f"[notify:take_message] persist failed ({exc})")
         return False
+
+
+# --- CLI -----------------------------------------------------------------------------------
+
+
+def chat_ids() -> list[dict[str, str]]:
+    """Every chat that has messaged the bot recently, from Telegram's getUpdates.
+
+    This exists so finding OWNER_TELEGRAM_CHAT_ID is one command instead of a hunt through
+    a third-party bot. Note getUpdates only returns updates the bot has not consumed, so it
+    stays empty while the receptionist's own poller is running — send the message with the
+    service stopped, or use a bot that nothing polls.
+    """
+    token = os.getenv("NOTIFY_TELEGRAM_TOKEN") or os.getenv("TELEGRAM_BOT_TOKEN")
+    if not token:
+        raise RuntimeError("no bot token: set TELEGRAM_BOT_TOKEN (or NOTIFY_TELEGRAM_TOKEN)")
+    with urllib.request.urlopen(
+        f"https://api.telegram.org/bot{token}/getUpdates", timeout=10
+    ) as resp:
+        payload = json.loads(resp.read())
+    seen: dict[str, dict[str, str]] = {}
+    for update in payload.get("result") or []:
+        chat = ((update.get("message") or update.get("channel_post") or {}).get("chat")) or {}
+        if chat.get("id") is not None:
+            seen[str(chat["id"])] = {
+                "id": str(chat["id"]),
+                "name": chat.get("username") or chat.get("first_name") or chat.get("title") or "",
+                "type": chat.get("type", ""),
+            }
+    return list(seen.values())
+
+
+def main(argv: list[str]) -> int:
+    if (argv[1:2] or [""])[0] != "chatid":
+        print("usage: python -m app.notify chatid")
+        return 2
+    try:
+        found = chat_ids()
+    except Exception as exc:
+        print(f"❌ {exc}")
+        return 1
+    if not found:
+        print(
+            "Geen chats gevonden. Stuur je bot eerst een bericht in Telegram.\n"
+            "Draait de receptionist-bot? Die consumeert dezelfde updates — stop hem even "
+            "(systemctl stop ai-receptionist) en probeer opnieuw."
+        )
+        return 1
+    for chat in found:
+        print(f"OWNER_TELEGRAM_CHAT_ID={chat['id']}    # {chat['type']} {chat['name']}".rstrip())
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

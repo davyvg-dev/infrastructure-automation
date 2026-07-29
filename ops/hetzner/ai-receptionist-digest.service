@@ -1,11 +1,14 @@
 [Unit]
-Description=Klantkraan daily oversight digest (per-client conversations/leads/cost -> founder Telegram)
+Description=Klantkraan daily oversight digest (per-client conversations/leads/cost -> founder Telegram, e-mail fallback)
 After=network-online.target ai-receptionist.service
 Wants=network-online.target
 
 [Service]
 Type=oneshot
-# app user: reads data/analytics.db + the app .env (OWNER_TELEGRAM_CHAT_ID / notify token).
+# app user: reads data/analytics.db + the app .env. Delivery needs EITHER
+# OWNER_TELEGRAM_CHAT_ID (+ a notify token) OR OWNER_EMAIL + RESEND_API_KEY. With neither
+# set the digest exits 1 and `systemctl status` shows the unit failed, which is the point:
+# this timer used to "succeed" every night while delivering into the journal.
 User=klantkraan
 WorkingDirectory=/opt/klantkraan/ai-receptionist
 ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.oversight digest
