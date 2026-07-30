@@ -95,10 +95,14 @@ platforms:
     label: "in LinkedIn (Buffer queue)"
     media: none
     media_required: false
-    # Hard ceiling: a second LinkedIn post inside 24h cannibalises the first. Enforced by
-    # the channel's schedule in Buffer (this repo has no scheduling code); `selftest
-    # buffer` compares Buffer's slots against this number and warns when they disagree.
+    # The target: post on 5 days a week, at most once a day. A second LinkedIn post
+    # inside 24h cannibalises the first, and weekends are dead for Dutch B2B. Both
+    # numbers are enforced by the channel's posting schedule in Buffer — this repo has
+    # no scheduling code on purpose — and `selftest buffer` warns when Buffer's schedule
+    # drifts from them. 5 slots/week is also the approval budget: approve more LinkedIn
+    # drafts than that and the queue backs up, so posts go out days after they were written.
     max_per_day: 1
+    days_per_week: 5
     note: "Primary B2B channel. No links in the post body (put them in comment 1 / Featured)."
     writing: "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are
       a scroll-stopping hook that stands alone above the fold. Generous line breaks (1-2

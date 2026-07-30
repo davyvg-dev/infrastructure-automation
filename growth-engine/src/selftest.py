@@ -480,17 +480,38 @@ def check_buffer() -> bool:
             channel = publish_buffer.channel_for(name)
         except Exception as exc:
             return _fail(f"{name}: {exc}")
-        slots = publish_buffer.slots_per_day(channel)
-        _ok(f"{name} -> {publish_buffer.label(channel)}, {slots} slot(s)/day in Buffer")
-        if slots == 0:
+        per_day = publish_buffer.slots_per_day(channel)
+        days = publish_buffer.posting_days(channel)
+        per_week = publish_buffer.slots_per_week(channel)
+        _ok(
+            f"{name} -> {publish_buffer.label(channel)}: {per_week} slot(s)/week "
+            f"({per_day}/day max, {len(days)} day(s): {', '.join(days) or 'none'})"
+        )
+        if per_day == 0:
             _warn(f"{name} has no posting schedule in Buffer — queued posts may never send")
-        # Buffer owns the schedule, so a mismatch is fixed in Buffer's UI, not in code.
-        ceiling = platforms.spec(name).get("max_per_day")
-        if ceiling and slots > ceiling:
+        # Buffer owns the schedule, so every mismatch is fixed in Buffer's UI, not in code.
+        spec = platforms.spec(name)
+        ceiling, target_days = spec.get("max_per_day"), spec.get("days_per_week")
+        if ceiling and per_day > ceiling:
             _warn(
-                f"{name}: Buffer posts up to {slots}×/day but config caps it at "
+                f"{name}: Buffer posts up to {per_day}×/day but config caps it at "
                 f"{ceiling}×/day — remove slots in Buffer's posting schedule"
             )
+        if target_days and len(days) != target_days:
+            _warn(
+                f"{name}: Buffer posts on {len(days)} day(s)/week but the goal is "
+                f"{target_days} — adjust the posting schedule in Buffer"
+            )
+        # A queue deeper than a week means approvals are outrunning the schedule and
+        # today's post will go out stale.
+        waiting = publish_buffer.pending(channel)
+        if waiting:
+            _ok(f"{name}: {len(waiting)} post(s) waiting, next {waiting[0].get('dueAt')}")
+            if per_week and len(waiting) > per_week:
+                _warn(
+                    f"{name}: {len(waiting)} queued but only {per_week} send(s)/week — "
+                    f"the backlog is over a week deep; approve fewer or add slots"
+                )
     return True
 
 

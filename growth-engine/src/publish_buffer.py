@@ -114,6 +114,34 @@ def slots_per_day(channel: dict[str, Any]) -> int:
     )
 
 
+def posting_days(channel: dict[str, Any]) -> list[str]:
+    """The days that actually have a slot — how many days a week the channel posts."""
+    return [d.get("day") for d in channel.get("postingSchedule") or [] if d.get("times")]
+
+
+def slots_per_week(channel: dict[str, Any]) -> int:
+    """Total sends a week the schedule allows — the rate the queue drains at."""
+    return sum(len(d.get("times") or []) for d in channel.get("postingSchedule") or [])
+
+
+def pending(channel: dict[str, Any]) -> list[dict[str, Any]]:
+    """Posts sitting on this channel waiting to go out, soonest first. `totalCount` is
+    forbidden on this key, so the edges are counted instead."""
+    query = (
+        "query Pending { posts(first: 100, input: {organizationId: "
+        + json.dumps(organization_id())
+        + ", filter: {channelIds: ["
+        + json.dumps(channel["id"])
+        + "]}}) { edges { node { id status dueAt } } } }"
+    )
+    edges = ((_gql(query).get("posts") or {}).get("edges")) or []
+    posts = [e.get("node") or {} for e in edges]
+    return sorted(
+        (p for p in posts if (p.get("status") or "").lower() not in ("sent", "error")),
+        key=lambda p: p.get("dueAt") or "",
+    )
+
+
 def label(channel: dict[str, Any]) -> str:
     return channel.get("displayName") or channel.get("name") or channel["id"]
 
