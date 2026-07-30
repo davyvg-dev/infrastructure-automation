@@ -93,13 +93,25 @@ def organization_id() -> str:
 
 @lru_cache(maxsize=1)
 def channels() -> list[dict[str, Any]]:
-    """Every channel connected to the organization (id, name, service, queue state)."""
+    """Every channel connected to the organization (id, name, service, queue state).
+
+    postingSchedule comes along because it *is* the cadence: this repo deliberately has
+    no scheduling code, so the only way to see how often a channel fires is to ask Buffer.
+    """
     query = (
         "query Channels { channels(input: {organizationId: "
         + json.dumps(organization_id())
-        + "}) { id name displayName service isQueuePaused } }"
+        + "}) { id name displayName service isQueuePaused postingSchedule { day times } } }"
     )
     return _gql(query).get("channels") or []
+
+
+def slots_per_day(channel: dict[str, Any]) -> int:
+    """The busiest day in the channel's Buffer schedule — its real per-day ceiling."""
+    return max(
+        (len(day.get("times") or []) for day in channel.get("postingSchedule") or []),
+        default=0,
+    )
 
 
 def label(channel: dict[str, Any]) -> str:
@@ -150,6 +162,7 @@ mutation QueuePost {
     schedulingType: automatic
     mode: addToQueue
     assets: []
+    saveToDraft: <DRAFT>
   }) {
     __typename
     ... on PostActionSuccess { post { id dueAt } }
@@ -159,14 +172,14 @@ mutation QueuePost {
 """
 
 
-def queue(platform: str, text: str) -> str:
-    """Add the text to the platform's Buffer queue. Returns a note saying when it goes out."""
-    if dry_run():
-        return "(dry-run: not queued in Buffer)"
-    channel = channel_for(platform)
+def _create_post(channel: dict[str, Any], text: str, *, as_draft: bool = False) -> dict[str, Any]:
+    """The createPost round-trip. as_draft parks it in Buffer's drafts — it never sends,
+    which is what makes the write path testable without publishing anything."""
     # Channel first, so post text containing the other sentinel can't be substituted into.
-    query = _QUEUE_POST.replace("<CHANNEL>", json.dumps(channel["id"])).replace(
-        "<TEXT>", json.dumps(text)
+    query = (
+        _QUEUE_POST.replace("<CHANNEL>", json.dumps(channel["id"]))
+        .replace("<DRAFT>", "true" if as_draft else "false")
+        .replace("<TEXT>", json.dumps(text))
     )
     result = _gql(query).get("createPost") or {}
     if result.get("__typename") != "PostActionSuccess":
@@ -174,7 +187,15 @@ def queue(platform: str, text: str) -> str:
             f"Buffer refused the post ({result.get('__typename') or 'unknown error'}): "
             f"{result.get('message') or 'no message given'}"
         )
-    post = result.get("post") or {}
+    return result.get("post") or {}
+
+
+def queue(platform: str, text: str) -> str:
+    """Add the text to the platform's Buffer queue. Returns a note saying when it goes out."""
+    if dry_run():
+        return "(dry-run: not queued in Buffer)"
+    channel = channel_for(platform)
+    post = _create_post(channel, text)
     note = f"{label(channel)} — goes out {post.get('dueAt') or 'at the next open slot'}"
     if channel.get("isQueuePaused"):
         note += " (⚠️ this queue is PAUSED in Buffer — nothing sends until you unpause it)"
@@ -196,9 +217,59 @@ def verify_auth() -> str:
     return "\n".join(lines)
 
 
+def post_status(post_id: str) -> str:
+    """The post's own view of itself — 'draft' for one saved to drafts, never queued."""
+    query = "query { post(input: {id: " + json.dumps(post_id) + "}) { status dueAt } }"
+    return ((_gql(query).get("post") or {}).get("status") or "unknown").lower()
+
+
+def delete_post(post_id: str) -> None:
+    query = (
+        "mutation { deletePost(input: {id: "
+        + json.dumps(post_id)
+        + "}) { __typename ... on MutationError { message } } }"
+    )
+    result = _gql(query).get("deletePost") or {}
+    if not str(result.get("__typename", "")).endswith("Success"):
+        raise BufferError(f"could not delete post {post_id}: {result.get('message') or result}")
+
+
+def test_draft(platform: str) -> str:
+    """Prove the whole write path against the real channel and leave nothing behind:
+    create as a Buffer draft (which never sends), assert it really is a draft, delete it.
+    Bails out loudly without deleting if Buffer ignored saveToDraft — that would mean a
+    live post is sitting in the queue and the founder needs to know."""
+    channel = channel_for(platform)
+    post = _create_post(
+        channel,
+        "Test van de Klantkraan content-pijplijn. Deze post is een concept in Buffer "
+        "en gaat niet live.",
+        as_draft=True,
+    )
+    post_id = post.get("id")
+    if not post_id:
+        raise BufferError(f"Buffer accepted the post on {label(channel)} but returned no id")
+    status = post_status(post_id)
+    if status != "draft":
+        raise BufferError(
+            f"saveToDraft was ignored — post {post_id} on {label(channel)} is "
+            f"'{status}', not 'draft'. DELETE IT IN BUFFER NOW before it sends."
+        )
+    delete_post(post_id)
+    return f"write path OK on {label(channel)}: created draft {post_id}, verified, deleted"
+
+
 def main(argv: list[str]) -> int:
-    """`python -m src.publish_buffer` — show the channels and the platform mapping."""
+    """`python -m src.publish_buffer [--test-draft <platform>]` — show the channel
+    mapping, or prove the write path by creating one Buffer draft that never sends."""
     try:
+        if "--test-draft" in argv:
+            which = argv[argv.index("--test-draft") + 1 :]
+            if not which:
+                print("usage: python -m src.publish_buffer --test-draft <platform>")
+                return 2
+            print(test_draft(which[0]))
+            return 0
         print(verify_auth())
         from . import platforms
 

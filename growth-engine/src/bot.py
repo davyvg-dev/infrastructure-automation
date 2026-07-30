@@ -35,6 +35,7 @@ from . import (
     media,
     pagekit,
     platforms,
+    publish_buffer,
     publish_meta,
     publish_tiktok,
     store,
@@ -331,6 +332,31 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
                 f"⚠️ {platform.title()} post failed ({exc}). Here it is to post by hand:",
             )
             await context.bot.send_message(chat_id, variants[platform])
+
+    # Buffer-delivery platforms: push the text into the channel's queue. Nothing is
+    # live yet — Buffer's own schedule decides when it goes out.
+    queued_any = False
+    for platform in platforms.buffer_platforms():
+        if platform not in variants:
+            continue
+        try:
+            note = await asyncio.to_thread(publish_buffer.queue, platform, variants[platform])
+            if _media_for(draft, platform):
+                note += "\nMedia stayed behind (Buffer fetches assets by URL and we have "
+                note += "nowhere public to host them yet) — attach it in Buffer if you want it."
+            store.update_draft(draft["id"], **{f"{platform}_queued": note})
+            queued_any = True
+            await context.bot.send_message(chat_id, f"🗓 Queued in Buffer: {note}")
+        except Exception as exc:
+            await context.bot.send_message(
+                chat_id,
+                f"⚠️ Couldn't queue {platform.title()} in Buffer ({exc}). "
+                f"Here it is to post by hand:",
+            )
+            await context.bot.send_message(chat_id, variants[platform])
+    # Queued is not posted; only say "posted" if an auto platform actually posted.
+    if queued_any and (store.get_draft(draft["id"]) or {}).get("status") != "posted":
+        store.update_draft(draft["id"], status="queued")
 
     # Draft-delivery platforms (TikTok): upload the reel to the founder's in-app
     # inbox; the caption can't ride along, so it is handed over to paste there.

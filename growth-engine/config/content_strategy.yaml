@@ -91,10 +91,14 @@ platforms:
       natural. A strong first line that stands alone."
   linkedin:
     enabled: true
-    delivery: assisted      # formatted + pushed to you to paste (native posts perform best)
-    label: "in LinkedIn (paste)"
+    delivery: buffer        # queued via Buffer (an official LinkedIn partner) on approval
+    label: "in LinkedIn (Buffer queue)"
     media: none
     media_required: false
+    # Hard ceiling: a second LinkedIn post inside 24h cannibalises the first. Enforced by
+    # the channel's schedule in Buffer (this repo has no scheduling code); `selftest
+    # buffer` compares Buffer's slots against this number and warns when they disagree.
+    max_per_day: 1
     note: "Primary B2B channel. No links in the post body (put them in comment 1 / Featured)."
     writing: "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are
       a scroll-stopping hook that stands alone above the fold. Generous line breaks (1-2

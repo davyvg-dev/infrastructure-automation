@@ -5,11 +5,14 @@ A draft record looks like:
   "id": "20260710-a1b2",
   "pillar": "build_log",
   "topic": "handling reschedules without a human",
-  "status": "pending" | "approved" | "posted" | "skipped",
+  "status": "pending" | "approved" | "posted" | "queued" | "skipped",
   "created_at": "2026-07-10T09:00:00+02:00",
   "variants": {"x": "...", "linkedin": "...", "reddit": "..."},
   "x_url": "https://x.com/.../status/123",   # set once posted
+  "linkedin_queued": "Klantkraan — goes out 2026-07-31T09:00:00Z",  # in Buffer's queue
 }
+
+"queued" means handed to Buffer and not live yet; there is no URL until Buffer sends it.
 """
 
 from __future__ import annotations

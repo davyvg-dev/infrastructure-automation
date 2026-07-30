@@ -123,8 +123,41 @@ Now wire the pieces together, but with posting disabled so mistakes are harmless
 
 ---
 
+## Step 9 — Buffer delivery (LinkedIn)
+
+`delivery: buffer` hands an approved variant to Buffer's queue instead of posting it.
+Buffer is an official LinkedIn partner, so this is sanctioned where a direct API call
+is not. **Buffer owns the schedule** — cadence is tuned in Buffer's UI, never here.
+
+- [x] ▶ `BUFFER_API_KEY` in `.env`; connect the channels at buffer.com
+- [x] ▶ `python -m src.publish_buffer` → ✓ lists the channels and resolves each
+      `delivery: buffer` platform to one of them (X appears as `twitter`)
+- [x] ▶ `python -m src.selftest buffer` → ✓ passes, and reports slots/day per channel
+- [x] ▶ `python -m src.publish_buffer --test-draft linkedin` → ✓ "write path OK": it
+      creates a real post as a Buffer *draft* (which never sends), asserts Buffer honoured
+      `saveToDraft`, then deletes it. Repeatable, leaves nothing behind.
+- [x] ✓ Approval loop in dry-run: X reports a dry-run post, LinkedIn reports a dry-run
+      queue, Reddit/Facebook come back as paste text, and the draft's status stays
+      `posted` rather than being downgraded to `queued`.
+- [ ] ▶ **Founder, in Buffer's UI:** cut the LinkedIn posting schedule to **1 slot/day**
+      (it ships with 2, and `selftest buffer` warns about it) and move the slot into
+      working hours — the defaults land at 21:28 / 22:44, which is not when Dutch
+      business owners read LinkedIn.
+- [ ] ▶ First real queue: run the bot for real, `/now`, tap ✅ → ✓ Telegram reports
+      "🗓 Queued in Buffer: <channel> — goes out <time>", and the post is visible in
+      Buffer's queue.
+
+Not yet possible: **media through Buffer.** Buffer fetches assets by URL, and rendered
+cards/reels live only in local `data/`. Until that directory is served over public HTTPS,
+buffer posts go out text-only and say so. Instagram therefore stays `assisted` (a
+caption-only IG post is rejected).
+
+---
+
 ## Regression check (run any time you change code)
 
 - [ ] `python -m py_compile src/*.py`
 - [ ] `python -m src.selftest all` (or `config` if you only touched config)
 - [ ] One dry-run `/now` cycle if you touched `bot.py`, `generate.py`, or `publish_x.py`.
+- [ ] `python -m src.publish_buffer --test-draft <platform>` if you touched
+      `publish_buffer.py` — it proves the write path without publishing.

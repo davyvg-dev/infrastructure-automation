@@ -29,6 +29,11 @@ def _ok(msg: str) -> None:
     print(f"  ✅ {msg}")
 
 
+def _warn(msg: str) -> None:
+    """Something the founder should fix outside this repo — never fails the gate."""
+    print(f"  ⚠️  {msg}")
+
+
 def _fail(msg: str) -> bool:
     print(f"  ❌ {msg}")
     return False
@@ -75,16 +80,23 @@ def check_platforms() -> bool:
         for key in ("label", "writing"):
             if not desc.get(key):
                 return _fail(f"'{name}' is missing '{key}'")
-        # Repo rule: X is the only platform allowed to auto-post (LinkedIn/Reddit ToS).
+        # Repo rule: X is the only platform allowed to post via a direct API call.
+        # Everything else automates through Buffer (a sanctioned partner) or not at all.
         if desc["delivery"] == "auto" and name != "x":
-            return _fail(f"'{name}' has delivery: auto — only x may auto-post")
+            return _fail(f"'{name}' has delivery: auto — only x may post direct; use buffer")
+        # Repo rule: Reddit is manual, permanently — its culture punishes automation.
+        if name == "reddit" and desc["delivery"] != "assisted":
+            return _fail("'reddit' must stay delivery: assisted — Reddit is manual, permanently")
     if "x" in reg and reg["x"]["char_limit"] != 280:
         return _fail(f"x char_limit must be 280, got {reg['x']['char_limit']}")
     _ok(f"enabled: {', '.join(platforms.enabled_platforms())}")
-    _ok(
-        f"auto: {', '.join(platforms.auto_platforms()) or '(none)'} — "
-        f"assisted: {', '.join(platforms.assisted_platforms()) or '(none)'}"
-    )
+    for mode, names in (
+        ("auto", platforms.auto_platforms()),
+        ("buffer", platforms.buffer_platforms()),
+        ("draft", platforms.draft_platforms()),
+        ("assisted", platforms.assisted_platforms()),
+    ):
+        _ok(f"{mode}: {', '.join(names) or '(none)'}")
     return True
 
 
@@ -465,9 +477,20 @@ def check_buffer() -> bool:
         return _fail(str(exc))
     for name in platforms.buffer_platforms():
         try:
-            _ok(f"{name} -> {publish_buffer.label(publish_buffer.channel_for(name))}")
+            channel = publish_buffer.channel_for(name)
         except Exception as exc:
             return _fail(f"{name}: {exc}")
+        slots = publish_buffer.slots_per_day(channel)
+        _ok(f"{name} -> {publish_buffer.label(channel)}, {slots} slot(s)/day in Buffer")
+        if slots == 0:
+            _warn(f"{name} has no posting schedule in Buffer — queued posts may never send")
+        # Buffer owns the schedule, so a mismatch is fixed in Buffer's UI, not in code.
+        ceiling = platforms.spec(name).get("max_per_day")
+        if ceiling and slots > ceiling:
+            _warn(
+                f"{name}: Buffer posts up to {slots}×/day but config caps it at "
+                f"{ceiling}×/day — remove slots in Buffer's posting schedule"
+            )
     return True
 
 
