@@ -9,6 +9,7 @@ Run one layer at a time (see TASK.md):
     python -m src.selftest generate    # Claude drafting (needs ANTHROPIC_API_KEY)
     python -m src.selftest telegram    # send a test message (needs Telegram vars)
     python -m src.selftest x           # verify X auth, does NOT post (needs X vars)
+    python -m src.selftest buffer      # list Buffer channels + mapping, queues NOTHING
     python -m src.selftest all         # run every check in order, stop on first failure
 
 Each check prints a clear PASS/FAIL and returns a non-zero exit code on failure, so it's
@@ -454,6 +455,22 @@ def check_meta() -> bool:
     return True
 
 
+def check_buffer() -> bool:
+    print("• buffer (lists channels — does NOT queue anything)")
+    from . import platforms, publish_buffer
+
+    try:
+        _ok(publish_buffer.verify_auth())
+    except Exception as exc:
+        return _fail(str(exc))
+    for name in platforms.buffer_platforms():
+        try:
+            _ok(f"{name} -> {publish_buffer.label(publish_buffer.channel_for(name))}")
+        except Exception as exc:
+            return _fail(f"{name}: {exc}")
+    return True
+
+
 def check_tiktok() -> bool:
     print("• tiktok (token refresh only — does NOT upload)")
     from . import publish_tiktok
@@ -474,12 +491,13 @@ CHECKS = {
     "generate": check_generate,
     "telegram": check_telegram,
     "x": check_x,
+    "buffer": check_buffer,
     "meta": check_meta,
     "tiktok": check_tiktok,
 }
 # Offline checks first, so a broken render can't waste an API call. meta/tiktok
 # stay out of 'all' until their creds exist (docs/AUTOPUBLISH.md) — run by name.
-ORDER = ["config", "platforms", "media", "reel", "seo", "generate", "telegram", "x"]
+ORDER = ["config", "platforms", "media", "reel", "seo", "generate", "telegram", "x", "buffer"]
 
 
 def main(argv: list[str]) -> int:

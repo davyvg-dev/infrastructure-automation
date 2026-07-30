@@ -12,9 +12,10 @@ from typing import Any
 
 from .settings import strategy
 
-# auto = post via API on approval · assisted = hand text over to paste ·
-# draft = upload media via API, founder finishes in-app (TikTok inbox flow)
-_DELIVERIES = ("auto", "assisted", "draft")
+# auto = post via API on approval · buffer = queue via Buffer, its schedule decides
+# when · assisted = hand text over to paste · draft = upload media via API, founder
+# finishes in-app (TikTok inbox flow)
+_DELIVERIES = ("auto", "buffer", "assisted", "draft")
 _MEDIA = ("none", "image", "video", "both")
 
 
@@ -49,6 +50,10 @@ def enabled_platforms() -> list[str]:
 
 def auto_platforms() -> list[str]:
     return [n for n, d in registry().items() if d["delivery"] == "auto"]
+
+
+def buffer_platforms() -> list[str]:
+    return [n for n, d in registry().items() if d["delivery"] == "buffer"]
 
 
 def assisted_platforms() -> list[str]:
