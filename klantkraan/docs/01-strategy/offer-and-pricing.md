@@ -97,6 +97,6 @@ Log candidates now; convert them the week voice goes live.
 
 - Competitor pricing (Cowcierge €150, Voicelabs €149, Gold Lemon €199+€899, MyAutoPilot €350+€1,350): research in `09-brand/naming-and-domain.md` references and `02-sales/funnel-benchmarks.md`.
 - Secretaresse.ai €397/mo flat + €497 setup, 14-day free trial, same trades ICP: `research/secretaresse-ai-2026-07-30.md` (retrieved 2026-07-30).
-- Watermelon €99 / 250 gesprekken — DIY chatbot builder with a hard conversation cap, not a done-for-you service. Different product, not a price competitor.
+- Watermelon (Free / €99 / €199 / €399) — DIY chatbot builder for webshops, no calendar booking at any tier. The comparable trade setup is €224, not €99: `research/watermelon-2026-07-30.md`.
 - US benchmarks (LeadTruffle $229, Podium from $399 with lock-in): https://www.intrysys.com/compare/best-missed-call-text-back-contractors
 - UK Invox £99/mo with 30-day guarantee: https://invoxai.uk/

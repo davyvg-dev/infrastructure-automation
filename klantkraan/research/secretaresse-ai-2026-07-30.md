@@ -100,13 +100,11 @@ Three options, in order of preference:
 
 Do not reprice before real LiveKit per-minute cost is on paper.
 
-## Also checked: Watermelon (€99 / 250 gesprekken)
+## Also checked: Watermelon
 
-Cheaper per month, different product: DIY chatbot builder, hard conversation cap, client does the
-configuring. Klantkraan sells done-for-you setup, tuning and a person. The €299 answer to "maar
-Watermelon is €99" is that €99 buys software and €299 buys a working receptionist — and that 250
-conversations is a ceiling, not an allowance. Worth making explicit on `/prijzen`; it is implicit
-today.
+Different market — a DIY chatbot builder for webshops, with no calendar booking at any tier. The
+comparable trade setup is €224/mo, not the €99 headline. Full teardown:
+`watermelon-2026-07-30.md`.
 
 ## Sources
 

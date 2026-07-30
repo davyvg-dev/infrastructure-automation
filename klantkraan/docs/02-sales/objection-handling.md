@@ -49,6 +49,15 @@
 ### "Ik heb al een CRM, doet die dit niet?"
 > "Welke gebruik je? Werkbon, Snelstart, Skoon? Geen van die beantwoordt je websitechat en WhatsApp en plant zelf afspraken in. Wij vullen aan, vervangen niet."
 
+### "Watermelon doet dit voor €99"
+> "Die €99 is de software. Iemand moet 'm nog instellen: jouw tarieven erin, je diensten, de WhatsApp-koppeling bij Meta aanvragen, en 'm bijwerken als je prijzen veranderen. Dat ben jij. En hij plant geen afspraken in — Watermelon is gebouwd voor webshops, voor vragen over bestellingen en retouren. Bij mij staat de klus in je agenda en jij doet niks."
+
+→ Never argue at €99. Their €99 tier runs the cheap model, includes one login and keeps
+Watermelon's logo on the widget. A trade setup with a decent model, WhatsApp and een tweede
+gebruiker is €199 + €25 = **€224** — and still no agenda. Quote that number.
+→ If the prospect is a webshop or has a support team: Watermelon is the better product. Say so and
+walk. Detail in `research/watermelon-2026-07-30.md`.
+
 ### "Mijn neef kan dit ook bouwen voor €0"
 > "Kan kloppen. Vraag hem hoe hij EU-AVG-compliance + 24/7 monitoring + maandelijkse software-updates inricht. Bij ons zit dat in de €299. Bij hem zit het bij jou op je bord."
 
