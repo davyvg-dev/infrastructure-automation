@@ -38,6 +38,8 @@ The receptionist only offers real calendar slots, never invents prices or advice
 
 **Status (2026-07-13):** only Chat is sellable today. The voice agent is dormant; Compleet is quoted as the upgrade path, never sold before voice is verified live. No third tier — the old top Premium tier is killed.
 
+**Compleet price is under review (2026-07-30).** Secretaresse.ai sells voice + chat + WhatsApp at **€397/mo flat, unlimited conversations**, €497 setup — €5.261 year 1 against Compleet's €6.237, and they are unmetered where Compleet is 750 min + €0,40/min. They target *vakspecialisten* (loodgieters, elektriciens, hoveniers) by name. Compleet's €499/750-min structure was priced on the Synthflow margin model; voice has since moved to self-hosted LiveKit. **Do not requote Compleet until real LiveKit per-minute COGS is on paper**; then decide between €449 flat with a fair-use cap (preferred) and holding €499 unmetered. Chat at €299 is unaffected and structurally stronger — they have no text-only tier, so their floor to first payment is €894 against our €149. Full teardown: `research/secretaresse-ai-2026-07-30.md`.
+
 ## Why this structure wins
 
 | Lever | Effect |
@@ -94,5 +96,7 @@ Log candidates now; convert them the week voice goes live.
 ## Sources
 
 - Competitor pricing (Cowcierge €150, Voicelabs €149, Gold Lemon €199+€899, MyAutoPilot €350+€1,350): research in `09-brand/naming-and-domain.md` references and `02-sales/funnel-benchmarks.md`.
+- Secretaresse.ai €397/mo flat + €497 setup, 14-day free trial, same trades ICP: `research/secretaresse-ai-2026-07-30.md` (retrieved 2026-07-30).
+- Watermelon €99 / 250 gesprekken — DIY chatbot builder with a hard conversation cap, not a done-for-you service. Different product, not a price competitor.
 - US benchmarks (LeadTruffle $229, Podium from $399 with lock-in): https://www.intrysys.com/compare/best-missed-call-text-back-contractors
 - UK Invox £99/mo with 30-day guarantee: https://invoxai.uk/

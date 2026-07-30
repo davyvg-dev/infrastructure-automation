@@ -7,8 +7,16 @@
 > was refuted in verification. A *named, time-boxed* founding-member rate discounts without
 > anchoring value low forever.
 >
-> **Deal mechanics (internal):** €149/mnd (excl. BTW) for 6 months on the €299 Chat tier, then
-> auto-steps to €299. Monthly-cancellable SEPA contract from day one — 30-day money-back, not a
+> **Deal mechanics (internal):** on the €299 Chat tier, a tapered founding rate — **€149/mnd
+> (excl. BTW) months 1–6, €224 months 7–12, €299 from month 13**. Both steps are rounded down from
+> an exact 50% / 25% off €299. The taper exists to remove the month-7 churn cliff: a straight
+> €149 → €299 doubles the bill in one step, on the exact cohort whose logos and references we need.
+> It costs €450 per client over year 1 versus the hard step-up (~€4.500 across ten) — cheap
+> insurance on the reference base. **Hard cap: the founding rate closes 30 September 2026 or after
+> the tenth signed client, whichever comes first.** The cap is the reason it converts; state the
+> date and the number in every conversation and hold both.
+>
+> Monthly-cancellable SEPA contract from day one — 30-day money-back, not a
 > free trial (one sales process, not two; it auto-converts to full recurring if the client does
 > nothing and is happy). Setup (normaal €249) waived for founding members. The discount is traded
 > **in writing** for: a testimonial, permission to use the captured-lead numbers as a case study,
@@ -31,9 +39,13 @@ jouw tarieven, jouw werkgebied.
 
 ### Het aanbod
 
-We nemen een klein aantal **oprichtersklanten** aan. Als een van hen krijg je:
+We nemen **tien oprichtersklanten** aan, en het aanbod loopt tot **30 september 2026**. Wat het
+eerst komt. Als oprichtersklant krijg je:
 
-- **€149 per maand** (excl. BTW) de eerste 6 maanden, in plaats van €299. Daarna €299 per maand.
+- **€149 per maand** (excl. BTW) de eerste 6 maanden, in plaats van €299.
+- **€224 per maand** in maand 7 tot en met 12.
+- Vanaf maand 13 het gewone tarief van €299. Geen verrassingen: je weet vanaf dag één wat je
+  betaalt en wanneer het verandert.
 - **Geen setupkosten** (normaal €249) — wij richten hem volledig voor je in.
 - **30 dagen geld-terug-garantie.** Bevalt hij de eerste maand niet, dan krijg je alles terug.
   Geen kleine lettertjes.
@@ -92,6 +104,8 @@ Binnen 48 uur na je "ja" staat hij live op je site. Geen wekenlang traject.
 Probeer hem nu zelf. Op **klantkraan.nl/demo** staat een werkende receptionist, direct in je
 browser — geen account, geen formulier. Stel een vraag of plan een afspraak, precies zoals jouw
 klant zou doen. Bevalt het? Dan zetten we hem op jouw bedrijf.
+
+Tien plekken, tot 30 september. Daarna is het gewoon €299.
 
 ---
 
