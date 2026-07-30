@@ -21,6 +21,10 @@ Three rules the rest of the batch depends on:
   mistake here that costs a deal rather than an impression.
 - A prospect who answered "stop" is done and goes in data/suppression.txt as well
   (Telecommunicatiewet art. 11.7 -- the opt-out has to actually stop it).
+- An address that hard-bounced is done too, but is *not* suppressed: a dead mailbox said
+  nothing about consent, and suppression.txt is the opt-out record rather than a list of
+  addresses that failed. Halting still matters -- sending touches 2, 3 and 4 into a 550
+  is exactly what wrecks a sending domain's reputation. `stop <slug> --bounced`.
 - Follow-ups thread. Every send stores its Message-ID, and touch N quotes it in
   In-Reply-To/References so the mail lands inside the original conversation rather than
   as a fresh one. That is what a person doing this by hand produces, and threading is
@@ -150,10 +154,19 @@ class Record:
     touches: dict[int, dict[str, str]]  # touch number -> {"at": iso, "message_id": str}
     replied: str | None = None
     stopped: str | None = None
+    bounced: str | None = None
 
     @property
     def done(self) -> bool:
-        return bool(self.replied or self.stopped)
+        return bool(self.replied or self.stopped or self.bounced)
+
+    @property
+    def closed_because(self) -> str:
+        if self.replied:
+            return "replied"
+        if self.stopped:
+            return "opt-out"
+        return "bounced"
 
     @property
     def last_touch(self) -> int:
@@ -185,6 +198,7 @@ def load(path: Path = LEDGER) -> dict[str, Record]:
                 touches={int(n): e for n, e in (rec.get("touches") or {}).items()},
                 replied=rec.get("replied"),
                 stopped=rec.get("stopped"),
+                bounced=rec.get("bounced"),
             )
             for slug, rec in (raw.get("prospects") or {}).items()
         }
@@ -206,6 +220,7 @@ def save(ledger: dict[str, Record], path: Path = LEDGER) -> None:
                 "touches": {str(n): e for n, e in sorted(rec.touches.items())},
                 "replied": rec.replied,
                 "stopped": rec.stopped,
+                "bounced": rec.bounced,
             }
             for slug, rec in sorted(ledger.items())
         },
@@ -296,7 +311,7 @@ def cmd_board(args: argparse.Namespace) -> None:
         rec = ledger.get(p.slug)
         at = rec.last_touch if rec else 0
         if rec and rec.done:
-            done.append(f"  {p.slug:28} T{at}  {'replied' if rec.replied else 'opt-out'}")
+            done.append(f"  {p.slug:28} T{at}  {rec.closed_because}")
         elif p in due:
             rows.append(f"  {p.slug:28} T{at} -> T{due[p]}  {BY_NUMBER[due[p]].label}")
         elif rec:
@@ -329,6 +344,13 @@ def cmd_stop(args: argparse.Namespace) -> None:
         added = suppress(by_slug[args.slug].email)
         print(f"{args.slug}: opt-out recorded, no further touches")
         print(f"  {'added to' if added else 'already in'} {SUPPRESSION}")
+    elif args.bounced:
+        # Deliberately NOT suppressed: suppression.txt is the art. 11.7 opt-out record,
+        # and a dead mailbox said nothing about consent. Halting is enough, and it has to
+        # happen -- mailing a 550 three more times is what burns the sending domain.
+        rec.bounced = stamp
+        print(f"{args.slug}: hard bounce recorded, no further touches")
+        print(f"  {by_slug[args.slug].email} is dead; find the real address to re-open")
     else:
         rec.replied = stamp
         print(f"{args.slug}: reply recorded, sequence halted -- follow up by hand")
@@ -347,10 +369,13 @@ def main() -> None:
     stop.add_argument(
         "--opt-out", action="store_true", help='they answered "stop"; halt and suppress'
     )
+    stop.add_argument(
+        "--bounced", action="store_true", help="the address hard-bounced; halt, do not suppress"
+    )
     stop.set_defaults(func=cmd_stop)
     args = ap.parse_args()
-    if args.cmd == "stop" and not (args.replied or args.opt_out):
-        ap.error("say which: --replied or --opt-out")
+    if args.cmd == "stop" and not (args.replied or args.opt_out or args.bounced):
+        ap.error("say which: --replied, --opt-out or --bounced")
     args.func(args)
 
 
