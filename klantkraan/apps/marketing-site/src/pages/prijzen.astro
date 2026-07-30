@@ -25,7 +25,7 @@ const tiers: Tier[] = [
     price: 299,
     dayPrice: '9,97',
     blurb:
-      'AI-receptionist via websitechat + WhatsApp: beantwoordt vragen, plant afspraken en vangt terugbelverzoeken, 24/7. Onze aanrader.',
+      'Plant afspraken direct in uw agenda en vangt elke lead op, via websitechat en WhatsApp, 24/7 in het Nederlands. Wij richten hem volledig voor u in. Onze aanrader.',
     highlight: true,
     cta: 'Start met Chat',
     ctaHref: '/aanmelden/?plan=chat',
@@ -52,12 +52,12 @@ interface FeatureRow {
 }
 
 const features: FeatureRow[] = [
+  { feature: 'Plant afspraken direct in uw agenda', chat: 'ja', compleet: 'ja' },
   { feature: 'Websitechat op uw eigen site (Nederlands, 24/7)', chat: 'ja', compleet: 'ja' },
   { feature: 'WhatsApp-kanaal', chat: 'ja', compleet: 'ja' },
   { feature: 'Beantwoordt vragen over diensten, tarieven en werkgebied', chat: 'ja', compleet: 'ja' },
-  { feature: 'Plant afspraken direct in uw agenda', chat: 'ja', compleet: 'ja' },
   { feature: 'Vangt leads en terugbelverzoeken op', chat: 'ja', compleet: 'ja' },
-  { feature: 'Done-for-you setup en tuning', chat: 'ja', compleet: 'ja' },
+  { feature: 'Wij richten hem in en houden hem bij', chat: 'ja', compleet: 'ja' },
   { feature: 'Maandelijkse statistieken per e-mail', chat: 'ja', compleet: 'ja' },
   {
     feature: 'AI-telefonist op een eigen Nederlands nummer',
@@ -103,7 +103,7 @@ const serviceSchema = {
 
 <Base
   title="Prijzen AI-receptionist: Chat €299 of Compleet €499 | Klantkraan"
-  description="Twee abonnementen: Chat €299 en Compleet €499 per maand. Setup €249 (kwijtgescholden voor pilotklanten), maandelijks opzegbaar, eerste maand 50% korting."
+  description="Chat €299 en Compleet €499 per maand. Plant afspraken direct in uw agenda. Wij richten hem volledig in, u bouwt zelf niets. Maandelijks opzegbaar."
   centered={false}
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -169,8 +169,46 @@ const serviceSchema = {
     </div>
   </section>
 
-  <!-- 3. Feature comparison (cream) -->
+  <!-- 3. Done-for-you (cream) -->
   <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Wat u zelf doet</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Niets. Wij richten hem in.</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Een chatbot kopen is één ding. Er een receptionist van maken die uw tarieven kent en uw
+        agenda vult, is werk. Dat werk is van ons.
+      </p>
+      <ul class="mt-6 grid gap-4 md:gap-6 text-body text-(--color-dim) sm:grid-cols-2">
+        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h3 text-(--color-chalk)">Uw diensten en tarieven erin</p>
+          <p class="mt-2">U levert ze aan of wij halen ze van uw site. U kijkt mee, wij typen.</p>
+        </li>
+        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h3 text-(--color-chalk)">Uw agenda gekoppeld</p>
+          <p class="mt-2">
+            Zodat een afspraak er direct in staat, en niet als briefje in een inbox belandt.
+          </p>
+        </li>
+        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h3 text-(--color-chalk)">WhatsApp aangevraagd</p>
+          <p class="mt-2">De aanvraag bij Meta regelen wij. U hoeft daar niet doorheen.</p>
+        </li>
+        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h3 text-(--color-chalk)">Bijgewerkt als er iets verandert</p>
+          <p class="mt-2">
+            Nieuwe tarieven of een nieuwe dienst? Eén mailtje en wij passen hem aan. Blijvend.
+          </p>
+        </li>
+      </ul>
+      <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
+        Goedkopere chatbots bestaan. Daar bent u zelf de bouwer, en de meeste plannen geen afspraak
+        in. Dat is het verschil waar u voor betaalt.
+      </p>
+    </div>
+  </section>
+
+  <!-- 4. Feature comparison (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Wat zit erin</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Wat zit erin per abonnement</h2>
@@ -220,13 +258,13 @@ const serviceSchema = {
     </div>
   </section>
 
-  <!-- 4. Alle abonnementen + korting (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+  <!-- 5. Alle abonnementen + korting (cream) -->
+  <section class="py-10 md:py-16">
     <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-2">
       <div>
         <h2 class="font-display text-h2 text-(--color-chalk)">Alle abonnementen bevatten</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
-          <li>Done-for-you setup en tuning. Wij bouwen en koppelen alles voor u.</li>
+          <li>Volledige inrichting en onderhoud. U bouwt zelf niets.</li>
           <li>Maandelijks opzegbaar; opzeggen per mail, geen opzegtermijn.</li>
           <li>Eerste maand 50% korting.</li>
           <li>30 dagen tevredenheidsgarantie. Niet tevreden? Geld terug.</li>
@@ -243,7 +281,7 @@ const serviceSchema = {
     </div>
   </section>
 
-  <!-- 5. Final CTA (blue) -->
+  <!-- 6. Final CTA (stone-100) -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Klaar?</p>
