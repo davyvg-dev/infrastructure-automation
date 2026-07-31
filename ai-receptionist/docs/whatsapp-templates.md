@@ -1,6 +1,6 @@
 # WhatsApp utility templates (Dutch, generic)
 
-> Five templates covering the outbound modules in `WORKFLOW-MOAT.md`. Written once, approved once,
+> Six templates covering the outbound modules in `WORKFLOW-MOAT.md` and the missed-call funnel. Written once, approved once,
 > reused across the entire client base. **Do not create per-client templates** — approval is not
 > instant and every onboarding would then be gated on Meta.
 >
@@ -214,13 +214,41 @@ belongs with the owner, never with an automated worker.
 
 ---
 
+### 2.6 `gemiste_oproep_nl` — missed-call follow-up
+
+**Fires:** the customer called the business, nobody answered, and the call was forwarded to
+`POST /voice/missed` (`channels/voice_missed.py`). **Risk: low.**
+
+```
+Hallo, u belde net met {{1}} en we konden niet opnemen. Waar kunnen we u mee helpen? Stuur hier uw bericht, dan pakken we het direct op.
+```
+
+| Var | Meaning | Example |
+|---|---|---|
+| `{{1}}` | Bedrijfsnaam | `Klantkraan` |
+
+**Why utility:** a direct response to a call the customer placed seconds earlier — tied to a
+specific user action, no offer, no persuasion. The "u" register (not "je") because this is the
+first contact with someone we may not know at all.
+
+**Art. 50 note:** the template speaks as the business ("we"), which is accurate — a human may
+pick the thread up. The moment the *receptionist* answers the customer's reply, the standard
+config greeting disclosure applies, so the digital-assistant disclosure happens at the first
+automated conversational turn. Do not weaken that greeting to make this flow feel smoother.
+
+**Wiring:** after approval, put the returned Content SID in `.env` as
+`WHATSAPP_MISSED_CALL_CONTENT_SID`. Without it the code falls back to a freeform send, which
+only delivers on the sandbox or inside an open 24h window — fine for testing, not production.
+
+---
+
 ## 3. Submission checklist
 
 Run once, when the production sender exists.
 
 - [ ] Meta Business verification complete; production WhatsApp sender live (not the Twilio sandbox).
 - [ ] Template names exactly as above: lowercase, digits and underscores only.
-- [ ] `category: "utility"` on all five. Language `nl`.
+- [ ] `category: "utility"` on all six. Language `nl`.
 - [ ] Every `{{n}}` has an `example` value in the submission, or Meta rejects the template outright.
 - [ ] Placeholders are never adjacent (`{{1}} {{2}}`) and never open or close the body — a common
       silent rejection cause.
