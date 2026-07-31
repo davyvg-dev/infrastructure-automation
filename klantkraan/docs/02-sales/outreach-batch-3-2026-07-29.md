@@ -9,8 +9,13 @@
 >    is the source of what actually gets sent; this file is its human-readable twin.
 >
 > Also parked: the "maandelijks opzegbaar" line is **removed** from the generated mails until
-> the cancellation term is decided. `founding-member-offer.md` still describes the six-month
-> rate and monthly cancellation, so it and this batch currently disagree. Resolve before send.
+> the cancellation term is decided.
+>
+> **Resolved 2026-07-31 on the founder's call:** the founding offer is **eerste maand €149**,
+> plus an optional prepay reward — 6 months upfront at the founding rate, **€894 excl. BTW**
+> (offered after a verbal yes, on the phone or in the mail P.S., never as the opener).
+> `founding-member-offer.md` now matches, the six-month taper is retired, and the generated
+> mails carry the prepay line. Doc, mails and phone script agree; this batch is clear to send.
 
 **This supersedes batches 1 and 2. Do not send those.** Both pitch the free 14-day pilot at
 €299/mnd, which `founding-member-offer.md` retired on 2026-07-24. Same 23 prospects, same

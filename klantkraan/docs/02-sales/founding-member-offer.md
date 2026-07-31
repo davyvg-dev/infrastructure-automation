@@ -7,12 +7,21 @@
 > was refuted in verification. A *named, time-boxed* founding-member rate discounts without
 > anchoring value low forever.
 >
-> **Deal mechanics (internal):** on the €299 Chat tier, a tapered founding rate — **€149/mnd
-> (excl. BTW) months 1–6, €224 months 7–12, €299 from month 13**. Both steps are rounded down from
-> an exact 50% / 25% off €299. The taper exists to remove the month-7 churn cliff: a straight
-> €149 → €299 doubles the bill in one step, on the exact cohort whose logos and references we need.
-> It costs €450 per client over year 1 versus the hard step-up (~€4.500 across ten) — cheap
-> insurance on the reference base. **Hard cap: the founding rate closes 30 September 2026 or after
+> **Deal mechanics (internal, decided 2026-07-31 on the founder's call):** on the €299 Chat
+> tier, two rungs and nothing else:
+>
+> 1. **Monthly:** first month **€149** (excl. BTW), €299/mnd from month 2. This is exactly what
+>    the batch-3 mails promise — the phone script may never offer less.
+> 2. **Prepay reward (offered only after a verbal yes, never as the opener):** pay 6 months
+>    upfront in one iDEAL payment and keep the founding rate the whole half year:
+>    **6 × €149 = €894 excl. BTW (€1.081,74 incl.)** instead of €1.644 on the monthly path.
+>    €299/mnd from month 7. The 30-day money-back covers the full prepaid amount; after day 30
+>    the six months run their course, no refund.
+>
+> The 2026-07-29 taper (€149 months 1–6, €224 months 7–12) is **retired**: the monthly path now
+> steps to €299 at month 2 anyway, and prepay — not a taper — is the retention instrument. The
+> month-7 cliff for prepaid clients is a known trade-off; revisit if the first prepaid client
+> churns at month 7. **Hard cap unchanged: the founding rate closes 30 September 2026 or after
 > the tenth signed client, whichever comes first.** The cap is the reason it converts; state the
 > date and the number in every conversation and hold both.
 >
@@ -27,7 +36,7 @@
 
 ---
 
-## De oprichtersklant: je eigen AI-receptionist, €149/mnd de eerste 6 maanden
+## De oprichtersklant: je eigen AI-receptionist, eerste maand €149
 
 **Elke gemiste oproep is een gemiste klus.** Je staat op een dak of onder een wasbak — de
 telefoon gaat, jij kunt niet opnemen, de klant belt de volgende. Dat gebeurt vaker dan je denkt,
@@ -42,14 +51,13 @@ jouw tarieven, jouw werkgebied.
 We nemen **tien oprichtersklanten** aan, en het aanbod loopt tot **30 september 2026**. Wat het
 eerst komt. Als oprichtersklant krijg je:
 
-- **€149 per maand** (excl. BTW) de eerste 6 maanden, in plaats van €299.
-- **€224 per maand** in maand 7 tot en met 12.
-- Vanaf maand 13 het gewone tarief van €299. Geen verrassingen: je weet vanaf dag één wat je
-  betaalt en wanneer het verandert.
+- **Eerste maand €149** (excl. BTW), in plaats van €299. Daarna het gewone tarief van €299.
+  Geen verrassingen: je weet vanaf dag één wat je betaalt en wanneer het verandert.
+- **Liever in één keer geregeld?** Betaal 6 maanden vooruit en houd het oprichterstarief het
+  hele halfjaar vast: **€894** (excl. BTW) in plaats van €1.644.
 - **Geen setupkosten** (normaal €249) — wij richten hem volledig voor je in.
-- **30 dagen geld-terug-garantie.** Bevalt hij de eerste maand niet, dan krijg je alles terug.
-  Geen kleine lettertjes.
-- Maandelijks opzegbaar. Het risico ligt bij ons, niet bij jou.
+- **30 dagen geld-terug-garantie.** Bevalt hij de eerste maand niet, dan krijg je alles terug —
+  ook als je vooruitbetaald hebt. Geen kleine lettertjes.
 
 ### Waarom betaald, en niet gratis
 
