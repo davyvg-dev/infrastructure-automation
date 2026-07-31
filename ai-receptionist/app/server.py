@@ -13,6 +13,7 @@ import threading
 import time
 import uuid
 from collections import deque
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
@@ -24,13 +25,20 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 from starlette.concurrency import run_in_threadpool
 
-from . import billing, notify, sessions
-from .channels import whatsapp
+from . import billing, notify, sessions, takeover
+from .channels import voice_missed, whatsapp
 from .settings import MissingSetting, business, clear_slug, ensure_dirs, resolve_slug, use_slug
 
 log = logging.getLogger(__name__)
 
-app = FastAPI(title="AI Receptionist demo")
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    # Owner-command poller for WhatsApp takeover; a no-op unless Telegram env is configured.
+    takeover.start()
+    yield
+
+
+app = FastAPI(title="AI Receptionist demo", lifespan=_lifespan)
 _WEB = Path(__file__).resolve().parent.parent / "web"
 
 # The marketing site (klantkraan.nl) posts signup leads here cross-origin; the chat widget
@@ -385,6 +393,17 @@ async def whatsapp_webhook(request: Request) -> Response:
     params = {k: str(v) for k, v in form.items()}
     signature = request.headers.get("X-Twilio-Signature")
     body, status = await run_in_threadpool(whatsapp.handle, str(request.url), signature, params)
+    return Response(content=body, media_type="application/xml", status_code=status)
+
+
+@app.post("/voice/missed")
+async def voice_missed_webhook(request: Request) -> Response:
+    form = await request.form()
+    params = {k: str(v) for k, v in form.items()}
+    signature = request.headers.get("X-Twilio-Signature")
+    body, status = await run_in_threadpool(
+        voice_missed.handle, str(request.url), signature, params
+    )
     return Response(content=body, media_type="application/xml", status_code=status)
 
 
