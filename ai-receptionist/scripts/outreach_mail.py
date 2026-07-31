@@ -60,12 +60,14 @@ REVIEW = (
     "en na de klus netjes om een Google-review vraagt."
 )
 
-# The oprichtersklant terms, as the reader sees them. One month at half price, not six:
-# changed 2026-07-29 on the founder's call. Nothing here promises a cancellation term --
-# that is still undecided, and a cold mail is a bad place to promise something we may
-# retract. If a prospect asks, the founder answers.
+# The oprichtersklant terms, as the reader sees them. One month at half price, plus the
+# 6-months-prepaid rung: decided 2026-07-31 on the founder's call (canonical:
+# klantkraan/docs/02-sales/founding-member-offer.md). Nothing here promises a cancellation
+# term -- that is still undecided, and a cold mail is a bad place to promise something we
+# may retract. If a prospect asks, the founder answers.
 OFFER_LINES = [
     "Eerste maand €149 in plaats van €299 (excl. btw)",
+    "Of 6 maanden vooruit: €894 in plaats van €1.644, oprichterstarief het hele halfjaar",
     "Geen opstartkosten",
     "30 dagen geld-terug, zonder kleine lettertjes",
     "Binnen 48 uur live op je site",
