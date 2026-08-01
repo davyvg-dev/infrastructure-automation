@@ -9,9 +9,10 @@
  */
 
 export const contact = {
-  phoneNumberRaw: '+31621645206',
+  phoneNumberRaw: '+31644588321',
+  // WhatsApp stays on the old number until WhatsApp is confirmed active on the new one.
   waNumberRaw: '31621645206',
-  phoneDisplay: '+31 6 21 64 52 06',
+  phoneDisplay: '+31 6 44 58 83 21',
   email: 'hallo@klantkraan.nl',
   emailSubject: 'Klantkraan demo',
   waMessage: 'Hoi, ik zag Klantkraan en wil graag meer weten.',
