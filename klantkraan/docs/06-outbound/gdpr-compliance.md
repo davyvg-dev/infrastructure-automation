@@ -42,7 +42,7 @@ Unambiguously covered by Tw 11.7. Cold WhatsApp to a number obtained without con
 
 ## Cold calling
 
-From **1 July 2026** the soft opt-in dies entirely (Wet ongewenste telemarketing). Calling sole traders without consent is already prohibited. ACM is actively enforcing. The founder's "no cold calling" constraint already aligns with the law — no change needed.
+From **1 July 2026** the soft opt-in dies entirely (Wet ongewenste telemarketing). Calling sole traders without consent is already prohibited. ACM is actively enforcing. SUPERSEDED 2026-07-31: manual calls to a confirmed BV's kantoornummer are legal (rechtspersonen fall outside Tw 11.7) and now practiced — see `../02-sales/cold-call-playbook.md` §0. Natural persons stay off-limits without opt-in.
 
 ## What "legitimate interest" requires (Art. 6(1)(f) AVG)
 
@@ -78,7 +78,8 @@ If we ever use AI to generate hyper-personalised outbound at scale, the AP could
 | Cold email to `jan@plumber-eenmanszaak.nl` | **No** | Excluded by KvK rechtsvorm filter |
 | LinkedIn connection request, no pitch | Yes | All |
 | LinkedIn DM, commercial pitch | Yes (opt-out) | BV-owner profiles only |
-| Cold call | **No** | All |
+| Cold call (manual, kantoornummer) | Yes (opt-out) | Confirmed BV only — playbook §0 |
+| Cold call to eenmanszaak/VOF/zzp or an 06 | **No** | All |
 | Cold WhatsApp | **No** | All |
 | Newsletter signup → drip | Yes | Anyone who opted in |
 | Lead-form submission → personal follow-up | Yes | Anyone who submitted |

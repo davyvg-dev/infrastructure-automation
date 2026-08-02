@@ -36,7 +36,7 @@
 
 **Why**: ACM enforcement is active. Wet ongewenste telemarketing reform takes full effect 1 July 2026.
 
-**Do instead**: don't cold call. Period. Already a founder rule.
+**Do instead**: don't cold call natural persons (eenmanszaak/VOF/zzp, or any 06). SUPERSEDED 2026-07-31 for rechtspersonen: manually calling a confirmed BV's kantoornummer is legal (Tw 11.7 protects natural persons only) and now allowed — rules in `../02-sales/cold-call-playbook.md` §0.
 
 ## 7. No DPIA / no LIA / no Records of Processing (Art. 30) for outbound
 

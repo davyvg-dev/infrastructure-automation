@@ -35,7 +35,7 @@ Lead with the demo, not the website. The website's job is only to not embarrass 
 ## Compliant channel set (as of 2026-07-14)
 
 OFF (founder rules + Wet ongewenste telemarketing, full effect 1 July 2026):
-- Cold calls to anyone without consent — **including manual.** No exceptions.
+- ~~Cold calls to anyone without consent — including manual.~~ SUPERSEDED 2026-07-31: manual calls to confirmed BV kantoornummers are on — `cold-call-playbook.md` §0. Natural persons still never.
 - Cold email to eenmanszaak/VOF.
 - Commercial LinkedIn DMs to sole traders (connect + soft *question* is fine; a pitch is not).
 - WhatsApp before a permitted first contact is established.
