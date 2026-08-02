@@ -47,6 +47,40 @@ def test_nl_bv_qualifies(pipeline_root):
     assert _add_and_qualify()["decision"] == "qualified"
 
 
+def test_call_logs_dials_and_computes_funnel(pipeline_root):
+    _add_and_qualify()
+    pipeline.call("proef-bv", "no-answer")
+    pipeline.call("proef-bv", "voicemail", note="bouwvak, msg left")
+    out = pipeline.call("proef-bv", "demo", note="di 10:00", next_="2099-01-02")
+    assert out["next_call"] == "2099-01-02"
+    assert "advance" in out["hint"]
+
+    text = pipeline.calls_text()
+    assert "3 dials over 1 prospect" in text
+    assert "reach 1/3" in text
+    assert "reach→demo 1/1" in text
+    assert "2099-01-02" in text and "proef-bv" in text  # planned callback surfaced
+
+    with pytest.raises(ValueError):
+        pipeline.call("proef-bv", "ghosted")
+    with pytest.raises(ValueError):
+        pipeline.call("proef-bv", "callback", next_="tomorrow")
+
+
+def test_call_reached_outcome_clears_pending_callback(pipeline_root):
+    _add_and_qualify()
+    pipeline.call("proef-bv", "callback", next_="2099-01-02")
+    pipeline.call("proef-bv", "talked", note="callback happened, no next step")
+    assert pipeline.load("proef-bv").get("next_call") is None
+
+
+def test_call_opt_out_suppresses_phone(pipeline_root, monkeypatch):
+    monkeypatch.setattr(pipeline, "SUPPRESSION_FILE", pipeline_root / "suppression.txt")
+    pipeline.add("Proef BV", slug="proef-bv", phone="0182-686300", entity="bv")
+    pipeline.call("proef-bv", "rejected", opt_out=True)
+    assert pipeline.qualify("proef-bv")["decision"] == "disqualified"
+
+
 def test_readiness_gate_blocks_unfilled_price(pipeline_root):
     _add_and_qualify()
     staged = _stage_demo(pipeline_root)

@@ -11,6 +11,9 @@ thing that sold them is the thing that goes live — no re-entry between sales a
     python -m app.pipeline advance airco-mallorca demo --note "close pack sent"
     python -m app.pipeline board
     python -m app.pipeline show airco-mallorca
+    python -m app.pipeline call dekker voicemail --note "bouwvak; msg left"
+    python -m app.pipeline call dekker demo --note "di 10:00" --next 2026-08-05
+    python -m app.pipeline calls
 
 This module owns pipeline *state* only. Config generation stays in `scaffold.py`; the two
 compose (a later `stage` verb calls scaffold). One module, one job.
@@ -62,6 +65,22 @@ _SLUG_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$")
 ENTITY_OK = {"bv"}
 ENTITY_BLOCKED = {"vof", "eenmanszaak", "zzp"}
 ENTITY_CHOICES = ["bv", "vof", "eenmanszaak", "zzp", "unknown"]
+
+# Cold-call dial outcomes, one per dial, mutually exclusive. The first four never reached the
+# decision maker; the last five did (= "reach" in the stats). `calls` computes the funnel from
+# these, so log every dial — a skipped no-answer silently inflates the reach rate.
+CALL_OUTCOMES = {
+    "no-answer": "rang out / busy, nobody picked up",
+    "voicemail": "hit voicemail (note whether a message was left)",
+    "gatekeeper": "spoke to someone, but not the decision maker",
+    "bad-number": "number wrong / disconnected",
+    "callback": "reached the DM; a concrete callback was agreed (use --next)",
+    "talked": "reached the DM; no next step agreed",
+    "demo": "reached the DM; demo or appointment agreed",
+    "close": "signed on the call",
+    "rejected": "reached the DM; explicit no",
+}
+REACHED = {"callback", "talked", "demo", "close", "rejected"}
 
 # The CLI's local opt-out list (one entry per line: an email, an @domain, or a phone; `#`
 # comments allowed). Optional — a missing file means "nothing suppressed". The canonical
@@ -308,6 +327,109 @@ def note(slug: str, text: str) -> dict:
     return record
 
 
+def call(
+    slug: str,
+    outcome: str,
+    *,
+    note: str | None = None,
+    next_: str | None = None,
+    opt_out: bool = False,
+) -> dict:
+    """Log one dial against a prospect. The history event carries a machine-readable `call`
+    key so `calls` can compute the funnel from the same records that hold everything else.
+
+    `next_` (YYYY-MM-DD) stores/overwrites the record's `next_call` — the `calls` view surfaces
+    overdue ones. A reached outcome clears a pending `next_call` unless a new one is given (the
+    callback happened). `opt_out` appends the prospect's phone to the suppression list — the
+    record of "don't call me again", same file the qualify gate reads."""
+    if outcome not in CALL_OUTCOMES:
+        raise ValueError(f"outcome must be one of {sorted(CALL_OUTCOMES)}, not {outcome!r}")
+    if next_ and not re.match(r"^\d{4}-\d{2}-\d{2}$", next_):
+        raise ValueError(f"--next must be YYYY-MM-DD, not {next_!r}")
+    record = load(slug)
+    if record is None:
+        raise FileNotFoundError(f"no pipeline record for {slug!r}")
+
+    event = f"call/{outcome}" + (f" — {note}" if note else "")
+    record["history"].append({"ts": _now_ts(), "event": event, "call": outcome})
+    if next_:
+        record["next_call"] = next_
+    elif outcome in REACHED and record.get("next_call"):
+        del record["next_call"]
+
+    hint = None
+    if opt_out:
+        phone = (record.get("contact") or {}).get("phone")
+        if not phone:
+            raise ValueError(f"{slug} has no phone on record to opt out")
+        SUPPRESSION_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with SUPPRESSION_FILE.open("a", encoding="utf-8") as fh:
+            fh.write(f"{phone}  # {slug} asked not to be called, {_now_date()}\n")
+        hint = f"suppressed {phone}"
+    elif outcome == "demo" and record.get("status") in ("lead", "qualified", "staged"):
+        hint = f"demo agreed — advance when it happens:  pipeline advance {slug} demo"
+    elif outcome == "close":
+        hint = f"signed on the phone:  pipeline sign {slug}"
+
+    save(record)
+    return {"outcome": outcome, "next_call": record.get("next_call"), "hint": hint}
+
+
+def _call_events(record: dict) -> list[dict]:
+    return [h for h in record.get("history") or [] if h.get("call")]
+
+
+def calls_text(since: str | None = None) -> str:
+    """The cold-call funnel across every prospect, plus due callbacks — the belsheet scoreboard."""
+    records = all_records()
+    counts = dict.fromkeys(CALL_OUTCOMES, 0)
+    dials = 0
+    prospects_called = 0
+    for rec in records:
+        events = _call_events(rec)
+        if since:
+            events = [h for h in events if h.get("ts", "") >= since]
+        if events:
+            prospects_called += 1
+        for h in events:
+            dials += 1
+            counts[h["call"]] = counts.get(h["call"], 0) + 1
+
+    window = f"since {since}" if since else "all time"
+    if not dials:
+        return f"CALLS — no dials logged {window}. Log one:  pipeline call <slug> <outcome>"
+
+    reached = sum(counts[o] for o in REACHED)
+    demos = counts["demo"] + counts["close"]
+    lines = [
+        f"CALLS — {dials} dial{'s' if dials != 1 else ''} over {prospects_called} "
+        f"prospect{'s' if prospects_called != 1 else ''} ({window})",
+        "  " + " · ".join(f"{o} {counts[o]}" for o in CALL_OUTCOMES if counts[o]),
+    ]
+    if reached:
+        rate = f"  reach {reached}/{dials} ({reached / dials:.0%})"
+        rate += f"   reach→demo {demos}/{reached} ({demos / reached:.0%})"
+        rate += f"   dial→demo {demos / dials:.1%}"
+        lines.append(rate)
+    else:
+        lines.append(f"  reach 0/{dials} — nobody reached yet")
+
+    today = _now_date()
+    due = [r for r in records if r.get("next_call") and r["next_call"] <= today]
+    upcoming = [r for r in records if r.get("next_call") and r["next_call"] > today]
+    for label, group in (("DUE", due), ("PLANNED", upcoming)):
+        if not group:
+            continue
+        lines.append(f"  {label}")
+        for rec in sorted(group, key=lambda r: r["next_call"]):
+            phone = (rec.get("contact") or {}).get("phone") or "no phone!"
+            lines.append(
+                f"    {rec['next_call']}  {rec['slug']:<22} "
+                f"{_trunc(rec.get('business', ''), 32)}  {phone}"
+            )
+    return "\n".join(lines)
+
+
 def stage(slug: str, *, force: bool = False) -> dict:
     """Build the branded demo config for a record via scaffold, then advance it to `staged`.
 
@@ -457,6 +579,8 @@ def show_text(slug: str) -> str:
         f"  config    {record.get('config') or '— (none staged yet)'}",
         f"  added     {record.get('created', '?')}   updated {record.get('updated', '?')}",
     ]
+    if record.get("next_call"):
+        lines.insert(2, f"  call back {record['next_call']}")
     history = record.get("history") or []
     if history:
         lines.append("  history")
@@ -561,6 +685,24 @@ def main(argv: list[str]) -> int:
         help="Promote despite an existing client config or a failed readiness check.",
     )
 
+    p_call = sub.add_parser("call", help="Log one cold-call dial and its outcome.")
+    p_call.add_argument("slug")
+    p_call.add_argument(
+        "outcome",
+        choices=sorted(CALL_OUTCOMES),
+        help="; ".join(f"{o}: {d}" for o, d in CALL_OUTCOMES.items()),
+    )
+    p_call.add_argument("--note", help="What was said / agreed — logged with the dial.")
+    p_call.add_argument("--next", dest="next_", help="Callback date YYYY-MM-DD.")
+    p_call.add_argument(
+        "--opt-out",
+        action="store_true",
+        help="They said don't call again: suppress their phone number.",
+    )
+
+    p_calls = sub.add_parser("calls", help="The call funnel + due callbacks.")
+    p_calls.add_argument("--since", help="Only count dials on/after this date (YYYY-MM-DD).")
+
     p_note = sub.add_parser("note", help="Append a note to a record's history.")
     p_note.add_argument("slug")
     p_note.add_argument("text")
@@ -630,6 +772,23 @@ def main(argv: list[str]) -> int:
         for w in r["warnings"]:
             print(f"   ⚠️  forced past: {w}")
         print(_GO_LIVE_CHECKLIST.format(slug=args.slug))
+        return 0
+    if args.cmd == "call":
+        try:
+            r = call(
+                args.slug, args.outcome, note=args.note, next_=args.next_, opt_out=args.opt_out
+            )
+        except (ValueError, FileNotFoundError) as exc:
+            parser.error(str(exc))
+        line = f"✅ {args.slug}: call/{r['outcome']}"
+        if r["next_call"]:
+            line += f"  (callback {r['next_call']})"
+        print(line)
+        if r["hint"]:
+            print(f"   {r['hint']}")
+        return 0
+    if args.cmd == "calls":
+        print(calls_text(since=args.since))
         return 0
     if args.cmd == "note":
         try:
