@@ -12,8 +12,6 @@ interface Tier {
   priceNote?: string
   blurb: string
   highlight: boolean
-  /** Mono badge in the card header (e.g. "binnenkort beschikbaar" on Compleet). */
-  badge?: string
   cta: string
   ctaHref: string
 }
@@ -37,11 +35,10 @@ const tiers: Tier[] = [
     dayPrice: '16,63',
     priceNote: 'incl. 750 belminuten/mnd, daarna €0,40/min',
     blurb:
-      'Alles van Chat, plus een AI-telefonist op een eigen Nederlands nummer. Nog niet te bestellen; laat uw gegevens achter en u hoort het als eerste.',
+      'Alles van Chat, plus een AI-telefonist die uw telefoon 24/7 opneemt op een eigen Nederlands nummer. Gemiste oproepen bestaan niet meer.',
     highlight: false,
-    badge: 'binnenkort beschikbaar',
-    cta: 'Hou me op de hoogte',
-    ctaHref: '/aanmelden/?plan=compleet-interesse',
+    cta: 'Start met Compleet',
+    ctaHref: '/aanmelden/?plan=compleet',
   },
 ]
 
@@ -62,12 +59,17 @@ const features: FeatureRow[] = [
   {
     feature: 'AI-telefonist op een eigen Nederlands nummer',
     chat: '–',
-    compleet: 'binnenkort beschikbaar',
+    compleet: 'ja',
   },
   {
     feature: 'Inbegrepen belminuten per maand',
     chat: '–',
     compleet: '750, daarna €0,40/min',
+  },
+  {
+    feature: 'Gelijktijdige gesprekken',
+    chat: '–',
+    compleet: 'tot 5 tegelijk',
   },
 ]
 
@@ -131,11 +133,6 @@ const serviceSchema = {
               {tier.highlight && (
                 <span class="rounded-(--radius-button) bg-(--color-sodium) px-2 py-1 text-micro text-(--color-night)">
                   aanrader
-                </span>
-              )}
-              {tier.badge && (
-                <span class="rounded-(--radius-button) border border-(--color-line) px-2 py-1 font-mono text-micro text-(--color-dim)">
-                  {tier.badge}
                 </span>
               )}
             </header>
@@ -292,6 +289,7 @@ const serviceSchema = {
       </p>
       <div class="mt-6 btn-row">
         <a href="/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start met Chat</a>
+        <a href="/aanmelden/?plan=compleet" class="btn btn-ghost btn-lg">Start met Compleet</a>
         <a href="/demo/" class="btn btn-ghost btn-lg">Probeer de demo</a>
       </div>
     </div>

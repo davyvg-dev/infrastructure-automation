@@ -20,7 +20,7 @@ const inputClass =
 <Base
   lang="es"
   title="Alta: empiece con su recepcionista con IA | Klantkraan"
-  description="Dé de alta su negocio en Klantkraan Chat (299 € al mes). Le contactamos en un día laborable y nos encargamos de toda la instalación."
+  description="Dé de alta su negocio en Klantkraan Chat (299 €) o Compleet con agente telefónico de IA (499 € al mes). Le contactamos en un día laborable y nos encargamos de toda la instalación."
   centered={false}
   stickyCta={false}
 >
@@ -124,11 +124,13 @@ const inputClass =
                 </span>
               </label>
               <label class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3">
-                <input type="radio" name="plan" value="compleet-interesse" class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)" />
+                <input type="radio" name="plan" value="compleet" class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)" />
                 <span class="text-body text-(--color-chalk)">
-                  Interés en Compleet
+                  Compleet
                   <span class="block text-small text-(--color-dim)">
-                    con agente telefónico de IA, próximamente &middot; le mantenemos informado
+                    primer mes 249,50 €, después 499 € al mes, IVA no incluido &middot; chat + WhatsApp
+                    + agente telefónico de IA &middot; incl. 750 minutos de llamada/mes, luego
+                    0,40 €/min &middot; cancelación mensual
                   </span>
                 </span>
               </label>
@@ -264,9 +266,10 @@ const inputClass =
     if (!form || form.dataset.bound) return
     form.dataset.bound = '1'
 
-    // ?plan=chat | ?plan=compleet-interesse (or plain "compleet") preselects the radio.
+    // ?plan=chat | ?plan=compleet preselects the radio. Old "compleet-interesse" links
+    // (pre-voice-launch outreach) land on the buyable compleet plan.
     const wanted = new URLSearchParams(window.location.search).get('plan')
-    const plan = wanted === 'compleet' ? 'compleet-interesse' : wanted
+    const plan = wanted === 'compleet-interesse' ? 'compleet' : wanted
     if (plan) {
       const radio = form.querySelector<HTMLInputElement>(`input[name="plan"][value="${plan}"]`)
       if (radio) radio.checked = true
@@ -274,23 +277,25 @@ const inputClass =
 
     const errorEl = document.getElementById('lead-error') as HTMLElement
     const submitBtn = document.getElementById('lead-submit') as HTMLButtonElement
-    const isChat = () =>
-      form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value === 'chat'
+    const isPaying = () =>
+      ['chat', 'compleet'].includes(
+        form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value ?? ''
+      )
 
-    // Chat buys now (checkout); Compleet files interest (lead). Button + hints follow.
+    // Both plans buy now (checkout); any non-paying plan value files an interest lead.
     // Email is only a hard requirement when paying (Mollie needs it for the confirmation).
     const emailInput = document.getElementById('email') as HTMLInputElement
     const akkoordInput = document.getElementById('akkoord') as HTMLInputElement | null
     const sync = () => {
-      submitBtn.textContent = isChat() ? COPY.payButton : COPY.leadButton
-      emailInput.required = isChat()
+      submitBtn.textContent = isPaying() ? COPY.payButton : COPY.leadButton
+      emailInput.required = isPaying()
       const hint = document.getElementById('contact-hint')
-      if (hint) hint.textContent = isChat() ? COPY.payHint : COPY.leadHint
-      document.getElementById('pay-note')?.classList.toggle('hidden', !isChat())
+      if (hint) hint.textContent = isPaying() ? COPY.payHint : COPY.leadHint
+      document.getElementById('pay-note')?.classList.toggle('hidden', !isPaying())
       // Terms acceptance rides with the paying plan, so a `required` checkbox can never
       // block an interest lead that does not need it.
-      document.getElementById('akkoord-row')?.classList.toggle('hidden', !isChat())
-      if (akkoordInput) akkoordInput.required = isChat()
+      document.getElementById('akkoord-row')?.classList.toggle('hidden', !isPaying())
+      if (akkoordInput) akkoordInput.required = isPaying()
     }
     form
       .querySelectorAll<HTMLInputElement>('input[name="plan"]')
@@ -312,7 +317,7 @@ const inputClass =
       errorEl.classList.add('hidden')
       const data = new FormData(form)
       const value = (name: string) => String(data.get(name) ?? '').trim()
-      const paying = isChat()
+      const paying = isPaying()
 
       if (!value('naam')) return fail(COPY.needName)
       if (paying && !value('email')) return fail(COPY.needEmail)

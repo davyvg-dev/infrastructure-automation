@@ -12,8 +12,6 @@ interface Tier {
   priceNote?: string
   blurb: string
   highlight: boolean
-  /** Mono badge in the card header (e.g. "coming soon" on Compleet). */
-  badge?: string
   cta: string
   ctaHref: string
 }
@@ -37,11 +35,10 @@ const tiers: Tier[] = [
     dayPrice: '16.63',
     priceNote: 'incl. 750 call minutes/mo, then €0.40/min',
     blurb:
-      'Everything in Chat, plus an AI phone agent on your own Dutch number. Not orderable yet; leave your details and you hear it first.',
+      'Everything in Chat, plus an AI phone agent that answers your phone 24/7 on your own Dutch number. Missed calls no longer exist.',
     highlight: false,
-    badge: 'coming soon',
-    cta: 'Keep me posted',
-    ctaHref: '/en/aanmelden/?plan=compleet-interesse',
+    cta: 'Start with Compleet',
+    ctaHref: '/en/aanmelden/?plan=compleet',
   },
 ]
 
@@ -62,12 +59,17 @@ const features: FeatureRow[] = [
   {
     feature: 'AI phone agent on your own Dutch number',
     chat: '–',
-    compleet: 'coming soon',
+    compleet: 'yes',
   },
   {
     feature: 'Included call minutes per month',
     chat: '–',
     compleet: '750, then €0.40/min',
+  },
+  {
+    feature: 'Simultaneous calls',
+    chat: '–',
+    compleet: 'up to 5 at once',
   },
 ]
 
@@ -132,11 +134,6 @@ const serviceSchema = {
               {tier.highlight && (
                 <span class="rounded-(--radius-button) bg-(--color-sodium) px-2 py-1 text-micro text-(--color-night)">
                   recommended
-                </span>
-              )}
-              {tier.badge && (
-                <span class="rounded-(--radius-button) border border-(--color-line) px-2 py-1 font-mono text-micro text-(--color-dim)">
-                  {tier.badge}
                 </span>
               )}
             </header>
@@ -293,6 +290,7 @@ const serviceSchema = {
       </p>
       <div class="mt-6 btn-row">
         <a href="/en/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start with Chat</a>
+        <a href="/en/aanmelden/?plan=compleet" class="btn btn-ghost btn-lg">Start with Compleet</a>
         <a href="/en/demo/" class="btn btn-ghost btn-lg">Try the demo</a>
       </div>
     </div>
