@@ -151,7 +151,7 @@
                 "temperature": 0.4,
                 "max_tokens": -1,
                 "tool_ids": [
-                    "tool_2901kz742dyxecktqzc01607b1qy"
+                    "tool_8401kz74xjsne7hspzycnb1cfsbc"
                 ],
                 "built_in_tools": {
                     "end_call": {
@@ -284,12 +284,23 @@
                                         "allowed_values_dynamic_variable": "",
                                         "constant_value": "3",
                                         "is_omitted": false
+                                    },
+                                    "fl": {
+                                        "type": "string",
+                                        "description": "",
+                                        "enum": null,
+                                        "is_system_provided": false,
+                                        "dynamic_variable": "",
+                                        "allowed_values_dynamic_variable": "",
+                                        "constant_value": "weergavenaam",
+                                        "is_omitted": false
                                     }
                                 },
                                 "required": [
                                     "q",
                                     "fq",
-                                    "rows"
+                                    "rows",
+                                    "fl"
                                 ]
                             },
                             "request_body_schema": null,
@@ -340,7 +351,7 @@
     },
     "metadata": {
         "created_at_unix_secs": 1785764247,
-        "updated_at_unix_secs": 1785871808
+        "updated_at_unix_secs": 1785872698
     },
     "platform_settings": {
         "evaluation": {
@@ -778,7 +789,7 @@
         "access_source": "creator"
     },
     "tags": [],
-    "version_id": "agtvrsn_6601kz742ebceb9rnjgdw4hbzz4d",
+    "version_id": "agtvrsn_0001kz74xk4zf0yb20gtvgfj6y4r",
     "branch_id": "agtbrch_3401kz3xfxqqf8frkpf2mnm8xarw",
     "main_branch_id": "agtbrch_3401kz3xfxqqf8frkpf2mnm8xarw",
     "procedures": {},
