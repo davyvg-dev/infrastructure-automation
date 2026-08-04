@@ -85,10 +85,15 @@ mijn.verbonden.nl feature.
 
 ## Pilot checklist
 
-- [ ] Founder: upgrade ElevenLabs tier (quota exhausted; Creator for demos, Pro for pilot).
-- [ ] Twilio NL regulatory bundle (KvK + address + VAT) → buy 085/geographic number.
-- [ ] Import number into ElevenLabs, assign agent, burst OFF.
-- [ ] Fix dynamic variables for phone calls (bake in DRS values or initiation webhook).
+- [x] Founder: upgraded ElevenLabs to Creator (2026-08-04). Pro still needed before pilot volume.
+- [x] Number bought: **+31 970 0653 0002** (097 mobile/M2M range — no regulatory bundle needed,
+      unlike 085/geographic; forwards at mobile rate €0.1046/min, fold into proposal math).
+- [x] Imported into ElevenLabs (`phnum_5901kz73jk4kef7awz3x80kxtzq9`), DRS agent assigned,
+      bursting off, daily_limit raised 50→200, concurrency → tier max. Twilio voice webhook
+      auto-rewritten to `api.elevenlabs.io/twilio/inbound_call` — verified 2026-08-04.
+- [x] Dynamic variables fixed the single-tenant way: all five DRS values inlined into the
+      live prompt + first message; only `{{system__caller_id}}` remains (telephony supplies it).
+      Multi-client = revisit the initiation webhook.
 - [ ] DRS (or founder screen-share): belplan step 3 Vaste Bestemming + beltijd 20–25 s
       + nummerweergave "Oorspronkelijke Beller"; keypress-confirm OFF; openingstijden
       closed branch → same number.
