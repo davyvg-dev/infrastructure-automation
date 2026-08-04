@@ -72,7 +72,7 @@ def test_checkout_saves_lead_and_returns_mollie_url(
     # Mollie got the business name (fallback: person's name) and the founding-offer amount.
     assert mollie["customers"] == [("De Vries Installatietechniek BV", "jan@devries.nl")]
     assert mollie["payments"] == [
-        ("cst_test", billing.FIRST_MONTH_NET_EUR, "Klantkraan Chat eerste maand", "chat")
+        ("cst_test", "149.50", "Klantkraan Chat eerste maand", "chat")
     ]
 
 
@@ -163,9 +163,20 @@ def test_interest_lead_needs_no_acceptance(client: TestClient, data_dir, sent) -
     assert "akkoord_versie" not in record
 
 
-def test_only_the_chat_plan_can_be_bought(client: TestClient) -> None:
+def test_compleet_buys_at_its_own_first_month_price(
+    client: TestClient, data_dir, sent, mollie
+) -> None:
+    """Voice is live: compleet sells self-serve at 50% of its €499, not chat's numbers."""
     resp = client.post("/api/checkout", json={**_BUYER, "plan": "compleet"})
-    assert resp.status_code == 422, "compleet is not self-serve until voice ships"
+    assert resp.status_code == 200
+    assert mollie["payments"] == [
+        ("cst_test", "249.50", "Klantkraan Compleet eerste maand", "compleet")
+    ]
+
+
+def test_unknown_plans_cannot_be_bought(client: TestClient) -> None:
+    resp = client.post("/api/checkout", json={**_BUYER, "plan": "premium"})
+    assert resp.status_code == 422
 
 
 # --- Native form posts: the zero-JS fallback. The browser is navigating, so every answer

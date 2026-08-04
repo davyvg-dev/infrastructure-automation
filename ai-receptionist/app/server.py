@@ -272,7 +272,7 @@ async def _signup(request: Request, buy: bool) -> Response:
 
     if not _rate_ok(f"lead:{_client_ip(request)}"):
         return reject(429, "Too many requests — try again in a minute.")
-    if buy and native and (data.get("plan") or "chat") != "chat":
+    if buy and native and (data.get("plan") or "chat") not in ("chat", "compleet"):
         buy = False  # the no-JS form posts every plan to /api/checkout; interest-only = lead
     try:
         body = CheckoutIn.model_validate(data) if buy else LeadIn.model_validate(data)
@@ -302,7 +302,10 @@ async def _signup(request: Request, buy: bool) -> Response:
                 body.bedrijf.strip() or body.naam.strip(), body.email.strip()
             )
             return billing.create_first_payment(
-                customer_id, billing.FIRST_MONTH_NET_EUR, "Klantkraan Chat eerste maand", body.plan
+                customer_id,
+                billing.first_month_net(body.plan),
+                f"Klantkraan {billing.plan_label(body.plan)} eerste maand",
+                body.plan,
             )
         except Exception as exc:
             # The founder already got the lead ping above; this extra one says "send the
@@ -325,11 +328,11 @@ async def lead(request: Request) -> Response:
 
 
 class CheckoutIn(LeadIn):
-    """The buy path. Mollie needs a billing email, and chat is the only plan that can be
-    bought self-serve (compleet is sold by hand once voice ships)."""
+    """The buy path. Mollie needs a billing email. Both plans sell self-serve since voice
+    went live (2026-08-04): chat, and compleet with the AI-telefonist."""
 
     email: str = Field(min_length=3, max_length=200)
-    plan: Literal["chat"] = "chat"
+    plan: Literal["chat", "compleet"] = "chat"
     # Acceptance of the voorwaarden + DPA. Required here and NOT on LeadIn on purpose: an
     # interest lead agrees to nothing, but nobody starts a SEPA mandate without a contract.
     akkoord: str = Field(default="", max_length=20)

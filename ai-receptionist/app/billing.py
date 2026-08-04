@@ -69,9 +69,10 @@ BTW_RATE = Decimal("0.21")
 # is half); the subscription always charges the plan price.
 PLAN_MONTHLY_NET = {"chat": "299.00", "compleet": "499.00"}
 DEFAULT_PLAN = "chat"
-# Founding offer: first month 50% off €299 net. The site's /aanmelden copy quotes this
-# number — change them together.
-FIRST_MONTH_NET_EUR = "149.50"
+# Founding offer: first month 50% off the plan price, net. The site's /aanmelden copy
+# quotes the resulting numbers (€149,50 / €249,50) — change them together.
+def first_month_net(plan: str) -> str:
+    return _eur(Decimal(PLAN_MONTHLY_NET.get(plan, PLAN_MONTHLY_NET[DEFAULT_PLAN])) / 2)
 
 _EVENTS_LOCK = threading.Lock()
 
@@ -144,7 +145,7 @@ def plan_monthly_gross(plan: str) -> str:
     return gross_eur(PLAN_MONTHLY_NET.get(plan, PLAN_MONTHLY_NET[DEFAULT_PLAN]))
 
 
-def _plan_label(plan: str) -> str:
+def plan_label(plan: str) -> str:
     return plan.strip().capitalize() or "Chat"
 
 
@@ -421,7 +422,7 @@ def welcome_blocks(
     # mail: the gross is what leaves the account, the net is what they were sold.
     monthly_net, _ = split_gross(monthly_eur)
     charged = first_amount_eur or monthly_eur
-    label = _plan_label(plan)
+    label = plan_label(plan)
 
     terms: list[tuple[str, str]] = [
         ("Abonnement", f"Klantkraan {label}"),
@@ -589,7 +590,7 @@ def _invoice_paid_payment_inner(payment: dict[str, Any], plan: str, result: dict
             on = None
 
     first = payment.get("sequenceType") == "first"
-    label = _plan_label(plan)
+    label = plan_label(plan)
     outcome = invoice.send(
         payment_id=str(payment.get("id") or ""),
         gross_eur=str(gross),
@@ -644,7 +645,7 @@ def handle_webhook(payment_id: str) -> dict[str, Any]:
             plan = str(metadata.get("plan") or DEFAULT_PLAN)
             monthly = metadata.get("monthly_eur") or plan_monthly_gross(plan)
             subscription = create_subscription(
-                customer_id, monthly, f"Klantkraan {_plan_label(plan)} maandabonnement"
+                customer_id, monthly, f"Klantkraan {plan_label(plan)} maandabonnement"
             )
             result["action"] = "subscription_created"
             result["subscription_id"] = subscription.get("id")
@@ -796,9 +797,10 @@ def main(argv: list[str]) -> int:
     p_co.add_argument("email", help="The client's billing email.")
     p_co.add_argument(
         "--amount",
-        default=FIRST_MONTH_NET_EUR,
-        help=f"First payment in EUR EX BTW (default {FIRST_MONTH_NET_EUR}: first month 50%% "
-        f"off). BTW is added on top, so this is what the factuur says, not what is charged.",
+        default="",
+        help="First payment in EUR EX BTW (default: half the plan price, the first-month 50%% "
+        "founding offer). BTW is added on top, so this is what the factuur says, not what is "
+        "charged.",
     )
     p_co.add_argument(
         "--plan",
@@ -873,9 +875,9 @@ def main(argv: list[str]) -> int:
     args = parser.parse_args(argv[1:])
 
     if args.cmd == "checkout":
-        label = _plan_label(args.plan)
+        label = plan_label(args.plan)
         try:
-            amount = _eur(args.amount)
+            amount = _eur(args.amount) if args.amount else first_month_net(args.plan)
             monthly = _eur(args.monthly) if args.monthly else PLAN_MONTHLY_NET[args.plan]
         except ValueError as exc:
             parser.error(str(exc))
@@ -924,7 +926,7 @@ def main(argv: list[str]) -> int:
                 "person": "Jan de Vries",
                 "plan": args.plan,
                 "monthly_eur": monthly,
-                "first_amount_eur": FIRST_MONTH_NET_EUR,
+                "first_amount_eur": first_month_net(args.plan),
             }
             print(f"Onderwerp: {WELCOME_SUBJECT}\n")
             print(welcome_text(**copy))
@@ -943,7 +945,7 @@ def main(argv: list[str]) -> int:
                 "person": str(lead.get("naam") or customer.get("name") or ""),
                 "plan": args.plan,
                 "monthly_eur": monthly,
-                "first_amount_eur": FIRST_MONTH_NET_EUR,
+                "first_amount_eur": first_month_net(args.plan),
                 "ask_website": not str(lead.get("site") or "").strip(),
             }
             print(f"Aan: {customer.get('email')}")
@@ -953,7 +955,7 @@ def main(argv: list[str]) -> int:
                 _write_html_preview(args.html, welcome_html(**copy))
             print("(niet verstuurd — voeg --send toe om te sturen)")
             return 0
-        result = send_welcome(args.customer_id, args.plan, monthly, FIRST_MONTH_NET_EUR)
+        result = send_welcome(args.customer_id, args.plan, monthly, first_month_net(args.plan))
         if result["sent"]:
             print(f"✅ welkomstmail verstuurd naar {result['to']}")
             return 0
