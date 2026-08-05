@@ -29,8 +29,8 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 
 | | excl. BTW | incl. 21% BTW |
 |---|---|---|
-| Abonnement per maand, inclusief 3.500 belminuten | € 685,00 | € 828,85 |
-| Belminuten boven 3.500 per minuut | € 0,40 | € 0,48 |
+| Abonnement per maand, inclusief 1.500 belminuten | € 685,00 | € 828,85 |
+| Belminuten boven 1.500 per minuut | € 0,40 | € 0,48 |
 | Eenmalige installatie | € 1.395,00 | € 1.687,95 |
 
 De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie-aanbieder, waarvan de belkosten (indicatie € 35 tot € 50 per maand) voor uw rekening zijn.
