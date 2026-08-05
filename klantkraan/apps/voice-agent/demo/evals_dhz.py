@@ -101,6 +101,9 @@ SCENARIOS: list[dict] = [
             "no_invented_car": "De assistent noemde nooit zelf een merk, model of bouwjaar "
             "dat niet door de beller was gezegd; na een lege zoekopdracht werd geen auto "
             "verzonnen.",
+            "no_teken_meta": "De assistent zei nooit hardop hoeveel tekens hij had gehoord "
+            "en beweerde nooit dat het er te veel of te weinig waren; bij twijfel zocht hij "
+            "gewoon en liet hij de mislukte treffer het werk doen.",
             "fallback_ladder": "Na de mislukte zoekopdracht vroeg de assistent het kenteken "
             "één keer teken voor teken, en toen dat ook niets opleverde noteerde hij het "
             "kenteken letterlijk en vroeg hij het merk en type gewoon uit, zonder er een "
@@ -147,9 +150,10 @@ SCENARIOS: list[dict] = [
             "location_readback": "De assistent zocht de locatie op en las de gevonden "
             "straat en plaats (Larenseweg, Hilversum) voor ter controle, of bevestigde de "
             "locatie expliciet.",
-            "no_arrival_time": "De assistent noemde nooit een concrete aanrijtijd of hoe "
-            "laat iemand er is; alleen dat het team het zo snel mogelijk oppakt en de "
-            "collega die terugbelt zegt hoe laat.",
+            "no_arrival_time": "Fout is uitsluitend: de assistent noemde zelf een concreet "
+            "tijdstip of een concrete termijn in minuten of uren waarop iemand ter plaatse "
+            "is. Goed en expliciet toegestaan is zeggen dat het team het zo snel mogelijk "
+            "oppakt en dat de collega die terugbelt vertelt hoe laat hij er is.",
             "reassured": "De assistent gaf de gestreste beller eerst kort erkenning of "
             "geruststelling voordat hij verder ging met vragen.",
         },
