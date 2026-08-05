@@ -55,7 +55,7 @@ De eerste betaling verloopt via iDEAL en registreert direct de automatische inca
 - Abonnement loopt vanaf de opleverdatum, niet vanaf ondertekening
 - Maandelijks opzegbaar met een opzegtermijn van 30 dagen
 - De dienst start op ons internationale spraakplatform; spraakverwerking kan in de startfase deels buiten de EU plaatsvinden. Uiterlijk zes weken na oplevering draait de dienst volledig op Europese servers, zonder meerkosten. Gespreksgegevens en klantgegevens worden in beide fasen verwerkt volgens de verwerkersovereenkomst.
-- Algemene voorwaarden, verwerkersovereenkomst (AVG) en SLA: klantkraan.nl/legal
+- Algemene voorwaarden: klantkraan.nl/legal/voorwaarden • verwerkersovereenkomst (AVG): klantkraan.nl/legal/dpa • SLA: klantkraan.nl/legal/sla
 
 ## Akkoord
 
