@@ -1,6 +1,6 @@
 # Offerte Slotenmaker DRS (2026-08)
 
-> Intern. Full answering per dag 1, prijsladder besloten 2026-08-04; maandprijs € 685 en installatie € 1.395 besloten 2026-08-05. Setup 50/50 besloten 2026-08-06. Voor verzending: DRS-gegevens invullen, datum en geldigheid actualiseren, dan als PDF naar SignWell. De setupwaiver (kwijtschelden bij conversie naar jaarcontract binnen een maand) staat bewust NIET in het document; dat is een gesprekshefboom.
+> Intern. Full answering per dag 1, prijsladder besloten 2026-08-04; maandprijs € 685 en installatie € 1.395 besloten 2026-08-05. Setup 50/50 besloten 2026-08-06. Dekking avond en weekend in plaats van 24/7, zelfde prijs, besloten 2026-08-05. Voor verzending: DRS-gegevens invullen, datum en geldigheid actualiseren, dan als PDF naar SignWell. De setupwaiver (kwijtschelden bij conversie naar jaarcontract binnen een maand) staat bewust NIET in het document; dat is een gesprekshefboom.
 
 ---
 
@@ -15,10 +15,11 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 
 ---
 
-## Aanbod: Klantkraan Compleet, telefoonservice
+## Aanbod: Klantkraan Compleet, telefoonservice voor avond en weekend
 
-- AI-telefonist neemt elk gesprek direct op, 24 uur per dag, 7 dagen per week, in het Nederlands
-- Geen wachttijd en geen gemiste oproepen, ook niet 's nachts en in het weekend
+- AI-telefonist neemt 's avonds en in het weekend elk gesprek direct op, in het Nederlands
+- Geen wachttijd en geen gemiste oproepen, juist op de uren dat uw eigen team niet bereikbaar is
+- Overdag op werkdagen rinkelt uw eigen telefoon zoals nu; de doorschakeltijden stellen we bij de installatie samen in
 - Neemt adres en contactgegevens op met verificatie tegen het officiële adresregister (BAG/PDOK)
 - Melding met naam, adres en telefoonnummer wordt direct naar u doorgestuurd
 - Transcript en samenvatting van ieder gesprek, plus maandelijkse rapportage*
