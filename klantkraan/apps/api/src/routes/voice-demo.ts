@@ -17,6 +17,10 @@ const DEMOS: Record<string, { agentId: string; languages: string[] }> = {
     agentId: "agent_9201kz8j953jesms7g9h5er53ykg",
     languages: ["en", "de", "es"],
   },
+  dhz: {
+    agentId: "agent_2501kz8ntph6fa6amhhtb92ve5ht",
+    languages: ["nl"],
+  },
 };
 
 const AGENT_PHONE_NUMBER_ID = "phnum_5901kz73jk4kef7awz3x80kxtzq9"; // +31 970 0653 0002
