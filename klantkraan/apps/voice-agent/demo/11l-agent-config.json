@@ -168,7 +168,7 @@
           "system__caller_id": "onbekend"
         }
       },
-      "disable_first_message_interruptions": false,
+      "disable_first_message_interruptions": true,
       "max_conversation_duration_message": "",
       "text_behavior_overrides": null,
       "prompt": {
@@ -179,7 +179,7 @@
         "thinking_budget": 0,
         "enable_reasoning_summary": false,
         "temperature": 0.4,
-        "max_tokens": -1,
+        "max_tokens": 200,
         "tool_ids": [
           "tool_8401kz74xjsne7hspzycnb1cfsbc"
         ],

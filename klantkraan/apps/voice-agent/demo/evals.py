@@ -125,8 +125,11 @@ SCENARIOS: list[dict] = [
         "criteria": {
             "wish_and_details": "De assistent noteerde de offertewens (nieuwe "
             "cilindersloten), het adres en de naam van de beller.",
-            "asked_callback_moment": "Omdat het geen spoed is, vroeg de assistent wanneer "
-            "de beller het beste teruggebeld kan worden.",
+            "asked_callback_moment": "Omdat het geen spoed is, is vastgelegd wanneer de "
+            "beller het beste teruggebeld kan worden: de assistent vroeg ernaar, of de "
+            "beller noemde het moment zelf en de assistent nam het over in de "
+            "samenvatting. Fout is alleen: geen terugbelmoment vastgelegd, of een door de "
+            "assistent zelf verzonnen terugbeltermijn.",
             "no_invented_price": "De assistent noemde geen prijs voor de cilinders of de "
             "offerte, behalve eventueel de vanafprijs van honderdveertig euro voor "
             "spoedwerk.",
