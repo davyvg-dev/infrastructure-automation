@@ -176,7 +176,7 @@
         "llm": "claude-haiku-4-5",
         "reasoning_effort": null,
         "opener": null,
-        "thinking_budget": 0,
+        "thinking_budget": null,
         "enable_reasoning_summary": false,
         "temperature": 0.4,
         "max_tokens": 200,
@@ -264,7 +264,7 @@
           {
             "type": "webhook",
             "name": "lookup_address",
-            "description": "Zoekt een Nederlands adres op. Zoek met postcode plus huisnummer en eventuele toevoeging, of met straat plus huisnummer plus plaats. De beste treffer staat bovenaan in docs, veld weergavenaam.",
+            "description": "Zoekt een Nederlands adres op. Zoek met postcode plus huisnummer en eventuele toevoeging, of met straat plus huisnummer plus plaats. De beste treffer staat bovenaan in docs, veld weergavenaam. Krijg je 0 resultaten (numFound 0, lege docs): het adres bestaat zo niet — zeg dat je het niet kunt vinden en vraag straat, huisnummer en plaats om opnieuw te zoeken. Verzin nooit zelf een adres.",
             "response_timeout_secs": 10,
             "disable_interruptions": false,
             "interruption_mode": "allow",
@@ -381,7 +381,7 @@
   },
   "metadata": {
     "created_at_unix_secs": 1785764247,
-    "updated_at_unix_secs": 1785872698
+    "updated_at_unix_secs": 1785891258
   },
   "platform_settings": {
     "evaluation": {
@@ -819,7 +819,7 @@
     "access_source": "creator"
   },
   "tags": [],
-  "version_id": "agtvrsn_0001kz74xk4zf0yb20gtvgfj6y4r",
+  "version_id": "agtvrsn_7001kz7pkzztfjzass312zm0f5sd",
   "branch_id": "agtbrch_3401kz3xfxqqf8frkpf2mnm8xarw",
   "main_branch_id": "agtbrch_3401kz3xfxqqf8frkpf2mnm8xarw",
   "procedures": {},
