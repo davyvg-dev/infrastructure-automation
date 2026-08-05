@@ -19,9 +19,12 @@ export default defineConfig({
   }),
   integrations: [
     sitemap({
-      // /r/* are private per-client dashboards, /demo/cool-global/ is a
-      // link-only prospect demo (noindex) — keep them out of the sitemap.
-      filter: (page) => !page.includes('/r/') && !page.includes('/demo/cool-global'),
+      // /r/* are private per-client dashboards; prospect demos are link-only
+      // (noindex) — keep them out of the sitemap. /demo/sportscholen stays in:
+      // that one is a public vertical page.
+      filter: (page) =>
+        !page.includes('/r/') &&
+        !['/demo/cool-global', '/demo/dhz'].some((p) => page.includes(p)),
       // Stamp every entry with the build date so crawlers see fresh lastmod
       // values on each deploy.
       serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
