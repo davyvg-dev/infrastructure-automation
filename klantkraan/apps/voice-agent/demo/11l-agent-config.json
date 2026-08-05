@@ -50,7 +50,7 @@
       "initial_wait_time": null,
       "silence_end_call_timeout": -1.0,
       "mode": "turn",
-      "turn_eagerness": "eager",
+      "turn_eagerness": "normal",
       "spelling_patience": "auto",
       "speculative_turn": true,
       "retranscribe_on_turn_timeout": false,
