@@ -15,27 +15,26 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 
 ---
 
-## Aanbod: Klantkraan Compleet, volledige telefoonbeantwoording
+## Aanbod: Klantkraan Compleet, telefoonservice
 
-- AI-telefonist neemt elk gesprek direct aan, 24 uur per dag, 7 dagen per week, in het Nederlands
-- Geen wachttijd en geen gemiste oproepen, ook 's nachts en in het weekend
+- AI-telefonist neemt elk gesprek direct op, 24 uur per dag, 7 dagen per week, in het Nederlands
+- Geen wachttijd en geen gemiste oproepen, ook niet 's nachts en in het weekend
 - Neemt adres en contactgegevens op met verificatie tegen het officiële adresregister (BAG/PDOK)
-- Registreert de melding en zet die met naam, adres en telefoonnummer door naar de juiste regio-slotenmaker
-- Transcript en samenvatting van ieder gesprek
-- Voldoet aan de wettelijke transparantie-eis voor AI aan de telefoon (EU AI Act, artikel 50)
-- Installatie, koppeling met uw belplan en afstemming op uw werkwijze volledig door Klantkraan verzorgd
-- Maandelijkse rapportage
+- Melding met naam, adres en telefoonnummer wordt direct naar u doorgestuurd
+- Transcript en samenvatting van ieder gesprek, plus maandelijkse rapportage*
+
+\* Voldoet aan de wettelijke transparantie-eis voor AI aan de telefoon (EU AI Act, artikel 50)
 
 ## Prijs
 
 | | excl. BTW | incl. 21% BTW |
 |---|---|---|
 | Abonnement per maand, inclusief 3.500 belminuten | € 685,00 | € 828,85 |
-| Belminuten boven 3.500 per maand, per minuut | € 0,40 | € 0,48 |
+| Belminuten boven 3.500 per minuut | € 0,40 | € 0,48 |
 | Eenmalige installatie | € 1.395,00 | € 1.687,95 |
 
 Fair use: maximaal 5 gelijktijdige gesprekken.
-De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie-aanbieder; die belkosten (indicatie € 35 tot € 50 per maand) zijn voor rekening van Slotenmaker DRS.
+De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie-aanbieder, waarvan de belkosten (indicatie € 35 tot € 50 per maand) voor uw rekening zijn.
 
 ## Betaalschema
 
