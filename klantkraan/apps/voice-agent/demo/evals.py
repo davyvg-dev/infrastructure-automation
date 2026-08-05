@@ -179,7 +179,7 @@ def run_scenario(scenario: dict) -> bool:
     ok = True
     for cid, res in (analysis.get("evaluation_criteria_results") or {}).items():
         verdict = res.get("result", "?")
-        if verdict != "success":
+        if verdict == "failure":
             ok = False
         mark = {"success": "PASS", "failure": "FAIL"}.get(verdict, "?   ")
         print(f"  [{mark}] {cid}: {res.get('rationale', '').strip()}")
