@@ -45,7 +45,7 @@ De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie
 | Bij oplevering | 50% installatie + eerste maand | € 1.382,50 | € 1.672,83 |
 | Daarna maandelijks | Abonnement | € 685,00 | € 828,85 |
 
-De eerste betaling verloopt via iDEAL en registreert direct de automatische incasso; alle volgende betalingen lopen via SEPA-incasso.
+De aanbetaling verloopt via iDEAL (betaallink: payment-links.mollie.com/payment/aSnDhBoYJguZ6Xokb6nTk, geldig tot 20-08-2026). De betaling bij oplevering registreert direct de automatische incasso; de maandtermijnen lopen daarna via SEPA-incasso.
 
 **Oplevering** betekent: de AI-telefonist is live op het nummer van Slotenmaker DRS en een gezamenlijk testgesprek is door beide partijen goedgekeurd.
 
