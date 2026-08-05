@@ -1,0 +1,230 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import { waLink, mailLink } from '../../data/contact'
+
+// Private prospect demo for Cool Global Mallorca (EN/DE). Shared by link only.
+const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
+---
+
+<Base
+  title="Cool Global Mallorca — live receptionist demo"
+  description="Try the digital receptionist prepared for Cool Global Mallorca: get a live phone call in English or German, or chat as a customer would."
+  lang="en"
+  centered={false}
+  stickyCta={false}
+  noindex={true}
+>
+  <!-- 1. Hero -->
+  <section class="py-8 md:py-14">
+    <div class="mx-auto max-w-3xl px-6">
+      <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="font-display text-h1 md:text-hero text-(--color-chalk)">
+          The <span class="text-(--color-sodium)">Cool Global Mallorca</span> receptionist.
+        </h1>
+        <span
+          class="inline-flex shrink-0 items-center gap-2 rounded-full bg-(--color-panel) px-3 py-1 eyebrow"
+        >
+          <span class="h-2 w-2 rounded-full bg-(--color-sodium)"></span> Live demo
+        </span>
+      </div>
+      <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
+        A working demo prepared for Cool Global Mallorca. Mia answers in English, German or
+        Spanish, knows the island's streets, and captures every job with the details your
+        engineer needs. Try her on a real phone call, or in chat.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Call + chat, side by side -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- Call me now -->
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
+          <div class="flex items-center gap-3">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.22)] text-(--color-sodium)">
+              <Icon name="phone" class="h-5 w-5" />
+            </span>
+            <h2 class="font-display text-h2 text-(--color-chalk)">Get a live call</h2>
+          </div>
+          <p class="mt-4 text-body text-(--color-dim)">
+            Enter your number and Mia calls you within seconds. Play a customer: a broken
+            unit, a guest emergency in a rental, a maintenance quote.
+          </p>
+
+          <form id="voice-demo-form" data-demo="cool-global" class="mt-5" novalidate>
+            <label for="voice-demo-phone" class="text-small text-(--color-dim)">
+              Your phone number
+            </label>
+            <input
+              id="voice-demo-phone"
+              type="tel"
+              inputmode="tel"
+              autocomplete="tel"
+              placeholder="+34 6XX XX XX XX"
+              class="mt-1 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-3 text-body text-(--color-chalk) placeholder:text-(--color-dim)"
+              required
+            />
+            <p id="voice-demo-phone-error" class="mt-2 hidden text-small text-(--color-sodium)">
+              Enter a full number including country code, e.g. +34 612 345 678.
+            </p>
+
+            <fieldset class="mt-4">
+              <legend class="text-small text-(--color-dim)">Language of the call</legend>
+              <div class="mt-2 flex gap-3">
+                <label class="inline-flex items-center gap-2 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-2 text-body text-(--color-chalk)">
+                  <input type="radio" name="voice-demo-language" value="en" checked />
+                  English
+                </label>
+                <label class="inline-flex items-center gap-2 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-2 text-body text-(--color-chalk)">
+                  <input type="radio" name="voice-demo-language" value="de" />
+                  Deutsch
+                </label>
+              </div>
+            </fieldset>
+
+            <button
+              id="voice-demo-submit"
+              type="submit"
+              data-submitting="Calling you now…"
+              class="mt-5 btn btn-primary btn-lg w-full justify-center"
+            >
+              <Icon name="phone" class="h-5 w-5" />
+              <span>Call me now</span>
+            </button>
+            <p
+              id="voice-demo-error"
+              class="mt-3 hidden text-small text-(--color-sodium)"
+              data-msg-country="That country code isn't enabled for this demo. Spanish, Dutch, German, Austrian, Swiss, Belgian and UK numbers work."
+              data-msg-rate="A few calls already went to this connection just now. Give it fifteen minutes and try again."
+              data-msg-phone="That number doesn't look complete. Include the country code, e.g. +34 612 345 678."
+              data-msg-generic="The call couldn't be placed just now. Try again in a minute, or use the chat demo below."
+            >
+            </p>
+          </form>
+
+          <div id="voice-demo-success" class="mt-5 hidden rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] p-4">
+            <p class="font-display text-h3 text-(--color-sodium)">Your phone is about to ring.</p>
+            <p class="mt-2 text-body text-(--color-dim)">
+              The call comes from <strong class="text-(--color-chalk)">+31 970 0653 0002</strong>,
+              a Dutch number. Answer it and talk to Mia as a customer would.
+            </p>
+          </div>
+
+          <p class="mt-4 text-small text-(--color-dim)">
+            The call comes from a Dutch number (+31 970 0653 0002) and lasts up to five
+            minutes. Free, no obligations.
+          </p>
+        </div>
+
+        <!-- Chat -->
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
+          <div class="flex items-center gap-3">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.22)] text-(--color-sodium)">
+              <Icon name="message-square" class="h-5 w-5" />
+            </span>
+            <h2 class="font-display text-h2 text-(--color-chalk)">Chat with Mia</h2>
+          </div>
+          <p class="mt-4 text-body text-(--color-dim)">
+            The same receptionist in writing, as she'd sit on coolglobalmallorca.com or answer
+            on WhatsApp. She answers questions, checks the diary and books the visit — English,
+            German or Spanish.
+          </p>
+          <a
+            href={chatUrl}
+            target="_blank"
+            rel="noopener"
+            class="mt-5 btn btn-primary btn-lg w-full justify-center"
+          >
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>Start the chat demo</span>
+          </a>
+          <p class="mt-4 text-small text-(--color-dim)">
+            Opens in a new tab. Booked slots land in a demo diary, not a real one.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. What to try -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Things worth trying</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Put her under pressure.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">A guest emergency</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              "I manage a rental in Santa Ponsa and my guests have no cooling." Watch her treat
+              it as urgent and collect everything the engineer needs for the callback.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="message-square" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">A Mallorca address, said badly</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Give a real street the English or German way — "Paseo Maritimo" — and she finds
+              the proper street on the island and reads it back to confirm.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Push for a price</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Try to get a number out of her. She never invents prices: the engineer confirms
+              on site, and a survey for a new installation is free. Your rules, never improvised.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="message-circle" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Switch language mid-call</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Start in English, carry on in German or Spanish. She follows without being asked.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Honesty + CTA -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8">
+        <h2 class="font-display text-h2 text-(--color-sodium)">Honest by design</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          Mia opens every conversation by saying she is a digital assistant — required by the
+          EU AI Act, and simply the right way to treat customers. She only says what Cool
+          Global has approved: no invented prices, no promised arrival times, no DIY advice
+          on refrigerant or electrics.
+        </p>
+      </div>
+      <div class="mt-10">
+        <h2 class="font-display text-h1 text-(--color-chalk)">Want this on your own number?</h2>
+        <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+          This demo was prepared by Klantkraan. Your services, your prices, your rules — live
+          within days, cancel monthly.
+        </p>
+        <div class="mt-8 btn-row">
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>WhatsApp us</span>
+          </a>
+          <a href={mailLink} class="btn btn-ghost btn-lg">Rather by e-mail</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/voice-demo.js?v=1" type="module" is:inline></script>
+</Base>

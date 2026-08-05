@@ -19,8 +19,9 @@ export default defineConfig({
   }),
   integrations: [
     sitemap({
-      // /r/* are private per-client dashboards — keep them out of the sitemap.
-      filter: (page) => !page.includes('/r/'),
+      // /r/* are private per-client dashboards, /demo/cool-global/ is a
+      // link-only prospect demo (noindex) — keep them out of the sitemap.
+      filter: (page) => !page.includes('/r/') && !page.includes('/demo/cool-global'),
       // Stamp every entry with the build date so crawlers see fresh lastmod
       // values on each deploy.
       serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
