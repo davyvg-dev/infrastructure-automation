@@ -1,11 +1,11 @@
 # Offerte Slotenmaker DRS (2026-08)
 
-> Intern. Full answering per dag 1, prijsladder besloten 2026-08-04; maandprijs verlaagd naar € 685 (besloten 2026-08-05). Setup 50/50 besloten 2026-08-06. Voor verzending: BTW-nummer invullen, DRS-gegevens invullen, datum en geldigheid actualiseren, dan als PDF naar SignWell. De setupwaiver (kwijtschelden bij conversie naar jaarcontract binnen een maand) staat bewust NIET in het document; dat is een gesprekshefboom.
+> Intern. Full answering per dag 1, prijsladder besloten 2026-08-04; maandprijs € 685 en installatie € 1.395 besloten 2026-08-05. Setup 50/50 besloten 2026-08-06. Voor verzending: DRS-gegevens invullen, datum en geldigheid actualiseren, dan als PDF naar SignWell. De setupwaiver (kwijtschelden bij conversie naar jaarcontract binnen een maand) staat bewust NIET in het document; dat is een gesprekshefboom.
 
 ---
 
 **Klantkraan** • handelsnaam van T4 Software Consulting BV
-KvK 90232135 • BTW {{BTW-NUMMER}} • klantkraan.nl
+KvK 90232135 • BTW NL004800098B81 • klantkraan.nl
 
 **Offerte voor:** Slotenmaker DRS
 {{Adres}} • KvK {{KvK-nummer}}
@@ -32,7 +32,7 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 |---|---|---|
 | Abonnement per maand, inclusief 3.500 belminuten | € 685,00 | € 828,85 |
 | Belminuten boven 3.500 per maand, per minuut | € 0,40 | € 0,48 |
-| Eenmalige installatie | € 1.500,00 | € 1.815,00 |
+| Eenmalige installatie | € 1.395,00 | € 1.687,95 |
 
 Fair use: maximaal 5 gelijktijdige gesprekken.
 De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie-aanbieder; die belkosten (indicatie € 35 tot € 50 per maand) zijn voor rekening van Slotenmaker DRS.
@@ -41,8 +41,8 @@ De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie
 
 | Moment | Omschrijving | excl. BTW | incl. BTW |
 |---|---|---|---|
-| Bij ondertekening | 50% installatie | € 750,00 | € 907,50 |
-| Bij oplevering | 50% installatie + eerste maand | € 1.435,00 | € 1.736,35 |
+| Bij ondertekening | 50% installatie | € 697,50 | € 843,98 |
+| Bij oplevering | 50% installatie + eerste maand | € 1.382,50 | € 1.672,83 |
 | Daarna maandelijks | Abonnement | € 685,00 | € 828,85 |
 
 De eerste betaling verloopt via iDEAL en registreert direct de automatische incasso; alle volgende betalingen lopen via SEPA-incasso.
