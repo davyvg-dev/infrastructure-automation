@@ -4,6 +4,5 @@ export const company = {
   tradeName: 'Klantkraan',
   legalName: 'T4 Software Consulting BV',
   kvk: '90232135',
-  // BTW number pending from the founder; pages hide the field while empty.
-  btw: '',
+  btw: 'NL004800098B81',
 } as const;
