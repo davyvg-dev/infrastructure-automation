@@ -246,7 +246,7 @@ def _block_html(block: Block, *, first: bool, after_heading: bool) -> str:
     if isinstance(block, Fine):
         # Tight to the block above regardless of section spacing: it belongs to it.
         return _cell(
-            f'<div style="font-size:13px;line-height:1.6;color:{_MUTED};">'
+            f'<div style="font-size:11px;line-height:1.6;color:{_MUTED};">'
             f"{escape(block.text)}</div>",
             top=0 if first else 10,
         )

@@ -33,7 +33,6 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 | Belminuten boven 3.500 per minuut | € 0,40 | € 0,48 |
 | Eenmalige installatie | € 1.395,00 | € 1.687,95 |
 
-Fair use: maximaal 5 gelijktijdige gesprekken.
 De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie-aanbieder, waarvan de belkosten (indicatie € 35 tot € 50 per maand) voor uw rekening zijn.
 
 ## Betaalschema
@@ -48,7 +47,7 @@ De aanbetaling verloopt via iDEAL (betaallink: payment-links.mollie.com/payment/
 
 **Oplevering** betekent: de AI-telefonist is live op het nummer van Slotenmaker DRS en een gezamenlijk testgesprek is door beide partijen goedgekeurd.
 
-## Voorwaarden
+## Overig
 
 - Live binnen {{10}} werkdagen na ondertekening
 - Abonnement loopt vanaf de opleverdatum, niet vanaf ondertekening
