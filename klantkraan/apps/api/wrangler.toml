@@ -8,9 +8,12 @@ compatibility_date = "2026-05-20"
 compatibility_flags = ["nodejs_compat"]
 workers_dev = false
 
+# Custom domain (not a zone route): wrangler auto-provisions the DNS record +
+# cert for api.klantkraan.nl. The bare route form needed a manually created DNS
+# record, which never existed — the hostname didn't resolve until 2026-08-05.
 [[routes]]
-pattern = "api.klantkraan.nl/*"
-zone_name = "klantkraan.nl"
+pattern = "api.klantkraan.nl"
+custom_domain = true
 
 # -----------------------------------------------------------------------------
 # Observability — keep tail logs on. Sentry forwarding lives in src/index.ts.
@@ -44,6 +47,7 @@ enabled = true
 #   WEBHOOK_N8N_URL            n8n webhook base URL for forwarded events
 #   MONEYBIRD_API_KEY          Moneybird invoicing token
 #   MONEYBIRD_ADMIN_ID         Moneybird administration id
+#   ELEVENLABS_API_KEY         ElevenLabs key for voice-demo outbound calls
 # -----------------------------------------------------------------------------
 
 # Local development vars (non-secret defaults). Override in `.dev.vars`.

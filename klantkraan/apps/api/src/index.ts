@@ -10,6 +10,7 @@ import { webhookCalcomRouter } from "./routes/webhook-calcom.js";
 import { webhookMollieRouter } from "./routes/webhook-mollie.js";
 import { webhookSignwellRouter } from "./routes/webhook-signwell.js";
 import { unsubscribeRouter } from "./routes/unsubscribe.js";
+import { voiceDemoRouter } from "./routes/voice-demo.js";
 import { healthRouter } from "./routes/health.js";
 
 // TODO: import { initSentry, captureException } from "@sentry/cloudflare";
@@ -116,6 +117,7 @@ app.route("/api", intakeRouter);
 app.route("/api", leadRouter);
 app.route("/api", dashboardRouter);
 app.route("/api", unsubscribeRouter);
+app.route("/api", voiceDemoRouter);
 app.route("/api", webhookCmRouter);
 app.route("/api", webhookSynthflowRouter);
 app.route("/api", webhookCalcomRouter);

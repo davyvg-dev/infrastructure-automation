@@ -15,6 +15,7 @@ export const EnvSchema = z.object({
   MOLLIE_API_KEY: z.string().min(1),
   MONEYBIRD_API_KEY: z.string().min(1).optional(),
   MONEYBIRD_ADMIN_ID: z.string().min(1).optional(),
+  ELEVENLABS_API_KEY: z.string().min(1).optional(),
 
   // Webhook signing secrets (HMAC SHA-256)
   CM_WEBHOOK_SECRET: z.string().min(16),
