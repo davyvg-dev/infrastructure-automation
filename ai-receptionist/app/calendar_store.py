@@ -138,14 +138,22 @@ def _sim_book(
     with _lock:
         bookings = _load()
         if any(b["slot"] == slot for b in bookings):
-            return {"ok": False, "error": "That slot was just taken. Please pick another."}
+            return {
+                "ok": False,
+                "error": "That slot was just taken. Call check_availability again and "
+                "offer the customer a fresh open slot.",
+            }
         # Validate the slot is a real, open slot for its day.
         try:
             day = datetime.strptime(slot, "%Y-%m-%d %H:%M").date()
         except ValueError:
             return {"ok": False, "error": f"Invalid slot '{slot}'. Use 'YYYY-MM-DD HH:MM'."}
         if slot not in slots_for_day(day):
-            return {"ok": False, "error": "That time isn't a bookable slot."}
+            return {
+                "ok": False,
+                "error": "That time isn't a bookable slot. Call check_availability and "
+                "only offer times it returns.",
+            }
         confirmation = f"BK-{uuid.uuid4().hex[:6].upper()}"
         bookings.append(
             {

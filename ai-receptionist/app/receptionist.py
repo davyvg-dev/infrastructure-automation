@@ -7,6 +7,7 @@ easy to explain in build-in-public content and to hand to a client.
 
 from __future__ import annotations
 
+import json
 import logging
 from datetime import date
 from typing import Any
@@ -170,7 +171,25 @@ def run_turn(
             results = []
             for block in response.content:
                 if block.type == "tool_use":
-                    output = tools.execute(block.name, block.input)
+                    # A tool that raises (a real calendar API timing out, once one is
+                    # plugged into calendar_store) must not kill the customer's turn:
+                    # hand the model an instructive error so it can recover in-chat.
+                    failed = False
+                    try:
+                        output = tools.execute(block.name, block.input)
+                    except Exception as exc:
+                        failed = True
+                        log.exception("tool %s failed", block.name)
+                        notify.owner_exception(exc, context=f"tool {block.name}")
+                        output = json.dumps(
+                            {
+                                "ok": False,
+                                "error": "This system is temporarily unreachable. Do not "
+                                "retry it now. Apologize, then take a message with "
+                                "take_message, or give the customer the business phone "
+                                "number.",
+                            }
+                        )
                     # Observable tool trace — you'll want this when debugging "why did it
                     # book the wrong slot?" support questions.
                     log.info("tool %s(%s) -> %s", block.name, block.input, output)
@@ -183,6 +202,7 @@ def run_turn(
                             "type": "tool_result",
                             "tool_use_id": block.id,
                             "content": output,
+                            "is_error": failed,
                         }
                     )
             history = history + [{"role": "user", "content": results}]
