@@ -1,6 +1,6 @@
 # Offerte Slotenmaker DRS (2026-08)
 
-> Intern. Full answering per dag 1, prijsladder besloten 2026-08-04. Setup 50/50 besloten 2026-08-06. Voor verzending: BTW-nummer invullen, DRS-gegevens invullen, datum en geldigheid actualiseren, dan als PDF naar SignWell. De setupwaiver (kwijtschelden bij conversie naar jaarcontract binnen een maand) staat bewust NIET in het document; dat is een gesprekshefboom.
+> Intern. Full answering per dag 1, prijsladder besloten 2026-08-04; maandprijs verlaagd naar € 685 (besloten 2026-08-05). Setup 50/50 besloten 2026-08-06. Voor verzending: BTW-nummer invullen, DRS-gegevens invullen, datum en geldigheid actualiseren, dan als PDF naar SignWell. De setupwaiver (kwijtschelden bij conversie naar jaarcontract binnen een maand) staat bewust NIET in het document; dat is een gesprekshefboom.
 
 ---
 
@@ -30,7 +30,7 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 
 | | excl. BTW | incl. 21% BTW |
 |---|---|---|
-| Abonnement per maand, inclusief 3.500 belminuten | € 1.199,00 | € 1.450,79 |
+| Abonnement per maand, inclusief 3.500 belminuten | € 685,00 | € 828,85 |
 | Belminuten boven 3.500 per maand, per minuut | € 0,40 | € 0,48 |
 | Eenmalige installatie | € 1.500,00 | € 1.815,00 |
 
@@ -42,8 +42,8 @@ De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie
 | Moment | Omschrijving | excl. BTW | incl. BTW |
 |---|---|---|---|
 | Bij ondertekening | 50% installatie | € 750,00 | € 907,50 |
-| Bij oplevering | 50% installatie + eerste maand | € 1.949,00 | € 2.358,29 |
-| Daarna maandelijks | Abonnement | € 1.199,00 | € 1.450,79 |
+| Bij oplevering | 50% installatie + eerste maand | € 1.435,00 | € 1.736,35 |
+| Daarna maandelijks | Abonnement | € 685,00 | € 828,85 |
 
 De eerste betaling verloopt via iDEAL en registreert direct de automatische incasso; alle volgende betalingen lopen via SEPA-incasso.
 
