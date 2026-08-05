@@ -91,6 +91,15 @@ class Para:
 
 
 @dataclass(frozen=True)
+class Fine:
+    """Small print tied to the block above it — an asterisked footnote under a Panel or
+    Table. Rendered smaller and muted, and kept tight against its block, because at full
+    paragraph size and spacing a footnote reads as the next point instead of an aside."""
+
+    text: str
+
+
+@dataclass(frozen=True)
 class Steps:
     """A numbered list. Numbered rather than bulleted wherever the reader is expected to
     do the items, so "point 2" means something when they reply."""
@@ -187,6 +196,7 @@ class Signoff:
 Block = (
     Heading
     | Para
+    | Fine
     | Steps
     | Panel
     | Amount
@@ -232,6 +242,14 @@ def _block_html(block: Block, *, first: bool, after_heading: bool) -> str:
 
     if isinstance(block, Para):
         return _cell(f"<div>{escape(block.text)}</div>", top=top)
+
+    if isinstance(block, Fine):
+        # Tight to the block above regardless of section spacing: it belongs to it.
+        return _cell(
+            f'<div style="font-size:13px;line-height:1.6;color:{_MUTED};">'
+            f"{escape(block.text)}</div>",
+            top=0 if first else 10,
+        )
 
     if isinstance(block, Steps):
         # Numbered chips rather than <ol>: list markers cannot be styled reliably across
@@ -486,6 +504,8 @@ def _block_text(block: Block) -> str | None:
     if isinstance(block, Heading):
         return block.text.upper()
     if isinstance(block, Para):
+        return _wrap(block.text)
+    if isinstance(block, Fine):
         return _wrap(block.text)
     if isinstance(block, Steps):
         return "\n".join(f"{i}. {item}" for i, item in enumerate(block.items, start=1))
