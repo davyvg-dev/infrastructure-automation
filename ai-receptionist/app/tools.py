@@ -1,6 +1,8 @@
 """Tool definitions the receptionist can call, plus their handlers.
 
-Two tools: look up open slots, and book one. Handlers return JSON strings so Claude gets
+Core tools (every business): look up open slots, book one, take a message. Listings tools
+(only businesses with a `listings:` config block — real-estate clients): search inventory
+and register a qualified buyer lead. Handlers return JSON strings so Claude gets
 structured data back.
 """
 
@@ -9,7 +11,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from . import calendar_store, notify
+from . import calendar_store, listings_store, notify
+from .settings import business
 
 TOOLS: list[dict[str, Any]] = [
     {
@@ -76,6 +79,94 @@ TOOLS: list[dict[str, Any]] = [
     },
 ]
 
+# Only offered to businesses with a `listings:` block in their config (real-estate
+# clients) — a salon or plumber never sees these.
+LISTINGS_TOOLS: list[dict[str, Any]] = [
+    {
+        "name": "search_listings",
+        "description": (
+            "Search the property inventory for listings matching the buyer's criteria. "
+            "Call this once you know at least a budget or a location — refine as you "
+            "learn more. Only ever present properties this tool returned; never invent "
+            "listings, prices, or availability."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "type": "string",
+                    "enum": ["sale", "rent"],
+                    "description": "Buying = sale, long-term renting = rent.",
+                },
+                "locations": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Towns/areas the buyer wants, e.g. ['Estepona','Marbella'].",
+                },
+                "min_price": {"type": "integer"},
+                "max_price": {"type": "integer", "description": "Budget ceiling in EUR."},
+                "min_bedrooms": {"type": "integer"},
+                "min_bathrooms": {"type": "integer"},
+                "property_type": {
+                    "type": "string",
+                    "description": "E.g. apartment, penthouse, villa, townhouse.",
+                },
+                "features": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Must-have features, e.g. ['pool','sea views'].",
+                },
+                "max_results": {"type": "integer", "description": "Default 5."},
+            },
+        },
+    },
+    {
+        "name": "register_buyer_lead",
+        "description": (
+            "Register a qualified buyer/renter so the right human agent follows up. Call "
+            "this once you have the customer's name, a contact (phone or email), and "
+            "their search criteria — typically after showing them matches. Pass the "
+            "references of listings they liked. If the result has ok: false, apologize "
+            "and give the customer the business phone number instead — do not claim the "
+            "lead was passed on."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "customer_name": {"type": "string"},
+                "contact": {"type": "string", "description": "Phone or email."},
+                "operation": {"type": "string", "enum": ["sale", "rent"]},
+                "locations": {"type": "array", "items": {"type": "string"}},
+                "min_price": {"type": "integer"},
+                "max_price": {"type": "integer"},
+                "min_bedrooms": {"type": "integer"},
+                "language": {
+                    "type": "string",
+                    "description": "Conversation language code, e.g. en, nl, es, de.",
+                },
+                "references": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "References of listings the customer liked.",
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Timeline, financing status, viewing wishes, extras.",
+                },
+            },
+            "required": ["customer_name", "contact"],
+        },
+    },
+]
+
+
+def for_business() -> list[dict[str, Any]]:
+    """The tool set for the active tenant: core tools, plus listings tools when the
+    config has a `listings:` block."""
+    if business().get("listings"):
+        return TOOLS + LISTINGS_TOOLS
+    return TOOLS
+
 
 def execute(name: str, tool_input: dict[str, Any]) -> str:
     if name == "check_availability":
@@ -96,6 +187,23 @@ def execute(name: str, tool_input: dict[str, Any]) -> str:
                 customer=tool_input.get("customer_name", "unknown"),
                 contact=tool_input.get("contact", "no contact"),
                 message=tool_input.get("message", ""),
+            )
+        )
+    if name == "search_listings":
+        return json.dumps(listings_store.search(tool_input), ensure_ascii=False)
+    if name == "register_buyer_lead":
+        criteria = {
+            k: v
+            for k, v in tool_input.items()
+            if k not in ("customer_name", "contact", "references", "notes") and v
+        }
+        return json.dumps(
+            listings_store.register_lead(
+                customer_name=tool_input.get("customer_name", "unknown"),
+                contact=tool_input.get("contact", "no contact"),
+                criteria=criteria,
+                references=tool_input.get("references") or [],
+                notes=tool_input.get("notes", ""),
             )
         )
     return json.dumps({"error": f"Unknown tool: {name}"})

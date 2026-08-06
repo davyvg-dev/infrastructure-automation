@@ -9,6 +9,7 @@ python -m app.selftest analytics   # per-client capture store round-trip, no net
 python -m app.selftest digest      # deterministic oversight digest, no network
 python -m app.selftest insights    # analyst store + PII redaction + backlog, no network
 python -m app.selftest pipeline    # prospect→client state machine + sign promotion, no network
+python -m app.selftest listings    # inventory search + lead routing (sim provider), no network
 python -m app.selftest analyst     # live Haiku insight extraction (needs ANTHROPIC_API_KEY)
 python -m app.selftest agent       # scripted booking conversation (needs ANTHROPIC_API_KEY)
 python -m app.selftest scope       # takes on an in-trade job not on the price list (needs key)
@@ -713,6 +714,75 @@ def check_pipeline() -> bool:
             pipeline.PIPELINE_DIR, pipeline.ROOT, pipeline.CLIENTS_DIR = saved
 
 
+def check_listings() -> bool:
+    print("• listings (sim inventory search + lead routing, no network)")
+    from . import listings_store, tools
+
+    token = settings.use_slug("solvista-demo")
+    orig_dir = settings.DATA_DIR
+    try:
+        if settings.active_client() != "solvista-demo":
+            return _fail("could not activate the solvista-demo client config")
+
+        names = [t["name"] for t in tools.for_business()]
+        if "search_listings" not in names or "register_buyer_lead" not in names:
+            return _fail(f"listings tools missing for a listings-enabled config: {names}")
+        _ok("listings tools offered to a config with a listings: block")
+
+        result = listings_store.search(
+            {"operation": "sale", "locations": ["Estepona"], "max_price": 300000,
+             "min_bedrooms": 2}
+        )
+        refs = [p["Reference"] for p in result["properties"]]
+        if refs != ["SV-1001", "SV-1002"]:
+            return _fail(f"Estepona <=300k 2+bed should match SV-1001+SV-1002, got {refs}")
+        _ok(f"filtered search: {result['count']} matches, sorted by price ({', '.join(refs)})")
+
+        rentals = listings_store.search({"operation": "rent"})
+        if {p["Reference"] for p in rentals["properties"]} != {"SV-1013", "SV-1014"}:
+            return _fail(f"rent search wrong: {rentals}")
+        feat = listings_store.search({"features": ["sea views"], "max_price": 350000})
+        if any("Sea Views" not in p["Features"] for p in feat["properties"]):
+            return _fail("feature filter let a non-matching property through")
+        _ok("operation and feature filters hold (rentals split off, must-haves enforced)")
+
+        agent = listings_store.route_agent({"locations": ["Marbella"], "language": "nl"})
+        if agent["name"] != "Maria":
+            return _fail(f"area match must beat language match, got {agent['name']}")
+        agent = listings_store.route_agent({"locations": ["Fuengirola"], "language": "nl"})
+        if agent["name"] != "Tom":
+            return _fail(f"Fuengirola+nl should route to Tom, got {agent['name']}")
+        agent = listings_store.route_agent({"locations": ["Madrid"], "language": "fr"})
+        if agent["name"] != "Sarah":
+            return _fail(f"no rule match should fall back to the default, got {agent['name']}")
+        _ok("routing: area beats language; default agent catches the rest")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            settings.DATA_DIR = Path(tmp)
+            lead = listings_store.register_lead(
+                "Jan de Vries",
+                "jan@example.com",
+                {"operation": "sale", "locations": ["Estepona"], "max_price": 300000,
+                 "min_bedrooms": 2, "language": "nl"},
+                references=["SV-1001"],
+                notes="wants to buy within 6 months, financing arranged",
+            )
+            if not lead.get("saved") or lead.get("agent") != "Maria":
+                return _fail(f"lead not saved or misrouted: {lead}")
+            path = settings.DATA_DIR / "listing-leads-solvista-demo.jsonl"
+            if not path.exists() or "SV-1001" not in path.read_text(encoding="utf-8"):
+                return _fail("lead JSONL missing or lost the matched reference")
+        _ok(f"lead persisted per-client and routed to {lead['agent']} (honest ok/saved/notified)")
+    finally:
+        settings.DATA_DIR = orig_dir
+        settings.clear_slug(token)
+
+    if "search_listings" in [t["name"] for t in tools.for_business()]:
+        return _fail("listings tools leaked into the default (non-real-estate) config")
+    _ok("listings tools hidden again for configs without a listings: block")
+    return True
+
+
 def interactive_chat() -> bool:
     from . import receptionist
 
@@ -743,6 +813,7 @@ CHECKS = {
     "insights": check_insights,
     "analyst": check_analyst,
     "pipeline": check_pipeline,
+    "listings": check_listings,
     "agent": check_agent,
     "scope": check_scope,
 }
@@ -755,6 +826,7 @@ ORDER = [
     "digest",
     "insights",
     "pipeline",
+    "listings",
     "agent",
     "scope",
 ]

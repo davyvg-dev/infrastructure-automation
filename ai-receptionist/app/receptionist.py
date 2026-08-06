@@ -157,7 +157,7 @@ def run_turn(
             thinking={"type": "adaptive"},
             output_config={"effort": model_cfg.get("effort", "low")},
             system=build_system_prompt(),
-            tools=tools.TOOLS,
+            tools=tools.for_business(),
             messages=history,
         )
         if telemetry is not None:
