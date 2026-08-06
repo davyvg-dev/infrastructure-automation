@@ -19,6 +19,17 @@ Build on **Resales Online WebAPI V6** (the agent-to-agent MLS for Costa del Sol/
 
 Key asymmetry everywhere: agencies *feed listings in* to portals (Idealista ILC JSON/XML etc.); almost nobody gets to *read the market out*. Resales Online is the exception because it's an MLS, not a portal.
 
+### Resales WebAPI V6 — verified spec (read from live docs, 2026-08-06)
+
+Docs: https://webapi-v6.learning.resales-online.com/ (Postman-published, current version 6.1.0 Feb-2024).
+
+- **Shape**: plain GET, `https://webapi.resales-online.com/V6/{Function}`, JSON or XML (`p_output`). Auth = `p1` (agent id) + `p2` (API key) + a filter id (`P_ApiId` or its alias `P_Agency_FilterId`, 4 auto-created per key). Filters are agency-side caps on what the key may return. `p_sandbox=true` adds a debug transaction block with parsed params and error codes (001 = IP mismatch — keys are IP-locked). Public Postman collection exists; sandbox demo creds are printed in the docs (p1=1023133, test data only).
+- **SearchProperties**: everything the qualification flow needs — `P_Min`/`P_Max` price, `P_Beds`/`P_Baths` (`2` exact, `2x` at-least), `P_Location` CSV + `P_RemoveLocation`, `P_Province`, `P_PropertyTypes` (ids via SearchPropertyTypes), per-feature params + `P_MustHaveFeatures` (any/all), `P_Built_Min/Max`, `P_Plot_Min/Max`, energy rating, new-devs include/only/exclude, tourist-licence filters (`P_stl`/`P_cvs`), long/short-term-rental search with date ranges, `P_SortType` incl. **newest-listed and last-updated** (quality/freshness signals), `P_Lang` 14 languages **incl. Dutch (5)**, pagination via returned `QueryId` (`p_PageSize` max 40).
+- **Listing record**: Reference, AgencyRef, Province/Area/Location/SubLocation, type hierarchy, status (Available / Under offer / Sale agreed), beds/baths, `Price` + `OriginalPrice` (**price-drop detection**), built/terrace/plot m2, pool/parking/garden flags, feature categories, multilingual descriptions, image URLs, and in V6.1 by default: GPS coords, energy rating, virtual/video tours, last-update date. Off-market/sold properties still resolve in PropertyDetails for 15 days.
+- **RegisterLead — the funnel closer**: `V6/RegisterLead` writes a lead **into the agency's Resales-Online CRM**: contact `M1`/`M2` (name, required), `M3`/`M4` (phone/mobile), `M5` (email, required), `M6` (subject, required), `M7` (message, required, no URLs) — plus the buyer's full search profile as structured fields `W1`–`W13` (country, area, locations, property types + subtypes, beds/baths with `2x` syntax, min/max price, search type resale/short/long-rental, rental dates, furnished), `Source`, and `RsId` = one or more property references (`;`-separated). This maps 1:1 onto our structured qualification — the receptionist can register the qualified buyer + matched properties into the agency's own CRM *and* mirror to HubSpot.
+- **BookingCalendar**: rental bookings per property in a date range — availability checks for holiday-rental agencies (maps onto our booking tool pattern).
+- No documented rate limit in the endpoint docs; the per-key filter config is the practical cap.
+
 Geographic caveat: Resales Online is Costa del Sol/Blanca/Cálida — weak on Mallorca/Balearics (there, Inmobalia is the luxury MLS/CRM equivalent). Pick the prospect region before picking the provider.
 
 Do not scrape Idealista or build on third-party scraper APIs — they litigate (EU database right), and a demo for real agencies can't sit on that.
