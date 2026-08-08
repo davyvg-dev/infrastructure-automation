@@ -343,6 +343,21 @@ PROSPECTS = [
         "leveren de volgende klant op.",
         REVIEW,
     ),
+    # Added 2026-08-08. One entry for two entiteiten (Bol B.V. Installatietechniek +
+    # Vermeulen B.V. Loodgietersbedrijf, KvK 29051477/29051479): zelfde kantoor, zelfde
+    # site, zelfde eigenaar -- twee mails zou dubbel mailen zijn. Adres staat op hun
+    # eigen contactpagina (bol-vermeulen.nl/contact, gelezen 2026-08-08).
+    Prospect(
+        "bol-vermeulen",
+        "Bol B.V. Installatietechniek / Vermeulen B.V. Loodgietersbedrijf",
+        "Bol & Vermeulen",
+        "Bol & Vermeulen",
+        "opdrachten@bol-vermeulen.nl",
+        "Twee bedrijven, twee telefoonnummers, één kantoor in Gouda. Wie 's avonds een "
+        "cv-storing of lekkage heeft, vindt op jullie site een formulier - en belt "
+        "ondertussen gewoon de volgende.",
+        BOOK,
+    ),
 ]
 
 
