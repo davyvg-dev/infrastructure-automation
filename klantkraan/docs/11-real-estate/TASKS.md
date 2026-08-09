@@ -61,10 +61,13 @@ the main loop.
       spoken TwiML + WhatsApp text now nl/en/es by config `locale:`. Pytest:
       solvista number → en-GB/es-ES text-back, unknown number → still Dutch.
       229 tests green, ruff clean.
-- [ ] 1.4 Before/after demo asset: one page/script an owner sees — "9pm
+- [x] 1.4 Before/after demo asset: one page/script an owner sees — "9pm
       enquiry today: silence" vs live Solvista chat answering, qualifying,
-      temperature ping. **Gate**: renders end-to-end with real demo data;
-      founder can run it in one link/command.
+      temperature ping. **Gate met**: klantkraan.nl/demo/solvista LIVE
+      (noindex, share by link) — timeline of the unanswered 21:04 enquiry
+      vs the real transcript + real 🔥 HOT ping from the 1.1 gate run,
+      then the live chat CTA + per-flow try-this list. Built, deployed
+      (--branch=production), verified on prod by screenshot.
 - [ ] 1.5 Selftest extended + full pytest green + text evals for the four
       flows (new — no chat evals exist yet; judge needed, mirror the
       ElevenLabs SCENARIOS/criteria shape).
