@@ -31,14 +31,19 @@ the main loop.
 
 ## Week 1 — build (only what the before/after demo needs)
 
-- [ ] 1.1 Branched qualification in the Solvista config: buyer / seller /
+- [x] 1.1 Branched qualification in the Solvista config: buyer / seller /
       renter / existing-client flows, per-type required fields (buyer: area,
       budget, bedrooms, timeline, financing; seller: property address +
       readback, condition, timeline; renter: area, monthly budget, move-in
       date). Lives in `persona.goals` prose + conditional prompt block if
       needed (onsite_block seam in `receptionist.build_system_prompt`).
-      **Gate**: live chat transcript per flow shows the branch + all required
-      fields asked; no field skipped.
+      **Gate met**: four live scripted chats (buyer/seller/renter/existing)
+      each showed the branch, asked every required field, and called
+      register_buyer_lead with structured fields — buyer: timeline=0-3 +
+      financing=cash; seller: property_address (read back) + timeline=3-12 +
+      valuation_booked=true; renter: timeline=0-3 + references; existing: no
+      re-qualifying, clear note for the agent. Prompt prose only, no
+      onsite_block needed; 226 tests stayed green.
 - [ ] 1.2 Timeline mandatory in every flow; temperature computed on the lead
       and visible in the agent Telegram ping (`listings_store.py` ping text).
       **Gate**: selftest shows temperature on the ping for a hot and a
