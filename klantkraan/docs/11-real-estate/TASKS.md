@@ -24,9 +24,10 @@ same files in the main loop.
       (timeline <3mo + concrete criteria = hot; 3–12mo = warm; else nurture;
       seller with valuation booked = hot).
       **Gate**: pytest table-driven cases, all four intents covered.
-- [ ] 0.3 Art. 50 disclosure text EN/ES/DE checked into the vertical docs +
+- [x] 0.3 Art. 50 disclosure text EN/ES/DE checked into the vertical docs +
       wired location identified for the voice prompt (Phase 2 consumes it).
-      **Gate**: file exists, three languages, reviewed against the DRS pattern.
+      **Gate met**: `art50-disclosure.md` — EN/ES/DE, DRS/Cool Global
+      first_message pattern + ai_disclosure eval criterion.
 
 ⏸ CHECKPOINT A — update HANDOFF.md, commit, /clear.
 
