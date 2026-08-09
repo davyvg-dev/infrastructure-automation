@@ -123,18 +123,51 @@ LISTINGS_TOOLS: list[dict[str, Any]] = [
     {
         "name": "register_buyer_lead",
         "description": (
-            "Register a qualified buyer/renter so the right human agent follows up. Call "
-            "this once you have the customer's name, a contact (phone or email), and "
-            "their search criteria — typically after showing them matches. Pass the "
-            "references of listings they liked. If the result has ok: false, apologize "
-            "and give the customer the business phone number instead — do not claim the "
-            "lead was passed on."
+            "Register a qualified lead — buyer, seller, renter or existing client — so "
+            "the right human agent follows up. Call this once you have the customer's "
+            "name, a contact (phone or email), their intent and their timeline; for "
+            "buyers/renters typically after showing them matches (pass the references "
+            "of listings they liked). If the result has ok: false, apologize and give "
+            "the customer the business phone number instead — do not claim the lead "
+            "was passed on."
         ),
         "input_schema": {
             "type": "object",
             "properties": {
                 "customer_name": {"type": "string"},
                 "contact": {"type": "string", "description": "Phone or email."},
+                "intent": {
+                    "type": "string",
+                    "enum": ["buyer", "seller", "renter", "existing"],
+                    "description": (
+                        "Why they contacted us: buying, selling, renting, or an "
+                        "existing client of the agency."
+                    ),
+                },
+                "timeline": {
+                    "type": "string",
+                    "enum": ["0-3", "3-12", "12+", "browsing"],
+                    "description": (
+                        "Months until they want to move/complete; 'browsing' when "
+                        "they are only orienting. Always ask before registering."
+                    ),
+                },
+                "financing": {
+                    "type": "string",
+                    "enum": ["cash", "mortgage_arranged", "mortgage_needed", "unknown"],
+                    "description": "How the purchase would be funded, if discussed.",
+                },
+                "property_address": {
+                    "type": "string",
+                    "description": (
+                        "Sellers only: the property to sell, confirmed by reading it "
+                        "back to the customer."
+                    ),
+                },
+                "valuation_booked": {
+                    "type": "boolean",
+                    "description": "Sellers only: true once a valuation visit is agreed.",
+                },
                 "operation": {"type": "string", "enum": ["sale", "rent"]},
                 "locations": {"type": "array", "items": {"type": "string"}},
                 "min_price": {"type": "integer"},

@@ -42,7 +42,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from . import notify, settings
+from . import lead_score, notify, settings
 from .settings import active_client, business, ensure_dirs
 
 _lock = threading.Lock()
@@ -225,6 +225,8 @@ def register_lead(
         "client": client,
         "customer_name": customer_name,
         "contact": contact,
+        "intent": lead_score.resolve_intent(criteria),
+        "temperature": lead_score.temperature(criteria),
         "criteria": criteria,
         "references": references or [],
         "notes": notes,
