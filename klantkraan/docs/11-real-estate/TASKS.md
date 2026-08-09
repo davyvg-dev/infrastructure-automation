@@ -44,10 +44,13 @@ the main loop.
       valuation_booked=true; renter: timeline=0-3 + references; existing: no
       re-qualifying, clear note for the agent. Prompt prose only, no
       onsite_block needed; 226 tests stayed green.
-- [ ] 1.2 Timeline mandatory in every flow; temperature computed on the lead
+- [x] 1.2 Timeline mandatory in every flow; temperature computed on the lead
       and visible in the agent Telegram ping (`listings_store.py` ping text).
-      **Gate**: selftest shows temperature on the ping for a hot and a
-      nurture lead.
+      **Gate met**: ping now opens "[Business] 🔥 HOT buyer lead for Maria:"
+      (🏠 for warm/nurture); selftest listings registers a hot and a nurture
+      lead and asserts both tags; pytest asserts the tag per intent.
+      Timeline-mandatory shipped with 1.1's prompt (all four live flows
+      asked it). 226 tests green, ruff clean.
 - [ ] 1.3 Missed-call text-back ported for this vertical: tenant resolution
       via `settings.resolve_whatsapp_slug` (seam exists, `voice_missed.py`
       doesn't call it yet) + locale-aware EN/ES text (currently hard-coded

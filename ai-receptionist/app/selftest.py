@@ -773,6 +773,33 @@ def check_listings() -> bool:
             if not path.exists() or "SV-1001" not in path.read_text(encoding="utf-8"):
                 return _fail("lead JSONL missing or lost the matched reference")
         _ok(f"lead persisted per-client and routed to {lead['agent']} (honest ok/saved/notified)")
+
+        # Temperature must lead the agent ping — that's how a hot lead gets same-hour
+        # follow-up from a phone lock screen.
+        from . import notify
+
+        pings: list[str] = []
+        orig_owner = notify.owner
+        notify.owner = lambda text, chat_id=None: pings.append(text) or True
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                settings.DATA_DIR = Path(tmp)
+                listings_store.register_lead(
+                    "Hot Harry", "harry@example.com",
+                    {"intent": "buyer", "timeline": "0-3", "locations": ["Estepona"],
+                     "max_price": 250000},
+                )
+                listings_store.register_lead(
+                    "Browsing Bob", "bob@example.com",
+                    {"intent": "buyer", "timeline": "browsing"},
+                )
+        finally:
+            notify.owner = orig_owner
+        if len(pings) != 2 or "HOT buyer lead" not in pings[0]:
+            return _fail(f"hot lead ping lacks the temperature tag: {pings[:1]}")
+        if "NURTURE buyer lead" not in pings[1]:
+            return _fail(f"nurture lead ping lacks the temperature tag: {pings[1:]}")
+        _ok("ping carries the temperature: HOT for 0-3+concrete, NURTURE for browsing")
     finally:
         settings.DATA_DIR = orig_dir
         settings.clear_slug(token)

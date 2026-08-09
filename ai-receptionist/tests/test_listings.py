@@ -130,6 +130,8 @@ def test_register_lead_persists_schema_v1(solvista, data_dir, intent, expected_t
     assert record["criteria"] == criteria
     assert record["client"] == "solvista-demo"
     assert len(solvista) == 1  # exactly one agent ping per lead
+    ping_text = solvista[0][0]
+    assert f"{expected_temp.upper()} {intent} lead" in ping_text  # triage-ready ping
 
 
 def test_execute_flows_new_fields_into_criteria(solvista, data_dir):

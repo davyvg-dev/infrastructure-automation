@@ -254,9 +254,12 @@ def register_lead(
     )
     matched = f"\nMatches: {', '.join(references)}" if references else ""
     note_line = f"\nNotes: {notes}" if notes else ""
+    # Temperature first: the agent triages this on a phone lock screen — "HOT seller"
+    # must be readable before the notification is even opened.
+    flame = "🔥" if record["temperature"] == "hot" else "🏠"
     text = (
-        f"[{business()['business']['name']}] 🏠 New qualified lead"
-        f"{' for ' + agent['name'] if agent else ''}: "
+        f"[{business()['business']['name']}] {flame} {record['temperature'].upper()} "
+        f"{record['intent']} lead{' for ' + agent['name'] if agent else ''}: "
         f"{customer_name} ({contact})\nLooking for: {wants or '—'}{matched}{note_line}"
     )
     chat_id = (agent or {}).get("telegram_chat_id") or (
