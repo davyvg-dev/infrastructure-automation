@@ -3,15 +3,25 @@
 > Rewrite this file at every ⏸ CHECKPOINT in `TASKS.md`, then commit.
 > A fresh session starts here: read this, then `TASKS.md`, then `00-PLAN.md`.
 
-## State (2026-08-09)
+## State (2026-08-09, Checkpoint A — Phase 0 COMPLETE)
 
 - **Rescoped to a narrow 30-day pilot** (founder decision, supersedes
   "full MVP before outreach"): one problem (after-hours/missed enquiries go
   cold), one result (every enquiry answered <1 min, qualified, hot leads
   flagged same-hour), one before/after demo. ~1 week build, then owner
   conversations. Voice, viewing booking, metrics CLI etc. all deferred.
-- Done: 0.3 (art. 50 disclosure EN/ES/DE, `art50-disclosure.md`).
-- Next task: **0.1 lead schema v1** (then 0.2 temperature rules).
+- Done: 0.1 lead schema v1 + 0.2 temperature rules (`app/lead_score.py`,
+  new fields on `register_buyer_lead`, intent+temperature stamped on the
+  record, `tests/test_listings.py`, 226 tests green), 0.3 art. 50
+  disclosure (`art50-disclosure.md`).
+- Next task: **1.1 branched qualification in the Solvista config** —
+  edit `persona.goals` in `config/clients/solvista-demo.yaml` to branch
+  buyer/seller/renter/existing with per-type required fields, instructing
+  the model to always ask timeline and to fill the new tool fields
+  (intent/timeline/financing/property_address/valuation_booked). Gate:
+  live chat transcript per flow. Then 1.2: put temperature on the
+  Telegram ping text (`listings_store.py` ~l.255, temperature is already
+  on the record two lines up).
 
 ## Engine map (from the 2026-08-09 exploration — trust these seams)
 

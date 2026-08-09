@@ -15,18 +15,14 @@ the main loop.
 
 ## Phase 0 — Foundations
 
-- [ ] 0.1 Lead schema v1 in the buyer-lead path: intent
-      (buyer/seller/renter/existing), areas, budget, bedrooms, timeline,
-      financing, temperature, language, channel, property refs. New
-      `register_buyer_lead` schema fields flow into `criteria` automatically
-      (`app/tools.py` criteria comprehension) — standardize keys + compute
-      temperature server-side in `listings_store.register_lead`.
-      **Gate**: new `tests/test_listings.py` constructs + persists a lead per
-      intent type; pytest green.
-- [ ] 0.2 Temperature rules v1 — pure function lead → hot/warm/nurture
-      (timeline <3mo + concrete criteria = hot; 3–12mo warm; else nurture;
-      seller with valuation booked = hot).
-      **Gate**: table-driven pytest, all four intents covered.
+- [x] 0.1 Lead schema v1 in the buyer-lead path.
+      **Gate met**: `register_buyer_lead` schema now carries intent/timeline/
+      financing/property_address/valuation_booked; `register_lead` stamps
+      resolved intent + temperature on the record; `tests/test_listings.py`
+      persists a lead per intent type. 226 tests green.
+- [x] 0.2 Temperature rules v1 — `app/lead_score.py`, pure functions.
+      **Gate met**: table-driven pytest (17 cases, all four intents,
+      malformed input degrades to nurture).
 - [x] 0.3 Art. 50 disclosure EN/ES/DE.
       **Gate met**: `art50-disclosure.md` — DRS/Cool Global first_message
       pattern + ai_disclosure eval criterion.
