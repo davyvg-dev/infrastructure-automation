@@ -3,67 +3,67 @@
 > Rewrite this file at every ⏸ CHECKPOINT in `TASKS.md`, then commit.
 > A fresh session starts here: read this, then `TASKS.md`, then `00-PLAN.md`.
 
-## State (2026-08-09, Checkpoint A — Phase 0 COMPLETE)
+## State (2026-08-10, Checkpoint B — Week 1 build COMPLETE)
 
-- **Rescoped to a narrow 30-day pilot** (founder decision, supersedes
-  "full MVP before outreach"): one problem (after-hours/missed enquiries go
-  cold), one result (every enquiry answered <1 min, qualified, hot leads
-  flagged same-hour), one before/after demo. ~1 week build, then owner
-  conversations. Voice, viewing booking, metrics CLI etc. all deferred.
-- Done: 0.1 lead schema v1 + 0.2 temperature rules (`app/lead_score.py`,
-  new fields on `register_buyer_lead`, intent+temperature stamped on the
-  record, `tests/test_listings.py`, 226 tests green), 0.3 art. 50
-  disclosure (`art50-disclosure.md`).
-- Next task: **1.1 branched qualification in the Solvista config** —
-  edit `persona.goals` in `config/clients/solvista-demo.yaml` to branch
-  buyer/seller/renter/existing with per-type required fields, instructing
-  the model to always ask timeline and to fill the new tool fields
-  (intent/timeline/financing/property_address/valuation_booked). Gate:
-  live chat transcript per flow. Then 1.2: put temperature on the
-  Telegram ping text (`listings_store.py` ~l.255, temperature is already
-  on the record two lines up).
+All of Phase 0 and Week 1 (1.1–1.5) are done and committed. The build half of
+the narrow pilot is finished; what remains is owner conversations (2.1–2.4),
+which are founder-led with session support.
 
-## Engine map (from the 2026-08-09 exploration — trust these seams)
+- 1.1 Branched qualification lives in `persona.goals` of
+  `config/clients/solvista-demo.yaml` (buyer/seller/renter/existing, per-type
+  required fields, structured tool fields named explicitly). Verified with
+  four live chats.
+- 1.2 Temperature leads the agent ping: "[Business] 🔥 HOT buyer lead for
+  Maria: …" (`listings_store.py`), asserted in selftest + pytest.
+- 1.3 `voice_missed.py` is multi-tenant (routes on the called number via
+  `resolve_whatsapp_slug`) and localized nl/en/es via config `locale:`. NB the
+  follow-up thread re-activates the tenant explicitly — contextvars don't
+  cross threads.
+- 1.4 Before/after demo page LIVE: klantkraan.nl/demo/solvista (noindex,
+  share by link). 21:04-enquiry-goes-cold timeline vs real transcript + real
+  HOT ping, live chat CTA, per-flow try-this list. Source:
+  `klantkraan/apps/marketing-site/src/pages/demo/solvista.astro`. Deploy =
+  `npm run build` then `pnpm dlx wrangler@4 pages deploy ./dist
+  --branch=production --project-name=klantkraan-marketing`.
+- 1.5 Chat evals: `ai-receptionist/app/evals.py` — LLM customer simulator +
+  LLM judge (claude-opus-5, structured outputs) over the real receptionist.
+  `python -m app.evals run all` = 4 scenarios, 14 criteria, all green. Online
+  (needs ANTHROPIC_API_KEY); leads land in a temp DATA_DIR. Rerun after any
+  Solvista prompt/config change.
+- Verification state: 229 pytest green, `app.selftest all` green, ruff clean.
 
-- Buyer lead path: `ai-receptionist/app/listings_store.py` —
-  `register_lead()` at ~l.210, record built ~l.223-232, persisted as JSONL
-  `data/listing-leads-<client>.jsonl`, Telegram ping composed ~l.243-263
-  (per-agent chat_id → client notify → OWNER_TELEGRAM_CHAT_ID).
-- New fields added to the `register_buyer_lead` tool schema
-  (`app/tools.py` LISTINGS_TOOLS, ~l.123-159) flow into the persisted
-  `criteria` dict automatically via the comprehension at tools.py ~l.195-199
-  (exclusion tuple: customer_name/contact/references/notes).
-- Tool gating: `tools.for_business()` — presence of a `listings:` config key.
-- Qualification script today = prose in `persona.goals` in
-  `config/clients/solvista-demo.yaml`; conditional prompt blocks use the
-  onsite_block seam in `receptionist.build_system_prompt` (~l.55-66/86).
-- No `tests/test_listings.py` exists; listings coverage only in
-  `selftest.check_listings` (selftest.py ~l.717-783, uses
-  `settings.use_slug("solvista-demo")` + temp DATA_DIR).
-- pytest: `tests/conftest.py` fixtures `data_dir` (patches settings AND
-  calendar_store DATA_DIR) + `clients_dir`; flat test modules, offline only.
-- Missed-call funnel: `app/channels/voice_missed.py` — hard-coded Dutch, no
-  tenant resolution; fix = call `settings.resolve_whatsapp_slug(params["To"])`
-  like `whatsapp.py:66` does, + locale-aware text (config has `locale:`).
-- No chat-side evals exist anywhere; ElevenLabs `evals.py` SCENARIOS/criteria
-  shape is the pattern to mirror with a local judge.
-- Analytics gap (matters for deferred metrics): `_outcome_from_tools`
-  ignores `register_buyer_lead`.
+## Next: Weeks 2–4 — owner conversations (TASKS.md 2.1–2.4)
+
+- 2.1 Prospect list: Costa del Sol agencies on Resales-Online, source per
+  row; phone/manual only until the LSSI-CE check clears email (founder item).
+- 2.2 Discovery script EN/ES around the /demo/solvista before/after,
+  including the Resales API-key ask (agency dashboard: Properties → Feed Out
+  → API Keys, IP-locked — see the WebAPI notes in the project memory).
+- 2.3 Pricing proposal — founder sign-off required, never improvise.
+- 2.4 Track conversations in the pipeline CLI (`app/pipeline.py` via
+  ./.venv/bin/python), demo sent same-day.
 
 ## Decisions in force
 
-Narrow pilot (above); Costa del Sol / Resales-Online; EN primary ES/DE
-secondary; text-first, voice = upsell; no live transfer ever in this
-vertical's voice future; art. 50 disclosure non-negotiable; config pack on
-the shared engine, NOT a fork.
+Narrow 30-day pilot (one problem: after-hours enquiries go cold; one result:
+answered <1 min, qualified, hot flagged same-hour; one demo:
+/demo/solvista). Costa del Sol / Resales-Online; EN primary ES/DE secondary;
+text-first, voice = upsell; no live transfer ever in this vertical; art. 50
+disclosure non-negotiable; config pack on the shared engine, NOT a fork.
 
 ## Open / blocked (founder)
 
-Pricing sign-off; LSSI-CE check before cold email; Resales test key.
+Pricing sign-off (blocks 2.3); LSSI-CE check before any cold email; Resales
+WebAPI test key (sim provider is the demo fallback).
 
 ## Gotchas
 
 - Run python via `./.venv/bin/python` inside ai-receptionist; pytest = `-q`.
 - Solvista config tracked via gitignore exception (fictional client).
+- Pages deploys are manual wrangler; verify via the deploy alias first
+  (edge-cache poison memory), then prod.
 - Narrow-pilot principle is a standing memory
   (feedback_narrow_pilot_principle_2026_08_09) — challenge build-creep.
+- Side note captured in klantkraan/TODO.md: the demo-page chat X button is
+  dead (posts a widget close message nothing listens for); proposed fix is a
+  restart (↺) control on demo pages. Founder hasn't picked a direction yet.
