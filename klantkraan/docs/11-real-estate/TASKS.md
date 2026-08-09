@@ -51,13 +51,16 @@ the main loop.
       lead and asserts both tags; pytest asserts the tag per intent.
       Timeline-mandatory shipped with 1.1's prompt (all four live flows
       asked it). 226 tests green, ruff clean.
-- [ ] 1.3 Missed-call text-back ported for this vertical: tenant resolution
+- [x] 1.3 Missed-call text-back ported for this vertical: tenant resolution
       via `settings.resolve_whatsapp_slug` (seam exists, `voice_missed.py`
       doesn't call it yet) + locale-aware EN/ES text (currently hard-coded
       Dutch).
-      **Gate**: simulated missed call (pytest, `test_voice_missed.py`
-      pattern) produces the right-language text-back for a solvista number
-      and still Dutch for trades.
+      **Gate met**: `handle()` routes on the called number (same
+      `whatsapp.number` seam as the WhatsApp channel) and the follow-up
+      thread re-activates the tenant (contextvars don't cross threads);
+      spoken TwiML + WhatsApp text now nl/en/es by config `locale:`. Pytest:
+      solvista number → en-GB/es-ES text-back, unknown number → still Dutch.
+      229 tests green, ruff clean.
 - [ ] 1.4 Before/after demo asset: one page/script an owner sees — "9pm
       enquiry today: silence" vs live Solvista chat answering, qualifying,
       temperature ping. **Gate**: renders end-to-end with real demo data;
