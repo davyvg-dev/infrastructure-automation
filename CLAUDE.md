@@ -18,9 +18,8 @@ Per-app rules live in `.claude/rules/` (`growth-engine.md`, `ai-receptionist.md`
 - Progress: `/klantkraan/TODO.md` for the product, `/growth-engine/TASK.md` for the pipeline. Tick boxes as you go.
 
 ## Docs source of truth — context7
-- Before writing code that uses any external library/SDK (Astro, n8n, CM.com, Mollie, Cloudflare, Hetzner, Attio, Cal.com, ElevenLabs, Resend, Neon, Anthropic SDK, Tally, PandaDoc, SignWell, LiveKit, python-telegram-bot, tweepy, etc.), fetch current docs via the **context7 MCP**.
-- If context7 is not connected, ask the user to enable it. Do not guess from training data.
-- Cite the context7-fetched version in the PR / commit message when API surface matters.
+- Before writing code that uses any external library/SDK (Astro, n8n, CM.com, Mollie, Cloudflare, Hetzner, Attio, Cal.com, ElevenLabs, Resend, Neon, Anthropic SDK, Tally, PandaDoc, SignWell, LiveKit, python-telegram-bot, tweepy, etc.), fetch current docs via the **`ctx7` CLI** — the global context7 rule (`~/.claude/rules/context7.md`) explains how. Do not guess from training data.
+- Cite the fetched docs version in the PR / commit message when API surface matters.
 
 ## Branch
 - All work on `claude/business-marketing-planning-FArXV`.
