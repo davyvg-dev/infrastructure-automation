@@ -68,10 +68,16 @@ the main loop.
       vs the real transcript + real 🔥 HOT ping from the 1.1 gate run,
       then the live chat CTA + per-flow try-this list. Built, deployed
       (--branch=production), verified on prod by screenshot.
-- [ ] 1.5 Selftest extended + full pytest green + text evals for the four
+- [x] 1.5 Selftest extended + full pytest green + text evals for the four
       flows (new — no chat evals exist yet; judge needed, mirror the
       ElevenLabs SCENARIOS/criteria shape).
-      **Gate**: `app.selftest all` + pytest + evals all green.
+      **Gate met**: `app/evals.py` — LLM customer simulator + LLM judge
+      (claude-opus-5, structured-output verdicts) over the REAL receptionist;
+      four scenarios × 14 criteria (disclosure, required fields, no invented
+      listings/facts/valuations, address readback, real bookings, structured
+      lead fields) — all PASS live. `app.selftest all` green (incl. agent +
+      scope), 229 pytest green, ruff clean. Leads/bookings land in a temp
+      DATA_DIR.
 
 ⏸ CHECKPOINT B — update HANDOFF.md, commit, /clear.
 
