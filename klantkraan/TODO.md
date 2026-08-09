@@ -228,6 +228,11 @@ See `docs/00-MASTER-PLAN.md § 5`.
 - [ ] Tally intake form
 
 ### Demo assets
+- [ ] Chat header X button is dead on the /demo pages: it posts the widget
+      close message (`web/index.html` ~l.134) but the demo iframes have no
+      listener — only `widget.js` on client sites does. Fix: replace it with
+      a restart control (↺, clears session + log, fresh greeting) on demo
+      pages, keep X-as-close only for the real widget embed.
 - [ ] Public AI demo number (+31 ...) live
 - [x] ROI calculator live (page built; goes live with Pages deploy)
 - [x] Founder bio page with KVK + DPA download (added to `/over`: founder section + 3-column downloads block; KvK PDF path placeholder until founder uploads)
