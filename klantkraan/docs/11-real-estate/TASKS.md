@@ -1,109 +1,95 @@
-# Real Estate MVP — task ledger
+# Real Estate narrow pilot — task ledger
 
-Working ledger for the build in `00-PLAN.md`. Ralph Wiggums loop: one task →
-verify gate → tick → commit → next. Never skip a gate. If a gate fails, stop
-and fix root cause before touching the next box.
+Working ledger for `00-PLAN.md` (narrow 30-day pilot). Ralph Wiggums loop: one
+task → verify gate → tick → commit → next. Never skip a gate. If a gate fails,
+stop and fix root cause before the next box.
 
-**Context-clear protocol**: at every `⏸ CHECKPOINT`, update `HANDOFF.md` with
-current state, commit, tell the user to `/clear`. The next session reads
-`HANDOFF.md` + this file and continues from the first unticked box.
+**Context-clear protocol**: at every `⏸ CHECKPOINT`, update `HANDOFF.md`,
+commit, tell the user to `/clear`. A fresh session reads `HANDOFF.md` → this
+file → `00-PLAN.md` and continues from the first unticked box.
 
-Subagents: fan out independent tasks (research, isolated modules, eval
-authoring) to parallel subagents; serialize commits and anything touching the
-same files in the main loop.
+Subagents: fan out independent tasks; serialize commits and same-file work in
+the main loop.
 
 ---
 
 ## Phase 0 — Foundations
 
-- [ ] 0.1 Lead schema v1 — dataclass/dict shape in the receptionist app:
-      intent (buyer/seller/renter/existing), areas, budget, bedrooms, timeline,
-      financing, temperature, language, channel, property refs discussed.
-      **Gate**: unit test constructs + serializes a lead of each intent type.
+- [ ] 0.1 Lead schema v1 in the buyer-lead path: intent
+      (buyer/seller/renter/existing), areas, budget, bedrooms, timeline,
+      financing, temperature, language, channel, property refs. New
+      `register_buyer_lead` schema fields flow into `criteria` automatically
+      (`app/tools.py` criteria comprehension) — standardize keys + compute
+      temperature server-side in `listings_store.register_lead`.
+      **Gate**: new `tests/test_listings.py` constructs + persists a lead per
+      intent type; pytest green.
 - [ ] 0.2 Temperature rules v1 — pure function lead → hot/warm/nurture
-      (timeline <3mo + concrete criteria = hot; 3–12mo = warm; else nurture;
+      (timeline <3mo + concrete criteria = hot; 3–12mo warm; else nurture;
       seller with valuation booked = hot).
-      **Gate**: pytest table-driven cases, all four intents covered.
-- [x] 0.3 Art. 50 disclosure text EN/ES/DE checked into the vertical docs +
-      wired location identified for the voice prompt (Phase 2 consumes it).
-      **Gate met**: `art50-disclosure.md` — EN/ES/DE, DRS/Cool Global
-      first_message pattern + ai_disclosure eval criterion.
+      **Gate**: table-driven pytest, all four intents covered.
+- [x] 0.3 Art. 50 disclosure EN/ES/DE.
+      **Gate met**: `art50-disclosure.md` — DRS/Cool Global first_message
+      pattern + ai_disclosure eval criterion.
 
 ⏸ CHECKPOINT A — update HANDOFF.md, commit, /clear.
 
-## Phase 1 — Text MVP hardening
+## Week 1 — build (only what the before/after demo needs)
 
 - [ ] 1.1 Branched qualification in the Solvista config: buyer / seller /
       renter / existing-client flows, per-type required fields (buyer: area,
-      budget, bedrooms, timeline, financing; seller: address + readback,
-      condition, timeline; renter: area, monthly budget, move-in date).
-      **Gate**: live chat transcript per flow shows the branch + required
+      budget, bedrooms, timeline, financing; seller: property address +
+      readback, condition, timeline; renter: area, monthly budget, move-in
+      date). Lives in `persona.goals` prose + conditional prompt block if
+      needed (onsite_block seam in `receptionist.build_system_prompt`).
+      **Gate**: live chat transcript per flow shows the branch + all required
       fields asked; no field skipped.
-- [ ] 1.2 Timeline mandatory everywhere; temperature computed on the lead and
-      visible in the agent Telegram ping.
-      **Gate**: selftest shows temperature on the ping payload for a hot and
-      a nurture lead.
-- [ ] 1.3 Viewing scheduling via calendar provider with property ref attached;
-      after-hours = propose slots + "confirmation follows", never hard-book.
-      **Gate**: eval proves after-hours request gets propose-only response;
-      in-hours books with the ref on the event.
-- [ ] 1.4 Metrics CLI (existing CLI pattern, no dashboard): leads by
-      type/temperature, viewings, response time, handoffs, per client.
-      **Gate**: CLI runs against real demo data and prints correct counts.
-- [ ] 1.5 Selftest + pytest for all new tool paths; text evals for the four
-      flows green.
-      **Gate**: full pytest suite + `app.selftest` green, evals pass.
+- [ ] 1.2 Timeline mandatory in every flow; temperature computed on the lead
+      and visible in the agent Telegram ping (`listings_store.py` ping text).
+      **Gate**: selftest shows temperature on the ping for a hot and a
+      nurture lead.
+- [ ] 1.3 Missed-call text-back ported for this vertical: tenant resolution
+      via `settings.resolve_whatsapp_slug` (seam exists, `voice_missed.py`
+      doesn't call it yet) + locale-aware EN/ES text (currently hard-coded
+      Dutch).
+      **Gate**: simulated missed call (pytest, `test_voice_missed.py`
+      pattern) produces the right-language text-back for a solvista number
+      and still Dutch for trades.
+- [ ] 1.4 Before/after demo asset: one page/script an owner sees — "9pm
+      enquiry today: silence" vs live Solvista chat answering, qualifying,
+      temperature ping. **Gate**: renders end-to-end with real demo data;
+      founder can run it in one link/command.
+- [ ] 1.5 Selftest extended + full pytest green + text evals for the four
+      flows (new — no chat evals exist yet; judge needed, mirror the
+      ElevenLabs SCENARIOS/criteria shape).
+      **Gate**: `app.selftest all` + pytest + evals all green.
 
 ⏸ CHECKPOINT B — update HANDOFF.md, commit, /clear.
 
-## Phase 2 — Voice agent (ElevenLabs)
+## Weeks 2–4 — owner conversations
 
-- [ ] 2.1 Solvista voice agent cloned from Cool Global mold (EN default,
-      ES/DE switch, call-me-back only). **Founder gate: plan headroom.**
-      **Gate**: agent exists, disclosure uninterruptible, config vars baked.
-- [ ] 2.2 Webhook tools on FastAPI: search_listings, register_buyer_lead,
-      viewing booking (DHZ pattern).
-      **Gate**: WS-verified tool round-trips from the ElevenLabs side.
-- [ ] 2.3 Voice hardening: readback confirms (names, phones, urbanización
-      names — adapt DRS ladder, no postcode-first in ES), no price promises,
-      after-hours boundaries.
-      **Gate**: real test call transcript reviewed against each rule.
-- [ ] 2.4 Handoff = callback promise + instant lead alert; no live transfer.
-      **Gate**: eval case proves no transfer is ever offered.
-- [ ] 2.5 Eval set 5/5: hot buyer, seller valuation, renter, wrong-fit,
-      after-hours viewing, mangled-address recovery.
-      **Gate**: `evals.py run all` style suite = 5/5.
+- [ ] 2.1 Prospect list: Costa del Sol agencies on Resales-Online, source
+      per row; phone/manual only until LSSI-CE check clears email.
+      **Gate**: list reviewed by founder.
+- [ ] 2.2 Discovery script (EN/ES) around the before/after demo, incl. the
+      Resales API-key ask. **Gate**: founder dry-run.
+- [ ] 2.3 Pricing proposal. **Gate**: founder sign-off — never improvise.
+- [ ] 2.4 Conversation loop: prospects tracked in the pipeline CLI, notes
+      per call, demo sent same-day. **Gate**: first 10 conversations logged.
 
 ⏸ CHECKPOINT C — update HANDOFF.md, commit, /clear.
 
-## Phase 3 — Missed-call recovery + follow-up
+## Deferred until owners ask / first client
 
-- [ ] 3.1 Port trades missed-call funnel (missed call → WhatsApp/SMS
-      text-back → text qualification → booking) for the vertical.
-      **Gate**: simulated missed call produces the text-back + a qualified
-      lead end-to-end.
-- [ ] 3.2 Follow-up by temperature: hot → instant ping; warm → next-morning
-      digest; nurture → email captured. No other automated outbound.
-      **Gate**: selftest covers all three paths.
-- [ ] 3.3 Call summary into lead record + daily digest to agency.
-      **Gate**: digest renders from a day of demo data.
-
-⏸ CHECKPOINT D — update HANDOFF.md, commit, /clear.
-
-## Phase 4 — Package + sales prep
-
-- [ ] 4.1 Demo page on the site (chat + call-me-back, EN/ES).
-      **Gate**: deployed, verified via deploy alias, links work.
-- [ ] 4.2 Sales pack EN/ES: one-pager, discovery script incl. Resales API-key
-      ask, metrics story. **Gate**: founder review.
-- [ ] 4.3 Prospect list: Costa del Sol agencies on Resales-Online.
-      **Gate**: list with source per row; BV-equivalent/opt-in rules noted.
-- [ ] 4.4 Pricing proposal. **Gate**: founder sign-off — do not improvise.
+Full voice agent (Cool Global mold, DRS readback ladder, no live transfer,
+disclosure per `art50-disclosure.md`), viewing scheduling (propose-only rule;
+NB propose-only mode doesn't exist in `calendar_store` yet), metrics CLI
+(NB `analytics._outcome_from_tools` ignores `register_buyer_lead` — extend
+`_OUTCOME_RANK` or read the JSONL), follow-up paths by temperature, daily
+digests, HubSpot push, Idealista API, Spanish inbound number.
 
 ## Founder items (blocking)
 
-1. ElevenLabs plan headroom (blocks 2.1).
-2. Resales WebAPI test key (blocks live resales provider test; sim is the
-   demo fallback).
-3. Spanish outreach legality check (blocks any cold email in Phase 4).
-4. Pricing sign-off (blocks 4.4).
+1. Pricing sign-off before any pitch (blocks 2.3).
+2. LSSI-CE outreach legality check (blocks any cold email).
+3. Resales WebAPI test key (sim provider is the demo fallback).
+4. (With voice, deferred) ElevenLabs plan headroom.
