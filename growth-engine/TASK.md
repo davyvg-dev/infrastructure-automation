@@ -157,6 +157,7 @@ caption-only IG post is rejected).
 ## Regression check (run any time you change code)
 
 - [ ] `python -m py_compile src/*.py`
+- [ ] `python -m pytest` (offline unit tests, tests/ — API calls mocked)
 - [ ] `python -m src.selftest all` (or `config` if you only touched config)
 - [ ] One dry-run `/now` cycle if you touched `bot.py`, `generate.py`, or `publish_x.py`.
 - [ ] `python -m src.publish_buffer --test-draft <platform>` if you touched

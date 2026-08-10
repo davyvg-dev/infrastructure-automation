@@ -68,6 +68,12 @@ def dry_run() -> bool:
     return os.getenv("GROWTH_ENGINE_DRY_RUN", "").strip() not in ("", "0", "false", "False")
 
 
+def verify_enabled() -> bool:
+    """Pre-approval LLM-judge pass on every draft (src/verify.py). ON by default;
+    set GROWTH_ENGINE_VERIFY=0 to disable without a deploy."""
+    return os.getenv("GROWTH_ENGINE_VERIFY", "").strip() not in ("0", "false", "False")
+
+
 def ensure_dirs() -> None:
     data_dir().mkdir(parents=True, exist_ok=True)
     if vertical() == "trades":

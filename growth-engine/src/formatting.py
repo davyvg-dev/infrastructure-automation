@@ -7,10 +7,31 @@ from typing import Any
 from .platforms import registry
 
 
+def verify_flags(draft: dict[str, Any]) -> list[str]:
+    """Pre-check warnings for the approval message (empty on pass / when disabled).
+
+    A draft that still fails after its one auto-revise is never dropped — it goes
+    to the founder with the failure reasons on top. Same for a judge error.
+    """
+    v = draft.get("verify") or {}
+    if v.get("status") == "fail":
+        lines = ["🚩 " + _esc("Pre-check failed (after 1 auto-rewrite) — review extra carefully:")]
+        for f in v.get("failures", []):
+            reason = f.get("reason") or "no reason given"
+            lines.append("• " + _esc(f"{f.get('criterion', 'unknown')}: {reason}"))
+        lines.append("")
+        return lines
+    if v.get("status") == "error":
+        err = v.get("error", "unknown error")
+        return ["⚠️ " + _esc(f"Verify pass errored — draft is UNCHECKED: {err}"), ""]
+    return []
+
+
 def preview(draft: dict[str, Any]) -> str:
     """The Telegram approval message body."""
     reg = registry()
-    lines = [f"🧵 *{_esc(draft['pillar'])}* — {_esc(draft['topic'])}", ""]
+    lines = verify_flags(draft)
+    lines += [f"🧵 *{_esc(draft['pillar'])}* — {_esc(draft['topic'])}", ""]
     for platform, text in draft["variants"].items():
         # Stored drafts may predate a config change — fall back to the raw name.
         desc = reg.get(platform, {})

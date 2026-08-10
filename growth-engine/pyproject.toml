@@ -10,3 +10,9 @@ select = ["E", "F", "W", "I", "UP", "B"]
 # The formatter owns line wrapping; a handful of long comments/strings can't be wrapped and
 # are fine as-is, so E501 is not a lint error.
 ignore = ["E501"]
+
+[tool.pytest.ini_options]
+# Offline unit tests only (API calls mocked). Run: python -m pytest
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

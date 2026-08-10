@@ -39,6 +39,7 @@ from . import (
     publish_meta,
     publish_tiktok,
     store,
+    verify,
 )
 from .publish_x import post as post_to_x
 from .settings import active_cadence, data_dir, env, strategy
@@ -89,6 +90,10 @@ async def _deliver_draft(app: Application, chat_id: int, draft: dict) -> None:
 
 
 async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
+    # Pre-approval verify pass (LLM judge + one auto-revise; see src/verify.py).
+    # Fail-open by design: check_and_revise never raises and never drops a draft —
+    # a failing or unchecked draft arrives flagged via formatting.verify_flags.
+    draft = await asyncio.to_thread(verify.check_and_revise, draft)
     store.save_draft(draft)
     await _deliver_draft(app, chat_id, draft)
 
