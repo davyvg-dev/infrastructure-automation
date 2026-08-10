@@ -2,11 +2,13 @@
 
 > Internal. Sent 2026-08-10 by mail (English, branded mail_layout shell) to
 > jiromorgan17@gmail.com from davy@klantkraan.nl, after two review rounds with the
-> founder on davyvg98@gmail.com. Pricing decided 2026-08-10: voice € 499/month
-> (750 minutes incl., € 0,40/min over), installation € 945 one-time (billed 50/50),
-> chat-only fallback € 299/month with no installation fee. No payment link in the
-> mail (DRS deliverability lesson). Spanish client, so VAT reverse-charged instead
-> of the Dutch 21% column.
+> founder on davyvg98@gmail.com. Re-sent same day to both addresses with two
+> corrections: contact name is Jordan (first send said Jiro) and first month 50%
+> off added. The re-send is the version that stands. Pricing decided 2026-08-10:
+> voice € 499/month (750 minutes incl., € 0,40/min over), first month € 249,50,
+> installation € 945 one-time (billed 50/50), chat-only fallback € 299/month with
+> no installation fee. No payment link in the mail (DRS deliverability lesson).
+> Spanish client, so VAT reverse-charged instead of the Dutch 21% column.
 
 ---
 
@@ -14,7 +16,7 @@
 KvK 90232135 • VAT NL004800098B81 • klantkraan.nl
 
 **Offer for:** Cool Global Mallorca
-Contact: Jiro (jiromorgan17@gmail.com)
+Contact: Jordan (jiromorgan17@gmail.com)
 
 Date: 10-08-2026 • Valid until: 24-08-2026
 
@@ -40,6 +42,7 @@ Callers are told they are speaking with a digital assistant (EU AI Act, art. 50)
 | | excl. VAT |
 |---|---|
 | Subscription per month, incl. 750 call minutes | € 499,00 |
+| First month, 50% off | € 249,50 |
 | Call minutes above 750, per minute | € 0,40 |
 | One-time installation | € 945,00 |
 
