@@ -31,6 +31,14 @@ jobs:
           ruff format --check ai-receptionist/app ai-receptionist/tests
           ruff format --check growth-engine/src
 
+  compliance:
+    name: compliance gate (art. 50 + BV-only outreach)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run compliance check
+        run: bash scripts/compliance-check.sh
+
   receptionist:
     name: ai-receptionist (pytest)
     runs-on: ubuntu-latest
