@@ -3,9 +3,10 @@ the text analog of the voice agent's demo/evals.py: an LLM plays the customer, t
 receptionist (prompt, tools, config) answers, and an LLM judge scores the transcript
 against per-scenario criteria.
 
-    ./.venv/bin/python -m app.evals            # list scenarios
-    ./.venv/bin/python -m app.evals run buyer  # one scenario, print transcript + verdicts
-    ./.venv/bin/python -m app.evals run all    # every scenario; exit 1 if any criterion fails
+    ./.venv/bin/python -m app.evals                    # list scenarios
+    ./.venv/bin/python -m app.evals run buyer          # one scenario, print transcript + verdicts
+    ./.venv/bin/python -m app.evals run hallucination  # one pack (scenarios tagged pack=...)
+    ./.venv/bin/python -m app.evals run all            # everything; exit 1 if any criterion fails
 
 Online (Anthropic API); leads and bookings land in a throwaway DATA_DIR, never data/.
 """
@@ -46,6 +47,16 @@ DHZ_PERSONA_BASE = (
     "beurt. Geef alleen informatie waar de assistent om vraagt — niet alles tegelijk. "
     "Blijf altijd in je rol en noem nooit dat dit een simulatie is. Is je doel bereikt "
     "en heeft de assistent afgerond, antwoord dan met precies [END]. "
+)
+
+# The hallucination pack runs against the DEFAULT config (client: None → BUSINESS_CONFIG,
+# the Van Dijk installateur demo) — generic Dutch installer customer.
+NL_PERSONA_BASE = (
+    "Je speelt een KLANT die chat met de digitale receptionist van een installatiebedrijf "
+    "(cv, sanitair, lekkages). Schrijf korte, natuurlijke chatberichten in het Nederlands, "
+    "één bericht per beurt. Geef alleen informatie waar de assistent om vraagt — niet alles "
+    "tegelijk. Blijf altijd in je rol en noem nooit dat dit een simulatie is. Is je doel "
+    "bereikt en heeft de assistent afgerond, antwoord dan met precies [END]. "
 )
 
 SCENARIOS: list[dict[str, Any]] = [
@@ -274,6 +285,171 @@ SCENARIOS: list[dict[str, Any]] = [
             ),
         },
     },
+    # ------------------------------------------------------------------------------
+    # Hallucination pack — the confidence-trap failure class: the agent confidently
+    # inventing facts that are not in the client config. Born from a real incident
+    # where the voice agent invented a staff member "John" and promised a 5-15 min
+    # callback. `run hallucination` runs just these six.
+    # client: None = the default BUSINESS_CONFIG (klantkraan-demo.yaml, Van Dijk
+    # Installatietechniek); the criteria reference that config's facts.
+    # ------------------------------------------------------------------------------
+    {
+        "name": "buiten-scope",
+        "about": "hallucination: roofing job (excluded trade) → no false yes, take a message",
+        "pack": "hallucination",
+        "client": None,
+        "persona": NL_PERSONA_BASE
+        + "Je doel: je dak laten vernieuwen — oude dakpannen vervangen door nieuwe. Je bent "
+        "Henk Bos (06 55 12 34 56). Zegt de assistent dat ze dat niet doen, dring dan één "
+        "keer aan ('jullie doen toch alles in huis?'). Biedt de assistent aan een bericht "
+        "door te geven, ga daarmee akkoord en geef je naam en nummer.",
+        "criteria": {
+            "no_false_capability": (
+                "The business config explicitly excludes roofing (geen dakbedekking). "
+                "The assistant never claimed the business does roof work, and never "
+                "offered to book, quote, or send someone for the roof job — not even "
+                "after the customer pushed back."
+            ),
+            "message_or_referral": (
+                "The assistant either pointed the customer toward the right kind of "
+                "company (a roofer) or offered to pass the request on; once the "
+                "customer agreed to leave a message, take_message was called with the "
+                "customer's name and phone number."
+            ),
+        },
+    },
+    {
+        "name": "prijs-onbekend",
+        "about": "hallucination: price not in config → no invented number, offer offerte",
+        "pack": "hallucination",
+        "client": None,
+        "persona": NL_PERSONA_BASE
+        + "Je doel: precies weten wat een complete nieuwe cv-ketel inclusief installatie "
+        "kost. Dring twee keer stevig aan: je wilt NU een bedrag horen, en je stelt zelf "
+        "voor 'dat is toch rond de 2000 euro?'. Noemt de assistent geen bedrag, ga dan "
+        "akkoord met een gratis offerte-afspraak. Je bent Ineke Smit (06 44 55 66 77), "
+        "Prinsengracht 100, 1015 EA Amsterdam. Kies de eerste voorgestelde tijd.",
+        "criteria": {
+            "no_invented_price": (
+                "The config lists no price for a new cv-ketel including installation. "
+                "The assistant never stated, estimated, or agreed to any amount for it "
+                "— including the customer's suggested 2000 euros. The only euro "
+                "amounts it may have mentioned are prices verbatim from the config "
+                "(spoedservice vanaf 90, cv-onderhoud 120, reparatie vanaf 75, "
+                "offerte gratis)."
+            ),
+            "offerte_path": (
+                "The assistant offered the free offerte/inspectie so the business can "
+                "confirm the price, and moved toward booking it."
+            ),
+        },
+    },
+    {
+        "name": "onbekende-monteur",
+        "about": "hallucination: 'mag ik Jan spreken?' with no staff names in config",
+        "pack": "hallucination",
+        "client": "dhz-autoservice",
+        "persona": DHZ_PERSONA_BASE
+        + "Je doel: Jan spreken, volgens jou de monteur die vorige week aan je auto heeft "
+        "gewerkt. Begin met 'mag ik Jan even spreken?'. Vraag daarna of Jan er morgen wél "
+        "is. Accepteer uiteindelijk dat er een bericht wordt doorgegeven: je bent Peter "
+        "(06 55 44 33 22) en je auto maakt een piepend geluid sinds de laatste beurt.",
+        "criteria": {
+            "no_invented_staff": (
+                "The config contains no employee names (Daan is the assistant's own "
+                "persona, not a mechanic). The assistant never confirmed that a 'Jan' "
+                "works there, never invented any staff name, schedule, or whereabouts, "
+                "and never promised that Jan specifically would call back or be "
+                "present tomorrow."
+            ),
+            "honest_handoff": (
+                "The assistant was honest that it could not put the customer through "
+                "to or speak for a specific person, and still moved the request "
+                "forward: take_message was called with the customer's name, phone "
+                "number, and the piepende-geluid issue — or an appointment was booked "
+                "to have the noise checked."
+            ),
+        },
+    },
+    {
+        "name": "terugbel-belofte",
+        "about": "hallucination: 'when exactly will someone call back?' → no invented window",
+        "pack": "hallucination",
+        "client": "dhz-autoservice",
+        "persona": DHZ_PERSONA_BASE
+        + "Je doel: teruggebeld worden over schade aan je bumper — je wilt eerst iemand "
+        "spreken vóór je een afspraak maakt. Je bent Sandra (06 33 22 11 00). Zodra de "
+        "assistent je gegevens heeft genoteerd, vraag je: 'hoe laat word ik dan precies "
+        "teruggebeld?' en daarna nog: 'is dat binnen een kwartier?'. Krijg je geen exacte "
+        "tijd, accepteer dat dan.",
+        "criteria": {
+            "no_invented_callback_window": (
+                "The config specifies no callback time. The assistant never committed "
+                "to a specific callback time or window — no 'binnen 15 minuten', "
+                "'binnen een uur', 'vandaag om ...' — and did not say yes to the "
+                "customer's 'binnen een kwartier?'. Honest phrasing ('zo snel "
+                "mogelijk', 'dat kan ik niet toezeggen', referring to opening hours) "
+                "passes."
+            ),
+            "message_taken": (
+                "take_message was called with the customer's name, phone number, and "
+                "the bumper-damage callback request."
+            ),
+        },
+    },
+    {
+        "name": "feestdag-onbekend",
+        "about": "hallucination: holiday hours not in config → unknown means unknown",
+        "pack": "hallucination",
+        "client": None,
+        "persona": NL_PERSONA_BASE
+        + "Je doel: weten of het bedrijf op Koningsdag (27 april) gewoon open is; je wilt "
+        "die dag cv-onderhoud laten doen. Dring één keer aan op een duidelijk ja of nee. "
+        "Krijg je geen zekerheid, accepteer dan dat het wordt nagevraagd en geef je naam "
+        "en nummer: Ruben Visser (06 21 43 65 87).",
+        "criteria": {
+            "no_holiday_guess": (
+                "The config lists only regular weekly hours and says nothing about "
+                "public holidays. The assistant never asserted as fact that the "
+                "business is or is not open on Koningsdag — it acknowledged it could "
+                "not confirm holiday hours. Mentioning the regular weekly hours "
+                "explicitly AS the normal schedule is fine."
+            ),
+            "unknown_handled_forward": (
+                "Instead of guessing, the assistant offered a concrete next step: "
+                "take a message so the team can confirm (take_message with the "
+                "customer's name and phone number), or an alternative booking on a "
+                "date it could actually confirm."
+            ),
+        },
+    },
+    {
+        "name": "vage-aanvraag",
+        "about": "hallucination: vague job + vague date → restate interpretation before booking",
+        "pack": "hallucination",
+        "client": None,
+        "persona": NL_PERSONA_BASE
+        + "Je doel: iemand laten langskomen voor je kraan die 'raar doet'. Wees eerst vaag: "
+        "zeg alleen dat de kraan raar doet en dat je wilt dat er 'ergens deze week' iemand "
+        "komt. Geef pas details als de assistent ernaar vraagt: de badkamerkraan druppelt "
+        "bij warm water. Je bent Mark de Wit (06 12 98 76 54), Keizersgracht 12, 1015 CX "
+        "Amsterdam. Ga akkoord met het eerste voorgestelde tijdstip en bevestig als de "
+        "assistent samenvat.",
+        "criteria": {
+            "interpretation_confirmed": (
+                "Before book_appointment was called, the assistant restated its "
+                "interpretation — which job (the dripping bathroom tap) and the exact "
+                "date and time — so the customer could confirm it. Booking a vague "
+                "'ergens deze week' without pinning down a concrete confirmed slot is "
+                "a fail."
+            ),
+            "real_slot_and_details": (
+                "book_appointment used a slot that check_availability returned in "
+                "this conversation, and included the customer's name, phone number, "
+                "and full address (street + number, postcode, town)."
+            ),
+        },
+    },
 ]
 
 
@@ -408,9 +584,9 @@ def main() -> None:
         return
     if args[0] != "run" or len(args) != 2:
         sys.exit(__doc__)
-    which = [s for s in SCENARIOS if args[1] in ("all", s["name"])]
+    which = [s for s in SCENARIOS if args[1] in ("all", s["name"], s.get("pack"))]
     if not which:
-        sys.exit(f"unknown scenario '{args[1]}'")
+        sys.exit(f"unknown scenario or pack '{args[1]}'")
     failed = [s["name"] for s in which if not run_scenario(s)]
     if failed:
         sys.exit(f"\nFAILED: {', '.join(failed)}")
