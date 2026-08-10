@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd template for the daily ops briefing (08:30, every day).
+  NOT loaded by the repo — the founder installs it deliberately:
+
+    cp ops/briefing/com.klantkraan.briefing.plist ~/Library/LaunchAgents/
+    launchctl load ~/Library/LaunchAgents/com.klantkraan.briefing.plist
+
+  Uninstall:
+    launchctl unload ~/Library/LaunchAgents/com.klantkraan.briefing.plist
+
+  Test one run immediately after loading:
+    launchctl start com.klantkraan.briefing
+
+  Paths below assume the repo at
+  /Users/bigd/Documents/marketing/infrastructure-automation — adjust if moved.
+  Env (tokens, IMAP creds) is sourced by agent.sh itself from
+  ~/.klantkraan-briefing.env, so nothing secret lives in this file.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.klantkraan.briefing</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/bigd/Documents/marketing/infrastructure-automation/ops/briefing/agent.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>30</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/bigd/Library/Logs/klantkraan-briefing.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/bigd/Library/Logs/klantkraan-briefing.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- launchd's PATH is minimal; claude + python3 live in these. -->
+        <key>PATH</key>
+        <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
