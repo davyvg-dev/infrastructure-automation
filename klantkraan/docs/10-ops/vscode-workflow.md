@@ -25,8 +25,9 @@ Inside `Cmd+P`: `@` jumps to a heading/symbol in the file, `:42` jumps to line 4
 | `playbook` / `objection` | cold-call playbook, objection handling | before every sales call |
 | `sequences` | cold-email sequences | before a send wave |
 
-Note: `../ai-receptionist` sits outside this window's root — Cmd+P can't see it.
-Fix if needed: File → Add Folder to Workspace.
+`ai-receptionist` is part of the workspace too — Cmd+P reaches both apps
+(`evals`, `pipeline`, `rdw`, …). Open the whole thing via
+`klantkraan.code-workspace` in the repo root.
 
 ## Command Palette (`Cmd+Shift+P`) — the pro five
 
