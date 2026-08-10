@@ -75,9 +75,9 @@ Here is the offer for Cool Global on paper.
 
 We put an AI receptionist on your number. When you don't pick up, it answers,
 finds out what the caller needs, takes a name and phone number, and sends it
-all to you in one message. You call back when it suits you. If a call gets
-missed anyway, the caller gets a WhatsApp back within seconds, so the lead
-stays with you.
+all to you in one message. You call back when it suits you. If for whatever
+reason a call is not answered, the caller gets a WhatsApp back within seconds,
+so the lead stays with you.
 
   Klantkraan Compleet
   • Answers day, night and weekend, in English, German and Spanish
