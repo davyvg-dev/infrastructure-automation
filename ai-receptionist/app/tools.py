@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from . import calendar_store, listings_store, notify
+from . import calendar_store, listings_store, notify, rdw
 from .settings import business
 
 TOOLS: list[dict[str, Any]] = [
@@ -75,6 +75,34 @@ TOOLS: list[dict[str, Any]] = [
                 "message": {"type": "string", "description": "What to pass to the team."},
             },
             "required": ["customer_name", "contact", "message"],
+        },
+    },
+]
+
+# Only offered to businesses with `kenteken_lookup: true` in their config (garages) —
+# the kenteken is their unique customer key: one lookup identifies the exact car and
+# the APK expiry date.
+VEHICLE_TOOLS: list[dict[str, Any]] = [
+    {
+        "name": "lookup_kenteken",
+        "description": (
+            "Look up a Dutch license plate in the official RDW vehicle register. Call this "
+            "as soon as the customer gives a kenteken — pass it exactly as they wrote it "
+            "(dashes and spaces are fine). A hit returns the make, model, colour, build "
+            "year and the APK expiry date; confirm the car back to the customer ('een "
+            "grijze Suzuki Alto uit 2012, klopt dat?'). found: false means the plate does "
+            "not exist as written — ask the customer to re-check it once, then continue "
+            "with make and model instead. Never invent a vehicle or an APK date."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "kenteken": {
+                    "type": "string",
+                    "description": "The license plate as the customer gave it, e.g. G-393-GH.",
+                },
+            },
+            "required": ["kenteken"],
         },
     },
 ]
@@ -194,11 +222,14 @@ LISTINGS_TOOLS: list[dict[str, Any]] = [
 
 
 def for_business() -> list[dict[str, Any]]:
-    """The tool set for the active tenant: core tools, plus listings tools when the
-    config has a `listings:` block."""
+    """The tool set for the active tenant: core tools, plus vehicle tools when the config
+    sets `kenteken_lookup: true`, plus listings tools when it has a `listings:` block."""
+    result = list(TOOLS)
+    if business().get("kenteken_lookup"):
+        result += VEHICLE_TOOLS
     if business().get("listings"):
-        return TOOLS + LISTINGS_TOOLS
-    return TOOLS
+        result += LISTINGS_TOOLS
+    return result
 
 
 def execute(name: str, tool_input: dict[str, Any]) -> str:
@@ -222,6 +253,8 @@ def execute(name: str, tool_input: dict[str, Any]) -> str:
                 message=tool_input.get("message", ""),
             )
         )
+    if name == "lookup_kenteken":
+        return json.dumps(rdw.lookup(tool_input.get("kenteken", "")), ensure_ascii=False)
     if name == "search_listings":
         return json.dumps(listings_store.search(tool_input), ensure_ascii=False)
     if name == "register_buyer_lead":
