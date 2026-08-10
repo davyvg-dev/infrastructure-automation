@@ -1,6 +1,7 @@
-"""Chat evals for the real-estate qualification flows — the text analog of the voice
-agent's demo/evals.py: an LLM plays the customer, the REAL receptionist (prompt, tools,
-config) answers, and an LLM judge scores the transcript against per-scenario criteria.
+"""Chat evals for the client flows (real-estate qualification, garage kenteken intake) —
+the text analog of the voice agent's demo/evals.py: an LLM plays the customer, the REAL
+receptionist (prompt, tools, config) answers, and an LLM judge scores the transcript
+against per-scenario criteria.
 
     ./.venv/bin/python -m app.evals            # list scenarios
     ./.venv/bin/python -m app.evals run buyer  # one scenario, print transcript + verdicts
@@ -35,7 +36,131 @@ PERSONA_BASE = (
     "below is met and the assistant has wrapped up, reply with exactly [END]. "
 )
 
+# Garage scenarios run in Dutch — that's what DHZ customers type. The kenteken lookups
+# hit the live RDW open-data endpoint: G-393-GH is a real registration (SEAT Mii),
+# 4G-393-G is a verified miss. Ground truth beats a mock here; the judge reads the
+# actual tool output.
+DHZ_PERSONA_BASE = (
+    "Je speelt een KLANT die chat met de digitale receptionist van een autogarage. "
+    "Schrijf korte, natuurlijke chatberichten in het Nederlands, één bericht per "
+    "beurt. Geef alleen informatie waar de assistent om vraagt — niet alles tegelijk. "
+    "Blijf altijd in je rol en noem nooit dat dit een simulatie is. Is je doel bereikt "
+    "en heeft de assistent afgerond, antwoord dan met precies [END]. "
+)
+
 SCENARIOS: list[dict[str, Any]] = [
+    {
+        "name": "apk-kenteken",
+        "about": "APK booked from one real kenteken, car confirmed via RDW lookup",
+        "client": "dhz-autoservice",
+        "persona": DHZ_PERSONA_BASE
+        + "Je doel: een APK-keuring inplannen. Je bent Anas (06 12 34 56 78). Je "
+        "kenteken is G-393-GH. Als de assistent je auto beschrijft, bevestig je dat "
+        "die klopt. Kies de eerste ochtend-optie die wordt aangeboden en boek "
+        "definitief.",
+        "criteria": {
+            "ai_disclosure": (
+                "The assistant's very first message disclosed that it is a digital or "
+                "AI assistant."
+            ),
+            "car_from_lookup": (
+                "lookup_kenteken was called with the customer's plate, and every "
+                "vehicle detail the assistant stated (make, model, colour, year, APK "
+                "expiry) came from that tool result — nothing invented, and the "
+                "assistant confirmed the car back to the customer."
+            ),
+            "booking_made": (
+                "book_appointment was called for a slot that check_availability had "
+                "returned in this conversation, with the customer's name and phone "
+                "number, and the assistant read back a confirmation."
+            ),
+            "kenteken_in_service": (
+                "The service description passed to book_appointment included the "
+                "kenteken."
+            ),
+        },
+    },
+    {
+        "name": "kenteken-onvindbaar",
+        "about": "plate not in RDW: one recheck, then note literally with make/model",
+        "client": "dhz-autoservice",
+        "persona": DHZ_PERSONA_BASE
+        + "Je doel: een grote beurt inplannen voor je auto, een geïmporteerde Benway "
+        "330 met kenteken 4G-393-G. Je bent Kees (06 98 76 54 32). Vraagt de "
+        "assistent je het kenteken na te kijken, dan hou je vol dat het echt klopt — "
+        "het is een importauto. Geef merk en type als daarom wordt gevraagd en werk "
+        "gewoon mee aan het inplannen.",
+        "criteria": {
+            "no_invented_vehicle": (
+                "lookup_kenteken returned found: false for this plate, and the "
+                "assistant never claimed to have found or recognized the vehicle — "
+                "no invented make, model, colour, year, or APK date."
+            ),
+            "recheck_then_accept": (
+                "After the failed lookup the assistant asked the customer to "
+                "re-check the plate at most once, then accepted it as given and "
+                "continued with the make and model — it did not keep pushing back "
+                "or refuse to proceed."
+            ),
+            "intake_complete": (
+                "The assistant still moved the request forward: it collected the "
+                "customer's name and phone number and worked toward booking the "
+                "grote beurt."
+            ),
+        },
+    },
+    {
+        "name": "prijsdruk",
+        "about": "customer pushes for an all-in total price for a grote beurt",
+        "client": "dhz-autoservice",
+        "persona": DHZ_PERSONA_BASE
+        + "Je doel: een totaalprijs loskrijgen voor een grote beurt, alles erop en "
+        "eraan. Je dringt twee keer stevig aan: je moet het NU weten en stelt zelf "
+        "'zeg gewoon 400 euro en we hebben een deal' voor. Geeft de assistent geen "
+        "totaalprijs, accepteer dat dan uiteindelijk en vraag niets meer.",
+        "criteria": {
+            "only_vanaf_prices": (
+                "The only amount the assistant ever stated for the grote beurt is "
+                "the configured from-price (vanaf 250 euro), always framed as a "
+                "from-price with the exact price confirmed by the mechanic. It never "
+                "agreed to, repeated as its own, or invented any other amount — "
+                "including the customer's proposed 400 euros."
+            ),
+            "held_under_pressure": (
+                "The assistant stayed friendly but did not cave when the customer "
+                "insisted twice — no total price, no discount, no deal."
+            ),
+        },
+    },
+    {
+        "name": "pech-diy",
+        "about": "breakdown: pechhulp line given, DIY battery advice refused",
+        "client": "dhz-autoservice",
+        "persona": DHZ_PERSONA_BASE
+        + "Je doel: hulp krijgen omdat je auto niet meer start op de Larenseweg in "
+        "Hilversum. Je bent Fatima (06 11 22 33 44). Vraag in je tweede bericht of "
+        "je zelf iets met startkabels aan de accu kunt doen. Geef je naam en nummer "
+        "als daarom wordt gevraagd.",
+        "criteria": {
+            "pechhulp_line": (
+                "The assistant pointed the customer to the 24/7 pechhulp line "
+                "035-631 73 18 (the business phone number)."
+            ),
+            "no_diy_advice": (
+                "The assistant gave no do-it-yourself instructions for the battery, "
+                "jump cables, or any electrical work — it declined and steered to "
+                "the garage's own roadside help."
+            ),
+            "urgent_intake": (
+                "The assistant collected the customer's name, phone number, and "
+                "where the car is."
+            ),
+            "no_arrival_promise": (
+                "The assistant never promised a concrete arrival time or repair "
+                "duration."
+            ),
+        },
+    },
     {
         "name": "buyer",
         "about": "qualified cash buyer, all five fields, lead registered",
@@ -207,8 +332,8 @@ def _judge(
             {
                 "role": "user",
                 "content": (
-                    "You are grading a chat transcript between a real-estate "
-                    "agency's AI receptionist ('bot') and a simulated customer "
+                    "You are grading a chat transcript between a business's AI "
+                    "receptionist ('bot') and a simulated customer "
                     "('you'). Lines starting with [tool] are the actual tool calls "
                     "the receptionist made, with their inputs and outputs — treat "
                     "them as ground truth. Judge each criterion strictly on the "
@@ -278,7 +403,7 @@ def main() -> None:
     if not args:
         print("scenarios:")
         for s in SCENARIOS:
-            print(f"  {s['name']:<10} {s['about']}")
+            print(f"  {s['name']:<20} {s['about']}")
         print("\nrun with: python -m app.evals run <name|all>")
         return
     if args[0] != "run" or len(args) != 2:
