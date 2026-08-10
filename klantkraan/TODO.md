@@ -98,6 +98,22 @@ zero-cost research or blocked on someone else's clock.
   - [x] **Site half done 2026-07-29** — new `components/home/Roadmap.astro` on all three homepages, between the honesty section and the how-to-start steps: what it does today vs what we are building. Honesty is structural, not a disclaimer (solid panel + sodium edge + checks for live; no fill, dashed border, dim clock icons for roadmap, and "nog niet beschikbaar, u betaalt er nu niet voor" *above* the list). The four roadmap items are exactly the five WhatsApp templates' jobs, so the story and the build queue are one list. Hero left alone on purpose: "Het licht blijft aan" is founder-approved and already says the place keeps running.
   - [ ] **Deck half NOT done** — no pitch deck was touched.
 
+### J. Workflow adoption — verification gates + ops tooling (added 2026-08-10)
+From `research/claude-code-workflow-videos-2026-08-10.md` (7 Agentic Lab videos + prompt survey).
+Through-line: catch failures with deterministic gates, don't prevent with prompt rules. Small
+items only — never displaces dials.
+- [ ] `scripts/copy-lint.sh` — grep gate over customer-facing text: em/en-dashes, founder name, English tells in .nl artefacts, banned pricing phrases, old phone number; run once over `docs/02-sales`
+- [ ] `scripts/compliance-check.sh` + CI job — art. 50 disclosure string in every agent prompt/config; outreach CSVs BV-only
+- [ ] Hallucination eval pack in `ai-receptionist/app/evals.py`, per client config: service-not-offered, price-not-in-config, invented staff name, invented callback window, unknown-means-unknown, ambiguous-request restatement; minimal prompt fixes to pass (no deploy — founder retest gates deploy)
+- [ ] Mirror the voice hallucination cases as Cekura scenarios (agent 21227)
+- [ ] `.claude/commands/`: `/deploy-site`, `/run-evals`, `/board`, `/log-regression`, `/new-client-demo`
+- [ ] Stop-hook dispatcher in `.claude/settings.json` — git-diff-scoped: copy-lint touched artefacts, eval subset on receptionist prompt/config change, exit 2 feeds failures back; retries capped
+- [ ] Daily ops briefing agent (`ops/briefing/`) — cron → headless `claude -p` (read-only signals: sequence board, IMAP DSNs/replies, calls log) → Telegram, single allowed chat ID; FOUNDER: Gmail app password + Telegram bot token
+- [ ] Growth-engine verify pass — one Haiku call, AI-tells/stats-policy checklist, before the Telegram approval message; dry-run untouched
+- [ ] Prompt refinements after eval pack: few-shot golden snippets (postcode, kenteken), Chain-of-Draft conciseness rule, restate-before-booking; TTFB check + Cekura rerun after
+- [x] Policy lines in CLAUDE.md: prompt-rule-needs-failing-golden; no wholesale rewrites of CLAUDE.md/MEMORY.md; markdown-folder memory only (no vector DBs/plugins) (2026-08-10)
+- [ ] Habits (no build): rewind-after-debug, recon-then-trim
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
