@@ -62,10 +62,61 @@ installation fee, voice can be added later.
 - Terms: klantkraan.nl/legal/voorwaarden • DPA: klantkraan.nl/legal/dpa •
   SLA: klantkraan.nl/legal/sla
 
-## Mail copy
+## Mail copy — final version as sent (founder-approved 2026-08-10)
 
-The sent mail is the source of truth; a rendered copy lives with the send
-script (session scratchpad, `coolglobal_offer_mail.py`). Copy highlights: no
-scenario opener ("Here is the offer for Cool Global on paper."), no em-dashes,
-subject "Offer for Cool Global Mallorca", CTA = reply to the mail, demo button
-to klantkraan.nl/demo/cool-global.
+Subject: **Offer for Cool Global Mallorca** · preheader "AI receptionist on
+your phone line. Valid until 24-08-2026." · branded mail_layout shell, HTML +
+plain text. Also sent to nathalieemanuels@gmail.com (same copy, same greeting).
+
+```
+Hi Jordan,
+
+Here is the offer for Cool Global on paper.
+
+We put an AI receptionist on your number. When you don't pick up, it answers,
+finds out what the caller needs, takes a name and phone number, and sends it
+all to you in one message. You call back when it suits you. If a call gets
+missed anyway, the caller gets a WhatsApp back within seconds, so the lead
+stays with you.
+
+  Klantkraan Compleet
+  • Answers day, night and weekend, in English, German and Spanish
+  • Name, number and question of every caller sent to you straight away
+  • Automatic WhatsApp reply to missed calls
+  • Urgent jobs (no cooling, guest emergencies) marked as such
+  • Transcript and summary of every call, monthly report
+
+Callers are told they are speaking with a digital assistant (EU AI Act,
+art. 50).
+
+PRICE                                            excl. VAT
+Subscription per month, incl. 750 call minutes    € 499,00
+Your first month, 50% off                         € 249,50
+Call minutes above 750, per minute                  € 0,40
+One-time installation                             € 945,00
+
+Prices are excl. VAT. With a valid Spanish VAT number the VAT is
+reverse-charged, so no Dutch VAT appears on the invoice.
+
+If you want to start with chat only (website and WhatsApp, no phone line):
+€ 299,00 per month, no installation fee. Voice can be added later.
+
+HOW IT WORKS
+1. Reply to this email.
+2. We set up the call forwarding together in one short call.
+3. We do a test call together. When you approve it, you're live.
+
+Live within 10 working days. Installation is billed half up front and half at
+go-live. The subscription starts on the day you go live and is cancellable
+monthly with 30 days notice. The service starts on our international voice
+platform and runs fully on EU servers within six weeks, at no extra cost.
+
+Terms: klantkraan.nl/legal/voorwaarden · Data processing agreement:
+klantkraan.nl/legal/dpa · SLA: klantkraan.nl/legal/sla · Offer valid until
+24-08-2026.
+
+[ Hear the demo -> https://klantkraan.nl/demo/cool-global ]
+
+Davy
+davy@klantkraan.nl
+```
