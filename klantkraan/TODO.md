@@ -102,14 +102,14 @@ zero-cost research or blocked on someone else's clock.
 From `research/claude-code-workflow-videos-2026-08-10.md` (7 Agentic Lab videos + prompt survey).
 Through-line: catch failures with deterministic gates, don't prevent with prompt rules. Small
 items only — never displaces dials.
-- [ ] `scripts/copy-lint.sh` — grep gate over customer-facing text: em/en-dashes, founder name, English tells in .nl artefacts, banned pricing phrases, old phone number; run once over `docs/02-sales`
-- [ ] `scripts/compliance-check.sh` + CI job — art. 50 disclosure string in every agent prompt/config; outreach CSVs BV-only
+- [x] `scripts/copy-lint.sh` — built + negative-tested (68d544e). Sweep of docs/02-sales: 849 findings — 2 banned-phrase (voltwerk call-review quotes), 13 founder-name (offerte-coolglobal sender lines, playbook, call sheets), 674 dash (mostly internal docs), 160 stale-phone (all prospects' own numbers — no old Klantkraan number found anywhere). FOUNDER decides what to clean; findings list in the session scratchpad
+- [x] `scripts/compliance-check.sh` + CI job — art. 50 in all 41 business configs OK; outreach CSVs BV-only-ungated OK; wired as 4th CI job (68d544e)
 - [ ] Hallucination eval pack in `ai-receptionist/app/evals.py`, per client config: service-not-offered, price-not-in-config, invented staff name, invented callback window, unknown-means-unknown, ambiguous-request restatement; minimal prompt fixes to pass (no deploy — founder retest gates deploy)
 - [ ] Mirror the voice hallucination cases as Cekura scenarios (agent 21227)
-- [ ] `.claude/commands/`: `/deploy-site`, `/run-evals`, `/board`, `/log-regression`, `/new-client-demo`
-- [ ] Stop-hook dispatcher in `.claude/settings.json` — git-diff-scoped: copy-lint touched artefacts, eval subset on receptionist prompt/config change, exit 2 feeds failures back; retries capped
-- [ ] Daily ops briefing agent (`ops/briefing/`) — cron → headless `claude -p` (read-only signals: sequence board, IMAP DSNs/replies, calls log) → Telegram, single allowed chat ID; FOUNDER: Gmail app password + Telegram bot token
-- [ ] Growth-engine verify pass — one Haiku call, AI-tells/stats-policy checklist, before the Telegram approval message; dry-run untouched
+- [x] `.claude/commands/`: `/deploy-site`, `/run-evals`, `/board`, `/log-regression`, `/new-client-demo` — all invocations verified against source (5b8624c)
+- [x] Stop-hook dispatcher in `.claude/settings.json` — git-diff-scoped: copy-lint on touched artefacts, pinned ruff on touched .py, non-blocking evals reminder on receptionist prompt/config change; fail-open, loop-guarded, exit 2 feeds findings back (54911d8). NB: open `/hooks` once or restart Claude Code to activate in running sessions
+- [x] Daily ops briefing agent (`ops/briefing/`) — built + dry-run verified on real data (bd280c6). FOUNDER (4 steps in ops/briefing/README.md): bot chat id via `app.notify chatid`, Gmail app password, `~/.klantkraan-briefing.env`, load the launchd plist
+- [x] Growth-engine verify pass — Haiku judge, 6 criteria, one auto-revise then deliver-flagged; toggle `GROWTH_ENGINE_VERIFY` (default on); 10 offline tests + ruff green (e5424a5). Needs a redeploy of growth-engine to go live on the server
 - [ ] Prompt refinements after eval pack: few-shot golden snippets (postcode, kenteken), Chain-of-Draft conciseness rule, restate-before-booking; TTFB check + Cekura rerun after
 - [x] Policy lines in CLAUDE.md: prompt-rule-needs-failing-golden; no wholesale rewrites of CLAUDE.md/MEMORY.md; markdown-folder memory only (no vector DBs/plugins) (2026-08-10)
 - [ ] Habits (no build): rewind-after-debug, recon-then-trim
