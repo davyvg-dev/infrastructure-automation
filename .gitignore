@@ -49,3 +49,6 @@ credentials.json
 
 # Wrangler local state
 .wrangler/
+
+# Claude Code parallel-session worktrees
+.claude/worktrees/
