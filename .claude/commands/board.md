@@ -1,15 +1,15 @@
 ---
 description: Morning status — deal pipeline board + outreach sequence board, summarized
-allowed-tools: Bash(cd ai-receptionist && ./.venv/bin/python -m app.pipeline:*), Bash(cd ai-receptionist && ./.venv/bin/python -m scripts.sequence:*)
+allowed-tools: Bash(cd "$(git rev-parse --show-toplevel)/ai-receptionist" && ./.venv/bin/python -m app.pipeline:*), Bash(cd "$(git rev-parse --show-toplevel)/ai-receptionist" && ./.venv/bin/python -m scripts.sequence:*)
 ---
 
 ## Deal pipeline
 
-!`cd ai-receptionist && ./.venv/bin/python -m app.pipeline board`
+!`cd "$(git rev-parse --show-toplevel)/ai-receptionist" && ./.venv/bin/python -m app.pipeline board`
 
 ## Outreach sequence (authoritative for touches due)
 
-!`cd ai-receptionist && ./.venv/bin/python -m scripts.sequence board`
+!`cd "$(git rev-parse --show-toplevel)/ai-receptionist" && ./.venv/bin/python -m scripts.sequence board`
 
 ## Task
 

@@ -1,11 +1,11 @@
 ---
 description: Run the ai-receptionist chat goldens and summarize any failures
-allowed-tools: Bash(cd ai-receptionist && ./.venv/bin/python -m app.evals:*)
+allowed-tools: Bash(cd "$(git rev-parse --show-toplevel)/ai-receptionist" && ./.venv/bin/python -m app.evals:*)
 ---
 
 ## Eval run (live — LLM customer + judge over the real receptionist)
 
-- Result: !`cd ai-receptionist && ./.venv/bin/python -m app.evals run all`
+- Result: !`cd "$(git rev-parse --show-toplevel)/ai-receptionist" && ./.venv/bin/python -m app.evals run all`
 
 ## Task
 
