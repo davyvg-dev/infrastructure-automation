@@ -1,7 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro'
 
-const lastUpdated = '29 juli 2026'
+const lastUpdated = '11 augustus 2026'
 
 type Subprocessor = {
   name: string
@@ -55,46 +55,11 @@ const subprocessors: Subprocessor[] = [
     dpa: 'https://www.mollie.com/legal/data-processing-agreement',
   },
   {
-    name: 'Moneybird',
-    purpose: 'Facturatie en boekhouding.',
-    location: 'NL',
-    transfer: 'Geen doorgifte buiten de EER.',
-    dpa: 'https://www.moneybird.com/legal/verwerkersovereenkomst',
-  },
-  {
-    name: 'Attio',
-    purpose: 'CRM voor sales- en delivery-pipeline.',
-    location: 'EU (geconfigureerd), leverancier EU/VS',
-    transfer: 'SCC 2021/914 indien doorgifte van toepassing.',
-    dpa: 'https://attio.com/legal/terms-and-conditions',
-  },
-  {
     name: 'Resend',
     purpose: 'Transactionele e-mail.',
     location: 'EU (Ierland), leverancier VS',
     transfer: 'SCC 2021/914; verzending geconfigureerd op EU-regio.',
     dpa: 'https://resend.com/legal/dpa',
-  },
-  {
-    name: 'SignWell',
-    purpose: 'Digitale ondertekening van MSA en DPA (primair).',
-    location: 'VS',
-    transfer: 'SCC 2021/914.',
-    dpa: 'https://www.signwell.com/legal/dpa/',
-  },
-  {
-    name: 'PandaDoc',
-    purpose: 'Digitale ondertekening (secundair, optioneel).',
-    location: 'VS',
-    transfer: 'SCC 2021/914.',
-    dpa: 'https://www.pandadoc.com/dpa/',
-  },
-  {
-    name: 'Sentry',
-    purpose: 'Foutmonitoring en alerting.',
-    location: 'EU-regio',
-    transfer: 'Geen doorgifte buiten de EER bij EU-region configuratie.',
-    dpa: 'https://sentry.io/legal/dpa/',
   },
 ]
 ---
