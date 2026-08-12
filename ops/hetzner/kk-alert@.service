@@ -1,0 +1,13 @@
+# Failure alert: every Klantkraan unit carries OnFailure=kk-alert@%n.service, so any
+# unit entering failed state fires this with its own name as the instance. Sends the
+# failed unit's journal tail to the founder (Telegram, e-mail fallback) via app.notify.
+# Root because journalctl must read other units' logs. Deliberately no OnFailure here:
+# an alert about a failed alert would loop.
+[Unit]
+Description=Klantkraan failure alert for %i -> founder (Telegram/e-mail)
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.notify alert %i

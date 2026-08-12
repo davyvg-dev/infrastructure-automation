@@ -2,6 +2,7 @@
 Description=Klantkraan daily oversight digest (per-client conversations/leads/cost -> founder Telegram, e-mail fallback)
 After=network-online.target ai-receptionist.service
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
 
 [Service]
 Type=oneshot

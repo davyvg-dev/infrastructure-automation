@@ -7,6 +7,11 @@
 Description=Klantkraan growth-engine — %i vertical (Telegram approval bot + scheduler)
 After=network-online.target
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
+# Same rationale as growth-engine.service: let a crash loop fail loudly instead of
+# restarting silently forever.
+StartLimitIntervalSec=600
+StartLimitBurst=5
 
 [Service]
 User=klantkraan

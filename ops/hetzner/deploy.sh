@@ -33,6 +33,11 @@ for app in growth-engine ai-receptionist; do
 done
 chown -R klantkraan:klantkraan /opt/klantkraan
 
+# Failure alert template: every unit's OnFailure= fires this -> founder Telegram/e-mail.
+cp "/opt/klantkraan/ops/hetzner/kk-alert@.service" /etc/systemd/system/
+# Caddy ships its own unit; give it the same OnFailure via a drop-in.
+mkdir -p /etc/systemd/system/caddy.service.d
+printf '[Unit]\nOnFailure=kk-alert@%%n.service\n' > /etc/systemd/system/caddy.service.d/kk-alert.conf
 cp /opt/klantkraan/ops/hetzner/growth-engine.service /etc/systemd/system/
 # Template for extra verticals (not auto-enabled: each instance needs its own
 # .env.<vertical> with its own bot token first — see the unit's header comment).

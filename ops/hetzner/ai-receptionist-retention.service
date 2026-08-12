@@ -2,6 +2,7 @@
 Description=Klantkraan receptionist AVG retention purge (drop raw transcript text past the window)
 After=network-online.target ai-receptionist.service
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
 
 [Service]
 Type=oneshot

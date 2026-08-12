@@ -2,6 +2,10 @@
 Description=Klantkraan ai-receptionist demo (web chat + WhatsApp webhook)
 After=network-online.target
 Wants=network-online.target
+# Restart=always + no start limit means this unit practically never enters failed state;
+# the watchdog timer owns its health (deep probe + self-heal + alert). OnFailure is the
+# backstop for the remaining paths (e.g. a start limit added later, ExecStartPre failure).
+OnFailure=kk-alert@%n.service
 
 [Service]
 User=klantkraan

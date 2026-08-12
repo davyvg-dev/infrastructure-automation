@@ -21,6 +21,20 @@ SERVER_IP = "168.119.173.25"
 HEALTH_URL = f"https://demo-{SERVER_IP.replace('.', '-')}.sslip.io/health"
 OUTREACH_DAILY_CAP = 6
 
+# kk health runs this on the server: OnFailure alerts (kk-alert@) deliver via Telegram or
+# e-mail, and with neither configured every unit failure lands only in the journal — the
+# exact silent-failure hole the alerting exists to close, so surface it on every health run.
+ALERT_CONFIG_CHECK = (
+    "cd /opt/klantkraan/ai-receptionist && "
+    'if { grep -q "^OWNER_TELEGRAM_CHAT_ID=." .env && '
+    'grep -qE "^(NOTIFY_TELEGRAM_TOKEN|TELEGRAM_BOT_TOKEN)=." .env; } || '
+    '{ grep -q "^OWNER_EMAIL=." .env && grep -q "^RESEND_API_KEY=." .env; }; then '
+    'echo "alerts: delivery configured"; else '
+    'echo "ALERTS UNCONFIGURED: unit failures only land in the journal.'
+    " Set OWNER_TELEGRAM_CHAT_ID (python -m app.notify chatid) or OWNER_EMAIL +"
+    ' RESEND_API_KEY in ai-receptionist/.env on the server."; fi'
+)
+
 # short name -> systemd unit on the Hetzner box
 LOG_UNITS = {
     "app": "ai-receptionist",
@@ -148,6 +162,13 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
                  "systemctl", "list-timers", "--all", "--no-pager"],
                 tolerant=True,
             ),
+            Step(
+                root,
+                ["ssh", f"root@{SERVER_IP}",
+                 "systemctl", "list-units", "--failed", "--no-pager"],
+                tolerant=True,
+            ),
+            Step(root, ["ssh", f"root@{SERVER_IP}", ALERT_CONFIG_CHECK], tolerant=True),
             Step(root, ["curl", "-sS", "-m", "10", HEALTH_URL], tolerant=True),
         ]
 

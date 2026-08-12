@@ -117,10 +117,10 @@ items only — never displaces dials.
 ### K. Command center (Phase 1 of research/PLAN-command-center-factory-2026-08-12.md)
 - [x] Step 1: `scripts/kk` dispatcher — cwd-proof CLI over existing tools (board/deal/outreach/evals/billing/health/logs/deploy); 6/day outreach cap enforced in code, server deploy gated on evals; 21 offline tests + ruff green (22b39d4)
 - [x] Step 2: ledger fixes (`created_at`, `dry_run` tagging, durable push-failure records, sequence.py path anchor) + `kk content` + `kk leads` readers; 26 kk tests + 3 approve-ledger tests, all suites green
-- [ ] Step 3: `kk-alert@.service` OnFailure= → Telegram on all systemd units
+- [x] Step 3: `kk-alert@.service` OnFailure= → founder alert on all systemd units (`app.notify alert <unit>` sends redacted journal tail, Telegram → e-mail fallback; growth-engine units get StartLimit so crash loops fail loudly; caddy drop-in via deploy.sh; `kk health` now lists failed units + flags unconfigured alert delivery). Ships on next `kk deploy server`.
 - [ ] Step 4: status page — `ops/status/generate.py` + 15-min timer + Caddy basic-auth vhost
 - [ ] Step 5: merge Mac launchd briefing into 07:30 server digest; delete launchd job
-- [ ] §C5 defects 5–8 (digest exit-1 visibility, regressions.md, dead BUFFER_CHANNEL_LINKEDIN, awaiting_note restart loss) — fix alongside steps 2–3
+- [ ] §C5 defects 6–8 (regressions.md, dead BUFFER_CHANNEL_LINKEDIN, awaiting_note restart loss) — defect 5 (digest exit-1 visibility) closed with step 3; the founder still owes OWNER_TELEGRAM_CHAT_ID or OWNER_EMAIL+RESEND_API_KEY in the server's ai-receptionist/.env (`kk health` shows which)
 
 ## Phase 0 — Planning docs
 

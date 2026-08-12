@@ -2,6 +2,7 @@
 Description=Klantkraan nightly analyst (Claude reads finished transcripts -> per-client insights)
 After=network-online.target ai-receptionist.service
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
 
 [Service]
 Type=oneshot

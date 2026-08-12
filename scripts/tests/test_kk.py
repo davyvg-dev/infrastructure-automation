@@ -124,6 +124,21 @@ def test_health_steps_are_tolerant():
     assert any("ssh" in s.argv[0] for s in steps)
 
 
+def test_health_lists_failed_units_on_the_server():
+    steps = kk.plan("health", [], ROOT)
+    assert any("--failed" in s.argv for s in steps)
+
+
+def test_health_checks_alert_delivery_config():
+    # OnFailure alerts are only real when the server can deliver them; a health run must
+    # say so either way (§C5 defect 5: digest failures were invisible).
+    steps = kk.plan("health", [], ROOT)
+    ssh_payloads = [s.argv[-1] for s in steps if s.argv[0] == "ssh"]
+    assert kk.ALERT_CONFIG_CHECK in ssh_payloads
+    assert "OWNER_TELEGRAM_CHAT_ID" in kk.ALERT_CONFIG_CHECK
+    assert "RESEND_API_KEY" in kk.ALERT_CONFIG_CHECK
+
+
 def test_logs_alias_and_passthrough():
     (argv,) = argvs("logs", ["digest"])
     assert "ai-receptionist-digest" in argv

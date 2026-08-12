@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import sys
 import threading
 import time
@@ -311,9 +312,60 @@ def chat_ids() -> list[dict[str, str]]:
     return list(seen.values())
 
 
+# --- Unit-failure alerts: systemd OnFailure= -> founder ----------------------------------
+# kk-alert@.service (ops/hetzner) fires `python -m app.notify alert <unit>` whenever any
+# Klantkraan unit enters failed state. The alert carries the unit's journal tail so the
+# founder sees WHY from his phone, PII-scrubbed through the same redact() the digest uses.
+# Delivery via owner_report: Telegram first, e-mail fallback — a failure alert that only
+# lands in the journal is the silent-failure hole this exists to close.
+
+_ALERT_JOURNAL_LINES = 20
+
+
+def _journal_tail(unit: str, lines: int = _ALERT_JOURNAL_LINES) -> str:
+    try:
+        proc = subprocess.run(
+            ["journalctl", "-u", unit, "-n", str(lines), "--no-pager", "-o", "cat"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        return proc.stdout.strip() or proc.stderr.strip() or "(journal empty)"
+    except Exception as exc:  # no journalctl (dev box) must not kill the alert itself
+        return f"(journal unavailable: {exc})"
+
+
+def unit_failed_alert(unit: str) -> dict[str, bool]:
+    """Tell the founder a systemd unit failed, with its redacted journal tail attached."""
+    # Lazy import: oversight imports notify, so importing it at module top is circular.
+    from .oversight import redact
+
+    text = f"⚠ server: {unit} failed\n\n{redact(_journal_tail(unit))}"
+    return owner_report(f"[server] {unit} failed", text)
+
+
 def main(argv: list[str]) -> int:
-    if (argv[1:2] or [""])[0] != "chatid":
-        print("usage: python -m app.notify chatid")
+    cmd = (argv[1:2] or [""])[0]
+    if cmd == "alert":
+        unit = (argv[2:3] or [""])[0]
+        if not unit:
+            print("usage: python -m app.notify alert <unit>")
+            return 2
+        delivered = unit_failed_alert(unit)
+        took = [channel for channel, ok in delivered.items() if ok]
+        if took:
+            print(f"[sent via {', '.join(took)}]")
+            return 0
+        # owner() already printed the message to stdout as its dev fallback; exit 1 so
+        # `systemctl status kk-alert@<unit>` shows the alert itself could not deliver.
+        print(
+            "[NOT sent — nowhere to deliver it. Set OWNER_TELEGRAM_CHAT_ID "
+            "(python -m app.notify chatid), or OWNER_EMAIL + RESEND_API_KEY.]"
+        )
+        return 1
+    if cmd != "chatid":
+        print("usage: python -m app.notify {chatid | alert <unit>}")
         return 2
     try:
         found = chat_ids()

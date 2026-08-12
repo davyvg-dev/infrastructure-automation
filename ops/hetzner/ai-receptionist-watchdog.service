@@ -2,6 +2,7 @@
 Description=Klantkraan receptionist watchdog (liveness + deep chat probe, self-heal + Telegram alert)
 After=network-online.target ai-receptionist.service
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
 
 [Service]
 Type=oneshot

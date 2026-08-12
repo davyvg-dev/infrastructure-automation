@@ -2,6 +2,12 @@
 Description=Klantkraan growth-engine (Telegram approval bot + scheduler)
 After=network-online.target
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
+# Without a start limit, RestartSec=10 never trips systemd's default 5-in-10s limit, so a
+# crash loop (revoked bot token, bad config) restarts silently forever — and no watchdog
+# probes this service. 5 failures in 10 min -> unit fails -> OnFailure alerts the founder.
+StartLimitIntervalSec=600
+StartLimitBurst=5
 
 [Service]
 User=klantkraan

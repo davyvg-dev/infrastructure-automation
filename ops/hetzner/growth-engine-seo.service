@@ -2,6 +2,7 @@
 Description=Klantkraan weekly Search Console report (queries, page-two wins -> founder Telegram)
 After=network-online.target
 Wants=network-online.target
+OnFailure=kk-alert@%n.service
 
 [Service]
 Type=oneshot
