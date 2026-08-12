@@ -10,9 +10,12 @@ A draft record looks like:
   "variants": {"x": "...", "linkedin": "...", "reddit": "..."},
   "x_url": "https://x.com/.../status/123",   # set once posted
   "linkedin_queued": "Klantkraan — goes out 2026-07-31T09:00:00Z",  # in Buffer's queue
+  "dry_run": true,                    # approved under GROWTH_ENGINE_DRY_RUN; nothing went out
+  "x_error": "2026-08-12T09:00:00+02:00 <exception>",  # last failed push per platform
 }
 
 "queued" means handed to Buffer and not live yet; there is no URL until Buffer sends it.
+Dry-run approvals never advance past "approved" and never store URLs/queue notes.
 """
 
 from __future__ import annotations

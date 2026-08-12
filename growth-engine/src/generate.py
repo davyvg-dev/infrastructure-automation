@@ -12,7 +12,7 @@ from typing import Any
 
 import anthropic
 
-from . import ideas, media, platforms, prompts
+from . import ideas, media, platforms, prompts, store
 from .settings import env, strategy
 
 # Static schema → structured outputs cache the compiled schema for 24h. Built ONCE at
@@ -133,6 +133,7 @@ def generate_draft(platforms: list[str]) -> dict[str, Any]:
         "pillar": pillar["key"],
         "topic": payload["topic"].strip(),
         "status": "pending",
+        "created_at": store.now_iso(),
         "variants": variants,
         "card": payload.get("card", {}),
         "carousel": payload.get("carousel", []),
@@ -179,6 +180,7 @@ def generate_from_brief(pillar_key: str, brief: str, platforms: list[str]) -> di
         "pillar": pillar_key,
         "topic": payload["topic"].strip(),
         "status": "pending",
+        "created_at": store.now_iso(),
         "variants": variants,
         "card": payload.get("card", {}),
         "carousel": payload.get("carousel", []),

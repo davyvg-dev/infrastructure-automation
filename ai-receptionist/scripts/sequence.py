@@ -64,8 +64,8 @@ from scripts.outreach_mail import (  # noqa: E402
     subject_for,
 )
 
-LEDGER = Path("build/outreach/sent.json")
-SUPPRESSION = Path("data/suppression.txt")
+LEDGER = ROOT / "build/outreach/sent.json"
+SUPPRESSION = ROOT / "data/suppression.txt"
 
 
 # ---------------------------------------------------------------------------

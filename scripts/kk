@@ -8,9 +8,13 @@ Adds no services, no databases, no daemons.
 Usage: kk <verb> [args]   (kk help for the verb list)
 """
 
+from __future__ import annotations
+
+import json
 import subprocess
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 
 SERVER_IP = "168.119.173.25"
@@ -39,6 +43,8 @@ kk — Klantkraan command center
   kk outreach send [args]        real send, --limit forced to <= 6
   kk outreach dry|dump [args]    dry run / write .eml files
   kk outreach stop <slug> --replied|--opt-out|--bounced
+  kk content                     growth-engine draft queues per vertical (read-only)
+  kk leads [n]                   last n records across the local lead stores (default 20)
   kk evals [list|<name|pack>]    run chat goldens (default: run all)
   kk billing [sub] [args]        passthrough to app.billing (default: status)
   kk health                      watchdog check+deep, server timers, /health
@@ -179,6 +185,120 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
     raise UsageError(f"unknown verb: {verb}")
 
 
+# --------------------------------------------------------------------------- #
+# Read-only local verbs (no subprocess): content + leads
+# --------------------------------------------------------------------------- #
+
+
+def _age(iso: str | None) -> str:
+    if not iso:
+        return "age ?"
+    try:
+        then = datetime.fromisoformat(iso)
+        days = (datetime.now(then.tzinfo) - then).days
+    except ValueError:
+        return "age ?"
+    return "today" if days < 1 else f"{days}d old"
+
+
+def _load_json(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"  ⚠ unreadable: {path.name} ({exc})", file=sys.stderr)
+        return None
+
+
+def _load_jsonl(path: Path) -> list[dict]:
+    records = []
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        print(f"  ⚠ unreadable: {path.name} ({exc})", file=sys.stderr)
+        return records
+    for line in lines:
+        try:
+            records.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue  # append-only file; a torn line must not hide the rest
+    return records
+
+
+def cmd_content(root: Path, args: list[str]) -> int:
+    """Board over growth-engine's per-vertical draft queues. Read-only."""
+    queues = sorted((root / "growth-engine" / "data").glob("*/queue.json"))
+    if not queues:
+        print("no content queues found under growth-engine/data/")
+        return 1
+    for qp in queues:
+        drafts = _load_json(qp)
+        if not isinstance(drafts, list):
+            continue
+        counts: dict[str, int] = {}
+        for d in drafts:
+            status = d.get("status", "?")
+            counts[status] = counts.get(status, 0) + 1
+        dry = sum(1 for d in drafts if d.get("dry_run"))
+        summary = ", ".join(f"{n} {s}" for s, n in sorted(counts.items()))
+        note = f"  ({dry} dry-run)" if dry else ""
+        print(f"{qp.parent.name.upper()} — {len(drafts)} drafts: {summary}{note}")
+        for d in drafts:
+            if d.get("status") == "pending":
+                print(f"  pending  {d.get('id', '?')}  {_age(d.get('created_at')):>8}  "
+                      f"{d.get('topic', '?')}")
+        for d in drafts:
+            for key, val in d.items():
+                if key.endswith("_error"):
+                    print(f"  ⚠ {d.get('id', '?')}  {key[:-6]} push failed: {val}")
+        print()
+    return 0
+
+
+def cmd_leads(root: Path, args: list[str]) -> int:
+    """Merged view over the four lead stores in ai-receptionist/data. Read-only.
+
+    The live stores are on the Hetzner box; local files hold demo/test data only.
+    """
+    limit = int(args[0]) if args and args[0].isdigit() else 20
+    data = root / "ai-receptionist" / "data"
+    rows: list[tuple[str, str, str, str, str, str]] = []  # (at, kind, client, who, contact, detail)
+
+    for p in sorted(data.glob("messages*.json")):
+        client = p.stem.removeprefix("messages").lstrip("-") or "default"
+        for m in _load_json(p) or []:
+            rows.append((m.get("at", ""), "message", m.get("client", client),
+                         m.get("customer_name", "?"), m.get("contact", "?"),
+                         (m.get("message") or "").replace("\n", " ")))
+    for r in _load_jsonl(data / "leads.jsonl") if (data / "leads.jsonl").exists() else []:
+        contact = r.get("telefoon") or r.get("email") or "?"
+        rows.append((r.get("at", ""), "site-lead", "klantkraan.nl",
+                     r.get("naam", "?"), contact, f"plan: {r.get('plan', '?')}"))
+    for p in sorted(data.glob("listing-leads-*.jsonl")):
+        for r in _load_jsonl(p):
+            rows.append((r.get("at", ""), "listing", r.get("client", p.stem),
+                         r.get("customer_name", "?"), r.get("contact", "?"),
+                         (r.get("notes") or "").replace("\n", " ")))
+    for p in sorted(data.glob("bookings*.json")):
+        client = p.stem.removeprefix("bookings").lstrip("-") or "default"
+        for b in _load_json(p) or []:
+            rows.append((b.get("created_at", ""), "booking", client,
+                         b.get("customer_name", "?"), b.get("contact", "?"),
+                         f"{b.get('service', '?')} @ {b.get('slot', '?')}"))
+
+    rows.sort(key=lambda r: r[0], reverse=True)
+    print(f"LEADS — {len(rows)} records across local stores "
+          f"(demo/test data; live stores are on the server: kk logs app)")
+    for at, kind, client, who, contact, detail in rows[:limit]:
+        print(f"  {at:19.19}  {kind:9}  {client:22.22}  {who:18.18}  {contact:26.26}  "
+              f"{detail:.48}")
+    if len(rows) > limit:
+        print(f"  … {len(rows) - limit} more (kk leads {len(rows)} shows all)")
+    return 0
+
+
+LOCAL_VERBS = {"content": cmd_content, "leads": cmd_leads}
+
+
 def run(steps: list[Step]) -> int:
     worst = 0
     for step in steps:
@@ -195,6 +315,9 @@ def main(argv: list[str]) -> int:
         print(USAGE)
         return 0
     try:
+        local = LOCAL_VERBS.get(argv[0])
+        if local is not None:
+            return local(repo_root(), argv[1:])
         return run(plan(argv[0], argv[1:], repo_root()))
     except UsageError as e:
         print(f"kk: {e}", file=sys.stderr)

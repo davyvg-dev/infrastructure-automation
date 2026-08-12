@@ -42,7 +42,7 @@ from . import (
     verify,
 )
 from .publish_x import post as post_to_x
-from .settings import active_cadence, data_dir, env, strategy
+from .settings import active_cadence, data_dir, dry_run, env, strategy
 
 # --------------------------------------------------------------------------- #
 # Sending drafts
@@ -310,7 +310,12 @@ _PUBLISHERS = {"x": _pub_x, "instagram": _pub_instagram, "facebook": _pub_facebo
 
 
 async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict) -> None:
+    # In dry-run the publishers return fake notes; keep the ledger honest by tagging
+    # the record dry_run and never advancing status past "approved".
+    dry = dry_run()
     store.update_draft(draft["id"], status="approved", approved_at=store.now_iso())
+    if dry:
+        store.update_draft(draft["id"], dry_run=True)
     variants = draft["variants"]
 
     # Auto-delivery platforms: post via API.
@@ -329,9 +334,11 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
             url = await asyncio.to_thread(
                 publisher, draft, variants[platform], _media_for(draft, platform)
             )
-            store.update_draft(draft["id"], status="posted", **{f"{platform}_url": url})
+            if not dry:
+                store.update_draft(draft["id"], status="posted", **{f"{platform}_url": url})
             await context.bot.send_message(chat_id, f"✅ Posted to {platform.title()}: {url}")
         except Exception as exc:
+            store.update_draft(draft["id"], **{f"{platform}_error": f"{store.now_iso()} {exc}"})
             await context.bot.send_message(
                 chat_id,
                 f"⚠️ {platform.title()} post failed ({exc}). Here it is to post by hand:",
@@ -349,10 +356,12 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
             if _media_for(draft, platform):
                 note += "\nMedia stayed behind (Buffer fetches assets by URL and we have "
                 note += "nowhere public to host them yet) — attach it in Buffer if you want it."
-            store.update_draft(draft["id"], **{f"{platform}_queued": note})
-            queued_any = True
+            if not dry:
+                store.update_draft(draft["id"], **{f"{platform}_queued": note})
+                queued_any = True
             await context.bot.send_message(chat_id, f"🗓 Queued in Buffer: {note}")
         except Exception as exc:
+            store.update_draft(draft["id"], **{f"{platform}_error": f"{store.now_iso()} {exc}"})
             await context.bot.send_message(
                 chat_id,
                 f"⚠️ Couldn't queue {platform.title()} in Buffer ({exc}). "
@@ -381,6 +390,7 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
                 f"Open the app, add a rising sound, paste the caption below, post.",
             )
         except Exception as exc:
+            store.update_draft(draft["id"], **{f"{platform}_error": f"{store.now_iso()} {exc}"})
             await context.bot.send_message(
                 chat_id,
                 f"⚠️ {platform.title()} draft upload failed ({exc}). Post by hand — caption below:",

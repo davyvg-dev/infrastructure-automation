@@ -2,6 +2,7 @@
 
 import importlib.machinery
 import importlib.util
+import sys
 from pathlib import Path
 
 import pytest
@@ -16,6 +17,8 @@ def _load_kk():
     loader = importlib.machinery.SourceFileLoader("kk", str(KK_PATH))
     spec = importlib.util.spec_from_loader("kk", loader)
     mod = importlib.util.module_from_spec(spec)
+    # dataclass resolves string annotations via sys.modules — register before exec
+    sys.modules["kk"] = mod
     loader.exec_module(mod)
     return mod
 
@@ -28,6 +31,7 @@ def argvs(verb, args=()):
 
 
 # -- board / deal ------------------------------------------------------------
+
 
 def test_board_runs_both_boards_from_air():
     steps = kk.plan("board", [], ROOT)
@@ -44,6 +48,7 @@ def test_deal_passthrough_and_default():
 
 
 # -- outreach cap ------------------------------------------------------------
+
 
 def test_outreach_send_injects_cap_when_absent():
     (argv,) = argvs("outreach", ["send"])
@@ -89,6 +94,7 @@ def test_outreach_dry_has_no_send_flag():
 
 # -- evals / billing ---------------------------------------------------------
 
+
 def test_evals_default_runs_all():
     assert argvs("evals") == [[AIR_PY, "-m", "app.evals", "run", "all"]]
 
@@ -108,6 +114,7 @@ def test_billing_default_status():
 
 
 # -- health / logs -----------------------------------------------------------
+
 
 def test_health_steps_are_tolerant():
     steps = kk.plan("health", [], ROOT)
@@ -131,6 +138,7 @@ def test_logs_requires_unit():
 
 # -- deploy ------------------------------------------------------------------
 
+
 def test_deploy_server_gates_on_evals_first():
     steps = kk.plan("deploy", ["server"], ROOT)
     assert steps[0].argv == [AIR_PY, "-m", "app.evals", "run", "all"]
@@ -153,7 +161,128 @@ def test_deploy_needs_valid_target():
             kk.plan("deploy", bad, ROOT)
 
 
+# -- content / leads (read-only local verbs) ---------------------------------
+
+
+def _write_json(path, data):
+    import json
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data), encoding="utf-8")
+
+
+def test_content_boards_queues_flags_dry_run_and_errors(tmp_path, capsys):
+    _write_json(
+        tmp_path / "growth-engine" / "data" / "trades" / "queue.json",
+        [
+            {
+                "id": "a1",
+                "status": "pending",
+                "topic": "gemiste oproepen",
+                "created_at": "2026-08-12T09:00:00+02:00",
+            },
+            {"id": "a2", "status": "approved", "dry_run": True, "topic": "x"},
+            {
+                "id": "a3",
+                "status": "posted",
+                "topic": "y",
+                "x_error": "2026-08-12T09:00:00+02:00 rate limited",
+            },
+        ],
+    )
+    assert kk.cmd_content(tmp_path, []) == 0
+    out = capsys.readouterr().out
+    assert "TRADES — 3 drafts" in out
+    assert "1 approved, 1 pending, 1 posted" in out
+    assert "(1 dry-run)" in out
+    assert "pending  a1" in out and "gemiste oproepen" in out
+    assert "a3  x push failed" in out and "rate limited" in out
+
+
+def test_content_without_queues_fails(tmp_path, capsys):
+    assert kk.cmd_content(tmp_path, []) == 1
+    assert "no content queues" in capsys.readouterr().out
+
+
+def test_leads_merges_all_four_stores_newest_first(tmp_path, capsys):
+    data = tmp_path / "ai-receptionist" / "data"
+    _write_json(
+        data / "messages-acme.json",
+        [
+            {
+                "at": "2026-08-01T10:00:00",
+                "client": "acme",
+                "customer_name": "Jan",
+                "contact": "06-1",
+                "message": "bel me\nterug",
+            },
+        ],
+    )
+    data.joinpath("leads.jsonl").write_text(
+        '{"at": "2026-08-04T10:00:00", "naam": "Piet", "email": "p@x.nl", "plan": "chat"}\n'
+        "NOT JSON — torn line must be skipped\n",
+        encoding="utf-8",
+    )
+    data.joinpath("listing-leads-demo.jsonl").write_text(
+        '{"at": "2026-08-03T10:00:00", "client": "demo", "customer_name": "Ana",'
+        ' "contact": "a@x.es", "notes": "pool"}\n',
+        encoding="utf-8",
+    )
+    _write_json(
+        data / "bookings-acme.json",
+        [
+            {
+                "created_at": "2026-08-02T10:00:00",
+                "customer_name": "Kees",
+                "contact": "k@x.nl",
+                "service": "Check-up",
+                "slot": "2026-08-03 08:00",
+            },
+        ],
+    )
+    assert kk.cmd_leads(tmp_path, []) == 0
+    out = capsys.readouterr().out
+    assert "4 records" in out
+    order = [out.index(n) for n in ("Piet", "Ana", "Kees", "Jan")]
+    assert order == sorted(order)  # newest first
+    assert (
+        "site-lead" in out
+        and "listing" in out
+        and "booking" in out
+        and "message" in out
+    )
+
+
+def test_leads_limit_and_more_hint(tmp_path, capsys):
+    data = tmp_path / "ai-receptionist" / "data"
+    _write_json(
+        data / "bookings.json",
+        [
+            {
+                "created_at": f"2026-08-0{i}T10:00:00",
+                "customer_name": f"c{i}",
+                "contact": "x",
+                "service": "s",
+                "slot": "t",
+            }
+            for i in range(1, 6)
+        ],
+    )
+    assert kk.cmd_leads(tmp_path, ["2"]) == 0
+    out = capsys.readouterr().out
+    assert "c5" in out and "c4" in out and "c3" not in out
+    assert "… 3 more" in out
+
+
+def test_content_and_leads_are_local_verbs_not_planned():
+    assert set(kk.LOCAL_VERBS) == {"content", "leads"}
+    for verb in kk.LOCAL_VERBS:
+        with pytest.raises(kk.UsageError):
+            kk.plan(verb, [], ROOT)
+
+
 # -- dispatcher shell --------------------------------------------------------
+
 
 def test_unknown_verb_raises():
     with pytest.raises(kk.UsageError):

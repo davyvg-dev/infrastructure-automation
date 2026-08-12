@@ -116,7 +116,7 @@ items only — never displaces dials.
 
 ### K. Command center (Phase 1 of research/PLAN-command-center-factory-2026-08-12.md)
 - [x] Step 1: `scripts/kk` dispatcher — cwd-proof CLI over existing tools (board/deal/outreach/evals/billing/health/logs/deploy); 6/day outreach cap enforced in code, server deploy gated on evals; 21 offline tests + ruff green (22b39d4)
-- [ ] Step 2: ledger fixes (`created_at`, `dry_run` tagging, durable push-failure records, sequence.py path anchor) + `kk content` + `kk leads` readers
+- [x] Step 2: ledger fixes (`created_at`, `dry_run` tagging, durable push-failure records, sequence.py path anchor) + `kk content` + `kk leads` readers; 26 kk tests + 3 approve-ledger tests, all suites green
 - [ ] Step 3: `kk-alert@.service` OnFailure= → Telegram on all systemd units
 - [ ] Step 4: status page — `ops/status/generate.py` + 15-min timer + Caddy basic-auth vhost
 - [ ] Step 5: merge Mac launchd briefing into 07:30 server digest; delete launchd job
