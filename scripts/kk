@@ -1,0 +1,206 @@
+#!/usr/bin/env python3
+"""kk — Klantkraan command center dispatcher.
+
+Thin dispatcher over CLIs that already exist and own their state.
+Resolves the repo root once, cds per verb, picks the right venv.
+Adds no services, no databases, no daemons.
+
+Usage: kk <verb> [args]   (kk help for the verb list)
+"""
+
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+
+SERVER_IP = "168.119.173.25"
+HEALTH_URL = f"https://demo-{SERVER_IP.replace('.', '-')}.sslip.io/health"
+OUTREACH_DAILY_CAP = 6
+
+# short name -> systemd unit on the Hetzner box
+LOG_UNITS = {
+    "app": "ai-receptionist",
+    "chat": "ai-receptionist",
+    "watchdog": "ai-receptionist-watchdog",
+    "retention": "ai-receptionist-retention",
+    "analyst": "ai-receptionist-analyst",
+    "digest": "ai-receptionist-digest",
+    "growth": "growth-engine",
+    "seo": "growth-engine-seo",
+    "caddy": "caddy",
+}
+
+USAGE = """\
+kk — Klantkraan command center
+
+  kk board                       deal pipeline + outreach sequence boards
+  kk deal <sub> [args]           passthrough to app.pipeline (default: board)
+  kk outreach [board]            sequence board
+  kk outreach send [args]        real send, --limit forced to <= 6
+  kk outreach dry|dump [args]    dry run / write .eml files
+  kk outreach stop <slug> --replied|--opt-out|--bounced
+  kk evals [list|<name|pack>]    run chat goldens (default: run all)
+  kk billing [sub] [args]        passthrough to app.billing (default: status)
+  kk health                      watchdog check+deep, server timers, /health
+  kk logs <unit|alias> [n]       journalctl on the server (default 150 lines)
+  kk deploy site|server          site: typecheck+build+wrangler; server: evals gate then deploy.sh
+  kk help                        this text
+"""
+
+
+class UsageError(Exception):
+    pass
+
+
+@dataclass
+class Step:
+    cwd: Path
+    argv: list[str]
+    tolerant: bool = field(default=False)  # nonzero exit does not abort the verb
+
+
+def repo_root() -> Path:
+    # kk lives at <root>/scripts/kk; resolve() follows PATH symlinks
+    return Path(__file__).resolve().parent.parent
+
+
+def _venv_py(root: Path, app: str) -> str:
+    return str(root / app / ".venv" / "bin" / "python")
+
+
+def _air(root: Path, *module_args: str, tolerant: bool = False) -> Step:
+    air = root / "ai-receptionist"
+    return Step(air, [_venv_py(root, "ai-receptionist"), "-m", *module_args], tolerant)
+
+
+def enforce_outreach_limit(args: list[str]) -> list[str]:
+    """Force --limit <= OUTREACH_DAILY_CAP; inject the cap when absent."""
+    out = list(args)
+    limit = None
+    for i, a in enumerate(out):
+        if a == "--limit":
+            if i + 1 >= len(out):
+                raise UsageError("--limit needs a value")
+            limit = out[i + 1]
+        elif a.startswith("--limit="):
+            limit = a.split("=", 1)[1]
+    if limit is not None:
+        try:
+            n = int(limit)
+        except ValueError:
+            raise UsageError(f"--limit must be a number, got {limit!r}")
+        if n > OUTREACH_DAILY_CAP:
+            raise UsageError(
+                f"daily outreach cap is {OUTREACH_DAILY_CAP}; refusing --limit {n}"
+            )
+        return out
+    return out + ["--limit", str(OUTREACH_DAILY_CAP)]
+
+
+def plan(verb: str, args: list[str], root: Path) -> list[Step]:
+    if verb == "board":
+        return [
+            _air(root, "app.pipeline", "board"),
+            _air(root, "scripts.sequence", "board"),
+        ]
+
+    if verb == "deal":
+        return [_air(root, "app.pipeline", *(args or ["board"]))]
+
+    if verb == "outreach":
+        sub, rest = (args[0], args[1:]) if args else ("board", [])
+        if sub == "board":
+            return [_air(root, "scripts.sequence", "board")]
+        if sub == "stop":
+            return [_air(root, "scripts.sequence", "stop", *rest)]
+        if sub == "send":
+            capped = enforce_outreach_limit(rest)
+            return [_air(root, "scripts.outreach_send", "--send", *capped)]
+        if sub == "dry":
+            return [_air(root, "scripts.outreach_send", *rest)]
+        if sub == "dump":
+            return [_air(root, "scripts.outreach_send", "--dump", *rest)]
+        raise UsageError(f"unknown outreach subverb: {sub}")
+
+    if verb == "evals":
+        if not args:
+            return [_air(root, "app.evals", "run", "all")]
+        if args == ["list"]:
+            return [_air(root, "app.evals")]
+        return [_air(root, "app.evals", "run", *args)]
+
+    if verb == "billing":
+        return [_air(root, "app.billing", *(args or ["status"]))]
+
+    if verb == "health":
+        return [
+            _air(root, "app.watchdog", "--check", tolerant=True),
+            _air(root, "app.watchdog", "--deep", tolerant=True),
+            Step(
+                root,
+                ["ssh", f"root@{SERVER_IP}",
+                 "systemctl", "list-timers", "--all", "--no-pager"],
+                tolerant=True,
+            ),
+            Step(root, ["curl", "-sS", "-m", "10", HEALTH_URL], tolerant=True),
+        ]
+
+    if verb == "logs":
+        if not args:
+            raise UsageError("kk logs <unit|alias> [lines]")
+        unit = LOG_UNITS.get(args[0], args[0])
+        lines = args[1] if len(args) > 1 else "150"
+        return [
+            Step(
+                root,
+                ["ssh", f"root@{SERVER_IP}",
+                 "journalctl", "-u", unit, "-n", lines, "--no-pager"],
+            )
+        ]
+
+    if verb == "deploy":
+        target = args[0] if args else ""
+        if target == "site":
+            site = root / "klantkraan" / "apps" / "marketing-site"
+            return [
+                Step(site, ["npm", "run", "typecheck"]),
+                Step(site, ["npm", "run", "build"]),
+                Step(site, ["pnpm", "dlx", "wrangler@4", "pages", "deploy",
+                            "./dist", "--branch=production",
+                            "--project-name=klantkraan-marketing"]),
+            ]
+        if target == "server":
+            return [
+                _air(root, "app.evals", "run", "all"),  # gate: any failure aborts
+                Step(root, [str(root / "ops" / "hetzner" / "deploy.sh"), SERVER_IP]),
+            ]
+        raise UsageError("kk deploy site|server")
+
+    raise UsageError(f"unknown verb: {verb}")
+
+
+def run(steps: list[Step]) -> int:
+    worst = 0
+    for step in steps:
+        proc = subprocess.run(step.argv, cwd=step.cwd, check=False)
+        if proc.returncode != 0:
+            if not step.tolerant:
+                return proc.returncode
+            worst = worst or proc.returncode
+    return worst
+
+
+def main(argv: list[str]) -> int:
+    if not argv or argv[0] in ("help", "-h", "--help"):
+        print(USAGE)
+        return 0
+    try:
+        return run(plan(argv[0], argv[1:], repo_root()))
+    except UsageError as e:
+        print(f"kk: {e}", file=sys.stderr)
+        print(USAGE, file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
