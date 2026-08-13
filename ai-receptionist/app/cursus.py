@@ -460,7 +460,12 @@ def send_due(*, now: datetime | None = None, only: str | None = None, dry: bool 
             text,
             html=html,
             idempotency_key=f"cursus-{email}-les-{n}",
-            headers={"List-Unsubscribe": f"<{unsubscribe_url(email)}>"},
+            # RFC 8058 one-click: mail clients POST to the URL without showing a page.
+            # The server accepts that POST next to the human confirm-button flow.
+            headers={
+                "List-Unsubscribe": f"<{unsubscribe_url(email)}>",
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            },
         )
         if not ok:
             report["failed"].append((email, n))

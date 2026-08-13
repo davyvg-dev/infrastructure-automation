@@ -6,6 +6,7 @@ bot, and WhatsApp all talk to the same receptionist.
 
 from __future__ import annotations
 
+import html
 import logging
 import os
 import re
@@ -21,11 +22,11 @@ from urllib.parse import urlsplit
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 from starlette.concurrency import run_in_threadpool
 
-from . import billing, notify, sessions, takeover
+from . import billing, cursus, notify, sessions, takeover
 from .channels import voice_missed, whatsapp
 from .settings import MissingSetting, business, clear_slug, ensure_dirs, resolve_slug, use_slug
 
@@ -358,6 +359,139 @@ async def checkout(request: Request) -> Response:
     """One POST from /aanmelden: save the lead, then send the buyer into Mollie checkout.
     JSON callers get {ok, checkout_url}; native form posts get a 303 straight to Mollie."""
     return await _signup(request, buy=True)
+
+
+# --- e-mailcursus: opt-in + afmelden ------------------------------------------------------
+# The rekentool offers the free 4-part course (app/cursus.py owns copy, ledger, schedule).
+# Same two-path contract as the signup form: fetch() with JSON, or a native form post that
+# gets 303'd back to the page it came from with ?cursus=ok|fout for the page to render.
+
+
+class CursusIn(BaseModel):
+    email: str = Field(min_length=3, max_length=200)
+    naam: str = Field(default="", max_length=200)
+    # Honeypot, same name and contract as LeadIn's: bots that fill it get a silent success.
+    website: str = Field(default="", max_length=500)
+
+    @field_validator("email")
+    @classmethod
+    def _email_shape(cls, v: str) -> str:
+        if not _EMAIL_RE.match(v.strip()):
+            raise ValueError("ongeldig e-mailadres")
+        return v.strip()
+
+
+def _cursus_urls(request: Request) -> tuple[str, str]:
+    """(ok_url, fout_url) for a native form poster: back to the page the form is on, with a
+    query flag. Only allowlisted site origins are echoed back."""
+    ref = urlsplit(request.headers.get("referer") or "")
+    origin = f"{ref.scheme}://{ref.netloc}"
+    path = ref.path or "/rekentool/"
+    if not _SITE_ORIGIN_RE.match(origin):
+        origin, path = "https://klantkraan.nl", "/rekentool/"
+    return f"{origin}{path}?cursus=ok", f"{origin}{path}?cursus=fout"
+
+
+@app.post("/api/cursus")
+async def cursus_optin(request: Request) -> Response:
+    """Subscribe an address and fire lesson 1 immediately. A failed send never fails the
+    opt-in: the subscriber is in the ledger and the daily timer is the catch-all."""
+    data, native = await _lead_payload(request)
+    ok_url, fout_url = _cursus_urls(request)
+
+    def reject(status: int, detail: str) -> Response:
+        if native:
+            return RedirectResponse(fout_url, status_code=303)
+        raise HTTPException(status_code=status, detail=detail)
+
+    if not _rate_ok(f"cursus:{_client_ip(request)}"):
+        return reject(429, "Too many requests — try again in a minute.")
+    try:
+        body = CursusIn.model_validate(data)
+    except ValidationError:
+        return reject(422, "Invalid input.")
+    if body.website.strip():  # honeypot tripped: pretend success, store nothing
+        return RedirectResponse(ok_url, status_code=303) if native else JSONResponse({"ok": True})
+
+    def subscribe() -> dict:
+        sub = cursus.add(body.email, name=body.naam.strip() or None, source="site")
+        who = f"{body.email} ({body.naam.strip()})" if body.naam.strip() else body.email
+        notify.owner(f"Nieuwe cursus-inschrijving: {who}")
+        return cursus.send_due(only=sub["email"])
+
+    try:
+        report = await run_in_threadpool(subscribe)
+    except (Exception, SystemExit) as exc:  # SystemExit = corrupt ledger refusing writes
+        log.exception("cursus opt-in failed for %s", body.email)
+        notify.owner_exception(exc, context="cursus-optin")
+        # The founder must still get the address: an opt-in that hit a broken store is a
+        # real lead that would otherwise vanish with the 503.
+        await run_in_threadpool(notify.owner, f"Cursus-inschrijving NIET opgeslagen: {body.email}")
+        return reject(503, "Could not save your signup.")
+    if report["failed"]:
+        log.warning("cursus lesson 1 not sent to %s; the daily timer retries", body.email)
+    return RedirectResponse(ok_url, status_code=303) if native else JSONResponse({"ok": True})
+
+
+def _afmeld_page(body_html: str, status: int = 200) -> HTMLResponse:
+    return HTMLResponse(
+        '<!doctype html><html lang="nl"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<meta name="robots" content="noindex"><title>E-mailcursus afmelden</title>'
+        "<style>body{font-family:system-ui,sans-serif;max-width:34rem;margin:4rem auto;"
+        "padding:0 1.5rem;color:#1f2937;line-height:1.6}"
+        "button{background:#b45309;color:#fff;border:0;border-radius:6px;"
+        "padding:.7rem 1.4rem;font-size:1rem;cursor:pointer}</style></head>"
+        f"<body>{body_html}</body></html>",
+        status_code=status,
+    )
+
+
+_AFMELD_INVALID = (
+    "<h1>Link niet geldig</h1>"
+    "<p>Deze afmeldlink klopt niet. Gebruik de link onderaan een van de lessen, "
+    "of stuur een reactie op de les en dan regelen wij het.</p>"
+)
+
+
+@app.get("/cursus/uitschrijven")
+async def cursus_uitschrijven(request: Request) -> HTMLResponse:
+    """Confirmation page, not the act itself: mail scanners prefetch GET links, and a
+    prefetch must never unsubscribe anyone. The button below does the POST."""
+    email = request.query_params.get("e", "")
+    tok = request.query_params.get("t", "")
+    if not cursus.verify_token(email, tok):
+        return _afmeld_page(_AFMELD_INVALID, status=404)
+    safe = html.escape(email, quote=True)
+    return _afmeld_page(
+        "<h1>Afmelden</h1>"
+        f"<p>Wilt u zich afmelden voor de e-mailcursus over gemiste omzet? "
+        f"U ontvangt dan geen lessen meer op {safe}.</p>"
+        # No action attribute: the form posts back to this URL, query string included.
+        '<form method="post"><button>Ja, meld mij af</button></form>'
+    )
+
+
+@app.post("/cursus/uitschrijven")
+async def cursus_uitschrijven_post(request: Request) -> HTMLResponse:
+    """The confirm button lands here, and so does an RFC 8058 one-click POST from a mail
+    client; both carry e/t in the query string of the afmeldlink."""
+    email = request.query_params.get("e", "")
+    tok = request.query_params.get("t", "")
+    if not cursus.verify_token(email, tok):
+        return _afmeld_page(_AFMELD_INVALID, status=404)
+    try:
+        await run_in_threadpool(cursus.stop, email)
+    except (Exception, SystemExit) as exc:
+        # An afmelding that silently fails is a legal problem, not just a bug.
+        log.exception("cursus afmelding failed for %s", email)
+        notify.owner_exception(exc, context="cursus-afmelden")
+        raise HTTPException(status_code=503, detail="Tijdelijk niet beschikbaar.") from None
+    return _afmeld_page(
+        "<h1>U bent afgemeld</h1>"
+        "<p>U ontvangt geen lessen meer van de e-mailcursus. Weer aanmelden kan altijd "
+        "via de rekentool op klantkraan.nl.</p>"
+    )
 
 
 # Mollie payment ids only — anything else is not a webhook we ever asked for.
