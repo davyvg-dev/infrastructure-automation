@@ -154,6 +154,146 @@ import Base from '../../layouts/Base.astro'
     </div>
   </section>
 
+  <!-- 4. Werkspot math (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Lead platforms</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">And what does a job through Werkspot cost?</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        On lead platforms you pay per lead, and the same lead also goes to your competitors.
+        Whoever responds first wins the job; the rest paid too. Compare that with a fixed price
+        for your own channel, where every caller simply gets answered.
+      </p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">€3&ndash;75</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            for a single lead on Werkspot, even when the job goes to someone else.
+          </p>
+        </div>
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">&plusmn;€208</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            in lead fees per job actually won, as calculated by
+            <a href="https://adaptoo.nl/blog/werkspot-kosten" class="underline">Adaptoo</a>.
+          </p>
+        </div>
+        <div class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-chalk)">€0 per lead</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            through your own number and website. Klantkraan is a fixed monthly price, however
+            many jobs you take on.
+          </p>
+        </div>
+      </div>
+      <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
+        Your own channel also grows in value: every review, every returning customer and every
+        referral belongs to you, not to the platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. E-mail course opt-in (cream). The calculator above stays e-mail-free: this form is
+       a separate, optional offer. Native POST works without JS (the API 303s back with
+       ?cursus=ok|fout); rekentool.js upgrades it to fetch() + inline result. -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1fr_.9fr] md:items-start">
+      <div>
+        <p class="eyebrow">Free e-mail course</p>
+        <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+          Tackle your missed revenue in 4 lessons
+        </h2>
+        <p class="mt-4 text-body text-(--color-dim)">
+          Four short e-mails over nine days, written for tradespeople with a full schedule.
+          Practical, no sales pitch, and everything can be applied yourself. The lessons are
+          in Dutch.
+        </p>
+        <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
+          <li>Lesson 1: the job that went to someone else.</li>
+          <li>Lesson 2: what a lead costs when you buy it back.</li>
+          <li>Lesson 3: three things you can fix yourself this week.</li>
+          <li>Lesson 4: if you want to automate it.</li>
+        </ul>
+        <p class="mt-4 text-small text-(--color-dim)">Unsubscribe with one click under any lesson.</p>
+      </div>
+
+      <div>
+        <!-- method+action are the zero-JS fallback: the browser posts the form itself and
+             the API answers with a 303 back to this page with ?cursus=ok|fout. -->
+        <form
+          id="cursus-form"
+          method="POST"
+          action="https://demo.klantkraan.nl/api/cursus"
+          data-astro-reload
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
+          <div class="space-y-6">
+            <div>
+              <label for="cursus-naam" class="block text-body font-medium text-(--color-chalk)">
+                First name <span class="font-normal text-(--color-dim)">(optional)</span>
+              </label>
+              <input
+                id="cursus-naam"
+                name="naam"
+                type="text"
+                autocomplete="given-name"
+                class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+              />
+            </div>
+            <div>
+              <label for="cursus-email" class="block text-body font-medium text-(--color-chalk)">
+                E-mail
+              </label>
+              <input
+                id="cursus-email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+              />
+            </div>
+            <div class="hp" aria-hidden="true">
+              <label for="cursus-website">Website</label>
+              <input id="cursus-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <p id="cursus-error" class="hidden text-small text-(--color-sodium)" role="alert">
+              Something went wrong. Check your e-mail address and try again.
+            </p>
+            <button type="submit" id="cursus-submit" class="btn btn-primary btn-lg w-full justify-center">
+              Send me lesson 1
+            </button>
+            <p class="text-small text-(--color-dim)">
+              Lesson 1 lands in your inbox right away. No newsletter, no spam.
+            </p>
+          </div>
+        </form>
+        <div
+          id="cursus-success"
+          class="hidden rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+        >
+          <h3 class="font-display text-h3 text-(--color-chalk)">Lesson 1 is on its way</h3>
+          <p class="mt-2 text-body text-(--color-dim)">
+            Check your inbox, and your spam folder just in case. The next lessons follow
+            automatically.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
   <script src="/js/rekentool.js" type="module" is:inline></script>
 </Base>
+
+<style>
+  /* Honeypot: parked off-screen so humans never see it; bots that fill it are dropped. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
