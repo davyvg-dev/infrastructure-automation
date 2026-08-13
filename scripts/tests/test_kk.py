@@ -108,6 +108,32 @@ def test_evals_pack_and_list():
 
 def test_billing_default_status():
     assert argvs("billing") == [[AIR_PY, "-m", "app.billing", "status"]]
+
+
+# -- cursus ------------------------------------------------------------------
+
+
+def test_cursus_default_board():
+    assert argvs("cursus") == [[AIR_PY, "-m", "app.cursus", "board"]]
+
+
+def test_cursus_passthrough_keeps_flags():
+    assert argvs("cursus", ["send", "--dry"]) == [
+        [AIR_PY, "-m", "app.cursus", "send", "--dry"]
+    ]
+    assert argvs("cursus", ["stop", "jan@bedrijf.nl", "--bounced"]) == [
+        [AIR_PY, "-m", "app.cursus", "stop", "jan@bedrijf.nl", "--bounced"]
+    ]
+
+
+def test_cursus_runs_from_the_app_dir():
+    (step,) = kk.plan("cursus", [], ROOT)
+    assert step.cwd == AIR
+
+
+def test_logs_cursus_alias_points_at_the_timer_unit():
+    (argv,) = argvs("logs", ["cursus"])
+    assert "klantkraan-cursus" in argv
     assert argvs("billing", ["subs", "cst_123"]) == [
         [AIR_PY, "-m", "app.billing", "subs", "cst_123"]
     ]

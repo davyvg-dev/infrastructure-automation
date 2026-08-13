@@ -63,6 +63,9 @@ cp /opt/klantkraan/ops/hetzner/growth-engine-seo.timer /etc/systemd/system/
 # Status page: 15-min regenerated static HTML, served by Caddy behind basic auth.
 cp /opt/klantkraan/ops/hetzner/klantkraan-status.service /etc/systemd/system/
 cp /opt/klantkraan/ops/hetzner/klantkraan-status.timer /etc/systemd/system/
+# E-mailcursus: daily send of due lessons; fails visibly when due + unconfigured.
+cp /opt/klantkraan/ops/hetzner/klantkraan-cursus.service /etc/systemd/system/
+cp /opt/klantkraan/ops/hetzner/klantkraan-cursus.timer /etc/systemd/system/
 mkdir -p /var/www/status
 chown klantkraan:klantkraan /var/www/status
 # Basic-auth credential: generated once on the box, reused on every later deploy.
@@ -81,7 +84,7 @@ systemctl daemon-reload
 systemctl enable --now growth-engine ai-receptionist caddy \
   ai-receptionist-watchdog.timer ai-receptionist-retention.timer \
   ai-receptionist-analyst.timer ai-receptionist-digest.timer \
-  klantkraan-status.timer
+  klantkraan-status.timer klantkraan-cursus.timer
 systemctl restart growth-engine ai-receptionist
 # Generate the page now so the vhost never serves a 404 until the first tick.
 systemctl start klantkraan-status.service || true

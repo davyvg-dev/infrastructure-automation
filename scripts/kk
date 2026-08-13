@@ -46,6 +46,7 @@ LOG_UNITS = {
     "growth": "growth-engine",
     "seo": "growth-engine-seo",
     "status": "klantkraan-status",
+    "cursus": "klantkraan-cursus",
     "caddy": "caddy",
 }
 
@@ -62,6 +63,7 @@ kk — Klantkraan command center
   kk outreach send [args]        real send, --limit forced to <= 6
   kk outreach dry|dump [args]    dry run / write .eml files
   kk outreach stop <slug> --replied|--opt-out|--bounced
+  kk cursus [sub] [args]         passthrough to app.cursus (default: board)
   kk content                     growth-engine draft queues per vertical (read-only)
   kk leads [n]                   last n records across the local lead stores (default 20)
   kk evals [list|<name|pack>]    run chat goldens (default: run all)
@@ -166,6 +168,11 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
 
     if verb == "billing":
         return [_air(root, "app.billing", *(args or ["status"]))]
+
+    if verb == "cursus":
+        # Local board shows demo data only; the live ledger is on the server
+        # (kk logs cursus). Sends from the Mac use the Mac .env's Resend key.
+        return [_air(root, "app.cursus", *(args or ["board"]))]
 
     if verb == "status":
         gen = str(root / "ops" / "status" / "generate.py")

@@ -1,0 +1,14 @@
+[Unit]
+Description=Send due e-mailcursus lessons every morning
+
+[Timer]
+# 09:15 local: lessons land during business hours, after the 07:30 digest (which
+# would report a failed run from the same morning). Day 0/2/5/9 anchoring lives in
+# app.cursus; the timer only needs to tick daily. Persistent=true catches up after
+# downtime — send_due caps at one lesson per subscriber per run, so no burst.
+OnCalendar=*-*-* 09:15:00
+Persistent=true
+AccuracySec=5min
+
+[Install]
+WantedBy=timers.target
