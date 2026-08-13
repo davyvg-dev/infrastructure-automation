@@ -1,0 +1,416 @@
+{
+  "version": 1,
+  "bijgewerkt": "2026-08-13",
+  "verboden": "city x service paginas (seo-strategy S7 NO-GO; wave2.ts blijft unwired). Banned stats: zie bannedClaims in pseo.ts.",
+  "pages": [
+    {
+      "slug": "ai-receptionist-voor-vakmensen",
+      "vertical": "vakmensen",
+      "type": "hub",
+      "targetKeyword": "ai receptionist vakmensen",
+      "cluster": "D",
+      "angle": "Pillar: de complete gids. Wat een AI-receptionist is, wat hij wel en niet kan, transparantieplicht, links naar alle vergelijkings- en vakpagina's.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "telefonische-bereikbaarheid-vakbedrijf",
+      "vertical": "vakmensen",
+      "type": "hub",
+      "targetKeyword": "telefonische bereikbaarheid verbeteren",
+      "cluster": "A",
+      "angle": "Pillar gemiste-oproepen-cluster, verankerd op de rekentool: waarom bereikbaarheid het echte lek is, met de formule en links naar de vak-probleempagina's.",
+      "dataBlocks": ["stat:kcm-geen-contact", "stat:eerste-reageerder-78", "stat:invoca-gemiste-calls-27"]
+    },
+    {
+      "slug": "antwoordservice-vergelijken",
+      "vertical": "vakmensen",
+      "type": "hub",
+      "targetKeyword": "antwoordservice kosten",
+      "cluster": "D",
+      "angle": "Hub voor alle antwoordservice-vergelijkingen: soorten telefoonaanname, kostenmodellen, en links naar de 6 vak-vergelijkingspagina's.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "markt:ai-telefonist", "prijzen:eigen"]
+    },
+    {
+      "slug": "wat-kost-een-ai-receptionist",
+      "vertical": "vakmensen",
+      "type": "vergelijking",
+      "targetKeyword": "ai telefoniste nederlands kosten",
+      "zoekvolume": "20-50",
+      "cluster": "D",
+      "angle": "Eerlijke prijzenpagina incl. concurrenten met naam en bedrag (Voicelabs, LoodgieterAI, STUDIOLEE, Klusio). Het #1 GEO-play: niemand bezit 'ai receptionist vergelijken nederland'.",
+      "dataBlocks": ["markt:ai-telefonist", "markt:website-bundel", "prijzen:eigen", "stat:ai-transparantie-plicht"]
+    },
+    {
+      "slug": "ai-telefoniste-vs-antwoordservice",
+      "vertical": "vakmensen",
+      "type": "vergelijking",
+      "targetKeyword": "ai telefoniste vs antwoordservice",
+      "cluster": "D",
+      "angle": "Money-spoke: AI-telefoniste vs antwoordservice vs telefoonaanname uitbesteden, kosten en wat de beller overhoudt.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:eerste-reageerder-78", "markt:ai-telefonist", "prijzen:eigen"]
+    },
+    {
+      "slug": "ai-receptionist-vs-secretaresse",
+      "vertical": "vakmensen",
+      "type": "vergelijking",
+      "targetKeyword": "receptioniste kosten",
+      "cluster": "D",
+      "angle": "Kostenvergelijking eigen (parttime) telefoniste vs AI-receptionist, gedragen door het personeelstekort: die telefoniste is er simpelweg niet.",
+      "dataBlocks": ["stat:techniek-nl-personeelstekort", "stat:techniek-nl-vacatures", "stat:techniek-nl-vakmensen-nodig", "prijzen:eigen"]
+    },
+    {
+      "slug": "werkspot-alternatief",
+      "vertical": "vakmensen",
+      "type": "vergelijking",
+      "targetKeyword": "werkspot alternatief",
+      "cluster": "B",
+      "angle": "Werkspot-als-foil: wat leads daar echt kosten, gedeelde leads, en het alternatief (eigen bereikbaarheid + eigen site, 'het is van u').",
+      "dataBlocks": ["stat:werkspot-leadprijs", "stat:werkspot-per-gewonnen-klus", "stat:leadplatform-gedeelde-leads", "markt:leadplatform"]
+    },
+    {
+      "slug": "websitechat-whatsapp-of-telefoon",
+      "vertical": "vakmensen",
+      "type": "vergelijking",
+      "targetKeyword": "whatsapp zakelijk vakbedrijf",
+      "cluster": "D",
+      "angle": "Waar klanten echt contact zoeken: chat, WhatsApp of bellen, per situatie (spoed vs offerte), en wat dat betekent voor uw kanaalkeuze.",
+      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-geen-contact"]
+    },
+    {
+      "slug": "telefoonservice-uitbesteden",
+      "vertical": "vakmensen",
+      "type": "vergelijking",
+      "targetKeyword": "telefoonservice uitbesteden kosten",
+      "cluster": "D",
+      "angle": "Uitbesteden aan een belbureau vs automatiseren: kostenmodellen (per gesprek vs vast), en de terugbel-valkuil.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "markt:ai-telefonist", "prijzen:eigen"]
+    },
+    {
+      "slug": "ai-wet-vakbedrijven",
+      "vertical": "vakmensen",
+      "type": "probleem",
+      "targetKeyword": "eu ai act mkb",
+      "cluster": "D",
+      "angle": "De Europese AI-wet voor vakbedrijven uitgelegd: wat art. 50 transparantie betekent als uw leverancier een AI-assistent inzet; compliant-by-design als koopargument.",
+      "dataBlocks": ["stat:ai-transparantie-plicht"]
+    },
+    {
+      "slug": "no-shows-verminderen",
+      "vertical": "vakmensen",
+      "type": "probleem",
+      "targetKeyword": "no-show afspraken verminderen",
+      "zoekvolume": "90-140",
+      "cluster": "C",
+      "angle": "No-shows op afspraken terugdringen: bevestiging, herinnering en drempelloze verzetting; formule-framing voor wat een lege agenda-plek kost.",
+      "dataBlocks": ["stat:eerste-reageerder-78"]
+    },
+    {
+      "slug": "gemiste-oproep-automatisch-opvolgen",
+      "vertical": "vakmensen",
+      "type": "probleem",
+      "targetKeyword": "missed call text back nederland",
+      "zoekvolume": "10-30",
+      "cluster": "A",
+      "angle": "Missed-call-text-back in NL: direct een WhatsApp terug bij een gemiste oproep, waarom dat de klus redt en hoe het werkt.",
+      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-terugbelbeloftes"]
+    },
+    {
+      "slug": "voorrijkosten-berekenen",
+      "vertical": "vakmensen",
+      "type": "probleem",
+      "targetKeyword": "voorrijkosten berekenen",
+      "zoekvolume": "60-110",
+      "cluster": "B",
+      "angle": "Hoe voorrijkosten opbouwen en communiceren; tarieven-transparantie als voorsprong, zachte CTA naar receptionist die tarieven uitlegt.",
+      "dataBlocks": ["euromath:loodgieters"]
+    },
+    {
+      "slug": "gemiste-oproepen-loodgieter",
+      "vertical": "loodgieters",
+      "type": "probleem",
+      "targetKeyword": "gemiste oproepen loodgieter",
+      "cluster": "A",
+      "angle": "GESCHREVEN (seed). Wat een gemiste oproep kost, ads-verbod, Werkspot-math, formule-framing.",
+      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-geen-contact", "stat:google-ads-ban", "stat:werkspot-per-gewonnen-klus", "euromath:loodgieters"]
+    },
+    {
+      "slug": "antwoordservice-loodgieter",
+      "vertical": "loodgieters",
+      "type": "vergelijking",
+      "targetKeyword": "antwoordservice loodgieter",
+      "cluster": "D",
+      "angle": "GESCHREVEN (seed). Antwoordservice vs zelf opnemen vs AI-receptionist, incl. wanneer de antwoordservice wint.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:kcm-geen-contact", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "ai-telefoniste-loodgieter",
+      "vertical": "loodgieters",
+      "type": "probleem",
+      "targetKeyword": "ai telefoniste voor loodgieters",
+      "zoekvolume": "40-90",
+      "cluster": "D",
+      "angle": "Wat een AI-telefoniste voor een loodgieter wel en niet kan, chat/WhatsApp-truth (geen voice-era mechanics), transparantieplicht.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "stat:google-ads-ban", "euromath:loodgieters", "prijzen:eigen"]
+    },
+    {
+      "slug": "software-loodgieter",
+      "vertical": "loodgieters",
+      "type": "vergelijking",
+      "targetKeyword": "software loodgieter",
+      "zoekvolume": "320-480",
+      "cluster": "B",
+      "angle": "Stack-overzicht voor het loodgietersbedrijf: planning, facturatie, klantcontact; eerlijk over waar Klantkraan wel en niet in past.",
+      "dataBlocks": ["markt:ai-telefonist", "prijzen:eigen"]
+    },
+    {
+      "slug": "werkspot-kosten-loodgieter",
+      "vertical": "loodgieters",
+      "type": "probleem",
+      "targetKeyword": "werkspot kosten loodgieter",
+      "cluster": "B",
+      "angle": "Wat Werkspot een loodgieter echt kost per gewonnen klus, naast het ads-verbod: eigen bereikbaarheid als enige gratis kanaal.",
+      "dataBlocks": ["stat:werkspot-leadprijs", "stat:werkspot-per-gewonnen-klus", "stat:google-ads-ban", "markt:leadplatform", "euromath:loodgieters"]
+    },
+    {
+      "slug": "crm-voor-installatiebedrijf",
+      "vertical": "installateur",
+      "type": "vergelijking",
+      "targetKeyword": "crm voor installatiebedrijf",
+      "zoekvolume": "90-170",
+      "cluster": "B",
+      "angle": "Eerlijke vergelijking Werkbon/Snelstart/Skoon e.a.; waar klantcontact-automatisering aansluit op een crm.",
+      "dataBlocks": ["prijzen:eigen"]
+    },
+    {
+      "slug": "offertesoftware-installateur",
+      "vertical": "installateur",
+      "type": "vergelijking",
+      "targetKeyword": "offertesoftware installateur",
+      "zoekvolume": "70-110",
+      "cluster": "B",
+      "angle": "Offertesoftware vergeleken + ROI-framing: de offerte die er snel ligt wint, eerste-reageerder-mechanisme.",
+      "dataBlocks": ["stat:eerste-reageerder-78"]
+    },
+    {
+      "slug": "werkbonnen-app-monteur",
+      "vertical": "installateur",
+      "type": "vergelijking",
+      "targetKeyword": "werkbonnen app monteur",
+      "zoekvolume": "110-210",
+      "cluster": "B",
+      "angle": "Top-5 werkbonnen-apps vergeleken; hoogste volume in het cluster, honest-comparison SEO-magneet.",
+      "dataBlocks": []
+    },
+    {
+      "slug": "no-shows-installateur",
+      "vertical": "installateur",
+      "type": "probleem",
+      "targetKeyword": "no-shows verminderen installateur",
+      "zoekvolume": "20-40",
+      "cluster": "C",
+      "angle": "Monteur voor een dichte deur: bevestigings- en herinneringsflow, verzetten via WhatsApp, formule voor een verloren blok.",
+      "dataBlocks": []
+    },
+    {
+      "slug": "klantcontact-automatiseren-installateur",
+      "vertical": "installateur",
+      "type": "probleem",
+      "targetKeyword": "installateur klantcontact automatiseren",
+      "zoekvolume": "30-60",
+      "cluster": "A",
+      "angle": "Wat er te automatiseren valt in klantcontact zonder de klant te verliezen: intake, status-updates, storingspiek in januari.",
+      "dataBlocks": ["stat:techniek-nl-personeelstekort", "stat:ai-transparantie-plicht"]
+    },
+    {
+      "slug": "ai-telefoniste-installateur",
+      "vertical": "installateur",
+      "type": "probleem",
+      "targetKeyword": "ai telefoniste installateur",
+      "cluster": "D",
+      "angle": "Wat AI-telefonie voor een installatiebedrijf kan (cv-storingspiek, spoedtriage), wel/niet-geschikt eerlijk benoemd.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "stat:techniek-nl-vacatures", "prijzen:eigen"]
+    },
+    {
+      "slug": "antwoordservice-installateur",
+      "vertical": "installateur",
+      "type": "vergelijking",
+      "targetKeyword": "antwoordservice installateur",
+      "cluster": "D",
+      "angle": "Spiegel van de loodgieter-seed voor installateurs: bericht vs afhandeling, cv-storing als spoedcase.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:kcm-geen-contact", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "planning-software-elektricien",
+      "vertical": "elektricien",
+      "type": "vergelijking",
+      "targetKeyword": "planning software elektricien",
+      "zoekvolume": "50-90",
+      "cluster": "B",
+      "angle": "Planningtools vergeleken (Cal.com + branche-tools); waar de receptionist de planning voedt.",
+      "dataBlocks": []
+    },
+    {
+      "slug": "ai-telefoniste-elektricien",
+      "vertical": "elektricien",
+      "type": "probleem",
+      "targetKeyword": "ai telefoniste elektricien",
+      "cluster": "D",
+      "angle": "Storing vs projectwerk uit elkaar houden aan de telefoon; wat AI-triage voor een elektricien doet.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "prijzen:eigen"]
+    },
+    {
+      "slug": "antwoordservice-elektricien",
+      "vertical": "elektricien",
+      "type": "vergelijking",
+      "targetKeyword": "antwoordservice elektricien",
+      "cluster": "D",
+      "angle": "Vak-vergelijking: bericht vs afhandeling voor storingsdiensten.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "gemiste-oproepen-elektricien",
+      "vertical": "elektricien",
+      "type": "probleem",
+      "targetKeyword": "gemiste oproepen elektricien",
+      "cluster": "A",
+      "angle": "Storingsklussen die naar de volgende gaan; formule-framing zonder verzonnen kluswaarde (geen gepubliceerd gemiddelde voor dit vak).",
+      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-geen-contact"]
+    },
+    {
+      "slug": "gemiste-oproepen-dakdekker",
+      "vertical": "dakdekkers",
+      "type": "probleem",
+      "targetKeyword": "gemiste oproepen dakdekker",
+      "cluster": "A",
+      "angle": "Lekkage- en stormmeldingen die niet wachten; formule met de site-kluswaarde (€600).",
+      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-geen-contact", "euromath:dakdekkers"]
+    },
+    {
+      "slug": "antwoordservice-dakdekker",
+      "vertical": "dakdekkers",
+      "type": "vergelijking",
+      "targetKeyword": "antwoordservice dakdekker",
+      "cluster": "D",
+      "angle": "Vak-vergelijking: piekdrukte na storm is precies wanneer een terugbelbelofte faalt.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "ai-telefoniste-dakdekker",
+      "vertical": "dakdekkers",
+      "type": "probleem",
+      "targetKeyword": "ai telefoniste dakdekker",
+      "cluster": "D",
+      "angle": "Wat AI-opvang voor een dakdekker doet: schade-intake met foto's via WhatsApp, spoed vs inspectie scheiden.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "euromath:dakdekkers", "prijzen:eigen"]
+    },
+    {
+      "slug": "stormschade-meldingen-dakdekker",
+      "vertical": "dakdekkers",
+      "type": "probleem",
+      "targetKeyword": "stormschade meldingen verwerken dakdekker",
+      "cluster": "A",
+      "angle": "De piek na een storm: tientallen meldingen in een dag opvangen, triagen en inplannen zonder extra handen.",
+      "dataBlocks": ["stat:techniek-nl-personeelstekort", "euromath:dakdekkers"]
+    },
+    {
+      "slug": "offerte-opvolging-dakdekker",
+      "vertical": "dakdekkers",
+      "type": "probleem",
+      "targetKeyword": "dakdekker offerte opvolging",
+      "zoekvolume": "20-40",
+      "cluster": "C",
+      "angle": "Offertes die blijven liggen na de inspectie; opvolgflow en de eerste-reageerder-mechaniek.",
+      "dataBlocks": ["stat:eerste-reageerder-78"]
+    },
+    {
+      "slug": "offerte-opvolging-schilder",
+      "vertical": "schilder",
+      "type": "probleem",
+      "targetKeyword": "offerte opvolging schilder",
+      "cluster": "C",
+      "angle": "Lentepiek: aanvragen komen 's avonds binnen en de offerte die er eerst ligt wint; formule met site-kluswaarde (€2.500).",
+      "dataBlocks": ["stat:eerste-reageerder-78", "euromath:schilder"]
+    },
+    {
+      "slug": "gemiste-oproepen-schilder",
+      "vertical": "schilder",
+      "type": "probleem",
+      "targetKeyword": "gemiste oproepen schilder",
+      "cluster": "A",
+      "angle": "Aanvragen buiten werktijd opvangen terwijl u op de steiger staat; formule-framing.",
+      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-geen-contact", "euromath:schilder"]
+    },
+    {
+      "slug": "antwoordservice-schilder",
+      "vertical": "schilder",
+      "type": "vergelijking",
+      "targetKeyword": "antwoordservice schilder",
+      "cluster": "D",
+      "angle": "Vak-vergelijking: offerte-aanvragen verdienen een antwoord plus afspraak, geen belofte.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "ai-telefoniste-schilder",
+      "vertical": "schilder",
+      "type": "probleem",
+      "targetKeyword": "ai telefoniste schilder",
+      "cluster": "D",
+      "angle": "Wat AI-opvang voor een schildersbedrijf doet: aanvraag-intake met m2/foto's, seizoenspiek opvangen.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "euromath:schilder", "prijzen:eigen"]
+    },
+    {
+      "slug": "offerteaanvragen-opvolgen-aannemer",
+      "vertical": "aannemer",
+      "type": "probleem",
+      "targetKeyword": "offerteaanvragen opvolgen aannemer",
+      "cluster": "C",
+      "angle": "Een verbouwingsaanvraag is groot (site-waarde €5.000) en vluchtig: dezelfde-dag-reactie als winstpakker.",
+      "dataBlocks": ["stat:eerste-reageerder-78", "euromath:aannemer"]
+    },
+    {
+      "slug": "antwoordservice-aannemer",
+      "vertical": "aannemer",
+      "type": "vergelijking",
+      "targetKeyword": "antwoordservice aannemer",
+      "cluster": "D",
+      "angle": "Vak-vergelijking: offerteaanvragen en leveranciers uit elkaar houden; bericht vs afhandeling.",
+      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:eerste-reageerder-78", "prijzen:eigen"]
+    },
+    {
+      "slug": "ai-telefoniste-aannemer",
+      "vertical": "aannemer",
+      "type": "probleem",
+      "targetKeyword": "ai telefoniste aannemer",
+      "cluster": "D",
+      "angle": "Wat AI-opvang voor een aannemer doet: aanvraag-triage (verbouwing vs klein werk), meerwerk-vragen doorzetten.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "euromath:aannemer", "prijzen:eigen"]
+    },
+    {
+      "slug": "gemiste-leads-sportschool",
+      "vertical": "sportscholen",
+      "type": "probleem",
+      "targetKeyword": "leads sportschool opvolgen",
+      "cluster": "A",
+      "angle": "Proefles-aanvragen komen 's avonds binnen als de balie dicht is; lidmaatschapswaarde-formule, lezer vult eigen tarief in.",
+      "dataBlocks": ["stat:eerste-reageerder-78", "euromath:sportscholen"]
+    },
+    {
+      "slug": "no-shows-proefles-sportschool",
+      "vertical": "sportscholen",
+      "type": "probleem",
+      "targetKeyword": "no-show proefles sportschool",
+      "cluster": "C",
+      "angle": "Proefles geboekt maar niet gekomen: bevestiging + herinnering + drempelloos verzetten.",
+      "dataBlocks": []
+    },
+    {
+      "slug": "virtuele-receptie-sportschool",
+      "vertical": "sportscholen",
+      "type": "vergelijking",
+      "targetKeyword": "virtuele receptie sportschool",
+      "cluster": "D",
+      "angle": "Bemande balie vs virtuele receptie: ledenvragen, proefles-intake en opzeggingen buiten balietijden.",
+      "dataBlocks": ["stat:ai-transparantie-plicht", "prijzen:eigen"]
+    }
+  ]
+}

@@ -155,6 +155,10 @@ pages land in the rsync-durable data dir, founder pulls and ships with `kk deplo
       2–3 hubs) with target keyword + angle + data-block refs; JSON so Astro imports it for
       link blocks AND the server-side drafter reads the rsynced copy. FOUNDER gate: approve the
       inventory before drafting starts
+      — code DONE 2026-08-13 (44 pages: 23 probleem / 18 vergelijking / 3 hubs; extra
+      vertical 'vakmensen' for cross-vertical cluster-D pages; elektricien/installateur/
+      sportscholen have NO published job value → formula-only, herkomst 'geen');
+      GATE PENDING: founder approves the inventory, then step 3 may start
 - [ ] Step 3: drafter — growth-engine page module: nightly in-process JobQueue job in the bot
       (one page/night ≈ 30/mo, no cross-process queue.json writes), own draft schema with
       page-sized max_tokens, prompt carries the stats registry + banned list + boilerplate

@@ -43,7 +43,12 @@ export async function getStaticPaths() {
 const { page, slug } = Astro.props
 const { Content } = await render(page)
 
-const branch = branches.find((b) => b.slug === page.data.vertical)!
+// 'vakmensen' = cross-vertical page; breadcrumb parent is the /voor-wie/ hub.
+const branch = branches.find((b) => b.slug === page.data.vertical) ?? {
+  slug: 'vakmensen',
+  labelPlural: 'Alle vakmensen',
+  href: '/voor-wie/',
+}
 const canonical = new URL(`/${slug}/`, Astro.site).toString()
 const siteRoot = new URL('/', Astro.site).toString()
 

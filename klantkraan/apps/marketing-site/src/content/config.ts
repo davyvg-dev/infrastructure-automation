@@ -29,8 +29,10 @@ const gidsen = defineCollection({
 })
 
 // Vertical pSEO pages (TODO §M): vertical × probleem/vergelijking/hub, NEVER
-// city×service. Verticals = the 7 branch slugs so cornerstone links can't drift.
-const branchSlugs = branches.map((b) => b.slug) as [string, ...string[]]
+// city×service. Verticals = the 7 branch slugs so cornerstone links can't
+// drift, plus 'vakmensen' for the cross-vertical comparison/hub pages
+// (breadcrumb parent /voor-wie/).
+const branchSlugs = ['vakmensen', ...branches.map((b) => b.slug)] as [string, ...string[]]
 
 const pseo = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pseo' }),
