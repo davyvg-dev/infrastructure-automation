@@ -139,7 +139,7 @@ reality (recon 2026-08-13): growth-engine drafts are social-post-shaped (2000-to
 4096-char Telegram preview) so pages get their own draft kind delivered as a .md document; the
 server has no Node and Pages has no git integration, so approval never auto-deploys — approved
 pages land in the rsync-durable data dir, founder pulls and ships with `kk deploy site`.
-- [ ] Step 1: site foundation — `pseo` content collection (schema: title ≤60, description ≤155,
+- [x] Step 1: site foundation — `pseo` content collection (schema: title ≤60, description ≤155,
       vertical over all 7 branches, type `probleem|vergelijking|hub`, targetKeyword, faq[],
       stats-used incl. bron, laatstBijgewerkt, related slugs) + shared `JsonLd.astro` component
       (factor the FAQPage builder out for new pages; retrofitting the 13 inline copies is a

@@ -1,0 +1,222 @@
+---
+// Vertical pSEO route (TODO §M step 1): renders the `pseo` content collection
+// at top-level slugs. Data-product rules: answer-first body (the markdown owns
+// that), visible "laatst bijgewerkt", sourced stats block, <details> FAQ,
+// BreadcrumbList + FAQPage + Article JSON-LD, hub-and-spoke link block.
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import JsonLd from '../components/JsonLd.astro'
+import { getCollection, render } from 'astro:content'
+import { branches } from '../data/branches'
+import { cities } from '../data/cities'
+import { faqPageSchema, breadcrumbSchema, articleSchema } from '../data/jsonld'
+
+export async function getStaticPaths() {
+  // Top-level slugs may never shadow an existing static page or a [stad] route.
+  const reserved = new Set([
+    ...Object.keys(cities),
+    ...branches.map((b) => b.href.replaceAll('/', '')),
+    'aanmelden',
+    'bedankt',
+    'blog',
+    'demo',
+    'en',
+    'es',
+    'gidsen',
+    'legal',
+    'over',
+    'prijzen',
+    'r',
+    'rekentool',
+    'voor-wie',
+  ])
+  const pages = await getCollection('pseo')
+  return pages.map((page) => {
+    const slug = page.id.replace(/\.md$/, '')
+    if (reserved.has(slug)) {
+      throw new Error(`pseo slug "${slug}" collides with an existing route`)
+    }
+    return { params: { pseo: slug }, props: { page, slug } }
+  })
+}
+
+const { page, slug } = Astro.props
+const { Content } = await render(page)
+
+const branch = branches.find((b) => b.slug === page.data.vertical)!
+const canonical = new URL(`/${slug}/`, Astro.site).toString()
+const siteRoot = new URL('/', Astro.site).toString()
+
+// Hub-and-spoke: explicit related slugs first, then other pages in the same
+// vertical. Renders whatever exists; a young collection shows fewer links.
+const allPseo = await getCollection('pseo')
+const bySlug = new Map(allPseo.map((p) => [p.id.replace(/\.md$/, ''), p]))
+const relatedPages = page.data.related
+  .map((r) => {
+    const p = bySlug.get(r)
+    return p ? { href: `/${r}/`, title: p.data.title } : null
+  })
+  .filter((p) => p !== null)
+const sameVertical = allPseo
+  .filter((p) => p.data.vertical === page.data.vertical && p.id !== page.id)
+  .map((p) => ({ href: `/${p.id.replace(/\.md$/, '')}/`, title: p.data.title }))
+  .filter((p) => !relatedPages.some((r) => r.href === p.href))
+  .slice(0, 4)
+
+const dateFmt = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
+const typeLabel =
+  page.data.type === 'probleem' ? 'Probleem' : page.data.type === 'vergelijking' ? 'Vergelijking' : 'Gids'
+
+// Only append the brand suffix when the title stays within ~65 chars.
+const pageTitle =
+  page.data.title.length <= 52 ? `${page.data.title} | Klantkraan` : page.data.title
+
+const schemas = [
+  breadcrumbSchema([
+    { name: 'Home', item: siteRoot },
+    { name: branch.labelPlural, item: new URL(branch.href, Astro.site).toString() },
+    { name: page.data.title, item: canonical },
+  ]),
+  faqPageSchema(page.data.faq),
+  articleSchema({
+    headline: page.data.title,
+    description: page.data.description,
+    url: canonical,
+    siteRoot,
+    datePublished: page.data.laatstBijgewerkt,
+    dateModified: page.data.laatstBijgewerkt,
+  }),
+]
+---
+
+<Base title={pageTitle} description={page.data.description} canonical={canonical} centered={false}>
+  <!-- 1. Kop -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <nav class="text-small text-(--color-dim)" aria-label="Kruimelpad">
+        <a href="/" class="hover:underline">Home</a>
+        <span aria-hidden="true"> › </span>
+        <a href={branch.href} class="hover:underline">{branch.labelPlural}</a>
+        <span aria-hidden="true"> › </span>
+        <span>{typeLabel}</span>
+      </nav>
+      <p class="mt-4 font-mono text-micro uppercase tracking-widest text-(--color-dim)">
+        {typeLabel} · {branch.labelPlural}
+      </p>
+      <h1 class="mt-3 font-display text-hero text-(--color-chalk)">{page.data.title}</h1>
+      <p class="mt-6 text-h3 text-(--color-dim)">{page.data.description}</p>
+      <p class="mt-4 text-small text-(--color-dim)">
+        Laatst bijgewerkt {dateFmt.format(page.data.laatstBijgewerkt)} · door Klantkraan
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Body (markdown owns the answer-first H2 structure) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] px-4 py-10 sm:px-6 md:py-16">
+    <article
+      class="mx-auto max-w-3xl rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10 text-body text-(--color-dim) [&_h2]:font-display [&_h2]:text-h2 [&_h2]:text-(--color-chalk) [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:font-display [&_h3]:text-h3 [&_h3]:text-(--color-chalk) [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_strong]:text-(--color-chalk) [&_a]:text-(--color-sodium) [&_a]:underline [&_a]:[overflow-wrap:break-word] [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:my-6 [&_table]:text-small [&_th]:border [&_th]:border-(--color-line) [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-(--color-line) [&_td]:p-2 [&_td]:align-top [&_pre]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto"
+    >
+      <Content />
+    </article>
+  </section>
+
+  <!-- 3. Bronnen (the unfakeable data layer, sourced stats only) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <p class="eyebrow">Bronnen</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        De cijfers op deze pagina.
+      </h2>
+      <ul class="mt-6 space-y-4">
+        {
+          page.data.stats.map((stat) => (
+            <li class="border-l-2 border-(--color-sodium) pl-4">
+              <p class="text-body text-(--color-chalk)">{stat.claim}</p>
+              <p class="mt-1 text-small text-(--color-dim)">
+                Bron:{' '}
+                {stat.bronUrl ? (
+                  <a href={stat.bronUrl} rel="noopener" class="underline">
+                    {stat.bron}
+                  </a>
+                ) : (
+                  stat.bron
+                )}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. FAQ -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <p class="eyebrow">Vragen</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Veelgestelde vragen.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          page.data.faq.map((faq) => (
+            <details class="group py-4">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-(--color-chalk) marker:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                  />
+                </span>
+              </summary>
+              <p class="mt-3 text-body text-(--color-dim)">{faq.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Verder lezen (hub-and-spoke) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <p class="eyebrow">Verder lezen</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        Meer voor {branch.labelPlural.toLowerCase()}.
+      </h2>
+      <ul class="mt-6 space-y-2 text-body text-(--color-dim)">
+        <li>
+          <a href={branch.href} class="text-(--color-sodium) underline">
+            Klantkraan voor {branch.labelPlural.toLowerCase()}: de complete oplossing
+          </a>
+        </li>
+        {
+          [...relatedPages, ...sameVertical].map((l) => (
+            <li>
+              <a href={l.href} class="text-(--color-sodium) underline">
+                {l.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. CTA -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <h2 class="font-display text-h1 text-(--color-chalk)">
+        Zien wat Klantkraan voor u opneemt?
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        De demo laat in twee minuten zien hoe de digitale receptionist uw klantvragen beantwoordt,
+        ook wanneer u op locatie zit.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg">Bekijk prijzen</a>
+      </div>
+    </div>
+  </section>
+
+  <JsonLd schema={schemas} />
+</Base>
