@@ -193,8 +193,8 @@ def collect_outreach(now: datetime) -> dict:
         "closed": done,
         "sequence_complete": at_last,
         "suppressed": suppressed,
-        # DSN/reply checking is IMAP on the Mac; lands here with Phase 1 step 5.
-        "dsn_note": "replies/DSNs: morning digest (Mac briefing merge pending)",
+        # Phase 1 step 5: replies/DSNs live in the 07:30 digest (app.mail_signals).
+        "dsn_note": "replies/DSNs: in the 07:30 morning digest",
     }
 
 

@@ -10,6 +10,9 @@ never replaces them.
 Internal ops alert -> English, matching the other notify.owner messages (the client-facing
 Dutch ROI PDF is Slice 4).
 
+The CLI path also appends the MAIL section (inbound replies/bounces via app.mail_signals,
+the merged remains of the retired Mac launchd briefing) so 07:30 is ONE morning message.
+
 CLI (the cron / systemd-timer entry point):
   python -m app.oversight digest         # build + send yesterday's digest
   python -m app.oversight digest --dry   # print it, don't send
@@ -27,7 +30,7 @@ from datetime import datetime, timedelta
 from datetime import time as dtime
 from typing import Any
 
-from . import analytics, notify, settings
+from . import analytics, mail_signals, notify, settings
 
 log = logging.getLogger("oversight")
 
@@ -98,7 +101,9 @@ def _day_window(now: datetime, today: bool) -> tuple[str, str, str]:
     return start.isoformat(timespec="seconds"), end.isoformat(timespec="seconds"), label
 
 
-def build_digest(now: datetime | None = None, today: bool = False) -> str:
+def build_digest(now: datetime | None = None, today: bool = False, mail: bool = False) -> str:
+    # mail=True (the CLI/timer path) appends the IMAP replies/bounces section; it stays off
+    # by default so library callers and tests never touch the network.
     now = now or datetime.now()
     start, end, label = _day_window(now, today)
     # Prior window of equal length, for the "went silent" signal.
@@ -119,6 +124,9 @@ def build_digest(now: datetime | None = None, today: bool = False) -> str:
             lines.append("NEEDS ATTENTION")
             for slug in went_silent:
                 lines.append(f"  ⚠ {_client_name(slug)} went quiet (had traffic, now none)")
+        if mail:
+            lines.append("")
+            lines.extend(mail_signals.digest_section(now))
         return "\n".join(lines)
 
     rows = []
@@ -190,16 +198,27 @@ def build_digest(now: datetime | None = None, today: bool = False) -> str:
         if upsell:
             lines.append("  upsell radar:")
             lines.extend(_top(upsell))
+    if mail:
+        lines.append("")
+        lines.extend(mail_signals.digest_section(now))
     return "\n".join(lines)
 
 
-def send_digest(now: datetime | None = None, today: bool = False) -> dict[str, bool]:
+def send_digest(
+    now: datetime | None = None,
+    today: bool = False,
+    mail: bool = False,
+    text: str | None = None,
+) -> dict[str, bool]:
     """Build the digest and push it to the founder: Telegram if configured, else e-mail.
 
     Returns which channels took it. A nightly timer whose output goes nowhere is worse than
     no timer, so the caller can tell the difference between delivered and merely printed.
+    Pass `text` when the digest is already built — the mail section does a real IMAP fetch,
+    which must not run twice for one send.
     """
-    text = build_digest(now, today)
+    if text is None:
+        text = build_digest(now, today, mail)
     subject = f"Klantkraan dagrapport {(now or datetime.now()).date().isoformat()}"
     return notify.owner_report(subject, text)
 
@@ -381,11 +400,11 @@ def main(argv: list[str]) -> int:
     cmd = argv[1] if len(argv) > 1 else ""
     if cmd == "digest":
         today = "--today" in argv
-        text = build_digest(today=today)
+        text = build_digest(today=today, mail=True)
         if "--dry" in argv:
             print(text)
             return 0
-        delivered = send_digest(today=today)
+        delivered = send_digest(today=today, text=text)
         print(text)
         took = [channel for channel, ok in delivered.items() if ok]
         if took:
