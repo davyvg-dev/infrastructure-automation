@@ -125,7 +125,7 @@ items only — never displaces dials.
 ### L. Marketing loop 1 — gemiste-omzet calculator + e-mailcursus (Phase 2.1 of research/PLAN-command-center-factory-2026-08-12.md)
 - [x] Step 1: `app/cursus.py` — subscriber ledger (data/cursus/), 4 Dutch lessons over Resend (day 0/2/5/9, one lesson per run max, List-Unsubscribe + HMAC afmeldlink, Idempotency-Keys), completion scored onto the pipeline board as inbound opt-in lead; mailer.py headers passthrough; CLI board/send/preview/add/stop/link; 18 offline tests, suite 268 green (f191538)
 - [x] Step 2: FastAPI opt-in — `POST /api/cursus` (JSON + no-JS 303 path, honeypot, rate limit, founder ping, fires les 1 via `send_due(only=...)`, failed send never fails the opt-in) + `GET /cursus/uitschrijven` confirm page (prefetch-safe) with `POST` doing the stop, incl. RFC 8058 one-click header; 13 endpoint tests, suite 281 green
-- [ ] Step 3: `klantkraan-cursus.timer` (daily) + deploy.sh wiring + `kk cursus` passthrough verb + LOG_UNITS alias
+- [x] Step 3: `klantkraan-cursus.timer` (daily 09:15, Persistent) + `klantkraan-cursus.service` (oneshot `app.cursus send`, OnFailure=kk-alert@) + deploy.sh copies both and enables the timer + `kk cursus` passthrough verb (default board) + `cursus` LOG_UNITS alias; 4 new planner tests (49 total in scripts/tests), ruff clean. Ships on next `kk deploy server`.
 - [ ] Step 4: site — rekentool grows the Werkspot-math panel + opt-in form (external JS per CSP), NL/EN/ES, deploy; keep the calculator itself e-mail-free (blog promises it)
 
 ## Phase 0 — Planning docs
