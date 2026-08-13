@@ -47,6 +47,7 @@ def send(
     html: str | None = None,
     reply_to: str | None = None,
     idempotency_key: str | None = None,
+    headers: dict[str, str] | None = None,
 ) -> bool:
     """Send one e-mail. True only if Resend accepted it.
 
@@ -74,11 +75,16 @@ def send(
     }
     if html:
         payload["html"] = html
-    headers = {"Authorization": f"Bearer {api_key}"}
+    if headers:
+        # Message headers ride in the payload (Resend renders them into the mail); only
+        # opt-in bulk mail uses this, for List-Unsubscribe. Verified against Resend docs
+        # via context7 2026-08-13: POST /emails accepts a `headers` object.
+        payload["headers"] = dict(headers)
+    req_headers = {"Authorization": f"Bearer {api_key}"}
     if idempotency_key:
-        headers["Idempotency-Key"] = idempotency_key[:256]
+        req_headers["Idempotency-Key"] = idempotency_key[:256]
     try:
-        resp = httpx.post(RESEND_API, json=payload, headers=headers, timeout=15)
+        resp = httpx.post(RESEND_API, json=payload, headers=req_headers, timeout=15)
     except httpx.HTTPError as exc:
         print(f"[mailer] send failed (unreachable: {exc}); to={to} subject={subject}")
         return False
