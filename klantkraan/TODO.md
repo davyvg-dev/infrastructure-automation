@@ -128,6 +128,46 @@ items only — never displaces dials.
 - [x] Step 3: `klantkraan-cursus.timer` (daily 09:15, Persistent) + `klantkraan-cursus.service` (oneshot `app.cursus send`, OnFailure=kk-alert@) + deploy.sh copies both and enables the timer + `kk cursus` passthrough verb (default board) + `cursus` LOG_UNITS alias; 4 new planner tests (49 total in scripts/tests), ruff clean. Ships on next `kk deploy server`.
 - [x] Step 4: site — rekentool grows the Werkspot-math panel (leads €3–75, ±€208/gewonnen klus per Adaptoo, "van ú" close) + e-mailcursus opt-in form (native POST → /api/cursus with ?cursus=ok|fout fallback, rekentool.js fetch() enhancement toggling per-locale markup, honeypot, CSP already allowed both paths), NL/EN/ES; calculator stays e-mail-free. Typecheck 0 errors, build green, form/action/scoped-hp verified in dist. NOT DEPLOYED: founder runs `kk deploy server` FIRST (ships /api/cursus + timer + Phase 1 steps 3–5, prints status-page password ONCE), THEN `kk deploy site` — site first would ship a form that 404s
 
+### M. Marketing loop 2 — vertical pSEO + GEO factory (Phase 2.2 of research/PLAN-command-center-factory-2026-08-12.md)
+~40–60 Dutch pages, vertical × problem × comparison. NEVER city×service: `wave2.ts` stays
+unwired and seo-strategy §S7's NO-GO stands. Data-product rules (agentic-marketing research §3
++ seo-strategy quality gates): boilerplate <60% per page, every page ≥1 unfakeable element,
+answer-first H2 openers, visible "laatst bijgewerkt", Organization-as-author. Stats policy
+(first-client research §1) is law: banned folklore list (62%/85%/voicemail/3-nummers), only
+sourced stats + the euro-math formula framing ("X gemiste calls × €Y per klus"). Pipeline
+reality (recon 2026-08-13): growth-engine drafts are social-post-shaped (2000-token schema,
+4096-char Telegram preview) so pages get their own draft kind delivered as a .md document; the
+server has no Node and Pages has no git integration, so approval never auto-deploys — approved
+pages land in the rsync-durable data dir, founder pulls and ships with `kk deploy site`.
+- [ ] Step 1: site foundation — `pseo` content collection (schema: title ≤60, description ≤155,
+      vertical over all 7 branches, type `probleem|vergelijking|hub`, targetKeyword, faq[],
+      stats-used incl. bron, laatstBijgewerkt, related slugs) + shared `JsonLd.astro` component
+      (factor the FAQPage builder out for new pages; retrofitting the 13 inline copies is a
+      later cleanup) + one top-level dynamic route rendering the collection (answer-first
+      sections, `<details>` FAQ, BreadcrumbList + FAQPage + Article JSON-LD, VerderLezen +
+      hub-and-spoke link block, NL-only per the i18n pattern) + 2 hand-written seed pages
+      proving template + boilerplate ratio (1 probleem, 1 vergelijking); copy-lint clean,
+      typecheck + build + eyeball
+- [ ] Step 2: data layer + inventory — `src/data/pseo.ts` (approved-stats registry with
+      bron+datum, per-vertical euro-math table, competitor/pricing table from
+      competitor-pricing.md + website-market-pricing incl. STUDIOLEE/LoodgieterAI) +
+      `pseo-inventory.json`: ~40–60 planned slugs (7 verticals × problems, ~12 comparisons,
+      2–3 hubs) with target keyword + angle + data-block refs; JSON so Astro imports it for
+      link blocks AND the server-side drafter reads the rsynced copy. FOUNDER gate: approve the
+      inventory before drafting starts
+- [ ] Step 3: drafter — growth-engine page module: nightly in-process JobQueue job in the bot
+      (one page/night ≈ 30/mo, no cross-process queue.json writes), own draft schema with
+      page-sized max_tokens, prompt carries the stats registry + banned list + boilerplate
+      rule, page-specific verify criteria (invented stats, u-register, em-dashes, founder
+      name), body stored under durable `data/<vertical>/pages/`, Telegram delivery = summary +
+      .md document + approve/rewrite/skip buttons, approve only marks approved (no publisher
+      fanout), GROWTH_ENGINE_DRY_RUN honored; offline tests in growth-engine/tests
+- [ ] Step 4: ship path + GEO — `kk pages` verb (board: inventory vs drafted vs approved vs
+      live; `kk pages pull` rsyncs approved .md into `src/content/pseo/`), llms.txt section
+      refreshed from the collection at build time, close the gidsen JSON-LD gap, deploy stays
+      founder-run `kk deploy site` after eyeballing pulled pages; verify sitemap pickup +
+      schema validity + copy-lint on pulled content
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
