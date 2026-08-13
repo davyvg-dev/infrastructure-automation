@@ -1,0 +1,13 @@
+[Unit]
+Description=Klantkraan status page generator (local ledgers -> /var/www/status/index.html)
+After=network-online.target
+OnFailure=kk-alert@%n.service
+
+[Service]
+Type=oneshot
+# app user: reads analytics.db, billing.jsonl, growth-engine queues and (read-only)
+# systemctl; writes only /var/www/status, which deploy.sh chowns to klantkraan.
+# WorkingDirectory must be the app dir so the generator's app.* imports resolve.
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python /opt/klantkraan/ops/status/generate.py --html /var/www/status/index.html

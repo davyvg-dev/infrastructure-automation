@@ -45,8 +45,13 @@ LOG_UNITS = {
     "digest": "ai-receptionist-digest",
     "growth": "growth-engine",
     "seo": "growth-engine-seo",
+    "status": "klantkraan-status",
     "caddy": "caddy",
 }
+
+# Where `kk status push` lands the Mac-side deal/outreach snapshot on the server: the
+# status generator falls back to this file when the host has no pipeline data.
+SNAPSHOT_REMOTE = "/opt/klantkraan/ai-receptionist/data/status-snapshot.json"
 
 USAGE = """\
 kk — Klantkraan command center
@@ -61,6 +66,9 @@ kk — Klantkraan command center
   kk leads [n]                   last n records across the local lead stores (default 20)
   kk evals [list|<name|pack>]    run chat goldens (default: run all)
   kk billing [sub] [args]        passthrough to app.billing (default: status)
+  kk status                      full status board in the terminal (local data)
+  kk status open                 render the HTML status page and open it
+  kk status push                 push the deal/outreach snapshot to the server page
   kk health                      watchdog check+deep, server timers, /health
   kk logs <unit|alias> [n]       journalctl on the server (default 150 lines)
   kk deploy site|server          site: typecheck+build+wrangler; server: evals gate then deploy.sh
@@ -91,6 +99,13 @@ def _venv_py(root: Path, app: str) -> str:
 def _air(root: Path, *module_args: str, tolerant: bool = False) -> Step:
     air = root / "ai-receptionist"
     return Step(air, [_venv_py(root, "ai-receptionist"), "-m", *module_args], tolerant)
+
+
+def _air_script(root: Path, script: str, *args: str) -> Step:
+    """A plain script run with the ai-receptionist venv, cwd'd into the app so the
+    script's app.* imports resolve (the status generator needs both)."""
+    air = root / "ai-receptionist"
+    return Step(air, [_venv_py(root, "ai-receptionist"), script, *args])
 
 
 def enforce_outreach_limit(args: list[str]) -> list[str]:
@@ -151,6 +166,28 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
 
     if verb == "billing":
         return [_air(root, "app.billing", *(args or ["status"]))]
+
+    if verb == "status":
+        gen = str(root / "ops" / "status" / "generate.py")
+        sub = args[0] if args else "ansi"
+        if sub == "ansi":
+            return [_air_script(root, gen, "--ansi")]
+        if sub == "open":
+            page = "/tmp/kk-status.html"
+            return [
+                _air_script(root, gen, "--html", page),
+                Step(root, ["open", page]),
+            ]
+        if sub == "push":
+            snap = "/tmp/kk-status-snapshot.json"
+            return [
+                _air_script(root, gen, "--snapshot", snap),
+                Step(root, ["scp", snap, f"root@{SERVER_IP}:{SNAPSHOT_REMOTE}"]),
+                Step(root, ["ssh", f"root@{SERVER_IP}",
+                            (f"chown klantkraan:klantkraan {SNAPSHOT_REMOTE} && "
+                             "systemctl start klantkraan-status.service")]),
+            ]
+        raise UsageError(f"unknown status subverb: {sub}")
 
     if verb == "health":
         return [

@@ -151,6 +151,43 @@ def test_logs_requires_unit():
         kk.plan("logs", [], ROOT)
 
 
+# -- status ------------------------------------------------------------------
+
+
+GEN = str(ROOT / "ops" / "status" / "generate.py")
+
+
+def test_status_default_renders_ansi_from_the_app_dir():
+    # cwd must be the app dir: the generator imports app.* / scripts.* from there.
+    (step,) = kk.plan("status", [], ROOT)
+    assert step.cwd == AIR
+    assert step.argv == [AIR_PY, GEN, "--ansi"]
+
+
+def test_status_open_renders_html_then_opens_it():
+    steps = kk.plan("status", ["open"], ROOT)
+    assert steps[0].argv[:3] == [AIR_PY, GEN, "--html"]
+    page = steps[0].argv[3]
+    assert steps[1].argv == ["open", page]
+
+
+def test_status_push_ships_snapshot_then_regenerates_remote_page():
+    steps = kk.plan("status", ["push"], ROOT)
+    assert steps[0].argv[:3] == [AIR_PY, GEN, "--snapshot"]
+    snap = steps[0].argv[3]
+    assert steps[1].argv[0] == "scp" and steps[1].argv[1] == snap
+    assert kk.SNAPSHOT_REMOTE in steps[1].argv[2]
+    # remote follow-up must hand the file to the app user and regenerate immediately
+    assert steps[2].argv[0] == "ssh"
+    assert "chown klantkraan:klantkraan" in steps[2].argv[-1]
+    assert "klantkraan-status.service" in steps[2].argv[-1]
+
+
+def test_status_unknown_subverb_raises():
+    with pytest.raises(kk.UsageError):
+        kk.plan("status", ["frobnicate"], ROOT)
+
+
 # -- deploy ------------------------------------------------------------------
 
 
