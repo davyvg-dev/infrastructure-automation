@@ -122,6 +122,12 @@ items only — never displaces dials.
 - [x] Step 5: briefing merged into the 07:30 digest — `app/mail_signals.py` (read-only IMAP: last-24h replies + DSN/bounces with failed-recipient extraction, MAIL_WATCH_SENDERS pins live deals) appended by the digest CLI/timer path only; `ops/briefing/` deleted (plist was never installed). Server needs GMAIL_USER+GMAIL_APP_PASSWORD in ai-receptionist/.env or the digest says "MAIL: skipped". 10 new offline tests, live --dry verified against the real inbox.
 - [x] §C5 defects 6–8 closed: 6 = `docs/regressions.md` created (two-line header, /log-regression appends); 7 = false alarm, `BUFFER_CHANNEL_LINKEDIN` is live config via `channel_for()`'s dynamic `BUFFER_CHANNEL_<PLATFORM>` lookup (publish_buffer.py, shipped 2026-07-30 — the audit grep missed the f-string); 8 = rewrite/recording waits moved from chat_data to a durable `awaiting` field on the draft record + `_post_init` resurfaces delivered-but-undecided drafts (buttons only, no media re-upload); 4 new offline tests in growth-engine/tests/test_awaiting_restart.py. Defect 5 closed with step 3; the founder still owes OWNER_TELEGRAM_CHAT_ID or OWNER_EMAIL+RESEND_API_KEY in the server's ai-receptionist/.env (`kk health` shows which)
 
+### L. Marketing loop 1 — gemiste-omzet calculator + e-mailcursus (Phase 2.1 of research/PLAN-command-center-factory-2026-08-12.md)
+- [x] Step 1: `app/cursus.py` — subscriber ledger (data/cursus/), 4 Dutch lessons over Resend (day 0/2/5/9, one lesson per run max, List-Unsubscribe + HMAC afmeldlink, Idempotency-Keys), completion scored onto the pipeline board as inbound opt-in lead; mailer.py headers passthrough; CLI board/send/preview/add/stop/link; 18 offline tests, suite 268 green (f191538)
+- [ ] Step 2: FastAPI opt-in — `POST /api/cursus` (JSON + no-JS form path, honeypot, rate limit, founder ping, fires les 1 via `send_due(only=...)`) + `GET /cursus/uitschrijven` token-checked afmeldpagina
+- [ ] Step 3: `klantkraan-cursus.timer` (daily) + deploy.sh wiring + `kk cursus` passthrough verb + LOG_UNITS alias
+- [ ] Step 4: site — rekentool grows the Werkspot-math panel + opt-in form (external JS per CSP), NL/EN/ES, deploy; keep the calculator itself e-mail-free (blog promises it)
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
