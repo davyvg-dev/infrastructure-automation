@@ -252,13 +252,13 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.edit_message_reply_markup(reply_markup=None)
         await query.message.reply_text("❌ Skipped.")
     elif action == "rewrite":
-        context.chat_data["awaiting_note"] = draft_id
+        store.update_draft(draft_id, awaiting="note")
         await query.message.reply_text(
             "✏️ Send me a one-line note and I'll rewrite this draft "
             "(e.g. 'punchier hook', 'make it Dutch', 'shorter')."
         )
     elif action == "record":
-        context.chat_data["awaiting_recording"] = draft_id
+        store.update_draft(draft_id, awaiting="recording")
         await query.message.reply_text(
             "🎬 Send me the screen recording (as a video message — bots can't download "
             "files over 20MB) and I'll cut it into a branded reel."
@@ -404,13 +404,21 @@ async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
             await context.bot.send_message(chat_id, variants[platform])
 
 
+def _awaiting_draft(kind: str) -> dict | None:
+    """The pending draft waiting on founder input of this kind. The flag lives on
+    the draft record, not in chat_data, so it survives bot restarts."""
+    waiting = [
+        d for d in store.load_queue() if d.get("awaiting") == kind and d["status"] == "pending"
+    ]
+    return waiting[-1] if waiting else None
+
+
 async def on_note(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    draft_id = context.chat_data.pop("awaiting_note", None)
-    if not draft_id:
-        return  # not a rewrite note; ignore
-    draft = store.get_draft(draft_id)
+    draft = _awaiting_draft("note")
     if draft is None:
-        return
+        return  # not a rewrite note; ignore
+    draft_id = draft["id"]
+    store.update_draft(draft_id, awaiting=None)
     note = update.message.text.strip()
     await update.message.reply_text("Rewriting…")
     new_variants = {}
@@ -432,16 +440,14 @@ async def on_note(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """A video arrived: fulfill the draft's recording task by building the reel."""
-    draft_id = context.chat_data.pop("awaiting_recording", None)
+    draft = _awaiting_draft("recording")
     msg = update.message
-    if not draft_id:
+    if draft is None:
         await msg.reply_text(
             "Got a video, but no draft is waiting for one — tap 🎬 on a draft first."
         )
         return
-    draft = store.get_draft(draft_id)
-    if draft is None:
-        return
+    draft_id = draft["id"]
     await msg.reply_text("🎬 Building the reel…")
     raw_path = data_dir() / "media" / "raw" / f"{draft_id}-raw.mp4"
     raw_path.parent.mkdir(parents=True, exist_ok=True)
@@ -458,8 +464,7 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
             card.get("sub", "").strip(),
         )
     except Exception as exc:
-        # Keep the task open so the founder can just resend the clip.
-        context.chat_data["awaiting_recording"] = draft_id
+        # `awaiting` stays set on the draft, so the founder can just resend the clip.
         await msg.reply_text(
             f"⚠️ Reel build failed: {exc}\nSend the clip again to retry "
             f"(a compressed video message avoids the 20MB bot download limit)."
@@ -468,7 +473,7 @@ async def on_recording(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     # Real footage supersedes the whole video story: the pending task it fulfills
     # AND any scripted demo reel attached at generation time.
     media_list = [m for m in draft.get("media", []) if m["type"] != "video"] + [record]
-    draft = store.update_draft(draft_id, media=media_list) or draft
+    draft = store.update_draft(draft_id, media=media_list, awaiting=None) or draft
     with open(record["path"], "rb") as fh:
         await msg.reply_video(fh, caption="🎬 reel — save & attach")
     # A matching cover (same scheme as the draft's cards) — set it in-app when
@@ -524,9 +529,8 @@ async def _post_init(app: Application) -> None:
         "🚀 Growth Engine started and scheduled. Send /now for a draft, or wait for the "
         "next scheduled run.",
     )
-    stuck = [
-        d for d in store.load_queue() if d["status"] == "pending" and not d.get("delivered_at")
-    ]
+    pending = [d for d in store.load_queue() if d["status"] == "pending"]
+    stuck = [d for d in pending if not d.get("delivered_at")]
     if stuck:
         await app.bot.send_message(
             chat_id, f"📬 Resending {len(stuck)} draft(s) that never reached you:"
@@ -537,6 +541,25 @@ async def _post_init(app: Application) -> None:
         except Exception:
             logging.getLogger(__name__).exception(
                 "Redelivery of %s failed; will retry on next start", draft["id"]
+            )
+    # Delivered but never decided: resend the approval message (buttons only, media
+    # was already delivered once) so open drafts don't die in Telegram scroll-back.
+    waiting = [d for d in pending if d.get("delivered_at")]
+    if waiting:
+        await app.bot.send_message(
+            chat_id, f"⏳ {len(waiting)} draft(s) still await your decision:"
+        )
+    for draft in waiting:
+        try:
+            await app.bot.send_message(
+                chat_id=chat_id,
+                text=formatting.preview(draft),
+                parse_mode=ParseMode.MARKDOWN_V2,
+                reply_markup=_keyboard(draft["id"], formatting.pending_reel(draft)),
+            )
+        except Exception:
+            logging.getLogger(__name__).exception(
+                "Resurfacing %s failed; will retry on next start", draft["id"]
             )
 
 
