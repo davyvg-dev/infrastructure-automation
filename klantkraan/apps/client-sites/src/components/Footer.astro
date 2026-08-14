@@ -1,0 +1,74 @@
+---
+import { loadClient } from '../lib/client'
+import { openingstijdenRegels, plaatsSlug, telHref } from '../lib/format'
+
+// Footer: KvK + btw-id, adres, werkgebied, openingstijden, legal links.
+const { config } = loadClient()
+const { bedrijf } = config
+const regels = openingstijdenRegels(config.openingstijden)
+const jaar = new Date().getFullYear()
+---
+
+<footer class="mt-16 border-t border-(--color-line) bg-(--color-card)">
+  <div class="mx-auto grid max-w-5xl gap-10 px-6 py-12 sm:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <h2 class="text-h3">{bedrijf.naam}</h2>
+      <address class="mt-3 text-small text-(--color-mist) not-italic">
+        {bedrijf.adres.straat}<br />
+        {bedrijf.adres.postcode} {bedrijf.adres.plaats}
+      </address>
+      <p class="mt-3 text-small text-(--color-mist)">
+        KvK: {bedrijf.kvk}<br />
+        Btw-id: {bedrijf.btw_id}
+      </p>
+    </div>
+    <div>
+      <h2 class="text-h3">Contact</h2>
+      <ul role="list" class="mt-3 space-y-1 text-small">
+        <li><a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a></li>
+        <li><a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a></li>
+      </ul>
+      {
+        config.receptionist && (
+          <p class="mt-3 text-small text-(--color-mist)">
+            Telefonisch en via chat dag en nacht bereikbaar.
+          </p>
+        )
+      }
+    </div>
+    <div>
+      <h2 class="text-h3">Openingstijden</h2>
+      <ul role="list" class="mt-3 space-y-1 text-small text-(--color-mist)">
+        {
+          regels.map((r) => (
+            <li class="flex justify-between gap-4">
+              <span>{r.dag}</span>
+              <span>{r.tijden}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h2 class="text-h3">Werkgebied</h2>
+      <ul role="list" class="mt-3 space-y-1 text-small">
+        {
+          bedrijf.werkgebied.map((plaats) => (
+            <li>
+              <a href={`/werkgebied/${plaatsSlug(plaats)}/`}>{plaats}</a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul role="list" class="mt-5 space-y-1 text-small">
+        <li><a href="/privacyverklaring/">Privacyverklaring</a></li>
+        <li><a href="/voorwaarden/">Algemene voorwaarden</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-(--color-line)">
+    <p class="mx-auto max-w-5xl px-6 py-4 text-small text-(--color-mist)">
+      &copy; {jaar} {bedrijf.naam}. Deze website gebruikt geen cookies en geen trackers.
+    </p>
+  </div>
+</footer>

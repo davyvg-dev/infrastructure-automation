@@ -1,0 +1,52 @@
+---
+import Icon from './Icon.astro'
+import { loadClient } from '../lib/client'
+import { capitalize, telHref, waHref } from '../lib/format'
+
+// Hero: one promise, one number to call. Adapted from the marketing-site
+// dakdekkers Hero, stripped of statistics (no-stats policy: zero numeric claims).
+const { config } = loadClient()
+const { bedrijf } = config
+const vak = capitalize(bedrijf.vak)
+const [d1, d2, d3] = config.diensten.slice(0, 3).map((d) => d.naam.toLowerCase())
+---
+
+<section class="border-b border-(--color-line) bg-(--color-card)">
+  <div class="mx-auto max-w-5xl px-6 py-14 md:py-20">
+    <p class="text-small font-semibold tracking-wide text-(--brand-primary) uppercase">
+      {vak} in {bedrijf.adres.plaats} en omgeving
+    </p>
+    <h1 class="mt-3 max-w-3xl text-h1">
+      {bedrijf.naam}: vakwerk waar u op kunt rekenen.
+    </h1>
+    <p class="mt-5 max-w-2xl text-(--color-mist)">
+      Van {d1} en {d2} tot {d3}: u belt, wij komen langs en u weet vooraf waar u aan toe bent.
+      {config.spoed.beschikbaar && ' Ook bij spoed staan wij voor u klaar.'}
+    </p>
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a href={telHref(bedrijf.telefoon)} class="btn btn-call text-lg">
+        <Icon name="phone" class="h-5 w-5" />
+        <span>Bel {bedrijf.telefoon}</span>
+      </a>
+      {
+        bedrijf.whatsapp ? (
+          <a href={waHref(bedrijf.whatsapp)} target="_blank" rel="noopener" class="btn btn-outline">
+            <Icon name="whatsapp" class="h-5 w-5" />
+            <span>Stuur een WhatsApp</span>
+          </a>
+        ) : (
+          <a href="/diensten/" class="btn btn-outline">
+            Bekijk onze diensten
+          </a>
+        )
+      }
+    </div>
+    {
+      config.receptionist && (
+        <p class="mt-4 text-small text-(--color-mist)">
+          Dag en nacht bereikbaar, ook buiten werktijd nemen wij uw melding direct aan.
+        </p>
+      )
+    }
+  </div>
+</section>

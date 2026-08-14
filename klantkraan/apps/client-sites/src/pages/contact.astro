@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import { loadClient } from '../lib/client'
+import { openingstijdenRegels, telHref, waHref } from '../lib/format'
+
+// Contact: tel, WhatsApp (when present), e-mail, adres, openingstijden.
+// Deliberately NO contact form: forms need spam handling and delay the
+// conversation; click-to-call is the conversion path.
+const { config } = loadClient()
+const { bedrijf } = config
+const regels = openingstijdenRegels(config.openingstijden)
+const title = `Contact | ${bedrijf.naam}`
+const description = `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon} of stuur een e-mail naar ${bedrijf.email}.`
+---
+
+<Base title={title} description={description}>
+  <section class="mx-auto max-w-5xl px-6 py-12 md:py-16">
+    <h1 class="text-h1">Contact</h1>
+    <p class="mt-4 max-w-2xl text-(--color-mist)">
+      Bellen werkt het snelst: u legt uw situatie uit en wij plannen direct een afspraak in.
+      {
+        config.receptionist &&
+          ' Wij zijn 24/7 bereikbaar; ook buiten werktijd wordt uw melding direct aangenomen.'
+      }
+    </p>
+
+    <div class="mt-10 grid gap-8 md:grid-cols-2">
+      <div class="card p-8">
+        <h2 class="text-h3">Direct contact</h2>
+        <ul role="list" class="mt-5 space-y-4">
+          <li>
+            <a href={telHref(bedrijf.telefoon)} class="btn btn-call">
+              <Icon name="phone" class="h-5 w-5" />
+              <span>Bel {bedrijf.telefoon}</span>
+            </a>
+          </li>
+          {
+            bedrijf.whatsapp && (
+              <li>
+                <a
+                  href={waHref(bedrijf.whatsapp)}
+                  target="_blank"
+                  rel="noopener"
+                  class="btn btn-outline"
+                >
+                  <Icon name="whatsapp" class="h-5 w-5" />
+                  <span>Stuur een WhatsApp</span>
+                </a>
+              </li>
+            )
+          }
+          <li class="flex items-center gap-3 text-small">
+            <Icon name="mail" class="h-5 w-5 shrink-0 text-(--brand-primary)" />
+            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+          </li>
+          <li class="flex items-start gap-3 text-small text-(--color-mist)">
+            <Icon name="map-pin" class="mt-0.5 h-5 w-5 shrink-0 text-(--brand-primary)" />
+            <address class="not-italic">
+              {bedrijf.naam}<br />
+              {bedrijf.adres.straat}<br />
+              {bedrijf.adres.postcode} {bedrijf.adres.plaats}
+            </address>
+          </li>
+        </ul>
+      </div>
+      <div class="card p-8">
+        <h2 class="text-h3">Openingstijden</h2>
+        <ul role="list" class="mt-5 max-w-xs space-y-1 text-small text-(--color-mist)">
+          {
+            regels.map((r) => (
+              <li class="flex justify-between gap-6">
+                <span>{r.dag}</span>
+                <span>{r.tijden}</span>
+              </li>
+            ))
+          }
+        </ul>
+        {
+          config.spoed.beschikbaar && (
+            <p class="mt-5 text-small text-(--color-mist)">
+              {config.spoed.tekst ?? 'Bij spoed kunt u ons altijd bellen.'}
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Base>

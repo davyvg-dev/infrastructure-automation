@@ -1,0 +1,29 @@
+---
+import { loadClient } from '../lib/client'
+
+// Reviews: plain-text quotes only, rendered only when the client supplied
+// them (max 3, capped by the schema). Deliberately NO review/aggregateRating
+// JSON-LD: self-serving review markup is a Google manual-action risk.
+const { config } = loadClient()
+const reviews = config.reviews
+---
+
+{
+  reviews.length > 0 && (
+    <section class="mx-auto max-w-5xl px-6 py-12 md:py-16">
+      <h2 class="text-h2">Wat klanten zeggen</h2>
+      <ul role="list" class="mt-8 grid gap-5 md:grid-cols-3">
+        {reviews.map((review) => (
+          <li class="card p-6">
+            <blockquote>
+              <p class="text-(--color-ink)">&ldquo;{review.tekst}&rdquo;</p>
+              <footer class="mt-4 text-small text-(--color-mist)">
+                {review.naam}, {review.plaats}
+              </footer>
+            </blockquote>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

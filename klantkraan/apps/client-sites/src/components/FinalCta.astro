@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro'
+import { loadClient } from '../lib/client'
+import { telHref, waHref } from '../lib/format'
+
+// Final CTA band: brand-primary surface, click-to-call as the only real action.
+const { config } = loadClient()
+const { bedrijf } = config
+---
+
+<section class="mx-auto max-w-5xl px-6 pb-4">
+  <div
+    class="rounded-(--radius-card) p-8 text-white md:p-12"
+    style="background-color: var(--brand-primary)"
+  >
+    <h2 class="text-h2">Vertel ons wat er speelt</h2>
+    <p class="mt-3 max-w-2xl text-white/85">
+      Bel ons en leg uw situatie voor. U krijgt direct een eerlijk antwoord en een duidelijke
+      afspraak.
+    </p>
+    <div class="mt-7 flex flex-wrap items-center gap-4">
+      <a
+        href={telHref(bedrijf.telefoon)}
+        class="btn bg-white text-(--brand-primary) hover:bg-white/90"
+      >
+        <Icon name="phone" class="h-5 w-5" />
+        <span>Bel {bedrijf.telefoon}</span>
+      </a>
+      {
+        bedrijf.whatsapp && (
+          <a
+            href={waHref(bedrijf.whatsapp)}
+            target="_blank"
+            rel="noopener"
+            class="btn border border-white/60 text-white hover:bg-white/10"
+          >
+            <Icon name="whatsapp" class="h-5 w-5" />
+            <span>Stuur een WhatsApp</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

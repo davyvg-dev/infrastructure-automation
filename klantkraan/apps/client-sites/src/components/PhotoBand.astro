@@ -1,0 +1,41 @@
+---
+import { loadClient } from '../lib/client'
+
+// Photo band: the client's own work photos when present (clients/<slug>/fotos/),
+// otherwise a calm decorative color-block band in the brand colors. Never stock
+// photos, never AI images: real work or nothing.
+const { config, fotos } = loadClient()
+const shown = fotos.slice(0, 6)
+---
+
+{
+  shown.length > 0 ? (
+    <section aria-label="Foto's van ons werk" class="border-y border-(--color-line) bg-(--color-card)">
+      <ul
+        role="list"
+        class="mx-auto grid max-w-5xl grid-cols-2 gap-2 px-6 py-8 sm:grid-cols-3 md:grid-cols-6"
+      >
+        {shown.map((src) => (
+          <li>
+            <img
+              src={src}
+              alt={`Werk van ${config.bedrijf.naam}`}
+              loading="lazy"
+              decoding="async"
+              class="aspect-square w-full rounded-(--radius-card) object-cover"
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : (
+    <div aria-hidden="true" class="grid h-16 grid-cols-6 md:h-20">
+      <div style="background-color: var(--brand-primary)" />
+      <div style="background-color: color-mix(in oklab, var(--brand-primary) 70%, white)" />
+      <div style="background-color: color-mix(in oklab, var(--brand-primary) 40%, white)" />
+      <div style="background-color: color-mix(in oklab, var(--brand-accent) 45%, white)" />
+      <div style="background-color: color-mix(in oklab, var(--brand-accent) 75%, white)" />
+      <div style="background-color: var(--brand-accent)" />
+    </div>
+  )
+}

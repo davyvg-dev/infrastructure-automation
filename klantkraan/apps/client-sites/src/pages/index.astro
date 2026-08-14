@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro'
+import Hero from '../components/Hero.astro'
+import Intro from '../components/Intro.astro'
+import Diensten from '../components/Diensten.astro'
+import PhotoBand from '../components/PhotoBand.astro'
+import Werkgebied from '../components/Werkgebied.astro'
+import Usps from '../components/Usps.astro'
+import Reviews from '../components/Reviews.astro'
+import SpoedPanel from '../components/SpoedPanel.astro'
+import FinalCta from '../components/FinalCta.astro'
+import { loadClient } from '../lib/client'
+import { capitalize, somOp } from '../lib/format'
+
+const { config } = loadClient()
+const { bedrijf } = config
+const title = `${bedrijf.naam} | ${capitalize(bedrijf.vak)} in ${bedrijf.adres.plaats} en omgeving`
+const description = `${bedrijf.naam} is uw ${bedrijf.vak} in ${somOp(bedrijf.werkgebied)}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`
+---
+
+<Base title={title} description={description}>
+  <Hero />
+  <Intro />
+  <Diensten />
+  <PhotoBand />
+  <Werkgebied />
+  <Usps />
+  <Reviews />
+  <SpoedPanel />
+  <FinalCta />
+</Base>
