@@ -281,8 +281,9 @@ verifiable sales feature), KvK+btw footer, privacyverklaring names the reception
 The kit could only build a site for someone who had already bought, so it could not help with
 the one blocker that was actually open (no buyer). Q turns the factory into outreach ammunition:
 a real, working, noindexed proposal site per prospect, built from public sources in ~10 founder
-minutes. Deliberately NOT built: TransIP automation, an og:image pipeline, per-dienst pages,
-client-site monitoring, a public /website sales page.
+minutes. Deliberately NOT built: TransIP automation, per-dienst pages, client-site monitoring,
+a public /website sales page. (An og:image pipeline was on this list until Q9 — the photo rework
+gave the page a photograph worth cutting a share card from, which is why it was cheap.)
 - [x] Q1 (d07ed30): `modus: preview | live` required in the schema (no default: a forgotten
       mode must fail, never silently publish a proposal or silently noindex a paying client).
       Live keeps every legal field mandatory; preview allows KvK/btw-id/e-mail/adres/domein to
@@ -322,6 +323,23 @@ client-site monitoring, a public /website sales page.
       name, so a `werkgebied/<plaats>/` that lost its index.html passed while every link to it
       404s — now counted from built HTML. 8-way sabotage battery otherwise clean; both fixtures
       build + gate in ~4s; all `kk site` refusals hold. 16 sitedraft tests (+4), 73 kk tests.
+- [x] Q9 (6b40573, 503a253, 6f231e2): the photography. The site's only imagery was six equal
+      squares in one flat row, and the hero had no photo at all — a contact sheet between two
+      blocks of text. Twelve award-level trade/construction sites (Koto, Leidner, Adriaans,
+      Zecc, Van Wijnen, Hobbs, Land Morphology) use no square content photos anywhere, so the
+      fix was the crop, not the CSS: stock-photos.py now cuts per role (3:2 hero, 2:3 tall and
+      3:2 wide tiles, 1200x630 share card) in WebP, the crop follows the subject, and the tile
+      order is TALL WIDE WIDE TALL TALL WIDE so the three-column fill ends level while the
+      seams stay ragged. The hero is split rather than text-over-photo (these frames are bright
+      at the top; a scrim heavy enough for white copy would muddy the photo). Each vak gained a
+      seventh photo to fill the gap in its own coverage — a Dutch aerial establishing shot for
+      dakdekker, a cv-verdeler for loodgieter. Every stock photo carries its own Dutch alt from
+      a generated `stock/<vak>/alt.json`, describing the frame and never who did the work; a
+      missing description fails the build. NOT done: no captions — the strongest pattern found
+      (service + city under each photo) would have a stock frame claim a job this client may
+      never have done. squirrelscan 76/C → 78/C, Images and Accessibility 100.
+  - [ ] FOUNDER: the two fixture vakken are done; every new vak still needs its own pass
+        against the picking rule (face-free, Northern European) and a 3-tall/3-wide split.
 
 ## Phase 0 — Planning docs
 
