@@ -5,48 +5,90 @@ import { capitalize, telHref, waHref } from '../lib/format'
 
 // Hero: one promise, one number to call. Adapted from the marketing-site
 // dakdekkers Hero, stripped of statistics (no-stats policy: zero numeric claims).
-const { config } = loadClient()
+//
+// Split rather than text-over-photo. A trade hero wants a photo in it -- a page whose
+// first screen is words on white reads as a template no matter how good the words are --
+// but the stock heroes are bright at the top (grey sky, white workshop wall), and white
+// copy over that needs a scrim heavy enough to muddy the photo it is there to show. So
+// the copy keeps the paper it is legible on and the photo takes the other half, bleeding
+// off the right edge on desktop the way the marketing-site Duties band does. That bleed
+// is the only place the page leaves its max-w-5xl column, which is what stops the whole
+// site reading as one long centred document.
+const { config, fotos, stock } = loadClient()
 const { bedrijf } = config
 const vak = capitalize(bedrijf.vak)
 const [d1, d2, d3] = config.diensten.slice(0, 3).map((d) => d.naam.toLowerCase())
+// Same honesty rule as the work section: the client's own photo is their work, a stock
+// frame is only ever "een dakdekker". First own photo wins -- intake asks for the best
+// shot first -- otherwise the vak's hero crop, otherwise no photo at all and the copy
+// simply spans the page.
+const heroSrc = fotos[0] ?? stock.hero?.src ?? null
+const heroAlt = fotos[0] ? `Werk van ${bedrijf.naam}` : `Werk van een ${bedrijf.vak}`
+// The -sm rendition is 750px wide and the photo is never drawn wider than ~46vw, so it
+// covers every phone at 2x; only the stock set has one.
+const heroSm = !fotos[0] && stock.hero ? stock.hero.src.replace(/\.webp$/, '-sm.webp') : null
 ---
 
-<section class="border-b border-(--color-line) bg-(--color-card)">
-  <div class="mx-auto max-w-5xl px-6 py-10 md:py-14">
-    <p class="text-small font-semibold tracking-wide text-(--brand-primary) uppercase">
-      {vak} in {bedrijf.adres.plaats} en omgeving
-    </p>
-    <h1 class="mt-3 max-w-3xl text-h1">
-      {bedrijf.naam}: vakwerk waar u op kunt rekenen.
-    </h1>
-    <p class="mt-5 max-w-2xl text-(--color-mist)">
-      Van {d1} en {d2} tot {d3}: u belt, wij komen langs en u weet vooraf waar u aan toe bent.
-      {config.spoed.beschikbaar && ' Ook bij spoed staan wij voor u klaar.'}
-    </p>
-    <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href={telHref(bedrijf.telefoon)} class="btn btn-call text-lg">
-        <Icon name="phone" class="h-5 w-5" />
-        <span>Bel {bedrijf.telefoon}</span>
-      </a>
+<section class="relative border-b border-(--color-line) bg-(--color-card)">
+  {
+    heroSrc && (
+      <div class="md:absolute md:inset-y-0 md:right-0 md:w-[46%]">
+        <img
+          src={heroSrc}
+          srcset={heroSm ? `${heroSm} 750w, ${heroSrc} 1500w` : undefined}
+          sizes={heroSm ? '(min-width: 768px) 46vw, 100vw' : undefined}
+          alt={heroAlt}
+          fetchpriority="high"
+          decoding="async"
+          class="aspect-3/2 w-full object-cover md:aspect-auto md:h-full md:rounded-l-[1.25rem]"
+        />
+      </div>
+    )
+  }
+  <div class="relative mx-auto max-w-5xl px-6 py-10 md:grid md:grid-cols-2 md:py-20">
+    <div class="md:pr-8">
+      <p
+        class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase"
+      >
+        {vak} in {bedrijf.adres.plaats} en omgeving
+      </p>
+      <h1 class="mt-4 text-h1">
+        {bedrijf.naam}: vakwerk waar u op kunt rekenen.
+      </h1>
+      <p class="mt-5 text-(--color-mist)">
+        Van {d1} en {d2} tot {d3}: u belt, wij komen langs en u weet vooraf waar u aan toe bent.
+        {config.spoed.beschikbaar && ' Ook bij spoed staan wij voor u klaar.'}
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <a href={telHref(bedrijf.telefoon)} class="btn btn-call text-lg">
+          <Icon name="phone" class="h-5 w-5" />
+          <span>Bel {bedrijf.telefoon}</span>
+        </a>
+        {
+          bedrijf.whatsapp ? (
+            <a
+              href={waHref(bedrijf.whatsapp)}
+              target="_blank"
+              rel="noopener"
+              class="btn btn-outline"
+            >
+              <Icon name="whatsapp" class="h-5 w-5" />
+              <span>Stuur een WhatsApp</span>
+            </a>
+          ) : (
+            <a href="/diensten/" class="btn btn-outline">
+              Bekijk onze diensten
+            </a>
+          )
+        }
+      </div>
       {
-        bedrijf.whatsapp ? (
-          <a href={waHref(bedrijf.whatsapp)} target="_blank" rel="noopener" class="btn btn-outline">
-            <Icon name="whatsapp" class="h-5 w-5" />
-            <span>Stuur een WhatsApp</span>
-          </a>
-        ) : (
-          <a href="/diensten/" class="btn btn-outline">
-            Bekijk onze diensten
-          </a>
+        config.receptionist && (
+          <p class="mt-4 text-small text-(--color-mist)">
+            Dag en nacht bereikbaar, ook buiten werktijd nemen wij uw melding direct aan.
+          </p>
         )
       }
     </div>
-    {
-      config.receptionist && (
-        <p class="mt-4 text-small text-(--color-mist)">
-          Dag en nacht bereikbaar, ook buiten werktijd nemen wij uw melding direct aan.
-        </p>
-      )
-    }
   </div>
 </section>

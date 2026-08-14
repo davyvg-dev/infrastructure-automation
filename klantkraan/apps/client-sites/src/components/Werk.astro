@@ -1,0 +1,112 @@
+---
+import { loadClient } from '../lib/client'
+
+// The work section, in order of preference:
+//   1. the client's own work photos (clients/<slug>/fotos/) -- always best, and what
+//      the intake checklist asks for;
+//   2. the stock set for their vak (stock/<vak>/, fetched by scripts/stock-photos.py)
+//      when they supplied none, which is always the case on a voorstel because we do
+//      not take a prospect's own images;
+//   3. nothing: the section drops out and the page still reads.
+// Still never AI images. Stock is a backdrop while we wait for real photos, never a
+// claim that this is the client's work: only the client's own photos get the "Werk van
+// <naam>" alt text and the "ons werk" heading, stock is described by trade instead.
+//
+// This used to be six equal squares in one flat row -- a contact sheet, and the loudest
+// "built from a template" signal a trade site can send. Surveying award-level trade and
+// construction sites (Koto, Harold Leidner, Adriaans, Zecc, Van Wijnen, Land Morphology)
+// turned up no square content photos at all and one repeated structure: two ratios, a
+// portrait and a landscape, staggered so the columns never level off. That is what this
+// renders. Three things carry it:
+//   - mixed 2:3 and 3:2 crops in a masonry, so no row lines up with the next;
+//   - an eyebrow and a heading, because a bare grid of photos with no framing is the
+//     cheapest tell there is (the Dutch template farms all ship exactly that);
+//   - a tinted full-bleed band and a wider column than the rest of the page, so the
+//     section boundary is a colour change rather than another hairline rule.
+// Deliberately no captions: with generic stock the only honest caption would be the
+// trade name repeated five times, and the sites that do this best (Van Wijnen, Zecc)
+// caption nothing and let the heading carry the meaning. Synthesising "Pannendak
+// Utrecht" under a stock photo would read as a case study we never did.
+const { config, fotos, stock } = loadClient()
+const { bedrijf } = config
+
+// Hero.astro spends fotos[0] on the hero, so the gallery starts at the second photo; a
+// client who supplied exactly one photo gets a hero and no gallery rather than the same
+// frame twice. Capped so a client who sends forty holiday snaps still gets a page.
+const ownTiles = fotos.slice(1, 10)
+const own = ownTiles.length > 0
+
+// Client photos have no rendition pipeline (intake asks for web-ready files), so their
+// ratios are unknown at build time. Forcing them into the same tall/wide rhythm as the
+// stock set both reserves the box -- no reflow as they load -- and gives every client
+// site the same considered stagger. The cycle starts tall and puts the landscape frames
+// at 2 and 5, matching how the stock sets are cut.
+const CYCLE = ['tall', 'wide', 'tall', 'tall', 'wide'] as const
+const tiles = own
+  ? ownTiles.map((src, i) => ({ src, shape: CYCLE[i % CYCLE.length], width: 0, height: 0 }))
+  : stock.tiles.map((t) => ({
+      src: t.src,
+      shape: t.height > t.width ? ('tall' as const) : ('wide' as const),
+      width: t.width,
+      height: t.height,
+    }))
+
+// The client's own photos are informative -- they are the evidence -- so they get real
+// alt text. Stock tiles get alt="", the decorative-image contract: five images repeating
+// "Werk van een dakdekker" is five identical announcements for a screen reader, and an
+// empty alt is also the most honest thing we can say about a frame that is not this
+// client's work. The heading above them already carries the meaning.
+const alt = own ? `Werk van ${bedrijf.naam}` : ''
+// Tiles are drawn ~330px wide on a three-column desktop and ~170px on a two-column
+// phone, so the -sm rendition covers everything up to a 2x phone; stock only, since a
+// client photo has no second rendition to point at.
+const srcset = (src: string) => `${src.replace(/\.webp$/, '-sm.webp')} 400w, ${src} 800w`
+---
+
+{
+  tiles.length > 0 && (
+    <section
+      aria-labelledby="werk-titel"
+      class="border-y border-(--color-line)"
+      style="background-color: color-mix(in oklab, var(--brand-primary) 5%, var(--color-paper))"
+    >
+      <div class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
+          {own ? 'Ons werk' : 'Sfeerbeeld'}
+        </p>
+        <h2 id="werk-titel" class="mt-4 max-w-2xl text-h2">
+          {own ? 'Een greep uit ons werk.' : `Zo ziet het werk van een ${bedrijf.vak} eruit.`}
+        </h2>
+
+        {/*
+         * One column on a phone, not two. Two columns inside the page gutter draws a
+         * 163px photo, which is the size the marketing-site band already learned reads
+         * as a widget rather than a photograph -- and "the photos are too small" is the
+         * complaint this rewrite exists to answer. A phone gets one 340px-wide frame
+         * instead; the set costs more scroll there, which is the right trade for the one
+         * viewport most of these visitors actually use.
+         */}
+        <ul role="list" class="mt-10 gap-4 columns-1 sm:columns-2 md:mt-14 md:columns-3">
+          {tiles.map(({ src, shape, width, height }) => (
+            <li class="mb-4 break-inside-avoid">
+              <img
+                src={src}
+                srcset={own ? undefined : srcset(src)}
+                sizes={own ? undefined : '(min-width: 768px) 330px, 45vw'}
+                width={own ? undefined : width}
+                height={own ? undefined : height}
+                alt={alt}
+                loading="lazy"
+                decoding="async"
+                class:list={[
+                  'w-full rounded-(--radius-card) object-cover',
+                  shape === 'tall' ? 'aspect-[2/3]' : 'aspect-[3/2]',
+                ]}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

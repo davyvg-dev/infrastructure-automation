@@ -207,6 +207,40 @@ export function previewUrl(slug: string): string {
   return `https://${slug}.${PREVIEW_HOST}`
 }
 
+/**
+ * Rendition sizes, keyed by the filename suffix scripts/stock-photos.py writes.
+ * Keep in sync with RENDITIONS there; the ratio is what the pages depend on, since the
+ * CSS always draws these at width:100% and only needs the box reserved correctly.
+ */
+const SHAPES = {
+  hero: { width: 1500, height: 1000 },
+  wide: { width: 1200, height: 800 },
+  tall: { width: 800, height: 1200 },
+} as const
+
+export interface StockPhoto {
+  /** Public URL path, e.g. /stock/dakdekker-3-tall.webp */
+  src: string
+  /** Intrinsic size of the rendition, so the page can reserve the box before it loads. */
+  width: number
+  height: number
+}
+
+/**
+ * The stock set for one vak, split by the role each file was cropped for.
+ *
+ * Roles exist because one aspect ratio cannot do every job: the hero crop, the tall tile
+ * and the wide tile are three different crops of three different photos, and the page
+ * has to ask for them by name. A flat file list cannot express that -- and would
+ * silently mis-order, since "-hero" sorts before "-1" in a plain readdir.
+ */
+export interface StockSet {
+  /** Work-section tiles in pinned order, alternating tall and wide. */
+  tiles: StockPhoto[]
+  /** 3:2 crop beside the hero copy, when the vak's set defines one. */
+  hero: StockPhoto | null
+}
+
 export interface LoadedClient {
   slug: string
   config: ClientConfig
@@ -214,11 +248,12 @@ export interface LoadedClient {
   fotos: string[]
   /**
    * Public URL paths (/stock/...) of the stock set for this client's vak, used by the
-   * photo band when the client supplied no photos of their own -- which is always the
-   * case on a voorstel, where we do not take a prospect's images. Empty when no set
-   * exists for the vak yet; the band then falls back to the colour block.
+   * photo sections when the client supplied no photos of their own -- which is always
+   * the case on a voorstel, where we do not take a prospect's images. All roles are
+   * empty/null when no set exists for the vak yet; the page then falls back to
+   * photo-free layouts.
    */
-  stock: string[]
+  stock: StockSet
   /** Public URL path of the logo, when configured and present. */
   logoUrl: string | null
   siteUrl: string
@@ -290,14 +325,26 @@ export function loadClient(): LoadedClient {
 
   // Stock set for the vak: only consulted when the client supplied no photos, and only
   // the client's own vak is copied into dist/ (see clientStock in astro.config.mjs).
-  const stockDir = fileURLToPath(new URL(`../../stock/${config.bedrijf.vak}/`, import.meta.url))
-  let stock: string[] = []
+  // Roles are matched by filename rather than globbed, so a rendition that failed to
+  // generate stays null (the section drops out) instead of arriving as a stray tile
+  // with the wrong aspect ratio.
+  const vak = config.bedrijf.vak
+  const stockDir = fileURLToPath(new URL(`../../stock/${vak}/`, import.meta.url))
+  const stock: StockSet = { tiles: [], hero: null }
   if (fotos.length === 0 && fs.existsSync(stockDir)) {
-    stock = fs
-      .readdirSync(stockDir)
-      .filter((f) => FOTO_EXT.test(f) && !f.includes('-sm.'))
-      .sort()
-      .map((f) => `/stock/${f}`)
+    const files = fs.readdirSync(stockDir).filter((f) => FOTO_EXT.test(f) && !f.includes('-sm.'))
+    // Tiles are "<vak>-<n>-<shape>.webp", numbered from 1, and must render in that order:
+    // a plain .sort() is lexicographic, which is fine to 9 tiles and wrong at 10. The
+    // shape suffix carries the crop, so the markup never has to guess an aspect ratio.
+    const TILE = new RegExp(`^${vak}-(\\d+)-(wide|tall)\\.webp$`)
+    stock.tiles = files
+      .map((f) => ({ f, m: f.match(TILE) }))
+      .filter((x): x is { f: string; m: RegExpMatchArray } => x.m !== null)
+      .sort((a, b) => Number(a.m[1]) - Number(b.m[1]))
+      .map(({ f, m }) => ({ src: `/stock/${f}`, ...SHAPES[m[2] as 'wide' | 'tall'] }))
+    if (files.includes(`${vak}-hero.webp`)) {
+      stock.hero = { src: `/stock/${vak}-hero.webp`, ...SHAPES.hero }
+    }
   }
 
   const isPreview = config.modus === 'preview'
