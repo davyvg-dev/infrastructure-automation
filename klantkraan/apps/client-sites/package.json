@@ -11,6 +11,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "node scripts/verify-site.mjs",
     "typecheck": "astro check",
     "lint": "echo 'lint: see prettier:check at the workspace root'"
   },
