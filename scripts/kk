@@ -11,6 +11,8 @@ Usage: kk <verb> [args]   (kk help for the verb list)
 from __future__ import annotations
 
 import json
+import os
+import re
 import shlex
 import subprocess
 import sys
@@ -103,6 +105,11 @@ kk — Klantkraan command center
   kk status push                 push the deal/outreach snapshot to the server page
   kk health                      watchdog check+deep, server timers, /health
   kk logs <unit|alias> [n]       journalctl on the server (default 150 lines)
+  kk site new "<Naam>" --url <url> [--near <plaats>]   scrape a prospect into a voorstel-config
+  kk site build|check <slug>     build + fact gate (check: gate only, on the existing dist)
+  kk site open <slug>            build + gate, then serve it locally
+  kk site deploy <slug>          ship the voorstel to <slug>.klant-preview.pages.dev
+  kk site deploy <slug> --live   ship a paying client's site to its own Pages project
   kk deploy site|server          site: typecheck+build+wrangler; server: gate (goldens when
                                  the agent surface changed, else config check) then deploy.sh
   kk help                        this text
@@ -118,6 +125,7 @@ class Step:
     cwd: Path
     argv: list[str]
     tolerant: bool = field(default=False)  # nonzero exit does not abort the verb
+    env: dict[str, str] | None = field(default=None)  # merged over os.environ
 
 
 def repo_root() -> Path:
@@ -194,6 +202,99 @@ def evals_gate(root: Path) -> Step:
               "files changed) — offline config check only, no goldens")
         return _air(root, "app.selftest", "config")
     return _air(root, "app.evals", "run", "all")
+
+
+# --------------------------------------------------------------------------- #
+# Client sites: scrape, build, verify, ship
+# --------------------------------------------------------------------------- #
+
+# All proposals live in one Pages project, one branch per prospect, so speculative sites
+# never eat into the 100-projects-per-account cap that real client sites need.
+PREVIEW_PROJECT = "klant-preview"
+_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,62}$")
+
+
+def _client_dir(root: Path, slug: str) -> Path:
+    if not _SLUG_RE.match(slug or ""):
+        raise UsageError(f"{slug!r} is not a client slug (lowercase letters, digits, hyphens)")
+    return root / "klantkraan" / "apps" / "client-sites" / "clients" / slug
+
+
+def site_modus(root: Path, slug: str) -> str:
+    """'preview' or 'live', read straight from the yaml.
+
+    kk is stdlib-only, so this greps the one line it needs rather than parsing YAML. The
+    build parses the file properly a second later; this exists so a deploy can refuse to
+    put a proposal on a client's project (or a paying client's site on the shared preview
+    host) before any bytes move.
+    """
+    path = _client_dir(root, slug) / "client.yaml"
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        clients = _client_dir(root, "x").parent
+        known = sorted(p.name for p in clients.iterdir() if p.is_dir()) if clients.is_dir() else []
+        raise UsageError(
+            f"no config at {path}. Known clients: {', '.join(known) or '(none)'}"
+        ) from None
+    match = re.search(r"^modus:\s*([a-z]+)", text, re.MULTILINE)
+    if not match or match.group(1) not in ("preview", "live"):
+        raise UsageError(f"{path} has no usable `modus:` line (preview or live)")
+    return match.group(1)
+
+
+def _site_steps(root: Path, slug: str, *, check_only: bool = False) -> list[Step]:
+    app = root / "klantkraan" / "apps" / "client-sites"
+    env = {"CLIENT": slug}
+    build = [] if check_only else [Step(app, ["pnpm", "build"], env=env)]
+    return [*build, Step(app, ["pnpm", "check"], env=env)]
+
+
+def plan_site(args: list[str], root: Path) -> list[Step]:
+    sub = args[0] if args else ""
+    rest = args[1:]
+
+    if sub == "new":
+        if not rest:
+            raise UsageError('kk site new "<Bedrijfsnaam>" --url <url> [--near <plaats>]')
+        return [_air(root, "app.sitedraft", *rest)]
+
+    if sub in ("build", "check", "open", "deploy"):
+        if not rest:
+            raise UsageError(f"kk site {sub} <slug>")
+        slug, flags = rest[0], rest[1:]
+        app = root / "klantkraan" / "apps" / "client-sites"
+
+        if sub == "check":
+            return _site_steps(root, slug, check_only=True)
+        if sub == "build":
+            return _site_steps(root, slug)
+        if sub == "open":
+            # Build, verify, then serve: eyeballing an unverified build is how a wrong
+            # phone number gets approved by a human who was looking at the photos.
+            return [*_site_steps(root, slug), Step(app, ["pnpm", "preview"], env={"CLIENT": slug})]
+
+        live = "--live" in flags
+        modus = site_modus(root, slug)
+        if live and modus != "live":
+            raise UsageError(
+                f"{slug} is a voorstel (modus: preview) and cannot go live. Fill in KvK, btw-id, "
+                "adres, e-mail and domein and set modus: live first."
+            )
+        if not live and modus == "live":
+            raise UsageError(
+                f"{slug} is a paying client (modus: live); use `kk site deploy {slug} --live` "
+                f"instead of putting it on the shared {PREVIEW_PROJECT} host."
+            )
+        project = f"client-{slug}" if live else PREVIEW_PROJECT
+        branch = "production" if live else slug
+        return [
+            *_site_steps(root, slug),
+            Step(app, ["pnpm", "dlx", "wrangler@4", "pages", "deploy", "./dist",
+                       f"--project-name={project}", f"--branch={branch}"]),
+        ]
+
+    raise UsageError("kk site new|build|check|open|deploy")
 
 
 def enforce_outreach_limit(args: list[str]) -> list[str]:
@@ -348,6 +449,9 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
             )
         ]
 
+    if verb == "site":
+        return plan_site(args, root)
+
     if verb == "deploy":
         target = args[0] if args else ""
         if target == "site":
@@ -493,7 +597,8 @@ LOCAL_VERBS = {"content": cmd_content, "leads": cmd_leads}
 def run(steps: list[Step]) -> int:
     worst = 0
     for step in steps:
-        proc = subprocess.run(step.argv, cwd=step.cwd, check=False)
+        env = {**os.environ, **step.env} if step.env else None
+        proc = subprocess.run(step.argv, cwd=step.cwd, check=False, env=env)
         if proc.returncode != 0:
             if not step.tolerant:
                 return proc.returncode

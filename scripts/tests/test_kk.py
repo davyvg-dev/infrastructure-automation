@@ -427,6 +427,83 @@ def test_content_and_leads_are_local_verbs_not_planned():
             kk.plan(verb, [], ROOT)
 
 
+# -- site (client websites) --------------------------------------------------
+
+CS = ROOT / "klantkraan" / "apps" / "client-sites"
+
+
+def _write_client(tmp_path, slug, modus):
+    d = tmp_path / "klantkraan" / "apps" / "client-sites" / "clients" / slug
+    d.mkdir(parents=True)
+    (d / "client.yaml").write_text(f"modus: {modus}\nbedrijf:\n  naam: Test\n", encoding="utf-8")
+    return tmp_path
+
+
+def test_site_new_passes_through_to_sitedraft():
+    (step,) = kk.plan("site", ["new", "Jansen BV", "--url", "https://x.nl"], ROOT)
+    assert step.cwd == AIR
+    assert step.argv == [AIR_PY, "-m", "app.sitedraft", "Jansen BV", "--url", "https://x.nl"]
+
+
+def test_site_build_builds_then_verifies_with_client_in_the_env():
+    steps = kk.plan("site", ["build", "jansen"], ROOT)
+    assert [s.argv for s in steps] == [["pnpm", "build"], ["pnpm", "check"]]
+    assert all(s.cwd == CS and s.env == {"CLIENT": "jansen"} for s in steps)
+
+
+def test_site_check_skips_the_build():
+    (step,) = kk.plan("site", ["check", "jansen"], ROOT)
+    assert step.argv == ["pnpm", "check"]
+
+
+def test_site_open_never_serves_an_unverified_build():
+    steps = kk.plan("site", ["open", "jansen"], ROOT)
+    assert [s.argv for s in steps] == [["pnpm", "build"], ["pnpm", "check"], ["pnpm", "preview"]]
+
+
+def test_site_deploy_puts_a_proposal_on_a_branch_of_the_shared_project(tmp_path):
+    root = _write_client(tmp_path, "jansen", "preview")
+    steps = kk.plan("site", ["deploy", "jansen"], root)
+    assert [s.argv[:2] for s in steps] == [["pnpm", "build"], ["pnpm", "check"], ["pnpm", "dlx"]]
+    assert steps[-1].argv[-2:] == ["--project-name=klant-preview", "--branch=jansen"]
+
+
+def test_site_deploy_live_uses_the_clients_own_project(tmp_path):
+    root = _write_client(tmp_path, "jansen", "live")
+    steps = kk.plan("site", ["deploy", "jansen", "--live"], root)
+    assert steps[-1].argv[-2:] == ["--project-name=client-jansen", "--branch=production"]
+
+
+def test_site_deploy_refuses_to_take_a_proposal_live(tmp_path):
+    root = _write_client(tmp_path, "jansen", "preview")
+    with pytest.raises(kk.UsageError, match="voorstel"):
+        kk.plan("site", ["deploy", "jansen", "--live"], root)
+
+
+def test_site_deploy_refuses_to_put_a_paying_client_on_the_preview_host(tmp_path):
+    root = _write_client(tmp_path, "jansen", "live")
+    with pytest.raises(kk.UsageError, match="--live"):
+        kk.plan("site", ["deploy", "jansen"], root)
+
+
+def test_site_deploy_names_the_known_clients_when_the_slug_is_unknown(tmp_path):
+    root = _write_client(tmp_path, "jansen", "live")
+    with pytest.raises(kk.UsageError, match="jansen"):
+        kk.plan("site", ["deploy", "onbekend"], root)
+
+
+def test_site_rejects_a_slug_that_could_escape_the_clients_dir():
+    for bad in ("../../etc", "Jansen", "a/b", ""):
+        with pytest.raises(kk.UsageError):
+            kk.site_modus(ROOT, bad)
+
+
+def test_site_usage_errors():
+    for args in ([], ["frobnicate"], ["new"], ["build"], ["deploy"]):
+        with pytest.raises(kk.UsageError):
+            kk.plan("site", args, ROOT)
+
+
 # -- dispatcher shell --------------------------------------------------------
 
 
@@ -442,8 +519,8 @@ def test_run_aborts_on_strict_failure_and_tolerates_tolerant(monkeypatch):
         def __init__(self, rc):
             self.returncode = rc
 
-    def fake_run(argv, cwd, check=False):
-        calls.append(argv)
+    def fake_run(argv, cwd, check=False, env=None):
+        calls.append((argv, env))
         return FakeProc(1 if argv == ["fail"] else 0)
 
     monkeypatch.setattr(kk.subprocess, "run", fake_run)
@@ -454,7 +531,25 @@ def test_run_aborts_on_strict_failure_and_tolerates_tolerant(monkeypatch):
         kk.Step(ROOT, ["never"]),
     ]
     assert kk.run(steps) == 1
-    assert calls == [["fail"], ["ok"], ["fail"]]  # aborted before "never"
+    assert [c[0] for c in calls] == [["fail"], ["ok"], ["fail"]]  # aborted before "never"
+    assert all(env is None for _, env in calls)  # no env dict => inherit unchanged
+
+
+def test_run_merges_step_env_over_the_environment(monkeypatch):
+    seen = {}
+
+    class FakeProc:
+        returncode = 0
+
+    def fake_run(argv, cwd, check=False, env=None):
+        seen.update(env or {})
+        return FakeProc()
+
+    monkeypatch.setattr(kk.subprocess, "run", fake_run)
+    monkeypatch.setenv("PATH", "/usr/bin")
+    assert kk.run([kk.Step(ROOT, ["build"], env={"CLIENT": "jansen"})]) == 0
+    assert seen["CLIENT"] == "jansen"
+    assert seen["PATH"] == "/usr/bin"  # inherited, not replaced
 
 
 def test_help_exits_zero(capsys):
