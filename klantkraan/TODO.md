@@ -311,6 +311,17 @@ client-site monitoring, a public /website sales page.
       Needs a Cloudflare Pages project named `klant-preview` to exist first (one-off).
 - [ ] Q7: after 3 voorstellen, decide from the timing log whether the copy pass or the by-eye
       check is the expensive stage, and automate only that one.
+- [x] Q8: factory tested end to end (scrape → yaml → build → gate → serve). Three defects found
+      and fixed, all in code that had never been run: (a) `kk site new` could not work at all —
+      `_SCHEMA` used `maxItems`/`minItems: 3`, which structured outputs reject with a 400, and
+      the one stage that calls the API was the one stage the tests skipped; counts moved to the
+      prompt + build_config (truncate at the ceiling, refuse under the floor); (b) a prospect
+      without opening hours burned the Opus copy call before failing, and the error told the
+      founder to fix it "after generating" when nothing had been written — now checked first
+      (11.1s → 1.1s) with an honest message; (c) the fact gate counted city pages by directory
+      name, so a `werkgebied/<plaats>/` that lost its index.html passed while every link to it
+      404s — now counted from built HTML. 8-way sabotage battery otherwise clean; both fixtures
+      build + gate in ~4s; all `kk site` refusals hold. 16 sitedraft tests (+4), 73 kk tests.
 
 ## Phase 0 — Planning docs
 

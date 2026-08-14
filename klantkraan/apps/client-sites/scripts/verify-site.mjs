@@ -131,14 +131,14 @@ for (const dienst of cfg.diensten) {
   if (!pages.some((p) => p.html.includes(dienst.naam))) fail(`dienst "${dienst.naam}" never rendered`)
 }
 
-// 2. City pages: exactly the configured werkgebied, no more.
-const builtCities = fs.existsSync(path.join(DIST, 'werkgebied'))
-  ? fs
-      .readdirSync(path.join(DIST, 'werkgebied'), { withFileTypes: true })
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-      .sort()
-  : []
+// 2. City pages: exactly the configured werkgebied, no more. Counted from the built HTML rather
+// than from directory names, because a werkgebied/<plaats>/ that lost its index.html still looks
+// like a city page to readdir while every link to it 404s.
+const builtCities = pages
+  .map((p) => p.file.split(path.sep))
+  .filter((parts) => parts.length === 3 && parts[0] === 'werkgebied' && parts[2] === 'index.html')
+  .map((parts) => parts[1])
+  .sort()
 const wantedCities = bedrijf.werkgebied.map(plaatsSlug).sort()
 if (builtCities.join(',') !== wantedCities.join(',')) {
   fail(`werkgebied pages [${builtCities}] do not match the config [${wantedCities}]`)
