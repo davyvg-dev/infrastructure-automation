@@ -199,9 +199,13 @@ founder-triggered, never a timer.
       `app/suppression.py` (call-time DATA_DIR, shared by `sequence.py --opt-out` and
       `cursus.stop()`); bounce deliberately NOT suppressed (a dead mailbox says nothing
       about consent, mirroring sequence.py's rule); 2 new tests, suite 283 green
-- [ ] O2: `POST /api/resend/webhook` — svix-signature-verified (stdlib hmac,
-      `RESEND_WEBHOOK_SECRET`), bounce/complaint → stop+suppress; FOUNDER: secret in server
-      .env + webhook in Resend dashboard
+- [x] O2: `POST /api/resend/webhook` — svix-signature-verified (stdlib hmac against
+      `RESEND_WEBHOOK_SECRET`, 5-min replay tolerance, constant-time compare); Permanent
+      bounce → halt only, complaint → halt + suppress (also for non-subscribers, e.g. the
+      welcome mail); unconfigured secret → 503 so svix retries and no event is lost; 7
+      tests, suite 290 green. FOUNDER: set `RESEND_WEBHOOK_SECRET` in the server .env and
+      add the webhook (events: email.bounced + email.complained) in the Resend dashboard,
+      endpoint https://demo.klantkraan.nl/api/resend/webhook
 - [ ] O3: cursus block in the daily digest (aanmeldingen/actief/afgerond/due) → then
       `kk deploy server`
 - [ ] O4: extract `CursusForm.astro` + same-origin `public/js/cursus-form.js`; rekentool ×3

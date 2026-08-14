@@ -6,7 +6,11 @@ bot, and WhatsApp all talk to the same receptionist.
 
 from __future__ import annotations
 
+import base64
+import hashlib
+import hmac
 import html
+import json
 import logging
 import os
 import re
@@ -26,7 +30,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 from starlette.concurrency import run_in_threadpool
 
-from . import billing, cursus, notify, sessions, takeover
+from . import billing, cursus, notify, sessions, suppression, takeover
 from .channels import voice_missed, whatsapp
 from .settings import MissingSetting, business, clear_slug, ensure_dirs, resolve_slug, use_slug
 
@@ -521,6 +525,87 @@ async def mollie_webhook(request: Request) -> dict[str, bool]:
         # about it (the event may involve real money).
         log.exception("mollie webhook %s failed", payment_id)
         notify.owner_exception(exc, context="mollie-webhook")
+    return {"ok": True}
+
+
+# --- Resend delivery events (svix-signed) -------------------------------------------------
+
+_SVIX_TOLERANCE_S = 300
+
+
+def _verify_svix(
+    secret: str,
+    msg_id: str,
+    timestamp: str,
+    signatures: str,
+    body: bytes,
+    now: float | None = None,
+) -> bool:
+    """Verify a svix-signed webhook (docs.svix.com, "verifying payloads manually"):
+    HMAC-SHA256 over "<id>.<timestamp>.<body>", keyed with the base64 part of the
+    whsec_ secret; the signature header is a space-delimited list of "v1,<base64>"
+    candidates. Constant-time compare; timestamps outside the tolerance are replays."""
+    try:
+        ts = int(timestamp)
+    except (TypeError, ValueError):
+        return False
+    if abs((now if now is not None else time.time()) - ts) > _SVIX_TOLERANCE_S:
+        return False
+    try:
+        key = base64.b64decode(secret.split("_", 1)[-1])
+    except (ValueError, TypeError):
+        return False
+    signed = f"{msg_id}.{timestamp}.".encode() + body
+    expected = base64.b64encode(hmac.new(key, signed, hashlib.sha256).digest()).decode()
+    for candidate in signatures.split():
+        version, _, sig = candidate.partition(",")
+        if version == "v1" and hmac.compare_digest(expected, sig):
+            return True
+    return False
+
+
+@app.post("/api/resend/webhook")
+async def resend_webhook(request: Request) -> dict[str, bool]:
+    """Resend delivery events. Two types matter: a Permanent bounce halts the cursus for
+    that address (delivery-side halt, NOT suppression — a dead mailbox says nothing about
+    consent), and a spam complaint is a consent signal, so halt AND suppress. Everything
+    else is a 200 no-op. Unconfigured secret -> 503, so svix keeps retrying until the
+    founder sets RESEND_WEBHOOK_SECRET and no event is lost. No rate limit on purpose: a
+    broadcast can bounce in bursts and the signature check is the gate."""
+    secret = os.environ.get("RESEND_WEBHOOK_SECRET", "")
+    if not secret:
+        raise HTTPException(status_code=503, detail="Webhook not configured.")
+    body = await request.body()
+    if not _verify_svix(
+        secret,
+        request.headers.get("svix-id", ""),
+        request.headers.get("svix-timestamp", ""),
+        request.headers.get("svix-signature", ""),
+        body,
+    ):
+        raise HTTPException(status_code=401, detail="Bad signature.")
+    try:
+        event = json.loads(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid JSON.") from exc
+    etype = event.get("type")
+    data = event.get("data") or {}
+    recipients = [str(a) for a in (data.get("to") or [])]
+
+    def handle() -> None:
+        if etype == "email.bounced":
+            if (data.get("bounce") or {}).get("type") != "Permanent":
+                return  # a temporary failure is not a dead mailbox
+            for addr in recipients:
+                if cursus.stop(addr, bounced=True):
+                    log.info("resend webhook: bounce halted cursus for %s", addr)
+        elif etype == "email.complained":
+            for addr in recipients:
+                cursus.stop(addr)  # suppresses too, when the address is a subscriber
+                suppression.suppress(cursus.normalize(addr))
+                log.info("resend webhook: complaint suppressed %s", addr)
+
+    await run_in_threadpool(handle)
     return {"ok": True}
 
 
