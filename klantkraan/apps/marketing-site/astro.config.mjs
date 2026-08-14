@@ -21,10 +21,14 @@ export default defineConfig({
     sitemap({
       // /r/* are private per-client dashboards; prospect demos are link-only
       // (noindex) — keep them out of the sitemap. /demo/sportscholen stays in:
-      // that one is a public vertical page.
+      // that one is a public vertical page. /bedankt/ pages are noindex
+      // post-checkout confirmations; listing them trips a GSC
+      // "noindex page in sitemap" alert.
       filter: (page) =>
         !page.includes('/r/') &&
-        !['/demo/cool-global', '/demo/dhz'].some((p) => page.includes(p)),
+        !['/demo/cool-global', '/demo/dhz', '/demo/solvista', '/bedankt'].some(
+          (p) => page.includes(p),
+        ),
       // Stamp every entry with the build date so crawlers see fresh lastmod
       // values on each deploy.
       serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
