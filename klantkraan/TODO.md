@@ -277,6 +277,41 @@ verifiable sales feature), KvK+btw footer, privacyverklaring names the reception
   - [ ] FOUNDER: the pilot needs a real buyer — sell the website into an existing deal
         (DRS reply spotted 2026-08-14 / Cool Global t/m 24-08 / riool sprint wk 24 aug)
 
+### Q. Website factory — voorstel-sites as the opening move (built 2026-08-14)
+The kit could only build a site for someone who had already bought, so it could not help with
+the one blocker that was actually open (no buyer). Q turns the factory into outreach ammunition:
+a real, working, noindexed proposal site per prospect, built from public sources in ~10 founder
+minutes. Deliberately NOT built: TransIP automation, an og:image pipeline, per-dienst pages,
+client-site monitoring, a public /website sales page.
+- [x] Q1 (d07ed30): `modus: preview | live` required in the schema (no default: a forgotten
+      mode must fail, never silently publish a proposal or silently noindex a paying client).
+      Live keeps every legal field mandatory; preview allows KvK/btw-id/e-mail/adres/domein to
+      be absent and answers with noindex + X-Robots-Tag + robots Disallow, no sitemap, no
+      LocalBusiness JSON-LD, no reviews, receptionist false, a non-dismissable banner naming
+      Klantkraan, and canonicals on `<slug>.klant-preview.pages.dev`. Second fixture added.
+- [x] Q2 (d3f39c8): `app.sitedraft` bridges `app.extract` into a client.yaml — telefoon and
+      openingstijden mapped in code from the cited extraction, the Dutch copy from one
+      schema-constrained Claude call that must paraphrase and may not invent claims or prices;
+      `--from-json` reuses one scrape for both the receptionist config and the site. 12 tests.
+- [x] Q3 (844b617): `CLIENT=<slug> pnpm check` — the fact gate research §7 risk 4 asked for.
+      Re-reads the yaml itself and asserts dist/ against it (phone, every tel:/mailto:/wa.me,
+      diensten, city pages, KvK+btw, no placeholders, no prices, no review schema, zero
+      external hosts, per-mode publishing posture, structural greps). Proven by sabotage: all
+      seven mutated builds exit 1.
+- [x] Q4 (55c6394): `kk site new|build|check|open|deploy` — one command instead of seven, with
+      two refusals in the planner (a voorstel cannot go live; a paying client cannot land on
+      the shared preview host). scripts/tests 73.
+- [x] Q5 (a22bc6b): `docs/03-delivery/website-voorstel-playbook.md` — the sales motion and the
+      rules it does not relax (BV filter, no cold e-mail to eenmanszaak/VOF, 6/day, no cold
+      calling, public sources only, take it down on request), the by-eye check, the Dutch
+      first touch, and how a voorstel is promoted to a live client. Runbook + intake checklist
+      re-pointed at `kk site`.
+- [ ] Q6 FOUNDER: first real voorstel end to end. Pick a prospect already in the sequence,
+      run `kk site new` → `build` → `open` → `deploy`, time it, and send it as the opener.
+      Needs a Cloudflare Pages project named `klant-preview` to exist first (one-off).
+- [ ] Q7: after 3 voorstellen, decide from the timing log whether the copy pass or the by-eye
+      check is the expensive stage, and automate only that one.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
