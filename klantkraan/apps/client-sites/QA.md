@@ -53,21 +53,34 @@ CLIENT=<slug> pnpm preview --port 4331 &
 squirrel audit http://localhost:4331 --format llm
 ```
 
-Ran on 2026-08-14 (squirrel v0.0.80): 9 pages, 131 rules passed. Known local-preview artifacts,
-NOT template bugs (re-check on the deployed Pages URL instead):
+Audit through `astro preview`, not a plain static server. `python -m http.server` sends no gzip
+and ignores `public/_headers`, which fails `perf/compression` and `perf/cache-headers` for reasons
+that have nothing to do with the site; scores across the two are not comparable.
 
-- `links/broken-links`, `links/orphan-pages`, `eeat/privacy-policy`: squirrel strips the
-  trailing slash and `astro preview` does not redirect `/contact` to `/contact/`;
-  Cloudflare Pages 308-redirects, so these clear in production.
+Ran on 2026-08-14 (squirrel v0.0.85, voorbeeld-dakdekker): 9 pages, 76/C, 914 passed, 59 warnings,
+10 failed. Known local-preview artifacts, NOT template bugs (re-check on the deployed Pages URL
+instead):
+
 - `security/https`, `perf/http2`: localhost is plain HTTP.
 - `security/csp`, `security/x-frame-options`, `perf/bad-caching`: served by `public/_headers`
   on Cloudflare Pages, which `astro preview` ignores.
 - `crawl/sitemap-coverage`: the sitemap carries the client's real domain, the crawl ran on
   localhost.
+- `links/broken-links`, `links/orphan-pages`, `eeat/privacy-policy` were on this list under
+  v0.0.80 (trailing-slash handling) and no longer fire under v0.0.85.
 
 Real, accepted findings: no og:image (client sites ship no share image yet; candidate: first
-client photo), no About page (the homepage intro covers it), an a11y underline hint on the
-werkgebied chips (they are bordered button-style cards).
+client photo or the first stock tile), no About page (the homepage intro covers it), an a11y
+underline hint on the werkgebied chips (they are bordered button-style cards), `images/optimized`
+(info: "consider an image CDN", which a static Pages deploy does not have), and
+`perf/lazy-above-fold` on the first three photo-band tiles. The band is the fourth section on the
+homepage, well below any real fold, so `loading="lazy"` stays; the rule appears to flag the first
+grid row by position in the DOM rather than on screen.
+
+Also accepted, and worth a decision before a real client ships: `content/word-count` on
+`/contact/` (201), `/diensten/` (216) and the city pages (~261) against a 300 minimum, and
+`core/meta-description` outside 120-160 on four pages. `content/keyword-stuffing` flags "het" and
+"een": squirrel has no Dutch stopword list, so that part is noise.
 
 ## 4. Copy lint (repo root)
 

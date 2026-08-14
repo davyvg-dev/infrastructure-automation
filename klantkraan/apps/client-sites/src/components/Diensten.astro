@@ -9,6 +9,11 @@ interface Props {
 }
 const { compact = false } = Astro.props
 const { config } = loadClient()
+// The cards sit one level under whatever heading precedes them. On the homepage that is
+// this section's own h2, so they are h3; on /diensten/ the section title is suppressed
+// because the page already has <h1>Onze diensten</h1>, so h3 would skip a level.
+// Visual size is the text-h3 class either way, only the semantics move.
+const CardHeading = compact ? 'h2' : 'h3'
 ---
 
 <section class="mx-auto max-w-5xl px-6 py-9 md:py-12" id="diensten">
@@ -27,7 +32,7 @@ const { config } = loadClient()
     {
       config.diensten.map((dienst) => (
         <li class="card p-6">
-          <h3 class="text-h3">{dienst.naam}</h3>
+          <CardHeading class="text-h3">{dienst.naam}</CardHeading>
           <p class="mt-2 text-small text-(--color-mist)">{dienst.omschrijving}</p>
         </li>
       ))

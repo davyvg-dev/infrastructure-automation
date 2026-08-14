@@ -51,8 +51,12 @@ STOCK: dict[str, list[tuple[int, str]]] = {
     ],
 }
 
-SIZE = (1200, 800)
-SIZE_SM = (600, 400)
+# Square on purpose: the photo band renders aspect-square tiles, so a landscape file
+# ships pixels the page crops away and gives the <img> width/height a ratio that
+# contradicts the CSS box. Cropping here means the dimensions attributes are honest and
+# every file lands well under the 200 KB that squirrelscan flags.
+SIZE = (800, 800)
+SIZE_SM = (400, 400)
 OUT = Path(__file__).resolve().parent.parent / "stock"
 UA = "klantkraan-site-photos/1.0"  # Pexels 403s urllib's default UA
 

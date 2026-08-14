@@ -19,8 +19,12 @@ const shown = (own ? fotos : stock).slice(0, 6)
 const alt = own ? `Werk van ${config.bedrijf.naam}` : `Werk van een ${config.bedrijf.vak}`
 const label = own ? "Foto's van ons werk" : 'Sfeerbeeld'
 // The band renders ~170px squares, so the -sm variant covers almost every viewport.
-// Client photos have no -sm (no image pipeline: intake asks for web-ready files).
-const srcset = (src: string) => `${src.replace(/\.jpg$/, '-sm.jpg')} 600w, ${src} 1200w`
+// Client photos have no -sm and no known dimensions (no image pipeline: intake asks for
+// web-ready files), so srcset and width/height apply to the stock set only.
+const srcset = (src: string) => `${src.replace(/\.jpg$/, '-sm.jpg')} 400w, ${src} 800w`
+// Matches SIZE in scripts/stock-photos.py; square, so the ratio agrees with aspect-square
+// and the browser reserves the right box before the image loads (no layout shift).
+const STOCK_PX = 800
 ---
 
 {
@@ -36,6 +40,8 @@ const srcset = (src: string) => `${src.replace(/\.jpg$/, '-sm.jpg')} 600w, ${src
               src={src}
               srcset={own ? undefined : srcset(src)}
               sizes={own ? undefined : '(min-width: 768px) 170px, (min-width: 640px) 30vw, 45vw'}
+              width={own ? undefined : STOCK_PX}
+              height={own ? undefined : STOCK_PX}
               alt={alt}
               loading="lazy"
               decoding="async"
