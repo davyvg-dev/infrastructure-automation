@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta
 
-from app import analytics, mailer, notify, oversight
+from app import analytics, cursus, mailer, notify, oversight
 
 
 def test_cost_model_matches_published_rates():
@@ -61,6 +61,30 @@ def test_digest_rolls_up_active_bots(data_dir, clients_dir):
     assert "Acme Loodgieter" in text and "1 leads" in text and "100% after-hours" in text
     assert "Smit Dakwerken" in text and "1 booked" in text
     assert "NEEDS ATTENTION" not in text, "a clean window should raise nothing"
+
+
+def test_cursus_block_absent_without_subscribers(data_dir, clients_dir):
+    _seed_two_clients(clients_dir)
+    assert "E-MAILCURSUS" not in oversight.build_digest(now=datetime.now(), today=True)
+
+
+def test_cursus_block_counts_states(data_dir, clients_dir):
+    _seed_two_clients(clients_dir)
+    cursus.add("actief@bedrijf.nl")
+    cursus.add("weg@bedrijf.nl")
+    cursus.stop("weg@bedrijf.nl")
+    text = oversight.build_digest(now=datetime.now(), today=True)
+    assert "E-MAILCURSUS" in text
+    assert "2 aanmeldingen · 1 actief" in text and "1 afgemeld" in text
+    # The fresh subscriber has lesson 1 due immediately.
+    assert "1 les(sen) due" in text
+
+
+def test_cursus_block_appears_in_the_quiet_window_path(data_dir):
+    # No conversations at all: the early-return branch must still show the cursus.
+    cursus.add("actief@bedrijf.nl")
+    text = oversight.build_digest(now=datetime.now(), today=True)
+    assert "No conversations captured" in text and "E-MAILCURSUS" in text
 
 
 def test_analyst_insight_surfaces_in_digest(data_dir, clients_dir):

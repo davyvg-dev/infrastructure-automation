@@ -407,6 +407,34 @@ def due_lesson(sub: dict, now: datetime | None = None) -> int | None:
     return None
 
 
+def digest_lines(now: datetime | None = None) -> list[str]:
+    """Compact cursus block for the daily oversight digest. Empty list when nobody ever
+    signed up (no section beats a zero row); a warning line instead of a crash when the
+    ledger refuses to load, because the digest must always go out."""
+    try:
+        subs = load()["subscribers"]
+    except SystemExit:
+        return ["E-MAILCURSUS", "  ⚠ ledger unreadable (data/cursus/subscribers.json)"]
+    if not subs:
+        return []
+    afgerond = sum(1 for s in subs.values() if s.get("completed"))
+    afgemeld = sum(1 for s in subs.values() if s.get("unsubscribed"))
+    bounced = sum(1 for s in subs.values() if s.get("bounced"))
+    actief = sum(
+        1
+        for s in subs.values()
+        if not (s.get("completed") or s.get("unsubscribed") or s.get("bounced"))
+    )
+    due = sum(1 for s in subs.values() if due_lesson(s, now) is not None)
+    line = (
+        f"  {len(subs)} aanmeldingen · {actief} actief · {afgerond} afgerond · "
+        f"{afgemeld} afgemeld · {bounced} bounced"
+    )
+    if due:
+        line += f" · {due} les(sen) due"
+    return ["E-MAILCURSUS", line]
+
+
 def _score_completion(sub: dict) -> str:
     """Put a course completer on the pipeline board as an inbound opt-in lead. Returns a
     one-line description of what happened, for the send report."""

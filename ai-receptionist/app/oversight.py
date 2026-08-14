@@ -30,7 +30,7 @@ from datetime import datetime, timedelta
 from datetime import time as dtime
 from typing import Any
 
-from . import analytics, mail_signals, notify, settings
+from . import analytics, cursus, mail_signals, notify, settings
 
 log = logging.getLogger("oversight")
 
@@ -124,6 +124,10 @@ def build_digest(now: datetime | None = None, today: bool = False, mail: bool = 
             lines.append("NEEDS ATTENTION")
             for slug in went_silent:
                 lines.append(f"  ⚠ {_client_name(slug)} went quiet (had traffic, now none)")
+        cursus_block = cursus.digest_lines()
+        if cursus_block:
+            lines.append("")
+            lines.extend(cursus_block)
         if mail:
             lines.append("")
             lines.extend(mail_signals.digest_section(now))
@@ -198,6 +202,10 @@ def build_digest(now: datetime | None = None, today: bool = False, mail: bool = 
         if upsell:
             lines.append("  upsell radar:")
             lines.extend(_top(upsell))
+    cursus_block = cursus.digest_lines()
+    if cursus_block:
+        lines.append("")
+        lines.extend(cursus_block)
     if mail:
         lines.append("")
         lines.extend(mail_signals.digest_section(now))

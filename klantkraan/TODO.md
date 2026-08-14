@@ -206,8 +206,10 @@ founder-triggered, never a timer.
       tests, suite 290 green. FOUNDER: set `RESEND_WEBHOOK_SECRET` in the server .env and
       add the webhook (events: email.bounced + email.complained) in the Resend dashboard,
       endpoint https://demo.klantkraan.nl/api/resend/webhook
-- [ ] O3: cursus block in the daily digest (aanmeldingen/actief/afgerond/due) → then
-      `kk deploy server`
+- [x] O3: `cursus.digest_lines()` in both build_digest paths (aanmeldingen/actief/
+      afgerond/afgemeld/bounced/due; empty ledger = no section; unreadable ledger = warning
+      line, digest still goes out); 3 tests, suite 293 green, live `--dry --today` eyeballed
+      → ready for `kk deploy server`
 - [ ] O4: extract `CursusForm.astro` + same-origin `public/js/cursus-form.js`; rekentool ×3
       swaps to the component
 - [ ] O5: opt-in band on the 7 NL trade landings + homepage + /voor-wie
