@@ -131,6 +131,31 @@ def test_cursus_runs_from_the_app_dir():
     assert step.cwd == AIR
 
 
+def test_nieuwsbrief_board_runs_on_the_server_as_app_user():
+    (argv,) = argvs("nieuwsbrief")
+    assert argv[0] == "ssh" and argv[1].startswith("root@")
+    assert "runuser -u klantkraan" in argv[2] and "app.nieuwsbrief board" in argv[2]
+
+
+def test_nieuwsbrief_send_picks_newest_edition_and_keeps_dry():
+    (argv,) = argvs("nieuwsbrief", ["send", "--dry"])
+    assert "ls -t" in argv[2] and "growth-engine/data/newsletters" in argv[2]
+    assert 'send --file "$f" --dry' in argv[2]
+    (argv,) = argvs("nieuwsbrief", ["send"])
+    assert argv[2].endswith('send --file "$f"')
+
+
+def test_nieuwsbrief_send_named_file_must_be_bare_md():
+    (argv,) = argvs("nieuwsbrief", ["send", "--file", "editie-2026-08.md"])
+    assert "newsletters/editie-2026-08.md" in argv[2] and "ls -t" not in argv[2]
+    with pytest.raises(kk.UsageError):
+        kk.plan("nieuwsbrief", ["send", "--file", "../evil.md"], ROOT)
+    with pytest.raises(kk.UsageError):
+        kk.plan("nieuwsbrief", ["send", "--file", "editie"], ROOT)
+    with pytest.raises(kk.UsageError):
+        kk.plan("nieuwsbrief", ["oops"], ROOT)
+
+
 def test_logs_cursus_alias_points_at_the_timer_unit():
     (argv,) = argvs("logs", ["cursus"])
     assert "klantkraan-cursus" in argv

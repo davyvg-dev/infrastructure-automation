@@ -225,7 +225,10 @@ founder-triggered, never a timer.
       300 green, preview eyeballed
 - [ ] O10: growth-engine nieuwsbrief drafter through the existing Telegram approval (approve
       marks approved only; GROWTH_ENGINE_DRY_RUN honored; approved .md in durable data/)
-- [ ] O11: `kk nieuwsbrief send [--dry]` + `kk nieuwsbrief board`
+- [x] O11: `kk nieuwsbrief send [--dry] [--file <naam.md>]` + `board` — server-side over
+      ssh (ledger lives there), runuser as klantkraan, newest .md from rsync-durable
+      `growth-engine/data/newsletters/` unless --file names one (bare .md names only);
+      3 planner tests, scripts/tests 52 green
 - [ ] O12: FOUNDER first edition: draft → approve → `--dry` → send (`kk deploy server` first)
 
 ### P. Website factory — pilot kit (planned 2026-08-14; Phase 3 of the factory plan)

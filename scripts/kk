@@ -54,6 +54,14 @@ LOG_UNITS = {
 # status generator falls back to this file when the host has no pipeline data.
 SNAPSHOT_REMOTE = "/opt/klantkraan/ai-receptionist/data/status-snapshot.json"
 
+# Where the growth-engine bot stores Telegram-approved nieuwsbrief editions (rsync-durable,
+# like every data dir); `kk nieuwsbrief send` ships the newest one unless --file names it.
+NEWSLETTERS_REMOTE = "/opt/klantkraan/growth-engine/data/newsletters"
+_NB_RUN = (
+    "cd /opt/klantkraan/ai-receptionist && "
+    "runuser -u klantkraan -- .venv/bin/python -m app.nieuwsbrief "
+)
+
 USAGE = """\
 kk — Klantkraan command center
 
@@ -64,6 +72,8 @@ kk — Klantkraan command center
   kk outreach dry|dump [args]    dry run / write .eml files
   kk outreach stop <slug> --replied|--opt-out|--bounced
   kk cursus [sub] [args]         passthrough to app.cursus (default: board)
+  kk nieuwsbrief [board]         verstuurde edities (server-side ledger)
+  kk nieuwsbrief send [--dry] [--file <naam.md>]   ship the newest approved edition
   kk content                     growth-engine draft queues per vertical (read-only)
   kk leads [n]                   last n records across the local lead stores (default 20)
   kk evals [list|<name|pack>]    run chat goldens (default: run all)
@@ -173,6 +183,39 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
         # Local board shows demo data only; the live ledger is on the server
         # (kk logs cursus). Sends from the Mac use the Mac .env's Resend key.
         return [_air(root, "app.cursus", *(args or ["board"]))]
+
+    if verb == "nieuwsbrief":
+        # Broadcasts run on the server: the subscriber ledger lives there, and the
+        # approved editions land in the rsync-durable growth-engine data dir. runuser
+        # keeps the ledger files owned by the app user, not root.
+        sub = args[0] if args else "board"
+        if sub == "board":
+            return [Step(root, ["ssh", f"root@{SERVER_IP}", _NB_RUN + "board"])]
+        if sub == "send":
+            flags = args[1:]
+            dry = "--dry" in flags
+            named = [a for a in flags if a not in ("--dry",)]
+            fname = None
+            if named:
+                if named[0] != "--file" or len(named) != 2:
+                    raise UsageError("usage: kk nieuwsbrief send [--dry] [--file <naam.md>]")
+                fname = named[1]
+                if "/" in fname or not fname.endswith(".md"):
+                    raise UsageError("--file takes a bare .md name from the newsletters dir")
+            pick = (
+                f'f="{NEWSLETTERS_REMOTE}/{fname}"; [ -f "$f" ]'
+                if fname
+                else f'f=$(ls -t {NEWSLETTERS_REMOTE}/*.md 2>/dev/null | head -1); [ -n "$f" ]'
+            )
+            cmd = (
+                f"{pick} || {{ echo 'geen goedgekeurde editie in {NEWSLETTERS_REMOTE}'; "
+                'exit 2; }; echo "editie: $f"; '
+                + _NB_RUN
+                + 'send --file "$f"'
+                + (" --dry" if dry else "")
+            )
+            return [Step(root, ["ssh", f"root@{SERVER_IP}", cmd])]
+        raise UsageError(f"unknown nieuwsbrief subverb: {sub}")
 
     if verb == "status":
         gen = str(root / "ops" / "status" / "generate.py")
