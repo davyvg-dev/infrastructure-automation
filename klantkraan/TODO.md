@@ -216,7 +216,10 @@ founder-triggered, never a timer.
 - [ ] O6: opt-in on gidsen/[slug], blog/[slug], [pseo].astro (covers future pSEO pages)
 - [ ] O7: lead magnet — Dutch print-styled checklist "Nooit meer een klus missen" → PDF in
       `public/downloads/`; stats only from the approved registry; copy-lint
-- [ ] O8: les 1 links the download (cursus.py `_blocks_1`)
+- [x] O8: les 1 links the checklist ("Voor bij de telefoon" block + button to
+      klantkraan.nl/downloads/nooit-meer-een-klus-missen.pdf, URL pinned as
+      `cursus.CHECKLIST_URL`); deploy order: site (O7 PDF) before the next les-1 send;
+      1 test, suite 301 green, preview eyeballed
 - [x] O9: `app/nieuwsbrief.py` — broadcast layer on the SAME subscriber ledger (one
       afmelding stops cursus + nieuwsbrief), resumable broadcasts.json written per send,
       .md front-matter input → mail_layout blocks, `nb-<id>-<email>` Idempotency-Keys,

@@ -241,3 +241,9 @@ def test_lesson_copy_has_no_ai_tells_or_founder_name(data_dir):
     # The pitch lesson quotes the locked price and points at the demo.
     _, text4, _ = cursus.render(4, sub)
     assert "299" in text4 and "klantkraan.nl/demo" in text4
+
+
+def test_lesson_1_links_the_checklist_download(data_dir):
+    sub = {"email": "voorbeeld@bedrijf.nl", "name": "Jan"}
+    _, text1, html1 = cursus.render(1, sub)
+    assert cursus.CHECKLIST_URL in text1 and cursus.CHECKLIST_URL in html1

@@ -58,6 +58,10 @@ LESSON_DAY = {1: 0, 2: 2, 3: 5, 4: 9}
 
 DEFAULT_BASE_URL = "https://demo.klantkraan.nl"
 
+# The lead-magnet checklist les 1 links to; the PDF ships with the marketing site
+# (public/downloads/), so the site deploy must precede the first les-1 send after this.
+CHECKLIST_URL = "https://klantkraan.nl/downloads/nooit-meer-een-klus-missen.pdf"
+
 
 # --- time ---------------------------------------------------------------------------------
 
@@ -236,6 +240,12 @@ def _blocks_1(sub: dict) -> list[mail_layout.Block]:
         mail_layout.Para(
             "Uw eigen getallen invullen kan met de rekentool: klantkraan.nl/rekentool."
         ),
+        mail_layout.Heading("Voor bij de telefoon"),
+        mail_layout.Para(
+            "Als welkomstcadeau: een checklist op één A4 die u naast de telefoon legt, "
+            "zodat wie er ook opneemt altijd de juiste vragen stelt."
+        ),
+        mail_layout.Button("Download de checklist", CHECKLIST_URL),
         mail_layout.Para(
             "In de volgende les: wat een lead u kost als u hem via een platform "
             "terugkoopt."
