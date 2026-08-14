@@ -172,6 +172,76 @@ pages land in the rsync-durable data dir, founder pulls and ships with `kk deplo
       founder-run `kk deploy site` after eyeballing pulled pages; verify sitemap pickup +
       schema validity + copy-lint on pulled content
 
+### N. Command center dashboard — client-grade branded status page (planned 2026-08-14)
+Presentation-layer upgrade of `ops/status/generate.py` over the same collected data: static,
+no-JS, behind the existing basic auth, branded in the site's night/sodium system so it doubles
+as a sales asset ("dit is de cockpit die u krijgt"). `render_ansi`/`_section_lines` untouched
+(`kk status` terminal output unchanged); new HTML renderer reads `data["sections"]` directly.
+RAG colors: confirm green / sodium amber / dashboard-local ember red (inline CSS only — the
+site palette gets no red). Dutch labels, u-register, no em-dashes, no founder name. Fonts
+copied next to the output by a `_write_assets` helper (repo woff2; system-font fallback).
+- [ ] N1: branded shell + header — dark tokens, @font-face + `_write_assets`, RAG pill,
+      generated_at + snapshot age, sections as minimal panels from structured data; test pins
+      updated (RAG present, noindex, refresh, escaping, asset copy/skip)
+- [ ] N2: KPI tile row (vandaag totals, MRR, actieve abonnementen, outreach due) + per-client
+      Vandaag table + deals board table incl. due callbacks; fixture-dict render test
+- [ ] N3: outreach/content/billing panels (dsn_note, per-vertical queue + push errors, MRR,
+      last webhook) + `{"error": ...}` sections as sodium-bordered fault panels
+- [ ] N4: timers matrix as Space Mono ledger + design/accessibility polish pass (contrast on
+      night bg, never color-only signals), eyeball desktop + 320px
+- [ ] N5: FOUNDER ships `kk deploy server`; verify fonts + page at the basic-auth status URL
+
+### O. Email list — opt-in everywhere, lead magnet, nieuwsbrief (planned 2026-08-14)
+Builds on the §L cursus machinery. Compliance fixes first (live gaps), then site coverage,
+then the broadcast layer. Opt-in stays NL-only (course is Dutch); nieuwsbrief sends are
+founder-triggered, never a timer.
+- [ ] O1: `cursus.stop()` also writes `data/suppression.txt` (same append path as
+      `sequence.py --opt-out`) — unsubscribers must never be cold-outreach-eligible
+- [ ] O2: `POST /api/resend/webhook` — svix-signature-verified (stdlib hmac,
+      `RESEND_WEBHOOK_SECRET`), bounce/complaint → stop+suppress; FOUNDER: secret in server
+      .env + webhook in Resend dashboard
+- [ ] O3: cursus block in the daily digest (aanmeldingen/actief/afgerond/due) → then
+      `kk deploy server`
+- [ ] O4: extract `CursusForm.astro` + same-origin `public/js/cursus-form.js`; rekentool ×3
+      swaps to the component
+- [ ] O5: opt-in band on the 7 NL trade landings + homepage + /voor-wie
+- [ ] O6: opt-in on gidsen/[slug], blog/[slug], [pseo].astro (covers future pSEO pages)
+- [ ] O7: lead magnet — Dutch print-styled checklist "Nooit meer een klus missen" → PDF in
+      `public/downloads/`; stats only from the approved registry; copy-lint
+- [ ] O8: les 1 links the download (cursus.py `_blocks_1`)
+- [ ] O9: `app/nieuwsbrief.py` — broadcast ledger, halt/suppression filtering, .md +
+      front-matter input over mail_layout, Idempotency-Keys, List-Unsubscribe + one-click,
+      `--dry`, 1/sec throttle
+- [ ] O10: growth-engine nieuwsbrief drafter through the existing Telegram approval (approve
+      marks approved only; GROWTH_ENGINE_DRY_RUN honored; approved .md in durable data/)
+- [ ] O11: `kk nieuwsbrief send [--dry]` + `kk nieuwsbrief board`
+- [ ] O12: FOUNDER first edition: draft → approve → `--dry` → send (`kk deploy server` first)
+
+### P. Website factory — pilot kit (planned 2026-08-14; Phase 3 of the factory plan)
+Narrow-pilot principle holds: build the kit, do the first site BY HAND for a warm prospect,
+measure founder-minutes per stage. NOT built now: `kk factory` verb, TransIP API, generator
+CLI. Template rules baked in: click-to-call primary CTA, no review/aggregateRating schema,
+max 3–5 city pages, photo-free fallback, no external embeds (cookie-banner-free stays a
+verifiable sales feature), KvK+btw footer, privacyverklaring names the receptionist processor.
+- [ ] P1: `apps/client-sites/` scaffold — Astro workspace app, Zod `client.yaml` schema +
+      loader, fixture client, env-driven client selection, minimal index
+- [ ] P2: base layout + homepage from the dakdekkers kit, brand CSS vars from client.yaml,
+      sticky click-to-call, photo band with photo-free fallback
+- [ ] P3: diensten/contact/city-template + privacyverklaring + voorwaarden; Dutch fixture
+      copy, copy-lint
+- [ ] P4: QA battery on the fixture build (squirrelscan, lychee, pa11y, Lighthouse,
+      screenshots); record exact commands for the runbook
+- [ ] P5: `docs/03-delivery/website-intake-checklist.md` — Dutch client part (10-foto shot
+      list + top-up questions) + internal scrape-first procedure (extract/scaffold; prices
+      never scraped)
+- [ ] P6: `docs/03-delivery/website-pilot-runbook.md` — stages incl. TransIP NS (link
+      dns-ns-troubleshooting.md), CF Pages project, custom-domain REST curl, Email Routing
+      click, QA commands, IP-akte on final payment, domain in client's name
+- [ ] P7: `website-maintenance-scope.md` (kleine wijzigingen = 2 tekst/foto-edits per maand,
+      in writing) + `website-pilot-timing-log.md` (stage / founder-minutes / friction)
+- [ ] P8: FOUNDER blockers surfaced: seller BTW-id/address placeholders (invoices not legally
+      valid yet); pilot needs a real buyer (sell into DRS / Cool Global / riool sprint)
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
