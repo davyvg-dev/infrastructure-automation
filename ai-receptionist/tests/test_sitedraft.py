@@ -88,6 +88,48 @@ def test_build_config_refuses_a_site_without_hours() -> None:
         sitedraft.build_config("X BV", {**EXTRACTION, "hours": {}}, DRAFT)
 
 
+def _arrays(node: object):
+    """Every array subschema in _SCHEMA, at any depth."""
+    if isinstance(node, dict):
+        if node.get("type") == "array":
+            yield node
+        for value in node.values():
+            yield from _arrays(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from _arrays(item)
+
+
+def test_schema_carries_no_array_bounds_the_api_rejects() -> None:
+    """Structured outputs 400 on `maxItems`, and on `minItems` above 1. Those bounds live in the
+    prompt and in build_config instead; putting them back here breaks every scrape."""
+    for array in _arrays(sitedraft._SCHEMA):
+        assert "maxItems" not in array, array
+        assert array.get("minItems", 0) in (0, 1), array
+
+
+@pytest.mark.parametrize(
+    ("veld", "waarde"),
+    [("diensten", DRAFT["diensten"][:2]), ("usps", ["Eén pluspunt"])],
+)
+def test_build_config_refuses_a_draft_under_the_client_sites_floor(veld: str, waarde: list) -> None:
+    with pytest.raises(DraftError, match=veld):
+        sitedraft.build_config("X BV", EXTRACTION, {**DRAFT, veld: waarde})
+
+
+def test_build_config_truncates_to_the_client_sites_ceilings() -> None:
+    fat = {
+        **DRAFT,
+        "werkgebied": [f"Plaats{i}" for i in range(9)],
+        "diensten": [{"naam": f"Dienst {i}", "omschrijving": "Wat wij doen."} for i in range(12)],
+        "usps": [f"Pluspunt {i}" for i in range(7)],
+    }
+    config = sitedraft.build_config("X BV", EXTRACTION, fat)
+    assert len(config["bedrijf"]["werkgebied"]) == 5
+    assert len(config["diensten"]) == 8
+    assert len(config["usps"]) == 4
+
+
 def test_build_config_refuses_a_brand_colour_white_text_cannot_sit_on() -> None:
     with pytest.raises(DraftError, match="te licht"):
         sitedraft.build_config("X BV", EXTRACTION, DRAFT, kleur_primair="#ffe08a")

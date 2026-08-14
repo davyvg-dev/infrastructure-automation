@@ -65,6 +65,13 @@ DEFAULT_ACCENT = "#c2703d"
 _HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 _TIME_RE = re.compile(r"^\d{2}:\d{2}$")
 
+# Array counts live in the prompt and in build_config, never here. Structured outputs reject
+# `maxItems` outright ("property 'maxItems' is not supported") and accept `minItems` only as 0
+# or 1 ("'minItems' values other than 0 or 1 are not supported"), both with a 400 — probed
+# against claude-opus-5 on 2026-08-14, so only werkgebied's minItems 1 survives. The Zod schema
+# on the client-sites side is the real gate (werkgebied 1-5, diensten 3-8, usps 2-4);
+# build_config truncates to those ceilings and refuses anything under the floors, so a model
+# that miscounts costs a dropped item or a clear Dutch error, never a broken build.
 _SCHEMA: dict = {
     "type": "object",
     "additionalProperties": False,
@@ -75,11 +82,9 @@ _SCHEMA: dict = {
         "plaats": {"type": "string"},
         # 1-5 towns actually named in the sources. The template renders one page per town and
         # Google's doorway-page rules punish more than a handful of near-identical local pages.
-        "werkgebied": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 5},
+        "werkgebied": {"type": "array", "items": {"type": "string"}, "minItems": 1},
         "diensten": {
             "type": "array",
-            "minItems": 3,
-            "maxItems": 8,
             "items": {
                 "type": "object",
                 "additionalProperties": False,
@@ -90,7 +95,7 @@ _SCHEMA: dict = {
                 "required": ["naam", "omschrijving"],
             },
         },
-        "usps": {"type": "array", "items": {"type": "string"}, "minItems": 2, "maxItems": 4},
+        "usps": {"type": "array", "items": {"type": "string"}},
         "spoed_beschikbaar": {"type": "boolean"},
         "spoed_tekst": {"type": "string"},
     },
@@ -110,17 +115,29 @@ _SYSTEM = (
     "3. NOOIT prijzen, tarieven, voorrijkosten of bedragen. Ook geen percentages of statistieken.\n"
     "4. Herschrijf in je eigen woorden. Neem nooit meer dan zes woorden achter elkaar letterlijk "
     "over uit een bron: de tekst van de prospect is niet van ons.\n"
-    "5. `usps` alleen als ze uit de bronnen blijken. Kun je er maar twee onderbouwen, geef er dan "
-    "twee. Geen lege beloftes zoals 'de beste van de regio'.\n"
+    "5. `usps` alleen als ze uit de bronnen blijken: minimaal twee, maximaal vier. Kun je er maar "
+    "twee onderbouwen, geef er dan twee. Geen lege beloftes zoals 'de beste van de regio'.\n"
     "6. `spoed_beschikbaar` alleen true als de bronnen spoed, 24/7 of storingsdienst noemen; is "
     "dat niet zo, zet hem op false en schrijf in `spoed_tekst` alleen hoe men contact opneemt.\n"
-    "7. `omschrijving` is een of twee zinnen over wat de dienst voor de klant oplost.\n"
+    "7. `diensten`: minimaal drie, maximaal acht. `omschrijving` is een of twee zinnen over wat "
+    "de dienst voor de klant oplost.\n"
     "8. `werkgebied`: alleen plaatsen die in de bronnen staan, maximaal vijf, `plaats` als eerste."
 )
 
 
 class DraftError(RuntimeError):
     """Raised when the prospect cannot be turned into a config without guessing."""
+
+
+# Hours are the one required field no model may invent: without GOOGLE_PLACES_API_KEY they can
+# only come from the prospect's own site, and plenty of trade sites never publish them. main()
+# checks this before paying for the copy call, so a prospect that cannot work costs a second
+# instead of a minute.
+NO_HOURS = (
+    "geen openingstijden gevonden in de bronnen; er is niets geschreven. Zet de openingstijden "
+    "in een extraction-JSON (app.extract -o) en draai opnieuw met --from-json, of maak deze "
+    "prospect met de hand (de site toont anders alleen 'Gesloten')"
+)
 
 
 # --- deterministic mapping ---------------------------------------------------------------
@@ -252,15 +269,21 @@ def build_config(
     phone_raw = telefoon or (extraction.get("phone") or {}).get("value") or ""
     uren = openingstijden(extraction.get("hours") or {})
     if not uren:
-        raise DraftError(
-            "geen openingstijden gevonden in de bronnen; vul ze na het genereren met de hand aan "
-            "(de site toont anders alleen 'Gesloten')"
-        )
+        raise DraftError(NO_HOURS)
 
     plaats = draft["plaats"].strip()
     werkgebied = [p.strip() for p in draft["werkgebied"] if p.strip()]
     if plaats not in werkgebied:
         werkgebied.insert(0, plaats)
+
+    # The schema cannot carry these floors (see _SCHEMA), so catch a thin draft here rather
+    # than writing a yaml the client-sites build will reject with a Zod error.
+    for veld, minimum in (("diensten", 3), ("usps", 2)):
+        if len(draft[veld]) < minimum:
+            raise DraftError(
+                f"de bronnen leverden maar {len(draft[veld])} {veld} op (minimaal {minimum} "
+                f"nodig); vul {veld} met de hand aan of doe deze prospect handmatig"
+            )
 
     return {
         "modus": "preview",
@@ -277,14 +300,14 @@ def build_config(
         },
         "diensten": [
             {"naam": d["naam"].strip(), "omschrijving": d["omschrijving"].strip()}
-            for d in draft["diensten"]
+            for d in draft["diensten"][:8]
         ],
         "openingstijden": uren,
         "spoed": {
             "beschikbaar": bool(draft["spoed_beschikbaar"]),
             "tekst": draft["spoed_tekst"].strip(),
         },
-        "usps": [u.strip() for u in draft["usps"]],
+        "usps": [u.strip() for u in draft["usps"][:4]],
         # A proposal never claims the receptionist and never republishes their reviews.
         "receptionist": False,
     }
@@ -367,6 +390,10 @@ def main(argv: list[str]) -> int:
 
         if not (extraction.get("services") or sources):
             raise DraftError("de extractie bevat geen diensten en er zijn geen bronnen; stoppen.")
+        # Before the copy call, not after: build_config would raise the same error a minute and
+        # one Opus request later, having written nothing either way.
+        if not openingstijden(extraction.get("hours") or {}):
+            raise DraftError(NO_HOURS)
 
         draft = draft_copy(args.name, extraction, sources)
         config = build_config(
