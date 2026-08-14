@@ -215,7 +215,7 @@ export function previewUrl(slug: string): string {
 const SHAPES = {
   hero: { width: 1500, height: 1000 },
   og: { width: 1200, height: 630 },
-  wide: { width: 1200, height: 800 },
+  wide: { width: 900, height: 600 },
   tall: { width: 800, height: 1200 },
 } as const
 
@@ -225,6 +225,12 @@ export interface StockPhoto {
   /** Intrinsic size of the rendition, so the page can reserve the box before it loads. */
   width: number
   height: number
+  /**
+   * Dutch description of what is in the frame, from stock/<vak>/alt.json. Describes the
+   * photograph, never who did the work: a stock frame must not testify to a job this
+   * client may never have done.
+   */
+  alt: string
 }
 
 /**
@@ -336,6 +342,24 @@ export function loadClient(): LoadedClient {
   const stock: StockSet = { tiles: [], hero: null, og: null }
   if (fotos.length === 0 && fs.existsSync(stockDir)) {
     const files = fs.readdirSync(stockDir).filter((f) => FOTO_EXT.test(f) && !f.includes('-sm.'))
+    // Written by scripts/stock-photos.py alongside the images. A missing entry is a
+    // build failure rather than a silent empty alt: an undescribed photo is exactly the
+    // accessibility hole this file exists to close, and it can only happen when someone
+    // adds a rendition without describing it.
+    const altPath = path.join(stockDir, 'alt.json')
+    const alts: Record<string, string> = fs.existsSync(altPath)
+      ? JSON.parse(fs.readFileSync(altPath, 'utf8'))
+      : {}
+    const altFor = (file: string) => {
+      const text = alts[file]
+      if (!text) {
+        fail(
+          `stock/${vak}/alt.json has no description for "${file}". Add one in ` +
+            `scripts/stock-photos.py and re-run it; every stock photo needs Dutch alt text.`,
+        )
+      }
+      return text
+    }
     // Tiles are "<vak>-<n>-<shape>.webp", numbered from 1, and must render in that order:
     // a plain .sort() is lexicographic, which is fine to 9 tiles and wrong at 10. The
     // shape suffix carries the crop, so the markup never has to guess an aspect ratio.
@@ -344,10 +368,13 @@ export function loadClient(): LoadedClient {
       .map((f) => ({ f, m: f.match(TILE) }))
       .filter((x): x is { f: string; m: RegExpMatchArray } => x.m !== null)
       .sort((a, b) => Number(a.m[1]) - Number(b.m[1]))
-      .map(({ f, m }) => ({ src: `/stock/${f}`, ...SHAPES[m[2] as 'wide' | 'tall'] }))
+      .map(({ f, m }) => ({ src: `/stock/${f}`, ...SHAPES[m[2] as 'wide' | 'tall'], alt: altFor(f) }))
     for (const role of ['hero', 'og'] as const) {
       const name = `${vak}-${role}.webp`
-      if (files.includes(name)) stock[role] = { src: `/stock/${name}`, ...SHAPES[role] }
+      if (!files.includes(name)) continue
+      // The og card is never rendered in markup, so it carries no alt of its own.
+      const alt = role === 'og' ? '' : altFor(name)
+      stock[role] = { src: `/stock/${name}`, ...SHAPES[role], alt }
     }
   }
 

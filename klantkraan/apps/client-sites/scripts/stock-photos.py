@@ -25,50 +25,136 @@ gutters, scaffolding and brick facades instead. Every new vak needs that same pa
 
 from __future__ import annotations
 
+import json
 import sys
 import urllib.request
 from pathlib import Path
 
 from PIL import Image, ImageOps
 
-# vak -> [(pexels id, photographer, roles)], picked by eye from search sheets 2026-08-14.
+# vak -> [(pexels id, photographer, roles, alt)], picked by eye from search sheets
+# 2026-08-14.
 #
 # `roles` is the art direction: which crops this photo is cut to, and nothing more. Each
-# vak spends exactly one photo on the hero and gives the other five a tall or a wide
-# tile, so a photo only gets the renditions its roles need and adding a ratio does not
-# multiply the whole committed set. The hero photo takes no tile: seeing the same frame
-# twice on one page is the thing that gives a stock set away.
+# vak spends one photo on the hero and gives the other six a tall or a wide tile, so a
+# photo only gets the renditions its roles need and adding a ratio does not multiply the
+# whole committed set. The hero photo takes no tile: seeing the same frame twice on one
+# page is the thing that gives a stock set away.
 #
-# Which two of the five go wide is deliberately different per vak (dakdekker 2 and 6,
-# loodgieter 4 and 5), so two client sites built from this kit do not stagger identically.
+# Six tiles, three tall and three wide, in the order TALL WIDE WIDE TALL TALL WIDE -- and
+# that exact sequence is load-bearing, not tidiness. The work section is a CSS
+# multi-column, which fills sequentially and cannot reorder to balance, so the source
+# order decides the layout twice over:
+#   - three talls in a row pile 1028px into one column against 536px in another, and the
+#     short column reads as a missing photo rather than as rhythm;
+#   - but a plain tall/wide alternation balances the columns and then puts every seam at
+#     the same height, which is a ladder -- the thing the reference sites avoid.
+# This sequence fills as [tall, wide] [wide, tall] [tall, wide]: every column ends level
+# at 774px while the seams land at 536, 238 and 536. Level bottoms, ragged seams.
+# Reordering this list reorders the page, and re-running is not enough to see it -- check
+# the three column heights.
+#
+# Within that constraint the crop still follows the subject: the aerial, the tool spread
+# and the facade are horizontal facts and take the wide slots, the gable, the standpipe
+# and the tile courses are vertical ones and take the tall.
 #
 # Hero picks show a person doing the work rather than a finished object: a trade site
 # sells the crew, and a photo with a human in it is the one thing a stock strip cannot
-# fake. Both remain face-free, per the picking rule above.
-STOCK: dict[str, list[tuple[int, str, tuple[str, ...]]]] = {
+# fake. All remain face-free, per the picking rule above.
+#
+# `alt` is Dutch, and it describes what is IN the frame -- never who did it. That is the
+# whole discipline: "Dakdekker werkt vanuit een hoogwerker" is a true description of a
+# photograph, while anything naming the client would make a stock frame testify to work
+# they may never have done. Written per photo rather than shared, because five images
+# carrying one identical sentence is five identical announcements to a screen reader.
+STOCK: dict[str, list[tuple[int, str, tuple[str, ...], str]]] = {
     "dakdekker": [
         # roofer in a cherry picker, red brick building: the only frame with a person
         # actually working, and it is already 3:2, so the hero crop keeps all of it.
-        (31762405, "Gundula Vogel", ("hero", "og")),
-        (31745718, "Jef KoeleWijn", ("wide",)),  # scaffolding on a roof against blue sky
+        (
+            31762405,
+            "Gundula Vogel",
+            ("hero", "og"),
+            "Dakdekker werkt vanuit een hoogwerker aan een pannendak",
+        ),
         # brick gable, orange tiles, deep blue sky: the triangle is centred, so it is one
         # of the few landscape frames that survives a 2:3 crop.
-        (12484142, "Jan van der Wolf", ("tall",)),
-        (6195500, "A.", ("tall",)),  # brick house with tiled roof, autumn tree
-        (4446029, "Francesco Ungaro", ("tall",)),  # tile close-up with lead flashing
-        (37165058, "Priyanshi Garg", ("wide",)),  # clay tile texture, symmetric ridge
+        (
+            12484142,
+            "Jan van der Wolf",
+            ("tall",),
+            "Puntgevel met oranje dakpannen en een strakke daklijst",
+        ),
+        (
+            31745718,
+            "Jef KoeleWijn",
+            ("wide",),
+            "Steigerwerk langs een dak in aanbouw tegen een blauwe lucht",
+        ),
+        (6195500, "A.", ("wide",), "Woning met pannendak en dakgoot, herfstboom ernaast"),
+        (37165058, "Priyanshi Garg", ("tall",), "Rijen verweerde dakpannen op een hellend dak"),
+        (
+            4446029,
+            "Francesco Ungaro",
+            ("tall",),
+            "Loodslabben rond dakpannen, van dichtbij gezien",
+        ),
+        # The set had five close and mid shots and no establishing frame: every photo sat
+        # at roughly the same distance, which is its own kind of monotony. An aerial of
+        # Dutch terraced roofs is the widest shot available and unmistakably not abroad,
+        # which is the failure mode the picking rule was written against.
+        (
+            14493179,
+            "Kelly",
+            ("wide",),
+            "Rijtjeshuizen van bovenaf met pannendaken en dakkapellen",
+        ),
     ],
     "loodgieter": [
-        (6419128, "Anil Karakaya", ("tall",)),  # hands fitting steel pipe, pipe vertical
+        (
+            6419128,
+            "Anil Karakaya",
+            ("tall",),
+            "Handen monteren een stalen leiding onder een wastafel",
+        ),
         # gloved hands on blue pipe: workwear and a face-free person, the closest this
         # set gets to a crew shot.
-        (29226620, "Sergei Starostin", ("hero", "og")),
-        (5534767, "Roger Brown", ("tall",)),  # gloved hand, adjustable wrench
-        (5414383, "Roger Brown", ("wide",)),  # wrenches and pliers, spread diagonally
-        (14953886, "AS Photography", ("wide",)),  # fittings on a blueprint
+        (
+            29226620,
+            "Sergei Starostin",
+            ("hero", "og"),
+            "Loodgieter monteert een koppeling op een waterleiding",
+        ),
+        (5414383, "Roger Brown", ("wide",), "Moersleutels en waterpomptang op een werkblad"),
+        (
+            5534767,
+            "Roger Brown",
+            ("wide",),
+            "Hand met werkhandschoen en een verstelbare moersleutel",
+        ),
+        (
+            14953886,
+            "AS Photography",
+            ("tall",),
+            "Fittingen en flexibele slangen op een bouwtekening",
+        ),
         # chrome tap, running water: the finished result, and the brightest frame of the
         # set, which the tall slot needs next to dark tool close-ups.
-        (34295401, "Zulfugar Karimov", ("tall",)),
+        (
+            34295401,
+            "Zulfugar Karimov",
+            ("tall",),
+            "Kraan met stromend water boven een rvs spoelbak",
+        ),
+        # Six frames of hands and tools and no installation: this set could have been any
+        # trade. A cv-verdeler is the one object a Dutch homeowner recognises instantly as
+        # loodgieterswerk.
+        (
+            7937299,
+            "Erik Mclean",
+            ("wide",),
+            "Verdeler van een cv-installatie met pomp en leidingen",
+        ),
     ],
 }
 
@@ -108,10 +194,12 @@ RENDITIONS: dict[str, tuple[str, tuple[int, int], tuple[int, int] | None, int]] 
     # every platform crops to roughly 1.91:1 and a 3:2 hero loses its top and bottom to
     # that crop. No -sm: nothing ever renders this on a page.
     "og": ("og", (1200, 630), None, 80),
-    # Work-section tiles. Rendered ~330px wide in a three-column desktop grid and ~170px
-    # on a phone, so these carry roughly 2x for retina without paying for more.
+    # Work-section tiles, drawn ~357px wide in the three-column desktop grid and ~342px
+    # in the single-column phone layout, so these carry roughly 2x for retina and no more.
+    # Wide was 1200px until an aerial of a hundred roof tiles came in at 291 KB: at a
+    # 357px box those pixels were never going to be seen, and the budget is the budget.
     "tall": ("tall", (800, 1200), (400, 600), 78),
-    "wide": ("wide", (1200, 800), (600, 400), 78),
+    "wide": ("wide", (900, 600), (450, 300), 78),
 }
 OUT = Path(__file__).resolve().parent.parent / "stock"
 UA = "klantkraan-site-photos/1.0"  # Pexels 403s urllib's default UA
@@ -138,7 +226,11 @@ def main() -> int:
     for vak, photos in STOCK.items():
         dest = OUT / vak
         dest.mkdir(parents=True, exist_ok=True)
-        for i, (photo_id, photographer, roles) in enumerate(photos, start=1):
+        # filename -> alt, written next to the images so the descriptions travel with the
+        # set they describe and src/lib/client.ts has one place to read them from. The
+        # alternative -- a second copy of this text in TypeScript -- is a copy that drifts.
+        alts: dict[str, str] = {}
+        for i, (photo_id, photographer, roles, alt) in enumerate(photos, start=1):
             img = _fetch(photo_id)
             for role in roles:
                 suffix, size, size_sm, quality = RENDITIONS[role]
@@ -152,7 +244,15 @@ def main() -> int:
                         dest / f"{name}.webp", quality=quality, method=6
                     )
                     written += 1
+                # The og card is never rendered in page markup, so it needs no alt.
+                if role != "og":
+                    alts[f"{stem}.webp"] = alt
                 print(f"{stem}.webp  <- pexels {photo_id} ({photographer}) [{role}]")
+        (dest / "alt.json").write_text(
+            json.dumps(alts, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        written += 1
     print(f"\nwrote {written} files to {OUT}")
     return 0
 

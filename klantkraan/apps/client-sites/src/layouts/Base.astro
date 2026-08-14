@@ -23,6 +23,19 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString()
 // their first one, at whatever ratio it happens to be, which still beats nothing.
 const ogImage = stock.og?.src ?? fotos[0] ?? null
 const ogUrl = ogImage ? `${siteUrl}${ogImage}` : null
+
+// Preload the hero photo, which is the LCP element on the one page that has it. The
+// preload scanner would find the <img> on its own, but it sits behind the stylesheet in
+// the discovery order and this is the largest byte on the page; the hint moves it ahead.
+// Homepage only -- Hero.astro renders nowhere else, and preloading an image a page never
+// draws is a wasted round trip on every other page.
+const heroPreload =
+  Astro.url.pathname === '/' && !fotos[0] && stock.hero
+    ? {
+        href: stock.hero.src,
+        srcset: `${stock.hero.src.replace(/\.webp$/, '-sm.webp')} 750w, ${stock.hero.src} 1500w`,
+      }
+    : null
 // A proposal says so in the tab title too: screenshots and shared links travel
 // further than the page itself.
 const paginaTitel = isPreview ? `${title} | voorbeeld van Klantkraan` : title
@@ -67,6 +80,18 @@ const schema = isPreview
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      heroPreload && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroPreload.href}
+          imagesrcset={heroPreload.srcset}
+          imagesizes="(min-width: 768px) 46vw, 100vw"
+          fetchpriority="high"
+        />
+      )
+    }
     {isPreview && <meta name="robots" content="noindex, nofollow" />}
     <title>{paginaTitel}</title>
     <meta name="description" content={description} />

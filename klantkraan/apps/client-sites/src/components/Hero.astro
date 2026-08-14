@@ -23,7 +23,7 @@ const [d1, d2, d3] = config.diensten.slice(0, 3).map((d) => d.naam.toLowerCase()
 // shot first -- otherwise the vak's hero crop, otherwise no photo at all and the copy
 // simply spans the page.
 const heroSrc = fotos[0] ?? stock.hero?.src ?? null
-const heroAlt = fotos[0] ? `Werk van ${bedrijf.naam}` : `Werk van een ${bedrijf.vak}`
+const heroAlt = fotos[0] ? `Werk van ${bedrijf.naam}` : (stock.hero?.alt ?? '')
 // The -sm rendition is 750px wide and the photo is never drawn wider than ~46vw, so it
 // covers every phone at 2x; only the stock set has one.
 const heroSm = !fotos[0] && stock.hero ? stock.hero.src.replace(/\.webp$/, '-sm.webp') : null
@@ -37,6 +37,8 @@ const heroSm = !fotos[0] && stock.hero ? stock.hero.src.replace(/\.webp$/, '-sm.
           src={heroSrc}
           srcset={heroSm ? `${heroSm} 750w, ${heroSrc} 1500w` : undefined}
           sizes={heroSm ? '(min-width: 768px) 46vw, 100vw' : undefined}
+          width={stock.hero && !fotos[0] ? stock.hero.width : undefined}
+          height={stock.hero && !fotos[0] ? stock.hero.height : undefined}
           alt={heroAlt}
           fetchpriority="high"
           decoding="async"

@@ -57,9 +57,12 @@ Audit through `astro preview`, not a plain static server. `python -m http.server
 and ignores `public/_headers`, which fails `perf/compression` and `perf/cache-headers` for reasons
 that have nothing to do with the site; scores across the two are not comparable.
 
-Ran on 2026-08-14 (squirrel v0.0.85, voorbeeld-dakdekker): 9 pages, 76/C, 914 passed, 59 warnings,
-10 failed. Known local-preview artifacts, NOT template bugs (re-check on the deployed Pages URL
-instead):
+Ran on 2026-08-14 (squirrel v0.0.85, voorbeeld-dakdekker): 9 pages, 78/C, 953 passed, 50 warnings,
+10 failed, with Images and Accessibility both at 100. Up from 76/C, 914 passed, 59 warnings after
+the photo rework: the share card closed `social/og-image`, per-photo Dutch alt text closed
+`images/alt-text`, and width/height plus a hero preload closed `images/dimensions`,
+`perf/cls-hints` and `perf/lcp-hints`. Known local-preview artifacts, NOT template bugs (re-check
+on the deployed Pages URL instead):
 
 - `security/https`, `perf/http2`: localhost is plain HTTP.
 - `security/csp`, `security/x-frame-options`, `perf/bad-caching`: served by `public/_headers`
@@ -69,13 +72,19 @@ instead):
 - `links/broken-links`, `links/orphan-pages`, `eeat/privacy-policy` were on this list under
   v0.0.80 (trailing-slash handling) and no longer fire under v0.0.85.
 
-Real, accepted findings: no og:image (client sites ship no share image yet; candidate: first
-client photo or the first stock tile), no About page (the homepage intro covers it), an a11y
-underline hint on the werkgebied chips (they are bordered button-style cards), `images/optimized`
-(info: "consider an image CDN", which a static Pages deploy does not have), and
-`perf/lazy-above-fold` on the first three photo-band tiles. The band is the fourth section on the
-homepage, well below any real fold, so `loading="lazy"` stays; the rule appears to flag the first
-grid row by position in the DOM rather than on screen.
+Real, accepted findings: no About page (the homepage intro covers it), an a11y underline hint on
+the werkgebied chips (they are bordered button-style cards), `images/optimized` (info: "consider
+an image CDN", which a static Pages deploy does not have), and `perf/lazy-above-fold` on the first
+two work-section tiles. That section is the fourth on the homepage, well below any real fold, so
+`loading="lazy"` stays; the rule appears to flag the first grid row by position in the DOM rather
+than on screen. The hero photo above it is `fetchpriority="high"` with a `<link rel="preload">`,
+which is the image that actually matters for LCP.
+
+Stock photo budget: every rendition stays under the 200 KB that `images/image-file-size` flags
+(largest is the dakdekker hero at 179 KB). The aerial tile first came in at 291 KB, which is what
+sized the wide rendition down to 900px -- it is drawn in a 357px box, so the rest was never going
+to be seen. Re-check this after adding any vak: detail-dense frames (roof tiles, brickwork,
+foliage) compress far worse than studio close-ups.
 
 Also accepted, and worth a decision before a real client ships: `content/word-count` on
 `/contact/` (201), `/diensten/` (216) and the city pages (~261) against a 300 minimum, and

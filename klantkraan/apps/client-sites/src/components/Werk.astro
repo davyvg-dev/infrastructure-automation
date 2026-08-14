@@ -41,26 +41,34 @@ const own = ownTiles.length > 0
 // stock set both reserves the box -- no reflow as they load -- and gives every client
 // site the same considered stagger. The cycle starts tall and puts the landscape frames
 // at 2 and 5, matching how the stock sets are cut.
-const CYCLE = ['tall', 'wide', 'tall', 'tall', 'wide'] as const
+const CYCLE = ['tall', 'wide', 'tall', 'wide', 'tall', 'wide'] as const
 const tiles = own
-  ? ownTiles.map((src, i) => ({ src, shape: CYCLE[i % CYCLE.length], width: 0, height: 0 }))
+  ? ownTiles.map((src, i) => ({
+      src,
+      shape: CYCLE[i % CYCLE.length],
+      width: 0,
+      height: 0,
+      alt: `Werk van ${bedrijf.naam}`,
+    }))
   : stock.tiles.map((t) => ({
       src: t.src,
       shape: t.height > t.width ? ('tall' as const) : ('wide' as const),
       width: t.width,
       height: t.height,
+      alt: t.alt,
     }))
 
-// The client's own photos are informative -- they are the evidence -- so they get real
-// alt text. Stock tiles get alt="", the decorative-image contract: five images repeating
-// "Werk van een dakdekker" is five identical announcements for a screen reader, and an
-// empty alt is also the most honest thing we can say about a frame that is not this
-// client's work. The heading above them already carries the meaning.
-const alt = own ? `Werk van ${bedrijf.naam}` : ''
-// Tiles are drawn ~330px wide on a three-column desktop and ~170px on a two-column
-// phone, so the -sm rendition covers everything up to a 2x phone; stock only, since a
-// client photo has no second rendition to point at.
-const srcset = (src: string) => `${src.replace(/\.webp$/, '-sm.webp')} 400w, ${src} 800w`
+// Every stock tile carries its own Dutch description of what is in the frame (from
+// stock/<vak>/alt.json), never a claim about who did the work. One shared sentence would
+// be six identical announcements to a screen reader, and alt="" fails the audit's
+// images/alt-text rule -- these are content photographs on a trade site, not decoration.
+// A client's own photos are their work and say so.
+//
+// Tiles are drawn ~357px wide on a three-column desktop and ~342px in the single-column
+// phone layout, so the -sm rendition covers a 1x phone and the full file covers 2x;
+// stock only, since a client photo has no second rendition to point at.
+const srcset = (src: string, w: number) =>
+  `${src.replace(/\.webp$/, '-sm.webp')} ${w / 2}w, ${src} ${w}w`
 ---
 
 {
@@ -87,12 +95,12 @@ const srcset = (src: string) => `${src.replace(/\.webp$/, '-sm.webp')} 400w, ${s
          * viewport most of these visitors actually use.
          */}
         <ul role="list" class="mt-10 gap-4 columns-1 sm:columns-2 md:mt-14 md:columns-3">
-          {tiles.map(({ src, shape, width, height }) => (
+          {tiles.map(({ src, shape, width, height, alt }) => (
             <li class="mb-4 break-inside-avoid">
               <img
                 src={src}
-                srcset={own ? undefined : srcset(src)}
-                sizes={own ? undefined : '(min-width: 768px) 330px, 45vw'}
+                srcset={own ? undefined : srcset(src, width)}
+                sizes={own ? undefined : '(min-width: 768px) 357px, (min-width: 640px) 45vw, 90vw'}
                 width={own ? undefined : width}
                 height={own ? undefined : height}
                 alt={alt}
