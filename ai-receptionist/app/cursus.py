@@ -47,7 +47,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from urllib.parse import quote
 
-from . import mail_layout, mailer, pipeline, settings
+from . import mail_layout, mailer, pipeline, settings, suppression
 
 LESSON_NUMBERS = (1, 2, 3, 4)
 
@@ -151,7 +151,9 @@ def add(
 
 def stop(email: str, *, bounced: bool = False, now: datetime | None = None) -> bool:
     """Halt sending. Returns True if the address was known. `bounced` is the delivery-side
-    halt; the default is an afmelding (consent withdrawn)."""
+    halt; the default is an afmelding (consent withdrawn), which also lands the address on
+    the shared suppression list so the cold-outreach side can never touch it either. A
+    bounce is deliberately NOT suppressed: a dead mailbox said nothing about consent."""
     email = normalize(email)
     data = load()
     sub = data["subscribers"].get(email)
@@ -159,6 +161,8 @@ def stop(email: str, *, bounced: bool = False, now: datetime | None = None) -> b
         return False
     sub["bounced" if bounced else "unsubscribed"] = _iso(now or _now())
     save(data)
+    if not bounced:
+        suppression.suppress(email)
     return True
 
 

@@ -94,6 +94,25 @@ def test_halt_states_stop_the_schedule(data_dir):
     assert cursus.due_lesson(cursus.load()["subscribers"]["piet@bedrijf.nl"]) is None
 
 
+def test_afmelding_lands_on_the_suppression_list(data_dir):
+    cursus.add("jan@bedrijf.nl", now=T0)
+    cursus.stop("Jan@Bedrijf.nl")
+    listed = (data_dir / "suppression.txt").read_text().splitlines()
+    assert "jan@bedrijf.nl" in [ln.strip().lower() for ln in listed]
+    # Idempotent: a second afmelding does not duplicate the line.
+    cursus.stop("jan@bedrijf.nl")
+    assert (data_dir / "suppression.txt").read_text().count("jan@bedrijf.nl") == 1
+
+
+def test_bounce_is_not_suppressed(data_dir):
+    # A dead mailbox said nothing about consent: halt the course, keep the address off
+    # the art. 11.7 opt-out record.
+    cursus.add("piet@bedrijf.nl", now=T0)
+    cursus.stop("piet@bedrijf.nl", bounced=True)
+    path = data_dir / "suppression.txt"
+    assert not path.exists() or "piet@bedrijf.nl" not in path.read_text()
+
+
 # --- afmeldlink ---------------------------------------------------------------------------
 
 

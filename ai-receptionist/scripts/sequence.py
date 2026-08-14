@@ -54,6 +54,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from app.suppression import suppress as _suppress  # noqa: E402
 from scripts.outreach_mail import (  # noqa: E402
     DEMO,
     OPT_OUT,
@@ -280,19 +281,8 @@ def queue(
 
 
 def suppress(email: str, path: Path = SUPPRESSION) -> bool:
-    """Mirror an opt-out into the CLI suppression list. Returns False if already there."""
-    existing = set()
-    if path.exists():
-        existing = {
-            ln.strip().lower()
-            for ln in path.read_text().splitlines()
-            if ln.strip() and ln[0] != "#"
-        }
-    if email.lower() in existing:
-        return False
-    with path.open("a") as fh:
-        fh.write(f"{email}\n")
-    return True
+    """Mirror an opt-out into the shared suppression list. Returns False if already there."""
+    return _suppress(email, path)
 
 
 # ---------------------------------------------------------------------------

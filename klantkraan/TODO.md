@@ -195,8 +195,10 @@ copied next to the output by a `_write_assets` helper (repo woff2; system-font f
 Builds on the §L cursus machinery. Compliance fixes first (live gaps), then site coverage,
 then the broadcast layer. Opt-in stays NL-only (course is Dutch); nieuwsbrief sends are
 founder-triggered, never a timer.
-- [ ] O1: `cursus.stop()` also writes `data/suppression.txt` (same append path as
-      `sequence.py --opt-out`) — unsubscribers must never be cold-outreach-eligible
+- [x] O1: afmelding now writes `data/suppression.txt` — helper extracted to
+      `app/suppression.py` (call-time DATA_DIR, shared by `sequence.py --opt-out` and
+      `cursus.stop()`); bounce deliberately NOT suppressed (a dead mailbox says nothing
+      about consent, mirroring sequence.py's rule); 2 new tests, suite 283 green
 - [ ] O2: `POST /api/resend/webhook` — svix-signature-verified (stdlib hmac,
       `RESEND_WEBHOOK_SECRET`), bounce/complaint → stop+suppress; FOUNDER: secret in server
       .env + webhook in Resend dashboard
