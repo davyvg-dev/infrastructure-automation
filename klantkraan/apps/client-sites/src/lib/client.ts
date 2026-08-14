@@ -214,6 +214,7 @@ export function previewUrl(slug: string): string {
  */
 const SHAPES = {
   hero: { width: 1500, height: 1000 },
+  og: { width: 1200, height: 630 },
   wide: { width: 1200, height: 800 },
   tall: { width: 800, height: 1200 },
 } as const
@@ -239,6 +240,8 @@ export interface StockSet {
   tiles: StockPhoto[]
   /** 3:2 crop beside the hero copy, when the vak's set defines one. */
   hero: StockPhoto | null
+  /** 1200x630 share card, cut from the same frame as the hero. */
+  og: StockPhoto | null
 }
 
 export interface LoadedClient {
@@ -330,7 +333,7 @@ export function loadClient(): LoadedClient {
   // with the wrong aspect ratio.
   const vak = config.bedrijf.vak
   const stockDir = fileURLToPath(new URL(`../../stock/${vak}/`, import.meta.url))
-  const stock: StockSet = { tiles: [], hero: null }
+  const stock: StockSet = { tiles: [], hero: null, og: null }
   if (fotos.length === 0 && fs.existsSync(stockDir)) {
     const files = fs.readdirSync(stockDir).filter((f) => FOTO_EXT.test(f) && !f.includes('-sm.'))
     // Tiles are "<vak>-<n>-<shape>.webp", numbered from 1, and must render in that order:
@@ -342,8 +345,9 @@ export function loadClient(): LoadedClient {
       .filter((x): x is { f: string; m: RegExpMatchArray } => x.m !== null)
       .sort((a, b) => Number(a.m[1]) - Number(b.m[1]))
       .map(({ f, m }) => ({ src: `/stock/${f}`, ...SHAPES[m[2] as 'wide' | 'tall'] }))
-    if (files.includes(`${vak}-hero.webp`)) {
-      stock.hero = { src: `/stock/${vak}-hero.webp`, ...SHAPES.hero }
+    for (const role of ['hero', 'og'] as const) {
+      const name = `${vak}-${role}.webp`
+      if (files.includes(name)) stock[role] = { src: `/stock/${name}`, ...SHAPES[role] }
     }
   }
 

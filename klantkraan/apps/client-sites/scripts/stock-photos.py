@@ -49,7 +49,7 @@ STOCK: dict[str, list[tuple[int, str, tuple[str, ...]]]] = {
     "dakdekker": [
         # roofer in a cherry picker, red brick building: the only frame with a person
         # actually working, and it is already 3:2, so the hero crop keeps all of it.
-        (31762405, "Gundula Vogel", ("hero",)),
+        (31762405, "Gundula Vogel", ("hero", "og")),
         (31745718, "Jef KoeleWijn", ("wide",)),  # scaffolding on a roof against blue sky
         # brick gable, orange tiles, deep blue sky: the triangle is centred, so it is one
         # of the few landscape frames that survives a 2:3 crop.
@@ -62,7 +62,7 @@ STOCK: dict[str, list[tuple[int, str, tuple[str, ...]]]] = {
         (6419128, "Anil Karakaya", ("tall",)),  # hands fitting steel pipe, pipe vertical
         # gloved hands on blue pipe: workwear and a face-free person, the closest this
         # set gets to a crew shot.
-        (29226620, "Sergei Starostin", ("hero",)),
+        (29226620, "Sergei Starostin", ("hero", "og")),
         (5534767, "Roger Brown", ("tall",)),  # gloved hand, adjustable wrench
         (5414383, "Roger Brown", ("wide",)),  # wrenches and pliers, spread diagonally
         (14953886, "AS Photography", ("wide",)),  # fittings on a blueprint
@@ -78,7 +78,7 @@ STOCK: dict[str, list[tuple[int, str, tuple[str, ...]]]] = {
 # Every source frame is 3:2 landscape, so "wide" is nearly a straight resize while "tall"
 # is a real crop -- which is why only a deliberately chosen photo gets the tall role.
 #
-# Two ratios, never square. Surveying twelve award-level construction and trade sites
+# Two ratios on the page, never square. Surveying twelve award-level construction and trade sites
 # (Koto, Harold Leidner, Hobbs, Land Morphology, Strom, Keystone, Norm, Hutker et al.)
 # turned up not one square content photo -- squares appear only at icon and news-thumb
 # size. A grid of equal squares is the single loudest "template" signal there is, and it
@@ -98,12 +98,16 @@ STOCK: dict[str, list[tuple[int, str, tuple[str, ...]]]] = {
 # Keep in sync with SHAPES in src/lib/client.ts, which turns these suffixes back into the
 # width/height attributes the pages render.
 #
-# role -> (suffix, full size, -sm size, quality)
-RENDITIONS: dict[str, tuple[str, tuple[int, int], tuple[int, int], int]] = {
+# role -> (suffix, full size, -sm size or None, quality)
+RENDITIONS: dict[str, tuple[str, tuple[int, int], tuple[int, int] | None, int]] = {
     # Beside the hero copy, bleeding off the page edge. 3:2 is the source ratio, so this
     # is the one crop that throws nothing away, and it matches the box the split hero
     # actually draws (a 16:9 would be cropped again by the layout).
     "hero": ("hero", (1500, 1000), (750, 500), 72),
+    # The share card. Cut separately at 1200x630 rather than reusing the hero, because
+    # every platform crops to roughly 1.91:1 and a 3:2 hero loses its top and bottom to
+    # that crop. No -sm: nothing ever renders this on a page.
+    "og": ("og", (1200, 630), None, 80),
     # Work-section tiles. Rendered ~330px wide in a three-column desktop grid and ~170px
     # on a phone, so these carry roughly 2x for retina without paying for more.
     "tall": ("tall", (800, 1200), (400, 600), 78),
@@ -141,8 +145,9 @@ def main() -> int:
                 # The hero is named for its role -- the page asks for "the hero", never
                 # "photo 2" -- while a tile keeps its index and carries its shape as a
                 # suffix, which is how the loader reads the ratio back off the filename.
-                stem = f"{vak}-hero" if role == "hero" else f"{vak}-{i}-{suffix}"
-                for name, box in ((stem, size), (f"{stem}-sm", size_sm)):
+                stem = f"{vak}-{suffix}" if role in ("hero", "og") else f"{vak}-{i}-{suffix}"
+                boxes = [(stem, size)] + ([(f"{stem}-sm", size_sm)] if size_sm else [])
+                for name, box in boxes:
                     ImageOps.fit(img, box, Image.LANCZOS).save(
                         dest / f"{name}.webp", quality=quality, method=6
                     )

@@ -13,10 +13,16 @@ interface Props {
 }
 
 const { title, description } = Astro.props
-const { config, siteUrl, logoUrl, isPreview } = loadClient()
+const { config, siteUrl, logoUrl, isPreview, fotos, stock } = loadClient()
 const { bedrijf } = config
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString()
+// Share card. A link to a client site used to unfurl as a bare grey box on WhatsApp,
+// which is where these links actually get passed around: the site had no photograph to
+// cut one from. Prefer the vak's 1200x630 crop; a client with their own photos gets
+// their first one, at whatever ratio it happens to be, which still beats nothing.
+const ogImage = stock.og?.src ?? fotos[0] ?? null
+const ogUrl = ogImage ? `${siteUrl}${ogImage}` : null
 // A proposal says so in the tab title too: screenshots and shared links travel
 // further than the page itself.
 const paginaTitel = isPreview ? `${title} | voorbeeld van Klantkraan` : title
@@ -70,6 +76,20 @@ const schema = isPreview
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="nl_NL" />
+    {
+      ogUrl && (
+        <>
+          <meta property="og:image" content={ogUrl} />
+          <meta name="twitter:card" content="summary_large_image" />
+          {stock.og && (
+            <>
+              <meta property="og:image:width" content={String(stock.og.width)} />
+              <meta property="og:image:height" content={String(stock.og.height)} />
+            </>
+          )}
+        </>
+      )
+    }
     <meta name="theme-color" content={config.branding.kleur_primair} />
     {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
