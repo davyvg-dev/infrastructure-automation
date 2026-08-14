@@ -3,6 +3,7 @@
 // (/llmstxt/astro_build_llms-full_txt, 2026-05-20)
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 import Base from '../../layouts/Base.astro'
+import CursusForm from '../../components/CursusForm.astro'
 import { niches, type NicheSlug } from '../../data/niches'
 import { company } from '../../data/company'
 
@@ -105,6 +106,9 @@ const pageTitle =
         </a>.
       </p>
     </aside>
+
+    <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+    <CursusForm embedded />
 
     {
       related.length > 0 && (

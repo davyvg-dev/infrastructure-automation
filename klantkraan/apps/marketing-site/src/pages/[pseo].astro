@@ -4,6 +4,7 @@
 // that), visible "laatst bijgewerkt", sourced stats block, <details> FAQ,
 // BreadcrumbList + FAQPage + Article JSON-LD, hub-and-spoke link block.
 import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
 import Icon from '../components/Icon.astro'
 import JsonLd from '../components/JsonLd.astro'
 import { getCollection, render } from 'astro:content'
@@ -222,6 +223,9 @@ const schemas = [
       </div>
     </div>
   </section>
+
+  <!-- 7. E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
 
   <JsonLd schema={schemas} />
 </Base>
