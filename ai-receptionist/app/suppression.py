@@ -20,6 +20,18 @@ def default_path() -> Path:
     return settings.DATA_DIR / "suppression.txt"
 
 
+def entries(path: Path | None = None) -> set[str]:
+    """Every suppressed address, lowercased. Missing file = empty set."""
+    path = path or default_path()
+    if not path.exists():
+        return set()
+    return {
+        ln.strip().lower()
+        for ln in path.read_text().splitlines()
+        if ln.strip() and ln[0] != "#"
+    }
+
+
 def suppress(email: str, path: Path | None = None) -> bool:
     """Append an address to the opt-out record. Returns False if already there."""
     path = path or default_path()

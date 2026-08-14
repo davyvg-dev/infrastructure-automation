@@ -217,9 +217,12 @@ founder-triggered, never a timer.
 - [ ] O7: lead magnet — Dutch print-styled checklist "Nooit meer een klus missen" → PDF in
       `public/downloads/`; stats only from the approved registry; copy-lint
 - [ ] O8: les 1 links the download (cursus.py `_blocks_1`)
-- [ ] O9: `app/nieuwsbrief.py` — broadcast ledger, halt/suppression filtering, .md +
-      front-matter input over mail_layout, Idempotency-Keys, List-Unsubscribe + one-click,
-      `--dry`, 1/sec throttle
+- [x] O9: `app/nieuwsbrief.py` — broadcast layer on the SAME subscriber ledger (one
+      afmelding stops cursus + nieuwsbrief), resumable broadcasts.json written per send,
+      .md front-matter input → mail_layout blocks, `nb-<id>-<email>` Idempotency-Keys,
+      List-Unsubscribe + RFC 8058 one-click, `--dry`, 1/sec pacing, corrupt ledger exits
+      loudly; CLI board/send/preview; suppression.entries() reader added; 7 tests, suite
+      300 green, preview eyeballed
 - [ ] O10: growth-engine nieuwsbrief drafter through the existing Telegram approval (approve
       marks approved only; GROWTH_ENGINE_DRY_RUN honored; approved .md in durable data/)
 - [ ] O11: `kk nieuwsbrief send [--dry]` + `kk nieuwsbrief board`
