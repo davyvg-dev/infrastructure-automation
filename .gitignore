@@ -52,3 +52,6 @@ credentials.json
 
 # Claude Code parallel-session worktrees
 .claude/worktrees/
+
+# kk deploy marker (what the server last received)
+.kk/

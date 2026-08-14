@@ -243,11 +243,54 @@ def test_status_unknown_subverb_raises():
 
 
 def test_deploy_server_gates_on_evals_first():
+    # ROOT does not exist, so the marker is unreadable: the gate must assume the worst
     steps = kk.plan("deploy", ["server"], ROOT)
     assert steps[0].argv == [AIR_PY, "-m", "app.evals", "run", "all"]
     assert not steps[0].tolerant  # a failing eval must abort the deploy
     assert steps[1].argv[-1] == kk.SERVER_IP
     assert "deploy.sh" in steps[1].argv[0]
+
+
+def test_deploy_server_records_the_marker_last_and_tolerantly():
+    steps = kk.plan("deploy", ["server"], ROOT)
+    assert len(steps) == 3
+    assert steps[2].argv[:2] == ["sh", "-c"]
+    assert kk.DEPLOY_MARKER in steps[2].argv[2]
+    assert "git rev-parse HEAD" in steps[2].argv[2]
+    # a failed marker write must not fail a deploy that already landed
+    assert steps[2].tolerant
+
+
+def test_eval_surface_covers_prompt_tools_and_client_configs():
+    assert kk.touches_eval_surface(["ai-receptionist/app/receptionist.py"])
+    assert kk.touches_eval_surface(["ai-receptionist/app/tools.py"])
+    assert kk.touches_eval_surface(["ai-receptionist/config/clients/dhz-autoservice.yaml"])
+    assert kk.touches_eval_surface(["ai-receptionist/app/evals.py"])
+    # one hit anywhere in the changeset is enough
+    assert kk.touches_eval_surface(["ops/status/generate.py", "ai-receptionist/app/rdw.py"])
+
+
+def test_eval_surface_excludes_everything_that_cannot_move_a_golden():
+    assert not kk.touches_eval_surface([])
+    assert not kk.touches_eval_surface([
+        "ops/status/generate.py",
+        "ops/hetzner/klantkraan-cursus.timer",
+        "klantkraan/apps/marketing-site/src/pages/index.astro",
+        "growth-engine/src/newsletter.py",
+        "ai-receptionist/app/nieuwsbrief.py",   # mail sender, never in a conversation
+        "ai-receptionist/tests/test_cursus.py",
+    ])
+
+
+def test_changed_since_deploy_is_unknown_without_a_marker(tmp_path):
+    assert kk.changed_since_deploy(tmp_path) is None
+
+
+def test_changed_since_deploy_is_unknown_when_the_marker_is_empty(tmp_path):
+    marker = tmp_path / kk.DEPLOY_MARKER
+    marker.parent.mkdir(parents=True)
+    marker.write_text("  \n")
+    assert kk.changed_since_deploy(tmp_path) is None
 
 
 def test_deploy_site_sequence():

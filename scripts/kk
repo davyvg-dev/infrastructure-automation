@@ -11,6 +11,7 @@ Usage: kk <verb> [args]   (kk help for the verb list)
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -20,6 +21,24 @@ from pathlib import Path
 SERVER_IP = "168.119.173.25"
 HEALTH_URL = f"https://demo-{SERVER_IP.replace('.', '-')}.sslip.io/health"
 OUTREACH_DAILY_CAP = 6
+
+# Files whose contents decide what the receptionist says or does. deploy.sh rsyncs the
+# whole repo and restarts the service, so a change here ships live to the number clients
+# call and must clear the goldens first. A deploy that touches none of them cannot move
+# a golden, and paying for 14 simulated Opus conversations to prove that is waste.
+EVAL_SURFACE = (
+    "ai-receptionist/app/receptionist.py",   # the prompt and the tool-use loop
+    "ai-receptionist/app/tools.py",          # tool schemas + dispatch
+    "ai-receptionist/app/settings.py",       # which config a request resolves to
+    "ai-receptionist/app/rdw.py",            # kenteken lookup (apk-kenteken golden)
+    "ai-receptionist/app/calendar_store.py",  # slots + bookings (booking goldens)
+    "ai-receptionist/app/listings_store.py",  # inventory search (makelaar goldens)
+    "ai-receptionist/app/evals.py",          # the goldens themselves
+    "ai-receptionist/config/",               # business.yaml + every client yaml
+)
+# SHA of the tree the server last received, written after a successful deploy. Absent or
+# unreadable means "we cannot know what changed", which the gate reads as "run everything".
+DEPLOY_MARKER = ".kk/deployed-server"
 
 # kk health runs this on the server: OnFailure alerts (kk-alert@) deliver via Telegram or
 # e-mail, and with neither configured every unit failure lands only in the journal — the
@@ -84,7 +103,8 @@ kk — Klantkraan command center
   kk status push                 push the deal/outreach snapshot to the server page
   kk health                      watchdog check+deep, server timers, /health
   kk logs <unit|alias> [n]       journalctl on the server (default 150 lines)
-  kk deploy site|server          site: typecheck+build+wrangler; server: evals gate then deploy.sh
+  kk deploy site|server          site: typecheck+build+wrangler; server: gate (goldens when
+                                 the agent surface changed, else config check) then deploy.sh
   kk help                        this text
 """
 
@@ -119,6 +139,61 @@ def _air_script(root: Path, script: str, *args: str) -> Step:
     script's app.* imports resolve (the status generator needs both)."""
     air = root / "ai-receptionist"
     return Step(air, [_venv_py(root, "ai-receptionist"), script, *args])
+
+
+def touches_eval_surface(paths: list[str]) -> bool:
+    return any(p.startswith(EVAL_SURFACE) for p in paths)
+
+
+def _git_lines(root: Path, *args: str) -> list[str] | None:
+    """git stdout as non-empty lines, or None when git cannot answer — no repo, an
+    unknown ref, git missing. Callers treat None as 'assume the worst'."""
+    try:
+        proc = subprocess.run(["git", "-C", str(root), *args],
+                              capture_output=True, text=True, check=False)
+    except OSError:
+        return None
+    if proc.returncode != 0:
+        return None
+    return [ln for ln in proc.stdout.splitlines() if ln.strip()]
+
+
+def changed_since_deploy(root: Path) -> list[str] | None:
+    """Repo-relative paths that differ from the tree the server last received —
+    committed and uncommitted alike, since deploy.sh rsyncs the working tree, not
+    HEAD. None when the answer is unknowable."""
+    try:
+        last = (root / DEPLOY_MARKER).read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if not last:
+        return None
+    committed = _git_lines(root, "diff", "--name-only", f"{last}..HEAD")
+    if committed is None:  # marker SHA gone: rebase, fresh clone, pruned history
+        return None
+    dirty = _git_lines(root, "status", "--porcelain")
+    if dirty is None:
+        return None
+    # porcelain is "XY path", or "XY old -> new" for a rename; the new path is what ships
+    paths = committed + [ln[3:].split(" -> ")[-1].strip('"') for ln in dirty]
+    # our own bookkeeping is never a deploy input (and is gitignored in this repo anyway)
+    return [p for p in paths if not p.startswith(DEPLOY_MARKER.split("/")[0] + "/")]
+
+
+def evals_gate(root: Path) -> Step:
+    """The pre-deploy gate. Goldens when the agent's behavior surface moved (or when
+    we cannot tell); the offline config check otherwise — that still catches a broken
+    yaml, without 14 live conversations proving a systemd timer didn't change the prompt."""
+    changed = changed_since_deploy(root)
+    if changed is None:
+        print("kk: no deploy marker to compare against — running all goldens")
+    elif touches_eval_surface(changed):
+        print("kk: agent surface changed since the last deploy — running all goldens")
+    else:
+        print(f"kk: agent surface untouched since the last deploy ({len(changed)} other "
+              "files changed) — offline config check only, no goldens")
+        return _air(root, "app.selftest", "config")
+    return _air(root, "app.evals", "run", "all")
 
 
 def enforce_outreach_limit(args: list[str]) -> list[str]:
@@ -285,9 +360,16 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
                             "--project-name=klantkraan-marketing"]),
             ]
         if target == "server":
+            marker = root / DEPLOY_MARKER
+            record = (f"mkdir -p {shlex.quote(str(marker.parent))} && "
+                      f"git rev-parse HEAD > {shlex.quote(str(marker))}")
             return [
-                _air(root, "app.evals", "run", "all"),  # gate: any failure aborts
+                evals_gate(root),  # gate: any failure aborts
                 Step(root, [str(root / "ops" / "hetzner" / "deploy.sh"), SERVER_IP]),
+                # Record what the server now has, so the next deploy can scope its gate.
+                # Tolerant: the deploy already succeeded, and a missing marker only costs
+                # the next deploy a full eval run.
+                Step(root, ["sh", "-c", record], tolerant=True),
             ]
         raise UsageError("kk deploy site|server")
 
