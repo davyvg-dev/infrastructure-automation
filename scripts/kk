@@ -55,8 +55,9 @@ LOG_UNITS = {
 SNAPSHOT_REMOTE = "/opt/klantkraan/ai-receptionist/data/status-snapshot.json"
 
 # Where the growth-engine bot stores Telegram-approved nieuwsbrief editions (rsync-durable,
-# like every data dir); `kk nieuwsbrief send` ships the newest one unless --file names it.
-NEWSLETTERS_REMOTE = "/opt/klantkraan/growth-engine/data/newsletters"
+# vertical-scoped like all its state); `kk nieuwsbrief send` ships the newest one unless
+# --file names it.
+NEWSLETTERS_REMOTE = "/opt/klantkraan/growth-engine/data/trades/newsletters"
 _NB_RUN = (
     "cd /opt/klantkraan/ai-receptionist && "
     "runuser -u klantkraan -- .venv/bin/python -m app.nieuwsbrief "

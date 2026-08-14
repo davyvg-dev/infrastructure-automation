@@ -60,6 +60,42 @@ def preview(draft: dict[str, Any]) -> str:
     return "\n".join(lines).strip()
 
 
+def newsletter_preview(draft: dict[str, Any]) -> str:
+    """The Telegram approval message for a nieuwsbrief draft (kind='newsletter').
+
+    The full .md rides along as a document attachment; this message is the readable
+    summary the founder decides on, so it carries subject/preheader with their limits,
+    the word count, and the whole body (truncated only if Telegram's cap forces it).
+    """
+    # Function-level import: formatting is imported by bot before newsletter is needed,
+    # and newsletter pulls in the drafting stack — keep that out of module import time.
+    from .newsletter import PREHEADER_MAX, SUBJECT_MAX, WORDS_MAX, WORDS_MIN
+
+    subject = draft.get("subject", "")
+    preheader = draft.get("preheader", "")
+    body = draft.get("body", "")
+    words = len(body.split())
+    w_warn = "" if WORDS_MIN <= words <= WORDS_MAX else f" ⚠️ need {WORDS_MIN}-{WORDS_MAX}"
+    s_warn = f" ⚠️ over {SUBJECT_MAX}" if len(subject) > SUBJECT_MAX else ""
+    p_warn = f" ⚠️ over {PREHEADER_MAX}" if len(preheader) > PREHEADER_MAX else ""
+
+    lines = verify_flags(draft)
+    lines += [
+        f"📰 *{_esc('nieuwsbrief')}* — {_esc(draft.get('edition', draft['id']))} "
+        + _esc(f"({words} woorden{w_warn})"),
+        "",
+        f"*{_esc('Onderwerp:')}* " + _esc(f"{subject} ({len(subject)}/{SUBJECT_MAX}{s_warn})"),
+        f"*{_esc('Preheader:')}* "
+        + _esc(f"{preheader} ({len(preheader)}/{PREHEADER_MAX}{p_warn})"),
+        "",
+        _esc(body),
+    ]
+    text = "\n".join(lines).strip()
+    if len(text) > 3900:  # Telegram message cap is 4096; the .md document has the full text
+        text = text[:3900].rstrip("\\") + _esc("… (ingekort; volledige tekst in het bestand)")
+    return text
+
+
 def pending_reel(draft: dict[str, Any]) -> bool:
     """True when the draft still carries an unfulfilled recording task."""
     return any(

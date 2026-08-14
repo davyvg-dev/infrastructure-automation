@@ -139,7 +139,7 @@ def test_nieuwsbrief_board_runs_on_the_server_as_app_user():
 
 def test_nieuwsbrief_send_picks_newest_edition_and_keeps_dry():
     (argv,) = argvs("nieuwsbrief", ["send", "--dry"])
-    assert "ls -t" in argv[2] and "growth-engine/data/newsletters" in argv[2]
+    assert "ls -t" in argv[2] and "growth-engine/data/trades/newsletters" in argv[2]
     assert 'send --file "$f" --dry' in argv[2]
     (argv,) = argvs("nieuwsbrief", ["send"])
     assert argv[2].endswith('send --file "$f"')

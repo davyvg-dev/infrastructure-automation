@@ -230,8 +230,14 @@ founder-triggered, never a timer.
       List-Unsubscribe + RFC 8058 one-click, `--dry`, 1/sec pacing, corrupt ledger exits
       loudly; CLI board/send/preview; suppression.entries() reader added; 7 tests, suite
       300 green, preview eyeballed
-- [ ] O10: growth-engine nieuwsbrief drafter through the existing Telegram approval (approve
-      marks approved only; GROWTH_ENGINE_DRY_RUN honored; approved .md in durable data/)
+- [x] O10: growth-engine drafter — `src/newsletter.py` draft kind (max_tokens 4000,
+      structured output), monthly JobQueue job (1st, 09:30 Amsterdam, dedupes per month) +
+      `/nieuwsbrief` manual trigger, Telegram delivery = .md document + summary +
+      approve/rewrite/skip, verify pass = Haiku judge + deterministic checks (u-register,
+      dashes, founder name, numbers outside 299/499/24-7, subject/preheader budgets,
+      150-350 words, ≤1 button to /demo|/rekentool), approve writes
+      `data/trades/newsletters/editie-YYYY-MM.md` and marks approved only; kk verb
+      re-pointed at the vertical-scoped path; growth-engine tests 17→42 green, ruff clean
 - [x] O11: `kk nieuwsbrief send [--dry] [--file <naam.md>]` + `board` — server-side over
       ssh (ledger lives there), runuser as klantkraan, newest .md from rsync-durable
       `growth-engine/data/newsletters/` unless --file names one (bare .md names only);

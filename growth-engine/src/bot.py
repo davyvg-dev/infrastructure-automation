@@ -33,6 +33,7 @@ from . import (
     formatting,
     generate,
     media,
+    newsletter,
     pagekit,
     platforms,
     publish_buffer,
@@ -76,12 +77,29 @@ async def _send_media_previews(app: Application, chat_id: int, draft: dict) -> N
                 await app.bot.send_video(chat_id, fh, caption="🎬 reel — save & attach")
 
 
+def _approval_message(draft: dict) -> str:
+    """The right approval preview per draft kind (posts vs the nieuwsbrief)."""
+    if draft.get("kind") == newsletter.KIND:
+        return formatting.newsletter_preview(draft)
+    return formatting.preview(draft)
+
+
 async def _deliver_draft(app: Application, chat_id: int, draft: dict) -> None:
-    # Media previews first, so the approval message (with buttons) stays last in the chat.
-    await _send_media_previews(app, chat_id, draft)
+    if draft.get("kind") == newsletter.KIND:
+        # The .md the founder is approving rides along as a document; the approval
+        # message (with buttons) stays last in the chat, same as media previews below.
+        await app.bot.send_document(
+            chat_id,
+            document=newsletter.markdown(draft).encode("utf-8"),
+            filename=newsletter.filename(draft),
+            caption="📰 nieuwsbrief-editie (.md)",
+        )
+    else:
+        # Media previews first, so the approval message (with buttons) stays last.
+        await _send_media_previews(app, chat_id, draft)
     await app.bot.send_message(
         chat_id=chat_id,
-        text=formatting.preview(draft),
+        text=_approval_message(draft),
         parse_mode=ParseMode.MARKDOWN_V2,
         reply_markup=_keyboard(draft["id"], formatting.pending_reel(draft)),
     )
@@ -90,10 +108,16 @@ async def _deliver_draft(app: Application, chat_id: int, draft: dict) -> None:
 
 
 async def _send_draft(app: Application, chat_id: int, draft: dict) -> None:
-    # Pre-approval verify pass (LLM judge + one auto-revise; see src/verify.py).
+    # Pre-approval verify pass (LLM judge + one auto-revise; see src/verify.py, and
+    # src/newsletter.py for the nieuwsbrief's own criteria).
     # Fail-open by design: check_and_revise never raises and never drops a draft —
     # a failing or unchecked draft arrives flagged via formatting.verify_flags.
-    draft = await asyncio.to_thread(verify.check_and_revise, draft)
+    checker = (
+        newsletter.check_and_revise
+        if draft.get("kind") == newsletter.KIND
+        else verify.check_and_revise
+    )
+    draft = await asyncio.to_thread(checker, draft)
     store.save_draft(draft)
     await _deliver_draft(app, chat_id, draft)
 
@@ -113,6 +137,23 @@ async def generation_job(context: ContextTypes.DEFAULT_TYPE) -> None:
             await _send_draft(context.application, chat_id, draft)
         except Exception as exc:  # keep the loop alive; report the failure
             await context.bot.send_message(chat_id, f"⚠️ Generation failed: {exc}")
+
+
+async def newsletter_job(context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = context.job.chat_id
+    try:
+        existing = newsletter.open_edition_draft()
+        if existing:  # /nieuwsbrief (or an earlier run) already drafted this edition
+            await context.bot.send_message(
+                chat_id,
+                f"📰 Nieuwsbrief {existing['edition']} already has a draft "
+                f"({existing['status']}); not drafting another. /nieuwsbrief forces one.",
+            )
+            return
+        draft = await asyncio.to_thread(newsletter.generate_newsletter)
+        await _send_draft(context.application, chat_id, draft)
+    except Exception as exc:
+        await context.bot.send_message(chat_id, f"⚠️ Nieuwsbrief generation failed: {exc}")
 
 
 async def reddit_job(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -151,6 +192,17 @@ def schedule_jobs(app: Application, chat_id: int) -> None:
     cadence = active_cadence()
     for i, t in enumerate(_run_times(int(cadence["runs_per_day"]))):
         jq.run_daily(generation_job, time=t, chat_id=chat_id, name=f"gen-{i}")
+
+    # Monthly nieuwsbrief draft: the 1st of each month, mid-morning. Approval only
+    # writes the .md — sending stays a separate founder command (kk nieuwsbrief send).
+    tz = ZoneInfo(strategy()["cadence"]["timezone"])
+    jq.run_monthly(
+        newsletter_job,
+        when=dt.time(hour=9, minute=30, tzinfo=tz),
+        day=1,
+        chat_id=chat_id,
+        name="newsletter",
+    )
 
     # Reddit runs on its own timer — only in verticals where it's enabled.
     if "reddit" not in platforms.enabled_platforms():
@@ -210,6 +262,16 @@ async def cmd_buildlog(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await _send_draft(context.application, update.effective_chat.id, draft)
 
 
+async def cmd_nieuwsbrief(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Manual trigger for a nieuwsbrief draft (the monthly job's /now equivalent)."""
+    await update.message.reply_text("Drafting the monthly nieuwsbrief…")
+    try:
+        draft = await asyncio.to_thread(newsletter.generate_newsletter)
+        await _send_draft(context.application, update.effective_chat.id, draft)
+    except Exception as exc:
+        await update.message.reply_text(f"⚠️ Nieuwsbrief generation failed: {exc}")
+
+
 async def cmd_cadence(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     cad = strategy()["cadence"]
     profiles = ", ".join(cad["profiles"].keys())
@@ -224,6 +286,8 @@ async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         "/now — generate a draft now\n"
         "/buildlog — draft a build-in-public post from your recent git commits\n"
+        "/nieuwsbrief — draft this month's nieuwsbrief (also runs itself on the 1st; "
+        "approving writes the .md for `kk nieuwsbrief send`)\n"
         "/cadence — show cadence\n"
         "/start — (re)schedule jobs\n\n"
         "On each draft: ✅ approve (auto-posts X, hands you the rest to paste), "
@@ -265,7 +329,10 @@ async def on_button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
     elif action == "approve":
         await query.edit_message_reply_markup(reply_markup=None)
-        await _approve(context, query.message.chat_id, draft)
+        if draft.get("kind") == newsletter.KIND:
+            await _approve_newsletter(context, query.message.chat_id, draft)
+        else:
+            await _approve(context, query.message.chat_id, draft)
 
 
 def _media_for(draft: dict, platform: str) -> dict | None:
@@ -307,6 +374,23 @@ def _pub_facebook(draft: dict, text: str, media: dict | None) -> str:
 # Publisher per auto-delivery platform: fn(draft, text, media) -> url, raises on
 # failure. A new `delivery: auto` platform in config needs an entry here.
 _PUBLISHERS = {"x": _pub_x, "instagram": _pub_instagram, "facebook": _pub_facebook}
+
+
+async def _approve_newsletter(
+    context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict
+) -> None:
+    """Approval writes the .md and marks the draft approved — nothing is sent from here.
+    The dry-run tag lands on the record inside newsletter.approve; the file is the
+    deliverable either way, and `kk nieuwsbrief send` (founder-run) does the sending."""
+    try:
+        path = await asyncio.to_thread(newsletter.approve, draft)
+    except Exception as exc:
+        await context.bot.send_message(chat_id, f"⚠️ Couldn't save the nieuwsbrief: {exc}")
+        return
+    note = f"✅ Nieuwsbrief approved and saved: {path}\nSend it with: kk nieuwsbrief send"
+    if dry_run():
+        note += "\n(dry-run: approval tagged dry_run on the record; nothing was sent anyway)"
+    await context.bot.send_message(chat_id, note)
 
 
 async def _approve(context: ContextTypes.DEFAULT_TYPE, chat_id: int, draft: dict) -> None:
@@ -421,6 +505,16 @@ async def on_note(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     store.update_draft(draft_id, awaiting=None)
     note = update.message.text.strip()
     await update.message.reply_text("Rewriting…")
+    if draft.get("kind") == newsletter.KIND:
+        # One whole-edition rewrite, then redeliver (fresh .md document + summary).
+        try:
+            fields = await asyncio.to_thread(newsletter.regenerate, draft, note)
+        except Exception as exc:
+            await update.message.reply_text(f"⚠️ Couldn't rewrite the nieuwsbrief: {exc}")
+            fields = {}
+        draft = store.update_draft(draft_id, **fields) or {**draft, **fields}
+        await _deliver_draft(context.application, update.effective_chat.id, draft)
+        return
     new_variants = {}
     for platform, text in draft["variants"].items():
         try:
@@ -553,7 +647,7 @@ async def _post_init(app: Application) -> None:
         try:
             await app.bot.send_message(
                 chat_id=chat_id,
-                text=formatting.preview(draft),
+                text=_approval_message(draft),
                 parse_mode=ParseMode.MARKDOWN_V2,
                 reply_markup=_keyboard(draft["id"], formatting.pending_reel(draft)),
             )
@@ -577,6 +671,7 @@ def build_app() -> Application:
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("now", cmd_now))
     app.add_handler(CommandHandler("buildlog", cmd_buildlog))
+    app.add_handler(CommandHandler("nieuwsbrief", cmd_nieuwsbrief))
     app.add_handler(CommandHandler("cadence", cmd_cadence))
     app.add_handler(CommandHandler("help", cmd_help))
     app.add_handler(CallbackQueryHandler(on_button))
