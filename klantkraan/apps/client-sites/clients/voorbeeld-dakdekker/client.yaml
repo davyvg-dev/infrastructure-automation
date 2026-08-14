@@ -6,6 +6,8 @@
 # Deze fixture heeft bewust GEEN fotos/ map: zo test de build de foto-loze
 # fallback (kleurvlak in plaats van fotoband).
 
+modus: live # live = echte klant, alle wettelijke velden verplicht (preview = voorstel)
+
 bedrijf:
   naam: "Voorbeeld Dakwerken"
   vak: "dakdekker"

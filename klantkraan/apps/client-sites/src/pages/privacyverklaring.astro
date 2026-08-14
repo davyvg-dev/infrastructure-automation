@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro'
 import { loadClient } from '../lib/client'
-import { telHref } from '../lib/format'
+import { adresRegels, telHref } from '../lib/format'
 
 // AVG-basics for a static site without cookies, analytics or forms. When the
 // client also has the Klantkraan receptionist, Klantkraan is named as
@@ -22,10 +22,16 @@ const description = `Hoe ${bedrijf.naam} omgaat met uw persoonsgegevens wanneer 
 
     <h2 class="mt-10 text-h3">Wie wij zijn</h2>
     <p class="mt-3 text-(--color-mist)">
-      {bedrijf.naam}, {bedrijf.adres.straat}, {bedrijf.adres.postcode}
-      {bedrijf.adres.plaats}. KvK: {bedrijf.kvk}. U bereikt ons via
-      <a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a> of
-      <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>.
+      {bedrijf.naam}, {adresRegels(bedrijf.adres).join(', ')}.
+      {bedrijf.kvk && ` KvK: ${bedrijf.kvk}.`} U bereikt ons via
+      <a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a>{
+        bedrijf.email && (
+          <Fragment>
+            {' of '}
+            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+          </Fragment>
+        )
+      }.
     </p>
 
     <h2 class="mt-10 text-h3">Geen cookies, geen trackers</h2>
@@ -76,8 +82,18 @@ const description = `Hoe ${bedrijf.naam} omgaat met uw persoonsgegevens wanneer 
 
     <h2 class="mt-10 text-h3">Uw rechten</h2>
     <p class="mt-3 text-(--color-mist)">
-      U mag uw gegevens inzien, laten aanpassen of laten verwijderen. Stuur daarvoor een
-      e-mail naar <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>. Bent u niet
+      U mag uw gegevens inzien, laten aanpassen of laten verwijderen. {
+        bedrijf.email ? (
+          <Fragment>
+            Stuur daarvoor een e-mail naar
+            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>.
+          </Fragment>
+        ) : (
+          <Fragment>
+            Bel ons daarvoor via <a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a>.
+          </Fragment>
+        )
+      } Bent u niet
       tevreden over hoe wij met uw gegevens omgaan? Dan kunt u een klacht indienen bij de
       Autoriteit Persoonsgegevens.
     </p>

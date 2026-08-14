@@ -25,6 +25,17 @@ export function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
+/**
+ * Address lines to render. A proposal build (modus: preview) often knows only
+ * the plaats, so street and postcode lines are skipped rather than faked.
+ */
+export function adresRegels(adres: ClientConfig['bedrijf']['adres']): string[] {
+  const regels: string[] = []
+  if (adres.straat) regels.push(adres.straat)
+  regels.push([adres.postcode, adres.plaats].filter(Boolean).join(' '))
+  return regels
+}
+
 export interface DagRegel {
   dag: string
   tijden: string

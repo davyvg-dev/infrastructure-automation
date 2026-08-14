@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
 import { loadClient } from '../lib/client'
-import { openingstijdenRegels, telHref, waHref } from '../lib/format'
+import { adresRegels, openingstijdenRegels, telHref, waHref } from '../lib/format'
 
 // Contact: tel, WhatsApp (when present), e-mail, adres, openingstijden.
 // Deliberately NO contact form: forms need spam handling and delay the
@@ -10,8 +10,11 @@ import { openingstijdenRegels, telHref, waHref } from '../lib/format'
 const { config } = loadClient()
 const { bedrijf } = config
 const regels = openingstijdenRegels(config.openingstijden)
+const adres = adresRegels(bedrijf.adres)
 const title = `Contact | ${bedrijf.naam}`
-const description = `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon} of stuur een e-mail naar ${bedrijf.email}.`
+const description = bedrijf.email
+  ? `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon} of stuur een e-mail naar ${bedrijf.email}.`
+  : `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`
 ---
 
 <Base title={title} description={description}>
@@ -50,16 +53,24 @@ const description = `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaa
               </li>
             )
           }
-          <li class="flex items-center gap-3 text-small">
-            <Icon name="mail" class="h-5 w-5 shrink-0 text-(--brand-primary)" />
-            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
-          </li>
+          {
+            bedrijf.email && (
+              <li class="flex items-center gap-3 text-small">
+                <Icon name="mail" class="h-5 w-5 shrink-0 text-(--brand-primary)" />
+                <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+              </li>
+            )
+          }
           <li class="flex items-start gap-3 text-small text-(--color-mist)">
             <Icon name="map-pin" class="mt-0.5 h-5 w-5 shrink-0 text-(--brand-primary)" />
             <address class="not-italic">
-              {bedrijf.naam}<br />
-              {bedrijf.adres.straat}<br />
-              {bedrijf.adres.postcode} {bedrijf.adres.plaats}
+              {bedrijf.naam}
+              {adres.map((regel) => (
+                <Fragment>
+                  <br />
+                  {regel}
+                </Fragment>
+              ))}
             </address>
           </li>
         </ul>

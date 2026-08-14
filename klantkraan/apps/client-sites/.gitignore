@@ -2,5 +2,6 @@
 # ai-receptionist/config/clients/. Only the fake fixture is tracked.
 clients/*
 !clients/voorbeeld-dakdekker/
+!clients/voorbeeld-preview/
 dist/
 .astro/

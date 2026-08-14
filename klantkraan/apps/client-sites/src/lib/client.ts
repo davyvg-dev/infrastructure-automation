@@ -6,6 +6,17 @@
 // ai-receptionist configs (business/services/hours) where sensible, translated
 // to Dutch keys because the founder fills these in per client.
 //
+// Two modes, and `modus` is required so neither can happen by accident:
+//   live    = a paying client's real site. Every legal field must be present
+//             (KvK, btw-id, adres, e-mail, eigen domein) or the build stops.
+//   preview = an unsolicited proposal built from public sources for a prospect
+//             we have not sold yet. Legal identifiers are unknown and are NOT
+//             invented: the schema allows them to be absent, the pages omit
+//             them, the site is noindex + Disallow, carries no LocalBusiness
+//             JSON-LD (no entity confusion with the real business) and shows a
+//             banner naming Klantkraan as the sender. It lives on a
+//             *.pages.dev preview host, never on the prospect's own domain.
+//
 // Deliberately absent: prices. Prices are never scraped and never published on
 // client sites (pilot rule).
 import fs from 'node:fs'
@@ -42,23 +53,34 @@ function contrastWithWhite(hexColor: string): number {
 }
 
 export const ClientSchema = z.object({
+  // Required on purpose: a forgotten mode must fail the build, never silently
+  // publish a proposal or silently noindex a paying client's site.
+  modus: z.enum(['preview', 'live'], {
+    errorMap: () => ({ message: 'modus moet "preview" (voorstel) of "live" (echte klant) zijn' }),
+  }),
   bedrijf: z.object({
     naam: z.string().min(2),
     // The trade, lowercase singular noun: "dakdekker", "loodgieter", "installateur".
     // Used in template copy ("Uw dakdekker in ...").
     vak: z.string().min(2),
-    kvk: z.string().regex(/^\d{8}$/, 'kvk moet 8 cijfers zijn'),
-    btw_id: z.string().regex(/^NL\d{9}B\d{2}$/, 'btw_id moet NL#########B## zijn'),
+    // Legal identifiers: required for live, absent (never invented) for preview.
+    kvk: z.string().regex(/^\d{8}$/, 'kvk moet 8 cijfers zijn').optional(),
+    btw_id: z.string().regex(/^NL\d{9}B\d{2}$/, 'btw_id moet NL#########B## zijn').optional(),
     telefoon: z.string().regex(/^\+31[\d ]{9,14}$/, 'telefoon moet +31... zijn'),
     // Digits only, international format without +, for wa.me links: "31612345678".
     whatsapp: z
       .string()
       .regex(/^31\d{9}$/, 'whatsapp moet 31########## zijn (alleen cijfers)')
       .optional(),
-    email: z.string().email(),
+    email: z.string().email().optional(),
     adres: z.object({
-      straat: z.string().min(2),
-      postcode: z.string().regex(/^\d{4} ?[A-Z]{2}$/, 'postcode moet 1234 AB zijn'),
+      straat: z.string().min(2).optional(),
+      postcode: z
+        .string()
+        .regex(/^\d{4} ?[A-Z]{2}$/, 'postcode moet 1234 AB zijn')
+        .optional(),
+      // Always required: the trade, the title and every page's copy are built
+      // around "in <plaats> en omgeving", and public sources always yield it.
       plaats: z.string().min(2),
     }),
     // Max 5: the city-page template renders one page per plaats and Google's
@@ -112,15 +134,78 @@ export const ClientSchema = z.object({
     )
     .max(3)
     .default([]),
-  // Desired/registered domain, bare: "voorbeeld-dakwerken.nl".
-  domein: z.string().regex(/^[a-z0-9][a-z0-9.-]+\.[a-z]{2,}$/, 'domein zonder https:// of www.'),
+  // Registered domain, bare: "voorbeeld-dakwerken.nl". Live only: a preview is
+  // never served from the prospect's own domain, so canonicals and the sitemap
+  // point at the *.pages.dev preview host instead.
+  domein: z
+    .string()
+    .regex(/^[a-z0-9][a-z0-9.-]+\.[a-z]{2,}$/, 'domein zonder https:// of www.')
+    .optional(),
   // True when the client also has the Klantkraan receptionist: the privacy
   // page then names Klantkraan as verwerker and the site mentions 24/7
-  // bereikbaarheid on phone/chat.
+  // bereikbaarheid on phone/chat. A preview never claims this.
   receptionist: z.boolean(),
 })
 
+// Everything a live site legally needs. A preview may omit these because they
+// are not public; inventing them is what this list exists to prevent.
+const LIVE_VEREIST: Array<{ path: (string | number)[]; label: string }> = [
+  { path: ['bedrijf', 'kvk'], label: 'KvK-nummer (footer, art. 27 Hrw)' },
+  { path: ['bedrijf', 'btw_id'], label: 'btw-id (footer, art. 3:15d BW)' },
+  { path: ['bedrijf', 'email'], label: 'e-mailadres' },
+  { path: ['bedrijf', 'adres', 'straat'], label: 'straat' },
+  { path: ['bedrijf', 'adres', 'postcode'], label: 'postcode' },
+  { path: ['domein'], label: 'eigen domein' },
+]
+
+function op(root: unknown, path: (string | number)[]): unknown {
+  return path.reduce<unknown>(
+    (acc, key) => (acc && typeof acc === 'object' ? (acc as Record<string, unknown>)[key] : undefined),
+    root,
+  )
+}
+
+export const ClientSchemaChecked = ClientSchema.superRefine((cfg, ctx) => {
+  if (cfg.modus === 'live') {
+    for (const { path, label } of LIVE_VEREIST) {
+      if (op(cfg, path) === undefined) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path,
+          message: `verplicht bij modus: live (${label}). Zet modus: preview zolang u dit nog niet heeft.`,
+        })
+      }
+    }
+  }
+  if (cfg.modus === 'preview' && cfg.receptionist) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['receptionist'],
+      message: 'een voorstel kan geen receptionist claimen; zet receptionist: false bij modus: preview',
+    })
+  }
+  if (cfg.modus === 'preview' && cfg.reviews.length > 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['reviews'],
+      message: 'geen reviews op een voorstel: die zijn niet van ons om over te nemen',
+    })
+  }
+})
+
 export type ClientConfig = z.infer<typeof ClientSchema>
+
+/**
+ * Host that serves proposal builds. One Cloudflare Pages project holds them all,
+ * one branch per prospect slug, so speculative sites never eat into the 100
+ * projects-per-account cap that real client sites need.
+ */
+export const PREVIEW_HOST = process.env.PREVIEW_HOST ?? 'klant-preview.pages.dev'
+
+/** Preview URL for a prospect slug: https://<slug>.<preview host>. */
+export function previewUrl(slug: string): string {
+  return `https://${slug}.${PREVIEW_HOST}`
+}
 
 export interface LoadedClient {
   slug: string
@@ -130,6 +215,8 @@ export interface LoadedClient {
   /** Public URL path of the logo, when configured and present. */
   logoUrl: string | null
   siteUrl: string
+  /** True for an unsolicited proposal build (noindex, banner, no JSON-LD). */
+  isPreview: boolean
 }
 
 const FOTO_EXT = /\.(jpe?g|png|webp|avif)$/i
@@ -172,7 +259,7 @@ export function loadClient(): LoadedClient {
     fail(`clients/${slug}/client.yaml is not valid YAML: ${(err as Error).message}`)
   }
 
-  const parsed = ClientSchema.safeParse(raw)
+  const parsed = ClientSchemaChecked.safeParse(raw)
   if (!parsed.success) {
     const issues = parsed.error.issues
       .map((i) => `  - ${i.path.join('.') || '(root)'}: ${i.message}`)
@@ -194,6 +281,16 @@ export function loadClient(): LoadedClient {
     fail(`branding.logo is set to "${logoFile}" but clients/${slug}/fotos/${logoFile} does not exist.`)
   }
 
-  cached = { slug, config, fotos, logoUrl, siteUrl: `https://${config.domein}` }
+  const isPreview = config.modus === 'preview'
+  cached = {
+    slug,
+    config,
+    fotos,
+    logoUrl,
+    // A proposal is always served from the preview host, even when we already
+    // know the prospect's domain: canonicals must never point at their own site.
+    siteUrl: isPreview ? previewUrl(slug) : `https://${config.domein}`,
+    isPreview,
+  }
   return cached
 }
