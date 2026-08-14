@@ -180,15 +180,14 @@ as a sales asset ("dit is de cockpit die u krijgt"). `render_ansi`/`_section_lin
 RAG colors: confirm green / sodium amber / dashboard-local ember red (inline CSS only — the
 site palette gets no red). Dutch labels, u-register, no em-dashes, no founder name. Fonts
 copied next to the output by a `_write_assets` helper (repo woff2; system-font fallback).
-- [ ] N1: branded shell + header — dark tokens, @font-face + `_write_assets`, RAG pill,
-      generated_at + snapshot age, sections as minimal panels from structured data; test pins
-      updated (RAG present, noindex, refresh, escaping, asset copy/skip)
-- [ ] N2: KPI tile row (vandaag totals, MRR, actieve abonnementen, outreach due) + per-client
-      Vandaag table + deals board table incl. due callbacks; fixture-dict render test
-- [ ] N3: outreach/content/billing panels (dsn_note, per-vertical queue + push errors, MRR,
-      last webhook) + `{"error": ...}` sections as sodium-bordered fault panels
-- [ ] N4: timers matrix as Space Mono ledger + design/accessibility polish pass (contrast on
-      night bg, never color-only signals), eyeball desktop + 320px
+- [x] N1-N4 (one commit): render_html() replaced by per-section renderers over
+      `data["sections"]` (render_ansi/_section_lines untouched); brand tokens inline, page-
+      local ember red #e0654f (global.css untouched), RAG pill = dot + GREEN/AMBER/RED +
+      Dutch gloss, 7 Space Mono KPI tiles, Vandaag/Deals (due-callback chip)/Outreach/
+      Facturatie/Content/Systeem panels, faults as sodium-bordered panels, timers as mono
+      ledger; `_write_assets` copies 5 woff2 subsets next to the output (skip-if-present,
+      no-op on missing source); Dutch labels, all-escaped, noindex + refresh 900 kept;
+      scripts/tests 56 green, ruff clean, eyeballed real-data desktop + red fixture at 320px
 - [ ] N5: FOUNDER ships `kk deploy server`; verify fonts + page at the basic-auth status URL
 
 ### O. Email list — opt-in everywhere, lead magnet, nieuwsbrief (planned 2026-08-14)

@@ -458,49 +458,452 @@ def render_ansi(data: dict) -> str:
     return "\n".join(lines)
 
 
-_HTML_COLORS = {"green": "#1a7f37", "amber": "#b58900", "red": "#c0392b"}
+# --------------------------------------------------------------------------- #
+# HTML renderer — the branded cockpit ("dit is de cockpit die u krijgt").
+# render_ansi/_section_lines above stay the terminal path; this one reads the
+# structured section dicts directly. Every dynamic value goes through
+# html.escape; no <script> ever.
+# --------------------------------------------------------------------------- #
+
+RAG_HEX = {"green": "#63d3ab", "amber": "#ffb84d", "red": "#e0654f"}
+RAG_GLOSS = {"green": "alles in bedrijf", "amber": "aandacht nodig", "red": "storing"}
+
+FONT_SRC = REPO_ROOT / "klantkraan" / "apps" / "marketing-site" / "public" / "fonts"
+FONT_FILES = (
+    "bricolage-700-latin.woff2",
+    "hanken-400-latin.woff2",
+    "hanken-500-latin.woff2",
+    "spacemono-400-latin.woff2",
+    "spacemono-700-latin.woff2",
+)
+
+_MONTHS_NL = ("januari", "februari", "maart", "april", "mei", "juni", "juli",
+              "augustus", "september", "oktober", "november", "december")
+
+
+def _write_assets(out_dir: Path) -> None:
+    """Copy the page's woff2 subsets next to it; a host without the marketing-site
+    checkout just serves the system-font fallback stack."""
+    if not FONT_SRC.is_dir():
+        return
+    dest = out_dir / "fonts"
+    dest.mkdir(parents=True, exist_ok=True)
+    for name in FONT_FILES:
+        src, dst = FONT_SRC / name, dest / name
+        if src.is_file() and not dst.exists():
+            dst.write_bytes(src.read_bytes())
+
+
+def _nl_dt(iso: str | None) -> str:
+    if not iso:
+        return "onbekend"
+    try:
+        dt = datetime.fromisoformat(str(iso))
+    except ValueError:
+        return str(iso)
+    out = f"{dt.day} {_MONTHS_NL[dt.month - 1]} {dt.year}"
+    if len(str(iso)) > 10:
+        out += f", {dt.strftime('%H:%M')}"
+    return out
+
+
+def _eur(value) -> str:
+    try:
+        return f"€ {float(value):.2f}".replace(".", ",")
+    except (TypeError, ValueError):
+        return "€ ?"
+
+
+def _chip(text, kind: str = "") -> str:
+    cls = f"chip {kind}".strip()
+    return f'<span class="{cls}">{html.escape(str(text))}</span>'
+
+
+def _panel(title: str, body: str, *, span2: bool = False, fault: bool = False) -> str:
+    cls = "panel" + (" span2" if span2 else "") + (" fault" if fault else "")
+    return f'<section class="{cls}"><h2>{html.escape(title)}</h2>{body}</section>'
+
+
+def _fault_panel(title: str, err) -> str:
+    body = ('<p class="fault-msg">Bron niet leesbaar: '
+            f"<code>{html.escape(str(err))}</code></p>")
+    return _panel(title, body, fault=True)
+
+
+def _table(headers: list[tuple[str, bool]], rows: list[list[str]]) -> str:
+    """headers: (label, numeric); row cells arrive as ready-made html."""
+    def cell(tag: str, content: str, numeric: bool) -> str:
+        cls = ' class="num"' if numeric else ""
+        return f"<{tag}{cls}>{content}</{tag}>"
+
+    head = "".join(cell("th", html.escape(h), num) for h, num in headers)
+    body = "".join(
+        "<tr>" + "".join(cell("td", c, headers[i][1]) for i, c in enumerate(row)) + "</tr>"
+        for row in rows)
+    return ('<div class="scroll"><table>'
+            f"<thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>")
+
+
+def _facts(pairs: list[tuple[str, str]]) -> str:
+    """Label/value grid; values arrive as ready-made html."""
+    items = "".join(f"<dt>{html.escape(k)}</dt><dd>{v}</dd>" for k, v in pairs)
+    return f'<dl class="facts">{items}</dl>'
+
+
+def _tiles(s: dict) -> str:
+    t, b, o = s.get("today", {}), s.get("billing", {}), s.get("outreach", {})
+    terr, berr, oerr = bool(t.get("error")), bool(b.get("error")), bool(o.get("error"))
+    tot = {} if terr else (t.get("totals") or {})
+
+    def num(d: dict, key, err: bool) -> str:
+        return "?" if err else html.escape(str(d.get(key, 0)))
+
+    tiles = [
+        ("Gesprekken vandaag", num(tot, "conversations", terr)),
+        ("Leads vandaag", num(tot, "leads", terr)),
+        ("Afspraken vandaag", num(tot, "bookings", terr)),
+        ("Kosten vandaag", "?" if terr else "~" + html.escape(_eur(tot.get("cost_eur", 0)))),
+        ("MRR", "?" if berr else html.escape(_eur(b.get("mrr_eur", 0)))),
+        ("Actieve abonnementen", num(b, "active_subs", berr)),
+        ("Outreach vandaag", "?" if oerr else html.escape(str(len(o.get("due_today") or [])))),
+    ]
+    inner = "".join(f'<div class="tile"><b>{v}</b><span>{html.escape(k)}</span></div>'
+                    for k, v in tiles)
+    return f'<div class="tiles">{inner}</div>'
+
+
+def _render_today(t: dict) -> str:
+    if t.get("error"):
+        return _fault_panel("Vandaag per klant", t["error"])
+    esc = html.escape
+    rows = [[esc(str(r.get("client", "?"))),
+             esc(str(r.get("conversations", 0))),
+             esc(str(r.get("leads", 0))),
+             esc(str(r.get("bookings", 0))),
+             esc(_eur(r.get("cost_eur", 0)))]
+            for r in t.get("clients") or []]
+    if rows:
+        body = _table([("Klant", False), ("Gesprekken", True), ("Leads", True),
+                       ("Afspraken", True), ("Kosten", True)], rows)
+    else:
+        body = '<p class="note">Nog geen gesprekken vandaag.</p>'
+    return _panel("Vandaag per klant", body, span2=True)
+
+
+def _render_deals(d: dict) -> str:
+    if d.get("error"):
+        return _fault_panel("Deals", d["error"])
+    esc = html.escape
+    if not d.get("total"):
+        body = ('<p class="note">Geen dealgegevens op deze host. Voer op de Mac '
+                "<code>kk status push</code> uit.</p>")
+        return _panel("Deals", body, span2=True)
+    parts = []
+    chips = "".join(_chip(f"{st} {n}") for st, n in (d.get("counts") or {}).items())
+    if chips:
+        parts.append(f'<p class="chips">{chips}</p>')
+    due = d.get("due_callbacks") or []
+    if due:
+        items = "".join(
+            f"<li>{_chip('vandaag bellen', 'fill')} <strong>{esc(str(cb.get('slug', '?')))}"
+            f"</strong> · gepland {esc(_nl_dt(cb.get('next_call')))}</li>"
+            for cb in due)
+        parts.append(f'<ul class="due">{items}</ul>')
+    rows = [[esc(str(a.get("business") or a.get("slug") or "?")),
+             _chip(a.get("status", "?")),
+             esc(str(a.get("next_action") or "")),
+             esc(_nl_dt(a["next_call"])) if a.get("next_call") else ""]
+            for a in d.get("active") or []]
+    if rows:
+        parts.append(_table([("Klant", False), ("Status", False),
+                             ("Volgende stap", False), ("Terugbellen", False)], rows))
+    else:
+        parts.append('<p class="note">Geen actieve deals.</p>')
+    return _panel("Deals", "".join(parts), span2=True)
+
+
+def _render_outreach(o: dict) -> str:
+    if o.get("error"):
+        return _fault_panel("Outreach", o["error"])
+    esc = html.escape
+    due = o.get("due_today") or []
+    chips = "".join([
+        _chip(f"{o.get('prospects', 0)} prospects"),
+        _chip(f"{len(due)} vandaag te doen", "acc" if due else ""),
+        _chip(f"{o.get('closed', 0)} afgesloten"),
+        _chip(f"{o.get('sequence_complete', 0)} reeks voltooid"),
+        _chip(f"{o.get('suppressed', 0)} uitgesloten"),
+    ])
+    parts = [f'<p class="chips">{chips}</p>']
+    if due:
+        rows = [[esc(str(i.get("slug", "?"))), esc(str(i.get("touch", "?")))] for i in due]
+        parts.append(_table([("Prospect", False), ("Stap", True)], rows))
+    if o.get("dsn_note"):
+        parts.append(f'<p class="note">{esc(str(o["dsn_note"]))}</p>')
+    return _panel("Outreach", "".join(parts))
+
+
+def _render_content(c: dict) -> str:
+    if c.get("error"):
+        return _fault_panel("Content", c["error"])
+    esc = html.escape
+    blocks = []
+    for v in c.get("verticals") or []:
+        name = esc(str(v.get("vertical", "?")))
+        if v.get("error"):
+            blocks.append(f'<div class="vert"><h3>{name}</h3><p class="fault-msg">'
+                          f'Wachtrij niet leesbaar: <code>{esc(str(v["error"]))}</code></p></div>')
+            continue
+        chips = _chip(f"{v.get('total', 0)} concepten")
+        chips += "".join(_chip(f"{n} {st}") for st, n in sorted((v.get("counts") or {}).items()))
+        if v.get("dry_run"):
+            chips += _chip(f"{v['dry_run']} dry-run", "acc")
+        warns = "".join(f'<p class="warnline">push mislukt: {esc(str(e))}</p>'
+                        for e in v.get("push_errors") or [])
+        blocks.append(f'<div class="vert"><h3>{name}</h3><p class="chips">{chips}</p>{warns}</div>')
+    body = "".join(blocks) or '<p class="note">Geen contentwachtrijen op deze host.</p>'
+    return _panel("Content", body)
+
+
+def _render_billing(b: dict) -> str:
+    if b.get("error"):
+        return _fault_panel("Facturatie", b["error"])
+    esc = html.escape
+    facts = _facts([
+        ("Actieve abonnementen", esc(str(b.get("active_subs", 0)))),
+        ("MRR", esc(_eur(b.get("mrr_eur", 0)))),
+        ("Ledgerregels", esc(str(b.get("events", 0)))),
+        ("Laatste webhook", esc(_nl_dt(b.get("last_webhook")) if b.get("last_webhook")
+                                else "nooit")),
+        ("Laatste gebeurtenis", esc(_nl_dt(b.get("last_event")) if b.get("last_event")
+                                    else "nooit")),
+    ])
+    chips = "".join(_chip(f"{n} {kind}") for kind, n in sorted((b.get("counts") or {}).items()))
+    tail = f'<p class="chips">{chips}</p>' if chips else ""
+    return _panel("Facturatie", facts + tail)
+
+
+def _render_system(h: dict, tm: dict) -> str:
+    esc = html.escape
+    fault = False
+    parts = []
+    if h.get("error"):
+        fault = True
+        parts.append('<p class="fault-msg">Systeembron niet leesbaar: '
+                     f"<code>{esc(str(h['error']))}</code></p>")
+    else:
+        pairs: list[tuple[str, str]] = []
+        wd = h.get("watchdog")
+        if wd:
+            status = str(wd.get("status", "?"))
+            kind = {"up": "ok", "down": "bad"}.get(status, "")
+            status_txt = {"up": "in bedrijf", "down": "niet bereikbaar"}.get(status, status)
+            deep = str(wd.get("deep_status", "?"))
+            deep_txt = {"answering": "beantwoordt gesprekken",
+                        "silent": "beantwoordt niet"}.get(deep, deep)
+            pairs.append(("Receptionist", _chip(status_txt, kind) + " " + esc(deep_txt)))
+            pairs.append(("Watchdogmeting", esc(f"{wd.get('age_min', '?')} min geleden")))
+        else:
+            pairs.append(("Receptionist", esc("geen watchdogmeting op deze host")))
+        failed = h.get("failed_units") or []
+        if failed:
+            pairs.append(("Gefaalde units", "".join(_chip(u, "bad") for u in failed)))
+        elif h.get("has_systemd"):
+            pairs.append(("Gefaalde units", esc("geen")))
+        for unit, age_h in (h.get("last_run_hours") or {}).items():
+            val = "nooit gedraaid" if age_h is None else f"laatste succes {age_h:g} uur geleden"
+            pairs.append((str(unit), esc(val)))
+        alerts = h.get("alerts_configured")
+        if alerts is True:
+            pairs.append(("Alerts", _chip("geconfigureerd", "ok")))
+        elif alerts is False:
+            pairs.append(("Alerts", _chip("niet geconfigureerd", "acc")))
+        parts.append(_facts(pairs))
+    if tm.get("error"):
+        fault = True
+        parts.append('<p class="fault-msg">Timerbron niet leesbaar: '
+                     f"<code>{esc(str(tm['error']))}</code></p>")
+    elif tm.get("matrix"):
+        parts.append('<h3>Timers</h3><div class="scroll">'
+                     f'<pre class="ledger">{esc(str(tm["matrix"]))}</pre></div>')
+    return _panel("Systeem", "".join(parts), span2=True, fault=fault)
+
+
+_FONT_CSS = """\
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:700;
+font-display:swap;src:url('fonts/bricolage-700-latin.woff2') format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:400;
+font-display:swap;src:url('fonts/hanken-400-latin.woff2') format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:500;
+font-display:swap;src:url('fonts/hanken-500-latin.woff2') format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400;
+font-display:swap;src:url('fonts/spacemono-400-latin.woff2') format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:700;
+font-display:swap;src:url('fonts/spacemono-700-latin.woff2') format('woff2')}
+"""
+
+_CSS = """\
+:root{--night:#0f1c1e;--panel:#16292b;--panel-2:#1c3335;--line:#26403f;
+--chalk:#f4efe6;--dim:#93a6a2;--sodium:#ffb84d;--sodium-soft:#ffd089;
+--confirm:#63d3ab;--ember:#e0654f;--ink:#241603;--r:11px;
+--sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
+--display:'Bricolage Grotesque',system-ui,sans-serif;
+--mono:'Space Mono',ui-monospace,'SF Mono','Cascadia Mono',monospace}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--chalk);
+font:400 15px/1.55 var(--sans);padding:0 0 2.5rem}
+body.rag-green{--rag:var(--confirm)}
+body.rag-amber{--rag:var(--sodium)}
+body.rag-red{--rag:var(--ember)}
+.ragbar{height:3px;background:var(--rag)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 clamp(14px,3vw,28px)}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;
+justify-content:space-between;gap:12px 20px;padding:26px 0 4px}
+.eyebrow{margin:0;font:700 11px/1.4 var(--mono);letter-spacing:.18em;
+text-transform:uppercase;color:var(--sodium)}
+h1{margin:2px 0 0;font:700 clamp(1.55rem,4vw,2.1rem)/1.05 var(--display);
+letter-spacing:-.01em}
+.meta{margin:.4rem 0 0;color:var(--dim);font-size:.85rem}
+.meta.warn{color:var(--sodium)}
+code{font-family:var(--mono);font-size:.92em;color:var(--sodium-soft)}
+.pill{display:inline-flex;align-items:center;gap:.55em;border:1px solid var(--rag);
+border-radius:999px;padding:.45em .95em;font:700 12px/1 var(--mono);
+letter-spacing:.08em;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--rag);flex:none}
+.reasons{margin:14px 0 0;border:1px solid var(--line);border-left:3px solid var(--rag);
+border-radius:var(--r);background:linear-gradient(var(--panel-2),var(--panel));
+padding:12px 16px}
+.reasons h2{margin:0;font:700 11px/1.4 var(--mono);letter-spacing:.16em;
+text-transform:uppercase;color:var(--dim)}
+.reasons ul{margin:.4rem 0 0;padding:0;list-style:none}
+.reasons li{display:flex;gap:.6em;padding:.15rem 0;font-size:.9rem;
+overflow-wrap:anywhere}
+.reasons .dot{margin-top:.42em;width:7px;height:7px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));
+gap:12px;margin:18px 0 12px}
+.tile{background:linear-gradient(var(--panel-2),var(--panel));
+border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 11px}
+.tile b{display:block;font:700 1.5rem/1.15 var(--mono)}
+.tile span{display:block;margin-top:3px;font-size:10.5px;font-weight:500;
+letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{background:linear-gradient(var(--panel-2),var(--panel));
+border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;min-width:0}
+.panel.span2{grid-column:1/-1}
+.panel.fault{border-color:var(--sodium)}
+.panel h2{margin:0 0 .7rem;font:700 11px/1.4 var(--mono);letter-spacing:.16em;
+text-transform:uppercase;color:var(--dim)}
+.panel h3{margin:.9rem 0 .4rem;font:700 .95rem/1.3 var(--display)}
+.panel h3:first-child{margin-top:0}
+.fault-msg{margin:.3rem 0;overflow-wrap:anywhere}
+.meta{overflow-wrap:anywhere}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{font:500 10.5px/1.4 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+color:var(--dim);text-align:left;padding:.3rem .9rem .3rem 0;
+border-bottom:1px solid var(--line)}
+td{padding:.45rem .9rem .45rem 0;border-bottom:1px solid var(--line);
+vertical-align:top}
+tr:last-child td{border-bottom:0}
+th.num,td.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+th:last-child,td:last-child{padding-right:0}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:999px;
+padding:.16em .7em;font-size:.78rem;color:var(--dim);margin:0 .3em .25em 0;
+white-space:nowrap}
+.chip.acc{border-color:var(--sodium);color:var(--sodium)}
+.chip.ok{border-color:var(--confirm);color:var(--confirm)}
+.chip.bad{border-color:var(--ember);color:var(--ember)}
+.chip.fill{background:var(--sodium);border-color:var(--sodium);color:var(--ink);
+font-weight:700}
+.chips{margin:.1rem 0 .4rem}
+.due{margin:.2rem 0 .7rem;padding:0;list-style:none}
+.due li{padding:.3rem 0;font-size:.92rem}
+.note{color:var(--dim);font-size:.85rem;margin:.5rem 0 0}
+.warnline{color:var(--sodium);font-size:.85rem;margin:.25rem 0}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.2rem;margin:0}
+.facts dt{color:var(--dim);font-size:.85rem;padding-top:.1em}
+.facts dd{margin:0;font-size:.92rem}
+.ledger{margin:0;font:400 11.5px/1.5 var(--mono);white-space:pre}
+footer{margin-top:22px;color:var(--dim);font-size:.8rem}
+@media(max-width:760px){.grid{grid-template-columns:1fr}
+.facts{grid-template-columns:1fr;gap:.05rem}
+.facts dd{margin-bottom:.45rem}}
+"""
 
 
 def render_html(data: dict) -> str:
-    level = data["rag"]["level"]
     esc = html.escape
-    reasons = "".join(f"<li>{esc(r)}</li>" for r in data["rag"]["reasons"])
-    sections = []
-    for title, body in _section_lines(data):
-        items = "".join(f"<li>{esc(ln)}</li>" for ln in body)
-        sections.append(f"<section><h2>{esc(title)}</h2><ul>{items}</ul></section>")
-    matrix = data["sections"].get("timers", {}).get("matrix")
-    if matrix:
-        sections.append(f"<section><h2>Timers</h2><pre>{esc(matrix)}</pre></section>")
+    s = data["sections"]
+    level = data["rag"]["level"]
+    rag_cls = level if level in RAG_HEX else "amber"
+    reasons = data["rag"].get("reasons", [])
+    n = len(reasons)
+    count_txt = f" · {n} {'signaal' if n == 1 else 'signalen'}" if n else ""
+    pill = (f'<span class="pill"><span class="dot"></span>{esc(level.upper())} · '
+            f"{esc(RAG_GLOSS.get(level, 'onbekend'))}{esc(count_txt)}</span>")
+
+    meta = (f'<p class="meta">Gegenereerd op {esc(_nl_dt(data.get("generated_at")))} · '
+            f"wordt elke {REGEN_MINUTES} minuten ververst</p>")
+    snap_html = ""
+    snap_at = data.get("snapshot_at")
+    if snap_at:
+        snap_txt = f"Deal- en outreachgegevens: momentopname van {_nl_dt(snap_at)}."
+        stale = False
+        try:
+            age_h = (datetime.fromisoformat(data["generated_at"])
+                     - datetime.fromisoformat(str(snap_at))).total_seconds() / 3600
+            stale = age_h > SNAPSHOT_STALE_HOURS
+        except (ValueError, KeyError):
+            pass
+        if stale:
+            snap_html = (f'<p class="meta warn">{esc(snap_txt)} Deze gegevens komen via een '
+                         f"push vanaf de Mac en zijn ouder dan {SNAPSHOT_STALE_HOURS} uur; "
+                         "voer <code>kk status push</code> uit.</p>")
+        else:
+            snap_html = f'<p class="meta">{esc(snap_txt)}</p>'
+
+    reasons_html = ""
+    if reasons:
+        items = "".join(f'<li><span class="dot"></span>{esc(str(r))}</li>' for r in reasons)
+        reasons_html = f'<aside class="reasons"><h2>Signalen</h2><ul>{items}</ul></aside>'
+
+    panels = "".join([
+        _render_today(s.get("today", {})),
+        _render_deals(s.get("deals", {})),
+        _render_outreach(s.get("outreach", {})),
+        _render_billing(s.get("billing", {})),
+        _render_content(s.get("content", {})),
+        _render_system(s.get("health", {}), s.get("timers", {})),
+    ])
+
     return f"""<!doctype html>
-<html lang="en"><head>
+<html lang="nl"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="refresh" content="{REGEN_MINUTES * 60}">
 <meta name="robots" content="noindex">
-<title>Klantkraan status</title>
+<title>Klantkraan Command Center</title>
 <style>
-  body {{ font: 15px/1.5 -apple-system, system-ui, sans-serif; margin: 0; padding: 0 0 2rem;
-         background: #f6f5f2; color: #222; }}
-  header {{ background: {_HTML_COLORS[level]}; color: #fff; padding: 1rem 1.2rem; }}
-  header h1 {{ margin: 0; font-size: 1.15rem; }}
-  header p {{ margin: .3rem 0 0; opacity: .9; font-size: .85rem; }}
-  header ul {{ margin: .5rem 0 0; padding-left: 1.2rem; font-size: .9rem; }}
-  section {{ background: #fff; margin: .8rem; padding: .8rem 1rem; border-radius: 8px;
-             box-shadow: 0 1px 2px rgba(0,0,0,.06); }}
-  h2 {{ margin: 0 0 .4rem; font-size: .8rem; text-transform: uppercase;
-        letter-spacing: .05em; color: #666; }}
-  ul {{ margin: 0; padding-left: 1.1rem; }}
-  li {{ margin: .15rem 0; }}
-  pre {{ margin: 0; font-size: .72rem; overflow-x: auto; }}
-</style></head><body>
+{_FONT_CSS}{_CSS}</style></head><body class="rag-{rag_cls}">
+<div class="ragbar"></div>
+<div class="wrap">
 <header>
-  <h1>&#9679; {level.upper()} — Klantkraan</h1>
-  <p>generated {esc(data["generated_at"][:16])} · regenerates every {REGEN_MINUTES} min —
-     if this is older than {REGEN_MINUTES + 5} min, the status timer itself is broken</p>
-  {f"<ul>{reasons}</ul>" if reasons else ""}
+  <div>
+    <p class="eyebrow">Command Center</p>
+    <h1>Klantkraan</h1>
+    {meta}
+    {snap_html}
+  </div>
+  {pill}
 </header>
-{"".join(sections)}
+{reasons_html}
+{_tiles(s)}
+<div class="grid">
+{panels}
+</div>
+<footer>Deze pagina wordt elke {REGEN_MINUTES} minuten ververst; een oudere pagina
+betekent een kapotte statustimer.</footer>
+</div>
 </body></html>
 """
 
@@ -527,6 +930,7 @@ def main(argv: list[str] | None = None) -> int:
     data = collect()
     if args.html:
         out = Path(args.html)
+        _write_assets(out.parent)
         tmp = out.with_suffix(".tmp")  # atomic-ish: never serve a half-written page
         tmp.write_text(render_html(data), encoding="utf-8")
         tmp.replace(out)

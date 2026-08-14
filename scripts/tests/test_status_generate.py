@@ -166,12 +166,79 @@ def test_html_renders_level_reasons_and_escapes():
     assert "&lt;sqlite3.OperationalError&gt;" in page  # escaped, not injected
     assert "<script" not in page.lower()  # the page promises: no JS, ever
     assert 'http-equiv="refresh"' in page
+    assert 'name="robots" content="noindex"' in page
 
 
 def test_empty_deals_points_at_the_push_command():
     d = _data(deals={"total": 0, "counts": {}, "active": [], "due_callbacks": []})
     d["rag"] = gen.rag(d, NOW)
     assert "kk status push" in gen.render_ansi(d)
+    assert "kk status push" in gen.render_html(d)
+
+
+def test_html_rich_fixture_renders_rows_kpis_and_deal_board():
+    d = _data(
+        today={"label": "2026-08-12", "totals": {
+            "conversations": 7, "leads": 3, "bookings": 2, "cost_eur": 1.23},
+            "clients": [
+                {"client": "dhz", "conversations": 5, "leads": 2, "bookings": 1,
+                 "cost_eur": 0.80},
+                {"client": "<b>evil</b>", "conversations": 2, "leads": 1, "bookings": 1,
+                 "cost_eur": 0.43}]},
+        deals={"total": 3, "counts": {"lead": 1, "demo": 1, "signed": 1},
+               "active": [
+                   {"slug": "drs", "business": "DRS Riooltechniek", "status": "demo",
+                    "next_action": "stuur offerte na", "next_call": "2026-08-12"}],
+               "due_callbacks": [{"slug": "drs", "next_call": "2026-08-12"}]},
+        billing={"events": 4, "counts": {"webhook": 2, "checkout_created": 2},
+                 "active_subs": 2, "mrr_eur": 598.0,
+                 "last_webhook": "2026-08-11T09:00:00", "last_event": "2026-08-11T09:00:00"},
+    )
+    d["rag"] = gen.rag(d, NOW)
+    page = gen.render_html(d)
+    assert "dhz" in page  # per-client row
+    assert "&lt;b&gt;evil&lt;/b&gt;" in page and "<b>evil</b>" not in page
+    assert "DRS Riooltechniek" in page  # deal row
+    assert "stuur offerte na" in page
+    assert ">7<" in page  # conversations KPI tile numeral
+    assert "598,00" in page  # MRR, Dutch decimal comma
+
+
+def test_html_error_section_becomes_fault_panel_and_page_survives():
+    d = _data(billing={"error": "boom <tag>"})
+    d["rag"] = gen.rag(d, NOW)
+    page = gen.render_html(d)
+    assert 'class="panel fault"' in page
+    assert "boom &lt;tag&gt;" in page and "<tag>" not in page
+    assert "Outreach" in page and "Systeem" in page  # the rest still renders
+
+
+def test_html_timers_matrix_lands_in_a_pre_ledger():
+    d = _data(timers={"matrix": "NEXT  LEFT  UNIT\n-     -     klantkraan-status.timer"})
+    d["rag"] = gen.rag(d, NOW)
+    page = gen.render_html(d)
+    assert '<pre class="ledger">' in page
+    assert "klantkraan-status.timer" in page
+
+
+def test_write_assets_copies_when_present_and_skips_when_absent(tmp_path, monkeypatch):
+    src = tmp_path / "srcfonts"
+    src.mkdir()
+    name = gen.FONT_FILES[0]
+    (src / name).write_bytes(b"woff2!")
+    monkeypatch.setattr(gen, "FONT_SRC", src)
+    out = tmp_path / "www"
+    out.mkdir()
+    gen._write_assets(out)
+    assert (out / "fonts" / name).read_bytes() == b"woff2!"
+    (src / name).write_bytes(b"changed")  # already-present files are not overwritten
+    gen._write_assets(out)
+    assert (out / "fonts" / name).read_bytes() == b"woff2!"
+    monkeypatch.setattr(gen, "FONT_SRC", tmp_path / "does-not-exist")
+    out2 = tmp_path / "www2"
+    out2.mkdir()
+    gen._write_assets(out2)  # silent no-op
+    assert not (out2 / "fonts").exists()
 
 
 def test_snapshot_carries_only_mac_side_sections_and_its_age():
