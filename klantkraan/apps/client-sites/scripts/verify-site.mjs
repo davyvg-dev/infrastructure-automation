@@ -223,7 +223,15 @@ for (const p of pages) {
 // 8. Things a human still has to look at, printed rather than asserted.
 if (!bedrijf.email) notes.push('no e-mail address configured: the contact page is phone-only')
 if (!fs.existsSync(path.join(APP_ROOT, 'clients', slug, 'fotos'))) {
-  notes.push('no fotos/ dir: the site runs on the colour-block fallback')
+  // Which fallback actually rendered depends on whether a stock set exists for the vak.
+  // Worth naming: stock is generic by definition, so it is the founder's call whether it
+  // is good enough to send, and real client photos always beat it.
+  const hasStock = fs.existsSync(path.join(APP_ROOT, 'stock', bedrijf.vak))
+  notes.push(
+    hasStock
+      ? `no fotos/ dir: the band runs on the ${bedrijf.vak} stock set, not this client's own work`
+      : `no fotos/ dir and no stock set for "${bedrijf.vak}": the site runs on the colour-block fallback`,
+  )
 }
 if (!isPreview) notes.push('/voorwaarden/ is a generic placeholder: adapt it before go-live')
 

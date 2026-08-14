@@ -1,16 +1,31 @@
 ---
 import { loadClient } from '../lib/client'
 
-// Photo band: the client's own work photos when present (clients/<slug>/fotos/),
-// otherwise a calm decorative color-block band in the brand colors. Never stock
-// photos, never AI images: real work or nothing.
-const { config, fotos } = loadClient()
-const shown = fotos.slice(0, 6)
+// Photo band, in order of preference:
+//   1. the client's own work photos (clients/<slug>/fotos/) -- always best, and what
+//      the intake checklist asks for;
+//   2. the stock set for their vak (stock/<vak>/, fetched by scripts/stock-photos.py)
+//      when they supplied none, which is always the case on a voorstel because we do
+//      not take a prospect's own images;
+//   3. a decorative colour-block band, when no stock set exists for the vak yet.
+// Still never AI images. Stock is a backdrop while we wait for real photos, never a
+// claim that this is the client's work: only the client's own photos get the "Werk van
+// <naam>" alt text, stock is described by trade instead.
+const { config, fotos, stock } = loadClient()
+const own = fotos.length > 0
+const shown = (own ? fotos : stock).slice(0, 6)
+// "Werk van een loodgieter", not "Werk van <naam>": true of a stock photo, and it
+// composes for any vak without guessing Dutch compound-noun linking letters.
+const alt = own ? `Werk van ${config.bedrijf.naam}` : `Werk van een ${config.bedrijf.vak}`
+const label = own ? "Foto's van ons werk" : 'Sfeerbeeld'
+// The band renders ~170px squares, so the -sm variant covers almost every viewport.
+// Client photos have no -sm (no image pipeline: intake asks for web-ready files).
+const srcset = (src: string) => `${src.replace(/\.jpg$/, '-sm.jpg')} 600w, ${src} 1200w`
 ---
 
 {
   shown.length > 0 ? (
-    <section aria-label="Foto's van ons werk" class="border-y border-(--color-line) bg-(--color-card)">
+    <section aria-label={label} class="border-y border-(--color-line) bg-(--color-card)">
       <ul
         role="list"
         class="mx-auto grid max-w-5xl grid-cols-2 gap-2 px-6 py-8 sm:grid-cols-3 md:grid-cols-6"
@@ -19,7 +34,9 @@ const shown = fotos.slice(0, 6)
           <li>
             <img
               src={src}
-              alt={`Werk van ${config.bedrijf.naam}`}
+              srcset={own ? undefined : srcset(src)}
+              sizes={own ? undefined : '(min-width: 768px) 170px, (min-width: 640px) 30vw, 45vw'}
+              alt={alt}
               loading="lazy"
               decoding="async"
               class="aspect-square w-full rounded-(--radius-card) object-cover"

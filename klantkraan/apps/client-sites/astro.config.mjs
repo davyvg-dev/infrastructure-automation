@@ -21,6 +21,7 @@ const slug = process.env.CLIENT
 const PREVIEW_HOST = process.env.PREVIEW_HOST ?? 'klant-preview.pages.dev'
 let site = 'https://client-not-set.invalid'
 let fotosDir = null
+let stockDir = null
 let isPreview = false
 
 if (slug) {
@@ -36,6 +37,10 @@ if (slug) {
       site = `https://${raw.domein}`
     }
     fotosDir = path.join(clientDir, 'fotos')
+    // Only this client's own vak, so a dakdekker's site never ships a loodgieter's
+    // stock photos (nor lets a visitor browse the other trades we build for).
+    const vak = typeof raw?.bedrijf?.vak === 'string' ? raw.bedrijf.vak : null
+    if (vak) stockDir = path.join(appRoot, 'stock', vak)
   }
 }
 
@@ -51,26 +56,32 @@ const MIME = {
   '.svg': 'image/svg+xml',
 }
 
-const clientFotos = {
-  name: 'client-fotos',
+// Both client photos and the per-vak stock set live outside src/ and are mounted the
+// same way: served from disk in dev, copied into dist/<mount>/ on build.
+const mountDir = (name, getDir, mount) => ({
+  name,
   hooks: {
     'astro:server:setup': ({ server }) => {
-      if (!fotosDir || !fs.existsSync(fotosDir)) return
-      server.middlewares.use('/fotos', (req, res, next) => {
-        const name = path.basename(decodeURIComponent((req.url ?? '/').split('?')[0]))
-        const file = path.join(fotosDir, name)
-        const type = MIME[path.extname(name).toLowerCase()]
+      const dir = getDir()
+      if (!dir || !fs.existsSync(dir)) return
+      server.middlewares.use(`/${mount}`, (req, res, next) => {
+        const file = path.join(dir, path.basename(decodeURIComponent((req.url ?? '/').split('?')[0])))
+        const type = MIME[path.extname(file).toLowerCase()]
         if (!type || !fs.existsSync(file)) return next()
         res.setHeader('Content-Type', type)
         fs.createReadStream(file).pipe(res)
       })
     },
     'astro:build:done': ({ dir }) => {
-      if (!fotosDir || !fs.existsSync(fotosDir)) return
-      fs.cpSync(fotosDir, path.join(fileURLToPath(dir), 'fotos'), { recursive: true })
+      const src = getDir()
+      if (!src || !fs.existsSync(src)) return
+      fs.cpSync(src, path.join(fileURLToPath(dir), mount), { recursive: true })
     },
   },
-}
+})
+
+const clientFotos = mountDir('client-fotos', () => fotosDir, 'fotos')
+const clientStock = mountDir('client-stock', () => stockDir, 'stock')
 
 // A proposal build gets X-Robots-Tag on top of the per-page meta: the meta tag
 // alone does not cover non-HTML responses, and a preview URL that gets indexed
@@ -104,6 +115,7 @@ export default defineConfig({
           }),
         ]),
     clientFotos,
+    clientStock,
     previewNoindex,
   ],
   vite: {

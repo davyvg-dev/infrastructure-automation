@@ -212,6 +212,13 @@ export interface LoadedClient {
   config: ClientConfig
   /** Public URL paths of the client's photos (/fotos/...), excluding the logo. */
   fotos: string[]
+  /**
+   * Public URL paths (/stock/...) of the stock set for this client's vak, used by the
+   * photo band when the client supplied no photos of their own -- which is always the
+   * case on a voorstel, where we do not take a prospect's images. Empty when no set
+   * exists for the vak yet; the band then falls back to the colour block.
+   */
+  stock: string[]
   /** Public URL path of the logo, when configured and present. */
   logoUrl: string | null
   siteUrl: string
@@ -281,11 +288,24 @@ export function loadClient(): LoadedClient {
     fail(`branding.logo is set to "${logoFile}" but clients/${slug}/fotos/${logoFile} does not exist.`)
   }
 
+  // Stock set for the vak: only consulted when the client supplied no photos, and only
+  // the client's own vak is copied into dist/ (see clientStock in astro.config.mjs).
+  const stockDir = fileURLToPath(new URL(`../../stock/${config.bedrijf.vak}/`, import.meta.url))
+  let stock: string[] = []
+  if (fotos.length === 0 && fs.existsSync(stockDir)) {
+    stock = fs
+      .readdirSync(stockDir)
+      .filter((f) => FOTO_EXT.test(f) && !f.includes('-sm.'))
+      .sort()
+      .map((f) => `/stock/${f}`)
+  }
+
   const isPreview = config.modus === 'preview'
   cached = {
     slug,
     config,
     fotos,
+    stock,
     logoUrl,
     // A proposal is always served from the preview host, even when we already
     // know the prospect's domain: canonicals must never point at their own site.
