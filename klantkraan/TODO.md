@@ -252,14 +252,17 @@ verifiable sales feature), KvK+btw footer, privacyverklaring names the reception
       copy, copy-lint
 - [ ] P4: QA battery on the fixture build (squirrelscan, lychee, pa11y, Lighthouse,
       screenshots); record exact commands for the runbook
-- [ ] P5: `docs/03-delivery/website-intake-checklist.md` — Dutch client part (10-foto shot
-      list + top-up questions) + internal scrape-first procedure (extract/scaffold; prices
-      never scraped)
+- [x] P5: `docs/03-delivery/website-intake-checklist.md` — Dutch client part (10-foto shot
+      list + 5 top-up questions, prijzen bewust niet) + internal scrape-first procedure
+      (extract/scaffold, completeness gate starts the week-promise clock, client dirs stay
+      out of git); copy-lint clean
 - [ ] P6: `docs/03-delivery/website-pilot-runbook.md` — stages incl. TransIP NS (link
       dns-ns-troubleshooting.md), CF Pages project, custom-domain REST curl, Email Routing
       click, QA commands, IP-akte on final payment, domain in client's name
-- [ ] P7: `website-maintenance-scope.md` (kleine wijzigingen = 2 tekst/foto-edits per maand,
-      in writing) + `website-pilot-timing-log.md` (stage / founder-minutes / friction)
+- [x] P7: `website-maintenance-scope.md` (2 tekst/foto-edits per maand in writing, meerwerk
+      list, opzeggen = site + domein mee, internal margin notes) +
+      `website-pilot-timing-log.md` (stage table vs research targets + automation decision
+      rule); copy-lint clean
 - [ ] P8: FOUNDER blockers surfaced: seller BTW-id/address placeholders (invoices not legally
       valid yet); pilot needs a real buyer (sell into DRS / Cool Global / riool sprint)
 
