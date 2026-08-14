@@ -217,8 +217,10 @@ founder-triggered, never a timer.
       /voor-wie; EN/ES untouched (bdca6eb)
 - [x] O6: gidsen/[slug] (recessed), blog/[slug] (embedded), [pseo].astro — templates, so
       all future pSEO pages inherit it (6730e64)
-- [ ] O7: lead magnet — Dutch print-styled checklist "Nooit meer een klus missen" → PDF in
-      `public/downloads/`; stats only from the approved registry; copy-lint
+- [x] O7: lead magnet — one-A4 telefoonchecklist "Nooit meer een klus missen"
+      (tools/lead-magnet/telefoon-checklist.html + build.sh via headless Chrome →
+      public/downloads/nooit-meer-een-klus-missen.pdf); fully qualitative, no stats;
+      copy-lint clean, PDF eyeballed, dist carries it
 - [x] O8: les 1 links the checklist ("Voor bij de telefoon" block + button to
       klantkraan.nl/downloads/nooit-meer-een-klus-missen.pdf, URL pinned as
       `cursus.CHECKLIST_URL`); deploy order: site (O7 PDF) before the next les-1 send;
