@@ -210,10 +210,13 @@ founder-triggered, never a timer.
       afgerond/afgemeld/bounced/due; empty ledger = no section; unreadable ledger = warning
       line, digest still goes out); 3 tests, suite 293 green, live `--dry --today` eyeballed
       → ready for `kk deploy server`
-- [ ] O4: extract `CursusForm.astro` + same-origin `public/js/cursus-form.js`; rekentool ×3
-      swaps to the component
-- [ ] O5: opt-in band on the 7 NL trade landings + homepage + /voor-wie
-- [ ] O6: opt-in on gidsen/[slug], blog/[slug], [pseo].astro (covers future pSEO pages)
+- [x] O4: `CursusForm.astro` (lang prop with full per-locale strings, recessed/embedded
+      variants, scoped honeypot) + `public/js/cursus-form.js`; rekentool ×3 swapped;
+      typecheck 0, build green, dist eyeballed (586d6c2)
+- [x] O5: opt-in band on the 7 NL trade landings + homepage (after the honesty section) +
+      /voor-wie; EN/ES untouched (bdca6eb)
+- [x] O6: gidsen/[slug] (recessed), blog/[slug] (embedded), [pseo].astro — templates, so
+      all future pSEO pages inherit it (6730e64)
 - [ ] O7: lead magnet — Dutch print-styled checklist "Nooit meer een klus missen" → PDF in
       `public/downloads/`; stats only from the approved registry; copy-lint
 - [x] O8: les 1 links the checklist ("Voor bij de telefoon" block + button to
