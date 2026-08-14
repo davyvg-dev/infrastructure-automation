@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
 import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
 import Dumbbell from '../components/illustrations/Dumbbell.astro'
@@ -322,6 +323,9 @@ const faqSchema = {
       </div>
     </div>
   </section>
+
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
 
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
 </Base>

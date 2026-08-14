@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
 import CostReceipt from '../components/home/CostReceipt.astro'
 import DemoSection from '../components/home/DemoSection.astro'
 import Duties from '../components/home/Duties.astro'
@@ -187,6 +188,8 @@ const finalCta = {
   <DemoSection t={demo} />
   <CostReceipt t={kosten} />
   <Transparency t={eerlijk} />
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
   <Roadmap t={roadmap} />
   <HowItWorks t={starten} />
   <FinalCta t={finalCta} />
