@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
 ---
 
 <Base
@@ -193,106 +194,10 @@ import Base from '../layouts/Base.astro'
     </div>
   </section>
 
-  <!-- 5. E-mailcursus opt-in (cream). The calculator above stays e-mail-free: this form is
-       a separate, optional offer. Native POST works without JS (the API 303s back with
-       ?cursus=ok|fout); rekentool.js upgrades it to fetch() + inline result. -->
-  <section class="py-10 md:py-16">
-    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1fr_.9fr] md:items-start">
-      <div>
-        <p class="eyebrow">Gratis e-mailcursus</p>
-        <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
-          Pak uw gemiste omzet aan in 4 lessen
-        </h2>
-        <p class="mt-4 text-body text-(--color-dim)">
-          Vier korte e-mails in negen dagen, geschreven voor vakmensen met een volle agenda.
-          Concreet, zonder verkooppraatjes, en alles is zelf toe te passen.
-        </p>
-        <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
-          <li>Les 1: de klus die naar een ander ging.</li>
-          <li>Les 2: wat een lead kost als u hem terugkoopt.</li>
-          <li>Les 3: drie dingen die u deze week zelf kunt regelen.</li>
-          <li>Les 4: als u het wilt automatiseren.</li>
-        </ul>
-        <p class="mt-4 text-small text-(--color-dim)">Afmelden kan onder elke les met één klik.</p>
-      </div>
-
-      <div>
-        <!-- method+action are the zero-JS fallback: the browser posts the form itself and
-             the API answers with a 303 back to this page with ?cursus=ok|fout. -->
-        <form
-          id="cursus-form"
-          method="POST"
-          action="https://demo.klantkraan.nl/api/cursus"
-          data-astro-reload
-          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
-        >
-          <div class="space-y-6">
-            <div>
-              <label for="cursus-naam" class="block text-body font-medium text-(--color-chalk)">
-                Voornaam <span class="font-normal text-(--color-dim)">(optioneel)</span>
-              </label>
-              <input
-                id="cursus-naam"
-                name="naam"
-                type="text"
-                autocomplete="given-name"
-                class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
-              />
-            </div>
-            <div>
-              <label for="cursus-email" class="block text-body font-medium text-(--color-chalk)">
-                E-mail
-              </label>
-              <input
-                id="cursus-email"
-                name="email"
-                type="email"
-                required
-                autocomplete="email"
-                class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
-              />
-            </div>
-            <div class="hp" aria-hidden="true">
-              <label for="cursus-website">Website</label>
-              <input id="cursus-website" name="website" type="text" tabindex="-1" autocomplete="off" />
-            </div>
-            <p id="cursus-error" class="hidden text-small text-(--color-sodium)" role="alert">
-              Dat ging mis. Controleer uw e-mailadres en probeer het opnieuw.
-            </p>
-            <button type="submit" id="cursus-submit" class="btn btn-primary btn-lg w-full justify-center">
-              Stuur mij les 1
-            </button>
-            <p class="text-small text-(--color-dim)">
-              U krijgt les 1 direct in uw inbox. Geen nieuwsbrief, geen spam.
-            </p>
-          </div>
-        </form>
-        <div
-          id="cursus-success"
-          class="hidden rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
-        >
-          <h3 class="font-display text-h3 text-(--color-chalk)">Les 1 is onderweg</h3>
-          <p class="mt-2 text-body text-(--color-dim)">
-            Kijk in uw inbox, en voor de zekerheid even bij de ongewenste e-mail. De volgende
-            lessen komen vanzelf.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 5. E-mailcursus opt-in (cream). The calculator above stays e-mail-free: the form is
+       a separate, optional offer. Markup + fallback contract live in CursusForm.astro. -->
+  <CursusForm />
 
   <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
   <script src="/js/rekentool.js" type="module" is:inline></script>
 </Base>
-
-<style>
-  /* Honeypot: parked off-screen so humans never see it; bots that fill it are dropped. */
-  .hp {
-    position: absolute;
-    left: -9999px;
-    top: auto;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-</style>
