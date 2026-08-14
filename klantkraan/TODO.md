@@ -250,27 +250,32 @@ measure founder-minutes per stage. NOT built now: `kk factory` verb, TransIP API
 CLI. Template rules baked in: click-to-call primary CTA, no review/aggregateRating schema,
 max 3–5 city pages, photo-free fallback, no external embeds (cookie-banner-free stays a
 verifiable sales feature), KvK+btw footer, privacyverklaring names the receptionist processor.
-- [ ] P1: `apps/client-sites/` scaffold — Astro workspace app, Zod `client.yaml` schema +
-      loader, fixture client, env-driven client selection, minimal index
-- [ ] P2: base layout + homepage from the dakdekkers kit, brand CSS vars from client.yaml,
-      sticky click-to-call, photo band with photo-free fallback
-- [ ] P3: diensten/contact/city-template + privacyverklaring + voorwaarden; Dutch fixture
-      copy, copy-lint
-- [ ] P4: QA battery on the fixture build (squirrelscan, lychee, pa11y, Lighthouse,
-      screenshots); record exact commands for the runbook
+- [x] P1-P4 (one commit, 65dc94f): `apps/client-sites/` — Zod client.yaml (8-digit KvK,
+      +31 phone, ≤5 plaatsen, WCAG contrast check on brand color, NO price fields),
+      CLIENT=<slug> selection failing loudly, 9-page template (click-to-call primary, no
+      contact form, no aggregateRating, color-block photo fallback, zero external
+      requests = cookie-banner-free verifiable, KvK/btw footer, verwerker-naming privacy
+      page), fixture voorbeeld-dakdekker, QA battery run (squirrelscan 131 rules + greps)
+      and recorded in QA.md; copy-lint clean; real client dirs gitignored (PII); build +
+      typecheck green, homepage eyeballed over http
 - [x] P5: `docs/03-delivery/website-intake-checklist.md` — Dutch client part (10-foto shot
       list + 5 top-up questions, prijzen bewust niet) + internal scrape-first procedure
       (extract/scaffold, completeness gate starts the week-promise clock, client dirs stay
       out of git); copy-lint clean
-- [ ] P6: `docs/03-delivery/website-pilot-runbook.md` — stages incl. TransIP NS (link
-      dns-ns-troubleshooting.md), CF Pages project, custom-domain REST curl, Email Routing
-      click, QA commands, IP-akte on final payment, domain in client's name
+- [x] P6: `docs/03-delivery/website-pilot-runbook.md` — stages 0-7 incl. completeness gate,
+      QA.md battery reference, TransIP NS with the UI-lies failure mode (dig verify),
+      Pages deploy + custom-domain REST curl (wrangler can't), Email Routing client click,
+      Pages cache-poison smoke, IP-akte on final payment, domain in client's name;
+      copy-lint clean
 - [x] P7: `website-maintenance-scope.md` (2 tekst/foto-edits per maand in writing, meerwerk
       list, opzeggen = site + domein mee, internal margin notes) +
       `website-pilot-timing-log.md` (stage table vs research targets + automation decision
       rule); copy-lint clean
-- [ ] P8: FOUNDER blockers surfaced: seller BTW-id/address placeholders (invoices not legally
-      valid yet); pilot needs a real buyer (sell into DRS / Cool Global / riool sprint)
+- [x] P8: kit complete; the two FOUNDER blockers before a pilot can invoice:
+  - [ ] FOUNDER: fix seller BTW-id/address placeholders (invoices not legally valid yet —
+        also blocks §D and the BTW memory item)
+  - [ ] FOUNDER: the pilot needs a real buyer — sell the website into an existing deal
+        (DRS reply spotted 2026-08-14 / Cool Global t/m 24-08 / riool sprint wk 24 aug)
 
 ## Phase 0 — Planning docs
 
