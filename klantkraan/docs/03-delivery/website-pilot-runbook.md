@@ -4,6 +4,10 @@ Stage-by-stage, for the founder, one manual pilot site at a time. Targets per st
 timing log (`website-pilot-timing-log.md`); fill it in as you go, that is the pilot's whole
 point. The promise is "binnen een week online na complete intake", never faster promises.
 
+Selling one in the first place, by building a prospect their site before they buy, is a
+separate playbook: `website-voorstel-playbook.md`. A voorstel that turns into a client joins
+this runbook at stage 3.
+
 ## Stage 0: sale closed
 
 - Send the client Deel 1 of `website-intake-checklist.md` (photos + five questions).
@@ -19,20 +23,27 @@ one reject-with-checklist reply naming exactly what is missing. Nothing else.
 
 ## Stage 2: build (pilot = by hand)
 
-1. Scrape-first: `app.extract` + `app.scaffold` (see checklist Part 2), fill
-   `klantkraan/apps/client-sites/clients/<slug>/client.yaml`, photos into
-   `clients/<slug>/fotos/`. Client dirs are gitignored (PII).
-2. `cd klantkraan/apps/client-sites && CLIENT=<slug> pnpm build`; the schema fails loudly
-   on anything invalid, including a brand color that cannot carry white text.
+1. Scrape-first: `kk site new "<Naam>" --url <site> --near <plaats>` (see checklist Part 2)
+   writes `klantkraan/apps/client-sites/clients/<slug>/client.yaml`; top it up with what the
+   scrape cannot know (KvK, btw-id, adres, e-mail, domein, reviews) and set `modus: live`.
+   Photos into `clients/<slug>/fotos/`. Client dirs are gitignored (PII). A prospect who
+   already has a voorstel-site keeps that config: promote it per the voorstel-playbook.
+2. `kk site build <slug>`; the schema fails loudly on anything invalid, including a brand
+   color that cannot carry white text and a live config still missing its legal fields.
 3. Copy pass on the generated pages with the client's own words from the intake. No
    statistics, no prices, u-register.
 
 ## Stage 3: QA battery (~15 min, all must pass)
 
-The exact commands live in `klantkraan/apps/client-sites/QA.md` (recorded from the fixture
-run): build+typecheck, zero-external-requests grep (the no-cookie-banner guarantee), one h1
-per page, LocalBusiness JSON-LD parses + no aggregateRating anywhere, title/description/
-viewport per page, repo copy-lint. Additionally, from repo root against a local preview:
+`kk site build <slug>` is the battery: it builds and then runs the fact gate, which asserts the
+rendered pages against `client.yaml` (phone number and every tel:/mailto:/wa.me link, business
+name, diensten, city pages, KvK+btw in the footer, no placeholders, no prices, no review
+schema, zero external requests, no executable JavaScript, sitemap and canonicals on the
+client's own domain, one h1 and a title/description/viewport per page). A live-mode build also
+refuses to run at all until KvK, btw-id, adres, e-mail and domein are filled in.
+
+The full list, including what the gate deliberately does not judge, lives in
+`klantkraan/apps/client-sites/QA.md`. Additionally, from repo root against a local preview:
 the `audit-website` skill (squirrelscan; ignore trailing-slash and header findings that
 only exist on `astro preview`, Cloudflare Pages serves both). Lighthouse/pa11y/lychee are
 not installed locally; run Lighthouse from Chrome devtools on the preview URL until the

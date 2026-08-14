@@ -48,11 +48,17 @@ Prijzen vragen wij bewust niet: die horen in een gesprek, niet op een openbare p
 
 ### Scrape first, then top up
 
-1. `python -m app.extract <site-or-maps-url>` then `python -m app.scaffold` (ai-receptionist
-   venv): produces the cited YAML draft: name, phone, hours, services, region. Rules stand:
-   citation-or-blank, prices are NEVER extracted (`PRIJS?` stays until the founder fills it,
-   and for the website prices stay off entirely).
-2. Copy the confirmed fields into `klantkraan/apps/client-sites/clients/<slug>/client.yaml`.
+1. `kk site new "<Bedrijfsnaam>" --url <site> --near <plaats>` (wraps `app.sitedraft`) writes
+   `klantkraan/apps/client-sites/clients/<slug>/client.yaml` straight from the prospect's site
+   and Google listing: telefoon and openingstijden mapped in code from the cited extraction,
+   the Dutch copy drafted under a schema that forbids invented claims and any price. Same
+   underlying rules as `app.extract`: citation-or-blank, prices are NEVER extracted.
+   For the receptionist demo, `app.extract -o extraction.json` first and then
+   `kk site new ... --from-json extraction.json` reuses one scrape for both configs.
+2. The config lands as `modus: preview` (a voorstel). Check telefoon, plaats, werkgebied and
+   diensten with your own eyes before anything is sent: `pnpm check` proves the site matches
+   the config, not that the config matches reality. Promoting it to a live client site is the
+   last section of `website-voorstel-playbook.md`.
    The receptionist config and the site config should never disagree; when both exist, the
    receptionist config is the source the site copies from.
 3. The genuinely un-scrapeable set is exactly Deel 1: photos, KvK/btw-id, plaatsen choice,
