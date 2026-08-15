@@ -6,6 +6,7 @@ site is sent to anyone:
 ```sh
 CLIENT=<slug> pnpm build      # Zod schema: config is well formed
 pnpm typecheck                # astro check
+pnpm test                     # design vocabulary: what a skin resolves to (no CLIENT needed)
 CLIENT=<slug> pnpm check      # fact gate: dist/ says what client.yaml says
 ```
 
@@ -15,6 +16,28 @@ The build fails loudly on: missing `CLIENT`, unknown slug (lists known clients),
 schema violations with per-field Dutch messages (including the WCAG contrast check on
 `kleur_primair`), a missing `modus`, a `modus: live` config without KvK/btw-id/e-mail/adres/
 domein, and a `modus: preview` config that claims the receptionist or carries reviews.
+
+## 1b. `pnpm test`: the design vocabulary (`src/lib/stijl.test.ts`)
+
+Per-client checks all run against one skin -- the one that client got. These run against all
+1728 the vocabulary can express, which is what makes editing an axis or adding a value to one
+safe. `node --test` on the TypeScript directly; no framework, no CLIENT, about half a second.
+
+Every combination resolves the same token set, nothing empty, and the seven axes write disjoint
+properties (two axes on one property means the founder moves a knob and nothing happens). Then
+what the values have to mean: the type scale runs downhill and the schalen are ordered at both
+ends of every clamp, no h1 grows past the 3.5rem cap, the photo band keeps more air than the
+text at every density, `scherp` zeroes all three radii and `randloos` squares a photo whatever
+`vorm` says, every palet clears AA for ink AND mist on its own surfaces, `royaal`'s tint stays
+under 20%, the skin outranks a caller's override, and every `var()` the inline style references
+is set in the same declaration. Fonts: the leading family of each stack matches
+`fonts/manifest.json` and has a woff2 really on disk, and only the serif pairing falls back to
+a serif.
+
+Believed because they were made to fail first: 17 mutations of `stijl.ts` (drop a token, collide
+two axes, put `groot`'s h1 back to 4.25rem, invert a step, lighten the mist, pill a sharp button,
+ask for an uncopied family, let a caller outrank the skin), each caught by the test that should
+catch it and no other. Runs in CI on every push.
 
 ## 2. `pnpm check`: the fact gate (`scripts/verify-site.mjs`)
 
@@ -32,7 +55,20 @@ so a loader bug cannot hide behind its own output) and asserts the rendered page
   any price (`€ 95`, `95 euro`), review/aggregateRating structured data
 - **zero external requests**: the no-cookie-banner guarantee, plus no executable JavaScript.
   Allowed: the client's own domain, `wa.me`, `*.pages.dev`, and on a proposal `klantkraan.nl`
-  (the banner's sender link; a link is not a request)
+  (the banner's sender link; a link is not a request). Stylesheets are swept too: a remote
+  `@import` or a `url()` on a CDN costs the guarantee just as dearly as a `<script>`
+- **the skin, as the browser will paint it**: the gate reads the custom properties off `<html>`
+  and resolves what they actually resolve to -- `var()` chains and `color-mix(in oklab, …)`
+  included -- rather than trusting the vocabulary. 14 text/surface pairs against the 4.5:1 AA
+  floor, including white and white-at-85% over the client's own `kleur_primair`, which the
+  schema only ever checked against white. Hairlines are exempt on purpose (WCAG 1.4.11). Every
+  page must carry the same skin, and a page with none was not built on `Base.astro`
+- **fonts**: every `@font-face` names a family the page's stacks name and loads a root-relative
+  file really in `dist/`; every leading family has a rule; no shipped woff2 goes unreferenced;
+  and the pairing `stijl.letterontwerp` asked for is the one each stack LEADS with. That last
+  one is per stack, not a count: a `redactioneel` site that lost its serif still leads
+  `--font-sans` with Figtree, so a count sees nothing wrong while the half a reader notices
+  is gone
 - **publishing posture**: live: sitemap, robots pointing at it, canonicals on the client's
   domain, LocalBusiness JSON-LD, no noindex. Preview: noindex meta on every page, the banner on
   every page, `X-Robots-Tag` in `_headers`, `Disallow: /` in robots.txt, no sitemap, no JSON-LD
@@ -45,6 +81,11 @@ human still has to judge (missing photos, phone-only contact page, the generic `
 Verified 2026-08-14 against both fixtures, and against seven deliberately sabotaged builds:
 a swapped phone number, an injected price, a leftover `TODO`, an external `<script>`, review
 schema, a stripped preview banner, and a `dist/` from another client. All seven exit 1.
+
+The skin half (2026-08-15) got nine of its own: a missing woff2, a CDN `src`, a rule for a
+family the page does not name, a stack fallen back to the system one, a merkkleur too light for
+its band, a page with no skin, an off-host `url()`, an orphan font file, and two pages
+disagreeing about the skin. Each was made to fail before the check was believed.
 
 ## 3. Squirrelscan against a local preview
 

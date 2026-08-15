@@ -18,9 +18,37 @@ CLIENT=voorbeeld-dakdekker pnpm build      # static build -> dist/
 CLIENT=voorbeeld-dakdekker pnpm check      # fact gate: dist/ vs client.yaml
 CLIENT=voorbeeld-dakdekker pnpm preview    # serve the built dist/
 pnpm typecheck                             # astro check (no CLIENT needed)
+pnpm test                                  # design vocabulary tests (no CLIENT needed)
 ```
 
 The build fails loudly when `CLIENT` is unset or the yaml does not pass the Zod schema (`src/lib/client.ts`). `pnpm check` (`scripts/verify-site.mjs`) then asserts the built pages against the config: phone number, links, city pages, no placeholders, no prices, no external requests, the right publishing posture per mode. The full battery lives in `QA.md`.
+
+## The design vocabulary (`src/lib/stijl.ts`)
+
+The template used to have exactly one appearance, and the only thing a client could change about
+it were two hex colours: two voorstellen sent in the same week were recognisably the same
+document, which is the one thing an unsolicited proposal cannot afford to be. So the skin is a
+parameter and the silhouette is not.
+
+Seven axes, each a closed set of named values that resolve to CSS custom properties written onto
+`<html>`: `letterontwerp` (systeem/grotesk/industrieel/redactioneel), `schaal`, `vorm`, `ritme`,
+`palet`, `kleuring`, `foto`. Section order, markup and the components are identical for every
+client -- what varies is type, colour, rhythm, radius and how photographs are set. A closed
+vocabulary rather than generated CSS because every value in it has been looked at once on a real
+build: a chooser can produce a look, not an inaccessible contrast or a layout the fact gate
+cannot assert. No `stijl:` block in a config means the look every client site had before the
+vocabulary existed, so an older client.yaml builds the same bytes it did.
+
+Chosen by `app.sitestyle` (in `ai-receptionist/`): off `--voorbeeld` reference sites when the
+founder has one, otherwise composed from the vak and the company name. Measuring a reference is
+code; choosing among the vocabulary is one schema-constrained Claude call. Nothing is lifted off
+a reference -- it is measured and thrown away.
+
+Typefaces are self-hosted (`fonts/`, `scripts/fonts.mjs`), never linked: zero external requests
+is what ships these sites without a cookie banner, and a Google Fonts `<link>` would cost that.
+`fonts/manifest.json` is read by BOTH `stijl.ts` (to build the stacks) and `astro.config.mjs`
+(to copy only the woff2 a client needs, and to prune the `@font-face` rules of families this
+build did not get), so what the CSS asks for and what the deploy contains cannot drift.
 
 ## Scraping a proposal config
 
@@ -49,10 +77,13 @@ still asks for ten, and `research/website-aesthetics.md` puts real photos at +35
 ## Template rules (baked in, do not undo)
 
 - Click-to-call is the primary CTA everywhere; sticky call bar on mobile. No contact form.
-- Zero external requests: system fonts, inline icons, no CDN, no embeds. That is what keeps the site cookie-banner-free, and it is a sales feature.
+- Zero external requests: self-hosted fonts, inline icons, no CDN, no embeds. That is what keeps the site cookie-banner-free, and it is a sales feature.
 - No prices anywhere. No statistics or numeric claims in template copy. Dutch u-register.
 - Reviews are plain text, max 3, only when the client supplied real ones. Never review/aggregateRating JSON-LD (LocalBusiness JSON-LD is emitted).
 - Max 5 city pages, generated only for the configured `werkgebied` plaatsen.
 - Photo band prefers the client's own work photos, falls back to the per-vak stock set
   (`stock/<vak>/`, see below), and only then to a color block. Never AI images.
 - `/voorwaarden/` is a generic placeholder: adapt per client before go-live.
+- The skin is deliberately not on this list: everything above holds at every point in the design
+  vocabulary, which is what makes varying the look safe. Section order and markup are not part of
+  the vocabulary and are not negotiable per client -- free-form markup cannot be fact-gated.
