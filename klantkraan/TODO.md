@@ -446,6 +446,45 @@ reference given, the factory composes a look itself rather than falling back to 
 - [ ] R6: extend `CLIENT=<slug> pnpm check` for the skin: fonts resolve locally, the
       resolved palette still clears WCAG AA, no external hosts, no @font-face pointing at a
       family this build did not copy.
+- [x] R6 (this commit): the gate now reads the skin off the built page — the inline custom
+      properties on `<html>` — and resolves what the browser will actually paint, `var()`
+      chains and `color-mix(in oklab, …)` included, rather than trusting the vocabulary's
+      own promises. 14 contrast pairs (ink/mist/merkkleur over paper/card/band/fotoband,
+      white and white-at-85% over the merkkleur) against the 4.5:1 AA floor; hairlines are
+      out on purpose (1.4.11 exempts a divider). The OKLab matrices are Ottosson's, checked
+      against his published vectors to 1.2e-5, because a WCAG gate computing the wrong
+      colour is worse than no gate. Fonts: every `@font-face` must name a family the page's
+      stacks name, load a root-relative file that is really in `dist/`, and no shipped
+      woff2 may go unreferenced — plus the end-to-end one, `stijl.letterontwerp` against
+      the family each stack LEADS with, per stack. That last one started as "does the page
+      carry any webfont at all" and a negative test killed it: a `redactioneel` site that
+      loses its serif still leads `--font-sans` with Figtree, so a count sees nothing wrong
+      while the half a reader notices is gone. Stylesheets are also swept for off-host
+      `url()`/`@import`, which section 5 never covered — it reads the HTML only.
+      One build change fell out of writing it: `src/styles/fonts.css` declares all three
+      families (a stylesheet cannot be imported conditionally), so every build shipped
+      `@font-face` rules for files it had not copied — dead today, a 404 the day anything
+      names them. `astro.config.mjs` now prunes the rules of families this client did not
+      get, which is what makes "every rule resolves" assertable at all. Verified on all
+      four pairings: systeem 0 rules/no fonts dir, grotesk 6/6, industrieel 10/10,
+      redactioneel 8/8; CSS 19982 → 18766 bytes on the preview fixture. Nine negative tests
+      (missing woff2, CDN src, dead rule, fallen-back stack, too-light merkkleur, page
+      without a skin, off-host `url()`, orphan file, pages disagreeing) each fail the gate
+      on their own before it was believed.
+- [ ] R6b: the gate rejects skins the factory can compose. Swept the whole vocabulary
+      against the 3262 merkkleuren the Zod schema accepts: 3.6% of palet × kleuring ×
+      kleur_primair combinations fall under AA somewhere. Two root causes, both older than
+      R. First, `contrastWithWhite >= 4.5` guards a colour that is then used as TEXT on
+      paper/card/band — all darker than white — so the schema's own floor is systematically
+      too low for 11 of its usages (worst case 3.42:1). Second, `text-white/85` in
+      FinalCta.astro: 17% of accepted merkkleuren fail that line, and no alpha short of 1.0
+      is safe for a colour sitting exactly at the schema's 4.5 (#ed0c0c → 3.50). Not fixed
+      here because both fixes are the founder's call, not a check's: either raise the floor
+      in the schema AND the sitedraft pre-flight together (R5 put the colour gate ahead of
+      the Opus call on purpose — letting the two disagree is how a voorstel costs a paid
+      call twice), or drop the /85 and carry the hierarchy on size. Nothing ships broken
+      meanwhile: `pnpm check` runs before a voorstel goes out, so a bad combination stops
+      the send instead of reaching a prospect.
 - [ ] R7: tests (the vocabulary resolver — sitestyle's own 41 landed with R3) and a docs
       pass — the voorstel-playbook and intake checklist both describe the look as fixed.
 - NOTE (pre-existing, not from R): `.prettierrc.json` lists `prettier-plugin-astro` but the
