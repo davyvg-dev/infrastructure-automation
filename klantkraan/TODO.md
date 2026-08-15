@@ -378,6 +378,24 @@ reference given, the factory composes a look itself rather than falling back to 
       padding, image ratios) in code, then one schema-constrained Claude call maps those
       onto the vocabulary. The model picks among named values; it never emits CSS. Extract
       design parameters only — never a reference's copy, images or logo.
+- [x] R3 (aee01f0): `app.sitestyle`, built as above. `--feiten` prints the measurements
+      alone, so the extractor can be judged without paying for a call. The vocabulary is
+      parsed out of `stijl.ts` instead of restated in Python: a value only sitestyle knew
+      about would clear the API schema and then fail Zod at build time, on the founder's
+      machine, after the voorstel was written. The no-copy rule is a property of the parser
+      rather than an instruction — it is blind to text outside `<style>`, so no sentence of
+      the reference is ever in memory to leak, and a test pins that. Three defects found by
+      running it against real sites instead of fixtures: taking the largest length in a
+      value reported sizes browsers never render (`clamp()` is now resolved at an assumed
+      1440x900 viewport, which also taught it viewport units it could not read at all);
+      selector-based heading detection found nothing on compiled stylesheets, where rules
+      are named `.styles_heading__x7f2` rather than `h1`, so the type scale came back null
+      on exactly the modern sites the founder admires (added a size histogram — highest
+      count is the body text, top of the range is the display size); and Next.js
+      `<Family> Fallback` faces plus emoji/mono stack members were read as chosen
+      typefaces. Verified end to end: zecc.nl → industrieel/groot/scherp/neutraal,
+      vanwijnen.nl → industrieel/groot/zacht/koel. NOTE: a fully client-rendered reference
+      has no measurable CSS and is refused with a clear error rather than guessed at.
 - [ ] R4: the no-reference path. Same call with no facts, told to compose from the vak and
       the client's own brand colours. Must avoid `groot` when `bedrijf.naam` is long (see
       R1) — encode that as a rule in the prompt, not as a hope.
@@ -386,8 +404,8 @@ reference given, the factory composes a look itself rather than falling back to 
 - [ ] R6: extend `CLIENT=<slug> pnpm check` for the skin: fonts resolve locally, the
       resolved palette still clears WCAG AA, no external hosts, no @font-face pointing at a
       family this build did not copy.
-- [ ] R7: tests (sitestyle mapping + the vocabulary resolver) and a docs pass — the
-      voorstel-playbook and intake checklist both describe the look as fixed.
+- [ ] R7: tests (the vocabulary resolver — sitestyle's own 41 landed with R3) and a docs
+      pass — the voorstel-playbook and intake checklist both describe the look as fixed.
 - NOTE (pre-existing, not from R): `.prettierrc.json` lists `prettier-plugin-astro` but the
   plugin is not installed, so `pnpm format:check` fails repo-wide before any of this.
 
