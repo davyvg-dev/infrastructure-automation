@@ -889,6 +889,16 @@ def check_stijl(raw: dict, axes: dict[str, list[str]] | None = None) -> dict:
 # --- output -------------------------------------------------------------------------------
 
 
+def keuzes(stijl: dict) -> dict:
+    """The seven chosen values alone, without `redenen`.
+
+    The reasons belong above the block as comments (see `as_yaml`), never in it as data: a
+    client.yaml key the Zod schema has never heard of is silently dropped on a good day and
+    an error on a bad one, and either way it is not a design parameter.
+    """
+    return {axis: stijl[axis] for axis in vocabulaire()}
+
+
 def as_yaml(stijl: dict) -> str:
     """The `stijl:` block, with each choice's reason as the comment above it.
 

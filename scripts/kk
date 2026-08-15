@@ -105,7 +105,9 @@ kk — Klantkraan command center
   kk status push                 push the deal/outreach snapshot to the server page
   kk health                      watchdog check+deep, server timers, /health
   kk logs <unit|alias> [n]       journalctl on the server (default 150 lines)
-  kk site new "<Naam>" --url <url> [--near <plaats>]   scrape a prospect into a voorstel-config
+  kk site new "<Naam>" --url <url> [--near <plaats>] [--voorbeeld <url>]...
+                                 scrape a prospect into a voorstel-config; --voorbeeld takes
+                                 the skin off a site he likes, else the factory composes one
   kk site build|check <slug>     build + fact gate (check: gate only, on the existing dist)
   kk site open <slug>            build + gate, then serve it locally
   kk site deploy <slug>          ship the voorstel to <slug>.klant-preview.pages.dev
@@ -256,7 +258,10 @@ def plan_site(args: list[str], root: Path) -> list[Step]:
 
     if sub == "new":
         if not rest:
-            raise UsageError('kk site new "<Bedrijfsnaam>" --url <url> [--near <plaats>]')
+            raise UsageError(
+                'kk site new "<Bedrijfsnaam>" --url <url> [--near <plaats>] '
+                "[--voorbeeld <url>]..."
+            )
         return [_air(root, "app.sitedraft", *rest)]
 
     if sub in ("build", "check", "open", "deploy"):

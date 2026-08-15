@@ -2,6 +2,7 @@
 
     python -m app.sitedraft "Jansen Loodgieters" --url https://jansen-loodgieters.nl --near Utrecht
     python -m app.sitedraft "Jansen Loodgieters" --from-json extraction.json --slug jansen
+    python -m app.sitedraft "Jansen Loodgieters" --url https://... --voorbeeld https://zecc.nl
 
 Writes `klantkraan/apps/client-sites/clients/<slug>/client.yaml`, which the founder then builds
 with `CLIENT=<slug> pnpm build`. This is the bridge the pilot kit was missing: `extract.py`
@@ -12,7 +13,11 @@ Division of labour, on purpose:
   * mechanical fields (telefoon, openingstijden) are mapped in code from the extraction, so a
     wrong phone number can only come from a wrong source, never from a model;
   * copy fields (vak, plaats, werkgebied, dienstomschrijvingen, usps, spoedtekst) come from one
-    Claude call constrained by a schema, grounded in the same sources, and told to paraphrase.
+    Claude call constrained by a schema, grounded in the same sources, and told to paraphrase;
+  * the skin comes from `app.sitestyle`, off the `--voorbeeld` sites when the founder has one
+    to point at and composed from the vak, the name and the colours when he has not. Every
+    proposal gets one: two voorstellen sent in the same week that are recognisably the same
+    document is the defect section R exists to fix.
 
 Three invariants, enforced here and again by the Zod schema on the other side:
   1. ALWAYS `modus: preview`. A scraped config is a proposal, never a live client site: no KvK,
@@ -37,7 +42,7 @@ from pathlib import Path
 import anthropic
 import yaml
 
-from . import extract, settings
+from . import extract, settings, sitestyle
 
 # Drafting Dutch marketing copy from cited snippets wants deliberate reasoning; effort is set
 # a notch below extraction because the schema does most of the constraining here.
@@ -256,6 +261,12 @@ def draft_copy(name: str, extraction: dict, sources: dict[str, str]) -> dict:
     return json.loads(text)
 
 
+def vak_van(draft: dict) -> str:
+    """The trade as the site writes it. Read in two places -- the config and the skin -- and
+    the composer's answer changes with it, so it is normalised once."""
+    return draft["vak"].strip().lower()
+
+
 def build_config(
     name: str,
     extraction: dict,
@@ -264,6 +275,7 @@ def build_config(
     telefoon: str | None = None,
     kleur_primair: str = DEFAULT_PRIMARY,
     kleur_accent: str = DEFAULT_ACCENT,
+    stijl: dict | None = None,
 ) -> dict:
     """Assemble the client.yaml body. Preview-only: no legal identifiers are invented."""
     phone_raw = telefoon or (extraction.get("phone") or {}).get("value") or ""
@@ -289,7 +301,7 @@ def build_config(
         "modus": "preview",
         "bedrijf": {
             "naam": name,
-            "vak": draft["vak"].strip().lower(),
+            "vak": vak_van(draft),
             "telefoon": nl_phone(phone_raw),
             "adres": {"plaats": plaats},
             "werkgebied": werkgebied[:5],
@@ -298,6 +310,9 @@ def build_config(
             "kleur_primair": check_primary(kleur_primair),
             "kleur_accent": check_colour(kleur_accent),
         },
+        # Right after branding because that is what it is: the skin the colours sit in.
+        # Absent means the pre-vocabulary look, which is a valid config, not a broken one.
+        **({"stijl": stijl} if stijl else {}),
         "diensten": [
             {"naam": d["naam"].strip(), "omschrijving": d["omschrijving"].strip()}
             for d in draft["diensten"][:8]
@@ -311,6 +326,27 @@ def build_config(
         # A proposal never claims the receptionist and never republishes their reviews.
         "receptionist": False,
     }
+
+
+def choose_stijl(
+    name: str,
+    vak: str,
+    voorbeelden: list[dict],
+    *,
+    kleur_primair: str,
+    kleur_accent: str,
+) -> dict:
+    """The skin for this proposal: read off the reference sites, or composed when there are
+    none. Returns sitestyle's answer whole -- the axes go into the yaml as data, the reasons
+    above them as comments.
+
+    Never a fallback to the default look. Two voorstellen sent in the same week that are
+    recognisably the same document is the defect section R exists to fix, and a factory that
+    composes only when asked will be asked on the first prospect and never again.
+    """
+    if voorbeelden:
+        return sitestyle.map_to_stijl(voorbeelden, vak, name)
+    return sitestyle.compose_stijl(vak, name, kleur_primair, kleur_accent)
 
 
 _HEADER = """\
@@ -340,20 +376,40 @@ def _quoted_when_ambiguous(dumper: yaml.SafeDumper, value: str) -> yaml.ScalarNo
 _Dumper.add_representer(str, _quoted_when_ambiguous)
 
 
-def dump_config(config: dict) -> str:
+def _dump(fragment: dict) -> str:
     return yaml.dump(
-        config, Dumper=_Dumper, allow_unicode=True, sort_keys=False, default_flow_style=False
+        fragment, Dumper=_Dumper, allow_unicode=True, sort_keys=False, default_flow_style=False
     )
 
 
-def write_config(slug: str, config: dict, out_dir: Path | None = None) -> Path:
+def dump_config(config: dict, stijl_blok: str | None = None) -> str:
+    """The config as yaml, one top-level key at a time.
+
+    Dumped per key rather than in one go so that `stijl:` can be written by sitestyle
+    instead, which puts the reason for each choice in a comment above it. yaml.dump cannot
+    carry a comment, and a skin whose reasoning the founder cannot read is one he cannot
+    judge before the voorstel goes out. Every top-level key dumps the same at indent 0
+    either way, so a config without a block is byte-for-byte what it was before.
+    """
+    chunks = [
+        stijl_blok.rstrip("\n")
+        if key == "stijl" and stijl_blok
+        else _dump({key: value}).rstrip("\n")
+        for key, value in config.items()
+    ]
+    return "\n".join(chunks) + "\n"
+
+
+def write_config(
+    slug: str, config: dict, out_dir: Path | None = None, stijl_blok: str | None = None
+) -> Path:
     root = out_dir or CLIENTS_DIR
     target = root / slug
     path = target / "client.yaml"
     if path.exists():
         raise DraftError(f"{path} bestaat al; verwijder hem of kies een andere --slug")
     target.mkdir(parents=True, exist_ok=True)
-    path.write_text(_HEADER + "\n" + dump_config(config), encoding="utf-8")
+    path.write_text(_HEADER + "\n" + dump_config(config, stijl_blok), encoding="utf-8")
     return path
 
 
@@ -370,6 +426,14 @@ def main(argv: list[str]) -> int:
     parser.add_argument("--telefoon", help="Override the scraped phone number.")
     parser.add_argument("--kleur", default=DEFAULT_PRIMARY, help="Brand colour (#rrggbb).")
     parser.add_argument("--accent", default=DEFAULT_ACCENT, help="Accent colour (#rrggbb).")
+    parser.add_argument(
+        "--voorbeeld",
+        action="append",
+        default=[],
+        metavar="URL",
+        help="A website whose look this proposal should take (skin only). Repeatable. "
+        "Without one the skin is composed from the vak, the name and the colours.",
+    )
     parser.add_argument("--out-dir", help="Write under this dir instead of the client-sites app.")
     args = parser.parse_args(argv[1:])
 
@@ -394,8 +458,29 @@ def main(argv: list[str]) -> int:
         # one Opus request later, having written nothing either way.
         if not openingstijden(extraction.get("hours") or {}):
             raise DraftError(NO_HOURS)
+        # Both gates below are free and both guard paid calls, same reason as the hours.
+        # The colours because the composer is handed them and would reject a typo as a
+        # warning, after which build_config would reject it again as an error; and the
+        # references because a mistyped --voorbeeld should cost a second, not an Opus request.
+        check_primary(args.kleur)
+        check_colour(args.accent)
+        voorbeelden = sitestyle.measure_all(args.voorbeeld) if args.voorbeeld else []
 
         draft = draft_copy(args.name, extraction, sources)
+        try:
+            stijl = choose_stijl(
+                args.name,
+                vak_van(draft),
+                voorbeelden,
+                kleur_primair=args.kleur,
+                kleur_accent=args.accent,
+            )
+        except sitestyle.StyleError as err:
+            # The copy call is paid for by now. A voorstel in the default look is worth more
+            # than a run thrown away, so write it and say what to run to give it a skin.
+            print(f"⚠️  stijl overgeslagen: {err}", file=sys.stderr)
+            stijl = None
+
         config = build_config(
             args.name,
             extraction,
@@ -403,14 +488,27 @@ def main(argv: list[str]) -> int:
             telefoon=args.telefoon,
             kleur_primair=args.kleur,
             kleur_accent=args.accent,
+            stijl=sitestyle.keuzes(stijl) if stijl else None,
         )
         slug = args.slug or slugify(args.name)
-        path = write_config(slug, config, Path(args.out_dir) if args.out_dir else None)
-    except DraftError as err:
+        path = write_config(
+            slug,
+            config,
+            Path(args.out_dir) if args.out_dir else None,
+            stijl_blok=sitestyle.as_yaml(stijl) if stijl else None,
+        )
+    except (DraftError, sitestyle.StyleError) as err:
         print(f"❌ {err}", file=sys.stderr)
         return 1
 
     print(f"✅ Wrote {path}")
+    if stijl is None:
+        print("\nDeze site heeft nog geen eigen stijl. Haal er een op met:")
+        print(
+            f"  python -m app.sitestyle --vak {config['bedrijf']['vak']} "
+            f'--naam "{args.name}" --kleur {args.kleur} --accent {args.accent}'
+        )
+        print("en plak het blok in de client.yaml.")
     print("\nControleer telefoon, plaats en diensten met eigen ogen. Daarna:")
     print(f"  cd klantkraan/apps/client-sites && CLIENT={slug} pnpm build")
     return 0
