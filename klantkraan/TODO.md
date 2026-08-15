@@ -341,6 +341,56 @@ gave the page a photograph worth cutting a share card from, which is why it was 
   - [ ] FOUNDER: the two fixture vakken are done; every new vak still needs its own pass
         against the picking rule (face-free, Northern European) and a 3-tall/3-wide split.
 
+### R. Website factory — a design vocabulary, driven by reference sites (started 2026-08-15)
+Q9 fixed the photography, but the factory still built ONE site: same silhouette, same type
+scale, same corners, same air, and two hex values as the only thing a client could change.
+Two voorstellen sent in the same week were recognisably the same document. R makes the skin
+a parameter, and lets the founder point at example websites he likes instead of describing
+them. Decided up front (founder, 2026-08-15): the reference drives the SKIN ONLY — layout
+and section order stay fixed, because free-form markup per client cannot be fact-gated,
+cannot be checked for reflow, and grows the by-eye stage that Q7 wants to shrink. With no
+reference given, the factory composes a look itself rather than falling back to a preset.
+- [x] R1 (0d740f2): the vocabulary. Six axes (`schaal`, `vorm`, `ritme`, `palet`,
+      `kleuring`, `foto`) in `src/lib/stijl.ts`, each a closed set of named values that
+      resolve to CSS custom properties injected on `<html>` beside `--brand-primary`.
+      Tailwind v4 compiles utilities to `var()` references rather than inlining them, so
+      overriding a theme property re-skins every utility that reads it; components spend
+      tokens instead of literal `py-9`/`rounded-*` steps. Closed rather than generated so
+      every value is one that has been looked at once on a real build. Absent `stijl:` =
+      the old look, proven by diffing a default build against the previous one — including
+      the two photo radii (tiles 12px, hero 20px) that one `--foto-radius` silently
+      unified. Two defects found by looking: the `randloos` bleed used `calc(50% - 50vw)`,
+      and 50vw counts the scrollbar the layout width does not, so `overflow-x: clip` shaved
+      a slice off the outer photographs (now a tokenised max-width, no viewport
+      arithmetic); and `groot` at 4.25rem pushed the call button off a 1000px screen with a
+      real Dutch company name in the H1 (capped at 3.5rem).
+- [x] R2 (c915929): `letterontwerp` — systeem (unchanged), grotesk (Figtree), industrieel
+      (Archivo + Figtree), redactioneel (Instrument Serif + Figtree). Self-hosted woff2 via
+      `scripts/fonts.mjs`, never a CDN stylesheet: zero external requests is what lets these
+      sites ship with no cookie banner, and that is about where the bytes come from, not
+      whether there are any. All three families OFL 1.1, notice ships with them. Only the
+      selected family lands in a client's dist/ (the stock-photo rule); `fonts/manifest.json`
+      is the single source for both the CSS stacks and the copied files, because if those
+      drift the failure is a live site silently falling back to Arial. Weight and tracking
+      travel with the face, not the scale; h3 stays in the body face at every pairing.
+- [ ] R3: `app.sitestyle` — the reference-site analyser. Fetch each `--voorbeeld` URL,
+      extract MEASURABLE facts (font stacks, weights, sizes, colours, radii, section
+      padding, image ratios) in code, then one schema-constrained Claude call maps those
+      onto the vocabulary. The model picks among named values; it never emits CSS. Extract
+      design parameters only — never a reference's copy, images or logo.
+- [ ] R4: the no-reference path. Same call with no facts, told to compose from the vak and
+      the client's own brand colours. Must avoid `groot` when `bedrijf.naam` is long (see
+      R1) — encode that as a rule in the prompt, not as a hope.
+- [ ] R5: wire it in — `kk site new --voorbeeld <url>` (repeatable) through to sitedraft, so
+      the stijl block is written with the rest of the yaml.
+- [ ] R6: extend `CLIENT=<slug> pnpm check` for the skin: fonts resolve locally, the
+      resolved palette still clears WCAG AA, no external hosts, no @font-face pointing at a
+      family this build did not copy.
+- [ ] R7: tests (sitestyle mapping + the vocabulary resolver) and a docs pass — the
+      voorstel-playbook and intake checklist both describe the look as fixed.
+- NOTE (pre-existing, not from R): `.prettierrc.json` lists `prettier-plugin-astro` but the
+  plugin is not installed, so `pnpm format:check` fails repo-wide before any of this.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
