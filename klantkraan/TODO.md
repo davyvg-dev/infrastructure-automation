@@ -485,8 +485,30 @@ reference given, the factory composes a look itself rather than falling back to 
       call twice), or drop the /85 and carry the hierarchy on size. Nothing ships broken
       meanwhile: `pnpm check` runs before a voorstel goes out, so a bad combination stops
       the send instead of reaching a prospect.
-- [ ] R7: tests (the vocabulary resolver — sitestyle's own 41 landed with R3) and a docs
-      pass — the voorstel-playbook and intake checklist both describe the look as fixed.
+- [x] R7 (this commit): 22 tests on the resolver and a docs pass over four files.
+      sitestyle's 41 prove a chosen stijl stays inside the vocabulary; nothing proved what
+      the vocabulary resolves TO, which is where the silent failures live — every axis is a
+      record spread into one object, so a forgotten key drops a custom property and one
+      client's site is quietly wrong. `pnpm check` gates the built page, but only for the
+      combination that client got; these sweep all 1728. One token set per skin, nothing
+      empty, seven axes writing disjoint properties. Then what the values have to mean: the
+      scale runs downhill and the schalen are ordered at both ends of every clamp, no h1
+      past the 3.5rem cap Q9 paid for, the band keeps more air than the text at every
+      density, `scherp` zeroes all three radii and `randloos` squares a photo whatever
+      `vorm` says, every palet clears AA for ink AND mist, `royaal` stays under 20%, the
+      skin outranks a caller's override, every `var()` referenced is set in the same
+      declaration. Fonts get the bug with no symptom: a stack asking for a family whose
+      directory was never copied renders in Arial with nothing going red, so the leading
+      family is checked against the manifest AND a woff2 on disk. Believed because each was
+      made to fail first — 17 mutations of stijl.ts, each caught by the test that should
+      catch it and no other. No framework: `node --test` on the .ts directly, wired into
+      turbo and CI (engines moves to 22.18 for unflagged type stripping; two imports now
+      spell out what Vite was inferring). Docs: voorstel-playbook gains `--voorbeeld` and a
+      section on what it does; intake-checklist gains a sixth question ("kent u een website
+      waarvan u het uiterlijk mooi vindt") deliberately OUTSIDE the completeness gate — no
+      reference means the factory composes, not that something is missing. README carried an
+      outright false line ("system fonts") since R2 and had no vocabulary section at all;
+      QA.md documented the fact gate as it stood before R6, undersold by half.
 - NOTE (pre-existing, not from R): `.prettierrc.json` lists `prettier-plugin-astro` but the
   plugin is not installed, so `pnpm format:check` fails repo-wide before any of this.
 
