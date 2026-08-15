@@ -75,16 +75,17 @@ const srcset = (src: string, w: number) =>
   tiles.length > 0 && (
     <section
       aria-labelledby="werk-titel"
-      class="border-y border-(--color-line)"
-      style="background-color: color-mix(in oklab, var(--brand-primary) 5%, var(--color-paper))"
+      class="border-y border-(--band-line) bg-(--band-foto-bg)"
     >
-      <div class="mx-auto max-w-6xl px-6 py-14 md:py-20">
-        <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
-          {own ? 'Ons werk' : 'Sfeerbeeld'}
-        </p>
-        <h2 id="werk-titel" class="mt-4 max-w-2xl text-h2">
-          {own ? 'Een greep uit ons werk.' : `Zo ziet het werk van een ${bedrijf.vak} eruit.`}
-        </h2>
+      <div class="py-(--ritme-band-y) md:py-(--ritme-band-y-md)">
+        <div class="mx-auto max-w-6xl px-6">
+          <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
+            {own ? 'Ons werk' : 'Sfeerbeeld'}
+          </p>
+          <h2 id="werk-titel" class="mt-4 max-w-2xl text-h2">
+            {own ? 'Een greep uit ons werk.' : `Zo ziet het werk van een ${bedrijf.vak} eruit.`}
+          </h2>
+        </div>
 
         {/*
          * One column on a phone, not two. Two columns inside the page gutter draws a
@@ -94,7 +95,23 @@ const srcset = (src: string, w: number) =>
          * instead; the set costs more scroll there, which is the right trade for the one
          * viewport most of these visitors actually use.
          */}
-        <ul role="list" class="mt-10 gap-4 columns-1 sm:columns-2 md:mt-14 md:columns-3">
+        {/*
+         * Only the photographs escape the text column: the eyebrow and the H2 above stay
+         * in it, which is the shape the Q9 reference set uses and the reason a bleeding
+         * band reads as a portfolio rather than as a section that lost its margins.
+         *
+         * Done by widening this wrapper rather than by giving the grid a negative margin.
+         * The margin version has to say `calc(50% - 50vw)`, and 50vw counts the scrollbar
+         * that the layout width does not: the grid lands ~15px wider than the space it
+         * has, and with `overflow-x: clip` on <html> that silently shaves a slice off the
+         * outer photographs instead of showing a scrollbar. A max-width the skin sets is
+         * the same look with no arithmetic against the viewport.
+         */}
+        <div class="mx-auto mt-10 max-w-(--foto-kolom) px-(--foto-gutter) md:mt-14">
+        <ul
+          role="list"
+          class="gap-4 columns-1 sm:columns-2 md:columns-3"
+        >
           {tiles.map(({ src, shape, width, height, alt }) => (
             <li class="mb-4 break-inside-avoid">
               <img
@@ -107,13 +124,14 @@ const srcset = (src: string, w: number) =>
                 loading="lazy"
                 decoding="async"
                 class:list={[
-                  'w-full rounded-(--radius-card) object-cover',
+                  'w-full rounded-(--foto-tegel-radius) object-cover',
                   shape === 'tall' ? 'aspect-[2/3]' : 'aspect-[3/2]',
                 ]}
               />
             </li>
           ))}
         </ul>
+        </div>
       </div>
     </section>
   )

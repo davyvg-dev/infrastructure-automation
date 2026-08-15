@@ -6,8 +6,8 @@ import { loadClient } from '../lib/client'
 const { config } = loadClient()
 ---
 
-<section class="border-y border-(--color-line) bg-(--color-card)">
-  <div class="mx-auto max-w-5xl px-6 py-9 md:py-12">
+<section class="border-y border-(--band-line) bg-(--band-bg)">
+  <div class="mx-auto max-w-5xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)">
     <h2 class="text-h2">Waarom {config.bedrijf.naam}</h2>
     <ul role="list" class="mt-8 grid gap-5 sm:grid-cols-2">
       {

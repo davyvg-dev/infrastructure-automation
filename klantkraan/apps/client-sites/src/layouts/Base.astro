@@ -6,6 +6,7 @@ import PreviewBanner from '../components/PreviewBanner.astro'
 import StickyCallBar from '../components/StickyCallBar.astro'
 import { loadClient } from '../lib/client'
 import { openingHoursSpecification } from '../lib/format'
+import { stijlStyle } from '../lib/stijl'
 
 interface Props {
   title: string
@@ -13,8 +14,17 @@ interface Props {
 }
 
 const { title, description } = Astro.props
-const { config, siteUrl, logoUrl, isPreview, fotos, stock } = loadClient()
+const { config, stijl, siteUrl, logoUrl, isPreview, fotos, stock } = loadClient()
 const { bedrijf } = config
+
+// The two brand hooks and the resolved skin travel together as one inline style on
+// <html>: same element as :root, so these outrank global.css for every utility that
+// reads them. The brand colours come first so a skin token may reference them
+// (kleuring: royaal mixes the band tint out of --brand-primary).
+const rootStyle = stijlStyle(stijl, {
+  '--brand-primary': config.branding.kleur_primair,
+  '--brand-accent': config.branding.kleur_accent,
+})
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString()
 // Share card. A link to a client site used to unfurl as a bare grey box on WhatsApp,
@@ -70,10 +80,7 @@ const schema = isPreview
 ---
 
 <!doctype html>
-<html
-  lang="nl"
-  style={`--brand-primary: ${config.branding.kleur_primair}; --brand-accent: ${config.branding.kleur_accent}`}
->
+<html lang="nl" style={rootStyle}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

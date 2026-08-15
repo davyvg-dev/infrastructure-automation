@@ -28,6 +28,18 @@ branding:
   kleur_primair: "#1f4d45"
   kleur_accent: "#c2703d"
 
+# De vormgeving. Deze fixture staat bewust NIET op de standaardwaarden: samen met
+# voorbeeld-dakdekker (die geen stijl-blok heeft en dus de standaard bouwt) laten de
+# twee fixtures zien wat de woordenlijst doet. Elke as mag ontbreken; wat ontbreekt
+# valt terug op de standaard. Zie src/lib/stijl.ts voor de toegestane waarden.
+stijl:
+  schaal: groot # grote kop die het eerste scherm draagt
+  vorm: scherp # rechte hoeken op kaarten, knoppen en fotos
+  ritme: ruim # galerielucht tussen de secties
+  palet: zand # warm redactioneel grijs in plaats van koel wit
+  kleuring: royaal # de banden krijgen een tint van de merkkleur
+  foto: randloos # de fotoband loopt door tot de schermrand
+
 diensten:
   - naam: "Lekkage opsporen en verhelpen"
     omschrijving: "Wij zoeken de oorzaak van de lekkage op en repareren hem meteen."

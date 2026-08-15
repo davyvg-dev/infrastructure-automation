@@ -24,6 +24,16 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse } from 'yaml'
 import { z } from 'zod'
+import {
+  FOTOZETTINGEN,
+  KLEURINGEN,
+  PALETTEN,
+  RITMES,
+  SCHALEN,
+  STANDAARD_STIJL,
+  VORMEN,
+  type Stijl,
+} from './stijl'
 
 export const DAGEN = [
   'maandag',
@@ -96,6 +106,21 @@ export const ClientSchema = z.object({
     // Filename inside fotos/ (e.g. "logo.svg"); shown in the header when set.
     logo: z.string().optional(),
   }),
+  // The skin: which of the vocabulary's looks this site is built in. Absent means
+  // the look every client site had before the vocabulary existed, so an older
+  // client.yaml keeps building the same bytes. Each axis defaults on its own, so a
+  // partial block ("just make it roomier") is a valid config rather than an error.
+  // Written by `app.sitestyle` from reference sites, or by hand.
+  stijl: z
+    .object({
+      schaal: z.enum(SCHALEN).default(STANDAARD_STIJL.schaal),
+      vorm: z.enum(VORMEN).default(STANDAARD_STIJL.vorm),
+      ritme: z.enum(RITMES).default(STANDAARD_STIJL.ritme),
+      palet: z.enum(PALETTEN).default(STANDAARD_STIJL.palet),
+      kleuring: z.enum(KLEURINGEN).default(STANDAARD_STIJL.kleuring),
+      foto: z.enum(FOTOZETTINGEN).default(STANDAARD_STIJL.foto),
+    })
+    .default(STANDAARD_STIJL),
   diensten: z
     .array(
       z.object({
@@ -253,6 +278,8 @@ export interface StockSet {
 export interface LoadedClient {
   slug: string
   config: ClientConfig
+  /** Resolved skin, defaults filled in. Same object as config.stijl, named for the layout. */
+  stijl: Stijl
   /** Public URL paths of the client's photos (/fotos/...), excluding the logo. */
   fotos: string[]
   /**
@@ -382,6 +409,7 @@ export function loadClient(): LoadedClient {
   cached = {
     slug,
     config,
+    stijl: config.stijl,
     fotos,
     stock,
     logoUrl,

@@ -2,10 +2,19 @@
 
 /*
  * Client-site template tokens. Light, calm, trustworthy: the opposite of a
- * flashy agency site. Two brand hooks come from client.yaml and are set as
- * inline custom properties on <html> by Base.astro:
+ * flashy agency site.
+ *
+ * Every value below is a DEFAULT. Base.astro writes the resolved skin onto
+ * <html> as inline custom properties, which win over these because <html> is
+ * :root and an inline declaration outranks the stylesheet's rule for the same
+ * element. Tailwind v4 compiles utilities to var() references rather than
+ * inlining the values, so overriding the property re-skins every utility that
+ * reads it. src/lib/stijl.ts owns which combinations exist.
+ *
+ * Two brand hooks come from client.yaml the same way:
  *   --brand-primary  dark enough for white text (validated in the Zod schema)
  *   --brand-accent   decorative highlights only (never text on white)
+ *
  * Fonts: system stack only. No font files, no CDN, zero external requests;
  * the no-cookie-banner guarantee depends on it.
  */
@@ -15,6 +24,11 @@
   --color-ink: #20262c; /* primary text */
   --color-mist: #5a646e; /* muted text */
   --color-line: #e5e1da; /* hairline borders */
+
+  /* Alternating band surfaces: --color-card by default, tinted with the client's
+   * own primary when the skin asks for it (stijl.kleuring). */
+  --band-bg: var(--color-card);
+  --band-line: var(--color-line);
 
   --font-sans:
     system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -39,6 +53,22 @@
 
   --radius-card: 0.75rem;
   --radius-button: 0.625rem;
+  --radius-foto: 1.25rem;
+
+  /* Section rhythm. Components spend these instead of literal py-* steps so the
+   * whole page breathes on one axis (stijl.ritme); the band pair is the photo
+   * section, which has always carried more air than the text sections. */
+  --ritme-y: 2.25rem;
+  --ritme-y-md: 3rem;
+  --ritme-band-y: 3.5rem;
+  --ritme-band-y-md: 5rem;
+
+  /* Photography (stijl.foto): how wide the work grid may run, the gutter it keeps
+   * when it does, and the corner on each frame. */
+  --foto-kolom: 72rem;
+  --foto-gutter: 1.5rem;
+  --foto-radius: var(--radius-foto);
+  --foto-tegel-radius: var(--radius-card);
 }
 
 @layer base {
