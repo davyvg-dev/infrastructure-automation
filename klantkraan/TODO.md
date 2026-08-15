@@ -399,6 +399,30 @@ reference given, the factory composes a look itself rather than falling back to 
 - [ ] R4: the no-reference path. Same call with no facts, told to compose from the vak and
       the client's own brand colours. Must avoid `groot` when `bedrijf.naam` is long (see
       R1) — encode that as a rule in the prompt, not as a hope.
+- [x] R4 (4ca0edf): `--vak --naam --kleur --accent` with no `--voorbeeld` composes instead
+      of refusing. Same call, measurements swapped for what a prospect always has; both
+      paths now share one schema, one validator and one yaml writer. Two things went into
+      the enum rather than the prompt, because a prompt line is advice and the run that
+      ignores it ships a real voorstel. First, `groot` is withdrawn above 34 characters of
+      `bedrijf.naam` — measured in the browser on a real build at 1440x800, where the H1
+      (`<naam>: vakwerk waar u op kunt rekenen.` in a column that stops growing at ~480px)
+      sets in four lines at 33 characters and five at 35. R1 capped `groot` at 3.5rem to
+      keep the call button on screen; this is the other half of the same defect, the
+      headline that is legal but unreadable. It applies to the reference path too: it is a
+      fact about the client, not about the mode. Second, the composer gets a two-value
+      shortlist per axis rotated by a blake2b seed over the name, not the whole vocabulary
+      — sitedraft gives every prospect the same DEFAULT_PRIMARY until the founder overrides
+      it, so six dakdekkers drafted in one week would arrive with identical inputs and leave
+      with an identical skin, which is R's own defect one layer up. The cost is deliberate:
+      a shortlist sometimes withholds the best value (`ritme: ruim` above all), and handed
+      the full range the model keeps reaching for that same best answer, which is one site
+      with a longer prompt. blake2b and not `hash()` (salted per process) so fixing a typo
+      in the yaml does not redesign the page. `systeem` is never offered to the composer —
+      it is what a page looks like when nobody chose a typeface; measuring a reference
+      really set in Arial still maps to it, which is a reading rather than a decision.
+      Verified on two real calls: "Dakwerken Bos" → industrieel/scherp/warm/royaal/randloos,
+      "Installatietechniek Van der Veldenhuizen" (40 chars) → grotesk/zacht/ruim/koel, no
+      `groot`; built the long one and both call buttons sit above the fold. 60 tests.
 - [ ] R5: wire it in — `kk site new --voorbeeld <url>` (repeatable) through to sitedraft, so
       the stijl block is written with the rest of the yaml.
 - [ ] R6: extend `CLIENT=<slug> pnpm check` for the skin: fonts resolve locally, the
