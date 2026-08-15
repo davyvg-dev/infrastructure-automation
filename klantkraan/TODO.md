@@ -425,6 +425,24 @@ reference given, the factory composes a look itself rather than falling back to 
       `groot`; built the long one and both call buttons sit above the fold. 60 tests.
 - [ ] R5: wire it in — `kk site new --voorbeeld <url>` (repeatable) through to sitedraft, so
       the stijl block is written with the rest of the yaml.
+- [x] R5 (783cdc7): wired as above, and composing when there is no `--voorbeeld` rather than
+      leaving the block out — a factory that composes only when asked gets asked on the first
+      prospect and never again. The ordering carries two decisions. Both free gates moved
+      ahead of the copy call (references measured, brand colours checked), following the
+      openingstijden rule: a mistyped URL or a too-light `--kleur` costs a second, not an Opus
+      request, and the colour would otherwise come back twice — once as a warning from the
+      composer, which is handed it, and again as build_config's error. A skin that fails
+      AFTER that call does not sink the run: the voorstel is written in the default look with
+      the `app.sitestyle` command to fix it printed underneath, because a proposal in last
+      month's look beats a paid call thrown away. The yaml is dumped one top-level key at a
+      time so `stijl:` can carry each choice's reason as a comment above it (yaml.dump cannot,
+      and the founder judges the analyser by those lines before he sends the site); output is
+      byte-identical without a block, pinned by a test. Verified end to end on a real build:
+      industrieel/groot/scherp/ruim/warm/royaal/randloos → Archivo+Figtree, 0px radii,
+      full-bleed photos, only the two chosen families in dist/, `pnpm check` green over 8
+      pages. One defect found by building rather than testing: a hand-made fixture put a
+      kleuring value (`royaal`) on the ritme axis and rode the round trip all the way to a Zod
+      refusal, so fixtures are now checked against the vocabulary too. 28 tests.
 - [ ] R6: extend `CLIENT=<slug> pnpm check` for the skin: fonts resolve locally, the
       resolved palette still clears WCAG AA, no external hosts, no @font-face pointing at a
       family this build did not copy.
