@@ -1,0 +1,34 @@
+{
+  "_comment": [
+    "Which typeface pairing each stijl.letterontwerp value means, and which font",
+    "directories a client that picked it has to ship. Read by BOTH src/lib/stijl.ts",
+    "(to build the font-family stacks) and astro.config.mjs (to copy only the needed",
+    "woff2 files into dist/fonts/). One file so the CSS and the copied bytes cannot",
+    "disagree: a stack naming a family whose directory was not copied is an invisible",
+    "fallback to Arial on a client's live site.",
+    "",
+    "'dirs' are directories under fonts/. 'display' is the heading face, 'body' the",
+    "running text; equal values mean one family does both. 'val' is the fallback stack",
+    "appended after the webfont, and is the whole stack for systeem."
+  ],
+  "systeem": {
+    "dirs": [],
+    "display": null,
+    "body": null
+  },
+  "grotesk": {
+    "dirs": ["figtree"],
+    "display": "Figtree",
+    "body": "Figtree"
+  },
+  "industrieel": {
+    "dirs": ["archivo", "figtree"],
+    "display": "Archivo",
+    "body": "Figtree"
+  },
+  "redactioneel": {
+    "dirs": ["instrumentserif", "figtree"],
+    "display": "Instrument Serif",
+    "body": "Figtree"
+  }
+}

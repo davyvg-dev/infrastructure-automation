@@ -33,6 +33,7 @@ branding:
 # twee fixtures zien wat de woordenlijst doet. Elke as mag ontbreken; wat ontbreekt
 # valt terug op de standaard. Zie src/lib/stijl.ts voor de toegestane waarden.
 stijl:
+  letterontwerp: redactioneel # serif-kop, grotesk broodtekst
   schaal: groot # grote kop die het eerste scherm draagt
   vorm: scherp # rechte hoeken op kaarten, knoppen en fotos
   ritme: ruim # galerielucht tussen de secties

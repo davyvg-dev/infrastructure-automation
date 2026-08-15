@@ -22,7 +22,18 @@ const PREVIEW_HOST = process.env.PREVIEW_HOST ?? 'klant-preview.pages.dev'
 let site = 'https://client-not-set.invalid'
 let fotosDir = null
 let stockDir = null
+let fontDirs = []
 let isPreview = false
+
+// Which woff2 directories this client's typeface pairing needs. The mapping lives in
+// fonts/manifest.json rather than here because src/lib/stijl.ts builds its font-family
+// stacks from the same file: if the stack and the copied bytes could drift apart, the
+// failure is a client's live site silently falling back to Arial. This config cannot
+// import the TS module (the yaml peek runs before the build), but it can read the JSON
+// they share.
+const fontManifest = JSON.parse(
+  fs.readFileSync(path.join(appRoot, 'fonts', 'manifest.json'), 'utf8'),
+)
 
 if (slug) {
   const clientDir = path.join(appRoot, 'clients', slug)
@@ -41,6 +52,11 @@ if (slug) {
     // stock photos (nor lets a visitor browse the other trades we build for).
     const vak = typeof raw?.bedrijf?.vak === 'string' ? raw.bedrijf.vak : null
     if (vak) stockDir = path.join(appRoot, 'stock', vak)
+    // Same reasoning as the stock set: ship this client's typeface and nothing else, so
+    // a site is not carrying 250KB of faces it never names. Unknown/absent falls through
+    // to `systeem`, whose entry has no directories -- the pure system stack, no files.
+    const pairing = fontManifest[raw?.stijl?.letterontwerp ?? 'systeem'] ?? fontManifest.systeem
+    fontDirs = pairing?.dirs ?? []
   }
 }
 
@@ -83,6 +99,42 @@ const mountDir = (name, getDir, mount) => ({
 const clientFotos = mountDir('client-fotos', () => fotosDir, 'fotos')
 const clientStock = mountDir('client-stock', () => stockDir, 'stock')
 
+// Fonts differ from the other two mounts: several source directories flatten into one
+// /fonts/ mount, because src/styles/fonts.css addresses every face as /fonts/<file>.woff2
+// regardless of which family it belongs to. The OFL notice travels with them -- these
+// files are redistributed into a client's deploy, which is exactly the case the licence
+// asks to be accompanied.
+const clientFonts = {
+  name: 'client-fonts',
+  hooks: {
+    'astro:server:setup': ({ server }) => {
+      server.middlewares.use('/fonts', (req, res, next) => {
+        const wanted = path.basename(decodeURIComponent((req.url ?? '/').split('?')[0]))
+        for (const dir of fontDirs) {
+          const file = path.join(appRoot, 'fonts', dir, wanted)
+          if (!fs.existsSync(file)) continue
+          res.setHeader('Content-Type', 'font/woff2')
+          return fs.createReadStream(file).pipe(res)
+        }
+        next()
+      })
+    },
+    'astro:build:done': ({ dir }) => {
+      if (fontDirs.length === 0) return
+      const out = path.join(fileURLToPath(dir), 'fonts')
+      fs.mkdirSync(out, { recursive: true })
+      for (const family of fontDirs) {
+        const src = path.join(appRoot, 'fonts', family)
+        if (!fs.existsSync(src)) throw new Error(`[client-fonts] fonts/${family}/ does not exist`)
+        for (const file of fs.readdirSync(src)) {
+          fs.copyFileSync(path.join(src, file), path.join(out, file))
+        }
+      }
+      fs.copyFileSync(path.join(appRoot, 'fonts', 'OFL-NOTICE.txt'), path.join(out, 'OFL-NOTICE.txt'))
+    },
+  },
+}
+
 // A proposal build gets X-Robots-Tag on top of the per-page meta: the meta tag
 // alone does not cover non-HTML responses, and a preview URL that gets indexed
 // is the one failure mode of this whole motion.
@@ -116,6 +168,7 @@ export default defineConfig({
         ]),
     clientFotos,
     clientStock,
+    clientFonts,
     previewNoindex,
   ],
   vite: {

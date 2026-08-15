@@ -22,6 +22,7 @@
 // whether photographs are framed or allowed to bleed. Not the section order --
 // they all say the same things in the same sequence.
 
+export const LETTERONTWERPEN = ['systeem', 'grotesk', 'industrieel', 'redactioneel'] as const
 export const SCHALEN = ['compact', 'normaal', 'groot'] as const
 export const VORMEN = ['scherp', 'zacht', 'rond'] as const
 export const RITMES = ['dicht', 'normaal', 'ruim'] as const
@@ -29,6 +30,7 @@ export const PALETTEN = ['warm', 'koel', 'neutraal', 'zand'] as const
 export const KLEURINGEN = ['spaarzaam', 'royaal'] as const
 export const FOTOZETTINGEN = ['ingekaderd', 'randloos'] as const
 
+export type Letterontwerp = (typeof LETTERONTWERPEN)[number]
 export type Schaal = (typeof SCHALEN)[number]
 export type Vorm = (typeof VORMEN)[number]
 export type Ritme = (typeof RITMES)[number]
@@ -37,6 +39,7 @@ export type Kleuring = (typeof KLEURINGEN)[number]
 export type Fotozetting = (typeof FOTOZETTINGEN)[number]
 
 export interface Stijl {
+  letterontwerp: Letterontwerp
   schaal: Schaal
   vorm: Vorm
   ritme: Ritme
@@ -52,6 +55,7 @@ export interface Stijl {
  * new combination against.
  */
 export const STANDAARD_STIJL: Stijl = {
+  letterontwerp: 'systeem',
   schaal: 'normaal',
   vorm: 'zacht',
   ritme: 'normaal',
@@ -61,6 +65,93 @@ export const STANDAARD_STIJL: Stijl = {
 }
 
 type Tokens = Record<string, string>
+
+// --- typefaces --------------------------------------------------------------------------
+//
+// The single biggest tell that a site came out of a template is that it is set in
+// system-ui: it is what a page looks like when nobody chose anything. So the vocabulary
+// gets real faces, self-hosted (see scripts/fonts.mjs) rather than linked, because a
+// client site making zero external requests is what lets it ship without a cookie banner.
+//
+// Which files each pairing needs lives in fonts/manifest.json, read here and by
+// astro.config.mjs, so the stack the CSS names and the bytes the build copies cannot
+// drift apart. A stack naming a family that was never copied does not fail anything --
+// it silently falls back to Arial on a client's live site, which is exactly the class of
+// bug a shared manifest removes.
+import manifest from '../../fonts/manifest.json'
+
+// Trailing fallbacks. The webfont is prepended; on the systeem pairing this stack is all
+// there is. Kept identical to what the template shipped before webfonts existed, so
+// `letterontwerp: systeem` really is the old look and not an approximation of it.
+const SYSTEEM_STACK =
+  "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+const SERIF_FALLBACK = "Georgia, 'Times New Roman', serif"
+
+interface Pairing {
+  dirs: string[]
+  display: string | null
+  body: string | null
+}
+
+/**
+ * Per-pairing display treatment: the weight and tracking of h1/h2.
+ *
+ * Sizes come from `schaal`, but weight and tracking belong to the face -- the same
+ * numbers do not suit a 400-weight serif and an 800-weight grotesk, and a display serif
+ * forced to 800 with -0.015em tracking looks like a rendering fault rather than a choice.
+ *
+ * h3 is deliberately not here. It is a card and panel title at ~1.15rem, and at that size
+ * a display face is either invisible (a high-contrast serif loses its thin strokes) or
+ * shouty (a wide grotesk). Every pairing sets h3 in the body face, which is the ordinary
+ * convention: display for the two headings that carry the page, text face for the rest.
+ */
+const LETTER_TOKENS: Record<Letterontwerp, Tokens> = {
+  systeem: {
+    '--text-h1--font-weight': '800',
+    '--text-h2--font-weight': '700',
+    '--display-tracking': '-0.015em',
+  },
+  // Figtree carries its own weight at 700; 800 is heavier than the face wants.
+  grotesk: {
+    '--text-h1--font-weight': '700',
+    '--text-h2--font-weight': '700',
+    '--display-tracking': '-0.02em',
+  },
+  // Archivo is wide and sturdy, which is why it suits construction, and it needs tighter
+  // tracking at display sizes or a Dutch company name sprawls across three lines.
+  industrieel: {
+    '--text-h1--font-weight': '700',
+    '--text-h2--font-weight': '700',
+    '--display-tracking': '-0.03em',
+  },
+  // Instrument Serif ships one weight and is high contrast: let the size do the work.
+  // Negative tracking collides its thin strokes, so this is the one pairing at 0.
+  redactioneel: {
+    '--text-h1--font-weight': '400',
+    '--text-h2--font-weight': '400',
+    '--display-tracking': '0em',
+  },
+}
+
+const PAIRINGEN = manifest as unknown as Record<string, Pairing>
+
+/** Font-family stacks for a pairing: the webfont first, then the system fallbacks. */
+function fontTokens(naam: Letterontwerp): Tokens {
+  const pairing = PAIRINGEN[naam]
+  const isSerif = naam === 'redactioneel'
+  return {
+    '--font-sans': pairing.body ? `'${pairing.body}', ${SYSTEEM_STACK}` : SYSTEEM_STACK,
+    '--font-display': pairing.display
+      ? `'${pairing.display}', ${isSerif ? SERIF_FALLBACK : SYSTEEM_STACK}`
+      : SYSTEEM_STACK,
+    ...LETTER_TOKENS[naam],
+  }
+}
+
+/** Font directories a client on this pairing has to ship. Used by astro.config.mjs. */
+export function fontDirs(naam: Letterontwerp): string[] {
+  return PAIRINGEN[naam]?.dirs ?? []
+}
 
 // --- type scale -----------------------------------------------------------------------
 //
@@ -248,6 +339,7 @@ const FOTO_TOKENS: Record<Fotozetting, Tokens> = {
  */
 export function resolveStijl(stijl: Stijl): Tokens {
   return {
+    ...fontTokens(stijl.letterontwerp),
     ...SCHAAL_TOKENS[stijl.schaal],
     ...VORM_TOKENS[stijl.vorm],
     ...RITME_TOKENS[stijl.ritme],

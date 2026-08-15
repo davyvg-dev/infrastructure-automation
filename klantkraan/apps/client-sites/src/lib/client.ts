@@ -27,6 +27,7 @@ import { z } from 'zod'
 import {
   FOTOZETTINGEN,
   KLEURINGEN,
+  LETTERONTWERPEN,
   PALETTEN,
   RITMES,
   SCHALEN,
@@ -113,6 +114,7 @@ export const ClientSchema = z.object({
   // Written by `app.sitestyle` from reference sites, or by hand.
   stijl: z
     .object({
+      letterontwerp: z.enum(LETTERONTWERPEN).default(STANDAARD_STIJL.letterontwerp),
       schaal: z.enum(SCHALEN).default(STANDAARD_STIJL.schaal),
       vorm: z.enum(VORMEN).default(STANDAARD_STIJL.vorm),
       ritme: z.enum(RITMES).default(STANDAARD_STIJL.ritme),
