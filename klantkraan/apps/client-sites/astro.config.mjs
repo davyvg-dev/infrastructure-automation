@@ -23,6 +23,7 @@ let site = 'https://client-not-set.invalid'
 let fotosDir = null
 let stockDir = null
 let fontDirs = []
+let fontFamilies = []
 let isPreview = false
 
 // Which woff2 directories this client's typeface pairing needs. The mapping lives in
@@ -57,6 +58,9 @@ if (slug) {
     // to `systeem`, whose entry has no directories -- the pure system stack, no files.
     const pairing = fontManifest[raw?.stijl?.letterontwerp ?? 'systeem'] ?? fontManifest.systeem
     fontDirs = pairing?.dirs ?? []
+    // The families those directories carry, deduplicated (industrieel/redactioneel pair a
+    // display face with Figtree for running text). Used to prune the stylesheet below.
+    fontFamilies = [...new Set([pairing?.display, pairing?.body].filter(Boolean))]
   }
 }
 
@@ -104,6 +108,32 @@ const clientStock = mountDir('client-stock', () => stockDir, 'stock')
 // regardless of which family it belongs to. The OFL notice travels with them -- these
 // files are redistributed into a client's deploy, which is exactly the case the licence
 // asks to be accompanied.
+// One @font-face rule, minified or not. A @font-face block never nests braces, so matching
+// up to the first closing one is exact rather than lucky.
+const FONT_FACE_RE = /@font-face\s*\{[^}]*\}/g
+
+/** Drop every @font-face rule whose family is not in `keep`, across the built CSS and HTML. */
+function pruneFontFaces(root, keep) {
+  const kept = new Set(keep)
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        walk(file)
+        // Astro inlines small stylesheets into <style>, so the rules can land in either.
+      } else if (/\.(css|html)$/.test(entry.name)) {
+        const before = fs.readFileSync(file, 'utf8')
+        const after = before.replace(FONT_FACE_RE, (rule) => {
+          const family = rule.match(/font-family:\s*([^;}]+)/)?.[1]?.trim().replace(/^['"]|['"]$/g, '')
+          return family && kept.has(family) ? rule : ''
+        })
+        if (after !== before) fs.writeFileSync(file, after)
+      }
+    }
+  }
+  walk(root)
+}
+
 const clientFonts = {
   name: 'client-fonts',
   hooks: {
@@ -120,17 +150,29 @@ const clientFonts = {
       })
     },
     'astro:build:done': ({ dir }) => {
-      if (fontDirs.length === 0) return
-      const out = path.join(fileURLToPath(dir), 'fonts')
-      fs.mkdirSync(out, { recursive: true })
-      for (const family of fontDirs) {
-        const src = path.join(appRoot, 'fonts', family)
-        if (!fs.existsSync(src)) throw new Error(`[client-fonts] fonts/${family}/ does not exist`)
-        for (const file of fs.readdirSync(src)) {
-          fs.copyFileSync(path.join(src, file), path.join(out, file))
+      const root = fileURLToPath(dir)
+      if (fontDirs.length > 0) {
+        const out = path.join(root, 'fonts')
+        fs.mkdirSync(out, { recursive: true })
+        for (const family of fontDirs) {
+          const src = path.join(appRoot, 'fonts', family)
+          if (!fs.existsSync(src)) throw new Error(`[client-fonts] fonts/${family}/ does not exist`)
+          for (const file of fs.readdirSync(src)) {
+            fs.copyFileSync(path.join(src, file), path.join(out, file))
+          }
         }
+        fs.copyFileSync(path.join(appRoot, 'fonts', 'OFL-NOTICE.txt'), path.join(out, 'OFL-NOTICE.txt'))
       }
-      fs.copyFileSync(path.join(appRoot, 'fonts', 'OFL-NOTICE.txt'), path.join(out, 'OFL-NOTICE.txt'))
+      // src/styles/fonts.css declares every family the vocabulary can choose from, because a
+      // stylesheet cannot be imported conditionally. Only this client's bytes were copied
+      // above, so the rest of those declarations point at files that are not in this build:
+      // dead weight today (nothing names them, so nothing requests them) and a 404 the day
+      // anything does. Strip them here, where the pairing is already known.
+      //
+      // After the bundler, so the hashed filename no longer matches its own content. That is
+      // fine and deliberate: each client site is its own deploy on its own hostname, and the
+      // hash only has to differ between builds of the same site.
+      pruneFontFaces(root, fontFamilies)
     },
   },
 }
