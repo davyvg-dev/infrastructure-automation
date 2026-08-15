@@ -30,7 +30,7 @@ Geen stockfoto's; echte foto's van uw eigen werk overtuigen. Niet mooier maken d
 Lukt een nummer niet, sla hem over en maak een extra van een ander nummer. Minder dan tien
 kan, de site heeft een nette terugval zonder foto's; met foto's verkoopt hij beter.
 
-### Vijf korte vragen
+### Zes korte vragen
 
 1. Uw KvK-nummer en btw-id (komen verplicht in de footer).
 2. Welke plaatsen of regio bedient u? Maximaal vijf plaatsnamen.
@@ -39,6 +39,10 @@ kan, de site heeft een nette terugval zonder foto's; met foto's verkoopt hij bet
    stuur hun woorden letterlijk door (wij verzinnen geen reviews).
 5. Welke domeinnaam wilt u? De domeinnaam komt op uw eigen naam te staan; hij is en blijft
    van u.
+6. Kent u een website waarvan u het uiterlijk mooi vindt? Eén of twee links is genoeg, uit
+   welke branche dan ook. Wij nemen er niets van over: wij kijken alleen naar de vormgeving
+   (lettertype, ruimte, kleurtint, hoe foto's staan) en kiezen daar de uwe op af. Weet u er
+   geen, dan is dat prima -- dan kiezen wij.
 
 Prijzen vragen wij bewust niet: die horen in een gesprek, niet op een openbare pagina.
 
@@ -48,11 +52,14 @@ Prijzen vragen wij bewust niet: die horen in een gesprek, niet op een openbare p
 
 ### Scrape first, then top up
 
-1. `kk site new "<Bedrijfsnaam>" --url <site> --near <plaats>` (wraps `app.sitedraft`) writes
-   `klantkraan/apps/client-sites/clients/<slug>/client.yaml` straight from the prospect's site
-   and Google listing: telefoon and openingstijden mapped in code from the cited extraction,
-   the Dutch copy drafted under a schema that forbids invented claims and any price. Same
-   underlying rules as `app.extract`: citation-or-blank, prices are NEVER extracted.
+1. `kk site new "<Bedrijfsnaam>" --url <site> --near <plaats> [--voorbeeld <url>]...` (wraps
+   `app.sitedraft`) writes `klantkraan/apps/client-sites/clients/<slug>/client.yaml` straight
+   from the prospect's site and Google listing: telefoon and openingstijden mapped in code from
+   the cited extraction, the Dutch copy drafted under a schema that forbids invented claims and
+   any price. Same underlying rules as `app.extract`: citation-or-blank, prices are NEVER
+   extracted. Pass question 6's links as `--voorbeeld` and the skin is measured off them;
+   without any, the factory composes one from the vak and the name. Either way it lands as a
+   `stijl:` block with the reason per axis, and `pnpm check` gates the result.
    For the receptionist demo, `app.extract -o extraction.json` first and then
    `kk site new ... --from-json extraction.json` reuses one scrape for both configs.
 2. The config lands as `modus: preview` (a voorstel). Check telefoon, plaats, werkgebied and
@@ -62,16 +69,20 @@ Prijzen vragen wij bewust niet: die horen in een gesprek, niet op een openbare p
    The receptionist config and the site config should never disagree; when both exist, the
    receptionist config is the source the site copies from.
 3. The genuinely un-scrapeable set is exactly Deel 1: photos, KvK/btw-id, plaatsen choice,
-   review quotes with permission, domain wish, primary CTA preference. Ask ONLY for what the
-   scrape did not answer; never send the full list to someone whose site already told us
-   half of it.
+   review quotes with permission, domain wish, primary CTA preference, and the sites they
+   like the look of. Ask ONLY for what the scrape did not answer; never send the full list to
+   someone whose site already told us half of it. A client who said yes to a voorstel already
+   has a skin they have seen and approved: do not re-ask question 6, and only touch `stijl:`
+   if they bring it up themselves.
 
 ### Completeness gate (starts the clock)
 
 The "binnen een week online" promise runs from COMPLETE intake. Incomplete intake gets one
 reject-with-checklist reply naming exactly what is missing, nothing else. Photo minimum to
 pass the gate: none (fallback design exists), but record in the timing log whether photos
-were present, because it will show up in conversion later.
+were present, because it will show up in conversion later. Question 6 is not part of the gate
+either: no reference means the factory composes, not that anything is missing. Never hold a
+clock over a question whose honest answer is "geen idee".
 
 ### Storage
 

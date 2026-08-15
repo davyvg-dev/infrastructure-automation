@@ -18,8 +18,14 @@ This is a **sales** playbook. Delivery of a sold site stays in `website-pilot-ru
 - **Only public sources.** `app.sitedraft` reads the prospect's own website and their Google
   Business listing. Nothing else, no personal data beyond the business contact details they
   publish themselves.
-- **Their photos and reviews stay theirs.** A proposal runs on the colour-block fallback. The
-  schema refuses reviews on a preview config for the same reason.
+- **Their photos and reviews stay theirs.** A proposal runs on the per-vak stock set, never on
+  images taken from their site. The schema refuses reviews on a preview config for the same
+  reason.
+- **The skin varies, the facts and the silhouette do not.** Every proposal is built from the
+  same sections in the same order, and the type, colour, rhythm, radius and photo treatment are
+  chosen per prospect out of a closed vocabulary. Two proposals sent in the same week must not
+  be recognisably the same document; they also must not be a design experiment the fact gate
+  cannot read.
 - **Never on their domain, never indexed.** The build emits noindex, `X-Robots-Tag`,
   `Disallow: /`, no sitemap and no LocalBusiness JSON-LD, and canonicals point at the preview
   host. A proposal that turns up in Google search results for their name is the one failure
@@ -35,6 +41,10 @@ This is a **sales** playbook. Delivery of a sold site stays in `website-pilot-ru
 ```sh
 # 1. Scrape the prospect into a voorstel-config (writes clients/<slug>/client.yaml)
 kk site new "Jansen Loodgieters" --url https://jansen-loodgieters.nl --near Utrecht
+
+# ...or, when you have a site whose look suits them (repeatable, one or more):
+kk site new "Jansen Loodgieters" --url https://jansen-loodgieters.nl --near Utrecht \
+  --voorbeeld https://zecc.nl --voorbeeld https://vanwijnen.nl
 
 # 2. Build it and let the fact gate check it against the config
 kk site build jansen-loodgieters
@@ -58,6 +68,30 @@ reality**, so step 3 is not optional:
 - Does any sentence claim something we cannot point at a source for?
 
 Wrong facts are worse than no site: the whole pitch is that we pay attention.
+
+### Choosing the look
+
+`--voorbeeld <url>` is the only design input there is, and it is optional. Give it a site whose
+look suits this prospect and the factory measures that site -- type scale, weight, radius,
+rhythm, colour temperature, how photographs are set -- and picks the nearest values out of the
+vocabulary. Nothing is lifted off it: no markup, no colours, no images, no text -- it is measured
+and thrown away. With no reference the factory composes instead, keyed to the vak and the
+company name, so a client's look is stable across rebuilds and two prospects are unlikely to
+open the same one.
+
+Neither path can produce a site the gate cannot read: the sections, their order and the
+components are the same for every client, and every value in the vocabulary was looked at once
+on a real build. `kk site build` re-checks the resolved skin anyway -- fonts resolve to files
+this build really shipped, the palette clears WCAG AA against the prospect's own brand colour,
+nothing loads off-host.
+
+Written into `clients/<slug>/client.yaml` as a `stijl:` block, each axis carrying the reason it
+was chosen as a comment. Read it before you send: it is the one part of a proposal you cannot
+check by comparing it against a fact. Change any line by hand and rebuild.
+
+When the skin step fails (a reference that will not load, a brand colour too light), the
+proposal is still written -- in the default look -- and the command to fix it afterwards is
+printed. A failed skin never costs the copy call twice.
 
 ## Sending it
 
