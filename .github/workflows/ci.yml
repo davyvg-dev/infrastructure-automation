@@ -59,6 +59,34 @@ jobs:
       - name: Run offline test suite
         run: python -m pytest
 
+  client-sites:
+    name: client-sites (design vocabulary tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: klantkraan
+    steps:
+      - uses: actions/checkout@v7
+      # Before setup-node, and pointed at the workspace root: there is no package.json at
+      # the repo root, and setup-node's pnpm cache needs pnpm on PATH already.
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: klantkraan/package.json
+      - uses: actions/setup-node@v7
+        with:
+          # 22.18 is where TypeScript type stripping stopped needing a flag, which is what
+          # lets `node --test` run the .ts tests without a bundler or a test framework.
+          node-version: "22.18"
+          cache: pnpm
+          cache-dependency-path: klantkraan/pnpm-lock.yaml
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      # The resolver tests only. Building a site needs a CLIENT and its yaml, and the
+      # client dirs are per-client data that never enters git -- so the fact gate stays
+      # a local step, run before a voorstel goes out.
+      - name: Run the design vocabulary tests
+        run: pnpm test
+
   growth-engine:
     name: growth-engine (compile + offline selftest)
     runs-on: ubuntu-latest

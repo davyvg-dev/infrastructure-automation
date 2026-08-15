@@ -24,6 +24,9 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parse } from 'yaml'
 import { z } from 'zod'
+// The extension is spelled out here, unlike the rest of this app's imports: the resolver
+// tests run this module under plain Node, which does not resolve an extensionless specifier
+// the way Vite does. Astro's tsconfig has allowImportingTsExtensions on, so both are happy.
 import {
   FOTOZETTINGEN,
   KLEURINGEN,
@@ -34,7 +37,7 @@ import {
   STANDAARD_STIJL,
   VORMEN,
   type Stijl,
-} from './stijl'
+} from './stijl.ts'
 
 export const DAGEN = [
   'maandag',

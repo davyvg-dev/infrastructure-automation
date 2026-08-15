@@ -12,6 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "node scripts/verify-site.mjs",
+    "test": "node --test 'src/**/*.test.ts'",
     "typecheck": "astro check",
     "lint": "echo 'lint: see prettier:check at the workspace root'"
   },

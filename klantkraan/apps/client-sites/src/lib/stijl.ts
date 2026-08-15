@@ -78,7 +78,9 @@ type Tokens = Record<string, string>
 // drift apart. A stack naming a family that was never copied does not fail anything --
 // it silently falls back to Arial on a client's live site, which is exactly the class of
 // bug a shared manifest removes.
-import manifest from '../../fonts/manifest.json'
+// The `with` attribute is what lets this module be imported by plain Node as well as by
+// Vite -- the resolver tests run it outside the bundler, and Vite is happy either way.
+import manifest from '../../fonts/manifest.json' with { type: 'json' }
 
 // Trailing fallbacks. The webfont is prepended; on the systeem pairing this stack is all
 // there is. Kept identical to what the template shipped before webfonts existed, so
