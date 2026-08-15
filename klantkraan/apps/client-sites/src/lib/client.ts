@@ -55,6 +55,16 @@ const tijd = z.string().regex(/^\d{2}:\d{2}$/, 'tijd moet HH:MM zijn, bv. "08:00
 const dagdeel = z.tuple([tijd, tijd])
 
 // WCAG relative luminance; primary must carry white button/header text.
+//
+// The floor is 5.25, not the 4.5 white-on-brand needs, because the brand colour is also
+// TEXT -- links, the Hero and Werk eyebrows, .btn-outline -- on paper, card and the tinted
+// bands, all of which are darker than white. 4.5:1 against white is systematically too
+// generous for those 11 usages. 5.25 is the value that clears AA for every pair on every
+// palet x kleuring, found by sweeping all 16.7M hex values; keep it in step with
+// _MIN_CONTRAST in ai-receptionist/app/sitedraft.py, which gates the same colour before
+// the paid draft call. See TODO R6b.
+const MIN_CONTRAST_WITH_WHITE = 5.25
+
 function contrastWithWhite(hexColor: string): number {
   const channel = (c: number) => {
     const s = c / 255
@@ -110,9 +120,11 @@ export const ClientSchema = z.object({
     werkgebied: z.array(z.string().min(2)).min(1).max(5),
   }),
   branding: z.object({
-    kleur_primair: hex.refine((c) => contrastWithWhite(c) >= 4.5, {
+    kleur_primair: hex.refine((c) => contrastWithWhite(c) >= MIN_CONTRAST_WITH_WHITE, {
       message:
-        'kleur_primair moet donker genoeg zijn voor witte tekst (WCAG contrast >= 4.5:1); kies een donkere variant van de merkkleur',
+        `kleur_primair moet donker genoeg zijn voor witte tekst EN om zelf als tekst op papier en ` +
+        `getinte banden te staan (WCAG contrast met wit >= ${MIN_CONTRAST_WITH_WHITE}:1); ` +
+        `kies een donkere variant van de merkkleur`,
     }),
     kleur_accent: hex,
     // Filename inside fotos/ (e.g. "logo.svg"); shown in the header when set.

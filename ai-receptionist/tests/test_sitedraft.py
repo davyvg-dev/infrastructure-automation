@@ -3,6 +3,7 @@ made; `draft_copy` is the only thing that talks to the API and it is not exercis
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -133,6 +134,30 @@ def test_build_config_truncates_to_the_client_sites_ceilings() -> None:
 def test_build_config_refuses_a_brand_colour_white_text_cannot_sit_on() -> None:
     with pytest.raises(DraftError, match="te licht"):
         sitedraft.build_config("X BV", EXTRACTION, DRAFT, kleur_primair="#ffe08a")
+
+
+def test_colour_floor_matches_the_client_sites_schema() -> None:
+    """This gate runs before the paid draft call; the Zod schema runs at build. If they
+    drift apart a voorstel pays for copy the build then refuses, which is the one failure
+    the pre-flight exists to prevent. Pin the two numbers to each other rather than to a
+    literal, so raising one without the other fails here instead of in front of a
+    prospect."""
+    client_ts = (
+        Path(__file__).resolve().parents[2] / "klantkraan/apps/client-sites/src/lib/client.ts"
+    )
+    source = client_ts.read_text(encoding="utf-8")
+    match = re.search(r"^const MIN_CONTRAST_WITH_WHITE = ([\d.]+)$", source, re.M)
+    assert match, f"MIN_CONTRAST_WITH_WHITE not found in {client_ts}"
+    assert float(match.group(1)) == sitedraft._MIN_CONTRAST
+
+
+def test_the_colour_floor_is_the_one_the_whole_vocabulary_clears() -> None:
+    """5.25 is not a round number someone liked: below it there are brand colours the
+    schema accepts that put brand-coloured text under 4.5:1 on a tinted band. Two colours
+    either side of the line, so lowering the constant back to 4.5 fails."""
+    assert sitedraft.check_primary("#c0392b")  # 5.44 -- a loodgieter red, still allowed
+    with pytest.raises(DraftError, match="te licht"):
+        sitedraft.check_primary("#d32f2f")  # 4.98 -- cleared white text, failed the bands
 
 
 def test_slugify() -> None:

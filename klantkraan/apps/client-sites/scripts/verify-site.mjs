@@ -317,12 +317,6 @@ const contrast = (a, b) => {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
   return (hi + 0.05) / (lo + 0.05)
 }
-/** An alpha foreground flattened onto its background, the way the compositor does it. */
-const over = (hex, alpha, bg) => {
-  const onder = hexToRgb(bg)
-  return toHex(hexToRgb(hex).map((c, i) => c * alpha + onder[i] * (1 - alpha)))
-}
-
 // Every text colour the components use, against every surface they sit on. The full matrix
 // rather than the observed pairs: which component lands on which band is a layout decision
 // that changes, and all four surfaces are near-white variants of each other, so a
@@ -340,22 +334,23 @@ const contrastPairs = [
   // The schema checks this one too; re-asserting it here is what catches a build that
   // shipped before the config it claims to be built from.
   { fg: 'white', bg: '--brand-primary' },
-  // ...and the panel's body line, which is white at 85% (FinalCta.astro).
-  { fg: 'white', alpha: 0.85, bg: '--brand-primary' },
+  // There is deliberately no alpha row here any more. FinalCta's body line used to be
+  // white at 85%; against a brand colour anywhere near the schema's floor no alpha below
+  // 1.0 reaches 4.5:1, so the panel carries its hierarchy on type size instead and the
+  // pair stopped existing rather than being waived (TODO R6b).
 ]
-for (const { fg, bg, alpha } of contrastPairs) {
+for (const { fg, bg } of contrastPairs) {
   let fgHex, bgHex
   try {
     bgHex = resolveColor(bg.startsWith('--') ? vars[bg] : bg)
     fgHex = resolveColor(fg.startsWith('--') ? vars[fg] : fg)
-    if (alpha !== undefined) fgHex = over(fgHex, alpha, bgHex)
   } catch (err) {
     fail(`skin colour ${fg} on ${bg}: ${err.message}`)
     continue
   }
   const ratio = contrast(fgHex, bgHex)
   if (ratio < AA) {
-    const label = alpha === undefined ? fg : `${fg} at ${alpha * 100}%`
+    const label = fg
     // Which knob actually moves this pair. Naming all three every time would send the
     // founder to kleuring for a pair that is not tinted, and a gate that misdirects once
     // is a gate that gets argued with.

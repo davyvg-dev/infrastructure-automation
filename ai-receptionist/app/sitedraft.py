@@ -61,9 +61,10 @@ _DAY_NL = {
     "sunday": "zondag",
 }
 
-# Brand defaults for a proposal: a neutral dark blue that carries white text (the client-sites
-# schema enforces WCAG contrast >= 4.5:1) plus a warm accent. Override with --kleur/--accent
-# once the prospect's own colours are known.
+# Brand defaults for a proposal: a neutral dark blue that carries white text and can itself
+# be read as text on the pages' own surfaces (the client-sites schema enforces WCAG contrast
+# with white >= 5.25:1, mirrored below in _MIN_CONTRAST) plus a warm accent. Override with
+# --kleur/--accent once the prospect's own colours are known.
 DEFAULT_PRIMARY = "#1f3a5f"
 DEFAULT_ACCENT = "#c2703d"
 
@@ -214,12 +215,21 @@ def check_colour(hex_color: str) -> str:
     return hex_color.lower()
 
 
+# Must equal MIN_CONTRAST_WITH_WHITE in klantkraan/apps/client-sites/src/lib/client.ts.
+# This gate runs BEFORE the paid draft call and the Zod schema runs at build; if the two
+# ever disagree, a voorstel pays for a draft that the build then refuses -- which is the
+# whole reason the colour check sits this early. 5.25 rather than 4.5 because the brand
+# colour is also text on paper, card and the tinted bands, not only white-on-brand.
+_MIN_CONTRAST = 5.25
+
+
 def check_primary(hex_color: str) -> str:
     hex_color = check_colour(hex_color)
-    if _contrast_with_white(hex_color) < 4.5:
+    if _contrast_with_white(hex_color) < _MIN_CONTRAST:
         raise DraftError(
-            f"kleur_primair {hex_color} is te licht voor witte tekst (WCAG contrast >= 4.5:1); "
-            "kies een donkerder variant van de merkkleur"
+            f"kleur_primair {hex_color} is te licht: hij moet witte tekst dragen en zelf als "
+            f"tekst op papier en getinte banden staan (WCAG contrast met wit >= "
+            f"{_MIN_CONTRAST}:1); kies een donkerder variant van de merkkleur"
         )
     return hex_color
 

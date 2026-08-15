@@ -288,16 +288,25 @@ const PALET_TOKENS: Record<Palet, Tokens> = {
 // directly, so this axis moves them without touching the components' structure. The
 // tinted variant is mixed from the client's own primary, so it cannot clash with it, and
 // stays at a low enough percentage that --color-ink keeps its contrast on top.
+//
+// Every tint is mixed over --color-card, never --color-paper. Paper is already the darkest
+// surface a palet has, and tinting it compounds: the tint is mixed OUT of the brand colour,
+// so the darker the client's primary, the darker the band it lands on -- which is the one
+// direction a contrast floor on the brand colour cannot help with. Mixed over card instead,
+// the band starts from the lightest surface and the whole vocabulary clears AA (verified by
+// sweep over every #rrggbb the schema accepts; see TODO R6b).
 const KLEURING_TOKENS: Record<Kleuring, Tokens> = {
   spaarzaam: {
     '--band-bg': 'var(--color-card)',
     '--band-line': 'var(--color-line)',
-    '--band-foto-bg': 'color-mix(in oklab, var(--brand-primary) 5%, var(--color-paper))',
+    '--band-foto-bg': 'color-mix(in oklab, var(--brand-primary) 5%, var(--color-card))',
   },
   royaal: {
     '--band-bg': 'color-mix(in oklab, var(--brand-primary) 6%, var(--color-card))',
     '--band-line': 'color-mix(in oklab, var(--brand-primary) 18%, var(--color-line))',
-    '--band-foto-bg': 'color-mix(in oklab, var(--brand-primary) 13%, var(--color-paper))',
+    // 8%, not 13%: the photo band is the only surface that carries brand-coloured text
+    // (Werk's eyebrow) on top of a brand-coloured tint, so it is where the two meet.
+    '--band-foto-bg': 'color-mix(in oklab, var(--brand-primary) 8%, var(--color-card))',
   },
 }
 

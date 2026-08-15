@@ -59,10 +59,18 @@ so a loader bug cannot hide behind its own output) and asserts the rendered page
   `@import` or a `url()` on a CDN costs the guarantee just as dearly as a `<script>`
 - **the skin, as the browser will paint it**: the gate reads the custom properties off `<html>`
   and resolves what they actually resolve to -- `var()` chains and `color-mix(in oklab, …)`
-  included -- rather than trusting the vocabulary. 14 text/surface pairs against the 4.5:1 AA
-  floor, including white and white-at-85% over the client's own `kleur_primair`, which the
-  schema only ever checked against white. Hairlines are exempt on purpose (WCAG 1.4.11). Every
-  page must carry the same skin, and a page with none was not built on `Base.astro`
+  included -- rather than trusting the vocabulary. 13 text/surface pairs against the 4.5:1 AA
+  floor, including white over the client's own `kleur_primair`. Hairlines are exempt on purpose
+  (WCAG 1.4.11). Every page must carry the same skin, and a page with none was not built on
+  `Base.astro`. The gate no longer has an alpha pair: `FinalCta`'s body line used to be
+  white-at-85% and no alpha below 1.0 clears AA against a brand colour near the schema's floor,
+  so the panel carries its hierarchy on type size and the pair stopped existing (R6b)
+- **the colour floor is 5.25, not 4.5**: `branding.kleur_primair` has to carry white text AND be
+  read as text itself -- links, the Hero and Werk eyebrows, `.btn-outline` -- on paper, card and
+  the tinted bands, all darker than white. 5.25 is the value at which all 4,932,247 hex colours
+  the schema accepts clear AA on every one of the 1728 skins. The same number lives in
+  `sitedraft.py` as `_MIN_CONTRAST`, where it gates the colour before the paid draft call; a
+  pytest reads the TypeScript constant so the two cannot drift
 - **fonts**: every `@font-face` names a family the page's stacks name and loads a root-relative
   file really in `dist/`; every leading family has a rule; no shipped woff2 goes unreferenced;
   and the pairing `stijl.letterontwerp` asked for is the one each stack LEADS with. That last

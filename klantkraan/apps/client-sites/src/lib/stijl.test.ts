@@ -423,6 +423,44 @@ test('spaarzaam leaves the bands untinted and royaal tints all three', () => {
   }
 })
 
+test('every band tint is mixed over the lightest surface, never over paper', () => {
+  // R6b. The tint comes OUT of --brand-primary, so a darker client colour makes a darker
+  // band -- the one direction a contrast floor on that colour cannot help with, because
+  // raising the floor only makes the band darker still. Mixed over --color-paper, which is
+  // already the darkest surface a palet owns, the two compound and the vocabulary has
+  // combinations no floor can rescue (brand text bottomed out at 3.42:1). Over
+  // --color-card the whole 1728-combination space clears AA at kleur_primair >= 5.25.
+  for (const kleuring of KLEURINGEN) {
+    for (const [prop, value] of Object.entries(resolveStijl(met({ kleuring })))) {
+      const mix = value.match(/^color-mix\(in oklab, var\(--brand-primary\) [\d.]+%, (.+)\)$/)
+      if (!mix) continue
+      assert.ok(
+        mix[1] === 'var(--color-card)' || mix[1] === 'var(--color-line)',
+        `${kleuring} ${prop} tints over ${mix[1]}; only card (surfaces) and line (hairlines) are safe`,
+      )
+    }
+  }
+})
+
+test('the photo band never gets more tint than the band it alternates with can carry', () => {
+  // --band-foto-bg is the only surface that takes brand-coloured text (Werk's eyebrow) on
+  // top of a brand-coloured tint, so it is where the colour meets itself and it cannot be
+  // the most heavily tinted thing on the page. 13% is what R6b had to come down from.
+  const royaal = resolveStijl(met({ kleuring: 'royaal' }))
+  const pct = (v: string) => Number(v.match(/var\(--brand-primary\) ([\d.]+)%/)?.[1] ?? Number.NaN)
+  assert.ok(pct(royaal['--band-foto-bg']) <= 8, `foto band mixes ${pct(royaal['--band-foto-bg'])}%`)
+  for (const kleuring of KLEURINGEN) {
+    const t = resolveStijl(met({ kleuring }))
+    const foto = pct(t['--band-foto-bg'])
+    if (Number.isNaN(foto)) continue
+    // Both bands sit on the same page one after the other; a photo band tinted far past
+    // the plain band reads as a different template, not a rhythm.
+    const band = pct(t['--band-bg'])
+    if (!Number.isNaN(band))
+      assert.ok(foto - band <= 4, `${kleuring}: foto ${foto}% vs band ${band}%`)
+  }
+})
+
 // --- what reaches <html> --------------------------------------------------------------------
 
 test('stijlStyle emits declarations a browser can parse', () => {

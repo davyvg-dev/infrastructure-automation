@@ -39,6 +39,14 @@ build: a chooser can produce a look, not an inaccessible contrast or a layout th
 cannot assert. No `stijl:` block in a config means the look every client site had before the
 vocabulary existed, so an older client.yaml builds the same bytes it did.
 
+The one place the vocabulary meets the client's own colour is `kleuring`, which tints the bands
+with `branding.kleur_primair`. Those tints are mixed over `--color-card`, the lightest surface a
+palet owns, never over `--color-paper`: the tint comes out of the brand colour, so a darker
+client colour makes a darker band, and over paper the two compound into combinations that no
+contrast floor can rescue -- raising the floor makes that band darker still. Over card, every
+colour the schema accepts clears AA on all 1728 skins, which is what lets `kleur_primair` be
+gated by a single number (5.25:1 against white) instead of a per-skin check.
+
 Chosen by `app.sitestyle` (in `ai-receptionist/`): off `--voorbeeld` reference sites when the
 founder has one, otherwise composed from the vak and the company name. Measuring a reference is
 code; choosing among the vocabulary is one schema-constrained Claude call. Nothing is lifted off

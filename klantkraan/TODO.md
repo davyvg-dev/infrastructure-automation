@@ -515,6 +515,37 @@ reference given, the factory composes a look itself rather than falling back to 
       call twice), or drop the /85 and carry the hierarchy on size. Nothing ships broken
       meanwhile: `pnpm check` runs before a voorstel goes out, so a bad combination stops
       the send instead of reaching a prospect.
+- [x] R6b (this commit): closed, but not by either of the two fixes above — modelling the
+      choice found a THIRD cause that makes "raise the floor" impossible on its own. The
+      tint is mixed OUT of `--brand-primary`, so a darker client colour makes a darker
+      band; `--band-foto-bg` mixed that tint over `--color-paper`, already the darkest
+      surface a palet owns. The two compound, and the failure gets WORSE as the colour gets
+      darker: at `#000000` — which the schema accepts, contrast 21 — the palet's own
+      `--color-mist` lands on 3.87:1. No floor on `contrastWithWhite` can reach that,
+      because the floor only pushes colours darker. Swept every #rrggbb rather than a
+      sample: no value of the floor closes it while the foto band tints over paper.
+      So the tint moved instead. `--band-foto-bg` now mixes over `--color-card`, the
+      lightest surface, and royaal's share drops 13% → 8% (the foto band is the only
+      surface carrying brand-coloured text — Werk's eyebrow — on top of a brand-coloured
+      tint, so it is where the colour meets itself). `--band-bg` and `spaarzaam` were
+      already over card and did not move. With that, the floor becomes a single number
+      again: 5.25, verified exhaustively — all 4,932,247 accepted hex colours × 1728 skins,
+      zero pairs under AA. Raised in the Zod schema and in `sitedraft.py` together, pinned
+      by a pytest that parses `MIN_CONTRAST_WITH_WHITE` out of `client.ts`, because a
+      comment saying "keep these in step" is not a gate and drift here makes a voorstel pay
+      for a draft the build then refuses. `text-white/85` is gone from FinalCta and the
+      alpha row is gone from the gate: keeping it would have cost floor 5.91 instead of
+      5.25, which is ~16 points more of the colour space — reds and greens a trade actually
+      uses (#c0392b, #1e7a45). Founder chose the trade 2026-08-15: ~19% of previously
+      accepted colours now rejected, bright reds worst hit (#d32f2f 4.98, #e00000 5.04),
+      blues/greens/greys/browns unaffected. Cost on the page: the photo band's tint is
+      lighter and card-based (#d8dad3 → #eceee9 on the zand/royaal fixture) and brand text
+      on it goes 6.75 → 8.15:1. Five mutations, each caught by the intended test and no
+      other: foto band back over paper (royaal, then spaarzaam), 13% restored, the Python
+      floor lowered, and the two floors drifted apart.
+      NOT covered and deliberately left: `border-white/60` and `hover:bg-white/10` on
+      FinalCta's WhatsApp button are UI-component boundaries under WCAG 1.4.11 (3:1), which
+      this gate does not assert at all — it only ever checked text.
 - [x] R7 (this commit): 22 tests on the resolver and a docs pass over four files.
       sitestyle's 41 prove a chosen stijl stays inside the vocabulary; nothing proved what
       the vocabulary resolves TO, which is where the silent failures live — every axis is a
