@@ -4,6 +4,10 @@
     python -m app.sitestyle --voorbeeld https://a.nl --voorbeeld https://b.nl --vak dakdekker
     python -m app.sitestyle --voorbeeld https://a.nl --feiten     # measure only, no API call
 
+and, with no reference to point at, the factory composes a look itself:
+
+    python -m app.sitestyle --vak dakdekker --naam "Dakwerken Bos" --kleur "#1f3a5f"
+
 Prints the `stijl:` block for a clients/<slug>/client.yaml. The founder points at sites he
 likes instead of describing them; the reference drives the SKIN ONLY (see TODO section R),
 so layout and section order are untouched by everything below.
@@ -17,10 +21,17 @@ Two halves, and the split is the whole point:
     writes one Dutch line saying why. It never emits CSS: every value it can return is
     already in `src/lib/stijl.ts` and has been looked at once on a real build.
 
+The composing path is the same call with the measurements replaced by the three things a
+prospect always has -- vak, company name, brand colours -- and a shortlist per axis instead
+of the whole vocabulary. Both paths end in the same schema, the same validator and the same
+yaml block, so there is one place where a look can go wrong.
+
 Design parameters are facts about a page. Its copy, photographs and logo are not ours, so
 the extractor collects no text at all -- there is no path by which a sentence from the
 reference could reach the model, let alone a client's site. The one free-text field that
 does travel is the typeface name, and that is sanitised to [A-Za-z0-9 -] before it goes.
+(The client's own name does travel on the composing path. It is ours, it is already in
+every sitedraft call, and it is the one input the look has to survive.)
 
 The vocabulary is read out of stijl.ts rather than restated here: a value this module
 offers that the resolver does not know would fail the Zod schema at build time, on the
@@ -35,6 +46,7 @@ from __future__ import annotations
 
 import argparse
 import colorsys
+import hashlib
 import json
 import re
 import statistics
@@ -116,6 +128,93 @@ def vocabulaire() -> dict[str, list[str]]:
         axes[key] = values
     _vocabulaire = axes
     return axes
+
+
+# The length of `bedrijf.naam` above which the `groot` type scale is withdrawn.
+#
+# The H1 is "<bedrijf.naam>: vakwerk waar u op kunt rekenen." in the hero's half-width
+# column, which stops growing at ~480px because max-w-5xl does. Measured in the browser on a
+# real build at 1440x800: at `groot` a 33-character name sets in four lines, a 35-character
+# one in five, and "Installatietechniek Van der Veldenhuizen" turns the first screen into a
+# five-line wall with the WhatsApp button below the fold. `normaal` still holds four lines
+# there. R1 capping `groot` at 3.5rem is what keeps the call button on screen at all; this
+# is the other half of the same defect, the headline that is legal but unreadable.
+NAAM_MAX_GROOT = 34
+
+
+def allowed(naam: str | None = None) -> dict[str, list[str]]:
+    """The vocabulary minus the values this particular client cannot have.
+
+    Applied to both paths, because it is a property of the client rather than of the mode:
+    a reference site with a 64px display face is no reason to set a 39-character company
+    name at `groot`, and the resulting page is the same page either way.
+    """
+    axes = {axis: list(values) for axis, values in vocabulaire().items()}
+    if naam and len(naam.strip()) >= NAAM_MAX_GROOT:
+        axes["schaal"] = [v for v in axes["schaal"] if v != "groot"]
+    return axes
+
+
+# `systeem` is the one value the composer is never offered. It is not a look, it is what a
+# page looks like when nobody chose a typeface (R2), and a factory asked to compose one
+# cannot answer "none". Measuring a reference genuinely set in Arial still maps to it --
+# that is a reading, not a decision.
+_NIET_COMPONEERBAAR = {"letterontwerp": {"systeem"}}
+
+# How many values per axis the composer gets to choose between. Two: enough that the choice
+# is still a judgement about this client, few enough that two clients rarely share a shortlist.
+# The cost is real -- a shortlist sometimes withholds the value that would have been best,
+# `ritme: ruim` above all -- and that is the trade being made on purpose. Handed the whole
+# vocabulary the model would keep reaching for the same best answer, which is a factory that
+# builds one site with a longer prompt.
+_KANDIDATEN = 2
+
+
+def _seed(naam: str) -> int:
+    """A stable integer from a company name. blake2b rather than hash(), which is salted per
+    process -- the same client has to compose the same site tomorrow, or the founder cannot
+    fix a typo in the yaml without redesigning the page."""
+    genormaliseerd = re.sub(r"[^a-z0-9]", "", naam.lower())
+    return int.from_bytes(hashlib.blake2b(genormaliseerd.encode(), digest_size=8).digest(), "big")
+
+
+def candidates(naam: str) -> dict[str, list[str]]:
+    """Per-axis shortlists for the composer, rotated by the client's name.
+
+    Why the composer is not simply handed the whole vocabulary: its inputs are the vak, the
+    name and the brand colours, and sitedraft gives every prospect the same DEFAULT_PRIMARY
+    until the founder overrides it. Six dakdekkers drafted in one week would arrive with
+    near-identical inputs and leave with an identical skin -- which is the defect section R
+    exists to fix, rebuilt one layer up. A prompt asking for variety is a hope; a shortlist
+    that differs per client is a rule, and it is the same kind of rule as the enum itself.
+
+    What it is not: a preset. The shortlist says which two values are on the table, the
+    model still has to argue from the vak and the colours which of them this client gets.
+    """
+    zaad = _seed(naam)
+    out: dict[str, list[str]] = {}
+    for i, (axis, values) in enumerate(allowed(naam).items()):
+        pool = [v for v in values if v not in _NIET_COMPONEERBAAR.get(axis, frozenset())]
+        if len(pool) <= _KANDIDATEN:
+            out[axis] = pool
+            continue
+        # A separate slice of the digest per axis, so the axes rotate independently: one
+        # shared offset would tie palet to vorm and give the whole vocabulary seven looks.
+        start = (zaad >> (7 * i)) % len(pool)
+        out[axis] = [pool[(start + n) % len(pool)] for n in range(_KANDIDATEN)]
+    return out
+
+
+_HEX_OK = re.compile(r"^#[0-9a-fA-F]{6}$")
+
+
+def _check_hex(kleur: str) -> str:
+    """Format only. Whether a primary is dark enough for white text is the client-sites
+    schema's job and sitedraft's; here the colour is an input to a judgement, not a value
+    written to yaml, so re-asserting it would only give the founder two errors for one typo."""
+    if not _HEX_OK.match(kleur or ""):
+        raise StyleError(f"kleur {kleur!r} moet een #rrggbb hex-waarde zijn")
+    return kleur.lower()
 
 
 # --- fetching -----------------------------------------------------------------------------
@@ -599,13 +698,18 @@ def measure_all(urls: list[str]) -> list[dict]:
 # --- mapping ------------------------------------------------------------------------------
 
 
-def schema() -> dict:
+def schema(axes: dict[str, list[str]] | None = None) -> dict:
     """Structured-output schema: one enum per axis, plus one Dutch line of reasoning each.
 
     Every value is an `enum` drawn from stijl.ts, so the model cannot invent a look the
     resolver has no tokens for; `additionalProperties: false` is required on each object.
+
+    The enums are narrowed rather than described. A withdrawn `groot` or a two-value
+    shortlist could have been a sentence in the system prompt, and then the run that ignored
+    it would produce a five-line headline on a live proposal. Removing the value means the
+    model cannot return it at all, which is the same reason the vocabulary is closed.
     """
-    axes = vocabulaire()
+    axes = axes or vocabulaire()
     return {
         "type": "object",
         "additionalProperties": False,
@@ -621,6 +725,16 @@ def schema() -> dict:
         "required": [*axes, "redenen"],
     }
 
+
+# Appended to both prompts. The schema already makes it impossible to return `groot` for a
+# long name; this exists so the model does not spend its reasoning wanting a value that is
+# not there, and does not write a `reden` explaining a scale it was never offered.
+_LANGE_NAAM = (
+    "\n\nDe bedrijfsnaam staat voluit in de H1, in een halve kolom. Is die naam lang, dan "
+    f"is de schaal `groot` niet beschikbaar (vanaf {NAAM_MAX_GROOT} tekens): de kop zet dan "
+    "vijf regels en duwt de belknop van het eerste scherm. Staat een waarde niet in de "
+    "aangeboden lijst, dan bestaat hij voor deze site niet -- noem hem dan ook niet."
+)
 
 _SYSTEM = (
     "Je vertaalt gemeten ontwerpkenmerken van een voorbeeldwebsite naar een vaste "
@@ -651,21 +765,73 @@ _SYSTEM = (
     "gekleurde knoppen is `spaarzaam`.\n"
     "7. `redenen`: per as een zin in het Nederlands die de meting noemt waarop je de keuze "
     "baseert ('kop 56px op 18px tekst'). Geen marketingtaal, geen uitroeptekens."
-)
+) + _LANGE_NAAM
+
+# The composing path. Same job, but the evidence is what a prospect always has instead of
+# what a reference site measures: the trade, the name and the brand colours.
+_COMPONEER_SYSTEM = (
+    "Je stelt het uiterlijk samen van een website voor een Nederlands vakbedrijf "
+    "(loodgieter, dakdekker, installateur, elektricien). Er is geen voorbeeldsite: je "
+    "componeert de look zelf, uit het vak, de bedrijfsnaam en de eigen merkkleuren.\n\n"
+    "Je krijgt per as een lijst met aangeboden waarden. Die lijst is al ingeperkt voor deze "
+    "klant. Je kiest daaruit, en je onderbouwt elke keuze met een gegeven dat je hebt.\n\n"
+    "Harde regels:\n"
+    "1. Kies ALLEEN uit de aangeboden waarden per as. Je schrijft nooit CSS, geen hex-"
+    "waarden, geen pixelmaten: de gekozen naam bepaalt die al.\n"
+    "2. Kies niet de behoudende optie omdat hij behoudend is. Deze site wordt ongevraagd "
+    "naar een ondernemer gestuurd, naast die van zijn concurrent. Een pagina die eruitziet "
+    "als een sjabloon kost meer dan een pagina die een richting kiest.\n"
+    "3. `palet` moet de merkkleur dragen, niet tegenwerken. Kijk naar de tint: een warme "
+    "merkkleur (tint ruwweg 15-60) op koelgrijs papier vloekt, een koele merkkleur (tint "
+    "ruwweg 180-260) op zandkleurig papier ook. `neutraal` is de uitweg als de merkkleur "
+    "nauwelijks verzadigd is.\n"
+    "4. `kleuring` volgt hoe verzadigd en hoe donker de merkkleur is: een ingehouden donkere "
+    "kleur draagt `royaal` gekleurde vlakken, een felle verzadigde kleur wordt daarmee "
+    "schreeuwerig en hoort bij `spaarzaam`.\n"
+    "5. `letterontwerp` gaat over het karakter van de letter, niet over de naam: "
+    "`industrieel` is breed en stevig en past bij zwaar bouw- en dakwerk, `grotesk` is "
+    "neutraal en zakelijk, `redactioneel` zet een schreefletter in de koppen en leest als "
+    "een bedrijf dat zijn werk als vak presenteert.\n"
+    "6. `ritme` en `foto`: veel witruimte en beeld dat tot de rand doorloopt is wat een "
+    "vakbedrijf onderscheidt van een brochure. Weeg dat tegen het vak -- spoedwerk wil de "
+    "informatie dichter op elkaar dan renovatiewerk.\n"
+    "7. `redenen`: per as een zin in het Nederlands die het gegeven noemt waarop je de "
+    "keuze baseert ('merkkleur tint 212 en 51% verzadiging, dus koel papier'). Geen "
+    "marketingtaal, geen uitroeptekens."
+) + _LANGE_NAAM
 
 
-def _user_message(facts: list[dict], vak: str | None) -> str:
+def _axes_block(axes: dict[str, list[str]]) -> str:
+    return "Aangeboden waarden per as:\n" + json.dumps(axes, ensure_ascii=False, indent=2)
+
+
+def _user_message(facts: list[dict], vak: str | None, axes: dict[str, list[str]]) -> str:
     blocks = []
     if vak:
         blocks.append(f"Het vakbedrijf waarvoor de site gebouwd wordt: {vak}.")
     blocks.append(f"Gemeten kenmerken van {len(facts)} voorbeeldsite(s):")
     blocks.append(json.dumps(facts, ensure_ascii=False, indent=2))
+    blocks.append(_axes_block(axes))
     blocks.append("\nKies per as een waarde en licht elke keuze toe met de meting erachter.")
     return "\n".join(blocks)
 
 
-def map_to_stijl(facts: list[dict], vak: str | None = None) -> dict:
-    """One schema-constrained Claude call: measurements in, named vocabulary values out."""
+def _componeer_message(vak: str, naam: str, kleuren: dict, axes: dict[str, list[str]]) -> str:
+    blocks = [
+        f"Vak: {vak}.",
+        f"Bedrijfsnaam: {naam} ({len(naam.strip())} tekens). Die naam staat voluit in de H1.",
+    ]
+    if kleuren:
+        blocks.append("Merkkleuren:\n" + json.dumps(kleuren, ensure_ascii=False, indent=2))
+    else:
+        blocks.append("Merkkleuren: niet opgegeven. Componeer dan uit het vak alleen.")
+    blocks.append(_axes_block(axes))
+    blocks.append("\nKies per as een waarde en licht elke keuze toe met het gegeven erachter.")
+    return "\n".join(blocks)
+
+
+def _choose(system: str, message: str, axes: dict[str, list[str]]) -> dict:
+    """The one Claude call, shared by both paths: offered values in, chosen values out."""
     settings.env("ANTHROPIC_API_KEY")
     client = anthropic.Anthropic()
     response = client.messages.create(
@@ -673,22 +839,47 @@ def map_to_stijl(facts: list[dict], vak: str | None = None) -> dict:
         max_tokens=8000,
         output_config={
             "effort": _MODEL["effort"],
-            "format": {"type": "json_schema", "schema": schema()},
+            "format": {"type": "json_schema", "schema": schema(axes)},
         },
-        system=_SYSTEM,
-        messages=[{"role": "user", "content": _user_message(facts, vak)}],
+        system=system,
+        messages=[{"role": "user", "content": message}],
     )
     if response.stop_reason == "refusal":
-        raise StyleError(
-            "Claude weigerde deze voorbeeldsite te verwerken; vul de stijl met de hand in."
-        )
+        raise StyleError("Claude weigerde deze aanvraag; vul de stijl met de hand in.")
     text = next((b.text for b in response.content if b.type == "text"), "")
-    return check_stijl(json.loads(text))
+    return check_stijl(json.loads(text), axes)
 
 
-def check_stijl(raw: dict) -> dict:
+def map_to_stijl(facts: list[dict], vak: str | None = None, naam: str | None = None) -> dict:
+    """Measurements in, named vocabulary values out. The whole vocabulary is on offer here:
+    the reference decides the look, and narrowing it further would be us overruling the site
+    the founder pointed at. The one exception is the client's own name (see `allowed`)."""
+    axes = allowed(naam)
+    return _choose(_SYSTEM, _user_message(facts, vak, axes), axes)
+
+
+def compose_stijl(
+    vak: str, naam: str, kleur_primair: str | None = None, kleur_accent: str | None = None
+) -> dict:
+    """No reference: compose a look from the vak, the name and the client's own colours.
+
+    Colours travel as hue/saturation/lightness as well as hex, for the same reason the
+    reference path converts them: whether a brand colour wants warm or cool paper is a
+    question about its hue, and the model should not be asked to do that arithmetic in
+    its head.
+    """
+    kleuren = {}
+    if kleur_primair:
+        kleuren["primair"] = hsl(_check_hex(kleur_primair))
+    if kleur_accent:
+        kleuren["accent"] = hsl(_check_hex(kleur_accent))
+    axes = candidates(naam)
+    return _choose(_COMPONEER_SYSTEM, _componeer_message(vak, naam, kleuren, axes), axes)
+
+
+def check_stijl(raw: dict, axes: dict[str, list[str]] | None = None) -> dict:
     """Second gate on the model's answer, in case the schema ever stops being enforced."""
-    axes = vocabulaire()
+    axes = axes or vocabulaire()
     for axis, values in axes.items():
         if raw.get(axis) not in values:
             raise StyleError(f"as `{axis}` kwam terug als {raw.get(axis)!r}, niet uit {values}")
@@ -720,7 +911,8 @@ def as_yaml(stijl: dict) -> str:
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(
         prog="app.sitestyle",
-        description="Measure reference websites and map them onto the client-sites skin vocabulary.",
+        description="Pick a client-sites skin: from reference websites, or composed when "
+        "there are none.",
     )
     parser.add_argument(
         "--voorbeeld",
@@ -731,20 +923,60 @@ def main(argv: list[str]) -> int:
     )
     parser.add_argument("--vak", help="The client's trade, as context for the mapping.")
     parser.add_argument(
+        "--naam",
+        help="The client's company name. Withdraws `groot` when it is long, and seeds the "
+        "shortlists when there is no reference to measure.",
+    )
+    parser.add_argument(
+        "--kleur", help="Brand colour (#rrggbb), for composing without a reference."
+    )
+    parser.add_argument("--accent", help="Accent colour (#rrggbb), same.")
+    parser.add_argument(
         "--feiten",
         action="store_true",
-        help="Print the measurements as JSON and stop (no API call).",
+        help="Print what the model would be given as JSON and stop (no API call).",
     )
     args = parser.parse_args(argv[1:])
 
     try:
-        if not args.voorbeeld:
-            raise StyleError("geef minstens een --voorbeeld <url>")
-        facts = measure_all(args.voorbeeld)
-        if args.feiten:
-            print(json.dumps(facts, ensure_ascii=False, indent=2))
-            return 0
-        stijl = map_to_stijl(facts, args.vak)
+        if args.voorbeeld:
+            facts = measure_all(args.voorbeeld)
+            if args.feiten:
+                print(json.dumps(facts, ensure_ascii=False, indent=2))
+                return 0
+            stijl = map_to_stijl(facts, args.vak, args.naam)
+        else:
+            if not (args.vak and args.naam):
+                raise StyleError(
+                    "zonder --voorbeeld componeert de fabriek de stijl zelf, en daarvoor zijn "
+                    "--vak en --naam nodig (--kleur en --accent maken hem beter)"
+                )
+            if args.feiten:
+                # The composing path has no measurements, so --feiten prints its inputs
+                # instead: the shortlists this client's name produced. Same promise as on the
+                # reference path -- see what the call will be judged on without paying for it.
+                print(
+                    json.dumps(
+                        {
+                            "vak": args.vak,
+                            "naam": args.naam,
+                            "naam_tekens": len(args.naam.strip()),
+                            "kleuren": {
+                                sleutel: hsl(_check_hex(kleur))
+                                for sleutel, kleur in (
+                                    ("primair", args.kleur),
+                                    ("accent", args.accent),
+                                )
+                                if kleur
+                            },
+                            "kandidaten": candidates(args.naam),
+                        },
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                )
+                return 0
+            stijl = compose_stijl(args.vak, args.naam, args.kleur, args.accent)
     except StyleError as err:
         print(f"❌ {err}", file=sys.stderr)
         return 1

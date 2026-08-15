@@ -280,6 +280,18 @@ def test_schema_offers_only_vocabulary_values() -> None:
     assert set(schema["required"]) == set(axes) | {"redenen"}
 
 
+def test_schema_narrows_to_the_axes_it_is_given() -> None:
+    """The withdrawn value has to leave the enum, not merely the prompt.
+
+    A sentence in the system prompt is advice; an enum the API validates is a rule, and the
+    run that ignores the advice ships a five-line headline on a real proposal.
+    """
+    axes = sitestyle.allowed("Installatietechniek Van der Veldenhuizen")
+    schema = sitestyle.schema(axes)
+    assert "groot" not in schema["properties"]["schaal"]["enum"]
+    assert schema["properties"]["schaal"]["enum"] == axes["schaal"]
+
+
 def test_check_stijl_refuses_a_value_outside_the_vocabulary() -> None:
     goed = {axis: values[0] for axis, values in sitestyle.vocabulaire().items()}
     assert sitestyle.check_stijl(dict(goed)) == goed
@@ -287,6 +299,175 @@ def test_check_stijl_refuses_a_value_outside_the_vocabulary() -> None:
         sitestyle.check_stijl({**goed, "palet": "pastel"})
     with pytest.raises(StyleError, match="schaal"):
         sitestyle.check_stijl({k: v for k, v in goed.items() if k != "schaal"})
+
+
+def test_check_stijl_holds_the_narrowed_set_too() -> None:
+    axes = sitestyle.allowed("Installatietechniek Van der Veldenhuizen")
+    goed = {axis: values[0] for axis, values in axes.items()}
+    assert sitestyle.check_stijl(dict(goed), axes) == goed
+    with pytest.raises(StyleError, match="schaal"):
+        sitestyle.check_stijl({**goed, "schaal": "groot"}, axes)
+
+
+# --- the long-name rule -------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("naam", "groot_beschikbaar"),
+    [
+        ("Dakwerken Bos", True),
+        ("Installatiebedrijf Van der Velden", True),  # 33 characters: four lines, measured
+        ("Dakdekkersbedrijf Van der Meulen BV", False),  # 35: five lines, measured
+        ("Installatietechniek Van der Veldenhuizen", False),
+        ("   Installatietechniek Van der Veldenhuizen   ", False),  # padding is not a name
+        (None, True),
+    ],
+)
+def test_groot_is_withdrawn_for_a_long_company_name(naam, groot_beschikbaar: bool) -> None:
+    """The H1 is "<naam>: vakwerk waar u op kunt rekenen." in a half-width column, so the
+    company name is the one client field that can break the type scale. R1 capped `groot` at
+    3.5rem to keep the call button on screen; this keeps the headline readable above it."""
+    assert ("groot" in sitestyle.allowed(naam)["schaal"]) is groot_beschikbaar
+    # Only schaal narrows -- a long name says nothing about paper colour or corners.
+    for axis, values in sitestyle.allowed(naam).items():
+        if axis != "schaal":
+            assert values == sitestyle.vocabulaire()[axis]
+
+
+def test_the_rule_reaches_the_reference_path_as_well() -> None:
+    # A reference site with a 64px display face is no reason to set a 40-character name at
+    # `groot`: it is the same page either way.
+    assert "groot" not in sitestyle.candidates("Installatietechniek Van der Veldenhuizen")["schaal"]
+    assert "groot" not in sitestyle.allowed("Installatietechniek Van der Veldenhuizen")["schaal"]
+
+
+# --- composing without a reference --------------------------------------------------------
+
+
+def test_candidates_are_stable_for_the_same_client() -> None:
+    """Re-running for one client must rebuild one site.
+
+    hash() is salted per process, so a seed built on it would redesign the page every time
+    the founder fixed a typo in the yaml.
+    """
+    eerst = sitestyle.candidates("Dakwerken Bos")
+    assert eerst == sitestyle.candidates("Dakwerken Bos")
+    assert eerst == sitestyle.candidates("  DAKWERKEN-BOS!  ")
+    # Pinned so a change to the seed shows up as a failing test rather than as every
+    # existing client silently getting a new look on the next run.
+    assert eerst["letterontwerp"] == ["industrieel", "redactioneel"]
+    assert eerst["palet"] == ["zand", "warm"]
+
+
+def test_candidates_differ_between_clients() -> None:
+    """The reason the shortlist exists. sitedraft gives every prospect the same
+    DEFAULT_PRIMARY until the founder overrides it, so without this six dakdekkers drafted
+    in one week would arrive with identical inputs and leave with an identical skin."""
+    namen = [
+        "Dakwerken Bos",
+        "Loodgietersbedrijf Kok",
+        "Van Dijk Dakbedekking",
+        "Installatiebedrijf Van Veen",
+        "Elektro Jansen",
+        "Slotenmakerij DRS",
+    ]
+    shortlists = [tuple(map(tuple, sitestyle.candidates(n).values())) for n in namen]
+    assert len(set(shortlists)) == len(namen)
+
+
+def test_candidates_never_offer_the_composer_systeem() -> None:
+    """`systeem` is not a look, it is what a page looks like when nobody chose a typeface.
+    A factory asked to compose one cannot answer "none" -- but measuring a reference really
+    set in Arial still maps to it, which is a reading rather than a decision."""
+    for naam in ("Dakwerken Bos", "Elektro Jansen", "Bouwbedrijf Hendriks"):
+        assert "systeem" not in sitestyle.candidates(naam)["letterontwerp"]
+    assert "systeem" in sitestyle.allowed("Dakwerken Bos")["letterontwerp"]
+
+
+def test_candidates_stay_inside_the_vocabulary_and_keep_every_axis() -> None:
+    axes = sitestyle.vocabulaire()
+    for naam in ("Bos", "Installatietechniek Van der Veldenhuizen", "Elektro Jansen"):
+        kandidaten = sitestyle.candidates(naam)
+        assert set(kandidaten) == set(axes)
+        for axis, values in kandidaten.items():
+            assert 1 <= len(values) <= 2
+            assert len(set(values)) == len(values)
+            assert set(values) <= set(axes[axis])
+
+
+def test_every_value_survives_somewhere_across_clients() -> None:
+    """A rotation that stranded a value would quietly delete part of the vocabulary: the
+    look would exist in stijl.ts, be reachable from a reference, and never be composed."""
+    namen = [f"Voorbeeldbedrijf {n}" for n in range(40)]
+    gezien: dict[str, set[str]] = {axis: set() for axis in sitestyle.vocabulaire()}
+    for naam in namen:
+        for axis, values in sitestyle.candidates(naam).items():
+            gezien[axis].update(values)
+    for axis, values in sitestyle.vocabulaire().items():
+        verwacht = set(values) - {"systeem"} if axis == "letterontwerp" else set(values)
+        assert gezien[axis] == verwacht
+
+
+def test_check_hex_refuses_anything_that_is_not_a_colour() -> None:
+    assert sitestyle._check_hex("#1F3A5F") == "#1f3a5f"
+    for slecht in ("1f3a5f", "#1f3a5", "rood", "", None):
+        with pytest.raises(StyleError, match="hex-waarde"):
+            sitestyle._check_hex(slecht)
+
+
+def test_compose_stijl_sends_the_vak_the_name_and_the_colours_in_hsl(monkeypatch) -> None:
+    gezien = {}
+
+    def vang(system: str, message: str, axes: dict) -> dict:
+        gezien.update(system=system, message=message, axes=axes)
+        return {axis: values[0] for axis, values in axes.items()}
+
+    monkeypatch.setattr(sitestyle, "_choose", vang)
+    stijl = sitestyle.compose_stijl("dakdekker", "Dakwerken Bos", "#1f3a5f", "#c2703d")
+
+    assert gezien["axes"] == sitestyle.candidates("Dakwerken Bos")
+    assert stijl["letterontwerp"] in sitestyle.candidates("Dakwerken Bos")["letterontwerp"]
+    assert "dakdekker" in gezien["message"] and "Dakwerken Bos" in gezien["message"]
+    # Hue and saturation, not just hex: whether a brand colour wants warm or cool paper is a
+    # question about its hue, and the model should not do that arithmetic in its head.
+    assert '"tint": 215' in gezien["message"]
+    assert '"verzadiging": 51' in gezien["message"]
+    # And the shortlist travels, so the reasons can name what was on the table.
+    assert "Aangeboden waarden per as" in gezien["message"]
+    # The composer is told the rule it is already prevented from breaking.
+    assert str(sitestyle.NAAM_MAX_GROOT) in gezien["system"]
+
+
+def test_compose_stijl_refuses_a_bad_colour_before_paying_for_a_call(monkeypatch) -> None:
+    monkeypatch.setattr(
+        sitestyle, "_choose", lambda *a: pytest.fail("should not have called the API")
+    )
+    with pytest.raises(StyleError, match="hex-waarde"):
+        sitestyle.compose_stijl("dakdekker", "Dakwerken Bos", "rood")
+
+
+def test_main_without_a_reference_needs_a_vak_and_a_name(capsys) -> None:
+    assert sitestyle.main(["app.sitestyle"]) == 1
+    assert "--vak en --naam" in capsys.readouterr().err
+    assert sitestyle.main(["app.sitestyle", "--vak", "dakdekker"]) == 1
+
+
+def test_main_feiten_without_a_reference_prints_the_shortlists(capsys) -> None:
+    """Same promise as `--feiten` on the reference path: see what the call will be judged on
+    without paying for it. There are no measurements here, so the inputs are the answer."""
+    import json
+
+    code = sitestyle.main(
+        ["app.sitestyle", "--vak", "dakdekker", "--naam", "Dakwerken Bos", "--kleur", "#1F3A5F"]
+        + ["--feiten"]
+    )
+    assert code == 0
+    feiten = json.loads(capsys.readouterr().out)
+    assert feiten["vak"] == "dakdekker"
+    assert feiten["naam_tekens"] == 13
+    assert feiten["kleuren"]["primair"]["tint"] == 215
+    assert "accent" not in feiten["kleuren"]
+    assert feiten["kandidaten"] == sitestyle.candidates("Dakwerken Bos")
 
 
 def test_as_yaml_writes_every_axis_with_its_reason() -> None:
