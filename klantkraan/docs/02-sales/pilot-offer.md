@@ -45,6 +45,7 @@ je hem wilt houden.**
 **Tijdens de pilot: niets.** Geen creditcard, geen incasso, geen kleine lettertjes.
 
 Na 14 dagen kies je zelf:
+
 - **Wil je hem houden** → Klantkraan Chat, €299 per maand (excl. BTW), maandelijks opzegbaar.
 - **Wil je hem niet** → we zetten hem uit. Klaar. Geen kosten, geen gedoe.
 
@@ -83,4 +84,4 @@ kunt hem meteen vragen stellen. Bevalt het? Dan zetten we de pilot in gang.
 
 ---
 
-*Klantkraan is een handelsnaam van T4 Software Consulting BV · KvK 90232135 · klantkraan.nl*
+_Klantkraan is een handelsnaam van T4 Software Consulting BV · KvK 90232135 · klantkraan.nl_

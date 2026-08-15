@@ -18,8 +18,14 @@ interface PainStat {
 }
 
 const painStats: PainStat[] = [
-  { value: "'s Avonds", caption: 'komen de meeste proefles-aanvragen binnen, precies wanneer de balie dicht is.' },
-  { value: '21×', caption: 'meer kans op contact wanneer u een lead binnen 5 minuten beantwoordt.' },
+  {
+    value: "'s Avonds",
+    caption: 'komen de meeste proefles-aanvragen binnen, precies wanneer de balie dicht is.',
+  },
+  {
+    value: '21×',
+    caption: 'meer kans op contact wanneer u een lead binnen 5 minuten beantwoordt.',
+  },
   { value: '€480', caption: 'jaarwaarde van één gemist lid, bij €40 per maand.' },
 ]
 
@@ -121,23 +127,12 @@ const faqSchema = {
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-dim">
           Staat u les te geven? Dan beantwoordt onze digitale receptionist de vraag over
-          abonnementen of de proefles, op uw website en via WhatsApp, met uw rooster en
-          tarieven paraat. 's Avonds, weekend, feestdagen. De proefles staat direct in uw
-          agenda.
+          abonnementen of de proefles, op uw website en via WhatsApp, met uw rooster en tarieven
+          paraat. 's Avonds, weekend, feestdagen. De proefles staat direct in uw agenda.
         </p>
         <div class="mt-10 btn-row">
-          <a
-            href="/demo/sportscholen/"
-            class="btn btn-primary btn-lg"
-          >
-            Probeer de demo
-          </a>
-          <a
-            href="/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            Bekijk de tarieven
-          </a>
+          <a href="/demo/sportscholen/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
         </div>
       </div>
       <div class="hidden text-(--color-sodium) md:block">
@@ -200,9 +195,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Modules</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Wat Klantkraan doet voor sportscholen.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Wat Klantkraan doet voor sportscholen.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Drie modules. Eén maandprijs. Gebouwd voor de eigenaar die vaker op de vloer staat dan
         achter de balie.
@@ -227,10 +220,10 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Rekensom</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Reken het even na.
-      </h2>
-      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
+      <h2 class="mt-3 font-display text-h1 text-chalk">Reken het even na.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
         <p class="text-h3 text-chalk">
           Blijven er 4 proefles-aanvragen per maand onbeantwoord, à €480 jaarwaarde? Dat is
           <strong class="text-(--color-sodium)">ruim €23.000 gemiste omzet per jaar</strong>.
@@ -240,18 +233,8 @@ const faqSchema = {
           daarna is uw marge.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href="/demo/sportscholen/"
-            class="btn btn-primary btn-lg"
-          >
-            Probeer de demo
-          </a>
-          <a
-            href="/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            Bekijk de tarieven
-          </a>
+          <a href="/demo/sportscholen/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
         </div>
         <p class="mt-6 text-micro text-dim">
           Bedragen excl. 21% BTW. Voorbeeld op basis van €40 per maand gemiddeld abonnementstarief
@@ -266,9 +249,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Vragen</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Veelgestelde vragen.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -300,26 +281,14 @@ const faqSchema = {
   <!-- 6. Eind-CTA band (blue) -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h2 class="font-display text-h1 text-chalk">
-        Klaar om geen proefles meer te missen?
-      </h2>
+      <h2 class="font-display text-h1 text-chalk">Klaar om geen proefles meer te missen?</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Probeer de live demo van een sportschool-receptionist. In één gesprek ziet u hoe een
-        vraag over het abonnement eindigt als geplande proefles in de agenda.
+        Probeer de live demo van een sportschool-receptionist. In één gesprek ziet u hoe een vraag
+        over het abonnement eindigt als geplande proefles in de agenda.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/demo/sportscholen/"
-          class="btn btn-primary btn-lg"
-        >
-          Probeer de demo
-        </a>
-        <a
-          href="/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          Bekijk prijzen
-        </a>
+        <a href="/demo/sportscholen/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
       </div>
     </div>
   </section>

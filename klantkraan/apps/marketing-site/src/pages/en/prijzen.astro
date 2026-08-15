@@ -52,7 +52,11 @@ const features: FeatureRow[] = [
   { feature: 'Books appointments straight into your calendar', chat: 'yes', compleet: 'yes' },
   { feature: 'Website chat on your own site (Dutch, 24/7)', chat: 'yes', compleet: 'yes' },
   { feature: 'WhatsApp channel', chat: 'yes', compleet: 'yes' },
-  { feature: 'Answers questions about services, rates and service area', chat: 'yes', compleet: 'yes' },
+  {
+    feature: 'Answers questions about services, rates and service area',
+    chat: 'yes',
+    compleet: 'yes',
+  },
   { feature: 'Captures leads and callback requests', chat: 'yes', compleet: 'yes' },
   { feature: 'We set it up and keep it current', chat: 'yes', compleet: 'yes' },
   { feature: 'Monthly statistics by email', chat: 'yes', compleet: 'yes' },
@@ -137,16 +141,14 @@ const serviceSchema = {
                 </span>
               )}
             </header>
-            <p class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}>
+            <p
+              class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}
+            >
               €{tier.price}
               <span class="text-body text-(--color-dim)">/mo</span>
             </p>
-            <p class="mt-1 font-mono text-small text-(--color-dim)">
-              ≈ €{tier.dayPrice} per day
-            </p>
-            {tier.priceNote && (
-              <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>
-            )}
+            <p class="mt-1 font-mono text-small text-(--color-dim)">≈ €{tier.dayPrice} per day</p>
+            {tier.priceNote && <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>}
             <p class="mt-3 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
               href={tier.ctaHref}
@@ -179,7 +181,9 @@ const serviceSchema = {
       <ul class="mt-6 grid gap-4 md:gap-6 text-body text-(--color-dim) sm:grid-cols-2">
         <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
           <p class="font-display text-h3 text-(--color-chalk)">Your services and rates loaded</p>
-          <p class="mt-2">You send them over or we pull them from your site. You review, we type.</p>
+          <p class="mt-2">
+            You send them over or we pull them from your site. You review, we type.
+          </p>
         </li>
         <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
           <p class="font-display text-h3 text-(--color-chalk)">Your calendar connected</p>
@@ -199,8 +203,8 @@ const serviceSchema = {
         </li>
       </ul>
       <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
-        Cheaper chatbots exist. On those you are the builder, and most of them book no
-        appointments. That difference is what you are paying for.
+        Cheaper chatbots exist. On those you are the builder, and most of them book no appointments.
+        That difference is what you are paying for.
       </p>
     </div>
   </section>
@@ -285,8 +289,8 @@ const serviceSchema = {
       <p class="eyebrow">Ready?</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Ready to get started?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Sign up and we call within one working day to plan the setup. Rather see how it works
-        first? Try the demo, right in your browser.
+        Sign up and we call within one working day to plan the setup. Rather see how it works first?
+        Try the demo, right in your browser.
       </p>
       <div class="mt-6 btn-row">
         <a href="/en/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start with Chat</a>

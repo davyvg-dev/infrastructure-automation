@@ -10,6 +10,7 @@
 The site is **on-brand but visually under-utilised**. The brand brief at `klantkraan/docs/09-brand/visual-identity-brief.md` already permits single-line illustrations, larger stat treatments, and richer hero compositions — the live site uses none of them. Every cornerstone page follows the same hero → stats → features → ROI → FAQ pattern. Zero imagery, zero motion, zero product visualisation. Lucide icons are used as bullet points rather than as a designed visual language. The result is plain by omission, not by rule.
 
 Three moves close most of the gap, in this order:
+
 1. **A custom single-line illustration per cornerstone** (tap valve / ringing phone / storm cloud / paint roller / hard hat). The brief explicitly authorises this, and it removes the dominant "wall of text" feeling instantly.
 2. **A real product screenshot in the hero or right after the hero** (the dashboard, the call-log, or an SMS preview). B2B SaaS golds (Linear, Mercury, Vercel, Stripe) all anchor a UI artefact above the fold. Klantkraan has nothing to anchor on.
 3. **A founder photo + KvK number + AVG/AI Act badges in the footer**. Trust signals that fit when there are zero customers yet. Costs nothing visually but shifts perceived credibility hard.
@@ -66,25 +67,25 @@ Live fetches succeeded for the B2B SaaS golds; werkspot.nl is behind Cloudflare 
 
 ### B2B SaaS gold standards
 
-| Site | Hero | Palette | Standout visual element | Imagery strategy |
-|---|---|---|---|---|
-| **Linear** | Text + interactive screenshots demoing the issue tracker | Near-black, cyan accent | Animated "Codex agent" terminal output (live status, real product UI) | UI screenshots throughout; zero stock photos |
-| **Vercel** | Animated graphic — "nodes on the globe sending pulses" + tagline | Dark navy/charcoal + electric blue accent | The pulsing globe = "global CDN" made visible | Animations + diagrams; UI shots for product sections |
-| **Stripe** | Text + wave-pattern animated background | White/off-white + deep navy text + electric blue accent | Recurring parallelogram/stripe motif framing real customer photos | Real customer scenes (street, storefront) framed by brand-shaped geometry; minimal stock |
-| **Mercury** | Text + animated UI frames | White + teal/cyan accent | "Universal search bar" illustration mid-page as "one command center" | Illustrations over photos; alternating text/illustration layout |
-| **Attio** | (Fetch returned text-only; brand known: white + navy, video product loops in hero) | Light + navy | Looping UI video showing the product in action | Product video in hero, minimal photography |
-| **Resend** | (Fetch returned text-only; brand known: pure black + orange accent, dense screenshots) | Black + orange | Layered API-response screenshots stacked on the hero | UI screenshots are the entire visual identity |
+| Site        | Hero                                                                                   | Palette                                                 | Standout visual element                                               | Imagery strategy                                                                         |
+| ----------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Linear**  | Text + interactive screenshots demoing the issue tracker                               | Near-black, cyan accent                                 | Animated "Codex agent" terminal output (live status, real product UI) | UI screenshots throughout; zero stock photos                                             |
+| **Vercel**  | Animated graphic — "nodes on the globe sending pulses" + tagline                       | Dark navy/charcoal + electric blue accent               | The pulsing globe = "global CDN" made visible                         | Animations + diagrams; UI shots for product sections                                     |
+| **Stripe**  | Text + wave-pattern animated background                                                | White/off-white + deep navy text + electric blue accent | Recurring parallelogram/stripe motif framing real customer photos     | Real customer scenes (street, storefront) framed by brand-shaped geometry; minimal stock |
+| **Mercury** | Text + animated UI frames                                                              | White + teal/cyan accent                                | "Universal search bar" illustration mid-page as "one command center"  | Illustrations over photos; alternating text/illustration layout                          |
+| **Attio**   | (Fetch returned text-only; brand known: white + navy, video product loops in hero)     | Light + navy                                            | Looping UI video showing the product in action                        | Product video in hero, minimal photography                                               |
+| **Resend**  | (Fetch returned text-only; brand known: pure black + orange accent, dense screenshots) | Black + orange                                          | Layered API-response screenshots stacked on the hero                  | UI screenshots are the entire visual identity                                            |
 
 **Patterns common across all six**: a product artefact anchors the hero or appears within one scroll. None use stock photos of "the customer". None use decorative illustrations of office workers. Motion is restrained — animated UI states, not parallax circus.
 
 ### Direct competitors (AI receptionist / Dutch trades)
 
-| Site | Hero | Imagery | Social proof | Notable |
-|---|---|---|---|---|
-| **Smith.ai** | Text + generic AVIF illustration | Illustrations only, no real photos | None above the fold | Dual-form lead capture (AI-first vs Human-first preference) is a clear positioning move; trust-band is weak |
-| **Goodcall** | Text + emoji illustration ("AI phone calls made easy") | AI-generated Gemini illustrations + partner logos (Google, Microsoft, Twilio) | "Born at Google" + metrics ("306 area codes, 50,000 agents, 60M interactions") | The big-number strip is the only thing that lands; "Championed by Industry Leaders" logo bar leans entirely on borrowed credibility |
-| **Trustoo (NL)** | Dark hero with white headline ("Leg uit wat je nodig hebt"), text-shadow, large display font | Consumer-directory tiles, reviews carousel, Dutch trade categories | Customer-side reviews | Consumer marketplace, not direct B2B SaaS; Tailwind-based, dark hero is the one design move worth noting |
-| **Werkspot (NL)** | (Cloudflare bot challenge — could not audit) | — | — | — |
+| Site              | Hero                                                                                         | Imagery                                                                       | Social proof                                                                   | Notable                                                                                                                             |
+| ----------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Smith.ai**      | Text + generic AVIF illustration                                                             | Illustrations only, no real photos                                            | None above the fold                                                            | Dual-form lead capture (AI-first vs Human-first preference) is a clear positioning move; trust-band is weak                         |
+| **Goodcall**      | Text + emoji illustration ("AI phone calls made easy")                                       | AI-generated Gemini illustrations + partner logos (Google, Microsoft, Twilio) | "Born at Google" + metrics ("306 area codes, 50,000 agents, 60M interactions") | The big-number strip is the only thing that lands; "Championed by Industry Leaders" logo bar leans entirely on borrowed credibility |
+| **Trustoo (NL)**  | Dark hero with white headline ("Leg uit wat je nodig hebt"), text-shadow, large display font | Consumer-directory tiles, reviews carousel, Dutch trade categories            | Customer-side reviews                                                          | Consumer marketplace, not direct B2B SaaS; Tailwind-based, dark hero is the one design move worth noting                            |
+| **Werkspot (NL)** | (Cloudflare bot challenge — could not audit)                                                 | —                                                                             | —                                                                              | —                                                                                                                                   |
 
 **What Dutch competitors do that the B2B golds reject**: dark hero with shadowed text (Trustoo), AI-generated graphics that read fake (Goodcall), no social proof at all (Smith.ai). None of these are templates Klantkraan should clone.
 
@@ -108,7 +109,7 @@ Sourced research, summarised tight.
 - **Video heroes**: −7% in the same test. Skip.
 - **Asymmetric-with-product-shot**: still strong, but reflow on mobile becomes the design problem.
 - **Centred-text-only**: lowest-risk, fastest LCP, best mobile parity — but typography has to carry the page.
-- **H1 constraint**: under 8 words / 44 chars. Must answer *what, who, why* in 5 seconds.
+- **H1 constraint**: under 8 words / 44 chars. Must answer _what, who, why_ in 5 seconds.
 
 ### Colour and typography
 
@@ -118,6 +119,7 @@ Sourced research, summarised tight.
 ### Social proof when you have zero customers
 
 Ranked by credibility for pre-launch:
+
 1. **Compliance + certification badges** — KvK number, BTW-id, AVG/GDPR statement, EU AI Act art. 50 disclosure compliant, ISO badges. Already partially in scope; not yet on the site.
 2. **Quantified non-customer metrics** — "AI antwoordt binnen 4 sec", "24/7 bereikbaar", "Eerste maand gratis." Replace the "X customers trust us" pattern wholesale until pilots ship. ([LaunchWall](https://launchwall.online/blog/social-proof-for-saas-landing-pages))
 3. **Vendor/tech-stack logos** — "Draait op Synthflow, n8n, Mollie, EU-gehost op Hetzner." Borrows credibility from upstream brands.
@@ -193,37 +195,37 @@ Each entry: what it is, why it lifts the page, effort (S/M/L), and which file(s)
 
 ## 5. Sources
 
-| Source | Purpose |
-|---|---|
-| [SaaS Hero — Best SaaS Visuals B2B Ads](https://www.saashero.net/design/best-saas-visuals-b2b-ads/) | Screenshots vs illustrations vs stock photos in B2B |
-| [SaaS Hero — High-converting landing pages](https://www.saashero.net/design/high-converting-landing-page-examples/) | Hero patterns + H1 length |
-| [SaaS Hero — Mobile-first B2B SaaS ads](https://www.saashero.net/design/mobile-first-saas-b2b-ads/) | Mobile-first viewing share |
-| [Marketing Mix — Photos vs screenshots vs illustrations](https://www.themarketingmix.agency/post/product-visuals-for-saas-startups-photos-screenshots-or-illustrations) | Imagery strategy |
-| [CXL — Stock vs real photos](https://cxl.com/blog/stock-photography-vs-real-photos-cant-use/) | +35% real-photo lift, 71% stock recognition |
-| [Design Web Local — Local vs stock](https://designweblocal.com/local-vs-stock-photography-the-data-behind-authentic-visual-content/) | Stock photo damage in B2B trust |
-| [Digital Applied — 2026 landing page study (2000 pages)](https://www.digitalapplied.com/blog/landing-page-conversion-study-2000-pages-tested-2026) | Hero patterns; +18% single-stat hero; +11% sticky CTA; −7% video hero |
-| [Framiq — Best SaaS landing pages 2026](https://framiq.app/blog/best-saas-landing-pages-2026) | Centred-text hero pattern (Linear) |
-| [LogRocket — Linear-style design](https://blog.logrocket.com/ux-design/linear-design/) | Typography confidence pattern |
-| [Tentackles — B2B SaaS palettes 2026](https://tentackles.com/blog/b2b-saas-color-palettes-2026-that-stand-out) | Warm neutral palettes |
-| [Recursion — UI color trends 2026](https://recursion.software/blog/ui-color-trends-2026) | 2026 colour direction |
-| [Pravin Kumar — Inter / Geist / Plus Jakarta](https://www.pravinkumar.co/blog/inter-geist-plus-jakarta-sans-webflow-b2b-2026) | Mainstream B2B typography |
-| [FullStop — SaaS typography playbook](https://fullstop360.com/blog/insights/branding/saas-typography-playbook-what-leading-companies-use) | One-family-two-weights pattern |
-| [GTM Works — Social proof checklist](https://www.gtmworks.ai/blog/how-to-build-social-proof-for-saas-social-proof-checklist) | Pre-launch trust signals |
-| [LaunchWall — Social proof 2026 guide](https://launchwall.online/blog/social-proof-for-saas-landing-pages) | Quantified non-customer metrics |
-| [TrustSignals — Trust signals chapter 5](https://www.trustsignals.com/blog/chapter-5-website-trust-signals-making-visitors-feel-at-home) | Footer + cert badges |
-| [Crazy Egg — Trust signals](https://www.crazyegg.com/blog/trust-signals/) | Risk-reversal vs testimonial |
-| [NN/G — Handmade designs as trust](https://www.nngroup.com/articles/handmade-designs/) | Founder photo pattern |
-| [NN/G — Photos as web content](https://www.nngroup.com/articles/photos-as-web-content/) | Real-people photography |
-| [WebPeak — CSS/JS animation trends 2026](https://webpeak.org/blog/css-js-animation-trends/) | Motion restraint |
-| [Techqware — Motion design 2026](https://www.techqware.com/blog/motion-design-micro-interactions-what-users-expect) | Micro-interaction expectations |
-| [PixelFree — Motion + performance](https://blog.pixelfreestudio.com/the-impact-of-motion-design-on-web-performance/) | Lottie budget guidance |
-| [Blend B2B — 15 best SaaS websites 2026](https://www.blendb2b.com/blog/the-15-best-saas-website-examples) | Asymmetric hero examples |
-| [Sitepins — Astro in 2026](https://sitepins.com/blog/astro-sitepins-2026) | View Transitions stable; perf ceiling |
-| [Educative — Astro + Core Web Vitals](https://www.educative.io/courses/building-static-pages-with-astro-for-perfect-core-web-vitals) | Static-site perf ceiling |
-| Live audits (WebFetch, 2026-05-21) | Linear, Vercel, Stripe, Mercury, Smith.ai, Goodcall homepages |
-| Live audits (curl + UA, 2026-05-21) | Trustoo.nl (Werkspot.nl bot-challenged) |
-| Klantkraan source (2026-05-21) | `src/styles/global.css`, all cornerstones, `docs/09-brand/*` |
+| Source                                                                                                                                                                  | Purpose                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [SaaS Hero — Best SaaS Visuals B2B Ads](https://www.saashero.net/design/best-saas-visuals-b2b-ads/)                                                                     | Screenshots vs illustrations vs stock photos in B2B                   |
+| [SaaS Hero — High-converting landing pages](https://www.saashero.net/design/high-converting-landing-page-examples/)                                                     | Hero patterns + H1 length                                             |
+| [SaaS Hero — Mobile-first B2B SaaS ads](https://www.saashero.net/design/mobile-first-saas-b2b-ads/)                                                                     | Mobile-first viewing share                                            |
+| [Marketing Mix — Photos vs screenshots vs illustrations](https://www.themarketingmix.agency/post/product-visuals-for-saas-startups-photos-screenshots-or-illustrations) | Imagery strategy                                                      |
+| [CXL — Stock vs real photos](https://cxl.com/blog/stock-photography-vs-real-photos-cant-use/)                                                                           | +35% real-photo lift, 71% stock recognition                           |
+| [Design Web Local — Local vs stock](https://designweblocal.com/local-vs-stock-photography-the-data-behind-authentic-visual-content/)                                    | Stock photo damage in B2B trust                                       |
+| [Digital Applied — 2026 landing page study (2000 pages)](https://www.digitalapplied.com/blog/landing-page-conversion-study-2000-pages-tested-2026)                      | Hero patterns; +18% single-stat hero; +11% sticky CTA; −7% video hero |
+| [Framiq — Best SaaS landing pages 2026](https://framiq.app/blog/best-saas-landing-pages-2026)                                                                           | Centred-text hero pattern (Linear)                                    |
+| [LogRocket — Linear-style design](https://blog.logrocket.com/ux-design/linear-design/)                                                                                  | Typography confidence pattern                                         |
+| [Tentackles — B2B SaaS palettes 2026](https://tentackles.com/blog/b2b-saas-color-palettes-2026-that-stand-out)                                                          | Warm neutral palettes                                                 |
+| [Recursion — UI color trends 2026](https://recursion.software/blog/ui-color-trends-2026)                                                                                | 2026 colour direction                                                 |
+| [Pravin Kumar — Inter / Geist / Plus Jakarta](https://www.pravinkumar.co/blog/inter-geist-plus-jakarta-sans-webflow-b2b-2026)                                           | Mainstream B2B typography                                             |
+| [FullStop — SaaS typography playbook](https://fullstop360.com/blog/insights/branding/saas-typography-playbook-what-leading-companies-use)                               | One-family-two-weights pattern                                        |
+| [GTM Works — Social proof checklist](https://www.gtmworks.ai/blog/how-to-build-social-proof-for-saas-social-proof-checklist)                                            | Pre-launch trust signals                                              |
+| [LaunchWall — Social proof 2026 guide](https://launchwall.online/blog/social-proof-for-saas-landing-pages)                                                              | Quantified non-customer metrics                                       |
+| [TrustSignals — Trust signals chapter 5](https://www.trustsignals.com/blog/chapter-5-website-trust-signals-making-visitors-feel-at-home)                                | Footer + cert badges                                                  |
+| [Crazy Egg — Trust signals](https://www.crazyegg.com/blog/trust-signals/)                                                                                               | Risk-reversal vs testimonial                                          |
+| [NN/G — Handmade designs as trust](https://www.nngroup.com/articles/handmade-designs/)                                                                                  | Founder photo pattern                                                 |
+| [NN/G — Photos as web content](https://www.nngroup.com/articles/photos-as-web-content/)                                                                                 | Real-people photography                                               |
+| [WebPeak — CSS/JS animation trends 2026](https://webpeak.org/blog/css-js-animation-trends/)                                                                             | Motion restraint                                                      |
+| [Techqware — Motion design 2026](https://www.techqware.com/blog/motion-design-micro-interactions-what-users-expect)                                                     | Micro-interaction expectations                                        |
+| [PixelFree — Motion + performance](https://blog.pixelfreestudio.com/the-impact-of-motion-design-on-web-performance/)                                                    | Lottie budget guidance                                                |
+| [Blend B2B — 15 best SaaS websites 2026](https://www.blendb2b.com/blog/the-15-best-saas-website-examples)                                                               | Asymmetric hero examples                                              |
+| [Sitepins — Astro in 2026](https://sitepins.com/blog/astro-sitepins-2026)                                                                                               | View Transitions stable; perf ceiling                                 |
+| [Educative — Astro + Core Web Vitals](https://www.educative.io/courses/building-static-pages-with-astro-for-perfect-core-web-vitals)                                    | Static-site perf ceiling                                              |
+| Live audits (WebFetch, 2026-05-21)                                                                                                                                      | Linear, Vercel, Stripe, Mercury, Smith.ai, Goodcall homepages         |
+| Live audits (curl + UA, 2026-05-21)                                                                                                                                     | Trustoo.nl (Werkspot.nl bot-challenged)                               |
+| Klantkraan source (2026-05-21)                                                                                                                                          | `src/styles/global.css`, all cornerstones, `docs/09-brand/*`          |
 
 ---
 
-*Demand-bucket caveats from `serp-audit.md` apply here too — competitor SERP screenshots, palettes and structures change frequently. This artifact captures the picture on 2026-05-21. Re-audit before any major redesign more than 6 months later.*
+_Demand-bucket caveats from `serp-audit.md` apply here too — competitor SERP screenshots, palettes and structures change frequently. This artifact captures the picture on 2026-05-21. Re-audit before any major redesign more than 6 months later._

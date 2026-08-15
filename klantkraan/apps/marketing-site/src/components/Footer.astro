@@ -66,7 +66,11 @@ const trustBadgesByLang: Record<'nl' | 'en' | 'es', TrustBadge[]> = {
   ],
   es: [
     { icon: 'shield-check', label: 'Conforme al RGPD', sub: 'Contrato de tratamiento estándar' },
-    { icon: 'shield-check', label: 'Reglamento de IA de la UE art. 50', sub: 'La declaración no se puede desactivar' },
+    {
+      icon: 'shield-check',
+      label: 'Reglamento de IA de la UE art. 50',
+      sub: 'La declaración no se puede desactivar',
+    },
     { icon: 'check', label: 'Alojado en la UE', sub: 'Cloudflare · Neon · Hetzner FSN1' },
     { icon: 'clock', label: 'Cancelación mensual', sub: 'Un correo, sin preaviso' },
   ],
@@ -161,11 +165,13 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         <p class="font-display text-h3 text-(--color-chalk)">Klantkraan</p>
         <p class="mt-2">{t.tagline}</p>
         <p class="mt-4 text-micro">
-          {t.tradeNameNote} {company.legalName}.<br />
+          {t.tradeNameNote}
+          {company.legalName}.<br />
           KvK: <span class="font-mono">{company.kvk}</span>{
             company.btw && (
               <>
-                {' '}· {btwLabel}: <span class="font-mono">{company.btw}</span>
+                {' '}
+                · {btwLabel}: <span class="font-mono">{company.btw}</span>
               </>
             )
           }
@@ -174,16 +180,18 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
       <div>
         <p class="font-display text-h3 text-(--color-chalk)">{t.branchesHead}</p>
         <ul class="mt-2">
-          {branchLinks.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+          {
+            branchLinks.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
           <li>
             <a href={hubHref} class="block py-2 text-(--color-sodium) no-underline">
               {t.allBranches}

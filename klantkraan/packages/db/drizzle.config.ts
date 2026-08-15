@@ -1,4 +1,4 @@
-import { defineConfig } from "drizzle-kit";
+import { defineConfig } from 'drizzle-kit'
 
 /**
  * Drizzle Kit config. Targets Postgres (Neon) over the HTTP driver at runtime;
@@ -9,12 +9,12 @@ import { defineConfig } from "drizzle-kit";
  * branch can be rebuilt from scratch.
  */
 export default defineConfig({
-  dialect: "postgresql",
-  schema: "./src/schema.ts",
-  out: "./src/migrations",
+  dialect: 'postgresql',
+  schema: './src/schema.ts',
+  out: './src/migrations',
   dbCredentials: {
-    url: process.env.NEON_DATABASE_URL ?? "",
+    url: process.env.NEON_DATABASE_URL ?? '',
   },
   strict: true,
   verbose: true,
-});
+})

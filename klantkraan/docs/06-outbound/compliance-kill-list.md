@@ -124,12 +124,12 @@
 
 ## Audit cadence
 
-| When | Action |
-|---|---|
-| Before every new campaign | Verify it against this list. One paragraph note in Notion of any edge cases. |
-| Monthly | Review last 30 days of outbound. Any kill-list violations? Document. |
-| Quarterly | Re-read this doc as a team (or as solo + AI). Update with any new AP/ACM guidance. |
-| Annually | Full external review (privacy lawyer or ICTRecht). |
+| When                      | Action                                                                             |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| Before every new campaign | Verify it against this list. One paragraph note in Notion of any edge cases.       |
+| Monthly                   | Review last 30 days of outbound. Any kill-list violations? Document.               |
+| Quarterly                 | Re-read this doc as a team (or as solo + AI). Update with any new AP/ACM guidance. |
+| Annually                  | Full external review (privacy lawyer or ICTRecht).                                 |
 
 ## Source
 

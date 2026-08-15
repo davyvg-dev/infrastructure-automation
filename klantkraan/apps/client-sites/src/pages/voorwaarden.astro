@@ -14,30 +14,32 @@ const description = `De algemene voorwaarden van ${bedrijf.naam} voor offertes, 
 ---
 
 <Base title={title} description={description}>
-  {/* Astro strips template comments; set:html keeps this marker visible in the
-      built HTML so a shipped placeholder is caught during QA. */}
+  {
+    /* Astro strips template comments; set:html keeps this marker visible in the
+      built HTML so a shipped placeholder is caught during QA. */
+  }
   <Fragment
     set:html={'<!-- AANPASSEN PER KLANT: dit is een generieke placeholder-tekst. Vervang of laat nakijken voor livegang. -->'}
   />
   <article class="mx-auto max-w-3xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)">
     <h1 class="text-h1">Algemene voorwaarden</h1>
     <p class="mt-4 text-(--color-mist)">
-      Deze voorwaarden gelden voor al het werk dat {bedrijf.naam} voor u uitvoert, tenzij wij
-      samen schriftelijk iets anders afspreken.
+      Deze voorwaarden gelden voor al het werk dat {bedrijf.naam} voor u uitvoert, tenzij wij samen schriftelijk
+      iets anders afspreken.
     </p>
 
     <h2 class="mt-10 text-h3">Offertes en afspraken</h2>
     <p class="mt-3 text-(--color-mist)">
-      Een offerte is vrijblijvend en geldt voor de termijn die op de offerte staat. Het werk
-      begint pas nadat u akkoord heeft gegeven. Meerwerk dat tijdens de klus nodig blijkt,
-      leggen wij eerst aan u voor.
+      Een offerte is vrijblijvend en geldt voor de termijn die op de offerte staat. Het werk begint
+      pas nadat u akkoord heeft gegeven. Meerwerk dat tijdens de klus nodig blijkt, leggen wij eerst
+      aan u voor.
     </p>
 
     <h2 class="mt-10 text-h3">Uitvoering van het werk</h2>
     <p class="mt-3 text-(--color-mist)">
       Wij voeren het werk vakkundig uit en houden ons aan de afgesproken planning. Loopt een
-      afspraak toch anders, bijvoorbeeld door weer of levertijd van materiaal, dan hoort u dat
-      zo snel mogelijk van ons.
+      afspraak toch anders, bijvoorbeeld door weer of levertijd van materiaal, dan hoort u dat zo
+      snel mogelijk van ons.
     </p>
 
     <h2 class="mt-10 text-h3">Betaling</h2>
@@ -48,21 +50,21 @@ const description = `De algemene voorwaarden van ${bedrijf.naam} voor offertes, 
 
     <h2 class="mt-10 text-h3">Garantie</h2>
     <p class="mt-3 text-(--color-mist)">
-      Op ons werk geven wij garantie zoals omschreven in de offerte. Is er na oplevering toch
-      iets niet in orde met ons werk, meld het ons dan zo snel mogelijk; wij komen kijken en
-      lossen het op.
+      Op ons werk geven wij garantie zoals omschreven in de offerte. Is er na oplevering toch iets
+      niet in orde met ons werk, meld het ons dan zo snel mogelijk; wij komen kijken en lossen het
+      op.
     </p>
 
     <h2 class="mt-10 text-h3">Aansprakelijkheid</h2>
     <p class="mt-3 text-(--color-mist)">
-      Wij zijn verzekerd voor schade die tijdens het werk door ons ontstaat. Onze
-      aansprakelijkheid is beperkt tot het bedrag dat onze verzekering in dat geval uitkeert.
+      Wij zijn verzekerd voor schade die tijdens het werk door ons ontstaat. Onze aansprakelijkheid
+      is beperkt tot het bedrag dat onze verzekering in dat geval uitkeert.
     </p>
 
     <h2 class="mt-10 text-h3">Toepasselijk recht</h2>
     <p class="mt-3 text-(--color-mist)">
-      Op al onze overeenkomsten is Nederlands recht van toepassing. Komen wij er samen niet
-      uit, dan leggen wij het geschil voor aan de bevoegde Nederlandse rechter.
+      Op al onze overeenkomsten is Nederlands recht van toepassing. Komen wij er samen niet uit, dan
+      leggen wij het geschil voor aan de bevoegde Nederlandse rechter.
     </p>
   </article>
 </Base>

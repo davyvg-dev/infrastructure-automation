@@ -14,13 +14,13 @@ but the copy works for email and WhatsApp with minimal edits.
 
 ## Cadence
 
-| # | Beat | Timing |
-|---|------|--------|
-| 1 | Connectie / opener | Day 0 |
-| 2 | Opvolging | 2–3 days later |
-| 3 | Waarde toevoegen | 2–3 days later |
-| 4 | Interesse wekken | 2–3 days later |
-| 5 | Call to action | 2–3 days later |
+| #   | Beat               | Timing         |
+| --- | ------------------ | -------------- |
+| 1   | Connectie / opener | Day 0          |
+| 2   | Opvolging          | 2–3 days later |
+| 3   | Waarde toevoegen   | 2–3 days later |
+| 4   | Interesse wekken   | 2–3 days later |
+| 5   | Call to action     | 2–3 days later |
 
 ---
 

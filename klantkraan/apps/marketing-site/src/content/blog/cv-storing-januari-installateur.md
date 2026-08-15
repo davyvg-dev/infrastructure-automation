@@ -85,10 +85,10 @@ Eerlijk over de grenzen:
 
 Twee abonnementen, alle excl. BTW, maandelijks opzegbaar. Eenmalige setup €249, kwijtgescholden voor pilotklanten:
 
-| Tier | Per maand | Per dag | Wat u krijgt |
-|---|---|---|---|
-| Chat | €299 | ≈ €9,97 | AI-receptionist via websitechat + WhatsApp: beantwoordt vragen, plant afspraken, vangt terugbelverzoeken |
-| Compleet | €499 | ≈ €16,63 | Alles van Chat + AI-telefonist op een eigen Nederlands nummer (binnenkort beschikbaar) |
+| Tier     | Per maand | Per dag  | Wat u krijgt                                                                                             |
+| -------- | --------- | -------- | -------------------------------------------------------------------------------------------------------- |
+| Chat     | €299      | ≈ €9,97  | AI-receptionist via websitechat + WhatsApp: beantwoordt vragen, plant afspraken, vangt terugbelverzoeken |
+| Compleet | €499      | ≈ €16,63 | Alles van Chat + AI-telefonist op een eigen Nederlands nummer (binnenkort beschikbaar)                   |
 
 Voor een eenmans-installateur die in januari 15 oproepen per week mist:
 

@@ -38,21 +38,21 @@ superseded-note pointing here.
 - **Right now it's bouwvak** — Midden (the Randstad list) is out 3–21 Aug. Voicemail-heavy
   weeks; a logged callback date is a win, not a failure. The real sprint starts the week of
   **24 August** — first week back, when the missed-calls-while-away pain is freshest. Use it:
-  *"U bent net terug van de bouwvak — hoeveel voicemails stonden er?"*
+  _"U bent net terug van de bouwvak — hoeveel voicemails stonden er?"_
 - Call blocks are only calls. Admin in the dead midday hours.
 
 ## 2. The call — 90 seconds to 3 minutes
 
-The data that shapes this structure: on cold calls the *seller* talks 55:45; winning calls
+The data that shapes this structure: on cold calls the _seller_ talks 55:45; winning calls
 carry one unbroken ~35-second problem monologue, ~175 words/min, calm and low — not pumped.
 "Send me some info" is a loss state; the only two wins are a demo agreed or a callback at a
 named time.
 
 ### 2.1 Opener (10 sec)
 
-Never *"bel ik gelegen?"* / *"belt het even gelegen?"* — the single worst opener ever measured
+Never _"bel ik gelegen?"_ / _"belt het even gelegen?"_ — the single worst opener ever measured
 (0.9% vs 1.5% baseline; it hands them the exit). The bounded permission ask scores 7x better
-(~11%). Always say *"de reden dat ik bel"* — 2.1x lift, the most replicated finding there is.
+(~11%). Always say _"de reden dat ik bel"_ — 2.1x lift, the most replicated finding there is.
 
 **Koud (Blok D/F/G1):**
 
@@ -108,14 +108,14 @@ The decision question, before any close (voltwerk mistake 3 was skipping it):
 ### 2.4 De demo-in-het-gesprek (the move no voice competitor can copy)
 
 The cold call's goal is the demo, not the subscription (demos convert 35–50%; in-call closes
-5–10%). And a demo *during* the call has zero delay and zero no-show:
+5–10%). And a demo _during_ the call has zero delay and zero no-show:
 
 > "Mag ik u 'm nu appen, terwijl we bellen? Stel 'm gerust een lastige vraag — vindt u er
 > een gat in, dan houd ik op."
 
 Their yes = the WhatsApp opt-in. Demo tabs open before the block starts
 (`demo.klantkraan.nl/?client=<slug>`); Blok D without a branded demo shows `klantkraan.nl/demo`
-plus *"morgen staat er een met uw naam en diensten op"*.
+plus _"morgen staat er een met uw naam en diensten op"_.
 
 ### 2.5 De vraag (alleen deze aanbieding — niets anders aanbieden, ooit)
 
@@ -127,7 +127,7 @@ plus *"morgen staat er een met uw naam en diensten op"*.
 - **Prepay only after a verbal yes, never as opener:** "U kunt maandelijks betalen, of de
   eerste zes maanden in één keer — dan houdt u het oprichterstarief vast: €894 in plaats van
   €1.644. Ik stuur u nu een betaallinkje."
-- Guarantee direction: *geld terug als het niks is* — never "als u tevreden bent" inverted
+- Guarantee direction: _geld terug als het niks is_ — never "als u tevreden bent" inverted
   (voltwerk mistake 1b).
 - Ja gehoord → betaallink binnen het uur (`billing.py checkout`).
 - Voice bestaat niet — verkoop alleen Chat; eerlijk zeggen als ernaar gevraagd wordt (dat
@@ -159,13 +159,13 @@ Under 20 seconds, no pitch:
 
 **Cadence per prospect — 6 touches over ~15 working days, halt on any reply:**
 
-| Dag | Touch |
-|---|---|
-| 1 | Dial (window A). No answer → nothing left |
-| 3 | Dial (window B) + VM 1 + mail binnen het uur die de VM noemt |
-| 4 | (mailed prospects: this is the existing 4-touch ledger doing its work) |
-| 8 | Dial (other window) + VM 2 + mail |
-| 14 | Laatste dial + breakup-mail ("ik laat u met rust; de demo blijft staan") |
+| Dag | Touch                                                                    |
+| --- | ------------------------------------------------------------------------ |
+| 1   | Dial (window A). No answer → nothing left                                |
+| 3   | Dial (window B) + VM 1 + mail binnen het uur die de VM noemt             |
+| 4   | (mailed prospects: this is the existing 4-touch ledger doing its work)   |
+| 8   | Dial (other window) + VM 2 + mail                                        |
+| 14  | Laatste dial + breakup-mail ("ik laat u met rust; de demo blijft staan") |
 
 Never twice in one day, always a different day/window than last attempt. Email is the
 between-channel — WhatsApp only exists after their spoken yes.
@@ -181,24 +181,24 @@ klanten zeggen hetzelfde" (patronising to Dutch ears), no anglicisms.
 > "Helemaal terecht — ik val u rauw op het dak. Eén vraag en dan laat ik u gaan: wie neemt er
 > op als u onder een ketel ligt?"
 
-| Objectie | Antwoord |
-|---|---|
-| Te duur | "Wat kost één gemiste klus? Eén geredde klus per week is €600–€1.600 per maand — dit kost €299, en de eerste maand €149 met geld-terug. Het risico ligt bij ons." Nooit de maandprijs verlagen; bij aarzelen → prepay. |
-| Mijn klanten willen een mens | "De beller die uw voicemail krijgt, spreekt ook geen mens — die belt de volgende. Zeven op de tien Nederlanders appen liever dan bellen. En hij zegt er eerlijk bij dat hij digitaal is." |
-| AI zegt straks iets doms / verkeerde prijs | "Kan niet — hij kent alleen uw prijslijst en alleen agendaslots die echt bestaan. Alles daarbuiten gaat naar u. Test 'm nu: vindt u een gat, dan geen deal." |
-| Mijn vrouw / kantoor doet de telefoon | "Houden zo — dit is de aanvulling: 7 uur 's ochtends, lunch, na vijven, haar vakantie. Zij houdt het persoonlijke werk, wij de overloop." |
-| Ik bel iedereen terug | "Tegen die tijd heeft twee derde al een ander. Een spoedbeller belt drie nummers in vijf minuten — wie het eerst reageert, heeft de klus. En het kost u uw avonden." |
-| Ik heb werk genoeg | "Dan is dit geen leadmachine maar een filter: hij boekt de goede klussen en houdt de rest beleefd af. Vol is prima — onbereikbaar levert slechte reviews op." |
-| Ik mis er niet zoveel | "Dat denkt iedereen — gemeten is het bij mkb 1 op de 4. Zullen we het gewoon een maand meten? Dan telt u wat hij opvangt." |
-| Zo'n antwoordservice was niks | "Die krabbelt een briefje. Hier staat elk gesprek zwart-op-wit in WhatsApp, met een geboekte afspraak in uw agenda — er kan niks kwijtraken." |
-| Klanten zijn oud, die appen niet | "Uw telefoonlijn blijft gewoon bestaan — dit vangt alleen wat er nu doorheen valt. En ook senioren appen liever: vier op de tien tegen twee op de tien die liever bellen." |
-| Is dat wel legaal, AI? | "Sinds 2 augustus moet elke chatbot zich als AI bekendmaken — stond op NOS. Die van ons doet dat vanaf dag één. U bent hiermee juist meteen compliant." |
-| Geen tijd voor gedoe / niet technisch | "Eén telefoongesprek van 20 minuten, ik doe de rest. Binnen 48 uur staat hij aan." |
-| Eerst overleggen / over nadenken | "Natuurlijk. Ik app u de demo en de voorwaarden nu, dan heeft u iets om te laten zien — mag ik u donderdag terugbellen, eind van de middag?" |
-| Stuur maar een mailtje | "Die heeft u al — ik zet 'm nu bovenaan uw inbox, met de demolink. Wanneer kan ik u terugbellen?" |
-| Bouwvak / vakantie | "Juist dan mist u telefoontjes — hij vangt ze op terwijl u weg bent. Wanneer kan ik beter terugbellen?" (datum loggen) |
-| Watermelon is €99 | Not at €99 — the comparable setup is €224 and still no agenda. Webshop of supportteam? Zeg eerlijk dat Watermelon dan beter past en loop weg. |
-| Geen abonnement, wel eenmalig | Interest noteren, niets beloven — losse verkoop is geen product. |
+| Objectie                                   | Antwoord                                                                                                                                                                                                               |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Te duur                                    | "Wat kost één gemiste klus? Eén geredde klus per week is €600–€1.600 per maand — dit kost €299, en de eerste maand €149 met geld-terug. Het risico ligt bij ons." Nooit de maandprijs verlagen; bij aarzelen → prepay. |
+| Mijn klanten willen een mens               | "De beller die uw voicemail krijgt, spreekt ook geen mens — die belt de volgende. Zeven op de tien Nederlanders appen liever dan bellen. En hij zegt er eerlijk bij dat hij digitaal is."                              |
+| AI zegt straks iets doms / verkeerde prijs | "Kan niet — hij kent alleen uw prijslijst en alleen agendaslots die echt bestaan. Alles daarbuiten gaat naar u. Test 'm nu: vindt u een gat, dan geen deal."                                                           |
+| Mijn vrouw / kantoor doet de telefoon      | "Houden zo — dit is de aanvulling: 7 uur 's ochtends, lunch, na vijven, haar vakantie. Zij houdt het persoonlijke werk, wij de overloop."                                                                              |
+| Ik bel iedereen terug                      | "Tegen die tijd heeft twee derde al een ander. Een spoedbeller belt drie nummers in vijf minuten — wie het eerst reageert, heeft de klus. En het kost u uw avonden."                                                   |
+| Ik heb werk genoeg                         | "Dan is dit geen leadmachine maar een filter: hij boekt de goede klussen en houdt de rest beleefd af. Vol is prima — onbereikbaar levert slechte reviews op."                                                          |
+| Ik mis er niet zoveel                      | "Dat denkt iedereen — gemeten is het bij mkb 1 op de 4. Zullen we het gewoon een maand meten? Dan telt u wat hij opvangt."                                                                                             |
+| Zo'n antwoordservice was niks              | "Die krabbelt een briefje. Hier staat elk gesprek zwart-op-wit in WhatsApp, met een geboekte afspraak in uw agenda — er kan niks kwijtraken."                                                                          |
+| Klanten zijn oud, die appen niet           | "Uw telefoonlijn blijft gewoon bestaan — dit vangt alleen wat er nu doorheen valt. En ook senioren appen liever: vier op de tien tegen twee op de tien die liever bellen."                                             |
+| Is dat wel legaal, AI?                     | "Sinds 2 augustus moet elke chatbot zich als AI bekendmaken — stond op NOS. Die van ons doet dat vanaf dag één. U bent hiermee juist meteen compliant."                                                                |
+| Geen tijd voor gedoe / niet technisch      | "Eén telefoongesprek van 20 minuten, ik doe de rest. Binnen 48 uur staat hij aan."                                                                                                                                     |
+| Eerst overleggen / over nadenken           | "Natuurlijk. Ik app u de demo en de voorwaarden nu, dan heeft u iets om te laten zien — mag ik u donderdag terugbellen, eind van de middag?"                                                                           |
+| Stuur maar een mailtje                     | "Die heeft u al — ik zet 'm nu bovenaan uw inbox, met de demolink. Wanneer kan ik u terugbellen?"                                                                                                                      |
+| Bouwvak / vakantie                         | "Juist dan mist u telefoontjes — hij vangt ze op terwijl u weg bent. Wanneer kan ik beter terugbellen?" (datum loggen)                                                                                                 |
+| Watermelon is €99                          | Not at €99 — the comparable setup is €224 and still no agenda. Webshop of supportteam? Zeg eerlijk dat Watermelon dan beter past en loop weg.                                                                          |
+| Geen abonnement, wel eenmalig              | Interest noteren, niets beloven — losse verkoop is geen product.                                                                                                                                                       |
 
 One counter per objection, maximum. Second resistance → date or `rejected`, next dial.
 
@@ -239,12 +239,12 @@ top objection of the week (feed its counter back into §4), and callback-date ad
 
 ## 6. What good looks like (so 30 dials of silence doesn't read as failure)
 
-| Metric | Expect (avg skill) | Top decile |
-|---|---|---|
-| Connect (kantoornummers/mobiel) | 18–22% | — |
-| Demo per conversation | ~5% | 11–17% |
-| Dial → demo | 2–3% | 5%+ |
-| 50 dials/week | 10–15 gesprekken, 1–2 demo's | 3–4 demo's |
+| Metric                          | Expect (avg skill)           | Top decile |
+| ------------------------------- | ---------------------------- | ---------- |
+| Connect (kantoornummers/mobiel) | 18–22%                       | —          |
+| Demo per conversation           | ~5%                          | 11–17%     |
+| Dial → demo                     | 2–3%                         | 5%+        |
+| 50 dials/week                   | 10–15 gesprekken, 1–2 demo's | 3–4 demo's |
 
 Below 4% reply-equivalent after 100 dials → the hook is wrong, not the market: swap the
 pijn-hook family (bereikbaarheids-gat before review-gat) before swapping the list.

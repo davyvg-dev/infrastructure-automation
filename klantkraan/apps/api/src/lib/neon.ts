@@ -9,15 +9,15 @@
  * Drizzle query builder.
  */
 
-import { createDb, type Db } from "@kk/db";
+import { createDb, type Db } from '@kk/db'
 
-export { createDb };
-export type { Db };
+export { createDb }
+export type { Db }
 
-export type SqlRow = Record<string, unknown>;
+export type SqlRow = Record<string, unknown>
 
 export interface SqlTag {
-  <T extends SqlRow = SqlRow>(strings: TemplateStringsArray, ...values: unknown[]): Promise<T[]>;
+  <T extends SqlRow = SqlRow>(strings: TemplateStringsArray, ...values: unknown[]): Promise<T[]>
 }
 
 /**
@@ -28,12 +28,12 @@ export interface SqlTag {
  */
 export function getSql(databaseUrl: string): SqlTag {
   if (!databaseUrl) {
-    throw new Error("NEON_DATABASE_URL is required");
+    throw new Error('NEON_DATABASE_URL is required')
   }
   const tag: SqlTag = async (_strings, ..._values) => {
     throw new Error(
-      "getSql is a transitional stub; migrate to `createDb(env.NEON_DATABASE_URL)` from @kk/db",
-    );
-  };
-  return tag;
+      'getSql is a transitional stub; migrate to `createDb(env.NEON_DATABASE_URL)` from @kk/db',
+    )
+  }
+  return tag
 }

@@ -49,30 +49,30 @@ Je bent de virtuele assistent van {{client_name}}, een {{client_vak}} in {{clien
 
 ## Supported placeholders
 
-| Placeholder | Type | Default | Source (Attio path) | Required tier |
-|---|---|---|---|---|
-| `{{client_name}}`             | string  | —                       | `company.name`                              | Lite, Pro, Max |
-| `{{client_id}}`               | string  | —                       | `company.id` (Attio record id)              | Lite, Pro, Max |
-| `{{client_kvk}}`              | string  | —                       | `company.kvk`                               | Lite, Pro, Max |
-| `{{client_vak}}`              | string  | —                       | `company.vertical` (loodgieter / dakdekker) | Lite, Pro, Max |
-| `{{client_regio}}`            | string  | —                       | `company.regio`                             | Lite, Pro, Max |
-| `{{client_postcode_lijst}}`   | string  | ""                      | `company.service_area`                      | Pro, Max |
-| `{{client_voorrijkosten}}`    | number  | 65                      | `company.tariff_voorrijkosten`              | Pro, Max |
-| `{{client_uurtarief}}`        | number  | 75                      | `company.tariff_uurtarief`                  | Pro, Max (loodgieter) |
-| `{{client_spoedtoeslag}}`     | number  | 50                      | `company.tariff_spoedtoeslag_pct`           | Pro, Max (loodgieter) |
-| `{{client_spoedtoeslag_eur}}` | number  | derived                 | derived: `voorrijkosten × (1 + pct/100)`    | Pro, Max (loodgieter) |
-| `{{client_materiaalopslag}}`  | number  | 15                      | `company.tariff_materiaalopslag`            | Pro, Max (loodgieter) |
-| `{{client_inspectie_tarief}}`             | number  | 95          | `company.tariff_inspectie`                  | Pro, Max (dakdekker) |
-| `{{client_noodreparatie_toeslag}}`        | number  | 150         | `company.tariff_noodreparatie`              | Pro, Max (dakdekker) |
-| `{{client_dakpannenslag_prijs_indicatief}}` | number | 12         | `company.tariff_dakpan_indicatief`          | Pro, Max (dakdekker) |
-| `{{owner_naam}}`              | string  | —                       | `person.first_name`                         | Lite, Pro, Max |
-| `{{owner_email}}`             | string  | —                       | `person.email`                              | Lite, Pro, Max |
-| `{{escalation_number}}`       | string  | —                       | `company.escalation_phone`                  | Pro, Max |
-| `{{agent_naam}}`              | string  | "Sanne"                 | intake Q32 (`company.agent_voice_choice`)   | Pro, Max |
-| `{{may_quote_prices}}`        | boolean | false                   | intake Q14 (`company.may_quote_prices`)     | Pro, Max |
-| `{{calcom_eventtype_url}}`    | string  | ""                      | `company.calcom_url`                        | Pro, Max |
-| `{{n8n_webhook_url}}`         | string  | derived                 | `${N8N_WEBHOOK_BASE}/synthflow/${client_id}` | Pro, Max |
-| `{{faq_overlay}}`             | string  | ""                      | rendered from `<vertical>-faq.{client_id}.md` | Pro, Max |
+| Placeholder                                 | Type    | Default | Source (Attio path)                           | Required tier         |
+| ------------------------------------------- | ------- | ------- | --------------------------------------------- | --------------------- |
+| `{{client_name}}`                           | string  | —       | `company.name`                                | Lite, Pro, Max        |
+| `{{client_id}}`                             | string  | —       | `company.id` (Attio record id)                | Lite, Pro, Max        |
+| `{{client_kvk}}`                            | string  | —       | `company.kvk`                                 | Lite, Pro, Max        |
+| `{{client_vak}}`                            | string  | —       | `company.vertical` (loodgieter / dakdekker)   | Lite, Pro, Max        |
+| `{{client_regio}}`                          | string  | —       | `company.regio`                               | Lite, Pro, Max        |
+| `{{client_postcode_lijst}}`                 | string  | ""      | `company.service_area`                        | Pro, Max              |
+| `{{client_voorrijkosten}}`                  | number  | 65      | `company.tariff_voorrijkosten`                | Pro, Max              |
+| `{{client_uurtarief}}`                      | number  | 75      | `company.tariff_uurtarief`                    | Pro, Max (loodgieter) |
+| `{{client_spoedtoeslag}}`                   | number  | 50      | `company.tariff_spoedtoeslag_pct`             | Pro, Max (loodgieter) |
+| `{{client_spoedtoeslag_eur}}`               | number  | derived | derived: `voorrijkosten × (1 + pct/100)`      | Pro, Max (loodgieter) |
+| `{{client_materiaalopslag}}`                | number  | 15      | `company.tariff_materiaalopslag`              | Pro, Max (loodgieter) |
+| `{{client_inspectie_tarief}}`               | number  | 95      | `company.tariff_inspectie`                    | Pro, Max (dakdekker)  |
+| `{{client_noodreparatie_toeslag}}`          | number  | 150     | `company.tariff_noodreparatie`                | Pro, Max (dakdekker)  |
+| `{{client_dakpannenslag_prijs_indicatief}}` | number  | 12      | `company.tariff_dakpan_indicatief`            | Pro, Max (dakdekker)  |
+| `{{owner_naam}}`                            | string  | —       | `person.first_name`                           | Lite, Pro, Max        |
+| `{{owner_email}}`                           | string  | —       | `person.email`                                | Lite, Pro, Max        |
+| `{{escalation_number}}`                     | string  | —       | `company.escalation_phone`                    | Pro, Max              |
+| `{{agent_naam}}`                            | string  | "Sanne" | intake Q32 (`company.agent_voice_choice`)     | Pro, Max              |
+| `{{may_quote_prices}}`                      | boolean | false   | intake Q14 (`company.may_quote_prices`)       | Pro, Max              |
+| `{{calcom_eventtype_url}}`                  | string  | ""      | `company.calcom_url`                          | Pro, Max              |
+| `{{n8n_webhook_url}}`                       | string  | derived | `${N8N_WEBHOOK_BASE}/synthflow/${client_id}`  | Pro, Max              |
+| `{{faq_overlay}}`                           | string  | ""      | rendered from `<vertical>-faq.{client_id}.md` | Pro, Max              |
 
 ## Rendering rules
 

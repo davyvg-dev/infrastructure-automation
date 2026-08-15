@@ -9,66 +9,66 @@
 modus: live # live = echte klant, alle wettelijke velden verplicht (preview = voorstel)
 
 bedrijf:
-  naam: "Voorbeeld Dakwerken"
-  vak: "dakdekker"
-  kvk: "00000000" # placeholder, invullen bij echte klant
-  btw_id: "NL000000000B00" # placeholder, invullen bij echte klant
-  telefoon: "+31 6 12 34 56 78" # voorbeeldnummer (copy-lint-ok)
-  whatsapp: "31612345678" # voorbeeldnummer (copy-lint-ok)
-  email: "info@voorbeeld-dakwerken.nl"
+  naam: 'Voorbeeld Dakwerken'
+  vak: 'dakdekker'
+  kvk: '00000000' # placeholder, invullen bij echte klant
+  btw_id: 'NL000000000B00' # placeholder, invullen bij echte klant
+  telefoon: '+31 6 12 34 56 78' # voorbeeldnummer (copy-lint-ok)
+  whatsapp: '31612345678' # voorbeeldnummer (copy-lint-ok)
+  email: 'info@voorbeeld-dakwerken.nl'
   adres:
-    straat: "Voorbeeldstraat 1"
-    postcode: "3439 AB"
-    plaats: "Nieuwegein"
+    straat: 'Voorbeeldstraat 1'
+    postcode: '3439 AB'
+    plaats: 'Nieuwegein'
   werkgebied:
-    - "Nieuwegein"
-    - "Utrecht"
-    - "IJsselstein"
-    - "Houten"
+    - 'Nieuwegein'
+    - 'Utrecht'
+    - 'IJsselstein'
+    - 'Houten'
 
 branding:
   # kleur_primair moet donker genoeg zijn voor witte tekst (schema checkt dit).
-  kleur_primair: "#24435c"
-  kleur_accent: "#e0862f"
+  kleur_primair: '#24435c'
+  kleur_accent: '#e0862f'
 
 diensten:
-  - naam: "Daklekkage verhelpen"
-    omschrijving: "Wij sporen de lek op en dichten hem duurzaam, ook bij een plat dak."
-  - naam: "Dakrenovatie"
-    omschrijving: "Complete vernieuwing van uw dakbedekking, van pannen tot bitumen."
-  - naam: "Dakgoten en regenafvoer"
-    omschrijving: "Reinigen, repareren of vervangen van goten en hemelwaterafvoer."
-  - naam: "Dakinspectie"
-    omschrijving: "Periodieke controle van uw dak met een duidelijk verslag en advies."
-  - naam: "Zink- en loodwerk"
-    omschrijving: "Vakkundig zetwerk rond schoorstenen, dakkapellen en dakranden."
+  - naam: 'Daklekkage verhelpen'
+    omschrijving: 'Wij sporen de lek op en dichten hem duurzaam, ook bij een plat dak.'
+  - naam: 'Dakrenovatie'
+    omschrijving: 'Complete vernieuwing van uw dakbedekking, van pannen tot bitumen.'
+  - naam: 'Dakgoten en regenafvoer'
+    omschrijving: 'Reinigen, repareren of vervangen van goten en hemelwaterafvoer.'
+  - naam: 'Dakinspectie'
+    omschrijving: 'Periodieke controle van uw dak met een duidelijk verslag en advies.'
+  - naam: 'Zink- en loodwerk'
+    omschrijving: 'Vakkundig zetwerk rond schoorstenen, dakkapellen en dakranden.'
 
 openingstijden:
-  maandag: ["07:30", "17:00"]
-  dinsdag: ["07:30", "17:00"]
-  woensdag: ["07:30", "17:00"]
-  donderdag: ["07:30", "17:00"]
-  vrijdag: ["07:30", "16:00"]
-  zaterdag: ["08:00", "12:00"]
+  maandag: ['07:30', '17:00']
+  dinsdag: ['07:30', '17:00']
+  woensdag: ['07:30', '17:00']
+  donderdag: ['07:30', '17:00']
+  vrijdag: ['07:30', '16:00']
+  zaterdag: ['08:00', '12:00']
   # zondag weggelaten = gesloten
 
 spoed:
   beschikbaar: true
-  tekst: "Lekkage of stormschade? Bel ons direct. Wij overleggen meteen met u wat er nodig is en maken het dak zo snel mogelijk weer dicht."
+  tekst: 'Lekkage of stormschade? Bel ons direct. Wij overleggen meteen met u wat er nodig is en maken het dak zo snel mogelijk weer dicht.'
 
 usps:
-  - "Eigen dakdekkers, geen onderaannemers"
-  - "Heldere offerte voordat het werk begint"
-  - "Nette afwerking en een opgeruimde werkplek"
-  - "Ook bereikbaar voor spoed"
+  - 'Eigen dakdekkers, geen onderaannemers'
+  - 'Heldere offerte voordat het werk begint'
+  - 'Nette afwerking en een opgeruimde werkplek'
+  - 'Ook bereikbaar voor spoed'
 
 reviews:
-  - tekst: "Voorbeeldreview: snel geholpen bij een lekkage en netjes opgeleverd. Dit is een fictieve tekst ter illustratie."
-    naam: "Voorbeeldklant"
-    plaats: "Nieuwegein"
-  - tekst: "Voorbeeldreview: duidelijke offerte en de planning werd gewoon nagekomen. Dit is een fictieve tekst ter illustratie."
-    naam: "Voorbeeldklant"
-    plaats: "Utrecht"
+  - tekst: 'Voorbeeldreview: snel geholpen bij een lekkage en netjes opgeleverd. Dit is een fictieve tekst ter illustratie.'
+    naam: 'Voorbeeldklant'
+    plaats: 'Nieuwegein'
+  - tekst: 'Voorbeeldreview: duidelijke offerte en de planning werd gewoon nagekomen. Dit is een fictieve tekst ter illustratie.'
+    naam: 'Voorbeeldklant'
+    plaats: 'Utrecht'
 
-domein: "voorbeeld-dakwerken.nl"
+domein: 'voorbeeld-dakwerken.nl'
 receptionist: true

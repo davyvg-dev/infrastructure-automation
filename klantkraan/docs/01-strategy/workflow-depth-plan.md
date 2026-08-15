@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-28 · **Decides:** sequencing, gates, and what gets tested before anything gets built.
 
-Companion docs. Why: `research/automation-expansion-2026-07.md`. What to build: `ai-receptionist/docs/WORKFLOW-MOAT.md`. This is the *how* — the order, the gates, and the things that must start early because someone else controls the clock.
+Companion docs. Why: `research/automation-expansion-2026-07.md`. What to build: `ai-receptionist/docs/WORKFLOW-MOAT.md`. This is the _how_ — the order, the gates, and the things that must start early because someone else controls the clock.
 
 ---
 
@@ -12,7 +12,7 @@ Two rules drive everything below.
 
 **Gates, not dates.** Every phase has an entry condition, an exit condition, and a kill criterion. Nothing is scheduled by calendar, because client count is the real clock and it is not under our control. The only date-driven items are the three in §2, where an external party sets the deadline.
 
-**Founder hours are the bottleneck, not build hours.** At 3–7 h/week the scarce resource is the founder talking to clients — selling, onboarding, asking questions. Code is comparatively cheap. So every phase below states what it costs *the founder*, and the plan is arranged to spend as few of those hours as possible before the riskiest assumption is tested.
+**Founder hours are the bottleneck, not build hours.** At 3–7 h/week the scarce resource is the founder talking to clients — selling, onboarding, asking questions. Code is comparatively cheap. So every phase below states what it costs _the founder_, and the plan is arranged to spend as few of those hours as possible before the riskiest assumption is tested.
 
 ---
 
@@ -36,11 +36,11 @@ With the first pilot client, from the day they go live, the founder sends the cl
 
 The jobs come from what the bot booked, so the list takes a minute to assemble. Ten working days.
 
-| Measure | Read as |
-|---|---|
-| Replies on **≥7 of 10 days** | Green. Build the owner channel. |
-| Replies on 4–6 days | Amber. The message is wrong, not the idea — try morning-after instead of end-of-day, or shorter. Re-run once. |
-| Replies on **≤3 days** | Red. Stop. State has to come from somewhere else, and the build order changes (calendar inference + one-tap confirm, or integration-first). |
+| Measure                      | Read as                                                                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Replies on **≥7 of 10 days** | Green. Build the owner channel.                                                                                                             |
+| Replies on 4–6 days          | Amber. The message is wrong, not the idea — try morning-after instead of end-of-day, or shorter. Re-run once.                               |
+| Replies on **≤3 days**       | Red. Stop. State has to come from somewhere else, and the build order changes (calendar inference + one-tap confirm, or integration-first). |
 
 Also record: how long until they reply, whether the reply is parseable without a follow-up question, and what they volunteer beyond the answer. The last one is free product research.
 
@@ -83,7 +83,7 @@ The receptionist has no paying client yet (`TODO.md` item E). Building the offic
 What happens in P0:
 
 - **Reposition the story.** Site and deck move from "de AI-telefoniste" to **"het kantoor dat meedraait"**, with the office work shown honestly as roadmap, not as shipped features. Costs nothing, defends against the €99 floor, and reframes the €299 as an entry point rather than a ceiling.
-- **Make every discovery call demand research.** One question, asked the same way every time: *"Als er één ding op kantoor vanzelf zou gaan — wat zou dat zijn?"* Log the answer verbatim against the prospect in `app/pipeline.py` notes. Twenty answers pick module 1 better than any analysis in this repo.
+- **Make every discovery call demand research.** One question, asked the same way every time: _"Als er één ding op kantoor vanzelf zou gaan — wat zou dat zijn?"_ Log the answer verbatim against the prospect in `app/pipeline.py` notes. Twenty answers pick module 1 better than any analysis in this repo.
 - **Run the closeout test** (§1) with pilot #1.
 - **Start clock (a)** and, once it lands, (b).
 
@@ -121,7 +121,7 @@ Build the module the P0 tally chose. Default, absent a clear signal, is **offert
 
 Give it **free to the first three clients** in exchange for permission to publish the numbers. This is the same trade as the founding-member offer: they are buying proof nobody else in the Dutch market has, and per `competitor-landscape-2026-07.md` not one rival proves with a real trade business.
 
-**The exit gate is a measured number, not a shipped feature.** Specifically: quotes that converted after a nudge, against that client's own baseline from before. If it cannot be stated as *"€X in klussen die anders waren blijven liggen"*, it is not done, because that sentence is the entire €599 sales argument.
+**The exit gate is a measured number, not a shipped feature.** Specifically: quotes that converted after a nudge, against that client's own baseline from before. If it cannot be stated as _"€X in klussen die anders waren blijven liggen"_, it is not done, because that sentence is the entire €599 sales argument.
 
 **Founder cost:** medium — three clients to brief and a baseline to establish with each.
 
@@ -146,7 +146,7 @@ Give it **free to the first three clients** in exchange for permission to publis
 
 **Entry:** ~10 clients. **Exit:** none — this is the normal-operations state.
 
-Module 2 (onderhoudsherinneringen — the one that creates recurring revenue *for the client*, so it is the hardest to cancel), then the Moneybird connector, then invoice chasing.
+Module 2 (onderhoudsherinneringen — the one that creates recurring revenue _for the client_, so it is the hardest to cancel), then the Moneybird connector, then invoice chasing.
 
 By this point real demand will have re-ranked everything and this document will be a year stale. **Trust the tally over this plan.**
 
@@ -158,7 +158,7 @@ Carried from `research/automation-expansion-2026-07.md`, restated because this i
 
 1. **A module ships only if it works for every client from a config field.** Client-specific Python means it is a project, and the answer is no.
 2. **Build module N+1 only when three paying clients have asked for it.** The tally decides, not the roadmap.
-3. **Standalone by default.** Every module must work with zero integrations. The smallest trades have no system at all, and for them the automation *is* the system.
+3. **Standalone by default.** Every module must work with zero integrations. The smallest trades have no system at all, and for them the automation _is_ the system.
 4. **Two accounting integrations, maximum, in year one** — Moneybird first (much better API), e-Boekhouden second. A new connector needs three clients or one who pays for it knowing it becomes a product.
 5. **Never integrate to become a feature of an FSM platform.** Read from Gripp/Robaws/Bouw7 if a client asks; never depend on one.
 6. **Outbound is transactional only.** Every template reports a status. Never an offer, never a discount, always an opt-out.
@@ -169,13 +169,13 @@ Carried from `research/automation-expansion-2026-07.md`, restated because this i
 
 Worth writing down now, while it is cheap to admit.
 
-| Signal | What it means | Response |
-|---|---|---|
-| Closeout test comes back red | Owners will not feed the bot state | Whole build order changes — calendar inference + one-tap confirm, or integration-first. Re-plan before building. |
-| Module 1 ships and converts nothing | The value story is wrong, not the execution | Try tally #2 once. If that also fails, the office layer is not worth €300/mo and €299 is the product. |
-| A Dutch FSM platform ships this bundled | The wedge is closing faster than expected | The counter is the no-migration position — Klantkraan works on WhatsApp for trades that will never adopt an ERP. Defend there, do not chase features. |
-| Meta's October rate is punitive | Core margin, not module margin | Fair-use ceiling in the contract before a price rise. |
-| 3 paying clients never arrive | Nothing in this document is the problem | Stop. The wedge is the issue. |
+| Signal                                  | What it means                               | Response                                                                                                                                              |
+| --------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Closeout test comes back red            | Owners will not feed the bot state          | Whole build order changes — calendar inference + one-tap confirm, or integration-first. Re-plan before building.                                      |
+| Module 1 ships and converts nothing     | The value story is wrong, not the execution | Try tally #2 once. If that also fails, the office layer is not worth €300/mo and €299 is the product.                                                 |
+| A Dutch FSM platform ships this bundled | The wedge is closing faster than expected   | The counter is the no-migration position — Klantkraan works on WhatsApp for trades that will never adopt an ERP. Defend there, do not chase features. |
+| Meta's October rate is punitive         | Core margin, not module margin              | Fair-use ceiling in the contract before a price rise.                                                                                                 |
+| 3 paying clients never arrive           | Nothing in this document is the problem     | Stop. The wedge is the issue.                                                                                                                         |
 
 ---
 

@@ -17,8 +17,8 @@ exports a Drizzle client bound to `@neondatabase/serverless`'s `neon()` (HTTP
 only):
 
 ```ts
-import { createDb } from "@kk/db";
-const db = createDb(env.NEON_DATABASE_URL);
+import { createDb } from '@kk/db'
+const db = createDb(env.NEON_DATABASE_URL)
 ```
 
 Do not import `drizzle-orm/neon-serverless` here — it requires a `ws` shim

@@ -41,9 +41,11 @@ export const branches: Branch[] = [
     labelPluralEn: 'Contractors',
     labelPluralEs: 'Contratistas',
     href: '/aannemer/',
-    hubLine: 'Offerteaanvragen, meerwerk en leveranciers uit elkaar terwijl u op de bouwplaats staat.',
+    hubLine:
+      'Offerteaanvragen, meerwerk en leveranciers uit elkaar terwijl u op de bouwplaats staat.',
     hubLineEn: 'Quote requests, variations and suppliers kept apart while you are on site.',
-    hubLineEs: 'Presupuestos, trabajos adicionales y proveedores, separados mientras usted está en obra.',
+    hubLineEs:
+      'Presupuestos, trabajos adicionales y proveedores, separados mientras usted está en obra.',
     illustration: 'HardHat',
   },
   {
@@ -66,8 +68,10 @@ export const branches: Branch[] = [
     labelPluralEs: 'Electricistas',
     href: '/elektricien/',
     hubLine: 'Spoedklachten, projectofferte-aanvragen en VvE-werk gescheiden afgehandeld.',
-    hubLineEn: 'Emergency call-outs, project quotes and property-management work handled separately.',
-    hubLineEs: 'Urgencias, presupuestos de obra y trabajos para comunidades, gestionados por separado.',
+    hubLineEn:
+      'Emergency call-outs, project quotes and property-management work handled separately.',
+    hubLineEs:
+      'Urgencias, presupuestos de obra y trabajos para comunidades, gestionados por separado.',
     illustration: null,
   },
   {
@@ -79,7 +83,8 @@ export const branches: Branch[] = [
     href: '/installateur/',
     hubLine: 'CV-storingen, warmtepomp-aanvragen en spoedwerk naar de juiste prioriteit.',
     hubLineEn: 'Boiler faults, heat-pump enquiries and emergency work given the right priority.',
-    hubLineEs: 'Averías de calderas, consultas de bombas de calor y urgencias, ordenadas por prioridad.',
+    hubLineEs:
+      'Averías de calderas, consultas de bombas de calor y urgencias, ordenadas por prioridad.',
     illustration: null,
   },
   {
@@ -91,7 +96,8 @@ export const branches: Branch[] = [
     href: '/loodgieters/',
     hubLine: 'Spoed-oproepen, voorrijkosten en standleiding-werk uit elkaar gehouden.',
     hubLineEn: 'Emergency calls, call-out charges and drain work kept apart and prioritised.',
-    hubLineEs: 'Urgencias, gastos de desplazamiento y trabajos de desagüe, separados y priorizados.',
+    hubLineEs:
+      'Urgencias, gastos de desplazamiento y trabajos de desagüe, separados y priorizados.',
     illustration: 'TapValve',
   },
   {
@@ -114,8 +120,10 @@ export const branches: Branch[] = [
     labelPluralEs: 'Gimnasios',
     href: '/sportscholen/',
     hubLine: 'Proefles-aanvragen in de avond en het weekend direct beantwoord én ingepland.',
-    hubLineEn: 'Trial-class requests in the evening and at weekends answered and booked on the spot.',
-    hubLineEs: 'Solicitudes de clase de prueba por la tarde y el fin de semana, respondidas y agendadas al momento.',
+    hubLineEn:
+      'Trial-class requests in the evening and at weekends answered and booked on the spot.',
+    hubLineEs:
+      'Solicitudes de clase de prueba por la tarde y el fin de semana, respondidas y agendadas al momento.',
     illustration: 'Dumbbell',
   },
 ]

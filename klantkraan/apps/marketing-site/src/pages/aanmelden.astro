@@ -28,15 +28,17 @@ const inputClass =
     <div class="mx-auto max-w-5xl px-6">
       <h1 class="font-display text-hero text-(--color-chalk)">Aan de slag</h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
-        Laat hieronder uw gegevens achter. Wij bellen u binnen één werkdag om uw diensten,
-        tarieven en agenda door te nemen. De setup doen wij, u hoeft niets te bouwen.
+        Laat hieronder uw gegevens achter. Wij bellen u binnen één werkdag om uw diensten, tarieven
+        en agenda door te nemen. De setup doen wij, u hoeft niets te bouwen.
       </p>
     </div>
   </section>
 
   <!-- 2. Form + next steps -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start">
+    <div
+      class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start"
+    >
       <!-- method+action are the zero-JS fallback: if the page script can't run, the browser
            posts the form itself and the API answers with a 303 straight into Mollie. -->
       <form
@@ -49,13 +51,26 @@ const inputClass =
         <div class="space-y-6">
           <div>
             <label for="naam" class="block text-body font-medium text-(--color-chalk)">Naam</label>
-            <input id="naam" name="naam" type="text" required autocomplete="name" class={inputClass} />
+            <input
+              id="naam"
+              name="naam"
+              type="text"
+              required
+              autocomplete="name"
+              class={inputClass}
+            />
           </div>
           <div>
             <label for="bedrijf" class="block text-body font-medium text-(--color-chalk)">
               Bedrijfsnaam
             </label>
-            <input id="bedrijf" name="bedrijf" type="text" autocomplete="organization" class={inputClass} />
+            <input
+              id="bedrijf"
+              name="bedrijf"
+              type="text"
+              autocomplete="organization"
+              class={inputClass}
+            />
           </div>
           <div class="grid gap-6 sm:grid-cols-2 sm:gap-4">
             <div>
@@ -67,7 +82,7 @@ const inputClass =
                 name="telefoon"
                 type="tel"
                 autocomplete="tel"
-                pattern={"\\+?[\\d \\-\\(\\)\\.]{8,20}"}
+                pattern={'\\+?[\\d \\-\\(\\)\\.]{8,20}'}
                 title="Minimaal 8 cijfers, spaties en streepjes mogen"
                 class={inputClass}
               />
@@ -76,7 +91,14 @@ const inputClass =
               <label for="email" class="block text-body font-medium text-(--color-chalk)">
                 E-mail
               </label>
-              <input id="email" name="email" type="email" required autocomplete="email" class={inputClass} />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                class={inputClass}
+              />
             </div>
           </div>
           <p id="contact-hint" class="-mt-3 text-small text-(--color-dim)">
@@ -112,18 +134,33 @@ const inputClass =
           <fieldset>
             <legend class="block text-body font-medium text-(--color-chalk)">Abonnement</legend>
             <div class="mt-2 space-y-2">
-              <label class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3">
-                <input type="radio" name="plan" value="chat" checked class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)" />
+              <label
+                class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3"
+              >
+                <input
+                  type="radio"
+                  name="plan"
+                  value="chat"
+                  checked
+                  class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)"
+                />
                 <span class="text-body text-(--color-chalk)">
                   Chat
                   <span class="block text-small text-(--color-dim)">
-                    eerste maand €149,50, daarna €299 per maand, excl. btw &middot; websitechat
-                    + WhatsApp &middot; maandelijks opzegbaar
+                    eerste maand €149,50, daarna €299 per maand, excl. btw &middot; websitechat +
+                    WhatsApp &middot; maandelijks opzegbaar
                   </span>
                 </span>
               </label>
-              <label class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3">
-                <input type="radio" name="plan" value="compleet" class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)" />
+              <label
+                class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3"
+              >
+                <input
+                  type="radio"
+                  name="plan"
+                  value="compleet"
+                  class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)"
+                />
                 <span class="text-body text-(--color-chalk)">
                   Compleet
                   <span class="block text-small text-(--color-dim)">
@@ -166,12 +203,16 @@ const inputClass =
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
           </div>
           <p id="lead-error" class="hidden text-small text-(--color-sodium)" role="alert"></p>
-          <button type="submit" id="lead-submit" class="btn btn-primary btn-lg w-full justify-center">
+          <button
+            type="submit"
+            id="lead-submit"
+            class="btn btn-primary btn-lg w-full justify-center"
+          >
             Aanmelden en betalen
           </button>
           <p id="pay-note" class="text-small text-(--color-dim)">
-            U betaalt veilig via Mollie, onder meer met iDEAL. Na de betaling nemen wij contact
-            op voor de setup.
+            U betaalt veilig via Mollie, onder meer met iDEAL. Na de betaling nemen wij contact op
+            voor de setup.
           </p>
           <p class="text-small text-(--color-dim)">
             Wij gebruiken uw gegevens alleen om contact op te nemen. Zie ons
@@ -275,7 +316,7 @@ const inputClass =
     const submitBtn = document.getElementById('lead-submit') as HTMLButtonElement
     const isPaying = () =>
       ['chat', 'compleet'].includes(
-        form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value ?? ''
+        form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value ?? '',
       )
 
     // Both plans buy now (checkout); any non-paying plan value files an interest lead.

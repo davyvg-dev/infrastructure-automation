@@ -25,7 +25,8 @@ one phase, appends to the **Migration log**, and stops at the next checkpoint.
 5. Before stopping: append a Migration-log entry, tick the boxes here + in TODO § H, commit.
 
 Founder-approved decisions (2026-07-23):
-- **Rollout:** build on the branch, deploy to a Cloudflare Pages *preview* alias, keep the
+
+- **Rollout:** build on the branch, deploy to a Cloudflare Pages _preview_ alias, keep the
   apex `klantkraan.nl` on the current design the entire time, one **atomic cutover** at the end.
 - **Scope:** every page (all 47 + the `[stad]/[vak]` template), all three locales. Marketing
   pages get full energy; legal + blog/gidsen get a calm **reading variant** (same palette, no
@@ -83,16 +84,16 @@ a landmine). Introduce the new semantic tokens in `@theme`, migrate each compone
 them during rebuild (so every component gets eyes), and delete the `kraan-*` tokens once
 `grep -r kraan- src` is empty.
 
-| Old token | New token | Value | Role |
-|---|---|---|---|
-| `kraan-cream` | `night` | `#0f1c1e` | page base bg |
-| — | `panel` / `panel-2` | `#16292b` / `#1c3335` | raised surfaces |
-| `kraan-stone-300` | `line` | `#26403f` | borders / dividers |
-| `kraan-ink` | `chalk` | `#f4efe6` | primary text |
-| `kraan-stone-500/700` | `dim` | `#93a6a2` | muted text |
+| Old token               | New token                | Value                 | Role                           |
+| ----------------------- | ------------------------ | --------------------- | ------------------------------ |
+| `kraan-cream`           | `night`                  | `#0f1c1e`             | page base bg                   |
+| —                       | `panel` / `panel-2`      | `#16292b` / `#1c3335` | raised surfaces                |
+| `kraan-stone-300`       | `line`                   | `#26403f`             | borders / dividers             |
+| `kraan-ink`             | `chalk`                  | `#f4efe6`             | primary text                   |
+| `kraan-stone-500/700`   | `dim`                    | `#93a6a2`             | muted text                     |
 | `kraan-blue` (+700/300) | `sodium` / `sodium-soft` | `#ffb84d` / `#ffd089` | the single accent, links, CTAs |
-| `kraan-rust` | `sodium-soft` | `#ffd089` | hover accent |
-| `kraan-leaf` | `confirm` | `#63d3ab` | rationed — "booked" stamp only |
+| `kraan-rust`            | `sodium-soft`            | `#ffd089`             | hover accent                   |
+| `kraan-leaf`            | `confirm`                | `#63d3ab`             | rationed — "booked" stamp only |
 
 Type: `--font-display` Inter Tight → **Bricolage Grotesque**; `--font-sans` Inter → **Hanken
 Grotesk**; `--font-mono` JetBrains Mono → **Space Mono**. Radii align to the concept
@@ -111,6 +112,7 @@ hero). Watch selector specificity on section padding/margins (frontend-design sk
 Ralph gate for every page: **build → `astro check` → eyeball (Playwright screenshot) → commit.**
 
 ### Phase 0 — Foundation (serial, main loop) — no page looks right until this is done
+
 - [x] 0.1 Self-host the three fonts. 18 latin + latin-ext woff2 subsets from Google Fonts CSS2
       (Bricolage 600/700/800, Hanken 400/500/600/700, Space Mono 400/700) in `public/fonts/`,
       `font-display:swap`, unicode-range preserved; `src/styles/fonts.css` + OFL notice. Regen
@@ -129,6 +131,7 @@ Ralph gate for every page: **build → `astro check` → eyeball (Playwright scr
   Safe to clear context. Next session: Phase 1 (home).
 
 ### Phase 1 — Reference page: HOME (serial, main loop) — proves the whole system
+
 - [x] 1.1 Rebuild `index.astro` (NL) to near-parity with the concept, on the foundation.
       frontend-design skill used for the hero fidelity. (commit faf1e29)
 - [x] 1.2 Audit with **web-design-guidelines** skill; fix findings. (commit cd83615)
@@ -141,7 +144,8 @@ Ralph gate for every page: **build → `astro check` → eyeball (Playwright scr
   context. Next session: Phase 2 (page groups) — start with **G1 trade landings**.
 
 ### Phase 2 — Page groups (parallel draft → serial verify)
-Design each page *type* once (NL), audit, commit; then replicate locale twins.
+
+Design each page _type_ once (NL), audit, commit; then replicate locale twins.
 
 - [x] **G1 Trade landings** — DONE 2026-07-23 (commits ccf2ba3 gold ref + 332cacf twins).
       Reskinned the shared `components/dakdekkers/*` set (only `dakdekkers.astro` uses it) +
@@ -176,6 +180,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   **All Phase 2 groups (G1-G4) now DONE.**
 
 ### Phase 3 — Cross-cutting audit + polish (serial) — DONE 2026-07-23
+
 - [x] Migrate the last 3 non-page components (DashboardMock/LeadForm/RingingPhone) + delete the
       11 deprecated `@theme` kraan tokens. `grep -r -- '--color-kraan' src` is now empty (commit
       da182ca). RingingPhone = comment-only (SVG uses currentColor); DashboardMock + LeadForm are
@@ -191,13 +196,14 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
       all three locales, art. 50 present everywhere, €299/€499 price parity, no AI-tells,
       `grep -r -- '--color-kraan' src` empty. Build green (84 files), astro check 0/0.
 - **■ Checkpoint 3 — DONE 2026-07-23.** Audit + polish committed, preview alias redeployed with the
-      full site (`7f8d95f0`). Safe to clear context. Next session: **Phase 4 — cutover** (founder
-      go on the preview → `--branch=production`).
+  full site (`7f8d95f0`). Safe to clear context. Next session: **Phase 4 — cutover** (founder
+  go on the preview → `--branch=production`).
 
 ### Phase 4 — Cutover — DONE 2026-07-23 (SHIPPED)
+
 - [x] Founder reviewed the preview alias + gave go ("deploy the site, make it live").
 - [x] Production deploy — `pnpm dlx wrangler@4 pages deploy ./dist --branch=production
-      --project-name=klantkraan-marketing` → deployment `22c89e15`. Flipped `klantkraan.nl`.
+    --project-name=klantkraan-marketing` → deployment `22c89e15`. Flipped `klantkraan.nl`.
 - [x] Re-verified live: `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
       `/amsterdam/loodgieter/`, `/demo/` all 200 + dark `theme-color #0f1c1e`; home renders the
       dispatch panel + calc teaser + art. 50 with the correct self-hosted fonts (no tofu).
@@ -208,7 +214,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
 ## 5. Skill routing
 
 - **frontend-design** (anthropics) — the creative pass. Used in Phase 1 (hero fidelity) and at
-  the front of each Phase 2 group to *extend* the concept's language to page types it never
+  the front of each Phase 2 group to _extend_ the concept's language to page types it never
   designed (pricing, rekentool, legal, `[stad]/[vak]`). Brief is mostly fixed (design approved),
   so its job is faithful translation + solving the gaps + the Chanel "remove one accessory" pass.
 - **web-design-guidelines** (vercel) — the audit gate. Run per page/group before commit and once
@@ -254,15 +260,12 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
 - **2026-07-23 — Phase 1.1 + 1.2 done (commits faf1e29, cd83615).** NL `index.astro` rebuilt on
   the foundation: live dispatch-log hero (klant → typing → reply → INGEPLAND stamp), ledger strip,
   duty cards, cost receipt, art. 50 transparency panel, final CTA. Signatures in a scoped `<style>`
-  (kk-* classes, `--color-*`/`--font-*` tokens); universal chrome/buttons/eyebrow reused from
-  Phase 0. Copy de-AI'd on the way in (em-dashes → punctuation). Panel is decorative (role=img +
-  summary label); animation binds to `astro:page-load` (view-transition safe) and honours
-  reduced-motion (verified: jumps to resting state). web-design-guidelines audit fixes: scroll-mt
-  on jump-target sections, text-wrap:balance on headings, nbsp on "artikel 50", `color-scheme:dark`
-  on html (global.css), touch-action+tap-highlight on `.btn` (components.css). Build green, astro
-  check 0 errors, eyeballed desktop + 320px + reduced-motion. **Gotchas:** (1) Astro scopes `<style>`
-  by raising specificity via a `[data-astro-cid]` attribute — a scoped `.kk-stamp{display:flex}`
-  beats the UA `[hidden]{display:none}`, so I hide with `.kk-msg[hidden],.kk-stamp[hidden]{display:none}`
+  (kk-_ classes, `--color-_`/`--font-\*`tokens); universal chrome/buttons/eyebrow reused from
+Phase 0. Copy de-AI'd on the way in (em-dashes → punctuation). Panel is decorative (role=img +
+summary label); animation binds to`astro:page-load`(view-transition safe) and honours
+reduced-motion (verified: jumps to resting state). web-design-guidelines audit fixes: scroll-mt
+on jump-target sections, text-wrap:balance on headings, nbsp on "artikel 50",`color-scheme:dark`on html (global.css), touch-action+tap-highlight on`.btn`(components.css). Build green, astro
+check 0 errors, eyeballed desktop + 320px + reduced-motion. **Gotchas:** (1) Astro scopes`<style>`by raising specificity via a`[data-astro-cid]`attribute — a scoped`.kk-stamp{display:flex}`beats the UA`[hidden]{display:none}`, so I hide with `.kk-msg[hidden],.kk-stamp[hidden]{display:none}`
   (higher specificity than the base rule). (2) No-JS state = concept's (typing shown, reply/stamp
   hidden) — acceptable because the panel is decorative. (3) SendUserFile rejects a full-page 320px
   screenshot (668×12838, ~1:19 aspect) with a 400 — send a viewport-height crop instead.
@@ -275,7 +278,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   old design (preview alias only).
 - **2026-07-23 — Phase 1.4 + 1.5 done → Checkpoint 1 (commit 4b9b33f + this).** EN + ES home twins
   built by reskinning the locked NL `index.astro`: same section structure, scoped `<style>` and the
-  `astro:page-load` dispatch script carried **verbatim** (language-neutral kk-* classes + tokens);
+  `astro:page-load` dispatch script carried **verbatim** (language-neutral kk-_ classes + tokens);
   only copy, `<Base>` lang/title/description, and locale hrefs (`/en/demo/`, `/es/demo/`) differ.
   Section ids kept identical to NL (`nachtdienst`/`kosten`/`eerlijk`) — only the hero "how it works"
   link uses `#nachtdienst`, and nothing outside the home references the others, so translating the ids
@@ -283,10 +286,10 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   dispatch panel and transparency block (`digital assistant` / `asistente digital`), no founder name,
   price parity €450 across NL/EN/ES, `article/artículo 50` with nbsp, no decorative em-dashes in copy
   (the 3 em-dashes per file are in HTML comments copied from the NL template, not rendered), no
-  `kraan-*` left in either file. Build green (~1.7s), astro check 0/0. Eyeballed desktop + 320px for
-  both locales via Playwright against the built `dist/` — dispatch animation resolves to the
-  BOOKED/AGENDADA stamp, ES accents render (no tofu), no 320px horizontal overflow, sticky WhatsApp
-  CTA present. **First preview deploy** landed the alias `https://redesign.klantkraan-marketing.pages.dev`
+  `kraan-_`left in either file. Build green (~1.7s), astro check 0/0. Eyeballed desktop + 320px for
+both locales via Playwright against the built`dist/`— dispatch animation resolves to the
+BOOKED/AGENDADA stamp, ES accents render (no tofu), no 320px horizontal overflow, sticky WhatsApp
+CTA present. **First preview deploy** landed the alias`https://redesign.klantkraan-marketing.pages.dev`
   (deployment `a15d0b3d`); all 3 home locales return 200 with the dispatch signature + art. 50 on the
   alias; apex `klantkraan.nl` untouched (still old design). **Gotchas:** (1) wrangler is authenticated
   on this machine via OAuth (`wrangler login`, davyvg98@gmail.com, `pages (write)`) — no CF token in
@@ -332,7 +335,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   light would break the click-through). **Method = G1's exact deterministic transform**
   (`scratchpad/reskin_conversion.py`): compound/structural rules first (buttons->`.btn`
   primitives, full-blue + stone-100 sections->recessed `border-y border-(--color-line)
-  bg-[rgba(0,0,0,0.14)]`, eyebrows, signature panels, form inputs, badges), generic token
+bg-[rgba(0,0,0,0.14)]`, eyebrows, signature panels, form inputs, badges), generic token
   catch-alls last (ink->chalk, stone->dim, blue/rust->sodium, stone-300->line, white->panel).
   Confirmed the 5 page types are structurally analogous to trades; twins share identical
   language-neutral class strings, so one rule table migrated all three locales at once (verified:
@@ -383,7 +386,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   kraan- classes both in static markup AND inside the `<script>` innerHTML template strings
   (calls/bookings/reviews/error rows) — a plain substring replace hits markup + JS alike, so all of
   them migrated in one pass (KPI values -> sodium, cards -> panel/line, review stars -> sodium/amber
-  which actually reads *better* than the old rust, error alert -> sodium-bordered panel). **Design
+  which actually reads _better_ than the old rust, error alert -> sodium-bordered panel). **Design
   note on the dashboard error box:** there is no red/danger colour in the dispatch-dark palette, so
   rust->sodium (per the locked map) turns the alert into a warm amber-bordered panel; `role="alert"`
   carries the semantics, so this is fine and consistent with every other rust->sodium migration.
@@ -419,7 +422,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   run BEFORE the generic pass (they hold kraan tokens the generic map would otherwise rewrite):**
   (1) full-width alt `stone-100` **sections** (gidsen/index card-grid band + gidsen/[slug]
   article-card band) -> the locked recessed pattern `border-y border-(--color-line)
-  bg-[rgba(0,0,0,0.14)]`; small `stone-100` callouts/blockquotes/table-headers -> raised `panel`
+bg-[rgba(0,0,0,0.14)]`; small `stone-100` callouts/blockquotes/table-headers -> raised `panel`
   (context split: sections recess, elements raise). (2) `bg-white`/`bg-cream` card surfaces ->
   `panel`. (3) inline blue/white button anchors (404 x3, gidsen/[slug] x2) -> shared `.btn`
   primitives (`btn-primary`/`btn-ghost`, +`btn-lg` on the two section CTAs) — this is what keeps
@@ -427,13 +430,13 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   while keeping text-white would have failed contrast). **Reading-variant restraint (deliberate):**
   the dim section kickers ("JURIDISCH", "FOUT 404", blog/gidsen meta) were left as muted micro
   labels and NOT upgraded to sodium `.eyebrow`s — the runbook explicitly wants legal/blog/gidsen
-  *calm* vs the marketing pages' full energy. Copy untouched (class-only). `.prose-legal` turned
+  _calm_ vs the marketing pages' full energy. Copy untouched (class-only). `.prose-legal` turned
   out to be a marker class with **no CSS rule** (all legal styling is inline Tailwind utilities on
   each element), so nothing hidden there; `.prose-blog` DOES have a global `<style>` block, migrated
   by the same substring pass. Invariants: 0 `kraan-`/`bg-white`/`text-white` in all 11 files; the
   `Klantkraan-dienst`/`-receptionist` brand copy preserved (filter by `--color-kraan`, not bare
   `kraan-`); no art.50 chat surface on any of these page types (ai-disclosure is the legal doc
-  *about* art.50 — content untouched); €299/€499 parity in blog/[slug]'s pricing table (copy
+  _about_ art.50 — content untouched); €299/€499 parity in blog/[slug]'s pricing table (copy
   untouched); no founder name (footer "De oprichter"). Build green (84 files, ~1.8s), astro check
   0/0. Eyeballed all 6 page types on the built `dist/`: 404 (buttons night-on-sodium + ghost),
   blog/index + gidsen/index (panel cards; gidsen on the recessed band), blog/[slug] (wide 4-col
@@ -482,20 +485,20 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   typographic guideline item. **Runtime verification (Playwright):** reduced-motion → dispatch panel
   shows the resting `INGEPLAND` stamp (not mid-typing); keyboard → 3×Tab lands on "Voor wie?" with a
   solid `rgb(255,184,77)` sodium `:focus-visible` outline; `/demo` → 1 live-chat iframe + open button
-  + 3× art. 50 disclosure; view-transition continuity → `html` bg = `rgb(15,28,30)` night on home /
-  prijzen / dpa / loodgieters (no white flash possible). Invariants: art. 50 on demo + home all
-  locales, €299/€499 parity NL/EN/ES, `--color-kraan` 0, build green (84 files), astro check 0/0.
-  **Preview alias REDEPLOYED with the full migrated site** — deployment `7f8d95f0`, alias
-  `https://redesign.klantkraan-marketing.pages.dev`; curl-verified 200 + dark `theme-color #0f1c1e`
-  on `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
-  `/amsterdam/loodgieter/` (all page types now dark; apex `klantkraan.nl` still the old design).
-  **Gotchas:** (1) `git add -A` swept in the untracked `.claude/skills/` + `skills-lock.json` from
-  session start — unstage those; the redesign commits touch only `apps/marketing-site/src`. (2) the
-  `<button aria-label>` grep returned 0 because the label sits on the line AFTER `<button` — verify
-  multi-line attributes by reading, not a single-line grep. **NEXT = Phase 4 cutover:** founder
-  reviews the preview alias (now the complete redesign, not home-only), then the single production
-  deploy `pnpm dlx wrangler@4 pages deploy ./dist --branch=production --project-name=klantkraan-marketing`,
-  then re-verify live + update memory + close TODO § H.
+  - 3× art. 50 disclosure; view-transition continuity → `html` bg = `rgb(15,28,30)` night on home /
+    prijzen / dpa / loodgieters (no white flash possible). Invariants: art. 50 on demo + home all
+    locales, €299/€499 parity NL/EN/ES, `--color-kraan` 0, build green (84 files), astro check 0/0.
+    **Preview alias REDEPLOYED with the full migrated site** — deployment `7f8d95f0`, alias
+    `https://redesign.klantkraan-marketing.pages.dev`; curl-verified 200 + dark `theme-color #0f1c1e`
+    on `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
+    `/amsterdam/loodgieter/` (all page types now dark; apex `klantkraan.nl` still the old design).
+    **Gotchas:** (1) `git add -A` swept in the untracked `.claude/skills/` + `skills-lock.json` from
+    session start — unstage those; the redesign commits touch only `apps/marketing-site/src`. (2) the
+    `<button aria-label>` grep returned 0 because the label sits on the line AFTER `<button` — verify
+    multi-line attributes by reading, not a single-line grep. **NEXT = Phase 4 cutover:** founder
+    reviews the preview alias (now the complete redesign, not home-only), then the single production
+    deploy `pnpm dlx wrangler@4 pages deploy ./dist --branch=production --project-name=klantkraan-marketing`,
+    then re-verify live + update memory + close TODO § H.
 - **2026-07-23 — Founder preview feedback folded in (commit d119833).** After reviewing the full
   preview alias, the founder (1) **kept the sodium-amber accent** — I rendered 5 real-hero variants
   (amber/honey/champagne/coral/cyan) via a one-token swap (trivial now that everything rides
@@ -507,7 +510,7 @@ Design each page *type* once (NL), audit, commit; then replicate locale twins.
   `.kk-receipt-cap`/`.line.result`/`.kk-receipt-cta`. Build green, eyeballed all 3 locales.
 - **2026-07-23 — Phase 4 cutover — SHIPPED.** Founder gave the go ("deploy the site, make it live").
   Clean-tree check, fresh rebuild from HEAD (`d119833`), then `pnpm dlx wrangler@4 pages deploy
-  ./dist --branch=production --project-name=klantkraan-marketing` → deployment `22c89e15`. This
+./dist --branch=production --project-name=klantkraan-marketing` → deployment `22c89e15`. This
   flipped `klantkraan.nl` from the old light design to the new dispatch-dark design. **Verified
   live:** `/`, `/prijzen/`, `/loodgieters/`, `/legal/dpa/`, `/en/`, `/es/prijzen/`,
   `/amsterdam/loodgieter/`, `/demo/` all return 200 with dark `theme-color #0f1c1e` (old was

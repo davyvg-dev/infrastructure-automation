@@ -18,7 +18,7 @@ bent").
 
 **Resolution: honor the promised terms for THIS prospect** (word > €150), put them in
 writing in the follow-up so there is no drift, and never improvise pricing again. The
-belsheet says *niets anders aanbieden* — that line exists for exactly this moment.
+belsheet says _niets anders aanbieden_ — that line exists for exactly this moment.
 
 ## 2. Argued with the discovery answer instead of digging (0:55)
 

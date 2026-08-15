@@ -9,6 +9,7 @@ character_count: 299
 # Welk percentage van je calls pak je niet op (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 2, post 7) zegt: vraag "Welk percentage van je calls pak je niet op? Eerlijk." Beste vorm op LinkedIn: native poll. Reach is hoger dan een tekst-vraag omdat LI het algoritme-voorrang geeft.
 - LI poll-instellingen: 4 opties (max), looptijd 1 week.
 - Hook: één regel boven de poll. Geen aanloop, direct de vraag.
@@ -29,14 +30,14 @@ Geen oordeel. Geen verkoop. Gewoon benieuwd waar de NL-markt zit.
 
 ## LinkedIn poll-instellingen
 
-| Veld | Waarde |
-|---|---|
+| Veld          | Waarde                           |
+| ------------- | -------------------------------- |
 | Vraag in poll | "Hoeveel calls mis je per week?" |
-| Optie 1 | Minder dan 10% |
-| Optie 2 | 10–25% |
-| Optie 3 | 25–40% |
-| Optie 4 | Meer dan 40% |
-| Looptijd | 1 week |
+| Optie 1       | Minder dan 10%                   |
+| Optie 2       | 10–25%                           |
+| Optie 3       | 25–40%                           |
+| Optie 4       | Meer dan 40%                     |
+| Looptijd      | 1 week                           |
 
 ## Eerste comment (kopieer dit als eerste reactie op je eigen post)
 

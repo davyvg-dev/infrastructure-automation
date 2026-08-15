@@ -69,29 +69,29 @@ Retention: contract duration + 6 months. Automatic deletion job in `infra/n8n/re
 
 ## Required placeholders by tier
 
-| Placeholder | Lite | Pro | Max |
-|---|---|---|---|
-| `{{client_name}}`                          | required | required | required |
-| `{{client_id}}`                            | required | required | required |
-| `{{client_kvk}}`                           | required | required | required |
-| `{{client_vak}}`                           | required | required | required |
-| `{{client_regio}}`                         | required | required | required |
-| `{{owner_naam}}`                           | required | required | required |
-| `{{owner_email}}`                          | required | required | required |
-| `{{client_postcode_lijst}}`                | n/a      | required | required |
-| `{{escalation_number}}`                    | n/a      | required | required |
-| `{{agent_naam}}`                           | n/a      | required | required |
-| `{{calcom_eventtype_url}}`                 | n/a      | required | required |
-| `{{n8n_webhook_url}}`                      | n/a      | required | required |
-| `{{client_voorrijkosten}}` (loodgieter)    | n/a      | optional (default applies) | required |
-| `{{client_uurtarief}}` (loodgieter)        | n/a      | optional (default applies) | required |
-| `{{client_spoedtoeslag}}` (loodgieter)     | n/a      | optional (default applies) | required |
-| `{{client_materiaalopslag}}` (loodgieter)  | n/a      | optional (default applies) | required |
-| `{{client_inspectie_tarief}}` (dakdekker)  | n/a      | optional (default applies) | required |
-| `{{client_noodreparatie_toeslag}}` (dakdekker) | n/a  | optional (default applies) | required |
-| `{{client_dakpannenslag_prijs_indicatief}}` (dakdekker) | n/a | optional (default applies) | required |
-| `{{may_quote_prices}}`                     | n/a      | required (default false) | required |
-| `{{faq_overlay}}`                          | n/a      | optional | required (FAQ-blok altijd ingevuld) |
+| Placeholder                                             | Lite     | Pro                        | Max                                 |
+| ------------------------------------------------------- | -------- | -------------------------- | ----------------------------------- |
+| `{{client_name}}`                                       | required | required                   | required                            |
+| `{{client_id}}`                                         | required | required                   | required                            |
+| `{{client_kvk}}`                                        | required | required                   | required                            |
+| `{{client_vak}}`                                        | required | required                   | required                            |
+| `{{client_regio}}`                                      | required | required                   | required                            |
+| `{{owner_naam}}`                                        | required | required                   | required                            |
+| `{{owner_email}}`                                       | required | required                   | required                            |
+| `{{client_postcode_lijst}}`                             | n/a      | required                   | required                            |
+| `{{escalation_number}}`                                 | n/a      | required                   | required                            |
+| `{{agent_naam}}`                                        | n/a      | required                   | required                            |
+| `{{calcom_eventtype_url}}`                              | n/a      | required                   | required                            |
+| `{{n8n_webhook_url}}`                                   | n/a      | required                   | required                            |
+| `{{client_voorrijkosten}}` (loodgieter)                 | n/a      | optional (default applies) | required                            |
+| `{{client_uurtarief}}` (loodgieter)                     | n/a      | optional (default applies) | required                            |
+| `{{client_spoedtoeslag}}` (loodgieter)                  | n/a      | optional (default applies) | required                            |
+| `{{client_materiaalopslag}}` (loodgieter)               | n/a      | optional (default applies) | required                            |
+| `{{client_inspectie_tarief}}` (dakdekker)               | n/a      | optional (default applies) | required                            |
+| `{{client_noodreparatie_toeslag}}` (dakdekker)          | n/a      | optional (default applies) | required                            |
+| `{{client_dakpannenslag_prijs_indicatief}}` (dakdekker) | n/a      | optional (default applies) | required                            |
+| `{{may_quote_prices}}`                                  | n/a      | required (default false)   | required                            |
+| `{{faq_overlay}}`                                       | n/a      | optional                   | required (FAQ-blok altijd ingevuld) |
 
 (Lite = SMS-only tier, no voice agent — prompts only run for Pro and Max. Listed here so the Lite-to-Pro upgrade flow knows which fields to backfill from Attio.)
 

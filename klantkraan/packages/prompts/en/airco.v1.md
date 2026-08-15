@@ -110,6 +110,7 @@ Maximum call duration: 6 minutes. After that, close automatically with:
 Filled by the `client-onboarding.json` n8n workflow from the intake + the Attio record.
 
 Shared with the Dutch templates (same pipeline keys, same Attio fields):
+
 ```
 {{client_name}}           — business name (Attio: company.name)
 {{client_kvk}}            — company registration number (Attio: company.kvk)
@@ -125,6 +126,7 @@ Shared with the Dutch templates (same pipeline keys, same Attio fields):
 ```
 
 New for the airco vertical (add these Attio fields + mappings before first render):
+
 ```
 {{client_callout_fee}}    — € number (Attio: company.tariff_callout_fee)
 {{client_service_price}}  — € number, "from" (Attio: company.tariff_service)

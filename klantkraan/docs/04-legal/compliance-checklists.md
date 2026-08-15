@@ -77,13 +77,13 @@
 
 ## Periodic compliance routines
 
-| Frequency | Task |
-|---|---|
-| **Daily** | Monitor Sentry + Healthchecks.io alerts |
-| **Weekly** | Audit one random call for AI-Act disclosure playback |
-| **Monthly** | Audit 10 random calls; refresh sub-processor list if needed; review insurance coverage vs. exposure |
-| **Quarterly** | ICP-opgave to Belastingdienst; review RoPA; spot-check DPA-flow-down with new sub-processors |
-| **Annually** | Re-read AI Act + AVG guidance; renew DPA versions; insurance renewal; pen test (year 2+) |
+| Frequency     | Task                                                                                                |
+| ------------- | --------------------------------------------------------------------------------------------------- |
+| **Daily**     | Monitor Sentry + Healthchecks.io alerts                                                             |
+| **Weekly**    | Audit one random call for AI-Act disclosure playback                                                |
+| **Monthly**   | Audit 10 random calls; refresh sub-processor list if needed; review insurance coverage vs. exposure |
+| **Quarterly** | ICP-opgave to Belastingdienst; review RoPA; spot-check DPA-flow-down with new sub-processors        |
+| **Annually**  | Re-read AI Act + AVG guidance; renew DPA versions; insurance renewal; pen test (year 2+)            |
 
 ## Where things live
 

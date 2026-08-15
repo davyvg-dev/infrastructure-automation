@@ -1,11 +1,11 @@
-import { Hono } from "hono";
-import { z } from "zod";
-import type { Bindings } from "../env.js";
-import { addActivity, findByEmail } from "../lib/attio.js";
-import { getSql } from "../lib/neon.js";
-import { verifyHmac } from "../lib/signing.js";
+import { Hono } from 'hono'
+import { z } from 'zod'
+import type { Bindings } from '../env.js'
+import { addActivity, findByEmail } from '../lib/attio.js'
+import { getSql } from '../lib/neon.js'
+import { verifyHmac } from '../lib/signing.js'
 
-export const webhookSynthflowRouter = new Hono<{ Bindings: Bindings }>();
+export const webhookSynthflowRouter = new Hono<{ Bindings: Bindings }>()
 
 /**
  * Synthflow `call-end` webhook.
@@ -28,58 +28,56 @@ const CallEndSchema = z.object({
   recording_url: z.string().url().optional(),
   model_version: z.string(),
   voice_id: z.string(),
-  prompt_sha256: z
-    .string()
-    .regex(/^[a-f0-9]{64}$/, "prompt_sha256 must be SHA-256 hex"),
+  prompt_sha256: z.string().regex(/^[a-f0-9]{64}$/, 'prompt_sha256 must be SHA-256 hex'),
   ai_disclosure_played: z.boolean(),
   client_id: z.string().min(1),
   client_email: z.string().email().optional(),
-});
+})
 
-webhookSynthflowRouter.post("/webhook/synthflow/call-end", async (c) => {
-  const body = await c.req.text();
+webhookSynthflowRouter.post('/webhook/synthflow/call-end', async (c) => {
+  const body = await c.req.text()
   const ok = await verifyHmac(
     c.env.SYNTHFLOW_WEBHOOK_SECRET,
     body,
-    c.req.header("x-synthflow-signature"),
-  );
-  if (!ok) return c.json({ error: "invalid_signature" }, 401);
+    c.req.header('x-synthflow-signature'),
+  )
+  if (!ok) return c.json({ error: 'invalid_signature' }, 401)
 
-  let raw: unknown;
+  let raw: unknown
   try {
-    raw = JSON.parse(body);
+    raw = JSON.parse(body)
   } catch {
-    return c.json({ error: "invalid_json" }, 400);
+    return c.json({ error: 'invalid_json' }, 400)
   }
-  const parsed = CallEndSchema.safeParse(raw);
+  const parsed = CallEndSchema.safeParse(raw)
   if (!parsed.success) {
-    return c.json({ error: "invalid_payload", details: parsed.error.flatten() }, 400);
+    return c.json({ error: 'invalid_payload', details: parsed.error.flatten() }, 400)
   }
-  const data = parsed.data;
+  const data = parsed.data
 
   // --- Article 50 hard gate ------------------------------------------------
   if (!data.ai_disclosure_played) {
     return c.json(
       {
-        error: "ai_disclosure_required",
-        reference: "klantkraan/docs/04-legal/ai-act-disclosure.md",
+        error: 'ai_disclosure_required',
+        reference: 'klantkraan/docs/04-legal/ai-act-disclosure.md',
         call_id: data.call_id,
       },
       422,
-    );
+    )
   }
 
   // --- Persist to Neon (calls table). stub: real query in packages/db ------
-  const _sql = getSql(c.env.NEON_DATABASE_URL);
+  const _sql = getSql(c.env.NEON_DATABASE_URL)
   // await _sql`INSERT INTO calls (...) VALUES (...)`;
 
   // --- Attio activity ------------------------------------------------------
   if (data.client_email) {
-    const person = await findByEmail(c.env.ATTIO_API_KEY, data.client_email);
+    const person = await findByEmail(c.env.ATTIO_API_KEY, data.client_email)
     if (person) {
       await addActivity(c.env.ATTIO_API_KEY, {
         recordId: person.id,
-        type: "call",
+        type: 'call',
         content: data.summary,
         metadata: {
           call_id: data.call_id,
@@ -89,9 +87,9 @@ webhookSynthflowRouter.post("/webhook/synthflow/call-end", async (c) => {
           voice_id: data.voice_id,
           prompt_sha256: data.prompt_sha256,
         },
-      });
+      })
     }
   }
 
-  return c.json({ ok: true, call_id: data.call_id });
-});
+  return c.json({ ok: true, call_id: data.call_id })
+})

@@ -5,7 +5,7 @@ caller: +31615851987 -> +3197006530002 | 107s | ended: Call ended by remote part
 verdict: failure | LLM: glm-45-air-fp8 (temp 0.4)
 
 First live test call after the address idiot-proofing patch. What worked:
-CLI passthrough (real 06 in system__caller_id), spelling-alphabet
+CLI passthrough (real 06 in system\_\_caller_id), spelling-alphabet
 normalization ("Tinis Anton" -> 3035TA), postcode/huisnummer mismatch
 caught and queried back. What broke: after the 4th lookup_address call
 the LLM emitted pure garbage tokens (below, verbatim). Tool responses
@@ -50,19 +50,19 @@ Wat is uw postcode en huisnummer?
 **user**: 3000, Dordrecht, Kieners Anton, 298.
 
 > tool: lookup_address({"q": "Kieners Anton 298 Dordrecht"})
-**agent**: Ik heb een paar mogelijke adressen gevonden in Dordrecht met huisnummer 298. Kunt u mij de juiste...
+> **agent**: Ik heb een paar mogelijke adressen gevonden in Dordrecht met huisnummer 298. Kunt u mij de juiste...
 
 **user**: Nederstokkum.
 
 > tool: lookup_address({"q": "Nederstokkum 298 Dordrecht"})
-**user**: Derks, liefst vijf, en Derks, achttien, S. Anton, het huisnummer 298.
+> **user**: Derks, liefst vijf, en Derks, achttien, S. Anton, het huisnummer 298.
 
 **agent**: Ik hoor het niet helemaal goed. Kunt u de straatnaam nog eens rustig spellen, of weet u misschien de postcode?
 
 **user**: 3035 Tinis Anton, huisnummer 298.
 
 > tool: lookup_address({"q": "3035TA 298"})
-**agent**: Ik vind bij die postcode alleen Bergstraat in Rotterdam, met huisnummers vijf A, B en C. U gaf huisnummer...
+> **agent**: Ik vind bij die postcode alleen Bergstraat in Rotterdam, met huisnummers vijf A, B en C. U gaf huisnummer...
 
 **user**: Ik sprak mis.
 
@@ -71,71 +71,70 @@ Wat is uw postcode en huisnummer?
 **user**: Laan der Feo's 298 in Almere.
 
 > tool: lookup_address({"q": "Laan der Feo's 298 Almere"})
-**agent**: 4
-  sp2 22ER:: person 1  people\n People", people1 people people sp person
-0 sp 
- 
+> **agent**: 4
+> sp2 22ER:: person 1 people\n People", people1 people people sp person
+> 0 sp
+
 2 person::\n
 |,4.-people person sp2 peopleERER people#, r
- X  people)\", people",e sp
+X people)\", people",e sp
 . 9
- people ", ER\n , r1 ER peopleER people   sp 0 sp2
-2 people  peopleER people
-3 people  people
- and00 3 people people", r) people  people-0 \"
- people " ER r people::2
- people people3  people::::  (  people people::2 peoplePeople (
+people ", ER\n , r1 ER peopleER people sp 0 sp2
+2 people peopleER people
+3 people people
+and00 3 people people", r) people people-0 \"
+people " ER r people::2
+people people3 people:::: ( people people::2 peoplePeople (
 
- people " ( people
- 2 1, people  people12  people0 people people person people- \"-people people
-, ( people ("  sp2
- ::
-
+people " ( people
+2 1, people people12 people0 people people person people- \"-people people
+, ( people (" sp2
+::
 
 ::[ peoplePeople::::ER person people
 
- people1",2ER. ( person (people ( \ people people "- (9 0 people people
-1 sp1ex-- 
- people
- ::3
+people1",2ER. ( person (people ( \ people people "- (9 0 people people
+1 sp1ex--
+people
+::3
 ![ people people.():: People " \"::person "::::()::
-people people people " 
-  people people2/2  person sp  10ER::29 ( ER1 spER
- people（ people11 people0 people people3  people", people
+people people people "
+people people2/2 person sp 10ER::29 ( ER1 spER
+people（ people11 people0 people people3 people", people
 ,6 0
- \n- people
+\n- people
 1
 2 - - person ::4|1Person
- people: sp1, person people</ people3 sp21
-2 " people peoplepeople sp people2- people, (. sp  peoplepeople2 sp 9: :: ::  people::  people
+people: sp1, person people</ people3 sp21
+2 " people peoplepeople sp people2- people, (. sp peoplepeople2 sp 9: :: :: people:: people
 
- :: 
- people r| people25 people 
+::
+people r| people25 people
 R people r2 1 \"os \ r\
- 
- people person "-:: people (
+
+people person "-:: people (
 l people\n \n0
-peoplepeople people #  \"
-  " sp people person People sp1 sppeople "
-(::  "1 ::::::::()people people::::\n people3
- {:: people people:: - people
-   9::  sp  people1 | 2 ( -::23::2
-  [7 0-
-2  1 sp\n spperson
-&2  ( (::::4A People :: ::|::, People:: people -:: people
+peoplepeople people # \"
+" sp people person People sp1 sppeople "
+(:: "1 ::::::::()people people::::\n people3
+{:: people people:: - people
+9:: sp people1 | 2 ( -::23::2
+[7 0-
+2 1 sp\n spperson
+&2 ( (::::4A People :: ::|::, People:: people -:: people
 | sp people
 .( person5:: people sp 1-people
- sp ',"
- r3a2:: people::
- people:: 
+sp ',"
+r3a2:: people::
+people::
 
 \n people people
- people \ \-- sp people
- 
+people \ \-- sp people
+
 --0ER- "
 
- person:: people people
- people sp- People
+person:: people people
+people sp- People
 2...
 
 **user**: Ik ben net gebeld.

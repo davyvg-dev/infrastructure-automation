@@ -4,12 +4,13 @@ publish_week: 4
 post_type: build_in_public
 status: holdback
 character_count: 1295
-holdback_reason: "Build-in-public reflection — write after month 1 actually lived, not in advance."
+holdback_reason: 'Build-in-public reflection — write after month 1 actually lived, not in advance.'
 ---
 
 # Wat ik leerde van maand 1 — build in public (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - HOLDBACK. Build-in-public posts werken alléén als ze écht achteraf geschreven zijn. Vooraf invullen wordt fake en LI-volgers ruiken dat. Wacht tot einde maand 1 (eerste pilot live + 30 dagen verstreken).
 - Hook test: persoonlijk, niet bedrijfs-eerste. "Wat ik leerde" — ik, niet "wij hebben geleerd".
 - Cadans: 5 lessons of minder. Mix tactisch (technical/sales) met persoonlijk (energie, twijfel, beslissing).

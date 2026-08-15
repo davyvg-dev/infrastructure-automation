@@ -39,15 +39,27 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "caller_name":   { "type": "string",  "description": "Voor- en achternaam van de beller." },
-          "caller_phone":  { "type": "string",  "description": "Telefoonnummer in E.164 (+316...)." },
-          "address":       { "type": "string",  "description": "Adres + postcode + huisnummer (volledig — dakdekker moet locatie kunnen googlen voor satellietbeeld)." },
-          "roof_type":     { "type": "string",  "enum": ["plat", "hellend", "pannen", "leien", "EPDM", "bitumen", "onbekend"] },
-          "job_summary":   { "type": "string",  "description": "Korte omschrijving, max 200 tekens." },
-          "intent":        { "type": "string",  "enum": ["NIEUW_WERK", "BESTAANDE_KLANT", "LEVERANCIER"] },
-          "urgency":       { "type": "string",  "enum": ["LOW", "MED", "HIGH"] },
-          "preferred_window": { "type": "string", "description": "Bijv. 'binnen 4 uur', 'morgenochtend', 'deze week'." },
-          "insurance_claim": { "type": "boolean", "description": "Geeft beller aan dat er een verzekeringskwestie speelt?" }
+          "caller_name": { "type": "string", "description": "Voor- en achternaam van de beller." },
+          "caller_phone": { "type": "string", "description": "Telefoonnummer in E.164 (+316...)." },
+          "address": {
+            "type": "string",
+            "description": "Adres + postcode + huisnummer (volledig — dakdekker moet locatie kunnen googlen voor satellietbeeld)."
+          },
+          "roof_type": {
+            "type": "string",
+            "enum": ["plat", "hellend", "pannen", "leien", "EPDM", "bitumen", "onbekend"]
+          },
+          "job_summary": { "type": "string", "description": "Korte omschrijving, max 200 tekens." },
+          "intent": { "type": "string", "enum": ["NIEUW_WERK", "BESTAANDE_KLANT", "LEVERANCIER"] },
+          "urgency": { "type": "string", "enum": ["LOW", "MED", "HIGH"] },
+          "preferred_window": {
+            "type": "string",
+            "description": "Bijv. 'binnen 4 uur', 'morgenochtend', 'deze week'."
+          },
+          "insurance_claim": {
+            "type": "boolean",
+            "description": "Geeft beller aan dat er een verzekeringskwestie speelt?"
+          }
         },
         "required": ["caller_name", "caller_phone", "intent", "urgency"]
       }
@@ -58,11 +70,24 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "transfer_to":   { "type": "string", "description": "Doorverbind-nummer ({{escalation_number}})." },
-          "spoed_type":    { "type": "string", "enum": ["STORM_SCHADE", "LEK_TIJDENS_REGEN", "LOSSE_PANNEN_STORM", "BRAND_BLIKSEM", "INSTORTINGSGEVAAR", "OVERIG_SPOED"] },
-          "caller_phone":  { "type": "string" },
-          "address":       { "type": "string" },
-          "summary":       { "type": "string", "description": "Eén zin samenvatting voor de eigenaar." }
+          "transfer_to": {
+            "type": "string",
+            "description": "Doorverbind-nummer ({{escalation_number}})."
+          },
+          "spoed_type": {
+            "type": "string",
+            "enum": [
+              "STORM_SCHADE",
+              "LEK_TIJDENS_REGEN",
+              "LOSSE_PANNEN_STORM",
+              "BRAND_BLIKSEM",
+              "INSTORTINGSGEVAAR",
+              "OVERIG_SPOED"
+            ]
+          },
+          "caller_phone": { "type": "string" },
+          "address": { "type": "string" },
+          "summary": { "type": "string", "description": "Eén zin samenvatting voor de eigenaar." }
         },
         "required": ["transfer_to", "spoed_type", "caller_phone"]
       }
@@ -73,7 +98,16 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "tariff_kind": { "type": "string", "enum": ["voorrijkosten", "inspectie_tarief", "noodreparatie_toeslag", "dakpannenslag_prijs_indicatief", "alles"] }
+          "tariff_kind": {
+            "type": "string",
+            "enum": [
+              "voorrijkosten",
+              "inspectie_tarief",
+              "noodreparatie_toeslag",
+              "dakpannenslag_prijs_indicatief",
+              "alles"
+            ]
+          }
         },
         "required": ["tariff_kind"]
       }

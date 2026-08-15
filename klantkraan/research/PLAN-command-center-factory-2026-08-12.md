@@ -12,7 +12,7 @@ Date: 2026-08-12. Synthesis of four research tracks (full reports in this folder
 
 ## Operating frame (from research + Nate Herk service ladder)
 
-- Three buckets: every build maps to *get more customers / make each customer worth more / cut costs*. Four blanks before any client build: bucket, KPI, baseline, 60-day target.
+- Three buckets: every build maps to _get more customers / make each customer worth more / cut costs_. Four blanks before any client build: bucket, KPI, baseline, 60-day target.
 - Service ladder fit: website = rung-2 project (€1.000), receptionist = rung-3 retainer (€299–499/mo). The site's tel:/wa.me buttons feed the receptionist → churn insurance both ways.
 - Honest automation ceiling: **~15–30 min/day founder approvals**. Nobody credible runs marketing unsupervised. Agents produce; founder curates.
 - Constraints unchanged: no auto-replies/DMs, no cold-call automation, BV-only cold email (calculator opt-in legally opens eenmanszaak/VOF), no avatars, Dutch customer-facing.
@@ -22,6 +22,7 @@ Date: 2026-08-12. Synthesis of four research tracks (full reports in this folder
 Principle: ~300-line dispatcher + one HTML generator. Zero new services, zero new databases, no n8n/Temporal. Full design in `command-center-audit-2026-08-12.md` §C.
 
 Steps (each independently shippable, Ralph loop):
+
 1. `scripts/kk` dispatcher wrapping verbs that already work: `board`, `deal`, `outreach`, `evals`, `billing`, `health`, `deploy`, `logs`. Kills the cwd problem; enforces 6/day outreach cap in code.
 2. Ledger fixes + new readers: `created_at` in growth-engine `generate.py`; tag dry-run records (`dry_run: true`, stop fake `status="posted"`); durable failure records for Buffer/TikTok pushes; fix `sequence.py` cwd-relative path. Then `kk content` (~80-line queue.json reader) + `kk leads` (~60-line merger over the 4 lead stores).
 3. Alerting: `kk-alert@.service` template unit → `app.notify.owner` Telegram, added as `OnFailure=` to all systemd units. Closes every silent-failure hole.

@@ -30,8 +30,7 @@ const cornerstone: Record<string, string> = {
 const cornerstonePath = cornerstone[gids.data.vertical] ?? '/voor-wie/'
 
 // Only append the brand suffix when the title stays within ~65 chars.
-const pageTitle =
-  gids.data.title.length <= 52 ? `${gids.data.title} | Klantkraan` : gids.data.title
+const pageTitle = gids.data.title.length <= 52 ? `${gids.data.title} | Klantkraan` : gids.data.title
 ---
 
 <Base title={pageTitle} description={gids.data.description} centered={false}>
@@ -44,9 +43,7 @@ const pageTitle =
         <span aria-hidden="true"> › </span>
         <span>{nicheLabelPlural(gids.data.vertical)}</span>
       </nav>
-      <p
-        class="mt-4 font-mono text-micro uppercase tracking-widest text-(--color-dim)"
-      >
+      <p class="mt-4 font-mono text-micro uppercase tracking-widest text-(--color-dim)">
         Gids · {nicheLabelPlural(gids.data.vertical)} · {gids.data.readingTime} min lezen
       </p>
       <h1 class="mt-3 font-display text-hero text-(--color-chalk)">{gids.data.title}</h1>
@@ -67,11 +64,7 @@ const pageTitle =
 
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-3xl px-6">
-      <p
-        class="font-mono text-micro uppercase tracking-widest text-(--color-dim)"
-      >
-        Verder lezen
-      </p>
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-dim)">Verder lezen</p>
       <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
         Klantkraan voor {nicheLabelPlural(gids.data.vertical).toLowerCase()}
       </h2>
@@ -80,18 +73,8 @@ const pageTitle =
         WhatsApp die vragen beantwoordt, afspraken inplant en leads vangt, in één abonnement.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href={cornerstonePath}
-          class="btn btn-primary btn-lg"
-        >
-          Bekijk de oplossing
-        </a>
-        <a
-          href="/demo/"
-          class="btn btn-ghost btn-lg"
-        >
-          Probeer de demo
-        </a>
+        <a href={cornerstonePath} class="btn btn-primary btn-lg"> Bekijk de oplossing </a>
+        <a href="/demo/" class="btn btn-ghost btn-lg"> Probeer de demo </a>
       </div>
     </div>
   </section>

@@ -11,12 +11,12 @@
 
 ## Structure (20 min)
 
-| Phase | Time | Purpose |
-|---|---|---|
-| Rapport | 0:00 – 2:00 | Set context, set length |
-| Qualification | 2:00 – 10:00 | Discover pain, qualify, build trust |
-| Demo | 10:00 – 16:00 | Live web-chat receptionist (websitechat + WhatsApp) + dashboard |
-| Close | 16:00 – 20:00 | Tier rec, objection handling, propose start date |
+| Phase         | Time          | Purpose                                                         |
+| ------------- | ------------- | --------------------------------------------------------------- |
+| Rapport       | 0:00 – 2:00   | Set context, set length                                         |
+| Qualification | 2:00 – 10:00  | Discover pain, qualify, build trust                             |
+| Demo          | 10:00 – 16:00 | Live web-chat receptionist (websitechat + WhatsApp) + dashboard |
+| Close         | 16:00 – 20:00 | Tier rec, objection handling, propose start date                |
 
 ## Phase 1: Rapport (2 min)
 
@@ -43,7 +43,7 @@ Ask these in order. Type answers into Attio open in another window.
    → loodgieter: €300–1,200; dakdekker: €4,500–30,000. Anchors ROI.
 
 5. **"Wat is je grootste irritatie aan hoe het nu loopt?"**
-   → listen for the *emotional* answer. This is the language for the close.
+   → listen for the _emotional_ answer. This is the language for the close.
 
 6. **"Heb je eerder iets met software of AI geprobeerd? Wat ging er mis?"**
    → reveals trust hurdles + previous bad-vendor objections. Map to objection-handling table.
@@ -52,7 +52,7 @@ Ask these in order. Type answers into Attio open in another window.
    → if alleen → close today. If partner/accountant → schedule follow-up.
 
 8. **"Als dit werkt, wat mag het per maand kosten — ruwe orde grootte?"**
-   → never reveal price first. €200+ → Chat (€299) fits. If they push on missed *calls* specifically → note as Compleet (voice) candidate for when the AI-telefonist is live; sell Chat today.
+   → never reveal price first. €200+ → Chat (€299) fits. If they push on missed _calls_ specifically → note as Compleet (voice) candidate for when the AI-telefonist is live; sell Chat today.
 
 ## Phase 3: Demo (6 min)
 
@@ -65,6 +65,7 @@ Screenshare the Klantkraan demo receptionist (web chat, `klantkraan-demo` config
 ### Dashboard screenshare (3 min)
 
 Share screen. Show a test client's `/r/{slug}` Cloudflare Pages dashboard:
+
 - Tile 1: AI-opgenomen calls deze week
 - Tile 2: Gemiste klanten teruggewonnen
 - Tile 3: Nieuwe Google reviews
@@ -100,7 +101,7 @@ After handling, re-close with same A/B structure.
 
 > "Ik begrijp het. Wat zou je nu nog twijfel geven?"
 
-Listen. Address the *real* objection (usually #1 or #2 in the table). Re-close.
+Listen. Address the _real_ objection (usually #1 or #2 in the table). Re-close.
 
 ### If hard "no"
 
@@ -118,25 +119,25 @@ Note in Attio with reason code. Drop into newsletter list with consent.
 
 ## Discovery → close benchmarks
 
-| Stage | Target | If below |
-|---|---|---|
-| Show rate | 80% | Improve reminder cadence; WhatsApp T-2h is non-optional. |
-| Discovery → Proposal | 80% | Re-check qualification — are unfit leads making it through? |
-| Proposal → Won | 35% | Review the close language; review pricing presentation. |
-| End-to-end (booked → won) | ~22% | Review entire script. |
+| Stage                     | Target | If below                                                    |
+| ------------------------- | ------ | ----------------------------------------------------------- |
+| Show rate                 | 80%    | Improve reminder cadence; WhatsApp T-2h is non-optional.    |
+| Discovery → Proposal      | 80%    | Re-check qualification — are unfit leads making it through? |
+| Proposal → Won            | 35%    | Review the close language; review pricing presentation.     |
+| End-to-end (booked → won) | ~22%   | Review entire script.                                       |
 
 ## Founder time per closed deal
 
-| Step | Time |
-|---|---|
-| Pre-call review | 3 min |
-| Discovery call | 20 min |
-| Recap + offerte send | 10 min |
-| 2 follow-ups average | 10 min |
-| Onboarding (separate, 130 min — see delivery doc) | — |
-| **Total sales time** | ~45 min |
-| **Buffer for negotiation / re-close** | 25 min |
-| **Target ceiling** | **90 min** |
+| Step                                              | Time       |
+| ------------------------------------------------- | ---------- |
+| Pre-call review                                   | 3 min      |
+| Discovery call                                    | 20 min     |
+| Recap + offerte send                              | 10 min     |
+| 2 follow-ups average                              | 10 min     |
+| Onboarding (separate, 130 min — see delivery doc) | —          |
+| **Total sales time**                              | ~45 min    |
+| **Buffer for negotiation / re-close**             | 25 min     |
+| **Target ceiling**                                | **90 min** |
 
 ## Source
 

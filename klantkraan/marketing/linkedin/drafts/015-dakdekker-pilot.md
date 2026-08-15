@@ -4,12 +4,13 @@ publish_week: 4
 post_type: case_study_reveal
 status: holdback
 character_count: 1295
-holdback_reason: "Needs dakdekker pilot to start + 30 days data. Publish after first dakdekker pilot wraps month 1."
+holdback_reason: 'Needs dakdekker pilot to start + 30 days data. Publish after first dakdekker pilot wraps month 1.'
 ---
 
 # Case study #2 — dakdekker-pilot (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - HOLDBACK. Vereist een dakdekker-pilot die minimaal 30 dagen draait. Per huidige calendar: pilot #2 start in week 3, dus case study #2 publiceren rond einde week 4 / begin week 5.
 - Belangrijk: dakdekkers hebben andere call-patroon dan loodgieters. Minder spoed, meer offertes voor grotere klussen. Pas tone aan: minder "10 minuten lekkage", meer "5 dagen vooruitplanning".
 - Anonimiseren zelfde regels als 008. Geen plaatsnaam, geen achternaam.

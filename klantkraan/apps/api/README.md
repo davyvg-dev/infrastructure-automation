@@ -6,19 +6,19 @@ Architecture context: [`klantkraan/docs/08-tech/repo-architecture.md`](../../doc
 
 ## Routes
 
-| Route | Method | Purpose | Compliance notes |
-|---|---|---|---|
-| `/api/intake-form` | POST | Tally intake → Attio + Neon | AVG: suppression check before any auto-reply (06-outbound/gdpr-compliance.md) |
-| `/api/lead` | POST | Site lead form → Attio | AVG: suppression check |
-| `/api/dashboard/:slug` | GET | Per-client aggregate, KV-cached 5 min | Public unguessable URL, no PII beyond client's own data |
-| `/api/webhook/cm/call` | POST | CM.com missed call → n8n | HMAC `x-cm-signature`; downstream SMS gated by suppression |
-| `/api/webhook/cm/sms` | POST | CM.com inbound SMS → n8n | HMAC; `STOP` adds to suppression_list in n8n |
-| `/api/webhook/synthflow/call-end` | POST | Synthflow call summary → Neon + Attio | HMAC; **rejects 422 if `ai_disclosure_played != true`** (04-legal/ai-act-disclosure.md, AI Act art. 50) |
-| `/api/webhook/calcom/booking` | POST | Cal.com booking → Neon + SMS confirmation | HMAC `x-cal-signature-256`; SMS gated by suppression |
-| `/api/webhook/mollie/payment` | POST | Mollie payment → Moneybird + Neon | HMAC; form-encoded `id` only, payment fetched via API |
-| `/api/webhook/signwell/signed` | POST | Contract signed → trigger n8n `client-onboarding` | HMAC `x-signwell-signature` |
-| `/api/unsubscribe` | GET/POST | Signed-token opt-out, inserts into suppression_list | AVG: writes to suppression_list; Dutch confirmation page |
-| `/api/health` | GET | Liveness for Uptime Kuma | Public, no PII |
+| Route                             | Method   | Purpose                                             | Compliance notes                                                                                        |
+| --------------------------------- | -------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `/api/intake-form`                | POST     | Tally intake → Attio + Neon                         | AVG: suppression check before any auto-reply (06-outbound/gdpr-compliance.md)                           |
+| `/api/lead`                       | POST     | Site lead form → Attio                              | AVG: suppression check                                                                                  |
+| `/api/dashboard/:slug`            | GET      | Per-client aggregate, KV-cached 5 min               | Public unguessable URL, no PII beyond client's own data                                                 |
+| `/api/webhook/cm/call`            | POST     | CM.com missed call → n8n                            | HMAC `x-cm-signature`; downstream SMS gated by suppression                                              |
+| `/api/webhook/cm/sms`             | POST     | CM.com inbound SMS → n8n                            | HMAC; `STOP` adds to suppression_list in n8n                                                            |
+| `/api/webhook/synthflow/call-end` | POST     | Synthflow call summary → Neon + Attio               | HMAC; **rejects 422 if `ai_disclosure_played != true`** (04-legal/ai-act-disclosure.md, AI Act art. 50) |
+| `/api/webhook/calcom/booking`     | POST     | Cal.com booking → Neon + SMS confirmation           | HMAC `x-cal-signature-256`; SMS gated by suppression                                                    |
+| `/api/webhook/mollie/payment`     | POST     | Mollie payment → Moneybird + Neon                   | HMAC; form-encoded `id` only, payment fetched via API                                                   |
+| `/api/webhook/signwell/signed`    | POST     | Contract signed → trigger n8n `client-onboarding`   | HMAC `x-signwell-signature`                                                                             |
+| `/api/unsubscribe`                | GET/POST | Signed-token opt-out, inserts into suppression_list | AVG: writes to suppression_list; Dutch confirmation page                                                |
+| `/api/health`                     | GET      | Liveness for Uptime Kuma                            | Public, no PII                                                                                          |
 
 The 10-route spec in `repo-architecture.md` is honoured exactly; `/api/health` is the 11th item and was already on the spec list.
 
@@ -107,24 +107,24 @@ Verify route binding in Cloudflare dashboard → Workers → `klantkraan-api` �
 
 ## Env vars / secrets
 
-| Name | Where used | Type |
-|---|---|---|
-| `ATTIO_API_KEY` | intake, lead, webhook-synthflow | secret |
-| `CM_API_KEY` | webhook-calcom (SMS confirmations) | secret |
-| `SYNTHFLOW_API_KEY` | webhook-synthflow (future direct calls) | secret |
-| `MOLLIE_API_KEY` | webhook-mollie (payment fetch) | secret |
-| `MONEYBIRD_API_KEY` | webhook-mollie (invoice creation) | secret (optional) |
-| `MONEYBIRD_ADMIN_ID` | webhook-mollie | secret (optional) |
-| `CM_WEBHOOK_SECRET` | webhook-cm | secret |
-| `SYNTHFLOW_WEBHOOK_SECRET` | webhook-synthflow | secret |
-| `CALCOM_WEBHOOK_SECRET` | webhook-calcom | secret |
-| `MOLLIE_WEBHOOK_SECRET` | webhook-mollie | secret |
-| `SIGNWELL_WEBHOOK_SECRET` | webhook-signwell | secret |
-| `UNSUBSCRIBE_TOKEN_SECRET` | unsubscribe | secret |
-| `NEON_DATABASE_URL` | all persisting routes | secret |
-| `WEBHOOK_N8N_URL` | webhook-cm, webhook-signwell | plain var |
-| `SENTRY_DSN` | global error handler | secret (optional) |
-| `KV_DASHBOARD` | dashboard cache | KV namespace binding |
+| Name                       | Where used                              | Type                 |
+| -------------------------- | --------------------------------------- | -------------------- |
+| `ATTIO_API_KEY`            | intake, lead, webhook-synthflow         | secret               |
+| `CM_API_KEY`               | webhook-calcom (SMS confirmations)      | secret               |
+| `SYNTHFLOW_API_KEY`        | webhook-synthflow (future direct calls) | secret               |
+| `MOLLIE_API_KEY`           | webhook-mollie (payment fetch)          | secret               |
+| `MONEYBIRD_API_KEY`        | webhook-mollie (invoice creation)       | secret (optional)    |
+| `MONEYBIRD_ADMIN_ID`       | webhook-mollie                          | secret (optional)    |
+| `CM_WEBHOOK_SECRET`        | webhook-cm                              | secret               |
+| `SYNTHFLOW_WEBHOOK_SECRET` | webhook-synthflow                       | secret               |
+| `CALCOM_WEBHOOK_SECRET`    | webhook-calcom                          | secret               |
+| `MOLLIE_WEBHOOK_SECRET`    | webhook-mollie                          | secret               |
+| `SIGNWELL_WEBHOOK_SECRET`  | webhook-signwell                        | secret               |
+| `UNSUBSCRIBE_TOKEN_SECRET` | unsubscribe                             | secret               |
+| `NEON_DATABASE_URL`        | all persisting routes                   | secret               |
+| `WEBHOOK_N8N_URL`          | webhook-cm, webhook-signwell            | plain var            |
+| `SENTRY_DSN`               | global error handler                    | secret (optional)    |
+| `KV_DASHBOARD`             | dashboard cache                         | KV namespace binding |
 
 Set secrets:
 
@@ -157,14 +157,14 @@ pnpm --filter @kk/api deploy
 
 ## Stubs that need real implementations
 
-| File | What's stubbed | Lands in |
-|---|---|---|
-| `src/lib/neon.ts` | `sql` tag throws at runtime | `packages/db` (Drizzle + `@neondatabase/serverless`) |
-| `src/lib/suppression.ts` | `isSuppressed` always returns `false` | `packages/db` (`suppression_list` table) |
-| `src/lib/attio.ts` | typed Attio v2 calls — real HTTP but small surface | `packages/attio` (extended client) |
-| `src/routes/webhook-mollie.ts` | `createMoneybirdInvoice` returns `{id:"stub"}` | `packages/billing` (Moneybird client) |
-| `src/routes/webhook-calcom.ts` | `sendSmsViaCm` returns `{id:"stub"}` | `packages/telephony` (CM.com adapter) |
-| `src/index.ts` | Sentry `captureException` is a `console.error` | Add `@sentry/cloudflare`, init in `fetch` handler |
+| File                           | What's stubbed                                     | Lands in                                             |
+| ------------------------------ | -------------------------------------------------- | ---------------------------------------------------- |
+| `src/lib/neon.ts`              | `sql` tag throws at runtime                        | `packages/db` (Drizzle + `@neondatabase/serverless`) |
+| `src/lib/suppression.ts`       | `isSuppressed` always returns `false`              | `packages/db` (`suppression_list` table)             |
+| `src/lib/attio.ts`             | typed Attio v2 calls — real HTTP but small surface | `packages/attio` (extended client)                   |
+| `src/routes/webhook-mollie.ts` | `createMoneybirdInvoice` returns `{id:"stub"}`     | `packages/billing` (Moneybird client)                |
+| `src/routes/webhook-calcom.ts` | `sendSmsViaCm` returns `{id:"stub"}`               | `packages/telephony` (CM.com adapter)                |
+| `src/index.ts`                 | Sentry `captureException` is a `console.error`     | Add `@sentry/cloudflare`, init in `fetch` handler    |
 
 ## Source
 

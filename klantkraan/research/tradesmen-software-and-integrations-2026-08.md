@@ -13,6 +13,7 @@ WhatsApp/e-mail samenvatting), category language for the rest ("werkt naast elk 
 integrations page, no logos of tools we don't integrate with, no roadmap page.
 
 Why:
+
 - **The trades-native Dutch rivals already converged on this pattern.** InstallatieTelefoniste: one
   sentence, no logos ("Werkt met veelgebruikte software zoals Exact en Afas, of via e-mail-notificatie").
   Beller.io: one generic sentence. Voicelabs: FAQ only ("richten we op maat in"). The rivals that DO show
@@ -29,6 +30,7 @@ Why:
   that cannot be real API integrations. We don't play that game; honesty is our positioning (art. 50 wedge).
 
 Escalation tiers:
+
 1. **Now:** outcome language + one named tool. "Werkt met de agenda die u al heeft" + Google Agenda +
    WhatsApp/e-mail samenvatting + the paper-agenda promise ("wij zetten er een voor u op").
 2. **When built and proven on ≥1 client:** add the tool name to the sentence (text, not logo). Order:
@@ -65,14 +67,14 @@ terechtkomt, te beginnen met je agenda en je mail."
 
 ## 2. Integration build priorities (NL/BE, verified API surfaces)
 
-| # | Integration | Why | API reality (verified 2026-08-01) |
-|---|---|---|---|
-| 1 | **Microsoft 365 / Outlook Agenda** | The only other calendar with real NL SMB penetration (bouw tilts Microsoft when it formalizes; OneDrive 38% vs Google Drive 25% of Dutch business cloud). Closes ~all of the digital-agenda market. | Microsoft Graph; same `calendar_store.py` seam swap — bodies change, signatures stay. |
-| 2 | **OutSmart** | Werkbon marktleider NL+BE: 5,172 companies, 20k daily technicians, explicitly targets installateurs on "papier + Excel + WhatsApp". First integration that lets sales say "de klus staat meteen op de werkbon" — no Dutch AI-receptionist rival offers this. | Open REST API (work orders, customers, hours; keys on request, Postman docs). No webhooks. out-smart.com/features/integrations/outsmart-api |
-| 3 | **Solvari lead webhook** | The ONLY NL/BE lead platform with an official customer-facing API/webhook (every Pro tier). Lets the receptionist respond to a Solvari lead in under a minute — speed-to-lead is the whole game there (3–30 rivals per lead). Also: Trustoo/Trustlocal deliver leads by WhatsApp, which we already speak natively — zero-integration interception. | pro.solvari.nl/api/customer-docs |
-| 4 | **TimeMate** | #1 werkbon app on Appwiki, 1,000+ companies, cheapest in market (€4.95–9.95/user/mo) — the tool the smallest ICP firms actually buy. | Public API (developer.timemate.nl) + official Zapier connector — unique in the micro-FSM segment. |
-| 5 | **Moneybird** (later) | ~380–400k users; best developer experience in the whole landscape (REST, OAuth2, webhooks, estimates API incl. accept/send). Relevant when we touch offertes/facturen, not for booking. | developer.moneybird.com |
-| 0 | **Productize the e-mail/WhatsApp samenvatting as the universal koppeling** | Already exists (Resend + WhatsApp notify). Every werkbon tool ingests structured e-mail. This is the truthful "works with everything" answer today — InstallatieTelefoniste sells exactly this. | Zero build. |
+| #   | Integration                                                                | Why                                                                                                                                                                                                                                                                                                                                                | API reality (verified 2026-08-01)                                                                                                           |
+| --- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | **Microsoft 365 / Outlook Agenda**                                         | The only other calendar with real NL SMB penetration (bouw tilts Microsoft when it formalizes; OneDrive 38% vs Google Drive 25% of Dutch business cloud). Closes ~all of the digital-agenda market.                                                                                                                                                | Microsoft Graph; same `calendar_store.py` seam swap — bodies change, signatures stay.                                                       |
+| 2   | **OutSmart**                                                               | Werkbon marktleider NL+BE: 5,172 companies, 20k daily technicians, explicitly targets installateurs on "papier + Excel + WhatsApp". First integration that lets sales say "de klus staat meteen op de werkbon" — no Dutch AI-receptionist rival offers this.                                                                                       | Open REST API (work orders, customers, hours; keys on request, Postman docs). No webhooks. out-smart.com/features/integrations/outsmart-api |
+| 3   | **Solvari lead webhook**                                                   | The ONLY NL/BE lead platform with an official customer-facing API/webhook (every Pro tier). Lets the receptionist respond to a Solvari lead in under a minute — speed-to-lead is the whole game there (3–30 rivals per lead). Also: Trustoo/Trustlocal deliver leads by WhatsApp, which we already speak natively — zero-integration interception. | pro.solvari.nl/api/customer-docs                                                                                                            |
+| 4   | **TimeMate**                                                               | #1 werkbon app on Appwiki, 1,000+ companies, cheapest in market (€4.95–9.95/user/mo) — the tool the smallest ICP firms actually buy.                                                                                                                                                                                                               | Public API (developer.timemate.nl) + official Zapier connector — unique in the micro-FSM segment.                                           |
+| 5   | **Moneybird** (later)                                                      | ~380–400k users; best developer experience in the whole landscape (REST, OAuth2, webhooks, estimates API incl. accept/send). Relevant when we touch offertes/facturen, not for booking.                                                                                                                                                            | developer.moneybird.com                                                                                                                     |
+| 0   | **Productize the e-mail/WhatsApp samenvatting as the universal koppeling** | Already exists (Resend + WhatsApp notify). Every werkbon tool ingests structured e-mail. This is the truthful "works with everything" answer today — InstallatieTelefoniste sells exactly this.                                                                                                                                                    | Zero build.                                                                                                                                 |
 
 Rule of thumb from the discovery script: add "welke werkbon-app gebruik je?" to every call and build
 whatever the first three paying clients actually run — that also produces the client quote tier 3 needs.
@@ -87,15 +89,17 @@ Zapier), Tellow, SnelStart (certification-gated). Dead names to purge from any s
 ## 3. What the mature markets teach (US, UK/AU/NZ, DACH)
 
 **Integration depth is price-tiered, everywhere:**
+
 - Below ~$300/mo, calendar-only players win the micro segment: Rosie ($49–299), Goodcall ($79–249),
   Voctiv ($29) thrive on "Zapier + Google Calendar" because 1–5 person shops often have no FSM at all.
 - Above ~$400/mo, deep FSM integration is table-stakes: Avoca ($1k–3.5k/mo, entire brand = deepest
   ServiceTitan integration, per-integration landing pages + certified-app badge), Sameday ($449+/mo,
   site organized around FSM logos, "books directly into ServiceTitan").
 - Klantkraan at €149/€299 sits in the defensible vertical-micro band — calendar + WhatsApp is genuinely
-  enough at this price point *today*.
+  enough at this price point _today_.
 
 **The platform-bundling pincer is real and already moving:**
+
 - US/AU: Jobber AI Receptionist $99/mo add-on; Housecall Pro CSR AI; Workiz "Jessica" ~$200/mo;
   ServiceM8 Phone Agent from **+$13/mo** (Connect Plus $32/mo incl. AI, 500 min).
 - DACH: plancraft bundles its PORTA phone AI **free (60 min/mo) into every plan** — and plancraft is
@@ -105,27 +109,29 @@ Zapier), Tellow, SnelStart (certification-gated). Dead names to purge from any s
   moat as **22 Handwerkersoftware/ERP connectors** incl. an official OneQrew partnership.
 - Implication: NL has no native-AI FSM yet — Klantkraan is in the window US standalones had in 2023–24.
   The moat to build before Dutch planning tools bundle AI answering: werkbon write-back (OutSmart/TimeMate)
-  + WhatsApp-first, which **no player in any researched market ships as the primary channel** (US is
-  voice-first because WhatsApp isn't the US channel; DACH WhatsApp is universally "coming soon").
+  - WhatsApp-first, which **no player in any researched market ships as the primary channel** (US is
+    voice-first because WhatsApp isn't the US channel; DACH WhatsApp is universally "coming soon").
 
 **The winning marketing kit (recurs across every winner in every market):**
+
 1. Missed-call math as hero copy. Clean citable chain: Matelso 2024 (DE, n=100): 23% of calls unanswered,
    ~80% leave no message, ~85% never call back. Fix Radio survey (UK, n=220): 34% lost work from missed
    calls. Bitkom 2025 (DE, n=504): **85% of trades firms say customers expect constant reachability**;
    62% already use messengers with customers. HalloPetra's hero: "3 van 4 bellen geen tweede keer."
-2. "Boekt direct in je agenda" — the verb is always *book*, the differentiator always *direct*. Never
+2. "Boekt direct in je agenda" — the verb is always _book_, the differentiator always _direct_. Never
    "takes a message."
 3. A published booking-rate number (ServiceTitan 70–85%, Sameday 92%). We should measure and publish ours.
 4. Cost-vs-human framing (receptionist salary vs €149–299/mo).
 5. Live demo over testimonials: AU leaders (Never Miss a Call, AiDial) are testimonial-free and instead say
    "ring our AI right now." Our /demo + WhatsApp demo number is exactly this — feature it harder.
-6. Per-tool SEO pages: Goodcall runs programmatic "AI for [FSM tool]" pages capturing demand *before*
+6. Per-tool SEO pages: Goodcall runs programmatic "AI for [FSM tool]" pages capturing demand _before_
    integrations exist. Honest NL variant: "AI-receptionist naast OutSmart/TimeMate/Simple-Simon" pages
    describing coexistence (samenvatting per mail naast je pakket) — truthful, and captures the searches.
 7. Emergency/after-hours wedge: "73% of emergency trade calls come in after hours" (AU); spoedmelding
    triage is a sellable feature, not a nice-to-have.
 
 **WhatsApp is the open flank in every non-US market:**
+
 - NL: 13.8M users, 12.1M daily (Newcom 2026). Flanders: 88% monthly, 66% daily (digimeter 2025).
 - DE: 55% of German WhatsApp users have already booked appointments with businesses via WhatsApp
   (Capterra n=1,029); 62% of Handwerksbetriebe use messengers (Bitkom 2025).

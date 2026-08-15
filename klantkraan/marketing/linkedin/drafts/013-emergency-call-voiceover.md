@@ -4,12 +4,13 @@ publish_week: 4
 post_type: voiceover_demo
 status: holdback
 character_count: 1280
-holdback_reason: "Needs real recorded spoed-call from pilot. Until live: ship as transcript-only or hold."
+holdback_reason: 'Needs real recorded spoed-call from pilot. Until live: ship as transcript-only or hold.'
 ---
 
 # Spoed-call afgehandeld door AI — voice-over (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - HOLDBACK. Calendar (week 4, post 13) zegt: "screen-rec voice-over: luister mee — een echte spoed-call afgehandeld door de AI". Vereist een echte opname uit pilot (toestemming klant + vakman vooraf!).
 - Als opname nog niet kan: publiceer als transcript-only versie (zie body hieronder) en flag in caption dat audio volgt.
 - Permissions: AVG vereist expliciete schriftelijke OK van zowel klant als vakman voor publicatie van een gespreksopname. Anonimiseren is niet genoeg.

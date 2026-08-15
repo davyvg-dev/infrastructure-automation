@@ -39,13 +39,16 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "caller_name":   { "type": "string",  "description": "Caller first and last name." },
-          "caller_phone":  { "type": "string",  "description": "Phone number in E.164." },
-          "town":          { "type": "string",  "description": "Town + address." },
-          "job_summary":   { "type": "string",  "description": "Short description, max 200 chars." },
-          "intent":        { "type": "string",  "enum": ["NEW_JOB", "EXISTING_CUSTOMER", "SUPPLIER"] },
-          "urgency":       { "type": "string",  "enum": ["LOW", "MED", "HIGH"] },
-          "preferred_window": { "type": "string", "description": "e.g. 'within 4 hours', 'tomorrow morning', 'this week'." }
+          "caller_name": { "type": "string", "description": "Caller first and last name." },
+          "caller_phone": { "type": "string", "description": "Phone number in E.164." },
+          "town": { "type": "string", "description": "Town + address." },
+          "job_summary": { "type": "string", "description": "Short description, max 200 chars." },
+          "intent": { "type": "string", "enum": ["NEW_JOB", "EXISTING_CUSTOMER", "SUPPLIER"] },
+          "urgency": { "type": "string", "enum": ["LOW", "MED", "HIGH"] },
+          "preferred_window": {
+            "type": "string",
+            "description": "e.g. 'within 4 hours', 'tomorrow morning', 'this week'."
+          }
         },
         "required": ["caller_name", "caller_phone", "intent", "urgency"]
       }
@@ -56,11 +59,24 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "transfer_to":   { "type": "string", "description": "Transfer number ({{escalation_number}})." },
-          "emergency_type": { "type": "string", "enum": ["NO_COOLING_VULNERABLE", "WATER_LEAK_ELECTRICS", "BURNING_SMELL_ELECTRICAL", "REFRIGERANT_LEAK", "GAS_SMELL", "OTHER_EMERGENCY"] },
-          "caller_phone":  { "type": "string" },
-          "address":       { "type": "string" },
-          "summary":       { "type": "string", "description": "One-sentence summary for the owner." }
+          "transfer_to": {
+            "type": "string",
+            "description": "Transfer number ({{escalation_number}})."
+          },
+          "emergency_type": {
+            "type": "string",
+            "enum": [
+              "NO_COOLING_VULNERABLE",
+              "WATER_LEAK_ELECTRICS",
+              "BURNING_SMELL_ELECTRICAL",
+              "REFRIGERANT_LEAK",
+              "GAS_SMELL",
+              "OTHER_EMERGENCY"
+            ]
+          },
+          "caller_phone": { "type": "string" },
+          "address": { "type": "string" },
+          "summary": { "type": "string", "description": "One-sentence summary for the owner." }
         },
         "required": ["transfer_to", "emergency_type", "caller_phone"]
       }
@@ -71,7 +87,10 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "tariff_kind": { "type": "string", "enum": ["callout_fee", "service", "recharge", "survey", "all"] }
+          "tariff_kind": {
+            "type": "string",
+            "enum": ["callout_fee", "service", "recharge", "survey", "all"]
+          }
         },
         "required": ["tariff_kind"]
       }

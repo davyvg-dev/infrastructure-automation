@@ -5,3 +5,12 @@ dist/
 .turbo/
 pnpm-lock.yaml
 infra/n8n/*.json
+
+# Prettier does not converge on these three: it emits a different escaping of the
+# same source on every pass, so `--write` followed by `--check` fails forever. The
+# first two are signature blanks written as long runs of _ and *, the third a code
+# span that opens on one line and closes on the next. Reformatting is not worth
+# rewriting a sent offer to suit the formatter.
+docs/02-sales/offerte-drs-2026-08.md
+docs/03-delivery/website-pilot-timing-log.md
+docs/09-brand/redesign-execution-plan.md

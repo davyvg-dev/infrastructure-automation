@@ -73,10 +73,7 @@ const srcset = (src: string, w: number) =>
 
 {
   tiles.length > 0 && (
-    <section
-      aria-labelledby="werk-titel"
-      class="border-y border-(--band-line) bg-(--band-foto-bg)"
-    >
+    <section aria-labelledby="werk-titel" class="border-y border-(--band-line) bg-(--band-foto-bg)">
       <div class="py-(--ritme-band-y) md:py-(--ritme-band-y-md)">
         <div class="mx-auto max-w-6xl px-6">
           <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
@@ -108,29 +105,28 @@ const srcset = (src: string, w: number) =>
          * the same look with no arithmetic against the viewport.
          */}
         <div class="mx-auto mt-10 max-w-(--foto-kolom) px-(--foto-gutter) md:mt-14">
-        <ul
-          role="list"
-          class="gap-4 columns-1 sm:columns-2 md:columns-3"
-        >
-          {tiles.map(({ src, shape, width, height, alt }) => (
-            <li class="mb-4 break-inside-avoid">
-              <img
-                src={src}
-                srcset={own ? undefined : srcset(src, width)}
-                sizes={own ? undefined : '(min-width: 768px) 357px, (min-width: 640px) 45vw, 90vw'}
-                width={own ? undefined : width}
-                height={own ? undefined : height}
-                alt={alt}
-                loading="lazy"
-                decoding="async"
-                class:list={[
-                  'w-full rounded-(--foto-tegel-radius) object-cover',
-                  shape === 'tall' ? 'aspect-[2/3]' : 'aspect-[3/2]',
-                ]}
-              />
-            </li>
-          ))}
-        </ul>
+          <ul role="list" class="gap-4 columns-1 sm:columns-2 md:columns-3">
+            {tiles.map(({ src, shape, width, height, alt }) => (
+              <li class="mb-4 break-inside-avoid">
+                <img
+                  src={src}
+                  srcset={own ? undefined : srcset(src, width)}
+                  sizes={
+                    own ? undefined : '(min-width: 768px) 357px, (min-width: 640px) 45vw, 90vw'
+                  }
+                  width={own ? undefined : width}
+                  height={own ? undefined : height}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  class:list={[
+                    'w-full rounded-(--foto-tegel-radius) object-cover',
+                    shape === 'tall' ? 'aspect-[2/3]' : 'aspect-[3/2]',
+                  ]}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

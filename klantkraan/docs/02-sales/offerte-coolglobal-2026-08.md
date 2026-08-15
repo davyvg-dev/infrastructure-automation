@@ -39,12 +39,12 @@ Callers are told they are speaking with a digital assistant (EU AI Act, art. 50)
 
 ## Price
 
-| | excl. VAT |
-|---|---|
-| Subscription per month, incl. 750 call minutes | € 499,00 |
-| First month, 50% off | € 249,50 |
-| Call minutes above 750, per minute | € 0,40 |
-| One-time installation | € 945,00 |
+|                                                | excl. VAT |
+| ---------------------------------------------- | --------- |
+| Subscription per month, incl. 750 call minutes | € 499,00  |
+| First month, 50% off                           | € 249,50  |
+| Call minutes above 750, per minute             | € 0,40    |
+| One-time installation                          | € 945,00  |
 
 With a valid Spanish VAT number the VAT is reverse-charged, so no Dutch VAT
 appears on the invoice.

@@ -6,19 +6,19 @@ This directory is the single source of truth for strategy, sales, delivery, lega
 
 ## Quick map
 
-| Folder | What lives here |
-|---|---|
-| `docs/00-MASTER-PLAN.md` | Integrated overview. **Start here.** |
-| `docs/01-strategy/` | ICP, offer, positioning, 90-day roadmap |
-| `docs/02-sales/` | Cold email, LinkedIn, discovery, objections, offerte, benchmarks |
-| `docs/03-delivery/` | 30-day onboarding, intake form, Synthflow prompt, SMS templates, dashboard |
-| `docs/04-legal/` | MSA, DPA, SLA, AI Act disclosure, insurance, compliance checklists |
-| `docs/05-content/` | Channel strategy, 30-day content calendar, SEO, stack |
-| `docs/06-outbound/` | GDPR rules, data sources, deliverability, kill-list |
-| `docs/07-finance/` | Unit economics, MRR projections, COGS, first-hire triggers |
-| `docs/08-tech/` | Stack decisions, repo architecture, infra, observability |
-| `docs/09-brand/` | Name + domain, voice & tone, visual identity brief |
-| `docs/10-ops/` | Weekly KPI review, risk register, founder tooling |
+| Folder                   | What lives here                                                            |
+| ------------------------ | -------------------------------------------------------------------------- |
+| `docs/00-MASTER-PLAN.md` | Integrated overview. **Start here.**                                       |
+| `docs/01-strategy/`      | ICP, offer, positioning, 90-day roadmap                                    |
+| `docs/02-sales/`         | Cold email, LinkedIn, discovery, objections, offerte, benchmarks           |
+| `docs/03-delivery/`      | 30-day onboarding, intake form, Synthflow prompt, SMS templates, dashboard |
+| `docs/04-legal/`         | MSA, DPA, SLA, AI Act disclosure, insurance, compliance checklists         |
+| `docs/05-content/`       | Channel strategy, 30-day content calendar, SEO, stack                      |
+| `docs/06-outbound/`      | GDPR rules, data sources, deliverability, kill-list                        |
+| `docs/07-finance/`       | Unit economics, MRR projections, COGS, first-hire triggers                 |
+| `docs/08-tech/`          | Stack decisions, repo architecture, infra, observability                   |
+| `docs/09-brand/`         | Name + domain, voice & tone, visual identity brief                         |
+| `docs/10-ops/`           | Weekly KPI review, risk register, founder tooling                          |
 
 ## Status
 

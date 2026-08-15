@@ -23,22 +23,22 @@ web/API/Workers — running it in Python costs us nothing in repo cohesion.
 ## Why this exists
 
 Decision (2026-06): move off Synthflow to "own the stack." Justified by the
-*control* motive only — see `stack-decisions.md` re-evaluation triggers. Cost is
+_control_ motive only — see `stack-decisions.md` re-evaluation triggers. Cost is
 **not** the reason: a Dutch call's price is dominated by ElevenLabs TTS, which we
 keep either way.
 
 ## Architecture
 
-| Layer | Choice | Notes |
-|---|---|---|
-| Framework | LiveKit Agents (Python) | Native Claude plugin; fullest real-time ecosystem |
-| Media / SFU | LiveKit Cloud free tier → self-host on Hetzner later | Own the agent + data now; own the SFU when it pays off |
-| STT | Deepgram `nova-2` (`language="nl"`) | Swap to self-host Whisper if we want zero external STT |
-| LLM | Anthropic `claude-sonnet-4-6` | `livekit-plugins-anthropic` |
-| TTS | ElevenLabs `eleven_multilingual_v2` | The Dutch-quality moat — unchanged from the Synthflow plan |
-| Telephony | SIP trunk (Twilio) → LiveKit SIP | Inbound NL number rings the agent |
-| Runtime | Python worker on the shared Hetzner box | Long-lived process; sits beside n8n |
-| Fallback | CM.com conditional-forward to owner | If the agent is down, the phone still gets answered |
+| Layer       | Choice                                               | Notes                                                      |
+| ----------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| Framework   | LiveKit Agents (Python)                              | Native Claude plugin; fullest real-time ecosystem          |
+| Media / SFU | LiveKit Cloud free tier → self-host on Hetzner later | Own the agent + data now; own the SFU when it pays off     |
+| STT         | Deepgram `nova-2` (`language="nl"`)                  | Swap to self-host Whisper if we want zero external STT     |
+| LLM         | Anthropic `claude-sonnet-4-6`                        | `livekit-plugins-anthropic`                                |
+| TTS         | ElevenLabs `eleven_multilingual_v2`                  | The Dutch-quality moat — unchanged from the Synthflow plan |
+| Telephony   | SIP trunk (Twilio) → LiveKit SIP                     | Inbound NL number rings the agent                          |
+| Runtime     | Python worker on the shared Hetzner box              | Long-lived process; sits beside n8n                        |
+| Fallback    | CM.com conditional-forward to owner                  | If the agent is down, the phone still gets answered        |
 
 ## How it maps to the existing repo (nothing is reinvented)
 

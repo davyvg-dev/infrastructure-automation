@@ -36,13 +36,13 @@ This confirms the position already recorded in the founder strategy work: compli
 
 The evidence against project-based automation work is consistent and unkind.
 
-| Failure mode | Evidence |
-|---|---|
-| Revenue is one-time; the sales cycle restarts every deal | Founders commonly pivot within 12–18 months because project overhead becomes unsustainable |
-| Margins invert | Traditional service work runs 15–30% margin vs 70–80% productized |
-| Integration debt compounds permanently | Maintenance grows linearly per connector; connector upkeep becomes a permanent engineering function, not a one-off build |
-| Most of it never ships | MIT: ~95% of AI agent pilots fail. RAND: 80%+ never reach production |
-| Underscoping is structural | Fixed fees quoted before data-access and integration discovery is done |
+| Failure mode                                             | Evidence                                                                                                                 |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Revenue is one-time; the sales cycle restarts every deal | Founders commonly pivot within 12–18 months because project overhead becomes unsustainable                               |
+| Margins invert                                           | Traditional service work runs 15–30% margin vs 70–80% productized                                                        |
+| Integration debt compounds permanently                   | Maintenance grows linearly per connector; connector upkeep becomes a permanent engineering function, not a one-off build |
+| Most of it never ships                                   | MIT: ~95% of AI agent pilots fail. RAND: 80%+ never reach production                                                     |
+| Underscoping is structural                               | Fixed fees quoted before data-access and integration discovery is done                                                   |
 
 Two more objections specific to this business.
 
@@ -75,7 +75,7 @@ Ranked by revenue impact to the client per unit of build effort.
 Trades write quotes and never chase them. The bot already knows the job; after a quote goes out it follows up on day 2, 5 and 10 over WhatsApp, answers the objection, and books the go-ahead. Sells on revenue won, not time saved, which is the easier sale by a distance. Needs no accounting integration — the quote amount can come from a WhatsApp message or a form.
 
 **2. Onderhoudsherinneringen (recurring service reminders)**
-CV-ketel onderhoud, dakinspectie, airco-service. The bot knows what job it booked twelve months ago and rebooks it. This creates *recurring revenue for the client*, which makes Klantkraan the thing they cannot cancel. Highest retention value of anything on this list. Effort is low: a date field and a scheduled send.
+CV-ketel onderhoud, dakinspectie, airco-service. The bot knows what job it booked twelve months ago and rebooks it. This creates _recurring revenue for the client_, which makes Klantkraan the thing they cannot cancel. Highest retention value of anything on this list. Effort is low: a date field and a scheduled send.
 
 **3. Factuur- en betaalopvolging (invoice and payment chasing)**
 Payment chasing is the job every owner-operator hates most. Polite, escalating, in Dutch, never forgets. Here an accounting integration genuinely helps — Moneybird first (see §5).
@@ -97,13 +97,13 @@ Do not build a second price list. Two axes, cleanly separated:
 - **Channels** = the base subscription (what it answers on)
 - **Workflows** = modules (what it does)
 
-| | Monthly | Contents |
-|---|---|---|
-| **Chat** (existing) | €299 | webchat + WhatsApp receptionist, booking, messages |
-| **Kantoor** (new) | €599 | Chat + quote follow-up + service reminders + review requests |
-| **Compleet** (existing) | +€200 on either | adds the voice line |
-| Individual module | +€99–149 | for clients who want one thing, not the bundle |
-| Koppeling setup | €500–1,500 one-time | only for an integration already on the roadmap (§5) |
+|                         | Monthly             | Contents                                                     |
+| ----------------------- | ------------------- | ------------------------------------------------------------ |
+| **Chat** (existing)     | €299                | webchat + WhatsApp receptionist, booking, messages           |
+| **Kantoor** (new)       | €599                | Chat + quote follow-up + service reminders + review requests |
+| **Compleet** (existing) | +€200 on either     | adds the voice line                                          |
+| Individual module       | +€99–149            | for clients who want one thing, not the bundle               |
+| Koppeling setup         | €500–1,500 one-time | only for an integration already on the roadmap (§5)          |
 
 Why €599 holds:
 
@@ -122,7 +122,7 @@ Integration debt is the single mechanism that turns a product company into an ag
 
 The policy:
 
-1. **Standalone by default.** Every module must work with zero integrations — WhatsApp in, WhatsApp out, state in Klantkraan's own store. The smallest trades run on a notebook and a phone. For them the automation *is* the system, which is a stronger sale than an integration.
+1. **Standalone by default.** Every module must work with zero integrations — WhatsApp in, WhatsApp out, state in Klantkraan's own store. The smallest trades run on a notebook and a phone. For them the automation _is_ the system, which is a stronger sale than an integration.
 2. **Two accounting integrations, maximum, for the first year: Moneybird and e-Boekhouden.** These are the SMB standard. Moneybird has the materially better API; e-Boekhouden's is more limited. Exact Online is the enterprise-ward option and can wait for demand.
 3. **Never integrate with an FSM platform to become a feature of it.** Gripp, Veldwerk, Cobry, Robaws, Bouw7 are systems of record that will grow their own AI. Read from them if a client asks; do not build a dependency on one.
 4. **Three-client rule.** A new connector is built when three clients need it, or one pays the full build cost knowing it becomes a product.
@@ -133,12 +133,12 @@ The policy:
 
 The rival set changes, and improves.
 
-| Competitor | Their move | The counter |
-|---|---|---|
-| **FSM/ERP platforms** (Gripp, Veldwerk, Cobry, Robaws, OutSmart) — the real long-term threat | Own the job data; will add AI on top | They require adopting a full system at €125–200/mo for 5 users, plus migration. Klantkraan is a layer on WhatsApp with nothing to migrate. The under-8-person trades that will not adopt an ERP are exactly the ICP. **Do not try to become an ERP.** |
-| **NL AI/automation bureaus** (Red Factory, SiRo, Timmermans, aiagency.nl, +hundreds) | Generic AI automation, quoted per deal, ~6 weeks to first workflow | Fixed monthly price, no build fee, live in days, trade-native out of the box, one supplier. They sell a project; Klantkraan sells a subscription. |
-| **Voice receptionist rivals** (Voicelabs, Cowcierge, VoxFlow, InstallatieTelefoniste) | Racing each other to the price floor on answering calls | Once Klantkraan does the office work too, they are competing on a feature, not the product. This is precisely the escape from the €99 floor. |
-| **DIY** (n8n, Make, Zapier) | €9–16/mo and build it yourself | A loodgieter will not. Not a real competitor for this ICP, but it is why the *pricing* has to be justified by done-for-you, never by the technology. |
+| Competitor                                                                                   | Their move                                                         | The counter                                                                                                                                                                                                                                           |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **FSM/ERP platforms** (Gripp, Veldwerk, Cobry, Robaws, OutSmart) — the real long-term threat | Own the job data; will add AI on top                               | They require adopting a full system at €125–200/mo for 5 users, plus migration. Klantkraan is a layer on WhatsApp with nothing to migrate. The under-8-person trades that will not adopt an ERP are exactly the ICP. **Do not try to become an ERP.** |
+| **NL AI/automation bureaus** (Red Factory, SiRo, Timmermans, aiagency.nl, +hundreds)         | Generic AI automation, quoted per deal, ~6 weeks to first workflow | Fixed monthly price, no build fee, live in days, trade-native out of the box, one supplier. They sell a project; Klantkraan sells a subscription.                                                                                                     |
+| **Voice receptionist rivals** (Voicelabs, Cowcierge, VoxFlow, InstallatieTelefoniste)        | Racing each other to the price floor on answering calls            | Once Klantkraan does the office work too, they are competing on a feature, not the product. This is precisely the escape from the €99 floor.                                                                                                          |
+| **DIY** (n8n, Make, Zapier)                                                                  | €9–16/mo and build it yourself                                     | A loodgieter will not. Not a real competitor for this ICP, but it is why the _pricing_ has to be justified by done-for-you, never by the technology.                                                                                                  |
 
 The proprietary-data point compounds here: every conversation is data on what Dutch trade customers actually ask, which jobs convert, which objections kill quotes. Modules should be chosen partly for the data they add. No bureau accumulates that, and no platform has it for this vertical.
 
@@ -150,9 +150,9 @@ The proprietary-data point compounds here: every conversation is data on what Du
 
 Sell named jobs in Dutch, on the same page as the receptionist:
 
-- *"Offertes die zichzelf opvolgen."*
-- *"Je onderhoudsklanten komen vanzelf terug."*
-- *"Facturen die er zelf achteraan gaan."*
+- _"Offertes die zichzelf opvolgen."_
+- _"Je onderhoudsklanten komen vanzelf terug."_
+- _"Facturen die er zelf achteraan gaan."_
 
 Positioning line for the site: Klantkraan stops being "de AI-telefoniste" and becomes **"het kantoor dat meedraait"** — it answers, it quotes, it chases, it books next year. Same product, one level up the value chain, out of the reach of a €99 answering bot.
 
@@ -164,13 +164,13 @@ This repositioning is free and should happen regardless of when modules get buil
 
 The dominant constraint: `TODO.md` item E is open. No pilot is live and no client is paying. Building a second product before the first has proof is the classic way to end up with two unproven products.
 
-| When | Do |
-|---|---|
-| **Now** | Reposition the story only. Add "wat er daarna gebeurt" to the site and sales deck as roadmap, not features. Costs nothing, defends against the price floor, and every discovery call becomes free research into which module clients ask for. |
-| **First 3 paying clients** | Nothing new. Prove the receptionist, get the case study the whole `competitor-landscape` doc says nobody else has. |
-| **~5 paying clients** | Build **offerte-opvolging**. One module, config-driven, standalone. Offer it free to the first three clients in exchange for numbers. |
-| **Module 1 proven** | Launch the €599 Kantoor tier. Upsell existing clients first; new-client acquisition stays at €299. |
-| **~10 clients** | Build module 2 (onderhoudsherinneringen) and the Moneybird connector — by then real demand will have ranked them, and this analysis will be a year stale. |
+| When                       | Do                                                                                                                                                                                                                                            |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Now**                    | Reposition the story only. Add "wat er daarna gebeurt" to the site and sales deck as roadmap, not features. Costs nothing, defends against the price floor, and every discovery call becomes free research into which module clients ask for. |
+| **First 3 paying clients** | Nothing new. Prove the receptionist, get the case study the whole `competitor-landscape` doc says nobody else has.                                                                                                                            |
+| **~5 paying clients**      | Build **offerte-opvolging**. One module, config-driven, standalone. Offer it free to the first three clients in exchange for numbers.                                                                                                         |
+| **Module 1 proven**        | Launch the €599 Kantoor tier. Upsell existing clients first; new-client acquisition stays at €299.                                                                                                                                            |
+| **~10 clients**            | Build module 2 (onderhoudsherinneringen) and the Moneybird connector — by then real demand will have ranked them, and this analysis will be a year stale.                                                                                     |
 
 Gate on demand, not on ideas: **build module N+1 only when three paying clients have asked for it.**
 

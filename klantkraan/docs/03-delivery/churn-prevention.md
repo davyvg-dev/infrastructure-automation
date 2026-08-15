@@ -1,7 +1,7 @@
 # Churn Prevention & Upkeep
 
-> First 90 days = highest risk. The single biggest lever is *making the value visible*. Tradesmen
-> don't read dashboards; they need to be *shown* what they would have lost without the product.
+> First 90 days = highest risk. The single biggest lever is _making the value visible_. Tradesmen
+> don't read dashboards; they need to be _shown_ what they would have lost without the product.
 >
 > §1–§4 are the post-go-live upkeep loop: what runs, who owns it, and how a change request is
 > handled. §5 onward is the retention and off-boarding material. Read alongside
@@ -15,18 +15,18 @@
 One founder, many clients, €299/mo each. The loop has to be cheap by default and expensive only
 on purpose. Everything below is either automated or capped at minutes.
 
-| Cadence | What | Owner | Cost |
-|---|---|---|---|
-| Continuous | Liveness + deep-answer watchdog per host; self-heals a dead process, alerts on a dead API key | `watchdog.timer` | 0 |
-| Daily | Digest per active client: conversations, leads, bookings, after-hours share, est. cost, plus NEEDS ATTENTION | `digest.timer` | 0 |
-| Nightly | Claude analyst enriches the digest with quality flags and upsell signals | `analyst.timer` | ~cents |
-| Nightly | AVG retention sweep (chat data aged out per the DPA window) | `retention.timer` | 0 |
-| **Weekly, ~10 min** | Read the week of digests across all clients. Look for *zero-lead* weeks and *quality flags*, not for totals | Founder | 10 min |
-| **Monthly, ~15 min/client** | **The tune** (§2) | Founder | 15 min |
-| Monthly, auto | Value summary to the client: chats handled / after-hours leads / bookings | System | 0 |
-| Day 30 / 60 / 90 | The 4-minute value Loom (§5.2) | Founder | 12 min |
-| Day 45 | Case-study capture (§5.3) | Founder | 10 min |
-| Quarterly | Re-read one full transcript per client end to end. Nothing else surfaces a slow drift in the config | Founder | 20 min |
+| Cadence                     | What                                                                                                         | Owner             | Cost   |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------- | ------ |
+| Continuous                  | Liveness + deep-answer watchdog per host; self-heals a dead process, alerts on a dead API key                | `watchdog.timer`  | 0      |
+| Daily                       | Digest per active client: conversations, leads, bookings, after-hours share, est. cost, plus NEEDS ATTENTION | `digest.timer`    | 0      |
+| Nightly                     | Claude analyst enriches the digest with quality flags and upsell signals                                     | `analyst.timer`   | ~cents |
+| Nightly                     | AVG retention sweep (chat data aged out per the DPA window)                                                  | `retention.timer` | 0      |
+| **Weekly, ~10 min**         | Read the week of digests across all clients. Look for _zero-lead_ weeks and _quality flags_, not for totals  | Founder           | 10 min |
+| **Monthly, ~15 min/client** | **The tune** (§2)                                                                                            | Founder           | 15 min |
+| Monthly, auto               | Value summary to the client: chats handled / after-hours leads / bookings                                    | System            | 0      |
+| Day 30 / 60 / 90            | The 4-minute value Loom (§5.2)                                                                               | Founder           | 12 min |
+| Day 45                      | Case-study capture (§5.3)                                                                                    | Founder           | 10 min |
+| Quarterly                   | Re-read one full transcript per client end to end. Nothing else surfaces a slow drift in the config          | Founder           | 20 min |
 
 **Steady-state cost per client: about 35 minutes a month.** If it exceeds that two months running,
 something is wrong with the config, not with the client. Fix the config.
@@ -45,7 +45,7 @@ Fifteen minutes per client, calendar-blocked, same day each month. Not a call �
 the receptionist actually did.
 
 1. **Skim the flagged transcripts** the analyst raised. Ignore the good ones.
-2. **Find the fumbles.** Every fumble is two things: a config fix for this client *and* a better
+2. **Find the fumbles.** Every fumble is two things: a config fix for this client _and_ a better
    default for every future client. Push the second one into `scaffold.py`'s template, not just
    into the client's YAML. This is the compounding step; skipping it means solving the same
    problem eleven times.
@@ -53,8 +53,8 @@ the receptionist actually did.
    opening hours over holidays, new services the client started offering.
 4. **Verify the calendar share is still live.** A client who reorganises their Google account can
    silently revoke it; the booking then 403s and the first symptom is a lost customer.
-5. **One proactive message** with anything found: *"Ik zag dat hij twee keer naar je zomertijden
-   werd gevraagd, die heb ik bijgewerkt."* Unprompted maintenance is the cheapest retention there
+5. **One proactive message** with anything found: _"Ik zag dat hij twee keer naar je zomertijden
+   werd gevraagd, die heb ik bijgewerkt."_ Unprompted maintenance is the cheapest retention there
    is, and it is invisible unless you say it out loud.
 
 ---
@@ -64,7 +64,7 @@ the receptionist actually did.
 Clients ask for changes over WhatsApp, in one line, usually badly specified. That is fine and it
 should stay that way — a form here would kill the responsiveness that justifies the price.
 
-**The rule:** anything on playbook §1c's *inbegrepen* list is done same working day and never
+**The rule:** anything on playbook §1c's _inbegrepen_ list is done same working day and never
 invoiced. Text, prices, hours, services, FAQ, spoed policy, persona. No approval step, no ticket.
 
 **Anything else gets a number before any work starts.** Second location, second language,
@@ -85,20 +85,20 @@ collect. This is the same tally that picks workflow-depth module 1 (`docs/01-str
 Ambiguity here is where trades quietly disengage. Say it once at go-live, and again the first time
 it matters.
 
-| Thing | Klantkraan | Client |
-|---|---|---|
-| The receptionist answering correctly | ✅ | — |
-| Uptime, hosting, model updates, security | ✅ | — |
-| Prices, hours, services being *true* | Applies the change | **Tells us it changed** |
-| The Google Calendar share staying live | Monitors + alerts | Owns the account |
-| The website the snippet sits on | Places it once | Owns the site |
-| Answering a lead the receptionist booked | — | ✅ |
-| AVG towards the end customer | Processor (DPA) | **Controller** |
-| Deciding the receptionist may not quote a price | ✅ (non-negotiable) | — |
+| Thing                                           | Klantkraan          | Client                  |
+| ----------------------------------------------- | ------------------- | ----------------------- |
+| The receptionist answering correctly            | ✅                  | —                       |
+| Uptime, hosting, model updates, security        | ✅                  | —                       |
+| Prices, hours, services being _true_            | Applies the change  | **Tells us it changed** |
+| The Google Calendar share staying live          | Monitors + alerts   | Owns the account        |
+| The website the snippet sits on                 | Places it once      | Owns the site           |
+| Answering a lead the receptionist booked        | —                   | ✅                      |
+| AVG towards the end customer                    | Processor (DPA)     | **Controller**          |
+| Deciding the receptionist may not quote a price | ✅ (non-negotiable) | —                       |
 
 The last row matters more than it looks. Clients will ask for prices and diagnoses in chat. The
-answer is a permanent no, framed as protection: *"hij geeft nooit een prijs die jij niet hebt
-opgegeven — dat voorkomt dat je vastzit aan een bedrag dat niet klopt."*
+answer is a permanent no, framed as protection: _"hij geeft nooit een prijs die jij niet hebt
+opgegeven — dat voorkomt dat je vastzit aan een bedrag dat niet klopt."_
 
 ---
 
@@ -121,16 +121,16 @@ At day 30, 60, 90 the founder records a screen walk-through of the top three con
 month, with a concrete € estimate of what each was worth.
 
 - The **day-30 Loom is the highest-leverage retention artefact in the entire business.** Send it
-  over WhatsApp with one sentence: *"kort filmpje, 4 min, top-3 gesprekken deze maand."*
-- This is the asset that makes an owner say to their partner: *"deze gasten zijn die €299 dik waard."*
+  over WhatsApp with one sentence: _"kort filmpje, 4 min, top-3 gesprekken deze maand."_
+- This is the asset that makes an owner say to their partner: _"deze gasten zijn die €299 dik waard."_
 
 ### 5.3 Day-45 case-study capture (10 min)
 
 > "Welk gesprek was voor jou de mooiste win?"
 
 Two reasons: they articulate the value themselves, which binds them far harder than we can; and it
-feeds marketing. Afterwards ask: *"mogen we dit anoniem als case gebruiken? Naam mag, mag ook niet
-— jij kiest."*
+feeds marketing. Afterwards ask: _"mogen we dit anoniem als case gebruiken? Naam mag, mag ook niet
+— jij kiest."_
 
 ### 5.4 "Powered by Klantkraan" badge (optional)
 
@@ -143,16 +143,16 @@ light lock-in, plus free top-of-funnel. Natural next to a chat widget.
 
 Read these at the weekly digest pass, not on a schedule of their own.
 
-| Signal | Risk | Action |
-|---|---|---|
-| **Zero conversations for 7 days on a live client** | High | Almost always a broken surface, not low demand. Check the snippet is still on the page, the widget loads, the site did not get rebuilt |
-| Zero *bookings* while conversations continue | High | The receptionist is talking but not converting. Read the transcripts; usually a missing price or a too-narrow availability window |
-| Calendar share revoked / booking 403s | Critical | Same-day fix; the client cannot see this failure and will blame the product |
-| Client stops replying to the monthly summary (3×) | Medium | WhatsApp check-in: "Alles oké? Merk je er wat van?" |
-| Client mentions price in any check-in | High | Trigger an early Loom + a plain € summary; offer 6-month prepay |
-| Owner unresponsive >14 days | High | Personal call. If still silent, written notice about continued service |
-| Repeated "kan hij ook…" for the same missing thing | Medium | Not a churn signal yet — a roadmap signal. Log it (§3) |
-| Competitor mentioned by name | Medium | One-pager on the difference. No panic discount, ever |
+| Signal                                             | Risk     | Action                                                                                                                                 |
+| -------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Zero conversations for 7 days on a live client** | High     | Almost always a broken surface, not low demand. Check the snippet is still on the page, the widget loads, the site did not get rebuilt |
+| Zero _bookings_ while conversations continue       | High     | The receptionist is talking but not converting. Read the transcripts; usually a missing price or a too-narrow availability window      |
+| Calendar share revoked / booking 403s              | Critical | Same-day fix; the client cannot see this failure and will blame the product                                                            |
+| Client stops replying to the monthly summary (3×)  | Medium   | WhatsApp check-in: "Alles oké? Merk je er wat van?"                                                                                    |
+| Client mentions price in any check-in              | High     | Trigger an early Loom + a plain € summary; offer 6-month prepay                                                                        |
+| Owner unresponsive >14 days                        | High     | Personal call. If still silent, written notice about continued service                                                                 |
+| Repeated "kan hij ook…" for the same missing thing | Medium   | Not a churn signal yet — a roadmap signal. Log it (§3)                                                                                 |
+| Competitor mentioned by name                       | Medium   | One-pager on the difference. No panic discount, ever                                                                                   |
 
 ---
 
@@ -160,9 +160,9 @@ Read these at the weekly digest pass, not on a schedule of their own.
 
 If an owner cancels, do not scramble to retain. A clean exit is worth more than a saved month.
 
-1. Acknowledge within the hour: *"Dank voor je bericht, geen probleem."*
+1. Acknowledge within the hour: _"Dank voor je bericht, geen probleem."_
 2. Offer a 15-minute exit call.
-3. Ask: *"Welke één of twee dingen hadden we anders moeten doen?"* Listen. Do not defend.
+3. Ask: _"Welke één of twee dingen hadden we anders moeten doen?"_ Listen. Do not defend.
 4. Honour the notice period cleanly, per `/legal/voorwaarden`.
 5. Cancel the Mollie subscription immediately. Never let a mandate outlive the relationship —
    one unexpected debit undoes every good thing above.

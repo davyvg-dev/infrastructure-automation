@@ -1,29 +1,29 @@
 ---
-title: "Wat kost een gemiste oproep een loodgieter?"
-description: "Reken het na met uw eigen cijfers: gemiste spoedoproepen per week keer uw kluswaarde. En waarom u een verloren lead sinds 2024 niet meer kunt terugkopen."
+title: 'Wat kost een gemiste oproep een loodgieter?'
+description: 'Reken het na met uw eigen cijfers: gemiste spoedoproepen per week keer uw kluswaarde. En waarom u een verloren lead sinds 2024 niet meer kunt terugkopen.'
 vertical: loodgieters
 type: probleem
-targetKeyword: "gemiste oproepen loodgieter"
+targetKeyword: 'gemiste oproepen loodgieter'
 stats:
-  - claim: "78% van de klanten koopt bij het bedrijf dat als eerste reageert."
-    bron: "MIT/InsideSales, via Harvard Business Review"
-    bronUrl: "https://hbr.org/2011/03/the-short-life-of-online-sales-leads"
-  - claim: "1 op de 12 bellers krijgt helemaal geen contact met het bedrijf dat hij belt."
-    bron: "KCM Group, mystery-call onderzoek onder 10.000 gesprekken, via DIRECT Klantcontact"
-  - claim: "Google verbiedt in Nederland sinds 22 februari 2024 zoekadvertenties voor loodgieters- en ontstoppingsdiensten."
-    bron: "Google Ads-beleid voor lokale dienstverleners (slotenmakers sinds 2021, loodgieters sinds 2024)"
+  - claim: '78% van de klanten koopt bij het bedrijf dat als eerste reageert.'
+    bron: 'MIT/InsideSales, via Harvard Business Review'
+    bronUrl: 'https://hbr.org/2011/03/the-short-life-of-online-sales-leads'
+  - claim: '1 op de 12 bellers krijgt helemaal geen contact met het bedrijf dat hij belt.'
+    bron: 'KCM Group, mystery-call onderzoek onder 10.000 gesprekken, via DIRECT Klantcontact'
+  - claim: 'Google verbiedt in Nederland sinds 22 februari 2024 zoekadvertenties voor loodgieters- en ontstoppingsdiensten.'
+    bron: 'Google Ads-beleid voor lokale dienstverleners (slotenmakers sinds 2021, loodgieters sinds 2024)'
   - claim: "Via Werkspot betaalt u €3 tot €75 per lead en gemiddeld zo'n €208 aan leadkosten per gewonnen klus."
-    bron: "Adaptoo, analyse van Werkspot-kosten"
-    bronUrl: "https://adaptoo.nl/blog/werkspot-kosten"
+    bron: 'Adaptoo, analyse van Werkspot-kosten'
+    bronUrl: 'https://adaptoo.nl/blog/werkspot-kosten'
 faq:
-  - q: "Hoeveel telefoontjes mist een loodgieter gemiddeld?"
-    a: "Daar bestaat geen betrouwbaar landelijk cijfer voor; percentages die u online ziet zijn meestal verkoopfolklore. Wel onderzocht: in het KCM mystery-call onderzoek kreeg 1 op de 12 bellers geen contact. Tel daarom uw eigen gemiste oproepen van een maand, dat is het enige cijfer dat er voor uw bedrijf toe doet."
-  - q: "Is voicemail niet genoeg voor gemiste oproepen?"
-    a: "Bij spoed niet. Een beller met een lekkage wil direct weten of u kunt komen; een voicemail geeft geen antwoord en geen afspraak, dus belt hij de volgende loodgieter in de zoekresultaten."
-  - q: "Kan ik gemiste oproepen niet compenseren met Google-advertenties?"
+  - q: 'Hoeveel telefoontjes mist een loodgieter gemiddeld?'
+    a: 'Daar bestaat geen betrouwbaar landelijk cijfer voor; percentages die u online ziet zijn meestal verkoopfolklore. Wel onderzocht: in het KCM mystery-call onderzoek kreeg 1 op de 12 bellers geen contact. Tel daarom uw eigen gemiste oproepen van een maand, dat is het enige cijfer dat er voor uw bedrijf toe doet.'
+  - q: 'Is voicemail niet genoeg voor gemiste oproepen?'
+    a: 'Bij spoed niet. Een beller met een lekkage wil direct weten of u kunt komen; een voicemail geeft geen antwoord en geen afspraak, dus belt hij de volgende loodgieter in de zoekresultaten.'
+  - q: 'Kan ik gemiste oproepen niet compenseren met Google-advertenties?'
     a: "Nee. Google verbiedt in Nederland sinds 22 februari 2024 zoekadvertenties voor loodgieters- en ontstoppingsdiensten. Leads bijkopen kan alleen nog via platforms zoals Werkspot, waar u volgens Adaptoo gemiddeld zo'n €208 aan leadkosten per gewonnen klus betaalt."
   - q: "Wat kost een gemiste spoedoproep in euro's?"
-    a: "Uw gemiddelde kluswaarde. Bij spoedklussen ligt die voor loodgieters vaak tussen €150 en €400 of meer. De jaarschade rekent u uit met: gemiste oproepen per week keer kluswaarde keer 52."
+    a: 'Uw gemiddelde kluswaarde. Bij spoedklussen ligt die voor loodgieters vaak tussen €150 en €400 of meer. De jaarschade rekent u uit met: gemiste oproepen per week keer kluswaarde keer 52.'
 laatstBijgewerkt: 2026-08-13
 related:
   - antwoordservice-loodgieter

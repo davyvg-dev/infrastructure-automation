@@ -9,6 +9,7 @@ character_count: 1155
 # 5 redenen dat installateurs offertes verliezen (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 1, post 3) zegt: carousel "5 redenen dat installateurs offertes verliezen". Deze post-body is de begeleidende tekst bij de Canva-carousel (1 reden per slide).
 - Hook test: "Ik analyseerde 30 offerte-trajecten" — concrete claim, geeft autoriteit.
 - Cadans: 5 punten, één regel per reden. Geen uitleg in de post-body — die staat op de slides.

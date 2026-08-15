@@ -3,13 +3,7 @@
 // a city-unique intro paragraph (≥100 words), neighbourhood list, price tier
 // descriptor and lateral-link list. Niche-specific framing lives in wave1.ts.
 
-export type CitySlug =
-  | 'amsterdam'
-  | 'rotterdam'
-  | 'den-haag'
-  | 'utrecht'
-  | 'eindhoven'
-  | 'haarlem'
+export type CitySlug = 'amsterdam' | 'rotterdam' | 'den-haag' | 'utrecht' | 'eindhoven' | 'haarlem'
 
 export interface City {
   slug: CitySlug

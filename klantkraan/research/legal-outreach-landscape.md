@@ -1,4 +1,5 @@
 # Klantkraan — Legal Outreach Landscape (NL/EU)
+
 **Status as of 2026-05-21. Review after any AP, ACM, or EU Commission publication.**
 
 ---
@@ -65,11 +66,11 @@ Enforcer: **ACM** (Autoriteit Consument en Markt). Fine authority: up to €900,
 
 ### 2.2 B2B vs Consumer — Current State
 
-| Entity type | Cold call without prior consent? | Legal basis |
-|---|---|---|
-| Consument (natural person, private) | No — explicit opt-in required | Tw art. 11.7(1) |
-| Eenmanszaak / VOF / maatschap | No — same protection as consumer | Tw art. 11.7(1) + AVG (natural person data) |
-| BV / NV / vereniging / coöperatie / stichting (rechtspersoon) | **Yes, conditionally** | Tw art. 11.7(5) — rechtspersonen are excluded from the consumer protection scope |
+| Entity type                                                   | Cold call without prior consent? | Legal basis                                                                      |
+| ------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------------------------------- |
+| Consument (natural person, private)                           | No — explicit opt-in required    | Tw art. 11.7(1)                                                                  |
+| Eenmanszaak / VOF / maatschap                                 | No — same protection as consumer | Tw art. 11.7(1) + AVG (natural person data)                                      |
+| BV / NV / vereniging / coöperatie / stichting (rechtspersoon) | **Yes, conditionally**           | Tw art. 11.7(5) — rechtspersonen are excluded from the consumer protection scope |
 
 **Conditions for a permitted cold call to a BV:**
 
@@ -223,6 +224,7 @@ No official Dutch-language template has been published by the EU Commission, AP,
 Translation note: "geautomatiseerde assistent" (automated assistant) or "AI-systeem" are both acceptable. "Virtuele assistent" alone is ambiguous and may not satisfy the "informed they are interacting with an AI system" standard.
 
 **Required elements:**
+
 - Company name of the deployer (Klantkraan or its client)
 - Explicit statement it is an AI / automated system (not a person)
 - Purpose of the call
@@ -237,13 +239,13 @@ Translation note: "geautomatiseerde assistent" (automated assistant) or "AI-syst
 
 ### 5.4 Combined AVG + AI Act Compliance Pattern for Voice Agents
 
-| Layer | Requirement | When |
-|---|---|---|
-| AI Act art. 50 | Audible AI disclosure in Dutch | First 5 seconds of every call |
-| Tw art. 11.7 | Caller ID + company name + purpose | Same opening statement |
-| AVG art. 13/14 | Inform subject of processing purpose, legal basis, retention | Opening statement or follow-up email/URL |
-| AVG art. 6 | Legal basis for voice data processing | Before call: document legitimate interest or consent |
-| AVG recording | Inform caller before recording, apply retention limits | Opening statement |
+| Layer             | Requirement                                                          | When                                                                           |
+| ----------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| AI Act art. 50    | Audible AI disclosure in Dutch                                       | First 5 seconds of every call                                                  |
+| Tw art. 11.7      | Caller ID + company name + purpose                                   | Same opening statement                                                         |
+| AVG art. 13/14    | Inform subject of processing purpose, legal basis, retention         | Opening statement or follow-up email/URL                                       |
+| AVG art. 6        | Legal basis for voice data processing                                | Before call: document legitimate interest or consent                           |
+| AVG recording     | Inform caller before recording, apply retention limits               | Opening statement                                                              |
 | AI Act art. 50(2) | Machine-readable marking of AI-generated audio (for recorded output) | At output generation level — Synthflow provider obligation, verify in contract |
 
 **DPIA requirement**: If processing voice data at scale (many calls per month involving natural persons), a DPIA under AVG art. 35 is likely required given the sensitivity of voice data. Run one before scaling outbound campaigns.
@@ -255,6 +257,7 @@ Translation note: "geautomatiseerde assistent" (automated assistant) or "AI-syst
 ### Outbound AI Voice Agent to a BV
 
 **ALLOWED** under current law (to 2 August 2026), provided:
+
 - Called number is publicly disclosed by the BV (KvK, website, directory).
 - No NMI flag on the KvK extract.
 - Agent opens with: company name + commercial purpose + AI disclosure (the AI disclosure is not legally mandatory until 2 August 2026, but keep it on regardless — it is on in Synthflow and must remain on).
@@ -273,6 +276,7 @@ Translation note: "geautomatiseerde assistent" (automated assistant) or "AI-syst
 ### Cold Email to a BV (generic address, e.g., info@bv.nl)
 
 **ALLOWED** without prior consent, provided:
+
 - Legitimate interest basis documented in an LIA.
 - Email is relevant to the BV's business sector and size.
 - No NMI flag on KvK.
@@ -292,6 +296,7 @@ For **named director email at a BV** (jan.devries@bv.nl): AVG applies (CJEU C-71
 ### Inbound AI Voice Agent (Prospect-Initiated Call)
 
 **ALLOWED**, subject to:
+
 - AI disclosure in opening greeting (mandatory from 2 August 2026; keep on now).
 - Call recording: inform caller at opening if calls are recorded.
 - AVG art. 13 information provided (purpose, retention, rights) — via opening statement, post-call email, or website privacy notice linked during the call.
@@ -302,6 +307,7 @@ For **named director email at a BV** (jan.devries@bv.nl): AVG applies (CJEU C-71
 ### Recording Calls
 
 **ALLOWED** for business purposes, with:
+
 - Pre-recording notification to the caller ("Dit gesprek wordt opgenomen voor [doel]").
 - AVG legal basis documented (legitimate interest typical; or contractual necessity if call is intake for a signed engagement).
 - Works council approval if employees' calls are recorded.
@@ -312,13 +318,13 @@ For **named director email at a BV** (jan.devries@bv.nl): AVG applies (CJEU C-71
 
 ### Data Retention
 
-| Data type | Recommended retention | Legal basis |
-|---|---|---|
-| BV-level contact data (no natural person) | 24 months post last engagement | Outside AVG scope; internal policy |
-| Named director data | 12 months or duration of sales cycle | LIA, document |
-| Call recordings | 90 days (or longer only if needed for dispute) | Legitimate interest / contractual |
-| Opt-out / suppression list | Indefinitely (to honour the opt-out) | Legal obligation |
-| Consent records | Duration of consent + 3 years | Burden of proof (Tw) |
+| Data type                                 | Recommended retention                          | Legal basis                        |
+| ----------------------------------------- | ---------------------------------------------- | ---------------------------------- |
+| BV-level contact data (no natural person) | 24 months post last engagement                 | Outside AVG scope; internal policy |
+| Named director data                       | 12 months or duration of sales cycle           | LIA, document                      |
+| Call recordings                           | 90 days (or longer only if needed for dispute) | Legitimate interest / contractual  |
+| Opt-out / suppression list                | Indefinitely (to honour the opt-out)           | Legal obligation                   |
+| Consent records                           | Duration of consent + 3 years                  | Burden of proof (Tw)               |
 
 ---
 
@@ -343,6 +349,7 @@ For **named director email at a BV** (jan.devries@bv.nl): AVG applies (CJEU C-71
 All sources accessed 2026-05-21. Distinguish: (S) = statute/official text; (G) = regulator guidance; (P) = published analysis/commentary.
 
 **EU AI Act**
+
 - (S) EU AI Act, OJ L 2024/1689, art. 50 and art. 113: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202401689
 - (G) EU Commission AI Act Service Desk, art. 50: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50
 - (G) EU Commission digital strategy — Navigating the AI Act: https://digital-strategy.ec.europa.eu/en/faqs/navigating-ai-act
@@ -351,6 +358,7 @@ All sources accessed 2026-05-21. Distinguish: (S) = statute/official text; (G) =
 - (P) aiactblog.nl (NL-focused): https://www.aiactblog.nl/en/ai-act/artikel/50
 
 **Dutch Telemarketing / Telecommunicatiewet**
+
 - (S) Telecommunicatiewet art. 11.7 (official text): https://zoek.officielebekendmakingen.nl/kst-35421-3.html
 - (G) ACM — step up telemarketing enforcement: https://www.acm.nl/en/publications/acm-step-its-enforcement-compliance-telemarketing-rules
 - (G) ACM — warning on demonstrating explicit consent: https://www.acm.nl/en/publications/acm-issues-warning-telemarketers-must-be-able-demonstrate-explicit-consent
@@ -363,6 +371,7 @@ All sources accessed 2026-05-21. Distinguish: (S) = statute/official text; (G) =
 - (P) Lexology — HEM energy fine €1.1M: https://www.lexology.com/library/detail.aspx?g=6e6ffb0e-e957-41df-92b3-36dc600e631f
 
 **AVG/GDPR — Personal Data, Legitimate Interest, B2B Email**
+
 - (G) AP — What are personal data: https://www.autoriteitpersoonsgegevens.nl/en/themes/basic-gdpr/privacy-and-personal-data/what-are-personal-data
 - (G) AP — Legal bases from GDPR explained: https://www.autoriteitpersoonsgegevens.nl/en/themes/basic-gdpr/gdpr-basics/legal-bases-from-the-gdpr-explained
 - (G) AP — digital direct marketing: https://www.autoriteitpersoonsgegevens.nl/en/themes/internet-and-smart-devices/advertising/digital-direct-marketing
@@ -373,17 +382,20 @@ All sources accessed 2026-05-21. Distinguish: (S) = statute/official text; (G) =
 - (P) Cyberinsider — AP fines Experian €2.7M: https://cyberinsider.com/experian-fined-e2-7-million-in-the-netherlands-for-illegal-data-processing/
 
 **KvK / Non-Mailing Indicator**
+
 - (G) KvK — Non-Mailing Indicator: https://www.kvk.nl/en/about-the-business-register/the-non-mailing-indicator/
 - (G) KvK — privacy and business register FAQ: https://www.kvk.nl/over-kvk/veelgestelde-vragen-over-privacy-en-het-handelsregister/
 
 **Call Recording**
+
 - (P) Sound of Data — recording calls NL: https://www.soundofdata.com/recording-phone-calls/
 - (P) recordinglaw.com NL: https://recordinglaw.com/netherlands-recording-laws/
 
 **Voice AI Compliance**
+
 - (P) Knowlee — AI cold calling EU 2026: https://www.knowlee.ai/blog/ai-cold-calling-compliance-eu-2026
 - (P) DILR.ai — art. 50 voice disclosure guide: https://www.dilr.ai/blog/ai-voice-disclosure-compliance-eu-ai-act-article-50
 
 ---
 
-*This document is an operational research summary, not legal advice. Consult a Dutch-qualified privacy/telecom lawyer before scaling outreach operations or responding to regulatory inquiry. Refresh after any AP, ACM, or EU Commission publication.*
+_This document is an operational research summary, not legal advice. Consult a Dutch-qualified privacy/telecom lawyer before scaling outreach operations or responding to regulatory inquiry. Refresh after any AP, ACM, or EU Commission publication._

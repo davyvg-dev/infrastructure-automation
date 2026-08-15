@@ -28,9 +28,7 @@ const illustrations = {
   <!-- Hero -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-chalk)">
-        Wat voor bedrijf runt u?
-      </h1>
+      <h1 class="font-display text-hero text-(--color-chalk)">Wat voor bedrijf runt u?</h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
         Klantkraan kent de termen van uw branche. Proefles en abonnement voor de sportschool.
         Voorrijkosten en spoedtoeslag voor de loodgieter. M²-tarief en kleurproef voor de schilder.
@@ -39,7 +37,10 @@ const illustrations = {
   </section>
 
   <!-- Branches grid -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-label="Branches">
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Branches"
+  >
     <div class="mx-auto max-w-5xl px-6">
       <div class="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
@@ -53,18 +54,13 @@ const illustrations = {
                 <div class="flex items-start justify-between gap-3">
                   <h2 class="font-display text-h2 text-(--color-chalk)">{b.labelPlural}</h2>
                   {Illustration && (
-                    <div
-                      class="hidden text-(--color-sodium) sm:block"
-                      aria-hidden="true"
-                    >
+                    <div class="hidden text-(--color-sodium) sm:block" aria-hidden="true">
                       <Illustration class="h-20 w-20" />
                     </div>
                   )}
                 </div>
                 <p class="mt-3 text-body text-(--color-dim)">{b.hubLine}</p>
-                <p
-                  class="mt-5 inline-flex items-center gap-1 text-small font-medium text-(--color-sodium) group-hover:underline"
-                >
+                <p class="mt-5 inline-flex items-center gap-1 text-small font-medium text-(--color-sodium) group-hover:underline">
                   <span>Bekijk de oplossing voor {b.labelPlural.toLowerCase()}</span>
                   <span aria-hidden="true">→</span>
                 </p>
@@ -79,33 +75,17 @@ const illustrations = {
   <!-- "Mijn vak staat er niet bij" -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p
-        class="eyebrow"
-      >
-        Andere branche?
-      </p>
-      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
-        Staat uw branche er niet bij?
-      </h2>
+      <p class="eyebrow">Andere branche?</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">Staat uw branche er niet bij?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Klantkraan werkt voor elk Nederlands bedrijf waar klantvragen en afspraken binnenkomen,
-        van timmermannen, hoveniers en glaszetters tot kappers, fysiopraktijken en rijscholen. In
-        een korte intake leggen we uw diensten, tarieven en huisregels vast. Daarna spreekt de
+        Klantkraan werkt voor elk Nederlands bedrijf waar klantvragen en afspraken binnenkomen, van
+        timmermannen, hoveniers en glaszetters tot kappers, fysiopraktijken en rijscholen. In een
+        korte intake leggen we uw diensten, tarieven en huisregels vast. Daarna spreekt de
         AI-receptionist die uit zoals u dat zelf doet.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Probeer de demo
-        </a>
-        <a
-          href="/rekentool/"
-          class="btn btn-ghost btn-lg"
-        >
-          Bereken uw ROI
-        </a>
+        <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+        <a href="/rekentool/" class="btn btn-ghost btn-lg"> Bereken uw ROI </a>
       </div>
     </div>
   </section>
@@ -115,20 +95,14 @@ const illustrations = {
     <div class="mx-auto max-w-5xl px-6">
       <ul role="list" class="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
         <li class="flex items-start gap-3">
-          <Icon
-            name="shield-check"
-            class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)"
-          />
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
             <p class="text-small font-medium text-(--color-chalk)">AVG + AI Act art. 50</p>
             <p class="text-small text-(--color-dim)">Disclosure standaard aan</p>
           </div>
         </li>
         <li class="flex items-start gap-3">
-          <Icon
-            name="shield-check"
-            class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)"
-          />
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
             <p class="text-small font-medium text-(--color-chalk)">Gehost in de EU</p>
             <p class="text-small text-(--color-dim)">Cloudflare · Neon · Hetzner</p>

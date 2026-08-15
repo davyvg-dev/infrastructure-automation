@@ -17,7 +17,18 @@ const jaar = new Date().getFullYear()
     <div>
       <h2 class="text-h3">{bedrijf.naam}</h2>
       <address class="mt-3 text-small text-(--color-mist) not-italic">
-        {adres.map((regel, i) => (i === 0 ? regel : <Fragment><br />{regel}</Fragment>))}
+        {
+          adres.map((regel, i) =>
+            i === 0 ? (
+              regel
+            ) : (
+              <Fragment>
+                <br />
+                {regel}
+              </Fragment>
+            ),
+          )
+        }
       </address>
       {
         (bedrijf.kvk || bedrijf.btw_id) && (
@@ -33,11 +44,13 @@ const jaar = new Date().getFullYear()
       <h2 class="text-h3">Contact</h2>
       <ul role="list" class="mt-3 space-y-1 text-small">
         <li><a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a></li>
-        {bedrijf.email && (
-          <li>
-            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
-          </li>
-        )}
+        {
+          bedrijf.email && (
+            <li>
+              <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+            </li>
+          )
+        }
       </ul>
       {
         config.receptionist && (
@@ -79,7 +92,8 @@ const jaar = new Date().getFullYear()
   </div>
   <div class="border-t border-(--color-line)">
     <p class="mx-auto max-w-5xl px-6 py-4 text-small text-(--color-mist)">
-      &copy; {jaar} {bedrijf.naam}. Deze website gebruikt geen cookies en geen trackers.
+      &copy; {jaar}
+      {bedrijf.naam}. Deze website gebruikt geen cookies en geen trackers.
     </p>
   </div>
 </footer>

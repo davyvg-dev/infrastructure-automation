@@ -54,9 +54,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
               </a>
             </h2>
           </header>
-          <p class="mt-4 flex-1 text-body text-(--color-dim)">
-            {post.data.description}
-          </p>
+          <p class="mt-4 flex-1 text-body text-(--color-dim)">{post.data.description}</p>
           <a
             href={`/blog/${post.id.replace(/\.md$/, '')}/`}
             aria-label={`Lees het artikel → ${post.data.title}`}

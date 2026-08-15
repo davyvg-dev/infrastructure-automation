@@ -9,6 +9,7 @@ suggested_week: 2
 # Mag een AI je telefoon opnemen? (value-only, trust)
 
 ## Voice notes voor founder
+
 - Positioneert onze compliance-insteek als educatie, niet als pitch. Geen merknaam.
 - Houd de wettelijke feiten kloppend (art. 50, 2 aug 2026) — zie docs/04-legal/ai-act-disclosure.md.
 - Geen juridisch advies claimen; dat staat er expliciet in.

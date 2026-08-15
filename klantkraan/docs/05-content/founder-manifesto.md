@@ -6,6 +6,7 @@ English (the founder track's primary language); a Dutch follow-up can reuse the 
 section for the buyer audience later.
 
 Posting notes:
+
 - Post Tuesday–Thursday, 08:30–10:00 NL time (LinkedIn B2B peak).
 - No links in the body. First comment: link to demo.klantkraan.nl.
 - Reply to every comment personally for the first 24h. Replies stay human, always.

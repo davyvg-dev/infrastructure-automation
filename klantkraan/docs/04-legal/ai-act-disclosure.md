@@ -4,20 +4,21 @@
 
 ## What the law requires
 
-| Obligation | Source | Klantkraan implementation |
-|---|---|---|
-| Disclose AI nature at first interaction | Art. 50(1) | First-turn line of every Synthflow call |
-| Disclosure in plain language | Recital 132 | Plain Dutch, no jargon |
-| Provide a path to human | Implied (and good practice) | "Zeg 'medewerker' voor een mens" |
-| Record-keeping | Art. 50(5) | Audio recording + transcript + model version + prompt hash, retained |
-| Annex VIII registration | NOT required for limited-risk | n/a |
-| Conformity assessment | NOT required for limited-risk | n/a |
+| Obligation                              | Source                        | Klantkraan implementation                                            |
+| --------------------------------------- | ----------------------------- | -------------------------------------------------------------------- |
+| Disclose AI nature at first interaction | Art. 50(1)                    | First-turn line of every Synthflow call                              |
+| Disclosure in plain language            | Recital 132                   | Plain Dutch, no jargon                                               |
+| Provide a path to human                 | Implied (and good practice)   | "Zeg 'medewerker' voor een mens"                                     |
+| Record-keeping                          | Art. 50(5)                    | Audio recording + transcript + model version + prompt hash, retained |
+| Annex VIII registration                 | NOT required for limited-risk | n/a                                                                  |
+| Conformity assessment                   | NOT required for limited-risk | n/a                                                                  |
 
 ## The verbatim Dutch disclosure (use exactly)
 
 > "Goedendag, u spreekt met {{agent_naam}}, de digitale assistent van {{bedrijfsnaam}}. Dit gesprek wordt gevoerd door een AI-systeem en kan worden opgenomen voor kwaliteits- en trainingsdoeleinden. Wilt u liever een mens spreken? Zeg dan 'medewerker'. Waarmee kan ik u helpen?"
 
 Required elements present:
+
 1. ✅ AI nature disclosed
 2. ✅ First interaction (literally first sentence)
 3. ✅ Plain Dutch
@@ -45,6 +46,7 @@ Lying about AI status would be a separate violation + reputational damage.
 ## Record-keeping (Art. 50(5))
 
 For each call, we retain:
+
 - Audio recording (call.mp3)
 - Transcript (call.txt, plain text)
 - Synthflow model version + voice ID
@@ -61,6 +63,7 @@ If Klantkraan ever generates synthetic audio/video depicting a real person (e.g.
 ## Deepfake / voice-cloning policy
 
 Klantkraan does **NOT**:
+
 - Clone the owner's voice for the AI receptionist
 - Generate fake video testimonials
 - Auto-translate client voices into other languages
@@ -70,16 +73,19 @@ This is a deliberate brand boundary, not just legal hygiene.
 ## Compliance checks (operational)
 
 Monthly audit (founder, 15 min):
+
 1. Pick 10 random call recordings.
 2. Confirm disclosure played in first 8 seconds of each.
 3. Spot-check transcript reflects the disclosure text.
 4. Log audit result in `compliance_audits` table.
 
 Quarterly:
+
 1. Review Synthflow model version + voice — any drift?
 2. Review prompt for any change that weakens the disclosure.
 
 Annual:
+
 1. Re-read Art. 50 + any AP guidance.
 2. Update this document.
 3. Re-train any sub-processor agreements.

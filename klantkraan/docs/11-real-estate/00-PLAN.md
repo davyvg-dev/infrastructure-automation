@@ -4,6 +4,7 @@ Side-project track of Klantkraan: AI receptionist for real-estate agencies.
 Shares the `ai-receptionist` engine; separate at the sales/docs/demo level.
 
 Decisions (founder):
+
 - 2026-08-09: ElevenLabs for voice when voice comes (LiveKit stays the later
   margin play). Market: Spain / Costa del Sol, Resales-Online agencies. EN
   primary, ES/DE secondary.

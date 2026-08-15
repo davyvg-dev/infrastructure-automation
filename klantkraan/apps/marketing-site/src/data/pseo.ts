@@ -38,7 +38,8 @@ export const approvedStats: Record<string, ApprovedStat> = {
   },
   'invoca-gemiste-calls-27': {
     id: 'invoca-gemiste-calls-27',
-    claim: 'Ongeveer 27% van de inkomende telefoontjes naar klusbedrijven wordt gemist (Amerikaanse data).',
+    claim:
+      'Ongeveer 27% van de inkomende telefoontjes naar klusbedrijven wordt gemist (Amerikaanse data).',
     bron: 'Invoca, analyse van 60 miljoen gesprekken in de VS',
     voorbehoud: 'Altijd expliciet als internationaal/VS-cijfer labelen.',
   },
@@ -76,7 +77,8 @@ export const approvedStats: Record<string, ApprovedStat> = {
     claim: 'Gemiddeld kost een via Werkspot gewonnen klus zo’n €208 aan leadkosten.',
     bron: 'Adaptoo, analyse van Werkspot-kosten',
     bronUrl: 'https://adaptoo.nl/blog/werkspot-kosten',
-    voorbehoud: 'Schatting van Adaptoo, geen door Werkspot gepubliceerd cijfer; altijd attribueren.',
+    voorbehoud:
+      'Schatting van Adaptoo, geen door Werkspot gepubliceerd cijfer; altijd attribueren.',
   },
   'leadplatform-gedeelde-leads': {
     id: 'leadplatform-gedeelde-leads',
@@ -137,7 +139,8 @@ export const euroMath: Record<string, VerticalMath> = {
   loodgieters: {
     vertical: 'loodgieters',
     jobValueEur: 250,
-    bandbreedte: 'spoedklussen €150 tot €400; rioolontstopping €90 tot €250, met camera €270 tot €480, spoedtoeslag +60 tot 100%',
+    bandbreedte:
+      'spoedklussen €150 tot €400; rioolontstopping €90 tot €250, met camera €270 tot €480, spoedtoeslag +60 tot 100%',
     herkomst: 'onderzoek',
     toelichting:
       'NL-sourced job values, research §1: één gemiste klus per week = €600 tot €1.600 per maand. NB: de cornerstone gebruikt €450 als gemiddelde kluswaarde (niches.ts); niet mengen op één pagina.',
@@ -174,7 +177,13 @@ export const euroMath: Record<string, VerticalMath> = {
 // wordt nooit ingevuld. peildatum = wanneer geverifieerd.
 export interface CompetitorRow {
   naam: string
-  categorie: 'ai-telefonist' | 'website-bundel' | 'leadplatform' | 'marketingbureau' | 'websitebouwer' | 'antwoordservice'
+  categorie:
+    | 'ai-telefonist'
+    | 'website-bundel'
+    | 'leadplatform'
+    | 'marketingbureau'
+    | 'websitebouwer'
+    | 'antwoordservice'
   product: string
   prijs: string
   doelgroep?: string
@@ -244,14 +253,16 @@ export const marktprijzen: CompetitorRow[] = [
     categorie: 'leadplatform',
     product: 'Gedeelde klusaanvragen',
     prijs: '€3 tot €75 per lead; abonnement €29,95 of €49,95/mnd',
-    opmerking: 'zelfde lead naar meerdere bedrijven; ±€208 leadkosten per gewonnen klus (schatting Adaptoo)',
+    opmerking:
+      'zelfde lead naar meerdere bedrijven; ±€208 leadkosten per gewonnen klus (schatting Adaptoo)',
     peildatum: '2026-05',
   },
   {
     naam: 'Homedeal',
     categorie: 'leadplatform',
     product: 'Gedeelde klusaanvragen',
-    prijs: '€40 tot €80 per lead, gedeeld met 3 tot 5 concurrenten, plus verplicht abonnement (prijs niet gepubliceerd)',
+    prijs:
+      '€40 tot €80 per lead, gedeeld met 3 tot 5 concurrenten, plus verplicht abonnement (prijs niet gepubliceerd)',
     peildatum: '2026-05',
   },
   {

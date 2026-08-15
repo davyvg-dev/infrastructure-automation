@@ -4,12 +4,13 @@ publish_week: 4
 post_type: data_visual
 status: holdback
 character_count: 909
-holdback_reason: "Needs real dashboard screenshot + 30-day pilot data. Publish after post 008 case study."
+holdback_reason: 'Needs real dashboard screenshot + 30-day pilot data. Publish after post 008 case study.'
 ---
 
 # Before/after dashboard — pilot #1 (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - HOLDBACK. Calendar (week 4, post 14) zegt: "before/after dashboard van pilot #1". Visueel — screenshot van het `/r/[slug]`-dashboard, eventueel met getallen via Canva over de screenshot heen.
 - Dit is een korte caption-post. De LI-feed klikt op de afbeelding, niet de tekst. Tekst is alleen context.
 - Anonimiseer de screenshot: blur klantnaam in de header, blur telefoonnummers in de event-log, behoud cijfers + grafieken.

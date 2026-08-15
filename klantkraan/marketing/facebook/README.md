@@ -9,7 +9,7 @@ Meta **killed the Facebook Groups API in April 2024** (removed `publish_to_group
 and all third-party group access, to stop spam). No legitimate tool — Buffer,
 Hootsuite, Make, n8n — can post to a group anymore. The only thing left is a
 browser bot that logs in as you and clicks; that breaks Meta's Terms and risks a
-ban on the account that *is* the business. So this kit schedules and drafts; a
+ban on the account that _is_ the business. So this kit schedules and drafts; a
 human does the 30-second paste. Auto-posting to **Facebook Pages** (not groups)
 is still allowed — see the upgrade path below.
 
@@ -54,7 +54,7 @@ marketing/facebook/
 
 When n8n + CM.com are live, an `infra/n8n/facebook-post-reminder.json` workflow can
 push the day's draft to your WhatsApp/e-mail each posting morning — so the
-*reminder* is automated even though the *posting* stays manual. The same channel
+_reminder_ is automated even though the _posting_ stays manual. The same channel
 could run a real **Facebook Page** on autopilot (Pages allow scheduled posting via
 the official API), separate from groups. Not built yet; needs the same creds gate
 as the voice agent.

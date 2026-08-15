@@ -211,14 +211,14 @@ Succes,
 
 ## Reply-handling routing
 
-| Reply category | Action |
-|---|---|
+| Reply category                        | Action                                                                                               |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | Positive ("interesse", "vertel meer") | n8n flags in Attio → Slack ping → founder personal reply within 15 min, propose Zoom + Cal.com link. |
-| Information request | Personal reply with answer + Cal.com link as soft CTA. |
-| "Niet nu, later" | Polite reply, snooze in Attio 90 days, drop into newsletter list. |
-| "Stop" / "niet meer mailen" | Immediate unsubscribe, Postgres `suppressions` table, all sequences. |
-| Negative / hostile | Personal reply ("dank voor de duidelijkheid"), suppress. |
-| Out-of-office | Wait 14 days, resume sequence. |
+| Information request                   | Personal reply with answer + Cal.com link as soft CTA.                                               |
+| "Niet nu, later"                      | Polite reply, snooze in Attio 90 days, drop into newsletter list.                                    |
+| "Stop" / "niet meer mailen"           | Immediate unsubscribe, Postgres `suppressions` table, all sequences.                                 |
+| Negative / hostile                    | Personal reply ("dank voor de duidelijkheid"), suppress.                                             |
+| Out-of-office                         | Wait 14 days, resume sequence.                                                                       |
 
 ## A/B testing schedule
 
@@ -229,11 +229,11 @@ Succes,
 
 ## Inbox/domain rotation
 
-| Domain | Inboxes | Mailbox naming |
-|---|---|---|
-| getklantkraan.nl | 3 | `jan@`, `pieter@`, `info@` — all role-based-safe |
-| klantenmotor.nl | 3 | `jan@`, `pieter@`, `info@` |
-| klantkraanpro.nl | 3 | `jan@`, `pieter@`, `info@` |
+| Domain           | Inboxes | Mailbox naming                                   |
+| ---------------- | ------- | ------------------------------------------------ |
+| getklantkraan.nl | 3       | `jan@`, `pieter@`, `info@` — all role-based-safe |
+| klantenmotor.nl  | 3       | `jan@`, `pieter@`, `info@`                       |
+| klantkraanpro.nl | 3       | `jan@`, `pieter@`, `info@`                       |
 
 Never send from the brand domain `klantkraan.nl` to protect deliverability of legitimate transactional mail.
 

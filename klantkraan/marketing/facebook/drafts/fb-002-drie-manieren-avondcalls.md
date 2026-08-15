@@ -9,6 +9,7 @@ suggested_week: 1
 # Drie manieren om avond- en weekendcalls niet te verliezen (soft-mention)
 
 ## Voice notes voor founder
+
 - Optie 3 noemt de AI-route neutraal, zonder merknaam. Eerlijk over kosten en instelwerk = vertrouwen.
 - Alleen plaatsen in groepen waar een lichte zakelijke insteek mag. In strikte value-only groepen: gebruik fb-001 of fb-003.
 

@@ -1,26 +1,26 @@
 ---
-title: "Antwoordservice voor loodgieters: 3 opties vergeleken"
-description: "Antwoordservice, zelf opnemen of een AI-receptionist? De verschillen in bereikbaarheid, kosten en opvolging voor loodgietersbedrijven op een rij."
+title: 'Antwoordservice voor loodgieters: 3 opties vergeleken'
+description: 'Antwoordservice, zelf opnemen of een AI-receptionist? De verschillen in bereikbaarheid, kosten en opvolging voor loodgietersbedrijven op een rij.'
 vertical: loodgieters
 type: vergelijking
-targetKeyword: "antwoordservice loodgieter"
+targetKeyword: 'antwoordservice loodgieter'
 stats:
-  - claim: "Bijna de helft van de terugbelbeloftes wordt nooit nagekomen."
-    bron: "KCM Group, mystery-call onderzoek onder 10.000 gesprekken, via DIRECT Klantcontact"
-  - claim: "1 op de 12 bellers krijgt helemaal geen contact met het bedrijf dat hij belt."
-    bron: "KCM Group, mystery-call onderzoek onder 10.000 gesprekken, via DIRECT Klantcontact"
-  - claim: "78% van de klanten koopt bij het bedrijf dat als eerste reageert."
-    bron: "MIT/InsideSales, via Harvard Business Review"
-    bronUrl: "https://hbr.org/2011/03/the-short-life-of-online-sales-leads"
+  - claim: 'Bijna de helft van de terugbelbeloftes wordt nooit nagekomen.'
+    bron: 'KCM Group, mystery-call onderzoek onder 10.000 gesprekken, via DIRECT Klantcontact'
+  - claim: '1 op de 12 bellers krijgt helemaal geen contact met het bedrijf dat hij belt.'
+    bron: 'KCM Group, mystery-call onderzoek onder 10.000 gesprekken, via DIRECT Klantcontact'
+  - claim: '78% van de klanten koopt bij het bedrijf dat als eerste reageert.'
+    bron: 'MIT/InsideSales, via Harvard Business Review'
+    bronUrl: 'https://hbr.org/2011/03/the-short-life-of-online-sales-leads'
 faq:
-  - q: "Wat kost een antwoordservice voor een loodgieter?"
-    a: "De meeste Nederlandse antwoordservices rekenen een vast abonnement plus een tarief per aangenomen gesprek. De echte kostenpost zit in de opvolging: elk bericht moet u zelf nog terugbellen, en bijna de helft van de terugbelbeloftes wordt volgens KCM-onderzoek nooit nagekomen."
-  - q: "Wat is het verschil tussen een antwoordservice en een AI-receptionist?"
-    a: "Een antwoordservice noteert een bericht en belooft dat u terugbelt. Een AI-receptionist beantwoordt de vraag zelf, kent uw tarieven en plant de afspraak direct in, ook buiten kantooruren."
-  - q: "Merkt de klant dat hij met een digitale receptionist praat?"
-    a: "Ja, dat hoort de klant eerlijk te horen. De digitale receptionist van Klantkraan meldt aan het begin van het gesprek dat de klant met een digitale assistent praat, zoals de Europese AI-verordening ook voorschrijft."
-  - q: "Werkt een AI-receptionist ook voor telefoontjes?"
-    a: "Klantkraan vangt klantvragen op via de chat op uw website en via WhatsApp, en vangt zo ook de bellers op die u doorverwijst wanneer u niet kunt opnemen. Zo krijgt de klant direct antwoord in plaats van een voicemail."
+  - q: 'Wat kost een antwoordservice voor een loodgieter?'
+    a: 'De meeste Nederlandse antwoordservices rekenen een vast abonnement plus een tarief per aangenomen gesprek. De echte kostenpost zit in de opvolging: elk bericht moet u zelf nog terugbellen, en bijna de helft van de terugbelbeloftes wordt volgens KCM-onderzoek nooit nagekomen.'
+  - q: 'Wat is het verschil tussen een antwoordservice en een AI-receptionist?'
+    a: 'Een antwoordservice noteert een bericht en belooft dat u terugbelt. Een AI-receptionist beantwoordt de vraag zelf, kent uw tarieven en plant de afspraak direct in, ook buiten kantooruren.'
+  - q: 'Merkt de klant dat hij met een digitale receptionist praat?'
+    a: 'Ja, dat hoort de klant eerlijk te horen. De digitale receptionist van Klantkraan meldt aan het begin van het gesprek dat de klant met een digitale assistent praat, zoals de Europese AI-verordening ook voorschrijft.'
+  - q: 'Werkt een AI-receptionist ook voor telefoontjes?'
+    a: 'Klantkraan vangt klantvragen op via de chat op uw website en via WhatsApp, en vangt zo ook de bellers op die u doorverwijst wanneer u niet kunt opnemen. Zo krijgt de klant direct antwoord in plaats van een voicemail.'
 laatstBijgewerkt: 2026-08-13
 related:
   - gemiste-oproepen-loodgieter
@@ -44,14 +44,14 @@ Het verschil zit in wat de beller overhoudt: bij een antwoordservice een belofte
 
 ## De vergelijking in één tabel
 
-| | Zelf opnemen | Antwoordservice | AI-receptionist |
-|---|---|---|---|
-| Bereikbaar | Als uw handen vrij zijn | Kantooruren, soms ruimer | 24/7 |
-| De beller krijgt | Direct antwoord | Een terugbelbelofte | Direct antwoord plus afspraak |
-| Kent uw tarieven | Ja | Nee, werkt met een belscript | Ja, staat in de configuratie |
-| Opvolging | U belt zelf terug | U belt zelf terug | Afspraak staat al in de agenda |
-| Kosten | Uw werktijd | Abonnement plus tarief per gesprek | Vast maandbedrag, vanaf €299 per maand |
-| Kanalen | Telefoon | Telefoon | Websitechat en WhatsApp |
+|                  | Zelf opnemen            | Antwoordservice                    | AI-receptionist                        |
+| ---------------- | ----------------------- | ---------------------------------- | -------------------------------------- |
+| Bereikbaar       | Als uw handen vrij zijn | Kantooruren, soms ruimer           | 24/7                                   |
+| De beller krijgt | Direct antwoord         | Een terugbelbelofte                | Direct antwoord plus afspraak          |
+| Kent uw tarieven | Ja                      | Nee, werkt met een belscript       | Ja, staat in de configuratie           |
+| Opvolging        | U belt zelf terug       | U belt zelf terug                  | Afspraak staat al in de agenda         |
+| Kosten           | Uw werktijd             | Abonnement plus tarief per gesprek | Vast maandbedrag, vanaf €299 per maand |
+| Kanalen          | Telefoon                | Telefoon                           | Websitechat en WhatsApp                |
 
 ## Wanneer is een antwoordservice de betere keuze?
 

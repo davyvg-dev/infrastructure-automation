@@ -4,12 +4,13 @@ publish_week: 3
 post_type: lessons_learned
 status: holdback
 character_count: 1314
-holdback_reason: "Needs real pilot-1 learnings — publish 3-5 days after the case-study reveal (post 008)."
+holdback_reason: 'Needs real pilot-1 learnings — publish 3-5 days after the case-study reveal (post 008).'
 ---
 
 # 3 lessons learned uit pilot #1 (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - HOLDBACK. Volgt op 008-case-study. Publiceer 3-5 dagen na de case-study-reveal — niet eerder, anders bijt het zichzelf.
 - Lessons-style post werkt op LI als ze écht oncomfortabel zijn (wat er fout ging), niet als ze braaf-marketing zijn ("we hebben geleerd dat klantenfocus belangrijk is").
 - Drie lessons. Eén per blok. Concreet wat fout ging + wat we hebben aangepast.

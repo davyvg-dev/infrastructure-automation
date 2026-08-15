@@ -58,18 +58,19 @@ KvK's free **Open Dataset Basis Bedrijfsgegevens** (CC BY 4.0) contains BV/NV le
 
 KvK migrated from SBI 2008 to **SBI 2025** during the weekend of 6–7 September 2025. SBI 2025 adds a fifth digit (zero appended) to existing 4-digit codes. Both code sets are cross-referenceable. Use SBI 2025 for any new API calls against the current Handelsregister.
 
-| Niche | SBI 2008 code | SBI 2025 equivalent | Label |
-|---|---|---|---|
-| Elektrotechnisch installateur | **43.21** | **43210** | Elektrotechnische bouwinstallatie |
-| Werktuigbouwkundig installateur (HVAC/klimaat) | **43.22.2** | **43222** | Installatie van verwarmings- en luchtbehandelingsapparatuur |
-| Loodgieter (sanitair) | **43.22.1** | **43221** | Loodgieters- en fitterswerk; installatie van sanitair |
-| Overige bouwinstallatie (incl. mechanisch) | **43.29** | **43290** | Overige bouwinstallatie |
-| Dakdekker | **43.91** | **43910** | Dakdekken en bouwen van dakconstructies |
-| Aannemer algemeen (burgerlijke & utiliteitsbouw) | **41.20** | **41200** | Algemene burgerlijke en utiliteitsbouw |
-| Aannemer woningbouw / projectontwikkeling | **41.10** | **41100** | Projectontwikkeling |
-| Schilder en glaszetter | **43.34** | **43340** | Schilderen en glaszetten |
+| Niche                                            | SBI 2008 code | SBI 2025 equivalent | Label                                                       |
+| ------------------------------------------------ | ------------- | ------------------- | ----------------------------------------------------------- |
+| Elektrotechnisch installateur                    | **43.21**     | **43210**           | Elektrotechnische bouwinstallatie                           |
+| Werktuigbouwkundig installateur (HVAC/klimaat)   | **43.22.2**   | **43222**           | Installatie van verwarmings- en luchtbehandelingsapparatuur |
+| Loodgieter (sanitair)                            | **43.22.1**   | **43221**           | Loodgieters- en fitterswerk; installatie van sanitair       |
+| Overige bouwinstallatie (incl. mechanisch)       | **43.29**     | **43290**           | Overige bouwinstallatie                                     |
+| Dakdekker                                        | **43.91**     | **43910**           | Dakdekken en bouwen van dakconstructies                     |
+| Aannemer algemeen (burgerlijke & utiliteitsbouw) | **41.20**     | **41200**           | Algemene burgerlijke en utiliteitsbouw                      |
+| Aannemer woningbouw / projectontwikkeling        | **41.10**     | **41100**           | Projectontwikkeling                                         |
+| Schilder en glaszetter                           | **43.34**     | **43340**           | Schilderen en glaszetten                                    |
 
 **Priority codes for Klantkraan targeting:**
+
 - Installateur: query `43210` + `43222` + `43290` (catch HVAC/klimaat)
 - Loodgieter: `43221` (often overlaps with 43.22 parent)
 - Dakdekker: `43910`
@@ -84,13 +85,13 @@ KvK migrated from SBI 2008 to **SBI 2025** during the weekend of 6–7 September
 
 These are total company counts (all legal forms). BV share is typically 15–25% in specialized construction trades; eenmanszaak/ZZP dominate numerically.
 
-| Niche | SBI code | Total companies (all legal forms, ~Q1 2026) | Estimated BV share | Estimated BV count (≥1 FTE) |
-|---|---|---|---|---|
-| Installateur (elektrotechnisch + HVAC) | 43.21 + 43.22 | ~41,950 (SBI group 4321+4322 combined) | ~15% BV | ~3,000–4,500 BVs; subset ≥1 FTE likely 2,000–3,000 |
-| Loodgieter | 43.22.1 | Subset of above ~10,000 | ~12% | ~800–1,200 |
-| Dakdekker | 43.91 | 6,255 (Q1 2026, FirmFocus/CBS) | ~18% | ~700–1,000 |
-| Aannemer (41.20) | 41.20 | Part of >97,000 gespecialiseerde bouw total; 41.20 alone est. 8,000–12,000 | ~25% | ~1,500–2,500 |
-| Schilder | 43.34 | est. 12,000–15,000 | ~10% | ~800–1,200 |
+| Niche                                  | SBI code      | Total companies (all legal forms, ~Q1 2026)                                | Estimated BV share | Estimated BV count (≥1 FTE)                        |
+| -------------------------------------- | ------------- | -------------------------------------------------------------------------- | ------------------ | -------------------------------------------------- |
+| Installateur (elektrotechnisch + HVAC) | 43.21 + 43.22 | ~41,950 (SBI group 4321+4322 combined)                                     | ~15% BV            | ~3,000–4,500 BVs; subset ≥1 FTE likely 2,000–3,000 |
+| Loodgieter                             | 43.22.1       | Subset of above ~10,000                                                    | ~12%               | ~800–1,200                                         |
+| Dakdekker                              | 43.91         | 6,255 (Q1 2026, FirmFocus/CBS)                                             | ~18%               | ~700–1,000                                         |
+| Aannemer (41.20)                       | 41.20         | Part of >97,000 gespecialiseerde bouw total; 41.20 alone est. 8,000–12,000 | ~25%               | ~1,500–2,500                                       |
+| Schilder                               | 43.34         | est. 12,000–15,000                                                         | ~10%               | ~800–1,200                                         |
 
 **Total addressable BV universe across all 5 niches: approximately 5,800–9,900 BVs with ≥1 FTE.**
 
@@ -169,6 +170,7 @@ The GDPR (AVG in Dutch) applies whenever you process personal data. For BVs, the
 ### Legitimate interest (Art. 6(1)(f) GDPR)
 
 B2B outreach to companies can rely on **legitimate interest** as the legal basis when:
+
 1. You have a genuine commercial interest (offering relevant services to the prospect's business).
 2. The processing is necessary for that interest (i.e., you need the data to make contact).
 3. The interest is not overridden by the data subject's fundamental rights.
@@ -177,12 +179,12 @@ The CJEU ruled in **KNLTB (C-621/22)** that commercial interests can qualify as 
 
 ### Channel-specific rules
 
-| Channel | Rule |
-|---|---|
-| Physical mail (post) | Must respect NMI flag. NMI-flagged companies: do not mail. |
-| Door-to-door | NMI applies. |
-| Email (cold) | **Telecomwet / Spam ban applies.** For BVs (legal entities), cold email to role-based addresses is in a grey zone — the AP considers the risk lower than for natural persons, but prior consent or an existing relationship is safest. Cold email to named individuals at any company requires prior consent or a prior business relationship. |
-| Phone | KvK does not publish phone numbers in the open dataset. Phone numbers from resellers require the same legitimate interest assessment. |
+| Channel              | Rule                                                                                                                                                                                                                                                                                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Physical mail (post) | Must respect NMI flag. NMI-flagged companies: do not mail.                                                                                                                                                                                                                                                                                     |
+| Door-to-door         | NMI applies.                                                                                                                                                                                                                                                                                                                                   |
+| Email (cold)         | **Telecomwet / Spam ban applies.** For BVs (legal entities), cold email to role-based addresses is in a grey zone — the AP considers the risk lower than for natural persons, but prior consent or an existing relationship is safest. Cold email to named individuals at any company requires prior consent or a prior business relationship. |
+| Phone                | KvK does not publish phone numbers in the open dataset. Phone numbers from resellers require the same legitimate interest assessment.                                                                                                                                                                                                          |
 
 ### Non-Mailing Indicator (NMI)
 
@@ -279,35 +281,35 @@ _Sources: bedrijfsdata.nl AVG B2B analysis; GDPRWise.eu; KvK NMI page; CJEU KNLT
 
 All URLs retrieved May 2026.
 
-| Source | URL | Last verified |
-|---|---|---|
-| KvK 2026 tariff announcement | https://www.kvk.nl/pers/kvk-past-tarieven-aan-per-1-januari-2026/ | 2026-05-21 |
-| KvK API pricing page | https://developers.kvk.nl/pricing | 2026-05-21 |
-| KvK Dataservice product page | https://www.kvk.nl/en/ordering-products/kvk-dataservice/ | 2026-05-21 |
-| KvK Open Dataset documentation | https://developers.kvk.nl/nl/documentation/open-dataset-basis-bedrijfsgegevens-api | 2026-05-21 |
-| KvK Open Dataset product page | https://www.kvk.nl/en/ordering-products/kvk-business-register-open-data-set/ | 2026-05-21 |
-| KvK Terms of Use (Business Register) | https://www.kvk.nl/en/about-the-business-register/terms-of-use-business-register/ | 2026-05-21 |
-| KvK Non-Mailing Indicator | https://www.kvk.nl/en/about-the-business-register/the-non-mailing-indicator/ | 2026-05-21 |
-| KvK SBI overview | https://www.kvk.nl/over-het-handelsregister/overzicht-standaard-bedrijfsindeling-sbi-codes-voor-activiteiten/ | 2026-05-21 |
-| KvK SBI 2025 revision for data users | https://www.kvk.nl/en/about-the-business-register/sbi-revision-for-users-kvk-data/ | 2026-05-21 |
-| SBI codes list (FaillissementsDossier) | https://www.faillissementsdossier.nl/nl/sbi-codes.aspx | 2026-05-21 |
-| CBS Standard Industrial Classifications | https://www.cbs.nl/en-gb/our-services/methods/classifications/activiteiten/standard-industrial-classifications | 2026-05-21 |
-| CBS bedrijven bedrijfstak table 81589NED | https://www.cbs.nl/nl-nl/cijfers/detail/81589NED | 2026-05-21 |
-| CBS bedrijven rechtsvorm table 81588NED | https://www.cbs.nl/nl-nl/cijfers/detail/81588NED | 2026-05-21 |
-| FirmFocus bouwinstallatie sector (Q1 2026) | https://www.firmfocus.biz/NL/BI/branche/bouwinstallatie | 2026-05-21 |
-| FirmFocus dakdekken sector (Q1 2026) | https://www.firmfocus.biz/NL/BI/branche/dakdekken-en-bouwen-van-dakconstructies | 2026-05-21 |
-| CompanyData installateurs count | https://bolddata.nl/nl/bedrijven/nederland/installateurs/ (redirects to companydata.com) | 2026-05-21 |
-| Altares D&B products | https://www.altares.nl/en/products/ | 2026-05-21 |
-| Ad Hoc Data pricing and filters | https://www.adhocdata.nl/en/leadlists | 2026-05-21 |
-| Ad Hoc Data home page | https://www.adhocdata.nl/en | 2026-05-21 |
-| OpenKvK.nl | https://openkvk.nl/ | 2026-05-21 |
-| OpenKVK PyPI package | https://pypi.org/project/OpenKVK/ | 2026-05-21 |
-| Creditsafe acquires Graydon | https://www.biia.com/creditsafe-acquires-b2b-information-services-company-graydon-from-atradius/ | 2026-05-21 |
-| Company.info NMI handling | https://companyinfo.nl/veelgestelde-vragen/hoe-gaat-company-info-om-met-de-non-mailing-indicator-nmi/ | 2026-05-21 |
-| AVG B2B marketing analysis | https://www.bedrijfsdata.nl/privacy-en-bedrijfsdata-wat-mag-wel-en-niet-bij-b2b-marketing/ | 2026-05-21 |
-| GDPRWise B2B GDPR NL | https://gdprwise.eu/nl/kennisbank/verplichtingen/b2b-gdpr-van-toepassing/ | 2026-05-21 |
-| KNLTB CJEU case C-621/22 (AP settlement) | https://www.ictrecht.nl/en/blog/2025-in-vogelvlucht-wat-is-er-in-het-afgelopen-jaar-allemaal-gebeurd | 2026-05-21 |
-| KvK direct marketing page | https://www.kvk.nl/over-kvk/direct-marketing-en-regelgeving/ | 2026-05-21 |
-| Marktdata dakdekkerbedrijven growth | https://www.marktdata.nl/nieuws/Sterke-groei-aantal-dakdekkerbedrijven | 2026-05-21 |
-| NextBI leadlijsten kopen | https://nextbi.nl/leadlijsten-kopen/ | 2026-05-21 |
-| BoldData minimum order pricing | https://www.adhocdata.nl (cross-referenced via search results) | 2026-05-21 |
+| Source                                     | URL                                                                                                            | Last verified |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------- | ------------- |
+| KvK 2026 tariff announcement               | https://www.kvk.nl/pers/kvk-past-tarieven-aan-per-1-januari-2026/                                              | 2026-05-21    |
+| KvK API pricing page                       | https://developers.kvk.nl/pricing                                                                              | 2026-05-21    |
+| KvK Dataservice product page               | https://www.kvk.nl/en/ordering-products/kvk-dataservice/                                                       | 2026-05-21    |
+| KvK Open Dataset documentation             | https://developers.kvk.nl/nl/documentation/open-dataset-basis-bedrijfsgegevens-api                             | 2026-05-21    |
+| KvK Open Dataset product page              | https://www.kvk.nl/en/ordering-products/kvk-business-register-open-data-set/                                   | 2026-05-21    |
+| KvK Terms of Use (Business Register)       | https://www.kvk.nl/en/about-the-business-register/terms-of-use-business-register/                              | 2026-05-21    |
+| KvK Non-Mailing Indicator                  | https://www.kvk.nl/en/about-the-business-register/the-non-mailing-indicator/                                   | 2026-05-21    |
+| KvK SBI overview                           | https://www.kvk.nl/over-het-handelsregister/overzicht-standaard-bedrijfsindeling-sbi-codes-voor-activiteiten/  | 2026-05-21    |
+| KvK SBI 2025 revision for data users       | https://www.kvk.nl/en/about-the-business-register/sbi-revision-for-users-kvk-data/                             | 2026-05-21    |
+| SBI codes list (FaillissementsDossier)     | https://www.faillissementsdossier.nl/nl/sbi-codes.aspx                                                         | 2026-05-21    |
+| CBS Standard Industrial Classifications    | https://www.cbs.nl/en-gb/our-services/methods/classifications/activiteiten/standard-industrial-classifications | 2026-05-21    |
+| CBS bedrijven bedrijfstak table 81589NED   | https://www.cbs.nl/nl-nl/cijfers/detail/81589NED                                                               | 2026-05-21    |
+| CBS bedrijven rechtsvorm table 81588NED    | https://www.cbs.nl/nl-nl/cijfers/detail/81588NED                                                               | 2026-05-21    |
+| FirmFocus bouwinstallatie sector (Q1 2026) | https://www.firmfocus.biz/NL/BI/branche/bouwinstallatie                                                        | 2026-05-21    |
+| FirmFocus dakdekken sector (Q1 2026)       | https://www.firmfocus.biz/NL/BI/branche/dakdekken-en-bouwen-van-dakconstructies                                | 2026-05-21    |
+| CompanyData installateurs count            | https://bolddata.nl/nl/bedrijven/nederland/installateurs/ (redirects to companydata.com)                       | 2026-05-21    |
+| Altares D&B products                       | https://www.altares.nl/en/products/                                                                            | 2026-05-21    |
+| Ad Hoc Data pricing and filters            | https://www.adhocdata.nl/en/leadlists                                                                          | 2026-05-21    |
+| Ad Hoc Data home page                      | https://www.adhocdata.nl/en                                                                                    | 2026-05-21    |
+| OpenKvK.nl                                 | https://openkvk.nl/                                                                                            | 2026-05-21    |
+| OpenKVK PyPI package                       | https://pypi.org/project/OpenKVK/                                                                              | 2026-05-21    |
+| Creditsafe acquires Graydon                | https://www.biia.com/creditsafe-acquires-b2b-information-services-company-graydon-from-atradius/               | 2026-05-21    |
+| Company.info NMI handling                  | https://companyinfo.nl/veelgestelde-vragen/hoe-gaat-company-info-om-met-de-non-mailing-indicator-nmi/          | 2026-05-21    |
+| AVG B2B marketing analysis                 | https://www.bedrijfsdata.nl/privacy-en-bedrijfsdata-wat-mag-wel-en-niet-bij-b2b-marketing/                     | 2026-05-21    |
+| GDPRWise B2B GDPR NL                       | https://gdprwise.eu/nl/kennisbank/verplichtingen/b2b-gdpr-van-toepassing/                                      | 2026-05-21    |
+| KNLTB CJEU case C-621/22 (AP settlement)   | https://www.ictrecht.nl/en/blog/2025-in-vogelvlucht-wat-is-er-in-het-afgelopen-jaar-allemaal-gebeurd           | 2026-05-21    |
+| KvK direct marketing page                  | https://www.kvk.nl/over-kvk/direct-marketing-en-regelgeving/                                                   | 2026-05-21    |
+| Marktdata dakdekkerbedrijven growth        | https://www.marktdata.nl/nieuws/Sterke-groei-aantal-dakdekkerbedrijven                                         | 2026-05-21    |
+| NextBI leadlijsten kopen                   | https://nextbi.nl/leadlijsten-kopen/                                                                           | 2026-05-21    |
+| BoldData minimum order pricing             | https://www.adhocdata.nl (cross-referenced via search results)                                                 | 2026-05-21    |

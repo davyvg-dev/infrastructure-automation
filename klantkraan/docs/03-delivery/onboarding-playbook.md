@@ -18,7 +18,7 @@
 A €299–€499/mo ACV cannot afford human white-glove labour by the textbook. The resolution the
 research lands on: **the client's experience is white-glove; the work is self-serve for us** —
 templated, config-driven, near-zero marginal labour. The `config/<business>.yaml`-per-client
-architecture *is* that economic trick; protect it. Every onboarding step that isn't "edit one
+architecture _is_ that economic trick; protect it. Every onboarding step that isn't "edit one
 YAML + connect one calendar + place one snippet" is scope creep against the 2h budget.
 
 The client never sees a config, a form builder, or a dashboard — they get a finished thing, not
@@ -32,24 +32,24 @@ Everything else goes async.
 
 "Auto" = script/webhook. "Founder" = hands-on. "Client" = client action. The single biggest
 lever is **pre-building the receptionist before the client lifts a finger** — their first
-experience is a finished demo of *their own* receptionist, not a blank setup.
+experience is a finished demo of _their own_ receptionist, not a blank setup.
 
-| Step | What | Owner | Founder min | Auto? |
-|---|---|---|---|---|
-| Sign | Contract signed (SignWell/PandaDoc webhook) → create client record, generate `slug`, fire Mollie SEPA mandate, send welcome e-mail + re-recorded 90s Loom | System | 0 | AUTO |
-| Pre-build | Scrape site + Google Maps → Claude drafts cited config (prices left as `PRIJS?`) → `scaffold --from-json` → stage a branded demo (§3) | Founder | 15 | semi-AUTO |
-| Day 0–1 | Client **confirms the draft** by chatting with their own demo + a plain-Dutch one-pager, and supplies the only 4 human inputs: prices, spoed policy, where leads go, optional persona name (§3) | Client | 0 | — |
-| Day 1 | Founder pastes prices/spoed/lead-destination into the YAML, fills any gaps via WhatsApp; verify greeting keeps the AI-Act disclosure | Founder | 25 | FOUNDER |
-| Day 2 | **Kickoff (15 min, live or async):** set the one goal, **connect Google Calendar right there** (§4 — never homework), show their receptionist book a test lead | Founder | 15 | FOUNDER |
-| Day 2–3 | Founder sets `calendar.provider: google` + calendar id in config; drop it as `config/clients/<slug>.yaml` and redeploy — the server routes `<slug>.klantkraan.nl` to it | Founder | 10 | semi-AUTO |
-| Day 3 | **5 test chats** (spoed / nieuw_werk / spam / leverancier / bestaande_klant); confirm a booking lands in the real Google Calendar and the owner gets the lead notification | Founder | 20 | FOUNDER |
-| Day 3–4 | **Widget install (§5):** default = we paste the snippet using access the client gave / a 2-min screen-share; fallback = per-CMS guide or hosted `<client>.klantkraan.nl` link | Founder | 15 | partial |
-| Day 4 | Client does **3 test chats** on their own live surface; go/no-go via WhatsApp | Client | 0 | — |
-| Day 4–5 | Any YAML tweaks from the transcripts | Founder | 7 | FOUNDER |
-| Day 5 | **Go-live confirm (§10):** snippet/link live, calendar connected, disclosure present, one booking round-trip verified | Founder | 5 | AUTO msg |
-| Day 5–19 | Light **weekly** summary (chats handled / after-hours leads / bookings) via WhatsApp or e-mail | System | 0 | AUTO |
-| Day 14 | Check-in (5 min) | Founder | 5 | FOUNDER |
-| Day 30 | Month-1 review + case-study capture (top chats / bookings won; anonymised case) | Founder | 45 | FOUNDER |
+| Step      | What                                                                                                                                                                                            | Owner   | Founder min | Auto?     |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ----------- | --------- |
+| Sign      | Contract signed (SignWell/PandaDoc webhook) → create client record, generate `slug`, fire Mollie SEPA mandate, send welcome e-mail + re-recorded 90s Loom                                       | System  | 0           | AUTO      |
+| Pre-build | Scrape site + Google Maps → Claude drafts cited config (prices left as `PRIJS?`) → `scaffold --from-json` → stage a branded demo (§3)                                                           | Founder | 15          | semi-AUTO |
+| Day 0–1   | Client **confirms the draft** by chatting with their own demo + a plain-Dutch one-pager, and supplies the only 4 human inputs: prices, spoed policy, where leads go, optional persona name (§3) | Client  | 0           | —         |
+| Day 1     | Founder pastes prices/spoed/lead-destination into the YAML, fills any gaps via WhatsApp; verify greeting keeps the AI-Act disclosure                                                            | Founder | 25          | FOUNDER   |
+| Day 2     | **Kickoff (15 min, live or async):** set the one goal, **connect Google Calendar right there** (§4 — never homework), show their receptionist book a test lead                                  | Founder | 15          | FOUNDER   |
+| Day 2–3   | Founder sets `calendar.provider: google` + calendar id in config; drop it as `config/clients/<slug>.yaml` and redeploy — the server routes `<slug>.klantkraan.nl` to it                         | Founder | 10          | semi-AUTO |
+| Day 3     | **5 test chats** (spoed / nieuw_werk / spam / leverancier / bestaande_klant); confirm a booking lands in the real Google Calendar and the owner gets the lead notification                      | Founder | 20          | FOUNDER   |
+| Day 3–4   | **Widget install (§5):** default = we paste the snippet using access the client gave / a 2-min screen-share; fallback = per-CMS guide or hosted `<client>.klantkraan.nl` link                   | Founder | 15          | partial   |
+| Day 4     | Client does **3 test chats** on their own live surface; go/no-go via WhatsApp                                                                                                                   | Client  | 0           | —         |
+| Day 4–5   | Any YAML tweaks from the transcripts                                                                                                                                                            | Founder | 7           | FOUNDER   |
+| Day 5     | **Go-live confirm (§10):** snippet/link live, calendar connected, disclosure present, one booking round-trip verified                                                                           | Founder | 5           | AUTO msg  |
+| Day 5–19  | Light **weekly** summary (chats handled / after-hours leads / bookings) via WhatsApp or e-mail                                                                                                  | System  | 0           | AUTO      |
+| Day 14    | Check-in (5 min)                                                                                                                                                                                | Founder | 5           | FOUNDER   |
+| Day 30    | Month-1 review + case-study capture (top chats / bookings won; anonymised case)                                                                                                                 | Founder | 45          | FOUNDER   |
 
 **Founder total to go-live (~day 5): ~112 min.** Full 30-day incl. review: ~157 min. The two
 soft numbers are widget install (15m, can balloon on an awkward CMS) and the calendar connection
@@ -95,21 +95,21 @@ Taking money at the door means the qualification that a discovery call used to d
 Do it now, before building, because it is cheaper to refund on day 1 than to off-board on day 40.
 Four checks, ~3 minutes:
 
-| Check | Pass | Fail → |
-|---|---|---|
-| Legal form | BV (or a foreign equivalent we serve) | Decline path below. The BV filter is non-negotiable (CLAUDE.md) |
-| Country/language | NL/BE, or a language we run a config in | Decline, or quote as a custom build |
-| Trade | In scope, and the guardrails cover it | Decline if the work is regulated advice we must not automate |
-| Same-person duplicate | Not already a client under another slug | Refund the second subscription, merge |
+| Check                 | Pass                                    | Fail →                                                          |
+| --------------------- | --------------------------------------- | --------------------------------------------------------------- |
+| Legal form            | BV (or a foreign equivalent we serve)   | Decline path below. The BV filter is non-negotiable (CLAUDE.md) |
+| Country/language      | NL/BE, or a language we run a config in | Decline, or quote as a custom build                             |
+| Trade                 | In scope, and the guardrails cover it   | Decline if the work is regulated advice we must not automate    |
+| Same-person duplicate | Not already a client under another slug | Refund the second subscription, merge                           |
 
 Passing that, run the normal §2 pre-build on the `site` the form captured. If they left it blank
 and `bedrijf` + `vak` do not resolve to a real site or Maps listing in ~2 minutes, **stop guessing
-and ask one question** over WhatsApp: *"Wat is de link naar uw website?"* One question beats a
+and ask one question** over WhatsApp: _"Wat is de link naar uw website?"_ One question beats a
 wrong receptionist. (The welcome mail already asks, but only when the form came in without it.)
 
 **3 — Rejoin §1 at "Day 0–1".** From the confirm-the-draft step onward the self-serve path and
 the founder-led path are the same playbook. The only lasting difference: a self-serve client never
-had a kickoff booked, so §5's kickoff is an *offer* ("wil je 15 minuten samen doorlopen?"), never a
+had a kickoff booked, so §5's kickoff is an _offer_ ("wil je 15 minuten samen doorlopen?"), never a
 gate. If they decline the call, do the calendar share async with the §3 verbatim steps and go live
 on their say-so.
 
@@ -146,6 +146,7 @@ cycles is all the margin there is. Write it once, send it with the welcome, and 
 a request lands outside.
 
 **Inbegrepen (elke maand, geen meerkosten):**
+
 - De receptionist zelf: webchat + WhatsApp, 24/7, onbeperkt aantal gesprekken binnen normaal gebruik.
 - Hosting, updates en verbeteringen aan het onderliggende model. Je krijgt ze automatisch.
 - **Tekstwijzigingen: prijzen, openingstijden, diensten, FAQ, spoedbeleid, persona.** Eén bericht,
@@ -155,6 +156,7 @@ a request lands outside.
 - Support via WhatsApp, dezelfde werkdag antwoord.
 
 **Niet inbegrepen (apart offreren, of doorverwijzen):**
+
 - Een tweede vestiging, tweede merk of tweede taal als eigen receptionist. Dat is een nieuwe config,
   dus een nieuw abonnement.
 - Koppelingen met je boekhouding, offertepakket of veldsoftware. Staat op de roadmap, is geen
@@ -165,7 +167,7 @@ a request lands outside.
   opgegeven. Dat is een bewuste grens, geen beperking die we wegnemen.
 
 **The rule for the founder:** anything on the first list is done same-day and never invoiced,
-because that responsiveness *is* the retention product. Anything on the second list gets a price
+because that responsiveness _is_ the retention product. Anything on the second list gets a price
 before any work starts, even for a client you like. The moment one client's second location is
 free, it is free for everyone.
 
@@ -180,15 +182,16 @@ friction than filling a blank one — and a busy loodgieter will abandon a 32-fi
 a safe Dutch-trade default:
 
 1. **Confirm the draft** — "Klopt dit?" over auto-filled name / phone / region / hours / services (tap-level).
-2. **Prices** — starttarief per service + voorrijkosten (or "gratis offerte"). *The single unavoidable input.*
+2. **Prices** — starttarief per service + voorrijkosten (or "gratis offerte"). _The single unavoidable input._
 3. **Spoed policy** — do you take emergencies? surcharge / after-hours? (yes/no + optional number).
 4. **Where do leads/afspraken go?** — WhatsApp number / e-mail, and which agenda to book into.
-5. *(optional)* **Persona name** — keep "Fleur" or pick another.
+5. _(optional)_ **Persona name** — keep "Fleur" or pick another.
 
-If the client answers nothing, the scraped draft + defaults still produce a working, *safe* demo
+If the client answers nothing, the scraped draft + defaults still produce a working, _safe_ demo
 (it just quotes no prices — the guardrail already defers those to the monteur).
 
 **How the draft is built (report: intake §3):**
+
 - Auto-fill from **Google Maps Place Details** (name, phone, `regularOpeningHours`, `primaryType`,
   `pureServiceAreaBusiness` → region) + site text (`/diensten`, `/tarieven`, `/contact`).
 - Claude emits a **cited extraction JSON** — every field carries value + source + confidence +
@@ -200,8 +203,8 @@ If the client answers nothing, the scraped draft + defaults still produce a work
   AI-Act disclosure stay template-owned (locked, never touched by extraction).
 
 **Confirm in chat, never in YAML.** Boot the draft config, send the client their branded demo
-link + one WhatsApp line: *"Ik heb alvast een digitale receptionist voor [bedrijf] gebouwd —
-praat er even mee. Klopt alles? Wat mag anders?"* Attach a plain-Dutch one-pager (name, hours
+link + one WhatsApp line: _"Ik heb alvast een digitale receptionist voor [bedrijf] gebouwd —
+praat er even mee. Klopt alles? Wat mag anders?"_ Attach a plain-Dutch one-pager (name, hours
 grid, service+price table with `PRIJS?` rows highlighted, region, spoed line) so they can correct
 in one message. The founder pastes prices + spoed + lead-destination, redeploys, done.
 
@@ -229,11 +232,12 @@ calendar's ACL. The one gotcha (adding guests → `forbiddenForServiceAccounts`)
 title/description; they already got their confirmation in the chat thread.
 
 **What the client does (send verbatim, Dutch; desktop-only — the share UI isn't on mobile):**
+
 1. Open **calendar.google.com** op je computer, log in met je normale Google-account.
 2. Onder "Mijn agenda's" → hover over je agenda → drie puntjes (⋮) → **"Instellingen en delen"**.
 3. Scroll naar **"Delen met specifieke personen of groepen"** → **"Personen en groepen toevoegen"**.
-4. Plak dit e-mailadres exact: *(onze service-account e-mail)*.
-5. Kies bij rechten **"Wijzigingen aan afspraken aanbrengen"** — **niet** "alleen vrij/bezet", **niet** "alle afspraakgegevens". *(The #1 client mistake — bold it.)*
+4. Plak dit e-mailadres exact: _(onze service-account e-mail)_.
+5. Kies bij rechten **"Wijzigingen aan afspraken aanbrengen"** — **niet** "alleen vrij/bezet", **niet** "alle afspraakgegevens". _(The #1 client mistake — bold it.)_
 6. Klik **"Verzenden"**. Klaar — niets te installeren, geen wachtwoord te delen.
 
 Access is live the instant they click Send (a service account can't "accept an invite"). The
@@ -288,7 +292,7 @@ Trades live on WhatsApp; the product already has a WhatsApp channel. A short hum
 Keep synchronous time for goal-alignment only; push info to async video, reused across clients.
 
 1. **Kickoff (live, ~15 min, or async if they prefer):** one goal ("meer afspraken uit je website,
-   ook 's avonds"), do the calendar share *right there*, show *their* receptionist book a test lead.
+   ook 's avonds"), do the calendar share _right there_, show _their_ receptionist book a test lead.
 2. **Welcome Loom (async, ≤2 min, reusable):** "dit is je digitale receptioniste, zo werkt het, zo
    pas je iets aan, zo bereik je mij." Record once; optional 30-sec personalised top.
 3. **Go-live confirmation (async):** "Je bent live. De eerste keer dat een klant 's avonds boekt,
@@ -307,12 +311,12 @@ The two Klantkraan-specific stalls, and how to remove the client's technical bur
 
 - **Won't connect the calendar** → do the share live on the kickoff, never leave it as homework.
 - **Won't install the widget** → we paste the snippet for them (§4).
-- **Ghosts the test feedback** → **default to go-live**: *"we gaan maandag live tenzij je iets wilt
-  aanpassen."* Silence becomes consent-to-launch, not a blocker.
+- **Ghosts the test feedback** → **default to go-live**: _"we gaan maandag live tenzij je iets wilt
+  aanpassen."_ Silence becomes consent-to-launch, not a blocker.
 - **Instrument the ghost signal:** if a client hasn't opened the kickoff link / connected the
   calendar within 48h, fire a warm WhatsApp nudge — don't wait for revenue to dip. Track a simple
   per-client CLI status: `staged → calendar-connected → live → first-lead-handled`.
-- **Be the "who to call."** One named human on WhatsApp answering same-day *is* the trades adoption
+- **Be the "who to call."** One named human on WhatsApp answering same-day _is_ the trades adoption
   strategy — make that promise explicit in the welcome.
 
 ---
@@ -321,18 +325,18 @@ The two Klantkraan-specific stalls, and how to remove the client's technical bur
 
 Don't over-instrument as a solo founder; go concierge. Track exactly these:
 
-| Metric | Klantkraan definition | Target |
-|---|---|---|
-| Time-to-first-value | Signup → first real customer conversation handled | **Same day** |
-| Activation | First real appointment booked into the client's calendar by the AI | **Within 7 days** — *the* number |
-| Onboarding completion | Calendar connected + widget/link live + test lead booked | **Within 48–72h of kickoff** |
-| Retention proxy | Still live + ≥1 lead handled in the last 7 days (D7/D30) | Watch D30 as the churn tripwire |
-| Founder-time-per-client | Actual hours signup → go-live | **≤2h** (the DFY math breaks if it creeps) |
+| Metric                  | Klantkraan definition                                              | Target                                     |
+| ----------------------- | ------------------------------------------------------------------ | ------------------------------------------ |
+| Time-to-first-value     | Signup → first real customer conversation handled                  | **Same day**                               |
+| Activation              | First real appointment booked into the client's calendar by the AI | **Within 7 days** — _the_ number           |
+| Onboarding completion   | Calendar connected + widget/link live + test lead booked           | **Within 48–72h of kickoff**               |
+| Retention proxy         | Still live + ≥1 lead handled in the last 7 days (D7/D30)           | Watch D30 as the churn tripwire            |
+| Founder-time-per-client | Actual hours signup → go-live                                      | **≤2h** (the DFY math breaks if it creeps) |
 
 **Leading indicator unique to us: the first "'s avonds/weekend afspraak."** The after-hours
 booking is emotional proof the client couldn't have captured that lead themselves — flag it and
 celebrate it back ("Je receptioniste boekte gisteren om 21:40 een afspraak"). For client #1, read
-the actual transcripts: every fumble is a config-tuning item *and* a better default for every
+the actual transcripts: every fumble is a config-tuning item _and_ a better default for every
 future client.
 
 ---
@@ -364,15 +368,15 @@ saved-churn math). Apply these swaps:
 
 ## 10. What can go wrong
 
-| Risk | Recovery |
-|---|---|
-| Widget won't install on an awkward CMS | Hand out the hosted `<client>.klantkraan.nl` link + GBP/socials/QR — fully functional |
-| Calendar share set to wrong permission | Bold rule: must be **"Wijzigingen aan afspraken aanbrengen"** (writer); "vrij/bezet" or "reader" → booking 403s |
-| Workspace admin blocks external full-share | Admin allows our SA email, or client shares a dedicated calendar they own |
-| Widget says the wrong thing | Edit the YAML, redeploy — no voice agent to re-clone |
-| Client doesn't return test feedback | Default to go-live on conservative settings; WhatsApp nudge first |
-| Mollie mandate fails | Manual Moneybird invoice with iDEAL link; flag for risk-review |
-| Client wants to disable the AI-Act disclosure | Refuse in writing; non-waivable (`04-legal/ai-act-disclosure.md`) |
+| Risk                                          | Recovery                                                                                                        |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Widget won't install on an awkward CMS        | Hand out the hosted `<client>.klantkraan.nl` link + GBP/socials/QR — fully functional                           |
+| Calendar share set to wrong permission        | Bold rule: must be **"Wijzigingen aan afspraken aanbrengen"** (writer); "vrij/bezet" or "reader" → booking 403s |
+| Workspace admin blocks external full-share    | Admin allows our SA email, or client shares a dedicated calendar they own                                       |
+| Widget says the wrong thing                   | Edit the YAML, redeploy — no voice agent to re-clone                                                            |
+| Client doesn't return test feedback           | Default to go-live on conservative settings; WhatsApp nudge first                                               |
+| Mollie mandate fails                          | Manual Moneybird invoice with iDEAL link; flag for risk-review                                                  |
+| Client wants to disable the AI-Act disclosure | Refuse in writing; non-waivable (`04-legal/ai-act-disclosure.md`)                                               |
 
 ---
 
@@ -430,8 +434,9 @@ Synthesised from the 2026-07-13 onboarding deep-dive (internal audit · best-pra
 integration · intake minimisation), extended 2026-07-29 with §1b/§1c and a benchmark pass.
 
 **2026-07 benchmarks used for the §1b timings and the §7 targets:**
+
 - Time-to-value scales with contract size: the <$5k-ARR band shows a median TTV of ~11 minutes,
-  $5–25k ~2.4 days. Klantkraan at €299/mo is €3.6k/yr, i.e. the *fastest* band. Our 5-day go-live
+  $5–25k ~2.4 days. Klantkraan at €299/mo is €3.6k/yr, i.e. the _fastest_ band. Our 5-day go-live
   is defensible only because the pre-built demo delivers the first "oh, it works" moment on day 0
   to 1; the day-5 date is the go-live, not the first value. Keep those two apart when we quote a
   timeline. https://productquant.dev/blog/saas-activation-benchmarks-by-industry-2026/

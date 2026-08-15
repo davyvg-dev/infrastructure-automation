@@ -72,10 +72,7 @@
       "soft_timeout_config": {
         "timeout_seconds": 3.0,
         "message": "Momentje.",
-        "additional_soft_timeout_messages": [
-          "Eén ogenblikje.",
-          "Ik kijk even voor u."
-        ],
+        "additional_soft_timeout_messages": ["Eén ogenblikje.", "Ik kijk even voor u."],
         "use_llm_generated_message": false,
         "randomize_fillers": true,
         "max_soft_timeouts_per_generation": 3,
@@ -115,11 +112,7 @@
         "max_files_per_conversation": 10
       },
       "monitoring_enabled": false,
-      "monitoring_events": [
-        "user_transcript",
-        "agent_response",
-        "agent_response_correction"
-      ],
+      "monitoring_events": ["user_transcript", "agent_response", "agent_response_correction"],
       "dtmf_input_settings": {
         "dtmf_input_timeout": 3.0,
         "hash_terminator": true,
@@ -180,9 +173,7 @@
         "enable_reasoning_summary": false,
         "temperature": 0.4,
         "max_tokens": 200,
-        "tool_ids": [
-          "tool_8401kz74xjsne7hspzycnb1cfsbc"
-        ],
+        "tool_ids": ["tool_8401kz74xjsne7hspzycnb1cfsbc"],
         "built_in_tools": {
           "end_call": {
             "type": "system",
@@ -326,12 +317,7 @@
                     "is_omitted": false
                   }
                 },
-                "required": [
-                  "q",
-                  "fq",
-                  "rows",
-                  "fl"
-                ]
+                "required": ["q", "fq", "rows", "fl"]
               },
               "request_body_schema": null,
               "response_body_schema": null,
@@ -653,9 +639,7 @@
       "conversation_initiation_client_data_webhook": null,
       "webhooks": {
         "post_call_webhook_id": null,
-        "events": [
-          "transcript"
-        ],
+        "events": ["transcript"],
         "transcript_format": "json",
         "send_audio": false
       }

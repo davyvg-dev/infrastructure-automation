@@ -31,12 +31,14 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
         </span>
       </div>
       <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
-        Een echte voorbeeld-receptionist van een sportschool, hieronder in uw browser.
-        Vraag naar het abonnement of boek een gratis proefles. Geen verplichting.
+        Een echte voorbeeld-receptionist van een sportschool, hieronder in uw browser. Vraag naar
+        het abonnement of boek een gratis proefles. Geen verplichting.
       </p>
 
       <!-- Desktop: live embed inline. -->
-      <div class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4">
+      <div
+        class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4"
+      >
         <iframe
           src={DEMO_SRC}
           title="Live chat met de digitale receptionist van Sportcentrum De Vaart"
@@ -48,9 +50,13 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
       </div>
 
       <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). -->
-      <div class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden">
+      <div
+        class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden"
+      >
         <div class="flex items-center gap-3">
-          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)">
+          <span
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)"
+          >
             <Icon name="message-square" class="h-5 w-5" />
           </span>
           <div class="min-w-0">
@@ -58,9 +64,11 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
             <p class="text-small text-(--color-dim)">Digitale assistent · reageert direct</p>
           </div>
         </div>
-        <p class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)">
-          Chat als een bezoeker. Vraag naar het abonnement of boek een proefles. Opent op
-          volledig scherm.
+        <p
+          class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)"
+        >
+          Chat als een bezoeker. Vraag naar het abonnement of boek een proefles. Opent op volledig
+          scherm.
         </p>
         <button
           type="button"
@@ -74,8 +82,9 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
 
       <p class="mt-3 text-small text-(--color-dim)">
         Dit is een voorbeeldsportschool. Bij uw eigen receptionist staan uw lessen, tarieven en
-        openingstijden ingesteld. <a href="/sportscholen/">Lees wat Klantkraan voor sportscholen
-        doet</a>.
+        openingstijden ingesteld. <a href="/sportscholen/"
+          >Lees wat Klantkraan voor sportscholen doet</a
+        >.
       </p>
     </div>
   </section>
@@ -119,10 +128,12 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
           <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
           <div>
-            <h3 class="font-display text-h3 text-(--color-chalk)">Lead-notificatie op uw telefoon</h3>
+            <h3 class="font-display text-h3 text-(--color-chalk)">
+              Lead-notificatie op uw telefoon
+            </h3>
             <p class="mt-2 text-body text-(--color-dim)">
-              Elke proefles-aanvraag en elk terugbelverzoek landt direct als bericht op uw
-              telefoon, met naam, nummer en de vraag van de bezoeker.
+              Elke proefles-aanvraag en elk terugbelverzoek landt direct als bericht op uw telefoon,
+              met naam, nummer en de vraag van de bezoeker.
             </p>
           </div>
         </article>
@@ -133,30 +144,20 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
   <!-- 3. Liever een persoonlijke demo? (cream) — secondary path -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
-        <h2 class="font-display text-h2 text-(--color-chalk)">
-          Liever een persoonlijke demo?
-        </h2>
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Liever een persoonlijke demo?</h2>
         <p class="mt-3 max-w-2xl text-body text-(--color-dim)">
-          Wij zetten de receptionist op uw eigen lessen, tarieven en openingstijden en lopen hem
-          met u door. U krijgt geen verkooppraatje en zit nergens aan vast.
+          Wij zetten de receptionist op uw eigen lessen, tarieven en openingstijden en lopen hem met
+          u door. U krijgt geen verkooppraatje en zit nergens aan vast.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener"
-            class="btn btn-primary btn-lg"
-          >
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">
             <Icon name="message-circle" class="h-5 w-5" />
             <span>WhatsApp ons direct</span>
           </a>
-          <a
-            href={mailLink}
-            class="btn btn-ghost btn-lg"
-          >
-            Liever per e-mail
-          </a>
+          <a href={mailLink} class="btn btn-ghost btn-lg"> Liever per e-mail </a>
         </div>
         <p class="mt-3 text-small text-(--color-dim)">
           Antwoord meestal binnen één werkdag, direct van de eigenaar.
@@ -166,15 +167,20 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
   </section>
 
   <!-- 4. AI-disclosure (stone-100, with rust-bordered card) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-labelledby="ai-act">
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-labelledby="ai-act"
+  >
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
+      >
         <h2 id="ai-act" class="font-display text-h2 text-(--color-sodium)">
           AI-disclosure (EU AI Act art. 50)
         </h2>
         <p class="mt-3 text-body text-(--color-dim)">
-          De receptionist is een AI. Dat is wettelijk verplicht om te vermelden. Dat doet ook
-          deze demo, in de eerste zin van elk gesprek:
+          De receptionist is een AI. Dat is wettelijk verplicht om te vermelden. Dat doet ook deze
+          demo, in de eerste zin van elk gesprek:
         </p>
         <blockquote
           class="mt-4 rounded-(--radius-button) border border-dashed border-(--color-line) bg-[rgba(0,0,0,0.22)] p-3 md:p-4 font-mono text-small text-(--color-sodium-soft)"
@@ -185,9 +191,8 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
         <ul class="mt-4 space-y-2 text-small text-(--color-dim)">
           <li>De disclosure wordt nooit uitgeschakeld, ook niet op klantverzoek.</li>
           <li>
-            Vraagt uw bezoeker "Ben ik met een mens in gesprek?" dan antwoordt de assistent
-            eerlijk dat zij een digitale assistent is en dat het bericht direct bij de eigenaar
-            terechtkomt.
+            Vraagt uw bezoeker "Ben ik met een mens in gesprek?" dan antwoordt de assistent eerlijk
+            dat zij een digitale assistent is en dat het bericht direct bij de eigenaar terechtkomt.
           </li>
         </ul>
         <p class="mt-4 text-small">
@@ -202,22 +207,12 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
     <div class="mx-auto max-w-5xl px-6">
       <h2 class="font-display text-h1 text-(--color-chalk)">Liever eerst het verhaal?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Lees wat Klantkraan voor sportscholen doet: wat een onbeantwoorde proefles-aanvraag
-        kost en hoe de rekensom uitvalt. De demo blijft daarna één klik verwijderd.
+        Lees wat Klantkraan voor sportscholen doet: wat een onbeantwoorde proefles-aanvraag kost en
+        hoe de rekensom uitvalt. De demo blijft daarna één klik verwijderd.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/sportscholen/"
-          class="btn btn-primary btn-lg"
-        >
-          Klantkraan voor sportscholen
-        </a>
-        <a
-          href="/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          Bekijk prijzen
-        </a>
+        <a href="/sportscholen/" class="btn btn-primary btn-lg"> Klantkraan voor sportscholen </a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
       </div>
     </div>
   </section>
@@ -234,7 +229,10 @@ const DEMO_SRC = 'https://fitness.demo-168-119-173-25.sslip.io/?embed=1'
 
   <style>
     /* Full-screen solid backdrop behind the chat iframe — see /demo/ for rationale. */
-    #demo-overlay { background: #0f1c1e; overscroll-behavior: contain; }
+    #demo-overlay {
+      background: #0f1c1e;
+      overscroll-behavior: contain;
+    }
   </style>
 
   <!-- Externalised JS (CSP script-src 'self'); ?v busts the Pages edge cache. -->

@@ -24,7 +24,7 @@ which are founder-led with session support.
   HOT ping, live chat CTA, per-flow try-this list. Source:
   `klantkraan/apps/marketing-site/src/pages/demo/solvista.astro`. Deploy =
   `npm run build` then `pnpm dlx wrangler@4 pages deploy ./dist
-  --branch=production --project-name=klantkraan-marketing`.
+--branch=production --project-name=klantkraan-marketing`.
 - 1.5 Chat evals: `ai-receptionist/app/evals.py` — LLM customer simulator +
   LLM judge (claude-opus-5, structured outputs) over the real receptionist.
   `python -m app.evals run all` = 4 scenarios, 14 criteria, all green. Online

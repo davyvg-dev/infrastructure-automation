@@ -4,14 +4,15 @@
 
 ## Layer 1 — Errors (Sentry)
 
-| What | Where | SDK |
-|---|---|---|
-| Marketing site client errors | Astro pages + Cloudflare Pages | `@sentry/astro` |
-| API Worker errors | Cloudflare Worker | `@sentry/cloudflare` |
-| n8n workflow errors | n8n built-in Error workflow | Webhook → Sentry HTTP API |
-| Postgres slow queries | Neon dashboard + Drizzle slow-query logger | manual instrumentation |
+| What                         | Where                                      | SDK                       |
+| ---------------------------- | ------------------------------------------ | ------------------------- |
+| Marketing site client errors | Astro pages + Cloudflare Pages             | `@sentry/astro`           |
+| API Worker errors            | Cloudflare Worker                          | `@sentry/cloudflare`      |
+| n8n workflow errors          | n8n built-in Error workflow                | Webhook → Sentry HTTP API |
+| Postgres slow queries        | Neon dashboard + Drizzle slow-query logger | manual instrumentation    |
 
 Alert rules:
+
 - Any `error` level in `apps/api` → Slack #alerts + WhatsApp to founder
 - Any `warning` rate > 10/min → Slack only
 - Workflow error in n8n with severity HIGH → WhatsApp escalation
@@ -22,6 +23,7 @@ Alert rules:
 ### Push-style — Healthchecks.io
 
 Every n8n cron writes a heartbeat to a unique Healthchecks URL on success:
+
 ```
 HEAD https://hc-ping.com/<uuid>
 ```
@@ -29,6 +31,7 @@ HEAD https://hc-ping.com/<uuid>
 If the heartbeat is missed (cron expected every 15 min didn't fire for 30 min), Healthchecks alerts via WhatsApp.
 
 Covers:
+
 - `daily-stats-sms` (every weekday 18:00)
 - `weekly-stats-email` (Mondays 08:00)
 - `mrr-snapshot` (every day 23:55)
@@ -39,16 +42,16 @@ Covers:
 
 Runs on the same Hetzner CX22 at `status.klantkraan.nl`. Checks:
 
-| Monitor | Method | Interval | Alert |
-|---|---|---|---|
-| `klantkraan.nl/` | HTTP 200 | 60s | After 2 fails → WhatsApp |
-| `api.klantkraan.nl/api/health` | HTTP 200 | 60s | After 2 fails → WhatsApp |
-| `n8n.klantkraan.nl/healthz` | HTTP 200 | 60s | After 3 fails → WhatsApp |
-| `status.klantkraan.nl/` | HTTP 200 | 5 min | Slack only (self-ref) |
-| DNS check `klantkraan.nl` | DNS | 5 min | After 1 fail → WhatsApp |
-| Synthflow API status | HTTP via Synthflow status URL | 5 min | After 2 fails → Slack |
-| CM.com API status | HTTP via CM.com status URL | 5 min | After 2 fails → Slack |
-| Neon Postgres TCP | TCP 5432 | 5 min | After 2 fails → WhatsApp |
+| Monitor                        | Method                        | Interval | Alert                    |
+| ------------------------------ | ----------------------------- | -------- | ------------------------ |
+| `klantkraan.nl/`               | HTTP 200                      | 60s      | After 2 fails → WhatsApp |
+| `api.klantkraan.nl/api/health` | HTTP 200                      | 60s      | After 2 fails → WhatsApp |
+| `n8n.klantkraan.nl/healthz`    | HTTP 200                      | 60s      | After 3 fails → WhatsApp |
+| `status.klantkraan.nl/`        | HTTP 200                      | 5 min    | Slack only (self-ref)    |
+| DNS check `klantkraan.nl`      | DNS                           | 5 min    | After 1 fail → WhatsApp  |
+| Synthflow API status           | HTTP via Synthflow status URL | 5 min    | After 2 fails → Slack    |
+| CM.com API status              | HTTP via CM.com status URL    | 5 min    | After 2 fails → Slack    |
+| Neon Postgres TCP              | TCP 5432                      | 5 min    | After 2 fails → WhatsApp |
 
 Public status page at `status.klantkraan.nl` — referenced from the SLA (`04-legal/sla-annex.md`). Evidence-of-uptime for service-credit disputes.
 
@@ -89,13 +92,13 @@ See `10-ops/weekly-kpi-review.md`. The Notion page is the agenda.
 
 ### What we DON'T track (yet)
 
-| Thing | Why defer |
-|---|---|
+| Thing                               | Why defer                                                                                            |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | Full-funnel attribution per channel | Heuristic attribution in Attio is enough at <100 clients; switch to Dreamdata or similar at €20k MRR |
-| Cohort retention plots | At <60 clients, every churn is a one-on-one conversation |
-| LTV calculation per cohort | Aggregate LTV is fine until M9 |
-| Custom Datadog dashboards | Overkill at this scale |
-| OpenTelemetry traces | Sentry + Cloudflare Workers traces cover us |
+| Cohort retention plots              | At <60 clients, every churn is a one-on-one conversation                                             |
+| LTV calculation per cohort          | Aggregate LTV is fine until M9                                                                       |
+| Custom Datadog dashboards           | Overkill at this scale                                                                               |
+| OpenTelemetry traces                | Sentry + Cloudflare Workers traces cover us                                                          |
 
 ## Audit log (compliance evidence)
 
@@ -115,6 +118,7 @@ CREATE TABLE audit_log (
 ```
 
 Written by:
+
 - `apps/api` middleware (every write endpoint)
 - n8n via Postgres node (every workflow that mutates client data)
 - `apps/ops` (every founder/VA action)
@@ -129,24 +133,24 @@ n8n logs → on-VPS file rotation (logrotate, 14 days). Critical events also wri
 
 ## When to add what
 
-| Trigger | Add |
-|---|---|
-| First S1 incident postmortem | Document in `infra/postmortems/` + add a Sentry alert that would have caught it earlier |
-| First data-subject access request | Build a `/ops/dsr/<email>` page that pulls all data for that subject |
-| First sub-processor change | Add automated diff notification to all active clients (30-day notice) |
-| First disputed bill | Add per-client usage drill-down in `apps/ops` |
-| First serious AP question | Add SOAR / formal incident response playbook |
+| Trigger                           | Add                                                                                     |
+| --------------------------------- | --------------------------------------------------------------------------------------- |
+| First S1 incident postmortem      | Document in `infra/postmortems/` + add a Sentry alert that would have caught it earlier |
+| First data-subject access request | Build a `/ops/dsr/<email>` page that pulls all data for that subject                    |
+| First sub-processor change        | Add automated diff notification to all active clients (30-day notice)                   |
+| First disputed bill               | Add per-client usage drill-down in `apps/ops`                                           |
+| First serious AP question         | Add SOAR / formal incident response playbook                                            |
 
 ## Cost
 
-| Item | Monthly |
-|---|---|
-| Sentry free tier | €0 |
-| Healthchecks free tier | €0 |
-| Uptime Kuma (self-hosted) | €0 |
-| Cloudflare Logpush to R2 | €0 (free for our volume) |
-| Notion free tier | €0 |
-| **Total** | **€0** |
+| Item                      | Monthly                  |
+| ------------------------- | ------------------------ |
+| Sentry free tier          | €0                       |
+| Healthchecks free tier    | €0                       |
+| Uptime Kuma (self-hosted) | €0                       |
+| Cloudflare Logpush to R2  | €0 (free for our volume) |
+| Notion free tier          | €0                       |
+| **Total**                 | **€0**                   |
 
 Scaling: Sentry Team €26/mo at >5k events/mo; everything else stays free until ~80 active clients.
 

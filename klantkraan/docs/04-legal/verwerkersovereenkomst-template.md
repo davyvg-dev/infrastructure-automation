@@ -14,7 +14,7 @@
 >
 > **This is a template, not legal advice.** Have a Dutch jurist review it once before the first
 > client signature; after that it is fill-in-the-blanks. Replace every `[...]` placeholder. Client
-> signs this alongside the offer/MSA, *before* go-live — no signed DPA = unlawful processing under
+> signs this alongside the offer/MSA, _before_ go-live — no signed DPA = unlawful processing under
 > art. 28(3) and both parties are liable (AP guidance).
 
 ---
@@ -179,32 +179,32 @@ bevoegde rechter te [Rechtbank, bv. Den Haag].
 **Aldus overeengekomen en in tweevoud ondertekend:**
 
 | Verwerkingsverantwoordelijke | Verwerker (T4 Software Consulting B.V. / Klantkraan) |
-|---|---|
-| Naam: [ ] | Naam: [ ] |
-| Functie: [ ] | Functie: [ ] |
-| Datum: [ ] | Datum: [ ] |
-| Handtekening: | Handtekening: |
+| ---------------------------- | ---------------------------------------------------- |
+| Naam: [ ]                    | Naam: [ ]                                            |
+| Functie: [ ]                 | Functie: [ ]                                         |
+| Datum: [ ]                   | Datum: [ ]                                           |
+| Handtekening:                | Handtekening:                                        |
 
 ---
 
 ## Bijlage I — Verwerkingsdetails
 
-| | |
-|---|---|
-| **Onderwerp** | Het beantwoorden van inkomende berichten en het vastleggen van afspraken en leads namens Verwerkingsverantwoordelijke |
-| **Aard van de verwerking** | Ontvangen, opslaan, verwerken met een taalmodel, en doorsturen van tekstberichten; vastleggen van afspraak- en leadgegevens |
-| **Doel** | 24/7 bereikbaarheid: klantvragen beantwoorden, afspraken inplannen, terugbelverzoeken en leads doorgeven |
-| **Duur** | Voor de looptijd van de Diensten + de bewaartermijn van artikel 11 |
-| **Categorieën betrokkenen** | Klanten en prospects van Verwerkingsverantwoordelijke die contact opnemen |
+|                             |                                                                                                                             |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Onderwerp**               | Het beantwoorden van inkomende berichten en het vastleggen van afspraken en leads namens Verwerkingsverantwoordelijke       |
+| **Aard van de verwerking**  | Ontvangen, opslaan, verwerken met een taalmodel, en doorsturen van tekstberichten; vastleggen van afspraak- en leadgegevens |
+| **Doel**                    | 24/7 bereikbaarheid: klantvragen beantwoorden, afspraken inplannen, terugbelverzoeken en leads doorgeven                    |
+| **Duur**                    | Voor de looptijd van de Diensten + de bewaartermijn van artikel 11                                                          |
+| **Categorieën betrokkenen** | Klanten en prospects van Verwerkingsverantwoordelijke die contact opnemen                                                   |
 
 **Soorten persoonsgegevens:**
 
-| Categorie | Voorbeelden |
-|---|---|
-| Identificatiegegevens | Naam, telefoon-/WhatsApp-nummer, soms e-mail |
-| Adres-/locatiegegevens | Adres of postcode van de klus (voor de afspraak) |
-| Communicatiegegevens | Inhoud van de tekstberichten (de vraag/klus), afspraakgegevens |
-| Overige door de klant genoemde gegevens | Wat de klant zelf in het gesprek deelt |
+| Categorie                               | Voorbeelden                                                    |
+| --------------------------------------- | -------------------------------------------------------------- |
+| Identificatiegegevens                   | Naam, telefoon-/WhatsApp-nummer, soms e-mail                   |
+| Adres-/locatiegegevens                  | Adres of postcode van de klus (voor de afspraak)               |
+| Communicatiegegevens                    | Inhoud van de tekstberichten (de vraag/klus), afspraakgegevens |
+| Overige door de klant genoemde gegevens | Wat de klant zelf in het gesprek deelt                         |
 
 Geen doelverwerking van bijzondere categorieën, BSN of strafrechtelijke gegevens. Een klant kan
 onbedoeld bijzondere gegevens (bv. over gezondheid) in vrije tekst noemen; deze worden niet actief
@@ -227,11 +227,11 @@ uitgevraagd en niet apart verwerkt. **Geen** audio-opnames of spraaktranscriptie
 
 ## Bijlage III — Subverwerkers
 
-| Subverwerker | Rol | Verwerkte gegevens | Locatie | Doorgiftemechanisme | DPA |
-|---|---|---|---|---|---|
-| **Anthropic PBC** | Taalmodel (Claude) — genereert de antwoorden | Berichtinhoud + gesprekscontext | VS | EU-US Data Privacy Framework + SCC's | anthropic.com/legal/commercial-terms (incl. DPA) |
-| **Twilio Inc.** | WhatsApp-/SMS-transport (BSP) | Telefoonnummer + berichtinhoud | VS + EER-regio's | EU-US DPF + BCR's + SCC's | twilio.com/en-us/legal/data-protection-addendum |
-| **Hetzner Online GmbH** | Hosting van applicatie + database (primaire opslag) | Alle conversatie- en leadgegevens | EER (DE/FI) | Binnen EER — geen doorgifte | hetzner.com/AV/DPA_en.pdf |
+| Subverwerker            | Rol                                                 | Verwerkte gegevens                | Locatie          | Doorgiftemechanisme                  | DPA                                              |
+| ----------------------- | --------------------------------------------------- | --------------------------------- | ---------------- | ------------------------------------ | ------------------------------------------------ |
+| **Anthropic PBC**       | Taalmodel (Claude) — genereert de antwoorden        | Berichtinhoud + gesprekscontext   | VS               | EU-US Data Privacy Framework + SCC's | anthropic.com/legal/commercial-terms (incl. DPA) |
+| **Twilio Inc.**         | WhatsApp-/SMS-transport (BSP)                       | Telefoonnummer + berichtinhoud    | VS + EER-regio's | EU-US DPF + BCR's + SCC's            | twilio.com/en-us/legal/data-protection-addendum  |
+| **Hetzner Online GmbH** | Hosting van applicatie + database (primaire opslag) | Alle conversatie- en leadgegevens | EER (DE/FI)      | Binnen EER — geen doorgifte          | hetzner.com/AV/DPA_en.pdf                        |
 
 **Per klant toe te voegen (indien van toepassing), vóór activering en met kennisgeving als in
 artikel 6:**

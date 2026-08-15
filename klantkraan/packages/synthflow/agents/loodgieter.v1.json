@@ -39,13 +39,16 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "caller_name":   { "type": "string",  "description": "Voor- en achternaam van de beller." },
-          "caller_phone":  { "type": "string",  "description": "Telefoonnummer in E.164 (+316...)." },
-          "postcode":      { "type": "string",  "description": "Postcode + huisnummer." },
-          "job_summary":   { "type": "string",  "description": "Korte omschrijving, max 200 tekens." },
-          "intent":        { "type": "string",  "enum": ["NIEUW_WERK", "BESTAANDE_KLANT", "LEVERANCIER"] },
-          "urgency":       { "type": "string",  "enum": ["LOW", "MED", "HIGH"] },
-          "preferred_window": { "type": "string", "description": "Bijv. 'binnen 4 uur', 'morgenochtend', 'deze week'." }
+          "caller_name": { "type": "string", "description": "Voor- en achternaam van de beller." },
+          "caller_phone": { "type": "string", "description": "Telefoonnummer in E.164 (+316...)." },
+          "postcode": { "type": "string", "description": "Postcode + huisnummer." },
+          "job_summary": { "type": "string", "description": "Korte omschrijving, max 200 tekens." },
+          "intent": { "type": "string", "enum": ["NIEUW_WERK", "BESTAANDE_KLANT", "LEVERANCIER"] },
+          "urgency": { "type": "string", "enum": ["LOW", "MED", "HIGH"] },
+          "preferred_window": {
+            "type": "string",
+            "description": "Bijv. 'binnen 4 uur', 'morgenochtend', 'deze week'."
+          }
         },
         "required": ["caller_name", "caller_phone", "intent", "urgency"]
       }
@@ -56,11 +59,24 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "transfer_to":   { "type": "string", "description": "Doorverbind-nummer ({{escalation_number}})." },
-          "spoed_type":    { "type": "string", "enum": ["WATER_OVERSTROMING", "GASLUCHT", "GEEN_WARM_WATER_WINTER", "CV_STORING_VORST", "RIOOL_OVERSTORT", "OVERIG_SPOED"] },
-          "caller_phone":  { "type": "string" },
-          "address":       { "type": "string" },
-          "summary":       { "type": "string", "description": "Eén zin samenvatting voor de eigenaar." }
+          "transfer_to": {
+            "type": "string",
+            "description": "Doorverbind-nummer ({{escalation_number}})."
+          },
+          "spoed_type": {
+            "type": "string",
+            "enum": [
+              "WATER_OVERSTROMING",
+              "GASLUCHT",
+              "GEEN_WARM_WATER_WINTER",
+              "CV_STORING_VORST",
+              "RIOOL_OVERSTORT",
+              "OVERIG_SPOED"
+            ]
+          },
+          "caller_phone": { "type": "string" },
+          "address": { "type": "string" },
+          "summary": { "type": "string", "description": "Eén zin samenvatting voor de eigenaar." }
         },
         "required": ["transfer_to", "spoed_type", "caller_phone"]
       }
@@ -71,7 +87,10 @@
       "parameters": {
         "type": "object",
         "properties": {
-          "tariff_kind": { "type": "string", "enum": ["voorrijkosten", "uurtarief", "spoedtoeslag", "materiaalopslag", "alles"] }
+          "tariff_kind": {
+            "type": "string",
+            "enum": ["voorrijkosten", "uurtarief", "spoedtoeslag", "materiaalopslag", "alles"]
+          }
         },
         "required": ["tariff_kind"]
       }

@@ -9,6 +9,7 @@ suggested_week: 4
 # Pilot-oproep (alleen in promo-toegestane groepen / promo-draadjes)
 
 ## Voice notes voor founder
+
 - ALLEEN plaatsen waar promotie expliciet mag, of in het wekelijkse promo-draadje. Anders verwijderd + reputatieschade.
 - Geen verzonnen resultaten of bestaande klanten claimen (we hebben nog geen pilotdata — zie holdback-regel in linkedin/posting-calendar.md).
 - Geen link in de body; vraag om een bericht. Pas de vakken aan op de groep.

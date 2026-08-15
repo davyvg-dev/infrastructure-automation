@@ -19,15 +19,15 @@ no hunting through Workers and n8n nodes for hard-coded vendor URLs.
 ## Usage
 
 ```ts
-import { createTelephony } from "@kk/telephony";
+import { createTelephony } from '@kk/telephony'
 
-const tel = createTelephony({ provider: "cm", apiKey: env.CM_API_KEY });
+const tel = createTelephony({ provider: 'cm', apiKey: env.CM_API_KEY })
 await tel.sendSms({
-  to: "+31612345678",
-  from: "Klantkraan",
-  body: "We bellen u zo terug.",
-  clientId: "client_xxx",
-});
+  to: '+31612345678',
+  from: 'Klantkraan',
+  body: 'We bellen u zo terug.',
+  clientId: 'client_xxx',
+})
 ```
 
 ## Webhook signature verification

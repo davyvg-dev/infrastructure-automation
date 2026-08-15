@@ -65,12 +65,14 @@ const description = bedrijf.email
             <Icon name="map-pin" class="mt-0.5 h-5 w-5 shrink-0 text-(--brand-primary)" />
             <address class="not-italic">
               {bedrijf.naam}
-              {adres.map((regel) => (
-                <Fragment>
-                  <br />
-                  {regel}
-                </Fragment>
-              ))}
+              {
+                adres.map((regel) => (
+                  <Fragment>
+                    <br />
+                    {regel}
+                  </Fragment>
+                ))
+              }
             </address>
           </li>
         </ul>

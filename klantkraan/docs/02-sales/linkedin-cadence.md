@@ -61,13 +61,13 @@ Succes.
 
 ## Reply handling
 
-| Reply | Action |
-|---|---|
-| Positief / interesse | Direct stem-bericht (LinkedIn voice DM is 4x reply-rate vs text) of WhatsApp-uitnodiging voor 20-min Zoom |
-| Informatie-vraag | Beantwoord direct + voeg toe: "wil je het zien? cal.com/klantkraan/15min" |
-| "Niet nu" | "Snap ik. Ik bewaar je. Mag ik je over 3 maanden polsen?" → snooze in Attio |
-| Niet relevant (geen tradesman) | "Sorry, foute connectie aan mijn kant — geen vervolg" → suppress |
-| Negatief | "Dank voor de duidelijkheid, succes" → suppress |
+| Reply                          | Action                                                                                                    |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Positief / interesse           | Direct stem-bericht (LinkedIn voice DM is 4x reply-rate vs text) of WhatsApp-uitnodiging voor 20-min Zoom |
+| Informatie-vraag               | Beantwoord direct + voeg toe: "wil je het zien? cal.com/klantkraan/15min"                                 |
+| "Niet nu"                      | "Snap ik. Ik bewaar je. Mag ik je over 3 maanden polsen?" → snooze in Attio                               |
+| Niet relevant (geen tradesman) | "Sorry, foute connectie aan mijn kant — geen vervolg" → suppress                                          |
+| Negatief                       | "Dank voor de duidelijkheid, succes" → suppress                                                           |
 
 ## Volume
 

@@ -8,11 +8,11 @@
 ## Executive summary
 
 1. **klantkraan.nl has a distribution problem, not a conversion problem.** ~2 human visits/day; the domain is invisible even for near-branded queries. Everything below is about earning discovery.
-2. **The competitive whitespace is closing.** In May the "AI receptionist for Dutch trades" SERP barely existed; today ≥5 Dutch players occupy it by name (Voicelabs €99–299, installatietelefoniste.nl, vakmanai.nl €197–697, loodgieterai.nl, MIKE365 €15). But **none has real social proof** (loodgieterai's testimonials are labeled AI-generated), most are voice-only, and none owns the text-first WhatsApp+chat angle. The defensible position is *done-for-you + trades-specific + real proof*, not price. First real case study wins the category.
+2. **The competitive whitespace is closing.** In May the "AI receptionist for Dutch trades" SERP barely existed; today ≥5 Dutch players occupy it by name (Voicelabs €99–299, installatietelefoniste.nl, vakmanai.nl €197–697, loodgieterai.nl, MIKE365 €15). But **none has real social proof** (loodgieterai's testimonials are labeled AI-generated), most are voice-only, and none owns the text-first WhatsApp+chat angle. The defensible position is _done-for-you + trades-specific + real proof_, not price. First real case study wins the category.
 3. **Keyword pivot.** The May plan targeted "[vak] klanten werven" / "leads voor [vak]" — those SERPs are still a broker oligopoly (ETEB, LeadsMaster) and the intent mismatches a receptionist product. The realistic surface is the **bereikbaarheid cluster**: "ai telefoniste [vak]", "gemiste oproepen", "telefoonservice [vak]", "antwoordservice kosten", "whatsapp receptionist" — SERPs that are weeks old, thin, and exactly our intent. Keep the cornerstones for conversion; stop expecting them to rank on broker terms.
 4. **AI search is the fresh-domain shortcut.** Dutch AI Overviews live since Oct 2025; citation-overlap with organic top-10 has fallen to 17–54%, meaning **a low-authority site can be cited without ranking**. Levers: answer-first structure, FAQPage/Organization schema, original data, earned third-party mentions. (llms.txt: near-worthless per current evidence — 10-minute lottery ticket, fine, expect nothing.)
-5. **Original data is our only outsized lever.** A fresh anonymous-founder domain can't out-authority anyone, but it can be the *primary Dutch source* for missed-call/bereikbaarheid numbers (competitors quote US stats). The rekentool + a "Bereikbaarheid van Nederlandse vakbedrijven" study + a Tarievenindex built from wave1.ts data are the linkable assets.
-6. **Respect the founder's validation-first gate.** 2026-05-31 stance: no more site polish until pilot #1. This strategy sequences accordingly — the short-term list is (a) one-time technical debt paydown, (b) assets that *help close pilots* (comparison/price content arms sales conversations), (c) zero-cost founder registrations. The content flywheel scales after pilot #1.
+5. **Original data is our only outsized lever.** A fresh anonymous-founder domain can't out-authority anyone, but it can be the _primary Dutch source_ for missed-call/bereikbaarheid numbers (competitors quote US stats). The rekentool + a "Bereikbaarheid van Nederlandse vakbedrijven" study + a Tarievenindex built from wave1.ts data are the linkable assets.
+6. **Respect the founder's validation-first gate.** 2026-05-31 stance: no more site polish until pilot #1. This strategy sequences accordingly — the short-term list is (a) one-time technical debt paydown, (b) assets that _help close pilots_ (comparison/price content arms sales conversations), (c) zero-cost founder registrations. The content flywheel scales after pilot #1.
 
 ---
 
@@ -43,14 +43,14 @@ Baseline is healthy (unique titles, 1 h1/page, FAQPage schema on niche+city page
 
 **Cluster build order (D → A → B → C), 2 posts/month, founder-approved via a Telegram gate mirroring growth-engine:**
 
-- **Cluster D — "De digitale receptionist" (buying intent, build FIRST).** Pillar: *AI-receptionist voor vakmensen: de complete gids 2026* (~3,000 w). Money spokes: *AI-telefoniste vs. antwoordservice vs. telefoonaanname uitbesteden: kosten 2026*; *Wat kost een AI-receptionist in 2026? Eerlijke prijzen, ook van concurrenten* (name Voicelabs/MIKE365/VakmanAI with real prices — the honest-comparison page is also the #1 GEO play: nobody owns "ai receptionist vergelijken nederland", and AI assistants cite comparison content when asked "beste ai telefoniste voor loodgieters"); *De Europese AI-wet voor mkb'ers uitgelegd*; *Websitechat, WhatsApp of telefoon: waar uw klanten écht contact zoeken*.
+- **Cluster D — "De digitale receptionist" (buying intent, build FIRST).** Pillar: _AI-receptionist voor vakmensen: de complete gids 2026_ (~3,000 w). Money spokes: _AI-telefoniste vs. antwoordservice vs. telefoonaanname uitbesteden: kosten 2026_; _Wat kost een AI-receptionist in 2026? Eerlijke prijzen, ook van concurrenten_ (name Voicelabs/MIKE365/VakmanAI with real prices — the honest-comparison page is also the #1 GEO play: nobody owns "ai receptionist vergelijken nederland", and AI assistants cite comparison content when asked "beste ai telefoniste voor loodgieters"); _De Europese AI-wet voor mkb'ers uitgelegd_; _Websitechat, WhatsApp of telefoon: waar uw klanten écht contact zoeken_.
 - **Cluster A — "Gemiste oproepen & bereikbaarheid" (core pain).** Pillar anchored on the rekentool. Spokes per the content agent's map; the existing cv-storing post and 2 gidsen slot in.
 - **Cluster B — "Klanten werven zonder platformen".** Keeps the serp-audit discovery keywords; Werkspot-as-foil content from `lead-source-platforams.md` data; hosts the **Tarievenindex** (see L2).
 - **Cluster C — "Slim plannen & no-shows".** Existing no-show post becomes the pillar. Build last.
 
 **Quality gates (anti scaled-content-abuse; Google penalizes value-less volume, not AI tools):** every post carries ≥1 unfakeable element (real number, real transcript, original calculation, founder-verified tariff); human approval always; ≤10 non-programmatic pages/month; never same-day near-identical vertical variants.
 
-**E-E-A-T with an anonymous founder** (QRG requires *accountability*, not a name): Organization-as-author in schema + byline; KvK in footer + schema; first-person experience content ("we analyzed X chat conversations" — the ai-receptionist app generates proprietary data); named *customers* once pilots exist; live outbound citations; `/over` as accountability hub (story as "de oprichter", KvK, contact, product photos not face).
+**E-E-A-T with an anonymous founder** (QRG requires _accountability_, not a name): Organization-as-author in schema + byline; KvK in footer + schema; first-person experience content ("we analyzed X chat conversations" — the ai-receptionist app generates proprietary data); named _customers_ once pilots exist; live outbound citations; `/over` as accountability hub (story as "de oprichter", KvK, contact, product photos not face).
 
 ### S3. Answer-first retrofit (GEO)
 
@@ -104,14 +104,14 @@ Month 0: GSC + weekly query/indexation check (CLI: `gsc`-API script fits founder
 
 ## Founder actions (Claude cannot do these)
 
-| # | Action | Time | Unblocks |
-|---|--------|------|----------|
-| 1 | GSC domain verification (DNS TXT) + submit sitemap | 15 min | Wave 2, all rank/query data, wave gates |
-| 2 | Deploy the committed truth-audit + upcoming SEO fixes (`wrangler pages deploy`) | 5 min | everything — live site still serves stale claims |
-| 3 | Gartner DM + Appwiki + VIDM + ANP registrations (Claude preps all copy) | ~2 h | first real backlinks + press channel |
-| 4 | Approve content cadence (2 posts/month) + each post via Telegram gate | 15 min/post | content flywheel |
-| 5 | Decide data-study method (desk-based vs mystery-call) | decision | L1 |
-| 6 | Send persbericht/partner emails from company mailbox (Claude drafts) | drip | L1, L5 |
+| #   | Action                                                                          | Time        | Unblocks                                         |
+| --- | ------------------------------------------------------------------------------- | ----------- | ------------------------------------------------ |
+| 1   | GSC domain verification (DNS TXT) + submit sitemap                              | 15 min      | Wave 2, all rank/query data, wave gates          |
+| 2   | Deploy the committed truth-audit + upcoming SEO fixes (`wrangler pages deploy`) | 5 min       | everything — live site still serves stale claims |
+| 3   | Gartner DM + Appwiki + VIDM + ANP registrations (Claude preps all copy)         | ~2 h        | first real backlinks + press channel             |
+| 4   | Approve content cadence (2 posts/month) + each post via Telegram gate           | 15 min/post | content flywheel                                 |
+| 5   | Decide data-study method (desk-based vs mystery-call)                           | decision    | L1                                               |
+| 6   | Send persbericht/partner emails from company mailbox (Claude drafts)            | drip        | L1, L5                                           |
 
 ## Standing constraints honored
 

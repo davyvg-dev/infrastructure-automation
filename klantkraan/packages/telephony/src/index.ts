@@ -11,22 +11,22 @@ export type {
   ForwardCallInput,
   ProvisionNumberInput,
   ConfigureForwardingInput,
-} from "./types.js";
-export { TelephonyError, E164 } from "./types.js";
+} from './types.js'
+export { TelephonyError, E164 } from './types.js'
 
-export { CmComAdapter } from "./cm-com.js";
-export type { CmComAdapterOptions } from "./cm-com.js";
+export { CmComAdapter } from './cm-com.js'
+export type { CmComAdapterOptions } from './cm-com.js'
 
-export { TwilioAdapter } from "./twilio.js";
-export type { TwilioAdapterOptions } from "./twilio.js";
+export { TwilioAdapter } from './twilio.js'
+export type { TwilioAdapterOptions } from './twilio.js'
 
-import { CmComAdapter, type CmComAdapterOptions } from "./cm-com.js";
-import { TwilioAdapter, type TwilioAdapterOptions } from "./twilio.js";
-import type { TelephonyAdapter } from "./types.js";
+import { CmComAdapter, type CmComAdapterOptions } from './cm-com.js'
+import { TwilioAdapter, type TwilioAdapterOptions } from './twilio.js'
+import type { TelephonyAdapter } from './types.js'
 
 export type CreateTelephonyOptions =
-  | ({ provider: "cm" } & CmComAdapterOptions)
-  | ({ provider: "twilio" } & TwilioAdapterOptions);
+  | ({ provider: 'cm' } & CmComAdapterOptions)
+  | ({ provider: 'twilio' } & TwilioAdapterOptions)
 
 /**
  * Build a telephony adapter for the requested provider. Call sites depend on
@@ -35,13 +35,13 @@ export type CreateTelephonyOptions =
  */
 export function createTelephony(opts: CreateTelephonyOptions): TelephonyAdapter {
   switch (opts.provider) {
-    case "cm": {
-      const { provider: _p, ...rest } = opts;
-      return new CmComAdapter(rest);
+    case 'cm': {
+      const { provider: _p, ...rest } = opts
+      return new CmComAdapter(rest)
     }
-    case "twilio": {
-      const { provider: _p, ...rest } = opts;
-      return new TwilioAdapter(rest);
+    case 'twilio': {
+      const { provider: _p, ...rest } = opts
+      return new TwilioAdapter(rest)
     }
   }
 }

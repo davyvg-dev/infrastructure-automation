@@ -133,17 +133,21 @@ const t = T[lang]
                 class="h-4 w-4 transition-transform group-open:rotate-180"
               />
             </summary>
-            <ul class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-2">
-              {branchLinks.map((b) => (
-                <li>
-                  <a
-                    href={b.href}
-                    class="block rounded-(--radius-button) px-3 py-2 text-(--color-chalk) no-underline hover:bg-(--color-panel-2)"
-                  >
-                    {b.label}
-                  </a>
-                </li>
-              ))}
+            <ul
+              class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-2"
+            >
+              {
+                branchLinks.map((b) => (
+                  <li>
+                    <a
+                      href={b.href}
+                      class="block rounded-(--radius-button) px-3 py-2 text-(--color-chalk) no-underline hover:bg-(--color-panel-2)"
+                    >
+                      {b.label}
+                    </a>
+                  </li>
+                ))
+              }
               <li class="mt-1 border-t border-(--color-line) pt-1">
                 <a
                   href={hubHref}
@@ -173,32 +177,34 @@ const t = T[lang]
             role="group"
             aria-label={t.langSwitcher}
           >
-            {langSwitch.map((s, i) =>
-              s.current ? (
-                <span
-                  aria-current="true"
-                  class:list={[
-                    'px-2 py-1 bg-(--color-sodium) font-bold text-(--color-night)',
-                    i > 0 && 'border-l border-(--color-line)',
-                  ]}
-                >
-                  {s.label}
-                </span>
-              ) : (
-                <a
-                  href={s.href}
-                  hreflang={s.code}
-                  lang={s.code}
-                  aria-label={s.aria}
-                  class:list={[
-                    'px-2 py-1 text-(--color-dim) no-underline hover:bg-(--color-panel) hover:text-(--color-chalk)',
-                    i > 0 && 'border-l border-(--color-line)',
-                  ]}
-                >
-                  {s.label}
-                </a>
+            {
+              langSwitch.map((s, i) =>
+                s.current ? (
+                  <span
+                    aria-current="true"
+                    class:list={[
+                      'px-2 py-1 bg-(--color-sodium) font-bold text-(--color-night)',
+                      i > 0 && 'border-l border-(--color-line)',
+                    ]}
+                  >
+                    {s.label}
+                  </span>
+                ) : (
+                  <a
+                    href={s.href}
+                    hreflang={s.code}
+                    lang={s.code}
+                    aria-label={s.aria}
+                    class:list={[
+                      'px-2 py-1 text-(--color-dim) no-underline hover:bg-(--color-panel) hover:text-(--color-chalk)',
+                      i > 0 && 'border-l border-(--color-line)',
+                    ]}
+                  >
+                    {s.label}
+                  </a>
+                ),
               )
-            )}
+            }
           </div>
         </li>
       </ul>
@@ -241,24 +247,25 @@ const t = T[lang]
     <ul class="mx-auto flex max-w-5xl flex-col">
       <li class="border-b border-(--color-line)">
         <details data-branches-dropdown="mobile" class="group">
-          <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-chalk) marker:hidden">
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-chalk) marker:hidden"
+          >
             <span>{t.forWho}</span>
-            <Icon
-              name="chevron-down"
-              class="h-5 w-5 transition-transform group-open:rotate-180"
-            />
+            <Icon name="chevron-down" class="h-5 w-5 transition-transform group-open:rotate-180" />
           </summary>
           <ul class="bg-(--color-panel)">
-            {branchLinks.map((b) => (
-              <li class="border-t border-(--color-line)">
-                <a
-                  href={b.href}
-                  class="block px-10 py-3 text-body text-(--color-chalk) no-underline"
-                >
-                  {b.label}
-                </a>
-              </li>
-            ))}
+            {
+              branchLinks.map((b) => (
+                <li class="border-t border-(--color-line)">
+                  <a
+                    href={b.href}
+                    class="block px-10 py-3 text-body text-(--color-chalk) no-underline"
+                  >
+                    {b.label}
+                  </a>
+                </li>
+              ))
+            }
             <li class="border-t border-(--color-line)">
               <a
                 href={hubHref}
@@ -273,10 +280,7 @@ const t = T[lang]
       {
         nav.map((item) => (
           <li class="border-b border-(--color-line)">
-            <a
-              href={item.href}
-              class="block px-6 py-4 text-body text-(--color-chalk) no-underline"
-            >
+            <a href={item.href} class="block px-6 py-4 text-body text-(--color-chalk) no-underline">
               {item.label}
             </a>
           </li>
@@ -288,30 +292,32 @@ const t = T[lang]
           role="group"
           aria-label={t.langSwitcher}
         >
-          {langSwitch.map((s, i) =>
-            s.current ? (
-              <span
-                aria-current="true"
-                class:list={[
-                  'flex-1 py-2 text-center bg-(--color-sodium) font-bold text-(--color-night)',
-                  i > 0 && 'border-l border-(--color-line)',
-                ]}
-              >
-                {s.label}
-              </span>
-            ) : (
-              <a
-                href={s.href}
-                aria-label={s.aria}
-                class:list={[
-                  'flex-1 py-2 text-center text-(--color-chalk) no-underline hover:bg-(--color-panel)',
-                  i > 0 && 'border-l border-(--color-line)',
-                ]}
-              >
-                {s.label}
-              </a>
+          {
+            langSwitch.map((s, i) =>
+              s.current ? (
+                <span
+                  aria-current="true"
+                  class:list={[
+                    'flex-1 py-2 text-center bg-(--color-sodium) font-bold text-(--color-night)',
+                    i > 0 && 'border-l border-(--color-line)',
+                  ]}
+                >
+                  {s.label}
+                </span>
+              ) : (
+                <a
+                  href={s.href}
+                  aria-label={s.aria}
+                  class:list={[
+                    'flex-1 py-2 text-center text-(--color-chalk) no-underline hover:bg-(--color-panel)',
+                    i > 0 && 'border-l border-(--color-line)',
+                  ]}
+                >
+                  {s.label}
+                </a>
+              ),
             )
-          )}
+          }
         </div>
       </li>
     </ul>

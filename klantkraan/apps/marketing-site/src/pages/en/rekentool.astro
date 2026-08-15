@@ -12,7 +12,9 @@ import CursusForm from '../../components/CursusForm.astro'
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-chalk)">What does a <span class="text-(--color-sodium)">missed call</span> cost you?</h1>
+      <h1 class="font-display text-hero text-(--color-chalk)">
+        What does a <span class="text-(--color-sodium)">missed call</span> cost you?
+      </h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
         Enter your numbers. The calculator shows straight away how many jobs you lose in a year and
         how quickly each Klantkraan plan pays for itself.
@@ -103,7 +105,10 @@ import CursusForm from '../../components/CursusForm.astro'
           </div>
           <div>
             <p class="text-small text-(--color-dim)">Lost revenue per year</p>
-            <p id="out-lost-revenue" class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)">
+            <p
+              id="out-lost-revenue"
+              class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
+            >
               €0
             </p>
             <p class="mt-1 text-small text-(--color-dim)">
@@ -124,7 +129,8 @@ import CursusForm from '../../components/CursusForm.astro'
           </li>
         </ul>
         <p class="mt-4 text-small text-(--color-dim)">
-          "Payback time" = the number of months until the plan is paid for by the revenue you win back.
+          "Payback time" = the number of months until the plan is paid for by the revenue you win
+          back.
         </p>
       </aside>
     </div>
@@ -138,18 +144,15 @@ import CursusForm from '../../components/CursusForm.astro'
       <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
         <li>Missed calls per year = calls per week × 52 × (% missed / 100).</li>
         <li>
-          Lost revenue per year = missed calls × customer value × 33% conversion. So we only count
-          1 in 3 missed calls as a lost job; without a callback system, most callers give up.
+          Lost revenue per year = missed calls × customer value × 33% conversion. So we only count 1
+          in 3 missed calls as a lost job; without a callback system, most callers give up.
         </li>
         <li>
           Payback time = plan price ÷ (lost revenue per year ÷ 12). The bigger your pile of missed
           jobs, the faster Klantkraan pays for itself.
         </li>
       </ul>
-      <a
-        href="/en/demo/"
-        class="mt-8 btn btn-primary btn-lg"
-      >
+      <a href="/en/demo/" class="mt-8 btn btn-primary btn-lg">
         Have us check it live on your numbers
       </a>
     </div>
@@ -159,11 +162,13 @@ import CursusForm from '../../components/CursusForm.astro'
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Lead platforms</p>
-      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">And what does a job through Werkspot cost?</h2>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        And what does a job through Werkspot cost?
+      </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        On lead platforms you pay per lead, and the same lead also goes to your competitors.
-        Whoever responds first wins the job; the rest paid too. Compare that with a fixed price
-        for your own channel, where every caller simply gets answered.
+        On lead platforms you pay per lead, and the same lead also goes to your competitors. Whoever
+        responds first wins the job; the rest paid too. Compare that with a fixed price for your own
+        channel, where every caller simply gets answered.
       </p>
       <div class="mt-8 grid gap-4 sm:grid-cols-3">
         <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
@@ -182,8 +187,8 @@ import CursusForm from '../../components/CursusForm.astro'
         <div class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5">
           <p class="font-display text-h1 tabular-nums text-(--color-chalk)">€0 per lead</p>
           <p class="mt-2 text-small text-(--color-dim)">
-            through your own number and website. Klantkraan is a fixed monthly price, however
-            many jobs you take on.
+            through your own number and website. Klantkraan is a fixed monthly price, however many
+            jobs you take on.
           </p>
         </div>
       </div>

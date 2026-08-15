@@ -29,9 +29,9 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
         </span>
       </div>
       <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
-        A working demo prepared for Cool Global Mallorca. Mia answers in English, German or
-        Spanish, knows the island's streets, and captures every job with the details your
-        engineer needs. Try her on a real phone call, or in chat.
+        A working demo prepared for Cool Global Mallorca. Mia answers in English, German or Spanish,
+        knows the island's streets, and captures every job with the details your engineer needs. Try
+        her on a real phone call, or in chat.
       </p>
     </div>
   </section>
@@ -41,16 +41,20 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
     <div class="mx-auto max-w-5xl px-6">
       <div class="grid gap-6 md:grid-cols-2">
         <!-- Call me now -->
-        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
+        <div
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+        >
           <div class="flex items-center gap-3">
-            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.22)] text-(--color-sodium)">
+            <span
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.22)] text-(--color-sodium)"
+            >
               <Icon name="phone" class="h-5 w-5" />
             </span>
             <h2 class="font-display text-h2 text-(--color-chalk)">Get a live call</h2>
           </div>
           <p class="mt-4 text-body text-(--color-dim)">
-            Enter your number and Mia calls you within seconds. Play a customer: a broken
-            unit, a guest emergency in a rental, a maintenance quote.
+            Enter your number and Mia calls you within seconds. Play a customer: a broken unit, a
+            guest emergency in a rental, a maintenance quote.
           </p>
 
           <form id="voice-demo-form" data-demo="cool-global" class="mt-5" novalidate>
@@ -73,11 +77,15 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
             <fieldset class="mt-4">
               <legend class="text-small text-(--color-dim)">Language of the call</legend>
               <div class="mt-2 flex gap-3">
-                <label class="inline-flex items-center gap-2 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-2 text-body text-(--color-chalk)">
+                <label
+                  class="inline-flex items-center gap-2 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-2 text-body text-(--color-chalk)"
+                >
                   <input type="radio" name="voice-demo-language" value="en" checked />
                   English
                 </label>
-                <label class="inline-flex items-center gap-2 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-2 text-body text-(--color-chalk)">
+                <label
+                  class="inline-flex items-center gap-2 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] px-4 py-2 text-body text-(--color-chalk)"
+                >
                   <input type="radio" name="voice-demo-language" value="de" />
                   Deutsch
                 </label>
@@ -104,32 +112,39 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
             </p>
           </form>
 
-          <div id="voice-demo-success" class="mt-5 hidden rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] p-4">
+          <div
+            id="voice-demo-success"
+            class="mt-5 hidden rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.22)] p-4"
+          >
             <p class="font-display text-h3 text-(--color-sodium)">Your phone is about to ring.</p>
             <p class="mt-2 text-body text-(--color-dim)">
-              The call comes from <strong class="text-(--color-chalk)">+31 970 0653 0002</strong>,
-              a Dutch number. Answer it and talk to Mia as a customer would.
+              The call comes from <strong class="text-(--color-chalk)">+31 970 0653 0002</strong>, a
+              Dutch number. Answer it and talk to Mia as a customer would.
             </p>
           </div>
 
           <p class="mt-4 text-small text-(--color-dim)">
-            The call comes from a Dutch number (+31 970 0653 0002) and lasts up to five
-            minutes. Free, no obligations.
+            The call comes from a Dutch number (+31 970 0653 0002) and lasts up to five minutes.
+            Free, no obligations.
           </p>
         </div>
 
         <!-- Chat -->
-        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
+        <div
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+        >
           <div class="flex items-center gap-3">
-            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.22)] text-(--color-sodium)">
+            <span
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[rgba(0,0,0,0.22)] text-(--color-sodium)"
+            >
               <Icon name="message-square" class="h-5 w-5" />
             </span>
             <h2 class="font-display text-h2 text-(--color-chalk)">Chat with Mia</h2>
           </div>
           <p class="mt-4 text-body text-(--color-dim)">
-            The same receptionist in writing, as she'd sit on coolglobalmallorca.com or answer
-            on WhatsApp. She answers questions, checks the diary and books the visit — English,
-            German or Spanish.
+            The same receptionist in writing, as she'd sit on coolglobalmallorca.com or answer on
+            WhatsApp. She answers questions, checks the diary and books the visit — English, German
+            or Spanish.
           </p>
           <a
             href={chatUrl}
@@ -159,18 +174,20 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">A guest emergency</h3>
             <p class="mt-2 text-body text-(--color-dim)">
-              "I manage a rental in Santa Ponsa and my guests have no cooling." Watch her treat
-              it as urgent and collect everything the engineer needs for the callback.
+              "I manage a rental in Santa Ponsa and my guests have no cooling." Watch her treat it
+              as urgent and collect everything the engineer needs for the callback.
             </p>
           </div>
         </article>
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
           <Icon name="message-square" class="mt-1 h-7 w-7 text-(--color-sodium)" />
           <div>
-            <h3 class="font-display text-h3 text-(--color-chalk)">A Mallorca address, said badly</h3>
+            <h3 class="font-display text-h3 text-(--color-chalk)">
+              A Mallorca address, said badly
+            </h3>
             <p class="mt-2 text-body text-(--color-dim)">
-              Give a real street the English or German way — "Paseo Maritimo" — and she finds
-              the proper street on the island and reads it back to confirm.
+              Give a real street the English or German way — "Paseo Maritimo" — and she finds the
+              proper street on the island and reads it back to confirm.
             </p>
           </div>
         </article>
@@ -179,8 +196,8 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">Push for a price</h3>
             <p class="mt-2 text-body text-(--color-dim)">
-              Try to get a number out of her. She never invents prices: the engineer confirms
-              on site, and a survey for a new installation is free. Your rules, never improvised.
+              Try to get a number out of her. She never invents prices: the engineer confirms on
+              site, and a survey for a new installation is free. Your rules, never improvised.
             </p>
           </div>
         </article>
@@ -200,20 +217,22 @@ const chatUrl = 'https://demo.klantkraan.nl/?client=airco-mallorca'
   <!-- 4. Honesty + CTA -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
+      >
         <h2 class="font-display text-h2 text-(--color-sodium)">Honest by design</h2>
         <p class="mt-3 text-body text-(--color-dim)">
-          Mia opens every conversation by saying she is a digital assistant — required by the
-          EU AI Act, and simply the right way to treat customers. She only says what Cool
-          Global has approved: no invented prices, no promised arrival times, no DIY advice
-          on refrigerant or electrics.
+          Mia opens every conversation by saying she is a digital assistant — required by the EU AI
+          Act, and simply the right way to treat customers. She only says what Cool Global has
+          approved: no invented prices, no promised arrival times, no DIY advice on refrigerant or
+          electrics.
         </p>
       </div>
       <div class="mt-10">
         <h2 class="font-display text-h1 text-(--color-chalk)">Want this on your own number?</h2>
         <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-          This demo was prepared by Klantkraan. Your services, your prices, your rules — live
-          within days, cancel monthly.
+          This demo was prepared by Klantkraan. Your services, your prices, your rules — live within
+          days, cancel monthly.
         </p>
         <div class="mt-8 btn-row">
           <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">

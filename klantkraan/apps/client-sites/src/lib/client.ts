@@ -62,7 +62,9 @@ function contrastWithWhite(hexColor: string): number {
   }
   const n = parseInt(hexColor.slice(1), 16)
   const lum =
-    0.2126 * channel((n >> 16) & 0xff) + 0.7152 * channel((n >> 8) & 0xff) + 0.0722 * channel(n & 0xff)
+    0.2126 * channel((n >> 16) & 0xff) +
+    0.7152 * channel((n >> 8) & 0xff) +
+    0.0722 * channel(n & 0xff)
   return 1.05 / (lum + 0.05)
 }
 
@@ -78,8 +80,14 @@ export const ClientSchema = z.object({
     // Used in template copy ("Uw dakdekker in ...").
     vak: z.string().min(2),
     // Legal identifiers: required for live, absent (never invented) for preview.
-    kvk: z.string().regex(/^\d{8}$/, 'kvk moet 8 cijfers zijn').optional(),
-    btw_id: z.string().regex(/^NL\d{9}B\d{2}$/, 'btw_id moet NL#########B## zijn').optional(),
+    kvk: z
+      .string()
+      .regex(/^\d{8}$/, 'kvk moet 8 cijfers zijn')
+      .optional(),
+    btw_id: z
+      .string()
+      .regex(/^NL\d{9}B\d{2}$/, 'btw_id moet NL#########B## zijn')
+      .optional(),
     telefoon: z.string().regex(/^\+31[\d ]{9,14}$/, 'telefoon moet +31... zijn'),
     // Digits only, international format without +, for wa.me links: "31612345678".
     whatsapp: z
@@ -190,7 +198,8 @@ const LIVE_VEREIST: Array<{ path: (string | number)[]; label: string }> = [
 
 function op(root: unknown, path: (string | number)[]): unknown {
   return path.reduce<unknown>(
-    (acc, key) => (acc && typeof acc === 'object' ? (acc as Record<string, unknown>)[key] : undefined),
+    (acc, key) =>
+      acc && typeof acc === 'object' ? (acc as Record<string, unknown>)[key] : undefined,
     root,
   )
 }
@@ -211,7 +220,8 @@ export const ClientSchemaChecked = ClientSchema.superRefine((cfg, ctx) => {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['receptionist'],
-      message: 'een voorstel kan geen receptionist claimen; zet receptionist: false bij modus: preview',
+      message:
+        'een voorstel kan geen receptionist claimen; zet receptionist: false bij modus: preview',
     })
   }
   if (cfg.modus === 'preview' && cfg.reviews.length > 0) {
@@ -361,7 +371,9 @@ export function loadClient(): LoadedClient {
     if (logoFile && files.includes(logoFile)) logoUrl = `/fotos/${logoFile}`
   }
   if (logoFile && !logoUrl) {
-    fail(`branding.logo is set to "${logoFile}" but clients/${slug}/fotos/${logoFile} does not exist.`)
+    fail(
+      `branding.logo is set to "${logoFile}" but clients/${slug}/fotos/${logoFile} does not exist.`,
+    )
   }
 
   // Stock set for the vak: only consulted when the client supplied no photos, and only
@@ -400,7 +412,11 @@ export function loadClient(): LoadedClient {
       .map((f) => ({ f, m: f.match(TILE) }))
       .filter((x): x is { f: string; m: RegExpMatchArray } => x.m !== null)
       .sort((a, b) => Number(a.m[1]) - Number(b.m[1]))
-      .map(({ f, m }) => ({ src: `/stock/${f}`, ...SHAPES[m[2] as 'wide' | 'tall'], alt: altFor(f) }))
+      .map(({ f, m }) => ({
+        src: `/stock/${f}`,
+        ...SHAPES[m[2] as 'wide' | 'tall'],
+        alt: altFor(f),
+      }))
     for (const role of ['hero', 'og'] as const) {
       const name = `${vak}-${role}.webp`
       if (!files.includes(name)) continue

@@ -23,12 +23,7 @@ const { slug } = Astro.params
   description="Per-klant KPI-overzicht: gesprekken, boekingen, reviews en teruggewonnen klanten."
   noindex
 >
-  <section
-    id="kk-dashboard"
-    data-slug={slug}
-    class="space-y-10"
-    aria-busy="true"
-  >
+  <section id="kk-dashboard" data-slug={slug} class="space-y-10" aria-busy="true">
     <header class="space-y-2">
       <p class="text-small text-(--color-dim)">Klantkraan dashboard</p>
       <h1 class="font-display text-h1 text-(--color-chalk)" id="kk-title">
@@ -40,15 +35,23 @@ const { slug } = Astro.params
     <!-- KPI tiles -->
     <section aria-label="Kerncijfers">
       <div class="grid gap-4 sm:grid-cols-3" id="kk-kpis">
-        <article class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+        <article
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
           <p class="text-small text-(--color-dim)">Teruggewonnen klanten (30d)</p>
-          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="recoveries">&mdash;</p>
+          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="recoveries">
+            &mdash;
+          </p>
         </article>
-        <article class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+        <article
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
           <p class="text-small text-(--color-dim)">Totaal boekingen</p>
           <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="bookings">&mdash;</p>
         </article>
-        <article class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+        <article
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
           <p class="text-small text-(--color-dim)">Gemiddelde review</p>
           <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="rating">&mdash;</p>
         </article>
@@ -58,7 +61,10 @@ const { slug } = Astro.params
     <!-- Recent calls -->
     <section aria-label="Recente oproepen" class="space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">Recente oproepen</h2>
-      <ul id="kk-calls" class="divide-y divide-(--color-line) rounded-(--radius-card) border border-(--color-line) bg-(--color-panel)">
+      <ul
+        id="kk-calls"
+        class="divide-y divide-(--color-line) rounded-(--radius-card) border border-(--color-line) bg-(--color-panel)"
+      >
         <li class="px-6 py-4 text-small text-(--color-dim)">Laden&hellip;</li>
       </ul>
     </section>
@@ -66,7 +72,10 @@ const { slug } = Astro.params
     <!-- Bookings -->
     <section aria-label="Boekingen" class="space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">Boekingen</h2>
-      <ul id="kk-bookings" class="divide-y divide-(--color-line) rounded-(--radius-card) border border-(--color-line) bg-(--color-panel)">
+      <ul
+        id="kk-bookings"
+        class="divide-y divide-(--color-line) rounded-(--radius-card) border border-(--color-line) bg-(--color-panel)"
+      >
         <li class="px-6 py-4 text-small text-(--color-dim)">Laden&hellip;</li>
       </ul>
     </section>
@@ -75,7 +84,11 @@ const { slug } = Astro.params
     <section aria-label="Reviews" class="space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">Reviews</h2>
       <ul id="kk-reviews" class="grid gap-4 sm:grid-cols-2">
-        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6 text-small text-(--color-dim)">Laden&hellip;</li>
+        <li
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6 text-small text-(--color-dim)"
+        >
+          Laden&hellip;
+        </li>
       </ul>
     </section>
 
@@ -86,9 +99,7 @@ const { slug } = Astro.params
       hidden
       class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
     >
-      <p class="font-display text-h3 text-(--color-sodium)" id="kk-error-title">
-        Er ging iets mis
-      </p>
+      <p class="font-display text-h3 text-(--color-sodium)" id="kk-error-title">Er ging iets mis</p>
       <p class="mt-2 text-body text-(--color-dim)" id="kk-error-body">
         We konden uw dashboard nu niet laden. Probeer het later opnieuw.
       </p>

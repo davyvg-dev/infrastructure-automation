@@ -19,7 +19,11 @@
       "targetKeyword": "telefonische bereikbaarheid verbeteren",
       "cluster": "A",
       "angle": "Pillar gemiste-oproepen-cluster, verankerd op de rekentool: waarom bereikbaarheid het echte lek is, met de formule en links naar de vak-probleempagina's.",
-      "dataBlocks": ["stat:kcm-geen-contact", "stat:eerste-reageerder-78", "stat:invoca-gemiste-calls-27"]
+      "dataBlocks": [
+        "stat:kcm-geen-contact",
+        "stat:eerste-reageerder-78",
+        "stat:invoca-gemiste-calls-27"
+      ]
     },
     {
       "slug": "antwoordservice-vergelijken",
@@ -38,7 +42,12 @@
       "zoekvolume": "20-50",
       "cluster": "D",
       "angle": "Eerlijke prijzenpagina incl. concurrenten met naam en bedrag (Voicelabs, LoodgieterAI, STUDIOLEE, Klusio). Het #1 GEO-play: niemand bezit 'ai receptionist vergelijken nederland'.",
-      "dataBlocks": ["markt:ai-telefonist", "markt:website-bundel", "prijzen:eigen", "stat:ai-transparantie-plicht"]
+      "dataBlocks": [
+        "markt:ai-telefonist",
+        "markt:website-bundel",
+        "prijzen:eigen",
+        "stat:ai-transparantie-plicht"
+      ]
     },
     {
       "slug": "ai-telefoniste-vs-antwoordservice",
@@ -47,7 +56,12 @@
       "targetKeyword": "ai telefoniste vs antwoordservice",
       "cluster": "D",
       "angle": "Money-spoke: AI-telefoniste vs antwoordservice vs telefoonaanname uitbesteden, kosten en wat de beller overhoudt.",
-      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:eerste-reageerder-78", "markt:ai-telefonist", "prijzen:eigen"]
+      "dataBlocks": [
+        "stat:kcm-terugbelbeloftes",
+        "stat:eerste-reageerder-78",
+        "markt:ai-telefonist",
+        "prijzen:eigen"
+      ]
     },
     {
       "slug": "ai-receptionist-vs-secretaresse",
@@ -56,7 +70,12 @@
       "targetKeyword": "receptioniste kosten",
       "cluster": "D",
       "angle": "Kostenvergelijking eigen (parttime) telefoniste vs AI-receptionist, gedragen door het personeelstekort: die telefoniste is er simpelweg niet.",
-      "dataBlocks": ["stat:techniek-nl-personeelstekort", "stat:techniek-nl-vacatures", "stat:techniek-nl-vakmensen-nodig", "prijzen:eigen"]
+      "dataBlocks": [
+        "stat:techniek-nl-personeelstekort",
+        "stat:techniek-nl-vacatures",
+        "stat:techniek-nl-vakmensen-nodig",
+        "prijzen:eigen"
+      ]
     },
     {
       "slug": "werkspot-alternatief",
@@ -65,7 +84,12 @@
       "targetKeyword": "werkspot alternatief",
       "cluster": "B",
       "angle": "Werkspot-als-foil: wat leads daar echt kosten, gedeelde leads, en het alternatief (eigen bereikbaarheid + eigen site, 'het is van u').",
-      "dataBlocks": ["stat:werkspot-leadprijs", "stat:werkspot-per-gewonnen-klus", "stat:leadplatform-gedeelde-leads", "markt:leadplatform"]
+      "dataBlocks": [
+        "stat:werkspot-leadprijs",
+        "stat:werkspot-per-gewonnen-klus",
+        "stat:leadplatform-gedeelde-leads",
+        "markt:leadplatform"
+      ]
     },
     {
       "slug": "websitechat-whatsapp-of-telefoon",
@@ -131,7 +155,13 @@
       "targetKeyword": "gemiste oproepen loodgieter",
       "cluster": "A",
       "angle": "GESCHREVEN (seed). Wat een gemiste oproep kost, ads-verbod, Werkspot-math, formule-framing.",
-      "dataBlocks": ["stat:eerste-reageerder-78", "stat:kcm-geen-contact", "stat:google-ads-ban", "stat:werkspot-per-gewonnen-klus", "euromath:loodgieters"]
+      "dataBlocks": [
+        "stat:eerste-reageerder-78",
+        "stat:kcm-geen-contact",
+        "stat:google-ads-ban",
+        "stat:werkspot-per-gewonnen-klus",
+        "euromath:loodgieters"
+      ]
     },
     {
       "slug": "antwoordservice-loodgieter",
@@ -140,7 +170,12 @@
       "targetKeyword": "antwoordservice loodgieter",
       "cluster": "D",
       "angle": "GESCHREVEN (seed). Antwoordservice vs zelf opnemen vs AI-receptionist, incl. wanneer de antwoordservice wint.",
-      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:kcm-geen-contact", "stat:eerste-reageerder-78", "prijzen:eigen"]
+      "dataBlocks": [
+        "stat:kcm-terugbelbeloftes",
+        "stat:kcm-geen-contact",
+        "stat:eerste-reageerder-78",
+        "prijzen:eigen"
+      ]
     },
     {
       "slug": "ai-telefoniste-loodgieter",
@@ -150,7 +185,12 @@
       "zoekvolume": "40-90",
       "cluster": "D",
       "angle": "Wat een AI-telefoniste voor een loodgieter wel en niet kan, chat/WhatsApp-truth (geen voice-era mechanics), transparantieplicht.",
-      "dataBlocks": ["stat:ai-transparantie-plicht", "stat:google-ads-ban", "euromath:loodgieters", "prijzen:eigen"]
+      "dataBlocks": [
+        "stat:ai-transparantie-plicht",
+        "stat:google-ads-ban",
+        "euromath:loodgieters",
+        "prijzen:eigen"
+      ]
     },
     {
       "slug": "software-loodgieter",
@@ -169,7 +209,13 @@
       "targetKeyword": "werkspot kosten loodgieter",
       "cluster": "B",
       "angle": "Wat Werkspot een loodgieter echt kost per gewonnen klus, naast het ads-verbod: eigen bereikbaarheid als enige gratis kanaal.",
-      "dataBlocks": ["stat:werkspot-leadprijs", "stat:werkspot-per-gewonnen-klus", "stat:google-ads-ban", "markt:leadplatform", "euromath:loodgieters"]
+      "dataBlocks": [
+        "stat:werkspot-leadprijs",
+        "stat:werkspot-per-gewonnen-klus",
+        "stat:google-ads-ban",
+        "markt:leadplatform",
+        "euromath:loodgieters"
+      ]
     },
     {
       "slug": "crm-voor-installatiebedrijf",
@@ -237,7 +283,12 @@
       "targetKeyword": "antwoordservice installateur",
       "cluster": "D",
       "angle": "Spiegel van de loodgieter-seed voor installateurs: bericht vs afhandeling, cv-storing als spoedcase.",
-      "dataBlocks": ["stat:kcm-terugbelbeloftes", "stat:kcm-geen-contact", "stat:eerste-reageerder-78", "prijzen:eigen"]
+      "dataBlocks": [
+        "stat:kcm-terugbelbeloftes",
+        "stat:kcm-geen-contact",
+        "stat:eerste-reageerder-78",
+        "prijzen:eigen"
+      ]
     },
     {
       "slug": "planning-software-elektricien",

@@ -17,7 +17,10 @@ interface PainStat {
 }
 
 const painStats: PainStat[] = [
-  { value: 'Evenings', caption: 'are when most trial-class requests come in, right when the front desk is closed.' },
+  {
+    value: 'Evenings',
+    caption: 'are when most trial-class requests come in, right when the front desk is closed.',
+  },
   { value: '21×', caption: 'more likely to reach a lead when you reply within 5 minutes.' },
   { value: '€480', caption: 'yearly value of one lost member, at €40 a month.' },
 ]
@@ -32,12 +35,12 @@ const features: Feature[] = [
   {
     icon: 'message-square',
     title: 'Every message answered, even at 10pm',
-    body: 'Answers questions about memberships, opening hours and classes, on your website and via WhatsApp, in natural English. Weekends too. Never quotes a rate you haven\'t set yourself.',
+    body: "Answers questions about memberships, opening hours and classes, on your website and via WhatsApp, in natural English. Weekends too. Never quotes a rate you haven't set yourself.",
   },
   {
     icon: 'calendar-check',
     title: 'Trial classes straight into your calendar',
-    body: 'The receptionist books trial classes, tours and personal training intros straight into your calendar, only in the slots you\'ve made available. The 10pm lead is on the schedule the next morning.',
+    body: "The receptionist books trial classes, tours and personal training intros straight into your calendar, only in the slots you've made available. The 10pm lead is on the schedule the next morning.",
   },
   {
     icon: 'phone',
@@ -56,35 +59,35 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: 'With one small script that we install for you. You don\'t have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.',
+    a: "With one small script that we install for you. You don't have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
   },
   {
     q: 'We already have a front desk. What does this add?',
-    a: 'The front desk isn\'t there during a class, at the weekend or at 10pm, and those are exactly the moments when people go looking for a gym. The receptionist catches everything that comes in outside desk hours, books the trial class and lets your team do what they\'re good at: the floor.',
+    a: "The front desk isn't there during a class, at the weekend or at 10pm, and those are exactly the moments when people go looking for a gym. The receptionist catches everything that comes in outside desk hours, books the trial class and lets your team do what they're good at: the floor.",
   },
   {
-    q: 'Does the visitor know it\'s AI?',
-    a: 'Yes. Every conversation opens by stating that they\'re chatting with a digital assistant, on behalf of your gym. That isn\'t a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.',
+    q: "Does the visitor know it's AI?",
+    a: "Yes. Every conversation opens by stating that they're chatting with a digital assistant, on behalf of your gym. That isn't a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
   {
     q: 'What if the AI says something wrong about membership prices?',
-    a: 'That can\'t happen. The assistant only quotes rates you\'ve set yourself: memberships, trial class, personal training. Unknown prices aren\'t made up; the visitor is offered a callback or an advice call instead. We test every configuration before you go live.',
+    a: "That can't happen. The assistant only quotes rates you've set yourself: memberships, trial class, personal training. Unknown prices aren't made up; the visitor is offered a callback or an advice call instead. We test every configuration before you go live.",
   },
   {
     q: 'Can it handle cancellations and membership freezes too?',
     a: 'It catches them neatly: the assistant notes the request, books a call if needed and passes it straight to you. Decisions about memberships stay with your team. The assistant only makes sure the request never gets left.',
   },
   {
-    q: 'What happens to my members\' data?',
+    q: "What happens to my members' data?",
     a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you want shorter. The full supplier list is public in our sub-processor register.',
     href: '/legal/dpa/',
     linkLabel: 'View the DPA and privacy statement',
   },
   {
     q: 'Cancel monthly, really?',
-    a: 'Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who prefers to pay 6 or 12 months up front there\'s a discount (15% and 20% respectively), but that\'s a choice, not the default.',
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who prefers to pay 6 or 12 months up front there's a discount (15% and 20% respectively), but that's a choice, not the default.",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -126,18 +129,8 @@ const faqSchema = {
           your calendar.
         </p>
         <div class="mt-10 btn-row">
-          <a
-            href="/en/demo/"
-            class="btn btn-primary btn-lg"
-          >
-            Try the demo
-          </a>
-          <a
-            href="/en/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            See pricing
-          </a>
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
         </div>
       </div>
       <div class="hidden text-(--color-sodium) md:block">
@@ -200,9 +193,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Modules</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        What Klantkraan does for gyms.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">What Klantkraan does for gyms.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Three modules. One monthly price. Built for the owner who's on the floor more often than
         behind the desk.
@@ -227,10 +218,10 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">The maths</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Do the maths.
-      </h2>
-      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
+      <h2 class="mt-3 font-display text-h1 text-chalk">Do the maths.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
         <p class="text-h3 text-chalk">
           Leave 4 trial-class requests a month unanswered, at €480 yearly value each? That's
           <strong class="text-(--color-sodium)">over €23,000 in lost revenue a year</strong>.
@@ -240,18 +231,8 @@ const faqSchema = {
           after that is your margin.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href="/en/demo/"
-            class="btn btn-primary btn-lg"
-          >
-            Try the demo
-          </a>
-          <a
-            href="/en/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            See pricing
-          </a>
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
         </div>
         <p class="mt-6 text-micro text-dim">
           Amounts exclude 21% VAT. Example based on a €40 average monthly membership rate and an
@@ -266,9 +247,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Questions</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Frequently asked questions.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -300,26 +279,14 @@ const faqSchema = {
   <!-- 6. End CTA band (blue) -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h2 class="font-display text-h1 text-chalk">
-        Ready to stop missing trial classes?
-      </h2>
+      <h2 class="font-display text-h1 text-chalk">Ready to stop missing trial classes?</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Try the live demo of a gym receptionist. In one conversation you'll see how a question about
         a membership ends as a booked trial class in the calendar.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/en/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Try the demo
-        </a>
-        <a
-          href="/en/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          See pricing
-        </a>
+        <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+        <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
       </div>
     </div>
   </section>

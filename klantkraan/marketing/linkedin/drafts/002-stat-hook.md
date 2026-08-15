@@ -9,6 +9,7 @@ character_count: 1202
 # Loodgieters missen 28% van inkomende calls (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Hook test: getal en €-bedrag in de eerste twee regels. Geen aanloop, geen "wist je dat".
 - Cadans-controle: één cijfer per regel waar het kan. Rekensom moet visueel klikken.
 - Cijferbronnen vermeld in eerste comment (Aira/Invoca/411 Locals) zodat sceptici niet doorvragen.

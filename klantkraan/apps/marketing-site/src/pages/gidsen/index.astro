@@ -10,8 +10,7 @@ const nicheOrder: NicheSlug[] = ['loodgieter', 'dakdekker', 'schilder', 'aanneme
 const fullOrder = [...nicheOrder, 'installateur', 'elektricien']
 
 const sorted = gidsen.sort(
-  (a, b) =>
-    fullOrder.indexOf(a.data.vertical) - fullOrder.indexOf(b.data.vertical),
+  (a, b) => fullOrder.indexOf(a.data.vertical) - fullOrder.indexOf(b.data.vertical),
 )
 
 const nicheLabelPlural = (v: string): string =>
@@ -27,8 +26,8 @@ const nicheLabelPlural = (v: string): string =>
     <div class="mx-auto max-w-5xl px-6">
       <h1 class="font-display text-hero text-(--color-chalk)">Gidsen voor ondernemers</h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
-        Concrete Nederlandse praktijkadviezen per branche: uurtarieven, seizoenspieken,
-        juridische verplichtingen. Geen sales-praatje, alleen werk dat u direct kunt toepassen.
+        Concrete Nederlandse praktijkadviezen per branche: uurtarieven, seizoenspieken, juridische
+        verplichtingen. Geen sales-praatje, alleen werk dat u direct kunt toepassen.
       </p>
     </div>
   </section>

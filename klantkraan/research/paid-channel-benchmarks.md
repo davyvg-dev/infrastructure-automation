@@ -18,15 +18,16 @@ Google Search is the strongest cold-acquisition channel: high-intent, CPCs of �
 
 ### 1.1 Niche-specific high-intent keywords
 
-| Keyword pattern | Estimated NL CPC | Bucket | Notes |
-|---|---|---|---|
-| `[niche] klanten werven` | €2.50–€4.50 | Med | Local-service intent; bouw average CPC cited at €7.85 but that groups all bouw; marketing-about-bouw terms sit lower |
-| `leads [niche]` | €3.00–€6.00 | Med–High | "Leads dakdekker", "leads installateur" — supply-side demand; moderate volume |
-| `marketing voor [niche]` | €2.00–€4.00 | Med | B2B service query; lower competition than direct-job keywords |
-| `klanten krijgen [niche]` | €2.00–€3.50 | Med | Problem-aware; low-to-mid competition in NL |
-| `[niche] online marketing` | €2.50–€5.00 | Med | Informational–commercial blend; conversion rate lower |
+| Keyword pattern            | Estimated NL CPC | Bucket   | Notes                                                                                                                |
+| -------------------------- | ---------------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| `[niche] klanten werven`   | €2.50–€4.50      | Med      | Local-service intent; bouw average CPC cited at €7.85 but that groups all bouw; marketing-about-bouw terms sit lower |
+| `leads [niche]`            | €3.00–€6.00      | Med–High | "Leads dakdekker", "leads installateur" — supply-side demand; moderate volume                                        |
+| `marketing voor [niche]`   | €2.00–€4.00      | Med      | B2B service query; lower competition than direct-job keywords                                                        |
+| `klanten krijgen [niche]`  | €2.00–€3.50      | Med      | Problem-aware; low-to-mid competition in NL                                                                          |
+| `[niche] online marketing` | €2.50–€5.00      | Med      | Informational–commercial blend; conversion rate lower                                                                |
 
 **Niche CPC modifiers** (estimated range vs. baseline):
+
 - Loodgieter / installateur: +10–20% (competitive market, urgency-driven)
 - Dakdekker: baseline
 - Aannemer: +20–30% (higher job values, more competition)
@@ -34,24 +35,24 @@ Google Search is the strongest cold-acquisition channel: high-intent, CPCs of �
 
 ### 1.2 Klantkraan-relevant generic terms
 
-| Keyword | Estimated NL CPC | Bucket | Notes |
-|---|---|---|---|
-| `marketing automatisering vakmensen` | €1.50–€3.00 | Low–Med | Very low search volume; first-mover advantage, cheap but niche |
-| `leadgeneratie bouw` | €3.00–€5.50 | Med | Moderate volume; B2B services bucket |
-| `AI klanten antwoorden` | €1.00–€2.50 | Low–Med | Emergent query; minimal established competition |
-| `marketing voor vakmannen` | €2.00–€3.50 | Med | Category of competitors (VakmanMarketing, Roxtar) already active |
-| `leads voor installateurs` | €2.50–€5.00 | Med | Supply-side; agencies buying this against tradespeople |
+| Keyword                              | Estimated NL CPC | Bucket  | Notes                                                            |
+| ------------------------------------ | ---------------- | ------- | ---------------------------------------------------------------- |
+| `marketing automatisering vakmensen` | €1.50–€3.00      | Low–Med | Very low search volume; first-mover advantage, cheap but niche   |
+| `leadgeneratie bouw`                 | €3.00–€5.50      | Med     | Moderate volume; B2B services bucket                             |
+| `AI klanten antwoorden`              | €1.00–€2.50      | Low–Med | Emergent query; minimal established competition                  |
+| `marketing voor vakmannen`           | €2.00–€3.50      | Med     | Category of competitors (VakmanMarketing, Roxtar) already active |
+| `leads voor installateurs`           | €2.50–€5.00      | Med     | Supply-side; agencies buying this against tradespeople           |
 
 ### 1.3 Industry CPC reference table (Netherlands, verified/cited)
 
-| Sector | CPC (NL) | Source |
-|---|---|---|
-| B2B & SaaS | €3.20 | Searchlab NL 2026 benchmarks |
-| Bouwbedrijven | €7.85 | fivetwenty.nl NL Google Ads kosten 2026 |
-| Juridische diensten | €5.40–€8.58 | Searchlab NL 2026 / fivetwenty.nl |
-| Financiële diensten | €3.90–€6.00 | Searchlab NL 2026 |
-| Lokale dienstverleners | €3.00–€4.50 | fivetwenty.nl 2026 |
-| Overall NL average | €1.92–€2.15 | Searchlab NL / fivetwenty.nl 2026 |
+| Sector                 | CPC (NL)    | Source                                  |
+| ---------------------- | ----------- | --------------------------------------- |
+| B2B & SaaS             | €3.20       | Searchlab NL 2026 benchmarks            |
+| Bouwbedrijven          | €7.85       | fivetwenty.nl NL Google Ads kosten 2026 |
+| Juridische diensten    | €5.40–€8.58 | Searchlab NL 2026 / fivetwenty.nl       |
+| Financiële diensten    | €3.90–€6.00 | Searchlab NL 2026                       |
+| Lokale dienstverleners | €3.00–€4.50 | fivetwenty.nl 2026                      |
+| Overall NL average     | €1.92–€2.15 | Searchlab NL / fivetwenty.nl 2026       |
 
 **NL average CPL** (all B2B sectors): €45–€85 per inbound lead (Searchlab NL 2026). B2B services CPL noted up to €50–€200+ at fivetwenty.nl.
 
@@ -66,6 +67,7 @@ Google Search is the strongest cold-acquisition channel: high-intent, CPCs of �
 ### 2.1 Active competitor categories observed (NL, May 2026)
 
 **VakmanMarketing (vakmanmarketing.nl)**
+
 - Active on Meta Ads (confirmed via site claims of Meta Ads campaigns as core service)
 - Hook: "20+ leads per maand gegarandeerd" — guarantee-led creative
 - Angle: pain of word-of-mouth dependency, unpredictable pipeline
@@ -74,6 +76,7 @@ Google Search is the strongest cold-acquisition channel: high-intent, CPCs of �
 - Likely running: video testimonials + lead form ads targeting postcode NL, trades owners
 
 **Roxtar.nl**
+
 - Active on Meta Ads + Google Ads for dakdekkers, loodgieters
 - Hook: "Exclusieve Leads, niet gedeeld" — exclusivity angle vs. Werkspot
 - Angle: Werkspot fatigue (competing on price with 3–5 others)
@@ -81,12 +84,14 @@ Google Search is the strongest cold-acquisition channel: high-intent, CPCs of �
 - Offer: free intake consult, no pricing disclosed
 
 **Adaptoo.nl**
+
 - Targets Werkspot-fatigued tradespeople
 - Hook: "Voorspelbare kosten, exclusieve leads" — predictability vs. auction stress
 - CPL promise: ROI breakeven within 3 months
 - Likely running retargeting on Meta to website visitors from Google
 
 **Werkspot (werkspot.nl)**
+
 - The incumbent. Not a marketing agency but the dominant lead marketplace
 - Effective CPL at Werkspot for a tradesperson: ~€208 per won job (at win rate 20–30%)
 - This is the anchoring cost Klantkraan must beat in customer ROI narrative
@@ -94,6 +99,7 @@ Google Search is the strongest cold-acquisition channel: high-intent, CPCs of �
 ### 2.2 Creative patterns in this category
 
 Long-running (likely profitable) creative patterns for this niche in NL:
+
 1. **Guarantee hook** — "X leads per month or free" — reduces risk perception
 2. **Platform independence** — "stop afhankelijk zijn van Werkspot"
 3. **Urgency + simplicity** — "Binnen 2 weken live"
@@ -111,21 +117,25 @@ Long-running (likely profitable) creative patterns for this niche in NL:
 **"leads voor dakdekkers" / "marketing voor installateurs" SERPs (estimated):**
 
 **DakConnect.nl**
+
 - Headline: "Dakdekker Leads | Direct Exclusief | Geen Gedeelde Leads"
 - Body: Dagelijks nieuwe aanvragen. Betaal alleen voor geaccepteerde leads. Geen abonnement.
 - CTA: Meld je aan
 
 **VakmanMarketing.nl**
+
 - Headline: "20+ Leads/Maand Gegarandeerd | Marketing voor Vakmannen"
 - Body: Meer klanten, minder zorgen. Bewezen systeem voor dakdekkers, loodgieters en aannemers.
 - CTA: Bekijk gratis demo
 
 **Roxtar.nl**
+
 - Headline: "Online Marketing Dakdekkers | Exclusieve Leads | Roxtar"
 - Body: Klaar met concurreren op prijs bij Werkspot? Wij genereren exclusieve leads voor jouw bedrijf.
 - CTA: Gratis gesprek inplannen
 
 **Werkspot.nl** (marketplace, appears on branded + category terms)
+
 - Headline: "Klanten Via Werkspot | Direct Starten | 100% Gratis Aanmelden"
 - Body: Ontvang aanvragen van klanten in jouw regio. Betaal alleen voor leads die je interessant vindt.
 - CTA: Gratis aanmelden
@@ -138,15 +148,16 @@ Long-running (likely profitable) creative patterns for this niche in NL:
 
 > **Source note:** LinkedIn CPMs and CPCs are auction-driven. NL-specific isolation is limited in public sources. Figures below blend European benchmarks with NL-specific signals from ZenABM (211 companies, $5.5M spend) and Pettauer European Benchmarks 2025–2026.
 
-| Metric | Range | Notes |
-|---|---|---|
-| CPC (NL, B2B SaaS targeting) | €4–€6 | European SaaS median; NL slightly below UK |
-| CPC (C-suite / eigenaar targeting) | €8–€12 | Senior title premium; ZenABM data |
-| CPM (NL general B2B) | €30–€55 | ZenABM NL average $50.08 CPM; Western EU €32–€34 for awareness |
-| CPL via Lead Gen Forms | €80–€200 | 13% avg form fill rate on LGF; CPL = CPM/CTR/CVR |
-| CTR (LinkedIn sponsored content) | 0.3–0.8% | Well below Meta and Google; typical B2B LinkedIn range |
+| Metric                             | Range    | Notes                                                          |
+| ---------------------------------- | -------- | -------------------------------------------------------------- |
+| CPC (NL, B2B SaaS targeting)       | €4–€6    | European SaaS median; NL slightly below UK                     |
+| CPC (C-suite / eigenaar targeting) | €8–€12   | Senior title premium; ZenABM data                              |
+| CPM (NL general B2B)               | €30–€55  | ZenABM NL average $50.08 CPM; Western EU €32–€34 for awareness |
+| CPL via Lead Gen Forms             | €80–€200 | 13% avg form fill rate on LGF; CPL = CPM/CTR/CVR               |
+| CTR (LinkedIn sponsored content)   | 0.3–0.8% | Well below Meta and Google; typical B2B LinkedIn range         |
 
 **Targeting for Klantkraan:**
+
 - Audience: eigenaar, directeur, ZZP-er titles + industries: Bouw, Installatie, Schilderbedrijven
 - NL addressable audience (BV-only filter, trades, 5–50 employees): estimated 10,000–25,000 accounts
 - Minimum daily budget to exit learning phase: €30–€50/day
@@ -168,14 +179,14 @@ Max CAC (6-month payback) = monthly price × gross margin % × 6
 
 ### Scenario A — €300/maand, 12-month retention
 
-| Item | Value |
-|---|---|
-| LTV (before margin) | €3,600 |
-| Gross margin % | 60% |
-| Gross margin LTV | €2,160 |
-| Max CAC at 6-month payback | **€300 × 60% × 6 = €1,080** |
-| Max CAC at 6-month payback (conservative: equal to 6 months MRR) | **€1,080** |
-| Realistic target CAC for healthy unit econ | **€300–€500** |
+| Item                                                             | Value                       |
+| ---------------------------------------------------------------- | --------------------------- |
+| LTV (before margin)                                              | €3,600                      |
+| Gross margin %                                                   | 60%                         |
+| Gross margin LTV                                                 | €2,160                      |
+| Max CAC at 6-month payback                                       | **€300 × 60% × 6 = €1,080** |
+| Max CAC at 6-month payback (conservative: equal to 6 months MRR) | **€1,080**                  |
+| Realistic target CAC for healthy unit econ                       | **€300–€500**               |
 
 Wait — the standard payback formula: payback = CAC / (MRR × gross margin). Solving for CAC at 6-month payback:
 
@@ -187,17 +198,18 @@ A tighter and more conservative ceiling for early-stage: **CAC ≤ first-year gr
 
 ### Scenario B — €600/maand, 18-month retention
 
-| Item | Value |
-|---|---|
-| LTV (before margin) | €10,800 |
-| Gross margin % | 60% |
-| Gross margin LTV | €6,480 |
+| Item                       | Value                       |
+| -------------------------- | --------------------------- |
+| LTV (before margin)        | €10,800                     |
+| Gross margin %             | 60%                         |
+| Gross margin LTV           | €6,480                      |
 | Max CAC at 6-month payback | **€600 × 60% × 6 = €2,160** |
-| Realistic target CAC | **€800–€1,500** |
+| Realistic target CAC       | **€800–€1,500**             |
 
 ### 5.2 Funnel math — CPL to CAC
 
 **Assumptions (cold paid traffic, Dutch trade BVs):**
+
 - Landing page CVR (click → lead/form): 3–6%
 - Lead-to-call booked rate: 40–60% (form completions are warm but not all show)
 - Call-to-close rate: 5–15% (cold paid; SaaS benchmark for unqualified inbound)
@@ -205,12 +217,12 @@ A tighter and more conservative ceiling for early-stage: **CAC ≤ first-year gr
 
 **Scenario A — Google Search (CPC €4 median):**
 
-| CVR assumption | CPL | Close rate | CAC |
-|---|---|---|---|
-| 4% LP CVR, 10% close | €100 | 10% | €1,000 |
-| 4% LP CVR, 15% close | €100 | 15% | €667 |
-| 6% LP CVR, 15% close | €67 | 15% | €445 |
-| 6% LP CVR, 20% close | €67 | 20% | €333 |
+| CVR assumption       | CPL  | Close rate | CAC    |
+| -------------------- | ---- | ---------- | ------ |
+| 4% LP CVR, 10% close | €100 | 10%        | €1,000 |
+| 4% LP CVR, 15% close | €100 | 15%        | €667   |
+| 6% LP CVR, 15% close | €67  | 15%        | €445   |
+| 6% LP CVR, 20% close | €67  | 20%        | €333   |
 
 At Scenario A (max CAC €1,080, target €540): Google Search is viable **only with optimised landing pages (≥5% CVR) and above-average close rates (≥15%)**. This is achievable with niche-specific landing pages and a strong discovery call process, but not guaranteed on cold traffic.
 
@@ -222,30 +234,30 @@ The same CAC range (€333–€1,000) represents 15–46% of the €2,160 ceili
 
 Meta lead form CPL for B2B services: estimate €30–€80 (based on WordStream industrial/commercial CPL $37, NL EUR adjustment). Cold close rate for Meta: 3–8% (lower intent than Search).
 
-| CPL | Close rate | CAC |
-|---|---|---|
-| €50 | 5% | €1,000 |
-| €50 | 8% | €625 |
-| €75 | 8% | €938 |
+| CPL | Close rate | CAC    |
+| --- | ---------- | ------ |
+| €50 | 5%         | €1,000 |
+| €50 | 8%         | €625   |
+| €75 | 8%         | €938   |
 
 Meta cold traffic: CAC lands €625–€1,000+ — tight for Scenario A, workable for Scenario B. Meta is better positioned as **retargeting** (CAC drops significantly when targeting Search visitors or existing contacts).
 
 **LinkedIn (CPL €150–€250):**
 
-| CPL | Close rate | CAC |
-|---|---|---|
-| €150 | 10% | €1,500 |
-| €200 | 15% | €1,333 |
-| €200 | 20% | €1,000 |
+| CPL  | Close rate | CAC    |
+| ---- | ---------- | ------ |
+| €150 | 10%        | €1,500 |
+| €200 | 15%        | €1,333 |
+| €200 | 20%        | €1,000 |
 
 LinkedIn cold: only viable for Scenario B at strong close rates (≥15%). At Scenario A, CAC exceeds the ceiling almost universally.
 
 ### 5.3 Verdict on paid viability
 
-| Scenario | Google Search | Meta cold | Meta retarget | LinkedIn |
-|---|---|---|---|---|
-| A (€300/maand) | Borderline — needs ≥5% LP CVR + ≥15% close | Not viable cold | Viable — low CPL, warm intent | Not viable |
-| B (€600/maand) | Viable — comfortable headroom | Borderline | Strong | Viable if close rate ≥15% |
+| Scenario       | Google Search                              | Meta cold       | Meta retarget                 | LinkedIn                  |
+| -------------- | ------------------------------------------ | --------------- | ----------------------------- | ------------------------- |
+| A (€300/maand) | Borderline — needs ≥5% LP CVR + ≥15% close | Not viable cold | Viable — low CPL, warm intent | Not viable                |
+| B (€600/maand) | Viable — comfortable headroom              | Borderline      | Strong                        | Viable if close rate ≥15% |
 
 **Overall:** Paid acquisition as cold channel is **marginally viable at Scenario A** and requires tight funnel discipline. It becomes **clearly viable at Scenario B**. Retargeting (Meta, Display, YouTube) is viable at both pricing tiers as it reduces CPL by 50–70% compared to cold.
 
@@ -253,13 +265,13 @@ LinkedIn cold: only viable for Scenario B at strong close rates (≥15%). At Sce
 
 ## 6. Channel Verdict
 
-| Channel | Verdict | Reasoning |
-|---|---|---|
-| **Google Search** | **Test — priority** | Highest intent, CPCs manageable (€3–€6 for Klantkraan's keywords), CPL of €60–€150 achievable. CAC viable at Scenario B, borderline at A. Start with 2–3 niche-specific campaigns (installateur, dakdekker) at €500–€1,000/maand budget. |
-| **Google Display** | **Avoid (cold) / Retarget only** | Very low intent. CPCs low (€0.30–€0.60) but conversion rates near zero for B2B services. Use only for retargeting website visitors and nurturing leads in CRM. |
-| **Meta (Facebook/IG)** | **Retarget only initially** | Cold B2B CPL is too unpredictable for small budgets. Retargeting to Search traffic and email lists is cost-effective. Once €10K+ has been spent on Search and organic proof points exist, test cold Meta with video ads and lead forms (€500/maand test). |
-| **LinkedIn** | **Test small — Scenario B only** | Precise targeting of eigenaar/directeur in trades BVs. CPL too high for Scenario A. If average deal is ≥€500/maand, run small Sponsored Content + Lead Gen Form test (€1,500/maand min. budget). Document Ads (22.73% form completion rate) are worth testing first. |
-| **YouTube** | **Avoid — early stage** | CPM €8–€15 for B2B NL content. High production cost for quality creative. No direct-response ROI at Klantkraan's current stage. Revisit when brand recognition and retargeting pool are established. |
+| Channel                | Verdict                          | Reasoning                                                                                                                                                                                                                                                            |
+| ---------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Google Search**      | **Test — priority**              | Highest intent, CPCs manageable (€3–€6 for Klantkraan's keywords), CPL of €60–€150 achievable. CAC viable at Scenario B, borderline at A. Start with 2–3 niche-specific campaigns (installateur, dakdekker) at €500–€1,000/maand budget.                             |
+| **Google Display**     | **Avoid (cold) / Retarget only** | Very low intent. CPCs low (€0.30–€0.60) but conversion rates near zero for B2B services. Use only for retargeting website visitors and nurturing leads in CRM.                                                                                                       |
+| **Meta (Facebook/IG)** | **Retarget only initially**      | Cold B2B CPL is too unpredictable for small budgets. Retargeting to Search traffic and email lists is cost-effective. Once €10K+ has been spent on Search and organic proof points exist, test cold Meta with video ads and lead forms (€500/maand test).            |
+| **LinkedIn**           | **Test small — Scenario B only** | Precise targeting of eigenaar/directeur in trades BVs. CPL too high for Scenario A. If average deal is ≥€500/maand, run small Sponsored Content + Lead Gen Form test (€1,500/maand min. budget). Document Ads (22.73% form completion rate) are worth testing first. |
+| **YouTube**            | **Avoid — early stage**          | CPM €8–€15 for B2B NL content. High production cost for quality creative. No direct-response ROI at Klantkraan's current stage. Revisit when brand recognition and retargeting pool are established.                                                                 |
 
 ### Recommended channel stack for launch (months 1–6)
 
@@ -292,4 +304,4 @@ LinkedIn cold: only viable for Scenario B at strong close rates (≥15%). At Sce
 
 ---
 
-*All CPCs are directional estimates. Auction prices vary by Quality Score, Ad Rank, dayparting, geo, and real-time competition. Sources are a mix of NL-specific (Searchlab, fivetwenty.nl, Superads NL filter) and European/global data (WordStream, Pettauer, ZenABM). Where noted as global or US-skewed, apply a 15–30% discount for NL context. This document is a planning input, not a substitute for live keyword planner data in an active Google Ads account.*
+_All CPCs are directional estimates. Auction prices vary by Quality Score, Ad Rank, dayparting, geo, and real-time competition. Sources are a mix of NL-specific (Searchlab, fivetwenty.nl, Superads NL filter) and European/global data (WordStream, Pettauer, ZenABM). Where noted as global or US-skewed, apply a 15–30% discount for NL context. This document is a planning input, not a substitute for live keyword planner data in an active Google Ads account._

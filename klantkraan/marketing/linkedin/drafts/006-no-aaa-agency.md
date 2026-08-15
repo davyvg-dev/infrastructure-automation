@@ -9,6 +9,7 @@ character_count: 1306
 # Waarom je geen AAA-agency moet inhuren (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 2, post 6) zegt: contrarian "Waarom je geen AAA-agency moet inhuren". AAA = Acquire/Automate/Audit lead-gen agencies (Iman Gadzhi-school, n8n-flippers, etc.).
 - Hook test: tegen-intuïtief én concreet. €2.500/mnd retainer is geen cliché — dat is wat ze écht vragen.
 - Cadans: probleem-stelling, dan vier scherpe punten met cijfer of feit per regel.
@@ -22,18 +23,21 @@ Ik krijg deze vraag wekelijks: "Moet ik niet gewoon een AAA-agency inhuren voor 
 Eerlijk antwoord: voor 9 van de 10 installatiebedrijven — nee.
 
 Wat een AAA-agency je verkoopt:
+
 - €2.000–€5.000 per maand retainer
 - €1.500–€3.000 setup-fee
 - 6-maanden contract, geen tussentijds opzeggen
 - "Custom n8n-automation" — vaak een standaard-template
 
 Wat je daarvoor krijgt:
+
 - Een flow die op hún server draait, niet de jouwe
 - Een Make of Zapier-account dat zíj beheren
 - Een pipeline die stopt als je opzegt
 - Geen Nederlandse vakman-context (geen voorrijkosten, spoedtoeslag, 8-tot-5-tarief)
 
 Wat een vakman écht nodig heeft:
+
 - Klantvragen beantwoord op z'n website en WhatsApp — ook als hij op een dak staat
 - Afspraken direct in de agenda gepland
 - Leads en terugbelverzoeken vastgelegd, niets kwijt

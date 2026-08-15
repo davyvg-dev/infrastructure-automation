@@ -9,6 +9,7 @@ character_count: 1219
 # Hoe wij 12 calls per week laten beantwoorden zonder receptionist (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 2, post 4) zegt: carousel-teardown "Hoe wij een loodgieter 12 calls per week laten beantwoorden zonder receptionist". Op publicatie-moment is er nog geen pilot live; ik schrijf dit als blueprint / "hoe de flow eruit ziet". Pas "een loodgieter in Utrecht" aan als pilot #1 is gestart.
 - Hook test: getal "12 calls per week" plus "zonder receptionist" — concreet en tegen-intuïtief.
 - Cadans: tijdlijn-structuur (00:00, 00:01, 's avonds, 24u later) is visueel sterk op LI.

@@ -29,13 +29,13 @@ Automation: in production, steps 2–8 are scripted via the Synthflow REST API (
 
 ## Where the API tokens live
 
-| Token | Location |
-|---|---|
-| Synthflow workspace API key       | Bitwarden item `Synthflow — workspace owner`, field `api_key`. |
-| Synthflow per-agent webhook secret | Bitwarden item `Synthflow — webhook secret`. Used to verify `call_end` HMAC. |
-| ElevenLabs API key                | Bitwarden item `ElevenLabs — workspace owner`. Voice ids in `09-brand/voice-and-tone.md`. |
-| Cloudflare Workers env vars       | `wrangler secret put SYNTHFLOW_API_KEY` (project `klantkraan-api`). |
-| n8n env vars                      | n8n Docker secret file mounted at `/run/secrets/synthflow_api_key`. |
+| Token                              | Location                                                                                  |
+| ---------------------------------- | ----------------------------------------------------------------------------------------- |
+| Synthflow workspace API key        | Bitwarden item `Synthflow — workspace owner`, field `api_key`.                            |
+| Synthflow per-agent webhook secret | Bitwarden item `Synthflow — webhook secret`. Used to verify `call_end` HMAC.              |
+| ElevenLabs API key                 | Bitwarden item `ElevenLabs — workspace owner`. Voice ids in `09-brand/voice-and-tone.md`. |
+| Cloudflare Workers env vars        | `wrangler secret put SYNTHFLOW_API_KEY` (project `klantkraan-api`).                       |
+| n8n env vars                       | n8n Docker secret file mounted at `/run/secrets/synthflow_api_key`.                       |
 
 Never commit any of these values. CI runs `gitleaks` on every push.
 

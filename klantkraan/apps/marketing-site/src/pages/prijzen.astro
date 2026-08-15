@@ -52,7 +52,11 @@ const features: FeatureRow[] = [
   { feature: 'Plant afspraken direct in uw agenda', chat: 'ja', compleet: 'ja' },
   { feature: 'Websitechat op uw eigen site (Nederlands, 24/7)', chat: 'ja', compleet: 'ja' },
   { feature: 'WhatsApp-kanaal', chat: 'ja', compleet: 'ja' },
-  { feature: 'Beantwoordt vragen over diensten, tarieven en werkgebied', chat: 'ja', compleet: 'ja' },
+  {
+    feature: 'Beantwoordt vragen over diensten, tarieven en werkgebied',
+    chat: 'ja',
+    compleet: 'ja',
+  },
   { feature: 'Vangt leads en terugbelverzoeken op', chat: 'ja', compleet: 'ja' },
   { feature: 'Wij richten hem in en houden hem bij', chat: 'ja', compleet: 'ja' },
   { feature: 'Maandelijkse statistieken per e-mail', chat: 'ja', compleet: 'ja' },
@@ -136,16 +140,14 @@ const serviceSchema = {
                 </span>
               )}
             </header>
-            <p class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}>
+            <p
+              class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}
+            >
               €{tier.price}
               <span class="text-body text-(--color-dim)">/mnd</span>
             </p>
-            <p class="mt-1 font-mono text-small text-(--color-dim)">
-              ≈ €{tier.dayPrice} per dag
-            </p>
-            {tier.priceNote && (
-              <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>
-            )}
+            <p class="mt-1 font-mono text-small text-(--color-dim)">≈ €{tier.dayPrice} per dag</p>
+            {tier.priceNote && <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>}
             <p class="mt-3 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
               href={tier.ctaHref}
@@ -284,8 +286,8 @@ const serviceSchema = {
       <p class="eyebrow">Klaar?</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Klaar om te starten?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Meld u aan en wij bellen binnen één werkdag om de setup in te plannen. Liever eerst zien
-        hoe het werkt? Probeer de demo, direct in uw browser.
+        Meld u aan en wij bellen binnen één werkdag om de setup in te plannen. Liever eerst zien hoe
+        het werkt? Probeer de demo, direct in uw browser.
       </p>
       <div class="mt-6 btn-row">
         <a href="/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start met Chat</a>

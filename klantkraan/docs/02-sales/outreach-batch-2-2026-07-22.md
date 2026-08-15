@@ -33,21 +33,21 @@ instead of a link (best for a cold first touch anyway).
 
 ## The 13 at a glance
 
-| # | Bedrijf | Stad | Vak | E-mail | Demo link |
-|---|---------|------|-----|--------|-----------|
-| 1 | Loodgietersbedrijf Meijer B.V. | Rotterdam | loodgieter | info@loodgietermeijer.nl | https://demo.klantkraan.nl/?client=meijer |
-| 2 | Smits Installaties B.V. | Amsterdam | loodgieter | info@smits-installaties.nl | https://demo.klantkraan.nl/?client=smits-installaties |
-| 3 | L van der Wiel B.V. | Den Haag | loodgieter | info@lvanderwielbv.nl | https://demo.klantkraan.nl/?client=van-der-wiel |
-| 4 | P.H. Frauenfelder B.V. | Den Haag | loodgieter | info@phfrauenfelder.nl | https://demo.klantkraan.nl/?client=frauenfelder |
-| 5 | Technisch Bureau W. Janssen B.V. | Den Haag | loodgieter | info@wjanssen.nl | https://demo.klantkraan.nl/?client=w-janssen |
-| 6 | Andries Valkenburg Loodgieters & Verwarming B.V. | Delft | loodgieter | info@valkenburgloodgieters.nl | https://demo.klantkraan.nl/?client=valkenburg |
-| 7 | A. Barendse & Zn. B.V. | Leiden | loodgieter | info@barendseleiden.nl | https://demo.klantkraan.nl/?client=barendse |
-| 8 | Warmtetechnisch Bureau Joop Buiteman B.V. | Leiden | loodgieter | info@buiteman.nl | https://demo.klantkraan.nl/?client=buiteman |
-| 9 | Dekker Installatietechniek B.V. | Gouda | loodgieter | info@dekkerinstallatietechniek.eu | https://demo.klantkraan.nl/?client=dekker |
-| 10 | MD Dak & Klusbedrijf B.V. | Utrecht | dakdekker | info@dakdekkerutrechtbv.nl | https://demo.klantkraan.nl/?client=md-dak |
-| 11 | Dak Garantie Amsterdam B.V. | Amsterdam | dakdekker | info@dakgarantieamsterdam.nl | https://demo.klantkraan.nl/?client=dak-garantie-amsterdam |
-| 12 | Buddingh Dakdekkersbedrijf B.V. | Amsterdam | dakdekker | info@buddingh-dak.nl | https://demo.klantkraan.nl/?client=buddingh |
-| 13 | DV Dakdekkers B.V. | Amsterdam | dakdekker | info@dvdakdekkers.nl | https://demo.klantkraan.nl/?client=dv-dakdekkers |
+| #   | Bedrijf                                          | Stad      | Vak        | E-mail                            | Demo link                                                 |
+| --- | ------------------------------------------------ | --------- | ---------- | --------------------------------- | --------------------------------------------------------- |
+| 1   | Loodgietersbedrijf Meijer B.V.                   | Rotterdam | loodgieter | info@loodgietermeijer.nl          | https://demo.klantkraan.nl/?client=meijer                 |
+| 2   | Smits Installaties B.V.                          | Amsterdam | loodgieter | info@smits-installaties.nl        | https://demo.klantkraan.nl/?client=smits-installaties     |
+| 3   | L van der Wiel B.V.                              | Den Haag  | loodgieter | info@lvanderwielbv.nl             | https://demo.klantkraan.nl/?client=van-der-wiel           |
+| 4   | P.H. Frauenfelder B.V.                           | Den Haag  | loodgieter | info@phfrauenfelder.nl            | https://demo.klantkraan.nl/?client=frauenfelder           |
+| 5   | Technisch Bureau W. Janssen B.V.                 | Den Haag  | loodgieter | info@wjanssen.nl                  | https://demo.klantkraan.nl/?client=w-janssen              |
+| 6   | Andries Valkenburg Loodgieters & Verwarming B.V. | Delft     | loodgieter | info@valkenburgloodgieters.nl     | https://demo.klantkraan.nl/?client=valkenburg             |
+| 7   | A. Barendse & Zn. B.V.                           | Leiden    | loodgieter | info@barendseleiden.nl            | https://demo.klantkraan.nl/?client=barendse               |
+| 8   | Warmtetechnisch Bureau Joop Buiteman B.V.        | Leiden    | loodgieter | info@buiteman.nl                  | https://demo.klantkraan.nl/?client=buiteman               |
+| 9   | Dekker Installatietechniek B.V.                  | Gouda     | loodgieter | info@dekkerinstallatietechniek.eu | https://demo.klantkraan.nl/?client=dekker                 |
+| 10  | MD Dak & Klusbedrijf B.V.                        | Utrecht   | dakdekker  | info@dakdekkerutrechtbv.nl        | https://demo.klantkraan.nl/?client=md-dak                 |
+| 11  | Dak Garantie Amsterdam B.V.                      | Amsterdam | dakdekker  | info@dakgarantieamsterdam.nl      | https://demo.klantkraan.nl/?client=dak-garantie-amsterdam |
+| 12  | Buddingh Dakdekkersbedrijf B.V.                  | Amsterdam | dakdekker  | info@buddingh-dak.nl              | https://demo.klantkraan.nl/?client=buddingh               |
+| 13  | DV Dakdekkers B.V.                               | Amsterdam | dakdekker  | info@dvdakdekkers.nl              | https://demo.klantkraan.nl/?client=dv-dakdekkers          |
 
 **How to work it:** ~30 min/day. Send 3–4 cold emails, log replies, and run the LinkedIn track in
 parallel for the same names. Replace `[jouw naam]` with your own signature. Reply to any interest
@@ -517,4 +517,7 @@ klantkraan.nl · Geen interesse? Antwoord met "stop" en je hoort niets meer.
   Utrecht, Direct Loodgietersbedrijf, Loodgieter Utrecht (.com), Loodgietersbedrijf Utrecht
   (.nl), Van der Wijck Daktechniek, B&G Onderhoud, Kewodak, Haagsche Dakwerken, Dakdekkersbedrijf
   Leiden, Dakdekker Amsterdam.
+
+```
+
 ```

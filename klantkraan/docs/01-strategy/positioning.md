@@ -12,16 +12,17 @@ Category creation: **"klantenmotor"** (customer engine). Not "AI receptionist" (
 
 From the competitor research, the gap is real:
 
-| Competitor type | What they sell | What they miss |
-|---|---|---|
-| NL voice-only (Cowcierge €150, Voicelabs €149, Flireo €0.07/min) | One AI module | No bundle, no vertical scripts, no review engine |
-| NL bundled (Gold Lemon €199+€899, MyAutoPilot €350+€1,350) | Multi-module SMB stack | Horizontal, not trade-vertical, setup fees |
-| NL vertical (InstallatieTelefoniste) | Trade-aware AI phone | Single module (voice only) |
-| Lead marketplaces (Werkspot, Gigaleads) | Pay-per-lead | Tradesmen resent these; not the customer's own pipeline |
-| UK Invox (£99) | Vertical voice + reviews | UK only, not Dutch-native, no EU hosting story |
-| US Podium ($399) | Full bundle | 12-mo lock-in, not Dutch, not GDPR-native |
+| Competitor type                                                  | What they sell           | What they miss                                          |
+| ---------------------------------------------------------------- | ------------------------ | ------------------------------------------------------- |
+| NL voice-only (Cowcierge €150, Voicelabs €149, Flireo €0.07/min) | One AI module            | No bundle, no vertical scripts, no review engine        |
+| NL bundled (Gold Lemon €199+€899, MyAutoPilot €350+€1,350)       | Multi-module SMB stack   | Horizontal, not trade-vertical, setup fees              |
+| NL vertical (InstallatieTelefoniste)                             | Trade-aware AI phone     | Single module (voice only)                              |
+| Lead marketplaces (Werkspot, Gigaleads)                          | Pay-per-lead             | Tradesmen resent these; not the customer's own pipeline |
+| UK Invox (£99)                                                   | Vertical voice + reviews | UK only, not Dutch-native, no EU hosting story          |
+| US Podium ($399)                                                 | Full bundle              | 12-mo lock-in, not Dutch, not GDPR-native               |
 
 **Our wedge:** the only Dutch player with **all five** of:
+
 1. Trade-vertical (loodgieters + dakdekkers)
 2. Bundled (3 modules in one price)
 3. EU-hosted, AVG-native, AI Act-compliant
@@ -31,12 +32,15 @@ From the competitor research, the gap is real:
 ## Three differentiation pillars
 
 ### 1. **Dutch-vakman-native**
+
 The AI script knows what `voorrijkosten`, `spoedtoeslag`, `materiaalopslag` mean. It uses ABN Dutch with no Anglicismen. It addresses callers with `u`, switches to `je` when the caller does. It mentions "binnen 4 uur terugbellen" — not "we'll get back to you shortly." This is a moat because building it requires understanding the trade, not just translating an English prompt.
 
 ### 2. **EU AI Act + AVG out of the box**
+
 By August 2026, Article 50 transparency obligations are in force across the EU. Every voice agent must disclose at call start. Klantkraan ships with the disclosure baked in, EU-only data residency (Hetzner Frankfurt + Neon EU + Cloudflare EU Workers), and a signed DPA + DPIA template the client can show to their own customers if challenged. Foreign tools won't have this for at least 6–12 months.
 
 ### 3. **Skin in the game**
+
 - No setup fee
 - Monthly cancel
 - First month 50% off
@@ -56,11 +60,13 @@ This destroys risk for the buyer. Competitors that lock in for 12 months can't f
 ## Frames we use
 
 ### Anti-frame (the problem)
+
 - "U mist 28% van uw oproepen — dat zijn 2-3 klussen per week."
 - "Uw concurrent neemt 24/7 op. U niet."
 - "Eén misgelopen badkamer-renovatie is meer dan een jaar Klantkraan."
 
 ### Pro-frame (the solution)
+
 - "De Klantenmotor voor loodgieters."
 - "Elke gemiste oproep teruggebeld binnen 60 seconden."
 - "Reviews, terugbel-afspraken, en een AI-receptionist die uw vak spreekt."

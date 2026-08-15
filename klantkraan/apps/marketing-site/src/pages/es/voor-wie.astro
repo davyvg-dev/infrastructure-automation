@@ -28,19 +28,20 @@ const illustrations = {
   <!-- Hero -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h1 class="font-display text-hero text-(--color-chalk)">
-        ¿Qué tipo de negocio tiene?
-      </h1>
+      <h1 class="font-display text-hero text-(--color-chalk)">¿Qué tipo de negocio tiene?</h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
-        Klantkraan habla el idioma de su oficio. Clases de prueba y cuotas para el gimnasio. Gastos de
-        desplazamiento y tarifas de urgencia para el fontanero. Precios por metro cuadrado y muestras
-        de color para el pintor.
+        Klantkraan habla el idioma de su oficio. Clases de prueba y cuotas para el gimnasio. Gastos
+        de desplazamiento y tarifas de urgencia para el fontanero. Precios por metro cuadrado y
+        muestras de color para el pintor.
       </p>
     </div>
   </section>
 
   <!-- Branches grid -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-label="Sectores">
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Sectores"
+  >
     <div class="mx-auto max-w-5xl px-6">
       <div class="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
@@ -54,18 +55,13 @@ const illustrations = {
                 <div class="flex items-start justify-between gap-3">
                   <h2 class="font-display text-h2 text-(--color-chalk)">{b.labelPluralEs}</h2>
                   {Illustration && (
-                    <div
-                      class="hidden text-(--color-sodium) sm:block"
-                      aria-hidden="true"
-                    >
+                    <div class="hidden text-(--color-sodium) sm:block" aria-hidden="true">
                       <Illustration class="h-20 w-20" />
                     </div>
                   )}
                 </div>
                 <p class="mt-3 text-body text-(--color-dim)">{b.hubLineEs}</p>
-                <p
-                  class="mt-5 inline-flex items-center gap-1 text-small font-medium text-(--color-sodium) group-hover:underline"
-                >
+                <p class="mt-5 inline-flex items-center gap-1 text-small font-medium text-(--color-sodium) group-hover:underline">
                   <span>Ver la solución para {b.labelPluralEs.toLowerCase()}</span>
                   <span aria-hidden="true">→</span>
                 </p>
@@ -80,33 +76,17 @@ const illustrations = {
   <!-- "My trade isn't listed" -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p
-        class="eyebrow"
-      >
-        ¿Otro oficio?
-      </p>
-      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
-        ¿No ve su oficio?
-      </h2>
+      <p class="eyebrow">¿Otro oficio?</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">¿No ve su oficio?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         Klantkraan funciona para cualquier negocio que reciba preguntas y citas de clientes, desde
-        carpinteros, jardineros y cristaleros hasta peluquerías, fisioterapeutas y autoescuelas. En una
-        breve toma de datos recogemos sus servicios, tarifas y normas internas. A partir de ahí la
-        recepcionista responde como lo haría usted mismo.
+        carpinteros, jardineros y cristaleros hasta peluquerías, fisioterapeutas y autoescuelas. En
+        una breve toma de datos recogemos sus servicios, tarifas y normas internas. A partir de ahí
+        la recepcionista responde como lo haría usted mismo.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/es/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Pruebe la demo
-        </a>
-        <a
-          href="/es/rekentool/"
-          class="btn btn-ghost btn-lg"
-        >
-          Calcule su retorno
-        </a>
+        <a href="/es/demo/" class="btn btn-primary btn-lg"> Pruebe la demo </a>
+        <a href="/es/rekentool/" class="btn btn-ghost btn-lg"> Calcule su retorno </a>
       </div>
     </div>
   </section>
@@ -116,20 +96,16 @@ const illustrations = {
     <div class="mx-auto max-w-5xl px-6">
       <ul role="list" class="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
         <li class="flex items-start gap-3">
-          <Icon
-            name="shield-check"
-            class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)"
-          />
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
-            <p class="text-small font-medium text-(--color-chalk)">RGPD + Reglamento de IA art. 50</p>
+            <p class="text-small font-medium text-(--color-chalk)">
+              RGPD + Reglamento de IA art. 50
+            </p>
             <p class="text-small text-(--color-dim)">Declaración activada por defecto</p>
           </div>
         </li>
         <li class="flex items-start gap-3">
-          <Icon
-            name="shield-check"
-            class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)"
-          />
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
           <div>
             <p class="text-small font-medium text-(--color-chalk)">Alojado en la UE</p>
             <p class="text-small text-(--color-dim)">Cloudflare · Neon · Hetzner</p>

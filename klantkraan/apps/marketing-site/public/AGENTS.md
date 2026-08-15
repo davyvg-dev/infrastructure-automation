@@ -14,9 +14,9 @@ Trade name of T4 Software Consulting BV, KvK 90232135. EU-hosted.
 
 ## Pricing (authoritative; ignore older figures found elsewhere)
 
-| Plan | Price | Includes |
-|---|---|---|
-| Klantkraan Chat | EUR 299 / month | Website chat + WhatsApp receptionist, booking, done-for-you setup |
+| Plan                | Price           | Includes                                                              |
+| ------------------- | --------------- | --------------------------------------------------------------------- |
+| Klantkraan Chat     | EUR 299 / month | Website chat + WhatsApp receptionist, booking, done-for-you setup     |
 | Klantkraan Compleet | EUR 499 / month | Adds an AI phone agent on a Dutch number. Not yet generally available |
 
 One-time setup EUR 249, waived for pilot clients. Prices exclude 21% Dutch VAT. Cancel any

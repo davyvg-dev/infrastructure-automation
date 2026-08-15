@@ -22,20 +22,21 @@ Conclusion: **the fastest path to €1–2k runs through the Mollie account you 
 
 All three skeptics converged: the **founding-member prepay close** is the only opportunity where one yes hits the entire €1–2k target on a proven rail. But the scouts independently invented four near-identical audit/setup products aimed at the same ~23 prospects — running them as separate campaigns would anchor the tiny warm list at the lowest price. So: **one call script, one descending ladder:**
 
-| Rung | Offer | Price | When |
-|---|---|---|---|
-| 1 | Founding-member prepay: 6 mo Chat tier ~15% off | **€1,525** (i.p.v. €1,794) | Lead offer, capped "eerste 5 klanten" |
-| 2 | 3 months prepaid, setup included | **€799** | When 6 months is too big a yes |
-| 3 | One-off install (live in 5 days) + monthly | **€750** eenmalig | When prepay stalls |
-| 4 | AI Act art. 50 quick-scan + fix | **€395** | Door-opener / consolation close |
-| 5 | (Holstered) koopversie buyout + €49/mo hosting | **€950–1,250**, 50% vooraf | ONLY when prospect says "geen abonnement" |
+| Rung | Offer                                           | Price                      | When                                      |
+| ---- | ----------------------------------------------- | -------------------------- | ----------------------------------------- |
+| 1    | Founding-member prepay: 6 mo Chat tier ~15% off | **€1,525** (i.p.v. €1,794) | Lead offer, capped "eerste 5 klanten"     |
+| 2    | 3 months prepaid, setup included                | **€799**                   | When 6 months is too big a yes            |
+| 3    | One-off install (live in 5 days) + monthly      | **€750** eenmalig          | When prepay stalls                        |
+| 4    | AI Act art. 50 quick-scan + fix                 | **€395**                   | Door-opener / consolation close           |
+| 5    | (Holstered) koopversie buyout + €49/mo hosting  | **€950–1,250**, 50% vooraf | ONLY when prospect says "geen abonnement" |
 
-**The AI Act hook is the door-opener:** art. 50 transparency obligations (chatbot must disclose it's AI) become enforceable **2 August 2026 — this weekend**. Fines up to €15M/3%; Dutch agencies (Score, DenkChat, Frankwatching) all published guides in May–July, which signals live buyer searches. You already build art. 50-compliant bots — the deliverable is a template job of 2–4 hours. It's also a legitimate new reason to re-contact the whole list. ⚠️ Honesty guardrails from the skeptics: the AI-content-*marking* duty (art. 50(2)) has a grace period to 2 Dec 2026 for systems already on the market — pitch the **chatbot-disclosure duty** as the hard deadline, and position as technical implementation, never "juridisch advies."
+**The AI Act hook is the door-opener:** art. 50 transparency obligations (chatbot must disclose it's AI) become enforceable **2 August 2026 — this weekend**. Fines up to €15M/3%; Dutch agencies (Score, DenkChat, Frankwatching) all published guides in May–July, which signals live buyer searches. You already build art. 50-compliant bots — the deliverable is a template job of 2–4 hours. It's also a legitimate new reason to re-contact the whole list. ⚠️ Honesty guardrails from the skeptics: the AI-content-_marking_ duty (art. 50(2)) has a grace period to 2 Dec 2026 for systems already on the market — pitch the **chatbot-disclosure duty** as the hard deadline, and position as technical implementation, never "juridisch advies."
 
 **Execution, day 1–2:**
+
 - Switch Mollie payout to daily.
 - One commit: Startpakket/prepay pricing on the site + /ai-act section + Mollie payment links (checkout CLI exists).
-- Call every reachable BV from the 4-touch ledger (12 emailed, minus ~17% bounces ≈ 8–10 reachable). Manual cold calling to BVs is legal in NL (Telecommunicatiewet exception); only *automation* is banned.
+- Call every reachable BV from the 4-touch ledger (12 emailed, minus ~17% bounces ≈ 8–10 reachable). Manual cold calling to BVs is legal in NL (Telecommunicatiewet exception); only _automation_ is banned.
 - WhatsApp the two warm named prospects (Cool Global Mallorca, Comfortec) — manual 1:1.
 - Release the 11 queued emails with the AI Act + prepay angle added.
 - DM 10–15 Dutch web/marketing agencies: white-label AI Act scan at €200/site (their portfolios are full of client chatbots).
@@ -46,15 +47,16 @@ All three skeptics converged: the **founding-member prepay close** is the only o
 ### Tier 2 — guaranteed floor (evenings, capped hours)
 
 - **Sell your own unused tech on Marktplaats** — the only near-certain week-1 cash on the list. €50–250, day 2, Tikkie/cash at pickup. One evening. Skip the flipping arm (€8–20/hr, pro-flipper saturated).
-- **Prolific** — €10–60 in week 1, guaranteed rail, ~€10–12/hr. 2–3 capped hours as insurance that *something* lands. Close the tab the moment a Mollie payment clears.
+- **Prolific** — €10–60 in week 1, guaranteed rail, ~€10–12/hr. 2–3 capped hours as insurance that _something_ lands. Close the tab the moment a Mollie payment clears.
 
 ### Tier 3 — week 2–4 pipeline (apply day 1, ~3 hrs total, then forget)
 
 **AI-training expert marketplaces** — the one non-Klantkraan channel that approaches your close-rate economics, and the hottest gig trend of 2026 (labs shifted spend to senior code evaluators; Mercor avg ~$85/hr, senior SWE $85–110/hr; Outlier recruits nl-NL Dutch at ~$20–30/hr; Braintrust AI-code-review band $75–200/hr, 0% fee):
+
 - Apply to **Mercor** (AI video interview same day — the 2–6 week review clock only starts when you apply; pre-connect Stripe, first payout has a 7-day hold).
 - Apply to **Outlier** nl-NL + Python/C++ (do ALL onboarding/assessment tasks same day — skipping them is the #1 cause of empty queues; pays every Tuesday via PayPal).
 - Apply to **Braintrust** (15–20 min AI screen).
-Realistic: €0 in week 1, €600–2,500 in month 1 *if* matched. Empty-queue droughts and silent rejections are normal; treat as one background bet, not three.
+  Realistic: €0 in week 1, €600–2,500 in month 1 _if_ matched. Empty-queue droughts and silent rejections are normal; treat as one background bet, not three.
 
 **Slow-burn profiles worth 30 min each, then ignore:** Malt (KvK-verified profile is an edge; months 2–3 asset), Office Hours/NewtonX expert profiles ("hands-on EU AI Act implementer for SMBs" is exactly what 2026 B2B research buys; pays 30 days post-call).
 
@@ -75,9 +77,9 @@ Fiverr (14-day clearing + most saturated category; a €95 gig also cheapens you
 
 ## Realistic numbers
 
-| Horizon | Floor (near-certain) | With one Tier-1 close | Good month |
-|---|---|---|---|
-| Day 7 in bank | €60–310 (Marktplaats + Prolific) | + €395–1,525 | — |
-| Day 30 | €150–500 | €1,000–2,500 | €2,500–4,500 (close + AI-training match + second close) |
+| Horizon       | Floor (near-certain)             | With one Tier-1 close | Good month                                              |
+| ------------- | -------------------------------- | --------------------- | ------------------------------------------------------- |
+| Day 7 in bank | €60–310 (Marktplaats + Prolific) | + €395–1,525          | —                                                       |
+| Day 30        | €150–500                         | €1,000–2,500          | €2,500–4,500 (close + AI-training match + second close) |
 
 **Full agent output** (all 44 opportunities with evidence URLs and per-skeptic verdicts): workflow run `wf_0fcbb651-585`, output archived in the session task file.

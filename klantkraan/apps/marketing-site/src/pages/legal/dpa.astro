@@ -23,19 +23,29 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">1. Definities</h2>
       <p class="text-body">
-        Termen als verwerkingsverantwoordelijke, verwerker, persoonsgegevens en subverwerker
-        hebben de betekenis die daaraan wordt gegeven in artikel 4 AVG. Onder &lsquo;Diensten&rsquo;
-        worden de diensten verstaan zoals beschreven in de hoofdovereenkomst.
+        Termen als verwerkingsverantwoordelijke, verwerker, persoonsgegevens en subverwerker hebben
+        de betekenis die daaraan wordt gegeven in artikel 4 AVG. Onder &lsquo;Diensten&rsquo; worden
+        de diensten verstaan zoals beschreven in de hoofdovereenkomst.
       </p>
     </section>
 
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">2. Onderwerp, duur, aard en doel</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
-        <li><strong>Onderwerp:</strong> het uitvoeren van de Klantkraan-diensten zoals beschreven in de Service Description.</li>
-        <li><strong>Duur:</strong> voor de looptijd van de hoofdovereenkomst plus een retentie-window van 60 dagen.</li>
-        <li><strong>Aard:</strong> ontvangen, opslaan, transcriberen, analyseren en doorsturen van persoonsgegevens.</li>
-        <li><strong>Doel:</strong> het beantwoorden en afhandelen van inkomende communicatie namens de verwerkingsverantwoordelijke.</li>
+        <li>
+          <strong>Onderwerp:</strong> het uitvoeren van de Klantkraan-diensten zoals beschreven in de
+          Service Description.
+        </li>
+        <li>
+          <strong>Duur:</strong> voor de looptijd van de hoofdovereenkomst plus een retentie-window van
+          60 dagen.
+        </li>
+        <li>
+          <strong>Aard:</strong> ontvangen, opslaan, transcriberen, analyseren en doorsturen van persoonsgegevens.
+        </li>
+        <li>
+          <strong>Doel:</strong> het beantwoorden en afhandelen van inkomende communicatie namens de verwerkingsverantwoordelijke.
+        </li>
         <li><strong>Categorieën van betrokkenen en gegevens:</strong> zie Annex I.</li>
       </ul>
     </section>
@@ -59,8 +69,12 @@ const lastUpdated = '20 mei 2026'
     </section>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">5. Beveiligingsmaatregelen (art. 32 AVG)</h2>
-      <p class="text-body">De verwerker neemt de in Annex II opgenomen technische en organisatorische maatregelen:</p>
+      <h2 class="font-display text-h2 text-(--color-chalk)">
+        5. Beveiligingsmaatregelen (art. 32 AVG)
+      </h2>
+      <p class="text-body">
+        De verwerker neemt de in Annex II opgenomen technische en organisatorische maatregelen:
+      </p>
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>EU-only data residency (Hetzner Frankfurt, Neon EU, Cloudflare EU Workers).</li>
         <li>Versleuteling at-rest (Postgres TDE) en in-transit (TLS 1.3).</li>
@@ -75,8 +89,14 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">6. Sub-processors</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
-        <li>De verwerkingsverantwoordelijke geeft algemene toestemming voor de sub-processors op de actuele <a href="/legal/subprocessors/">sub-processor lijst</a>.</li>
-        <li>Wijzigingen worden minimaal 30 dagen vooraf aangekondigd. Bezwaar binnen die termijn geeft de verwerkingsverantwoordelijke een opzeggingsrecht.</li>
+        <li>
+          De verwerkingsverantwoordelijke geeft algemene toestemming voor de sub-processors op de
+          actuele <a href="/legal/subprocessors/">sub-processor lijst</a>.
+        </li>
+        <li>
+          Wijzigingen worden minimaal 30 dagen vooraf aangekondigd. Bezwaar binnen die termijn geeft
+          de verwerkingsverantwoordelijke een opzeggingsrecht.
+        </li>
         <li>De verwerker legt aan elke sub-processor dezelfde verplichtingen op (flow-down).</li>
       </ul>
     </section>
@@ -94,9 +114,9 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">8. Meldplicht datalekken</h2>
       <p class="text-body">
         Conform art. 33&ndash;34 AVG meldt de verwerker een datalek binnen <strong>48 uur</strong>
-        aan de verwerkingsverantwoordelijke (strikter dan de wettelijke 72 uur richting de
-        Autoriteit Persoonsgegevens). De melding bevat: aard van de inbreuk, betrokken
-        categorieën, geschatte aantallen, contactpersoon en getroffen maatregelen.
+        aan de verwerkingsverantwoordelijke (strikter dan de wettelijke 72 uur richting de Autoriteit
+        Persoonsgegevens). De melding bevat: aard van de inbreuk, betrokken categorieën, geschatte aantallen,
+        contactpersoon en getroffen maatregelen.
       </p>
     </section>
 
@@ -104,8 +124,8 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">9. DPIA en voorafgaande raadpleging</h2>
       <p class="text-body">
         Conform art. 35&ndash;36 AVG verstrekt de verwerker redelijke informatie ten behoeve van de
-        DPIA van de verwerkingsverantwoordelijke. De verwerker heeft een eigen DPIA per
-        service-tier uitgevoerd.
+        DPIA van de verwerkingsverantwoordelijke. De verwerker heeft een eigen DPIA per service-tier
+        uitgevoerd.
       </p>
     </section>
 
@@ -113,7 +133,10 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">10. Teruggave en verwijdering</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>Export in JSON of CSV is beschikbaar gedurende 30 dagen na einde overeenkomst.</li>
-        <li>Wissing vindt plaats binnen 60 dagen na einde (30 dagen export-window plus 30 dagen retentie-window).</li>
+        <li>
+          Wissing vindt plaats binnen 60 dagen na einde (30 dagen export-window plus 30 dagen
+          retentie-window).
+        </li>
         <li>Op verzoek bevestigt de verwerker de wissing schriftelijk.</li>
       </ul>
     </section>
@@ -122,9 +145,15 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">11. Audit-rechten</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>Eenmaal per jaar, en daarnaast bij gerede vermoedens van non-compliance.</li>
-        <li>De kosten worden gedragen door de verwerkingsverantwoordelijke, tenzij non-compliance wordt vastgesteld.</li>
+        <li>
+          De kosten worden gedragen door de verwerkingsverantwoordelijke, tenzij non-compliance
+          wordt vastgesteld.
+        </li>
         <li>Aankondiging minimaal 30 dagen vooraf, schriftelijk.</li>
-        <li>Uitvoering door een onafhankelijke derde onder NDA, zonder verstoring van de bedrijfsvoering.</li>
+        <li>
+          Uitvoering door een onafhankelijke derde onder NDA, zonder verstoring van de
+          bedrijfsvoering.
+        </li>
       </ul>
     </section>
 
@@ -132,9 +161,9 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">12. Internationale doorgiften</h2>
       <p class="text-body">
         Doorgiften buiten de EER vinden uitsluitend plaats met een geldig doorgifte-mechanisme. Bij
-        gebruik van Anthropic, Cloudflare, Twilio of Resend worden de EU Standard
-        Contractual Clauses 2021/914 (module 3) toegepast, aangevuld met een Transfer Impact
-        Assessment en aanvullende technische maatregelen.
+        gebruik van Anthropic, Cloudflare, Twilio of Resend worden de EU Standard Contractual
+        Clauses 2021/914 (module 3) toegepast, aangevuld met een Transfer Impact Assessment en
+        aanvullende technische maatregelen.
       </p>
     </section>
 
@@ -156,7 +185,9 @@ const lastUpdated = '20 mei 2026'
     </section>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">Annex I: Categorieën van persoonsgegevens</h2>
+      <h2 class="font-display text-h2 text-(--color-chalk)">
+        Annex I: Categorieën van persoonsgegevens
+      </h2>
       <div class="overflow-x-auto">
         <table class="w-full border-collapse text-small">
           <thead>
@@ -167,24 +198,49 @@ const lastUpdated = '20 mei 2026'
             </tr>
           </thead>
           <tbody class="divide-y divide-(--color-line)">
-            <tr><td class="py-2 pr-4">Identificatiegegevens</td><td class="py-2 pr-4">Naam, telefoonnummer</td><td class="py-2">Chatgesprekken</td></tr>
-            <tr><td class="py-2 pr-4">Adresgegevens</td><td class="py-2 pr-4">Adres, postcode</td><td class="py-2">Chatgesprekken</td></tr>
-            <tr><td class="py-2 pr-4">Communicatiegegevens</td><td class="py-2 pr-4">Chattranscripten (websitechat, WhatsApp)</td><td class="py-2">Klantkraan + Twilio</td></tr>
-            <tr><td class="py-2 pr-4">Klantgeschiedenis</td><td class="py-2 pr-4">Eerdere klussen, voorkeuren</td><td class="py-2">Chatgeschiedenis</td></tr>
-            <tr><td class="py-2 pr-4">Locatiegegevens</td><td class="py-2 pr-4">Service-postcode</td><td class="py-2">Booking flow</td></tr>
-            <tr><td class="py-2 pr-4">Financiële gegevens</td><td class="py-2 pr-4">Voorrijkosten, kostenraming</td><td class="py-2">Gespreksinhoud</td></tr>
+            <tr
+              ><td class="py-2 pr-4">Identificatiegegevens</td><td class="py-2 pr-4"
+                >Naam, telefoonnummer</td
+              ><td class="py-2">Chatgesprekken</td></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">Adresgegevens</td><td class="py-2 pr-4">Adres, postcode</td><td
+                class="py-2">Chatgesprekken</td
+              ></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">Communicatiegegevens</td><td class="py-2 pr-4"
+                >Chattranscripten (websitechat, WhatsApp)</td
+              ><td class="py-2">Klantkraan + Twilio</td></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">Klantgeschiedenis</td><td class="py-2 pr-4"
+                >Eerdere klussen, voorkeuren</td
+              ><td class="py-2">Chatgeschiedenis</td></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">Locatiegegevens</td><td class="py-2 pr-4">Service-postcode</td
+              ><td class="py-2">Booking flow</td></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">Financiële gegevens</td><td class="py-2 pr-4"
+                >Voorrijkosten, kostenraming</td
+              ><td class="py-2">Gespreksinhoud</td></tr
+            >
           </tbody>
         </table>
       </div>
       <p class="text-small text-(--color-dim)">
-        Klantkraan verwerkt geen strafrechtelijke gegevens, BSN of andere bijzondere categorieën
-        als doel. Klanten kunnen onbedoeld bijzondere gegevens (bijvoorbeeld gezondheidsgegevens)
+        Klantkraan verwerkt geen strafrechtelijke gegevens, BSN of andere bijzondere categorieën als
+        doel. Klanten kunnen onbedoeld bijzondere gegevens (bijvoorbeeld gezondheidsgegevens)
         noemen; hiervoor geldt een audit- en redactieprocedure.
       </p>
     </section>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">Annex II: Technische en organisatorische maatregelen</h2>
+      <h2 class="font-display text-h2 text-(--color-chalk)">
+        Annex II: Technische en organisatorische maatregelen
+      </h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>EU-only hosting.</li>
         <li>Versleuteling at-rest en in-transit.</li>
@@ -199,7 +255,9 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">Annex III: Sub-processors</h2>
       <p class="text-body">
-        De actuele lijst staat op <a href="/legal/subprocessors/">klantkraan.nl/legal/subprocessors</a>
+        De actuele lijst staat op <a href="/legal/subprocessors/"
+          >klantkraan.nl/legal/subprocessors</a
+        >
         en wordt bijgehouden bij elke wijziging.
       </p>
     </section>

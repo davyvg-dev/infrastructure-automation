@@ -7,6 +7,7 @@
 ## Hoe je groepen kiest
 
 Zoek op groepen waar je **klanten** zitten (vakbedrijven), niet je concurrenten:
+
 - Regionale ondernemersgroepen ("Ondernemers [stad/regio]", "ZZP [regio]")
 - Bouw / installatie / techniek-vakgroepen
 - Vak-specifiek: loodgieters, dakdekkers, installateurs, hoveniers, klusbedrijven
@@ -16,14 +17,14 @@ Mik op groepen met **echte activiteit** (dagelijkse posts), niet op de grootste 
 
 ## Inventaris (zelf invullen)
 
-| Groep | ± leden | Promo toegestaan? | Toegestane post-types | Beste dag/tijd | Link in body ok? | Notities |
-|---|---|---|---|---|---|---|
-| _voorbeeld: Ondernemers Utrecht_ | _8k_ | _alleen vrijdag-draadje_ | _value-only + promo vrij_ | _di/do ochtend_ | _nee, wordt verwijderd_ | _admin streng_ |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
+| Groep                            | ± leden | Promo toegestaan?        | Toegestane post-types     | Beste dag/tijd  | Link in body ok?        | Notities       |
+| -------------------------------- | ------- | ------------------------ | ------------------------- | --------------- | ----------------------- | -------------- |
+| _voorbeeld: Ondernemers Utrecht_ | _8k_    | _alleen vrijdag-draadje_ | _value-only + promo vrij_ | _di/do ochtend_ | _nee, wordt verwijderd_ | _admin streng_ |
+|                                  |         |                          |                           |                 |                         |                |
+|                                  |         |                          |                           |                 |                         |                |
+|                                  |         |                          |                           |                 |                         |                |
+|                                  |         |                          |                           |                 |                         |                |
+|                                  |         |                          |                           |                 |                         |                |
 
 ## Post-types ↔ groepsregel
 

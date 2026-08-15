@@ -139,7 +139,8 @@ const t = strings[lang]
         <div class="space-y-6">
           <div>
             <label for="cursus-naam" class="block text-body font-medium text-(--color-chalk)">
-              {t.nameLabel} <span class="font-normal text-(--color-dim)">{t.nameOptional}</span>
+              {t.nameLabel}
+              <span class="font-normal text-(--color-dim)">{t.nameOptional}</span>
             </label>
             <input
               id="cursus-naam"
@@ -164,12 +165,22 @@ const t = strings[lang]
           </div>
           <div class="hp" aria-hidden="true">
             <label for="cursus-website">Website</label>
-            <input id="cursus-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            <input
+              id="cursus-website"
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            />
           </div>
           <p id="cursus-error" class="hidden text-small text-(--color-sodium)" role="alert">
             {t.error}
           </p>
-          <button type="submit" id="cursus-submit" class="btn btn-primary btn-lg w-full justify-center">
+          <button
+            type="submit"
+            id="cursus-submit"
+            class="btn btn-primary btn-lg w-full justify-center"
+          >
             {t.submit}
           </button>
           <p class="text-small text-(--color-dim)">{t.footnote}</p>

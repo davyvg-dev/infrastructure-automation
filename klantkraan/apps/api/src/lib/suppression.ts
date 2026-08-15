@@ -7,11 +7,11 @@
  * and the Worker both consult it. Schema lives in packages/db once scaffolded.
  */
 
-import { getSql } from "./neon.js";
+import { getSql } from './neon.js'
 
 export interface SuppressionResult {
-  suppressed: boolean;
-  reason?: "email" | "phone" | "both";
+  suppressed: boolean
+  reason?: 'email' | 'phone' | 'both'
 }
 
 /**
@@ -26,8 +26,8 @@ export async function isSuppressed(
   databaseUrl: string,
   identifiers: { email?: string | undefined; phone?: string | undefined },
 ): Promise<SuppressionResult> {
-  const { email, phone } = identifiers;
-  if (!email && !phone) return { suppressed: false };
+  const { email, phone } = identifiers
+  if (!email && !phone) return { suppressed: false }
 
   // stub: real implementation queries suppression_list once packages/db lands.
   // const sql = getSql(databaseUrl);
@@ -44,6 +44,6 @@ export async function isSuppressed(
   //   reason: hasEmail && hasPhone ? "both" : hasEmail ? "email" : "phone",
   // };
 
-  void getSql; // keep the import live so the wiring is obvious to readers
-  return { suppressed: false };
+  void getSql // keep the import live so the wiring is obvious to readers
+  return { suppressed: false }
 }

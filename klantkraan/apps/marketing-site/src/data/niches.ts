@@ -139,9 +139,16 @@ export const niches: Record<NicheSlug, Niche> = {
     features: sharedFeatures('dakdekker'),
     baseFaqs,
     painStats: [
-      { value: '32%', caption: 'van de spoed-meldingen komt na 17:00 uur (na zware regen of storm).' },
+      {
+        value: '32%',
+        caption: 'van de spoed-meldingen komt na 17:00 uur (na zware regen of storm).',
+      },
       { value: '€600', caption: 'gemiddelde waarde per gemiste inspectie- of spoedklus.' },
-      { value: '24u', caption: 'is de gewenste reactietijd bij stormschade — moeilijk waar te maken met losse telefoon.' },
+      {
+        value: '24u',
+        caption:
+          'is de gewenste reactietijd bij stormschade — moeilijk waar te maken met losse telefoon.',
+      },
     ],
   },
   schilder: {
@@ -169,9 +176,15 @@ export const niches: Record<NicheSlug, Niche> = {
     features: sharedFeatures('aannemer'),
     baseFaqs,
     painStats: [
-      { value: '41%', caption: 'van offerte-aanvragen verdwijnt als u niet binnen 24 uur reageert.' },
+      {
+        value: '41%',
+        caption: 'van offerte-aanvragen verdwijnt als u niet binnen 24 uur reageert.',
+      },
       { value: '€5.000', caption: 'gemiddelde waarde per gemiste verbouwings- of dakkapel-klus.' },
-      { value: '1 op 3', caption: 'aanvragen wordt klant zodra u dezelfde dag een afspraak inboekt.' },
+      {
+        value: '1 op 3',
+        caption: 'aanvragen wordt klant zodra u dezelfde dag een afspraak inboekt.',
+      },
     ],
   },
 }

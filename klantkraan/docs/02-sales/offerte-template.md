@@ -73,12 +73,14 @@
 ## Variants
 
 ### Compleet (€499) — alleen aanbieden zodra de AI-telefonist live is
+
 - Voeg toe aan aanbod: "AI-telefonist (voice) op eigen Nederlands nummer — neemt inkomende telefoontjes 24/7 aan."
 - Prijs: €499,00 excl. / €603,79 incl. 21% BTW.
 - Eerste maand 50% = €249,50 excl. / €301,90 incl. BTW.
 - Nooit offreren vóór de voice-agent geverifieerd draait.
 
 ### Prepay variant
+
 - 6 maanden vooruit: 15% korting → Chat €254,15/mnd equivalent, totaal 6 × €254,15 = €1.524,90 excl. BTW.
 - 12 maanden vooruit: 20% korting → Chat €239,20/mnd equivalent, totaal 12 × €239,20 = €2.870,40 excl. BTW.
 - Vervang "Maandelijks opzegbaar" door "Looptijd {{6/12}} maanden, daarna maandelijks opzegbaar."

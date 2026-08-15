@@ -70,12 +70,14 @@ const subprocessors: Subprocessor[] = [
 >
   <article class="prose-legal">
     <header class="border-b border-(--color-line) pb-8">
-      <p class="text-micro uppercase tracking-wider text-(--color-dim)">Juridisch &middot; Annex III bij de DPA</p>
+      <p class="text-micro uppercase tracking-wider text-(--color-dim)">
+        Juridisch &middot; Annex III bij de DPA
+      </p>
       <h1 class="mt-2 font-display text-h1 text-(--color-chalk)">Sub-processors</h1>
       <p class="mt-4 text-small text-(--color-dim)">
         Laatste wijziging: {lastUpdated}. Onderstaande partijen verwerken persoonsgegevens in
-        opdracht van Klantkraan ten behoeve van de dienstverlening. Wijzigingen worden minimaal
-        30 dagen vooraf aangekondigd aan klanten met een actief contract.
+        opdracht van Klantkraan ten behoeve van de dienstverlening. Wijzigingen worden minimaal 30
+        dagen vooraf aangekondigd aan klanten met een actief contract.
       </p>
     </header>
 
@@ -101,7 +103,9 @@ const subprocessors: Subprocessor[] = [
                   <td class="py-2 pr-4 align-top">{sp.location}</td>
                   <td class="py-2 pr-4 align-top">{sp.transfer}</td>
                   <td class="py-2 align-top">
-                    <a href={sp.dpa} rel="external" aria-label={`DPA van ${sp.name}`}>DPA</a>
+                    <a href={sp.dpa} rel="external" aria-label={`DPA van ${sp.name}`}>
+                      DPA
+                    </a>
                   </td>
                 </tr>
               ))

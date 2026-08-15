@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod'
 
 /**
  * Worker env schema. Every secret consumed by any route lives here, even if the
@@ -6,7 +6,7 @@ import { z } from "zod";
  * binding fails fast with a typed error instead of a silent undefined at fetch.
  */
 export const EnvSchema = z.object({
-  ENV: z.enum(["development", "preview", "production"]).default("development"),
+  ENV: z.enum(['development', 'preview', 'production']).default('development'),
 
   // Vendor APIs
   ATTIO_API_KEY: z.string().min(1),
@@ -31,27 +31,27 @@ export const EnvSchema = z.object({
 
   // Observability
   SENTRY_DSN: z.string().url().optional(),
-});
+})
 
 export type Env = z.infer<typeof EnvSchema> & {
-  KV_DASHBOARD: KVNamespace;
-};
+  KV_DASHBOARD: KVNamespace
+}
 
 /**
  * Validate the Worker runtime env. Throws a ZodError on missing/invalid bindings.
  * Call once per request inside route handlers (cheap, ~µs) or once at boot.
  */
 export function parseEnv(env: unknown): Env {
-  const parsed = EnvSchema.parse(env);
-  const kv = (env as { KV_DASHBOARD?: KVNamespace }).KV_DASHBOARD;
+  const parsed = EnvSchema.parse(env)
+  const kv = (env as { KV_DASHBOARD?: KVNamespace }).KV_DASHBOARD
   if (!kv) {
-    throw new Error("KV_DASHBOARD binding missing on Worker env");
+    throw new Error('KV_DASHBOARD binding missing on Worker env')
   }
-  return { ...parsed, KV_DASHBOARD: kv };
+  return { ...parsed, KV_DASHBOARD: kv }
 }
 
 /**
  * Hono Bindings type. Cloudflare exposes secrets + KV namespaces on `c.env`,
  * so the same shape that `parseEnv` validates is what `c.env` is typed as.
  */
-export type Bindings = Env;
+export type Bindings = Env

@@ -34,11 +34,11 @@ into the Astro site the moment there's a Pixel ID.)
 ## 2. Where to post
 
 **A. A Klantkraan Facebook Page** — the brand home + the thing Meta requires before you can
-ever run an ad. Founder creates it (I can't create accounts). Set: name *Klantkraan*, category
-*Software / Local service*, profile = the blue "k" mark, cover = the benefit image below,
+ever run an ad. Founder creates it (I can't create accounts). Set: name _Klantkraan_, category
+_Software / Local service_, profile = the blue "k" mark, cover = the benefit image below,
 "Send WhatsApp" button → the business number, website → klantkraan.nl.
 
-**B. Groups — post from the founder's *personal* profile, not the Page.** Groups distrust
+**B. Groups — post from the founder's _personal_ profile, not the Page.** Groups distrust
 brand accounts and many block Page posting. Find them by searching Facebook for:
 
 - `ZZP <regio>`, `Ondernemers <stad/regio>`, `MKB <regio>` (Randstad first — matches the
@@ -47,7 +47,7 @@ brand accounts and many block Page posting. Find them by searching Facebook for:
 - `Bouw ZZP`, `Vakmensen`, regional `<stad> ondernemers` / bedrijvennetwerk groups
 
 Vet each before posting: is it active (posts this week), does it allow any self-promo, and does
-it contain *owners* (not just consumers looking for a klusser)? Join 5–8 good ones. **Read the
+it contain _owners_ (not just consumers looking for a klusser)? Join 5–8 good ones. **Read the
 rules; most ban overt ads.** So in groups you lead with value (§3A), never a sales pitch. A
 "promo/zaterdag" thread, if the group has one, is the one place a direct post is welcome.
 
@@ -62,12 +62,14 @@ Voice = direct, concrete, a little opinionated, short sentences, no hype, no emo
 ### 3A. Group-safe (value-first, soft or no CTA) — for dropping into ZZP/vakman groups
 
 **Post 1 — the missed-call problem (no link, pure value):**
+
 > Iets wat ik veel zie bij eenmanszaken in de bouw en installatie:
 > de meeste gemiste omzet zit niet in te weinig klanten, maar in klanten die bellen terwijl je
 > op een dak of onder een gootsteen zit. Ze spreken geen voicemail in — ze bellen de volgende
 > in Google.
 >
 > Drie dingen die helpen, zonder dure software:
+>
 > 1. Automatische WhatsApp-reactie op je zakelijke nummer: "Ik zit op een klus — app je vraag +
 >    postcode, ik reageer vanavond."
 > 2. Laat je voicemail een concrete belofte doen ("ik bel voor 18:00 terug"), geen standaardtekst.
@@ -76,6 +78,7 @@ Voice = direct, concrete, a little opinionated, short sentences, no hype, no emo
 > Wat werkt bij jullie tegen gemiste telefoontjes?
 
 **Post 2 — pilot recruit (soft, only in groups that allow it):**
+
 > Ik bouw een digitale receptionist speciaal voor vakbedrijven — een assistent die via de chat
 > op je site en via WhatsApp opneemt als jij niet kan, de vraag uitvraagt (inclusief adres en
 > postcode) en de afspraak meteen in je agenda zet.
@@ -86,6 +89,7 @@ Voice = direct, concrete, a little opinionated, short sentences, no hype, no emo
 ### 3B. Direct (Page posts + ad copy) — these may sell
 
 **Ad 1 — problem → solution:**
+
 > Hoeveel klussen loop je mis omdat je de telefoon niet kon opnemen?
 >
 > Klantkraan is een digitale receptionist voor vakmensen. Hij neemt 24/7 op via de chat op je
@@ -96,6 +100,7 @@ Voice = direct, concrete, a little opinionated, short sentences, no hype, no emo
 > Probeer de live demo → klantkraan.nl
 
 **Ad 2 — benefit-led:**
+
 > Je beste monteur kan niet én op het dak staan én de telefoon opnemen.
 >
 > Klantkraan doet dat tweede: 24/7 antwoord op elke klant, afspraken direct ingepland, elke
@@ -104,6 +109,7 @@ Voice = direct, concrete, a little opinionated, short sentences, no hype, no emo
 > Bekijk de live demo op klantkraan.nl
 
 **Ad 3 — one-liner (image caption / short ad):**
+
 > Elke gemiste oproep is een klus voor de concurrent. Klantkraan neemt op — 24/7, ook via
 > WhatsApp. klantkraan.nl
 
@@ -163,12 +169,14 @@ Only after §1's trigger. Keep it small and boring:
 ## 7. Next actions
 
 **Founder:**
+
 1. Create the Klantkraan Facebook Page (§2A).
 2. Join 5–8 vetted groups from your personal profile; read each group's rules (§2B).
 3. Post value-first (§3A) 1–2×/week; save the direct copy (§3B) for the Page.
 4. If/when you set up Meta Business + get a Pixel ID, send it over.
 
 **Claude (ready when you are):**
+
 - Wire the Meta Pixel into the Astro site once there's a Pixel ID.
 - Draft more group-safe posts / more image variants on request.
 - Add Facebook as a paste-ready channel in the growth-engine (assisted, never auto).

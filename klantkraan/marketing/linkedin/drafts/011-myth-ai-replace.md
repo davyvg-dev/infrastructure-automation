@@ -9,6 +9,7 @@ character_count: 1160
 # De grootste mythe over AI in installatiebedrijven (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 3, post 11) zegt: hot take "De grootste mythe over AI in installatiebedrijven". Hot take = polariserend, eigen mening, niet alleen feiten.
 - Hook test: één regel met de mythe, één regel met "klopt niet". Geen aanloop.
 - Cadans: drie blokken — wat de mythe is, waarom hij niet klopt, wat AI wél doet.
@@ -26,12 +27,14 @@ Onzin. AI gaat receptionisten en lead-agencies vervangen. Niet de monteur op het
 Hier is wat een AI vandaag wél kan en niet kan voor een loodgieter of dakdekker:
 
 Wat AI kan:
+
 - 24/7 een Nederlandstalige call opnemen
 - Voorrijkosten en spoedtoeslag exact noemen — elke keer hetzelfde
 - Afspraak in agenda + bevestigings-SMS + Attio-record
 - Review-SMS 24u na de klus, op het juiste moment
 
 Wat AI niet kan:
+
 - Een lekkage onder een vloer vinden
 - Een dakpan recht leggen
 - Een klant geruststellen die in tranen is — niet écht

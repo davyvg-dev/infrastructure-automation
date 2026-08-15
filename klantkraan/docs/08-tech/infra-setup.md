@@ -15,16 +15,16 @@
 
 Create records on `klantkraan.nl`:
 
-| Type | Name | Value | Proxy |
-|---|---|---|---|
-| A | @ | (Cloudflare Pages auto) | Proxied |
-| A | www | (Cloudflare Pages auto) | Proxied |
-| A | n8n | <hetzner-public-ip> | DNS-only |
-| A | status | <hetzner-public-ip> | DNS-only |
-| A | api | (Workers route) | Proxied |
-| TXT | @ | `v=spf1 -all` | n/a (no email from main domain) |
-| TXT | _dmarc | `v=DMARC1; p=reject; rua=mailto:dmarc@klantkraan.nl` | n/a |
-| MX | @ | (Resend inbound or Google Workspace if used) | n/a |
+| Type | Name    | Value                                                | Proxy                           |
+| ---- | ------- | ---------------------------------------------------- | ------------------------------- |
+| A    | @       | (Cloudflare Pages auto)                              | Proxied                         |
+| A    | www     | (Cloudflare Pages auto)                              | Proxied                         |
+| A    | n8n     | <hetzner-public-ip>                                  | DNS-only                        |
+| A    | status  | <hetzner-public-ip>                                  | DNS-only                        |
+| A    | api     | (Workers route)                                      | Proxied                         |
+| TXT  | @       | `v=spf1 -all`                                        | n/a (no email from main domain) |
+| TXT  | \_dmarc | `v=DMARC1; p=reject; rua=mailto:dmarc@klantkraan.nl` | n/a                             |
+| MX   | @       | (Resend inbound or Google Workspace if used)         | n/a                             |
 
 For cold-email secondary domains (`getklantkraan.nl`, `klantenmotor.nl`, `klantkraanpro.nl`), do the SPF/DKIM/DMARC setup per `06-outbound/deliverability-stack.md`.
 
@@ -105,13 +105,13 @@ Layout on disk:
 ## Step 4 — `docker-compose.yml`
 
 ```yaml
-version: "3.9"
+version: '3.9'
 
 services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
-    ports: ["80:80", "443:443"]
+    ports: ['80:80', '443:443']
     volumes:
       - /mnt/data/caddy/Caddyfile:/etc/caddy/Caddyfile
       - /mnt/data/caddy/data:/data
@@ -240,6 +240,7 @@ Borgbase scheduled daily 03:00 CET:
 ```
 
 `borg-backup.sh`:
+
 1. `pg_dump` Neon `main` branch → `/mnt/data/backups/db-$(date).sql.gz`
 2. Tar `/mnt/data/n8n/` → `/mnt/data/backups/n8n-$(date).tar.gz`
 3. Borg push to Borgbase EU repo (encrypted, deduplicated)
@@ -260,24 +261,24 @@ Restore drill: monthly tabletop. Documented in `infra/scripts/restore-drill.md`.
 
 ## Costs at this scale
 
-| Item | Monthly |
-|---|---|
-| Hetzner CX22 + 40 GB volume | €3.79 + €1.60 |
-| Neon Postgres free tier | €0 |
-| Cloudflare Pages + Workers + R2 | €0 (free tier) |
-| Borgbase 100 GB | €2.20 |
-| Healthchecks.io | €0 (free for our checks) |
-| **Total infra** | **~€7.60/mo** |
+| Item                            | Monthly                  |
+| ------------------------------- | ------------------------ |
+| Hetzner CX22 + 40 GB volume     | €3.79 + €1.60            |
+| Neon Postgres free tier         | €0                       |
+| Cloudflare Pages + Workers + R2 | €0 (free tier)           |
+| Borgbase 100 GB                 | €2.20                    |
+| Healthchecks.io                 | €0 (free for our checks) |
+| **Total infra**                 | **~€7.60/mo**            |
 
 ## When this stack outgrows
 
-| Trigger | Upgrade |
-|---|---|
-| n8n queue depth > 100 sustained | CX22 → CX32 (€7.49/mo, 8 GB / 80 GB) |
-| Postgres > 500 MB or > 191k writes/mo | Neon Launch plan (€19/mo) |
-| Workers requests > 100k/day | Cloudflare Workers Paid (€5/mo) |
-| R2 storage > 10 GB | Add Pro (€5/mo) |
-| Need HA / failover | Add second CX22 in Helsinki + Postgres read replica |
+| Trigger                               | Upgrade                                             |
+| ------------------------------------- | --------------------------------------------------- |
+| n8n queue depth > 100 sustained       | CX22 → CX32 (€7.49/mo, 8 GB / 80 GB)                |
+| Postgres > 500 MB or > 191k writes/mo | Neon Launch plan (€19/mo)                           |
+| Workers requests > 100k/day           | Cloudflare Workers Paid (€5/mo)                     |
+| R2 storage > 10 GB                    | Add Pro (€5/mo)                                     |
+| Need HA / failover                    | Add second CX22 in Helsinki + Postgres read replica |
 
 ## Source
 

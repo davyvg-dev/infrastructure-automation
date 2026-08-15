@@ -39,9 +39,9 @@ Do **not** touch production during the drill. The drill runs against a throwaway
 
 ## Drill log
 
-| Month | Date | TTR | Slowest step | Notes |
-|---|---|---|---|---|
-| YYYY-MM |  |  |  |  |
+| Month   | Date | TTR | Slowest step | Notes |
+| ------- | ---- | --- | ------------ | ----- |
+| YYYY-MM |      |     |              |       |
 
 ## What this drill does NOT cover (separate procedures)
 
@@ -52,9 +52,9 @@ Do **not** touch production during the drill. The drill runs against a throwaway
 
 ## Failure mode lookup
 
-| Symptom | First check |
-|---|---|
-| `borg list` hangs | `BORG_RSH` SSH key — is the agent loaded? Borgbase IP allowlist still includes this host? |
-| Postgres restore errors on extensions | Neon `dev` branch missing extensions — install `pgcrypto`, `uuid-ossp` before re-running step 4 |
-| n8n container restart-loops on boot | `N8N_ENCRYPTION_KEY` mismatch — credentials can't be decrypted. Confirm Bitwarden value matches. |
-| Healthchecks not green after restore | Sandbox cron not configured — expected during drill; ignore |
+| Symptom                               | First check                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `borg list` hangs                     | `BORG_RSH` SSH key — is the agent loaded? Borgbase IP allowlist still includes this host?        |
+| Postgres restore errors on extensions | Neon `dev` branch missing extensions — install `pgcrypto`, `uuid-ossp` before re-running step 4  |
+| n8n container restart-loops on boot   | `N8N_ENCRYPTION_KEY` mismatch — credentials can't be decrypted. Confirm Bitwarden value matches. |
+| Healthchecks not green after restore  | Sandbox cron not configured — expected during drill; ignore                                      |

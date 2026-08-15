@@ -6,33 +6,33 @@
 
 Assumption: ~300 text conversations/mo (web chat + WhatsApp), a few thousand tokens each.
 
-| Cost item | Detail | Cost |
-|---|---|---|
-| Claude API | ~300 conversations + monthly report, tool-use turns included | €3.00 |
-| WhatsApp Business API | Meta conversation fees via BSP; service conversations mostly free-entry, utility templates ~€0.05 | €3.00 |
-| Hetzner amortised | shared box runs ai-receptionist + n8n, ~30 clients per box | €0.50 |
-| Storage (calendar/session data) | SQLite/Postgres on same box | €0.00 |
-| Mollie SEPA fee | €0.25 / collection | €0.25 |
-| Misc + buffer | monitoring, notify pings, retries | €3.25 |
-| **Total Chat COGS** | | **€10.00** |
-| **Chat GM** | | **96.7%** |
+| Cost item                       | Detail                                                                                            | Cost       |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- | ---------- |
+| Claude API                      | ~300 conversations + monthly report, tool-use turns included                                      | €3.00      |
+| WhatsApp Business API           | Meta conversation fees via BSP; service conversations mostly free-entry, utility templates ~€0.05 | €3.00      |
+| Hetzner amortised               | shared box runs ai-receptionist + n8n, ~30 clients per box                                        | €0.50      |
+| Storage (calendar/session data) | SQLite/Postgres on same box                                                                       | €0.00      |
+| Mollie SEPA fee                 | €0.25 / collection                                                                                | €0.25      |
+| Misc + buffer                   | monitoring, notify pings, retries                                                                 | €3.25      |
+| **Total Chat COGS**             |                                                                                                   | **€10.00** |
+| **Chat GM**                     |                                                                                                   | **96.7%**  |
 
 ## Compleet — €499/mo (provisional — voice not yet live)
 
 Chat base + self-hosted LiveKit voice stack. Assumption: ~150 voice minutes/mo. **Do not treat as validated until the voice agent runs in production.**
 
-| Cost item | Detail | Cost |
-|---|---|---|
-| Chat base (above) | | €10.00 |
-| Dutch number + SIP trunk lease | | €5.00 |
-| Telephony per-minute | ~150 min × ~€0.01 | €1.50 |
-| STT | ~150 min × ~€0.006 (Deepgram-class) | €1.00 |
-| TTS | ~150 min × ~€0.08 (ElevenLabs-class Dutch) | €12.00 |
-| Claude API (voice turns) | latency-optimised, shorter context | €3.00 |
-| LiveKit self-hosted compute amortised | | €2.00 |
-| Misc + buffer | | €0.50 |
-| **Total Compleet COGS** | | **€35.00** |
-| **Compleet GM** | | **93.0%** |
+| Cost item                             | Detail                                     | Cost       |
+| ------------------------------------- | ------------------------------------------ | ---------- |
+| Chat base (above)                     |                                            | €10.00     |
+| Dutch number + SIP trunk lease        |                                            | €5.00      |
+| Telephony per-minute                  | ~150 min × ~€0.01                          | €1.50      |
+| STT                                   | ~150 min × ~€0.006 (Deepgram-class)        | €1.00      |
+| TTS                                   | ~150 min × ~€0.08 (ElevenLabs-class Dutch) | €12.00     |
+| Claude API (voice turns)              | latency-optimised, shorter context         | €3.00      |
+| LiveKit self-hosted compute amortised |                                            | €2.00      |
+| Misc + buffer                         |                                            | €0.50      |
+| **Total Compleet COGS**               |                                            | **€35.00** |
+| **Compleet GM**                       |                                            | **93.0%**  |
 
 ## Blended (70% Chat / 30% Compleet, once voice is live)
 
@@ -48,12 +48,12 @@ Until voice ships: 100% Chat → ARPU €299, GM ~96.7%.
 
 ## Where COGS could grow
 
-| Risk | Effect | Mitigation |
-|---|---|---|
-| Heavy chat users (>>300 conversations/mo) | +€2-5 Claude API per outlier client | Monitor per-client token spend; fair-use clause in MSA if needed |
-| Meta raises WhatsApp conversation fees | minor | Web chat is fee-free fallback; SMS via CM.com as backup channel |
-| TTS pricing (Compleet) | voice is the dominant COGS line | Validate real €/min before selling Compleet; swap TTS vendor if needed |
-| EU AI Act compliance audit costs | one-off ~€2-3k legal | Allocate against year-1 P&L, not COGS |
+| Risk                                      | Effect                              | Mitigation                                                             |
+| ----------------------------------------- | ----------------------------------- | ---------------------------------------------------------------------- |
+| Heavy chat users (>>300 conversations/mo) | +€2-5 Claude API per outlier client | Monitor per-client token spend; fair-use clause in MSA if needed       |
+| Meta raises WhatsApp conversation fees    | minor                               | Web chat is fee-free fallback; SMS via CM.com as backup channel        |
+| TTS pricing (Compleet)                    | voice is the dominant COGS line     | Validate real €/min before selling Compleet; swap TTS vendor if needed |
+| EU AI Act compliance audit costs          | one-off ~€2-3k legal                | Allocate against year-1 P&L, not COGS                                  |
 
 ## What's NOT in COGS
 

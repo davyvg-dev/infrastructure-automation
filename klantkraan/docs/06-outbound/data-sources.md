@@ -4,15 +4,15 @@
 
 ## Source ranking
 
-| Source | Cost | Output quality | Recommended use |
-|---|---|---|---|
-| **KvK Handelsregister API** | €6.40/mo subscription + €0.02/query (Zoeken free) | Authoritative for KvK + rechtsvorm filter + SBI | Primary — start every list here |
-| **Outscraper (Google Maps)** | ~€3/1k base + ~€11/1k email enrichment | Name + website + phone + sometimes email | Best price/quality combo |
-| **Apify Google Maps Scraper** | $4/1k base + $2/1k emails/socials | Customizable | If Outscraper has gaps |
-| **PhantomBuster** | $69/mo, 20h runtime | LinkedIn data | Skip unless we also do LinkedIn automation |
-| **Werkspot / Bouwnu / Installatie.nl directories** | Free | Low quality | Cross-reference only |
-| **Trade-association member lists** | Mostly public on websites | High trust signal | Manual extraction at small scale |
-| **Apollo / ZoomInfo** | $$$ | Mostly US-skewed, NL coverage thin | Avoid — wrong geography + GDPR provenance issues |
+| Source                                             | Cost                                              | Output quality                                  | Recommended use                                  |
+| -------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------ |
+| **KvK Handelsregister API**                        | €6.40/mo subscription + €0.02/query (Zoeken free) | Authoritative for KvK + rechtsvorm filter + SBI | Primary — start every list here                  |
+| **Outscraper (Google Maps)**                       | ~€3/1k base + ~€11/1k email enrichment            | Name + website + phone + sometimes email        | Best price/quality combo                         |
+| **Apify Google Maps Scraper**                      | $4/1k base + $2/1k emails/socials                 | Customizable                                    | If Outscraper has gaps                           |
+| **PhantomBuster**                                  | $69/mo, 20h runtime                               | LinkedIn data                                   | Skip unless we also do LinkedIn automation       |
+| **Werkspot / Bouwnu / Installatie.nl directories** | Free                                              | Low quality                                     | Cross-reference only                             |
+| **Trade-association member lists**                 | Mostly public on websites                         | High trust signal                               | Manual extraction at small scale                 |
+| **Apollo / ZoomInfo**                              | $$$                                               | Mostly US-skewed, NL coverage thin              | Avoid — wrong geography + GDPR provenance issues |
 
 ## KvK Handelsregister API (canonical first step)
 
@@ -36,12 +36,12 @@ Returns: KvK-nummer, handelsnaam, vestigingsadres, SBI, rechtsvorm, hoofdvestigi
 
 SBI codes to use:
 
-| SBI | Description |
-|---|---|
+| SBI  | Description                                                                                          |
+| ---- | ---------------------------------------------------------------------------------------------------- |
 | 4322 | Loodgieters- en fitterswerk, installatie van verwarmings- en luchtbehandelingsapparatuur en sanitair |
-| 4321 | Elektrische installatie |
-| 4329 | Overige bouwinstallatie (incl. dakdekkers koud-dakwerk) |
-| 4391 | Dakdekkers (warm-dakwerk + zink etc.) |
+| 4321 | Elektrische installatie                                                                              |
+| 4329 | Overige bouwinstallatie (incl. dakdekkers koud-dakwerk)                                              |
+| 4391 | Dakdekkers (warm-dakwerk + zink etc.)                                                                |
 
 Use 4322 + 4391 for the primary list.
 
@@ -50,6 +50,7 @@ Use 4322 + 4391 for the primary list.
 Why: KvK gives you the entity, but rarely a contact email. Outscraper Google-Maps scrape gives you the email + the live phone.
 
 Workflow (n8n):
+
 1. Query KvK for candidate entities by SBI + rechtsvorm + postcode.
 2. For each, run `Outscraper /maps/search` with `query = "{handelsnaam} {plaats}"` + `language = nl`.
 3. Outscraper returns: phone, website, social, sometimes email.
@@ -59,13 +60,13 @@ Workflow (n8n):
 
 Per-1,000-lead cost estimate:
 
-| Step | Cost / 1k |
-|---|---|
-| KvK Search-API queries | ~€20 |
-| Outscraper Maps base | €3 |
-| Outscraper email enrichment | €11 |
-| Email verification (MillionVerifier) | €1 |
-| **Total per 1k enriched, verified leads** | **~€35** |
+| Step                                      | Cost / 1k |
+| ----------------------------------------- | --------- |
+| KvK Search-API queries                    | ~€20      |
+| Outscraper Maps base                      | €3        |
+| Outscraper email enrichment               | €11       |
+| Email verification (MillionVerifier)      | €1        |
+| **Total per 1k enriched, verified leads** | **~€35**  |
 
 ## Trade-association member lists
 
@@ -78,6 +79,7 @@ These are high-quality signal — these owners are organized, business-minded. C
 ## Werkspot / Bouwnu / Installatie.nl
 
 Lower quality (often eenmanszaak, often new/temporary listings). Use only to:
+
 - Cross-reference whether a known BV is active
 - Spot trending sub-niches (e.g., "warmtepomp installatie" volume by region)
 
@@ -85,13 +87,13 @@ Don't scrape as primary source.
 
 ## What NOT to use
 
-| Source | Why not |
-|---|---|
-| **Apollo / ZoomInfo bulk export** | US-biased, lack documented Dutch GDPR provenance → AP would push the burden of proof onto us |
-| **Buying lists from data brokers (Datatrek etc.)** | Provenance opaque, often duplicated, often illegally collected |
-| **LinkedIn scrape → email finder** for eenmanszaak owners | Opt-in regime — non-compliant. AP has fined for exactly this. |
-| **WhatsApp number scrape** | No legitimate-interest defence works under Tw 11.7 |
-| **KvK list ignoring NMI** | Explicit prohibition for direct mail; signals bad faith regardless of channel |
+| Source                                                    | Why not                                                                                      |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Apollo / ZoomInfo bulk export**                         | US-biased, lack documented Dutch GDPR provenance → AP would push the burden of proof onto us |
+| **Buying lists from data brokers (Datatrek etc.)**        | Provenance opaque, often duplicated, often illegally collected                               |
+| **LinkedIn scrape → email finder** for eenmanszaak owners | Opt-in regime — non-compliant. AP has fined for exactly this.                                |
+| **WhatsApp number scrape**                                | No legitimate-interest defence works under Tw 11.7                                           |
+| **KvK list ignoring NMI**                                 | Explicit prohibition for direct mail; signals bad faith regardless of channel                |
 
 ## Suppression list (mandatory)
 
@@ -111,13 +113,13 @@ n8n checks this table before EVERY send (email, SMS, LinkedIn DM). One source of
 
 ## List hygiene cadence
 
-| Cadence | Action |
-|---|---|
-| Daily | Refresh suppressions from incoming "STOP" replies, AP-Bel-Me-Niet check |
-| Weekly | Re-verify the next-month send list via MillionVerifier |
-| Monthly | Re-fetch NMI flags from KvK; suppress any flipped to NMI = true |
-| Quarterly | De-duplicate; remove entries > 12 months old without engagement |
-| Annually | Re-do the LIA balancing assessment per campaign type |
+| Cadence   | Action                                                                  |
+| --------- | ----------------------------------------------------------------------- |
+| Daily     | Refresh suppressions from incoming "STOP" replies, AP-Bel-Me-Niet check |
+| Weekly    | Re-verify the next-month send list via MillionVerifier                  |
+| Monthly   | Re-fetch NMI flags from KvK; suppress any flipped to NMI = true         |
+| Quarterly | De-duplicate; remove entries > 12 months old without engagement         |
+| Annually  | Re-do the LIA balancing assessment per campaign type                    |
 
 ## Source
 

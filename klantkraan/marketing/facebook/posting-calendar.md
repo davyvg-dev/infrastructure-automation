@@ -12,12 +12,12 @@
 
 ## Plan (6 drafts, 4 weken)
 
-| Week | Dinsdag | Donderdag |
-|---|---|---|
-| 1 | fb-001 gemiste-call kosten (value) | fb-002 drie manieren (soft) |
-| 2 | fb-003 doorschakelcodes (value) | fb-004 AI-wet uitleg (value) |
-| 3 | fb-005 peiling (engagement) | fb-001 herhaling — andere groep, andere openingszin |
-| 4 | fb-003 herhaling — andere groep | fb-006 pilot-oproep (promo, alleen waar toegestaan) |
+| Week | Dinsdag                            | Donderdag                                           |
+| ---- | ---------------------------------- | --------------------------------------------------- |
+| 1    | fb-001 gemiste-call kosten (value) | fb-002 drie manieren (soft)                         |
+| 2    | fb-003 doorschakelcodes (value)    | fb-004 AI-wet uitleg (value)                        |
+| 3    | fb-005 peiling (engagement)        | fb-001 herhaling — andere groep, andere openingszin |
+| 4    | fb-003 herhaling — andere groep    | fb-006 pilot-oproep (promo, alleen waar toegestaan) |
 
 Volgorde-logica: geven → geven → betrekken → pas in week 4 vragen. Promo landt nadat de
 groep je als nuttig kent.
@@ -27,9 +27,10 @@ groep je als nuttig kent.
 Houd bij waar je wat plaatste, zodat je niet dubbelt en de ratio bewaakt:
 
 | Datum | Draft | Groep | Promo? | Reacties | Berichten/leads |
-|---|---|---|---|---|---|
-|  |  |  |  |  |  |
+| ----- | ----- | ----- | ------ | -------- | --------------- |
+|       |       |       |        |          |                 |
 
 ## Open punt
+
 - fb-006 (promo) pas plaatsen als er minstens 4 value-posts vooraf zijn gegaan in diezelfde
   groep. Anders kom je over als verkoper en verbrand je de groep.

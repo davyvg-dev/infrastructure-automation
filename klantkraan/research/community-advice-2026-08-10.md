@@ -8,6 +8,7 @@ Advice: check the call logs; latency usually comes from the LLM step — a faste
 lag noticeably. Crashes usually trace to a tool call or webhook timing out.
 
 Relevance:
+
 - We already lived the latency half on ElevenLabs: the Gemini-pool glitches and erratic TTFB
   (0.5s-13.7s) drove the switch to claude-haiku-4-5, and `calls.py latency` now measures it
   (median ~400ms). The advice validates the playbook: metrics first, then model choice.
@@ -27,6 +28,7 @@ qualifying leads, following up, booking, updating the CRM, improving the whole j
 "solve the entire front-desk problem."
 
 Relevance:
+
 - Confirms the existing strategy stack: workflow-depth moat (docs/01-strategy/
   workflow-depth-plan.md, "het kantoor dat meedraait" repositioning, WORKFLOW-MOAT.md) and
   the first-client research conclusion that the plain-receptionist niche got crowded in 2026.
@@ -43,6 +45,7 @@ check what's missing, summarize facts, flag risks, tee up a clean recommendation
 keeps the final 10%.
 
 Relevance:
+
 - This is a sharper articulation of what the receptionist already is: it does intake and
   preps the owner's callback decision. Worth stealing the framing for sales copy: "wij
   bereiden de beslissing voor, u beslist" — fits the honesty positioning and art. 50 story.

@@ -4,7 +4,7 @@
 > Basis: competitor + first-clients research (2026-07-24, `klantkraan/research/`). The free
 > pilot is retired: YC, SaaStr/Lemkin and Atlanta Ventures are unanimous that a free B2B pilot
 > is an "extended demo" that rarely converts; the "give the first 1-2 away free" counter-claim
-> was refuted in verification. A *named, time-boxed* founding-member rate discounts without
+> was refuted in verification. A _named, time-boxed_ founding-member rate discounts without
 > anchoring value low forever.
 >
 > **Deal mechanics (internal, decided 2026-07-31 on the founder's call):** on the €299 Chat
@@ -117,4 +117,4 @@ Tien plekken, tot 30 september. Daarna is het gewoon €299.
 
 ---
 
-*Klantkraan is een handelsnaam van T4 Software Consulting BV · KvK 90232135 · klantkraan.nl*
+_Klantkraan is een handelsnaam van T4 Software Consulting BV · KvK 90232135 · klantkraan.nl_

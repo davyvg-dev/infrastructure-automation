@@ -4,12 +4,12 @@
 
 ## Recommended cover
 
-| Cover | Why | Estimated premium (year 1) | Required at |
-|---|---|---|---|
-| **Beroepsaansprakelijkheid (PI) — ICT** | Faulty AI advice or bug causes client to miss €X in revenue → claim against Klantkraan | €40–80/mo | Before first client invoice |
-| **Bedrijfsaansprakelijkheid (AVB)** | Physical/property damage on a client site or in our office | €15–25/mo | Before first client invoice |
-| **Cyberverzekering** | Ransomware, AVG-boete defense, breach notification costs | €50–120/mo | Before first client invoice |
-| **Rechtsbijstand zakelijk** | Contract disputes, incasso, legal advice retainer | €25–40/mo | Optional — defer to month 3+ |
+| Cover                                   | Why                                                                                    | Estimated premium (year 1) | Required at                  |
+| --------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------- | ---------------------------- |
+| **Beroepsaansprakelijkheid (PI) — ICT** | Faulty AI advice or bug causes client to miss €X in revenue → claim against Klantkraan | €40–80/mo                  | Before first client invoice  |
+| **Bedrijfsaansprakelijkheid (AVB)**     | Physical/property damage on a client site or in our office                             | €15–25/mo                  | Before first client invoice  |
+| **Cyberverzekering**                    | Ransomware, AVG-boete defense, breach notification costs                               | €50–120/mo                 | Before first client invoice  |
+| **Rechtsbijstand zakelijk**             | Contract disputes, incasso, legal advice retainer                                      | €25–40/mo                  | Optional — defer to month 3+ |
 
 **Realistic total: €150–200/mo for the first three.** Target: locked in before invoicing pilot client #1.
 
@@ -21,14 +21,14 @@
 
 ## NL providers to quote
 
-| Provider | Notes |
-|---|---|
-| **Hiscox NL** | Best ICT-specific PI in NL. Online quote ~3 min. https://www.hiscox.nl/ |
-| **Centraal Beheer Achmea** | Strong bundled MKB pakketten |
-| **Klap (broker)** | Independent broker, good for cyber + niche cover |
-| **Allianz Bedrijven** | Comprehensive, slightly pricier |
-| **Nationale-Nederlanden** | Mid-market, decent rates |
-| **Aon** | If revenue scales >€500k ARR, worth a quote for more sophisticated cover |
+| Provider                   | Notes                                                                    |
+| -------------------------- | ------------------------------------------------------------------------ |
+| **Hiscox NL**              | Best ICT-specific PI in NL. Online quote ~3 min. https://www.hiscox.nl/  |
+| **Centraal Beheer Achmea** | Strong bundled MKB pakketten                                             |
+| **Klap (broker)**          | Independent broker, good for cyber + niche cover                         |
+| **Allianz Bedrijven**      | Comprehensive, slightly pricier                                          |
+| **Nationale-Nederlanden**  | Mid-market, decent rates                                                 |
+| **Aon**                    | If revenue scales >€500k ARR, worth a quote for more sophisticated cover |
 
 Stack PI + AVB combined often discounts ~15%.
 
@@ -51,16 +51,17 @@ Stack PI + AVB combined often discounts ~15%.
 
 ## When to upgrade
 
-| Trigger | Upgrade |
-|---|---|
-| 10 actieve klanten | Verhoog PI naar €1M / cyber naar €2M |
-| Eerste UK-klant | Add international cover endorsement |
-| Eerste werknemer / VA | Add werkgevers-aansprakelijkheid |
-| ARR > €250k | Consider a broker (Aon, Klap) for portfolio approach |
+| Trigger               | Upgrade                                              |
+| --------------------- | ---------------------------------------------------- |
+| 10 actieve klanten    | Verhoog PI naar €1M / cyber naar €2M                 |
+| Eerste UK-klant       | Add international cover endorsement                  |
+| Eerste werknemer / VA | Add werkgevers-aansprakelijkheid                     |
+| ARR > €250k           | Consider a broker (Aon, Klap) for portfolio approach |
 
 ## Cost / margin check
 
 At €170/mo blended insurance:
+
 - = €2,040/jaar
 - = €17/maand verspreid over 10 actieve klanten
 - = 0,3% van blended ARPU

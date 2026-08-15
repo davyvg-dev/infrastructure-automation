@@ -10,12 +10,13 @@ const lastUpdated = '20 mei 2026'
 >
   <article class="prose-legal">
     <header class="border-b border-(--color-line) pb-8">
-      <p class="text-micro uppercase tracking-wider text-(--color-dim)">Juridisch &middot; Bijlage 1 bij de algemene voorwaarden</p>
+      <p class="text-micro uppercase tracking-wider text-(--color-dim)">
+        Juridisch &middot; Bijlage 1 bij de algemene voorwaarden
+      </p>
       <h1 class="mt-2 font-display text-h1 text-(--color-chalk)">Service Level Agreement</h1>
       <p class="mt-4 text-small text-(--color-dim)">
         Laatste wijziging: {lastUpdated}. Deze SLA hoort bij de
-        <a href="/legal/voorwaarden/">algemene voorwaarden</a> en geldt voor alle klanten van
-        Klantkraan.
+        <a href="/legal/voorwaarden/">algemene voorwaarden</a> en geldt voor alle klanten van Klantkraan.
       </p>
     </header>
 
@@ -32,19 +33,32 @@ const lastUpdated = '20 mei 2026'
           <tbody class="divide-y divide-(--color-line)">
             <tr>
               <td class="py-2 pr-4 align-top">Beschikbaarheid</td>
-              <td class="py-2">Het percentage van de tijd binnen een kalendermaand dat de Dienst beschikbaar is voor normale operatie, gemeten van buitenaf via Uptime Kuma checks.</td>
+              <td class="py-2"
+                >Het percentage van de tijd binnen een kalendermaand dat de Dienst beschikbaar is
+                voor normale operatie, gemeten van buitenaf via Uptime Kuma checks.</td
+              >
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Geplande Downtime</td>
-              <td class="py-2">Aangekondigd onderhoud, minimaal 7 dagen vooraf, maximaal 1x per maand, binnen het onderhoudsvenster zondagavond 22:00&ndash;02:00 CET.</td>
+              <td class="py-2"
+                >Aangekondigd onderhoud, minimaal 7 dagen vooraf, maximaal 1x per maand, binnen het
+                onderhoudsvenster zondagavond 22:00&ndash;02:00 CET.</td
+              >
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Niet-toerekenbare Downtime</td>
-              <td class="py-2">Uitval die niet aan Klantkraan is toe te rekenen: sub-processor outage (Anthropic, Twilio, Cloudflare), internetstoring, overmacht, besluit van de toezichthouder of door Klant veroorzaakte issues.</td>
+              <td class="py-2"
+                >Uitval die niet aan Klantkraan is toe te rekenen: sub-processor outage (Anthropic,
+                Twilio, Cloudflare), internetstoring, overmacht, besluit van de toezichthouder of
+                door Klant veroorzaakte issues.</td
+              >
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Service Credit</td>
-              <td class="py-2">Een terugbetaling op de volgende maandfactuur, uitgedrukt als percentage van de maandfee.</td>
+              <td class="py-2"
+                >Een terugbetaling op de volgende maandfactuur, uitgedrukt als percentage van de
+                maandfee.</td
+              >
             </tr>
           </tbody>
         </table>
@@ -71,9 +85,21 @@ const lastUpdated = '20 mei 2026'
             </tr>
           </thead>
           <tbody class="divide-y divide-(--color-line)">
-            <tr><td class="py-2 pr-4">98,0% &ndash; 98,99%</td><td class="py-2">5% van de maandfee</td></tr>
-            <tr><td class="py-2 pr-4">95,0% &ndash; 97,99%</td><td class="py-2">10% van de maandfee</td></tr>
-            <tr><td class="py-2 pr-4">&lt; 95,0%</td><td class="py-2">10% van de maandfee plus het recht om kosteloos op te zeggen</td></tr>
+            <tr
+              ><td class="py-2 pr-4">98,0% &ndash; 98,99%</td><td class="py-2"
+                >5% van de maandfee</td
+              ></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">95,0% &ndash; 97,99%</td><td class="py-2"
+                >10% van de maandfee</td
+              ></tr
+            >
+            <tr
+              ><td class="py-2 pr-4">&lt; 95,0%</td><td class="py-2"
+                >10% van de maandfee plus het recht om kosteloos op te zeggen</td
+              ></tr
+            >
           </tbody>
         </table>
       </div>
@@ -108,13 +134,16 @@ const lastUpdated = '20 mei 2026'
           <tbody class="divide-y divide-(--color-line)">
             <tr>
               <td class="py-2 pr-4">S1 &mdash; Critical</td>
-              <td class="py-2 pr-4">Volledige dienst-uitval, geen gesprekken worden afgehandeld.</td>
+              <td class="py-2 pr-4">Volledige dienst-uitval, geen gesprekken worden afgehandeld.</td
+              >
               <td class="py-2 pr-4">&le; 30 min</td>
               <td class="py-2">&le; 4 uur</td>
             </tr>
             <tr>
               <td class="py-2 pr-4">S2 &mdash; High</td>
-              <td class="py-2 pr-4">Significant deel uitgevallen (bijvoorbeeld WhatsApp werkt niet).</td>
+              <td class="py-2 pr-4"
+                >Significant deel uitgevallen (bijvoorbeeld WhatsApp werkt niet).</td
+              >
               <td class="py-2 pr-4">&le; 2 uur</td>
               <td class="py-2">&le; 8 uur werkuren</td>
             </tr>
@@ -152,7 +181,10 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">7. Beperkingen</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
-        <li>Klant meldt het incident via <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a> of WhatsApp om credit-recht in te roepen.</li>
+        <li>
+          Klant meldt het incident via <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a> of
+          WhatsApp om credit-recht in te roepen.
+        </li>
         <li>Credit-aanvragen moeten binnen 30 dagen na het incident worden ingediend.</li>
         <li>Geen credits voor downtime tijdens trial of de eerste 50%-korting-maand.</li>
       </ul>

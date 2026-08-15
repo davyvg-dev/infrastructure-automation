@@ -9,6 +9,7 @@ character_count: 1255
 # Eerste 3 loodgieters van mei — DM open (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 3, post 12) zegt: soft CTA "Eerste 3 loodgieters van mei: stuur me een DM". Direct verkoop-post — moet vrij staan in de cadans, niet meteen na een andere verkoop-post.
 - Hook test: schaarste in de eerste regel ("3 plekken, mei"). Niet "we zoeken klanten".
 - Cadans: wat je krijgt, wat je betaalt, waarom alleen 3. Geen marketing-fluff.
@@ -22,6 +23,7 @@ Drie plekken open in deze pilot-ronde. Daarna sluit deze lichting.
 Wie ik zoek: loodgieter met 2–8 monteurs, in de Randstad of het oosten, die structureel klanten misloopt omdat er tijdens een klus niemand reageert op vragen en aanvragen.
 
 Wat je krijgt de eerste 2 maanden:
+
 - Nederlandstalige AI-receptionist op je website en WhatsApp, 24/7
 - Beantwoordt klantvragen over je diensten en tarieven
 - Plant afspraken direct in je agenda
@@ -30,16 +32,19 @@ Wat je krijgt de eerste 2 maanden:
 - Gewoon per maand opzegbaar — geen lock-in
 
 Wat het kost:
+
 - Maand 1: €149,50 (de helft van het reguliere tarief)
 - Maand 2 en verder: €299 per maand
 - Setup: €0 (pilotkorting — normaal €249)
 
 Waarom alleen drie:
+
 - Ik bouw nog. Drie pilots is wat ik kwalitatief kan begeleiden.
 - Ik leer van jullie scripts, tarieven, edge-cases. Die input gaat terug in de productie-flow.
 - Geen marketing-truc — als plek 4 zich meldt, pak ik hem in de volgende ronde.
 
 Wat ik vraag terug:
+
 - Eén check-in per week (15 min, op een tijd die jou uitkomt)
 - Toestemming voor één anonieme case study na 30 dagen
 

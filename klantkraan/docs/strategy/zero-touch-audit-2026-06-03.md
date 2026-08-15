@@ -27,27 +27,27 @@ Every recurring founder activity in the current design, classified by automation
 
 ### 1.1 Pre-sale + sale
 
-| Touchpoint | Current owner | Time/client | Status | Automation path |
-|---|---|---|---|---|
-| Lead reply (WhatsApp/form) | Founder | 5-15 min | Manual | AI BDR with Claude API, qualifies and books |
-| Discovery call (20 min) | Founder | 20 min | Manual | Recorded sales video + structured Tally → if-qualified path |
-| Offerte generation | Founder | 10 min | Manual | Self-serve pricing page → Mollie subscription link |
-| Contract signing | Manual chase | 5 min | Semi-manual | Documenso/SignWell templated, auto-sent on signup |
-| Payment setup | Founder | 5 min | Manual | Mollie SEPA mandate self-serve at signup |
+| Touchpoint                 | Current owner | Time/client | Status      | Automation path                                             |
+| -------------------------- | ------------- | ----------- | ----------- | ----------------------------------------------------------- |
+| Lead reply (WhatsApp/form) | Founder       | 5-15 min    | Manual      | AI BDR with Claude API, qualifies and books                 |
+| Discovery call (20 min)    | Founder       | 20 min      | Manual      | Recorded sales video + structured Tally → if-qualified path |
+| Offerte generation         | Founder       | 10 min      | Manual      | Self-serve pricing page → Mollie subscription link          |
+| Contract signing           | Manual chase  | 5 min       | Semi-manual | Documenso/SignWell templated, auto-sent on signup           |
+| Payment setup              | Founder       | 5 min       | Manual      | Mollie SEPA mandate self-serve at signup                    |
 
 **Total pre-sale: ~45-55 min per closed deal**
 
 ### 1.2 Onboarding (the 30-day playbook)
 
-| Day | Touchpoint | Current time | Status | Automation path |
-|---|---|---|---|---|
-| 1 | Intake review + gap-fill via WhatsApp | 15 min | Manual | Tally → validate-and-prompt with AI for missing fields |
-| 2 | Kickoff call | 15 min | Manual | Skip; replace with 90-sec welcome video + auto-WhatsApp confirm |
-| 3 | Synthflow prompt fine-tune (regio/FAQ/tone) | 30 min | Manual | AI-generated prompt from intake + 3 templates per branche |
-| 5 | Founder test calls (5 scenarios) | 20 min | Manual | Synthetic test calls via Synthflow API + automated quality scoring |
-| 7 | Prompt adjustments based on testbel feedback | 10 min | Manual | Client self-edits 5 highlighted variables in dashboard |
-| 14 | Check-in call | 5 min | Manual | Auto-NPS prompt in dashboard + email if score <8 |
-| 30 | Month-1 review + case-study Loom | 45 min | Manual | Auto-generated PDF report + opt-in case-study form |
+| Day | Touchpoint                                   | Current time | Status | Automation path                                                    |
+| --- | -------------------------------------------- | ------------ | ------ | ------------------------------------------------------------------ |
+| 1   | Intake review + gap-fill via WhatsApp        | 15 min       | Manual | Tally → validate-and-prompt with AI for missing fields             |
+| 2   | Kickoff call                                 | 15 min       | Manual | Skip; replace with 90-sec welcome video + auto-WhatsApp confirm    |
+| 3   | Synthflow prompt fine-tune (regio/FAQ/tone)  | 30 min       | Manual | AI-generated prompt from intake + 3 templates per branche          |
+| 5   | Founder test calls (5 scenarios)             | 20 min       | Manual | Synthetic test calls via Synthflow API + automated quality scoring |
+| 7   | Prompt adjustments based on testbel feedback | 10 min       | Manual | Client self-edits 5 highlighted variables in dashboard             |
+| 14  | Check-in call                                | 5 min        | Manual | Auto-NPS prompt in dashboard + email if score <8                   |
+| 30  | Month-1 review + case-study Loom             | 45 min       | Manual | Auto-generated PDF report + opt-in case-study form                 |
 
 **Total onboarding: 2h 10m per client (per the doc).**
 **After full automation: ~15 min residual (edge-case escalations only).**
@@ -69,16 +69,17 @@ These are ALREADY zero-touch in the current design:
 
 Per the churn-prevention doc:
 
-| Touchpoint | Frequency | Time/client | Status | Automation path |
-|---|---|---|---|---|
-| Monthly Loom of top-3 recovered calls | Monthly | 30 min | **Manual — explicitly the highest-leverage retention asset** | Replace with auto-generated email: "Vandaag had je gesprek X om Y. Naar onze schatting was dat €Z." |
-| Day-45 case-study capture call | Once per client | 10 min | Manual | Replace with auto-NPS + opt-in case-study form |
-| Quarterly check-in calls | Quarterly | 15 min | Manual | Auto-NPS at day 90/180/270 → only call if score drops |
-| Reactive WhatsApp support | Variable | 5-20 min/incident | Manual | AI support agent on docs + community Discord |
-| Edge-case Synthflow prompt tweaks | Ad-hoc | 10-30 min/incident | Manual | Self-edit dashboard for safe fields; AI assistant for complex |
-| Carrier-forwarding troubleshoots | Ad-hoc | 10-15 min/incident | Manual | Pre-recorded Loom library per carrier (already in onboarding doc) + AI support agent |
+| Touchpoint                            | Frequency       | Time/client        | Status                                                       | Automation path                                                                                     |
+| ------------------------------------- | --------------- | ------------------ | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| Monthly Loom of top-3 recovered calls | Monthly         | 30 min             | **Manual — explicitly the highest-leverage retention asset** | Replace with auto-generated email: "Vandaag had je gesprek X om Y. Naar onze schatting was dat €Z." |
+| Day-45 case-study capture call        | Once per client | 10 min             | Manual                                                       | Replace with auto-NPS + opt-in case-study form                                                      |
+| Quarterly check-in calls              | Quarterly       | 15 min             | Manual                                                       | Auto-NPS at day 90/180/270 → only call if score drops                                               |
+| Reactive WhatsApp support             | Variable        | 5-20 min/incident  | Manual                                                       | AI support agent on docs + community Discord                                                        |
+| Edge-case Synthflow prompt tweaks     | Ad-hoc          | 10-30 min/incident | Manual                                                       | Self-edit dashboard for safe fields; AI assistant for complex                                       |
+| Carrier-forwarding troubleshoots      | Ad-hoc          | 10-15 min/incident | Manual                                                       | Pre-recorded Loom library per carrier (already in onboarding doc) + AI support agent                |
 
 **Realistic monthly load at 30 clients (per current design):**
+
 - Monthly Loom: 30 × 30 min = 900 min = 15 hrs
 - Quarterly check-ins (1/3 per month): 10 × 15 = 150 min = 2.5 hrs
 - Support: ~30 incidents × 12 min avg = 6 hrs
@@ -88,13 +89,13 @@ At 50 clients: ~39 hrs/month. **Founder becomes the bottleneck before MRR even h
 
 ### 1.5 Admin + finance
 
-| Touchpoint | Current owner | Frequency | Status | Automation path |
-|---|---|---|---|---|
-| Monthly invoicing | Mollie + Moneybird | Monthly | ✅ Auto (once wired) | — |
-| Payment reconciliation | Moneybird | Monthly | ✅ Auto | — |
-| BTW return + ICP | Founder + accountant | Quarterly | Semi-auto | Accountant handles; founder reviews |
-| Churn off-boarding | Founder | Per cancellation | Manual | Self-serve cancel button + auto data export + auto DPA wipe job |
-| MRR / KPI review | Founder | Weekly | Manual | Auto-Slack weekly digest from Postgres |
+| Touchpoint             | Current owner        | Frequency        | Status               | Automation path                                                 |
+| ---------------------- | -------------------- | ---------------- | -------------------- | --------------------------------------------------------------- |
+| Monthly invoicing      | Mollie + Moneybird   | Monthly          | ✅ Auto (once wired) | —                                                               |
+| Payment reconciliation | Moneybird            | Monthly          | ✅ Auto              | —                                                               |
+| BTW return + ICP       | Founder + accountant | Quarterly        | Semi-auto            | Accountant handles; founder reviews                             |
+| Churn off-boarding     | Founder              | Per cancellation | Manual               | Self-serve cancel button + auto data export + auto DPA wipe job |
+| MRR / KPI review       | Founder              | Weekly           | Manual               | Auto-Slack weekly digest from Postgres                          |
 
 ---
 
@@ -103,11 +104,13 @@ At 50 clients: ~39 hrs/month. **Founder becomes the bottleneck before MRR even h
 This is the load-bearing assumption that determines everything downstream.
 
 **What voice AI does well in 2026 (Synthflow class):**
+
 - Standard inbound: name capture, problem description, postcode/huisnummer, callback scheduling
 - Known FAQs from the prompt
 - Stays within scripted flow for 80-90% of calls
 
 **What it fumbles:**
+
 - Strong dialects (Limburgs, Brabants, Twents) — degraded transcription
 - Frustrated/angry callers — agent doesn't de-escalate as well as humans
 - Multi-issue calls ("I have a leak AND need a quote for a new boiler AND...")
@@ -116,6 +119,7 @@ This is the load-bearing assumption that determines everything downstream.
 - Novel request types not in the prompt (e.g., "do you do solar panels too?")
 
 **Per the existing risk register (`10-ops/risk-register.md`) and onboarding doc § "What can go wrong":**
+
 > "Synthflow agent says wrong thing on first day | Daily review of first 50 calls, manual prompt tweak, redeploy in <30 min"
 
 This is the founder's current safety net. **Eliminating this without replacing it is a churn risk.** The replacement options:
@@ -138,6 +142,7 @@ The honest answer: **a combination of 2 and 4**. Build the auto-fallback (low en
 **Pricing:** €99-149/mo flat.
 
 **Pros:**
+
 - Truly zero-touch — n8n + CM.com + Postgres run themselves, no per-client config
 - No voice AI edge cases to handle
 - Onboarding shrinks to a Tally form + an automated CM.com number provision
@@ -146,13 +151,14 @@ The honest answer: **a combination of 2 and 4**. Build the auto-fallback (low en
 - Compliance simpler (no AI Act art. 50 exposure on voice)
 
 **Cons:**
+
 - ARPU drops from €540 blended to ~€129. At 20% churn, LTV drops from €27,900 → ~€6,400.
 - You need ~4× more clients for the same MRR.
 - Competitive moat is weak — SMS+review automation is commoditized.
 - You'd be one of several similar products (Trustoo, Bouwgarant, etc.)
 - The "AI receptionist that knows voorrijkosten" is the marketing wedge. Dropping it weakens the pitch.
 
-**Verdict:** Viable as a *second* product (see Path C). Not great as the only product.
+**Verdict:** Viable as a _second_ product (see Path C). Not great as the only product.
 
 ### Path B: Build heavy self-serve for the full stack.
 
@@ -160,29 +166,31 @@ The honest answer: **a combination of 2 and 4**. Build the auto-fallback (low en
 
 **Engineering required (in order of effort):**
 
-| Build | Effort | Eliminates |
-|---|---|---|
-| AI-generated Synthflow prompt from intake (Claude API + 3 branche templates) | 1-2 weeks | Day-3 prompt tuning, ongoing tweaks |
-| Self-serve dashboard config (8 safe fields: pricing, hours, FAQs, holiday mode) | 1 week | Ongoing customer-driven prompt tweaks |
-| Auto-fallback on low-confidence calls (Synthflow webhook → SMS to client) | 2-3 days | Edge-case escalations to founder |
-| Automated test-call suite (5 synthetic calls per onboarding, quality-scored) | 1 week | Day-5 founder test calls |
-| AI support agent on docs (Claude on the docs/ folder) | 3-5 days | Tier-1 WhatsApp support |
-| Pre-recorded carrier Loom library | Already in plan | Forwarding troubleshoots |
-| Auto-value emails replacing Loom reviews (monthly stats with €-estimates) | 1 week | The 30-min/client/month Loom recording |
-| Self-serve cancellation + auto data export | 3-5 days | Off-boarding |
-| AI-generated case study draft (Claude on call transcripts + dashboard data) | 1 week | Day-45 case-study call |
-| Self-serve onboarding wizard (15-min flow, no human) | 2 weeks | Most of the 30-day playbook |
-| In-app NPS + auto-rescue triggers | 1 week | Check-in calls |
+| Build                                                                           | Effort          | Eliminates                             |
+| ------------------------------------------------------------------------------- | --------------- | -------------------------------------- |
+| AI-generated Synthflow prompt from intake (Claude API + 3 branche templates)    | 1-2 weeks       | Day-3 prompt tuning, ongoing tweaks    |
+| Self-serve dashboard config (8 safe fields: pricing, hours, FAQs, holiday mode) | 1 week          | Ongoing customer-driven prompt tweaks  |
+| Auto-fallback on low-confidence calls (Synthflow webhook → SMS to client)       | 2-3 days        | Edge-case escalations to founder       |
+| Automated test-call suite (5 synthetic calls per onboarding, quality-scored)    | 1 week          | Day-5 founder test calls               |
+| AI support agent on docs (Claude on the docs/ folder)                           | 3-5 days        | Tier-1 WhatsApp support                |
+| Pre-recorded carrier Loom library                                               | Already in plan | Forwarding troubleshoots               |
+| Auto-value emails replacing Loom reviews (monthly stats with €-estimates)       | 1 week          | The 30-min/client/month Loom recording |
+| Self-serve cancellation + auto data export                                      | 3-5 days        | Off-boarding                           |
+| AI-generated case study draft (Claude on call transcripts + dashboard data)     | 1 week          | Day-45 case-study call                 |
+| Self-serve onboarding wizard (15-min flow, no human)                            | 2 weeks         | Most of the 30-day playbook            |
+| In-app NPS + auto-rescue triggers                                               | 1 week          | Check-in calls                         |
 
 **Total: ~8-10 weeks focused engineering, doable in 12-14 calendar weeks alongside support of early pilots.**
 
 **Pros:**
+
 - Preserves €540 ARPU and the marketing wedge
 - Voice AI as the differentiator stays
 - Compounding asset: every fix improves the product for all current and future clients
 - Founder eliminates self from the loop progressively
 
 **Cons:**
+
 - Hard. Lots of integration work. Each piece has edge cases.
 - AI-generated prompts can produce worse Synthflow quality than founder-tuned (in early phase)
 - The "founder personally tunes your agent" promise becomes a lie if it's actually AI-generated. Be honest about it in copy.
@@ -197,18 +205,20 @@ The honest answer: **a combination of 2 and 4**. Build the auto-fallback (low en
 **Premium (managed):** Voice AI + custom onboarding + monthly founder Loom + quarterly review calls. €849-1,499/mo. Positioned as a managed service.
 
 **Pros:**
+
 - Zero-touch product exists immediately (Lite is easy to build)
 - Premium captures the "founder hands-on" buyers at higher ARPU than today
 - Customer self-selects; you don't have to defend either positioning
 - Premium funds the engineering needed to gradually move Premium → Lite features
 
 **Cons:**
+
 - Two products = two marketing pages, two sales motions, two onboarding flows
 - Premium ARPU has a ceiling because there's only one of you (~30 Premium clients = full-time)
 - The "Klantkraan brand" gets split-personality risk
 - Founder still has the same retention burden on Premium; just at higher per-client revenue
 
-**Verdict:** A good *transitional* model. Use Premium as a profitable bridge while building Lite. Long-term, migrate everyone toward Lite as it matures.
+**Verdict:** A good _transitional_ model. Use Premium as a profitable bridge while building Lite. Long-term, migrate everyone toward Lite as it matures.
 
 ---
 
@@ -220,15 +230,15 @@ The right answer is **Path B with three modifications**:
 
 Before building anything: **decide what to KILL.**
 
-| Feature | Action |
-|---|---|
-| Tier 3 Max (€849) — custom integrations | **Kill.** Custom integrations were never going to be zero-touch. Anyone who needs them buys consulting from someone else. |
-| Monthly founder Loom reviews | **Kill.** Replace with auto-generated stats + sample-clip emails. |
-| Day-45 case-study capture call | **Kill.** Replace with auto-form after 60 days. |
-| Founder fine-tuned prompts | **Kill.** Replace with AI-generated prompts + 8 self-editable fields. |
-| 15-min kickoff call | **Kill.** Replace with 90-sec welcome video + WhatsApp confirm. |
-| Founder testbellen | **Kill.** Replace with automated synthetic test calls. |
-| "Spreek de oprichter" promise on the site | **Reframe.** Keep it for sales, but explicit that it's pre-sale only. Post-sale support is the AI agent + Discord. |
+| Feature                                   | Action                                                                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Tier 3 Max (€849) — custom integrations   | **Kill.** Custom integrations were never going to be zero-touch. Anyone who needs them buys consulting from someone else. |
+| Monthly founder Loom reviews              | **Kill.** Replace with auto-generated stats + sample-clip emails.                                                         |
+| Day-45 case-study capture call            | **Kill.** Replace with auto-form after 60 days.                                                                           |
+| Founder fine-tuned prompts                | **Kill.** Replace with AI-generated prompts + 8 self-editable fields.                                                     |
+| 15-min kickoff call                       | **Kill.** Replace with 90-sec welcome video + WhatsApp confirm.                                                           |
+| Founder testbellen                        | **Kill.** Replace with automated synthetic test calls.                                                                    |
+| "Spreek de oprichter" promise on the site | **Reframe.** Keep it for sales, but explicit that it's pre-sale only. Post-sale support is the AI agent + Discord.        |
 
 This is the **single most important step.** Every feature you keep is a touchpoint to automate or maintain. Ship a smaller product.
 
@@ -261,14 +271,14 @@ By the time you hit client #20, the price should be a flat €349/mo with zero "
 
 This is the hardest part. Zero-touch costs you specific advantages:
 
-| What you lose | Why it hurts | Worth it? |
-|---|---|---|
-| **The "founder personally tunes your agent" promise** | This was the differentiation against US tools (Podium etc.) | YES — at scale, this promise becomes a lie anyway |
-| **The Tier 3 Max revenue** | ~15% of mix at €849 = ~€127/blended-ARPU | YES — Tier 3 was always going to be a manual loss-leader |
-| **The monthly Loom retention asset** | Churn-prevention doc calls this the "single highest-leverage retention artifact in the entire business" | RISKY — replace with auto-value emails and *measure churn impact*. If churn rises >2pp, rebuild a semi-automated Loom (AI-generated from call transcript + 30-sec founder voiceover) |
-| **The personal touch in sales** | Discovery calls convert well | YES — replace with self-serve trial + Mollie self-checkout. Conversion will drop, but volume will scale. |
-| **High blended ARPU** | €540 → probably €299-349 once Tier 3 is killed and Pro becomes self-serve | NEUTRAL — at scale, this is fine. The math (LTV/CAC) still works at €299. |
-| **The control over voice quality** | Each manual prompt tune protected against fumbles | RISKY — needs the auto-fallback as a safety net |
+| What you lose                                         | Why it hurts                                                                                            | Worth it?                                                                                                                                                                            |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **The "founder personally tunes your agent" promise** | This was the differentiation against US tools (Podium etc.)                                             | YES — at scale, this promise becomes a lie anyway                                                                                                                                    |
+| **The Tier 3 Max revenue**                            | ~15% of mix at €849 = ~€127/blended-ARPU                                                                | YES — Tier 3 was always going to be a manual loss-leader                                                                                                                             |
+| **The monthly Loom retention asset**                  | Churn-prevention doc calls this the "single highest-leverage retention artifact in the entire business" | RISKY — replace with auto-value emails and _measure churn impact_. If churn rises >2pp, rebuild a semi-automated Loom (AI-generated from call transcript + 30-sec founder voiceover) |
+| **The personal touch in sales**                       | Discovery calls convert well                                                                            | YES — replace with self-serve trial + Mollie self-checkout. Conversion will drop, but volume will scale.                                                                             |
+| **High blended ARPU**                                 | €540 → probably €299-349 once Tier 3 is killed and Pro becomes self-serve                               | NEUTRAL — at scale, this is fine. The math (LTV/CAC) still works at €299.                                                                                                            |
+| **The control over voice quality**                    | Each manual prompt tune protected against fumbles                                                       | RISKY — needs the auto-fallback as a safety net                                                                                                                                      |
 
 ---
 
@@ -276,53 +286,59 @@ This is the hardest part. Zero-touch costs you specific advantages:
 
 Comparison: current design vs. zero-touch Path B + pruning.
 
-| Metric | Current design | Zero-touch (Path B) |
-|---|---|---|
-| Tier mix | 30% Lite / 55% Pro / 15% Max | 40% Lite / 60% Pro / 0% Max |
-| Blended ARPU | €540 | €299 |
-| GM | 95% | 92% (AI generation + storage costs slightly higher) |
-| Founder time per client / mo | ~45 min | ~5 min (residual edge cases only) |
-| Onboarding founder time | 130 min | 0 min |
-| Realistic ceiling | 50 clients before bottleneck | 500+ clients before bottleneck |
-| MRR for breakeven | ~€4,700 (~9 clients) | ~€4,700 (~16 clients) |
-| MRR at the ceiling | ~€27k (current) | ~€150k (zero-touch) |
-| LTV / CAC at €200 CAC | 140× | ~78× |
-| Time to first €10k MRR | ~M5-6 | ~M8-10 (more clients needed) |
-| Risk profile | Hits founder ceiling fast | Long ramp but no ceiling |
+| Metric                       | Current design               | Zero-touch (Path B)                                 |
+| ---------------------------- | ---------------------------- | --------------------------------------------------- |
+| Tier mix                     | 30% Lite / 55% Pro / 15% Max | 40% Lite / 60% Pro / 0% Max                         |
+| Blended ARPU                 | €540                         | €299                                                |
+| GM                           | 95%                          | 92% (AI generation + storage costs slightly higher) |
+| Founder time per client / mo | ~45 min                      | ~5 min (residual edge cases only)                   |
+| Onboarding founder time      | 130 min                      | 0 min                                               |
+| Realistic ceiling            | 50 clients before bottleneck | 500+ clients before bottleneck                      |
+| MRR for breakeven            | ~€4,700 (~9 clients)         | ~€4,700 (~16 clients)                               |
+| MRR at the ceiling           | ~€27k (current)              | ~€150k (zero-touch)                                 |
+| LTV / CAC at €200 CAC        | 140×                         | ~78×                                                |
+| Time to first €10k MRR       | ~M5-6                        | ~M8-10 (more clients needed)                        |
+| Risk profile                 | Hits founder ceiling fast    | Long ramp but no ceiling                            |
 
-**Take-away:** zero-touch is *slower* to revenue per client but has *no ceiling*. It's the right model if you want a real software business. The current high-touch model maxes out at a higher per-client revenue but caps you at a 30-50 client bottleneck.
+**Take-away:** zero-touch is _slower_ to revenue per client but has _no ceiling_. It's the right model if you want a real software business. The current high-touch model maxes out at a higher per-client revenue but caps you at a 30-50 client bottleneck.
 
 ---
 
 ## 7. The 90-day build sequence
 
 Weeks 1-2: **AI-generated Synthflow prompts.**
+
 - 3 templates per branche (loodgieter, dakdekker, elektricien)
 - Claude API call with intake form data → fills in 12 variables
 - Preview & approve UI in client dashboard
 - DELIVERS: eliminates Day-3 founder time (30 min × N clients)
 
 Week 3: **Auto-fallback on low-confidence calls.**
+
 - Synthflow webhook → confidence score parsing → if < threshold, SMS client owner
 - Documented as "the human safety net" in the FAQ
 - DELIVERS: eliminates ~80% of edge-case support tickets
 
 Weeks 4-5: **Self-serve onboarding wizard.**
+
 - Tally intake → n8n → CM.com number provision → Synthflow agent creation → forwarding Loom → "ready" page
 - 15 min end-to-end, no human in the loop
 - DELIVERS: kills the 2h 10m playbook entirely
 
 Week 6: **AI support agent.**
+
 - Claude API on `docs/` folder + 100 sample WhatsApp answers
 - Embedded in dashboard widget + WhatsApp Business Bot
 - Escalation to founder only if AI confidence < threshold
 - DELIVERS: eliminates ~70% of Tier-1 support load
 
 Weeks 7-8: **Auto-value emails replacing Loom.**
+
 - Cron: query Postgres → top-3 calls → €-estimate → Resend
 - DELIVERS: eliminates the monthly 30-min/client/month retention work
 
 Weeks 9-10: **Self-serve cancellation, data export, DPA wipe.**
+
 - Button in dashboard → Mollie cancel → n8n export → scheduled wipe job
 - DELIVERS: closes the loop; no human touch needed at any lifecycle stage
 
@@ -365,7 +381,7 @@ If you commit to Path B:
 4. **Update `03-delivery/churn-prevention.md`** to swap manual Loom for auto-value email.
 5. **Build the AI-generated Synthflow prompt service first** — single highest-leverage automation.
 
-If you're not sure: pilot one client *with the current manual playbook*. Track exact time spent. Validate or invalidate the 2h 10m assumption with a real data point before committing to the engineering investment.
+If you're not sure: pilot one client _with the current manual playbook_. Track exact time spent. Validate or invalidate the 2h 10m assumption with a real data point before committing to the engineering investment.
 
 ---
 

@@ -4,23 +4,23 @@
 
 ## The governing rules
 
-| Rule | Source | What it says (B2B email) |
-|---|---|---|
-| ePrivacy Directive | EU 2002/58/EC | Member states implement direct-marketing consent rules |
-| Telecommunicatiewet art. 11.7 | Dutch implementation | Direct marketing rules per recipient type |
-| AVG (GDPR) art. 6 | EU 2016/679 | Legal basis required for any personal-data processing |
-| EU AI Act art. 50 | EU 2024/1689 | (Doesn't apply to outbound directly, but to the receptionist AI we sell) |
+| Rule                          | Source               | What it says (B2B email)                                                 |
+| ----------------------------- | -------------------- | ------------------------------------------------------------------------ |
+| ePrivacy Directive            | EU 2002/58/EC        | Member states implement direct-marketing consent rules                   |
+| Telecommunicatiewet art. 11.7 | Dutch implementation | Direct marketing rules per recipient type                                |
+| AVG (GDPR) art. 6             | EU 2016/679          | Legal basis required for any personal-data processing                    |
+| EU AI Act art. 50             | EU 2024/1689         | (Doesn't apply to outbound directly, but to the receptionist AI we sell) |
 
 Enforcers: **Autoriteit Persoonsgegevens (AP)** for AVG, **ACM** for telemarketing.
 
 ## Recipient classification (this is everything)
 
-| Type | Treatment | Cold-email legality |
-|---|---|---|
-| **BV, NV, stichting, vereniging, coöperatie** | Legal entities | **Opt-out** regime — cold email allowed if address is publicly disclosed by company without restriction, message has clear sender ID, every message offers easy opt-out, legal basis is Art. 6(1)(f) legitimate interest with LIA documented |
-| **eenmanszaak, VOF, maatschap, CV, ZZP'er** | Natural persons (Dutch law treats them as individuals) | **Opt-in** required. Cold email prohibited unless prior consent OR existing customer relationship for similar products/services |
-| Sole director of a BV with `info@bedrijf.nl` | Treated by company (BV) | Opt-out OK |
-| Sole director of a BV with `jan@bedrijf.nl` | Borderline — generic enough? | Conservative: BV opt-out; safer: treat as personal |
+| Type                                          | Treatment                                              | Cold-email legality                                                                                                                                                                                                                          |
+| --------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **BV, NV, stichting, vereniging, coöperatie** | Legal entities                                         | **Opt-out** regime — cold email allowed if address is publicly disclosed by company without restriction, message has clear sender ID, every message offers easy opt-out, legal basis is Art. 6(1)(f) legitimate interest with LIA documented |
+| **eenmanszaak, VOF, maatschap, CV, ZZP'er**   | Natural persons (Dutch law treats them as individuals) | **Opt-in** required. Cold email prohibited unless prior consent OR existing customer relationship for similar products/services                                                                                                              |
+| Sole director of a BV with `info@bedrijf.nl`  | Treated by company (BV)                                | Opt-out OK                                                                                                                                                                                                                                   |
+| Sole director of a BV with `jan@bedrijf.nl`   | Borderline — generic enough?                           | Conservative: BV opt-out; safer: treat as personal                                                                                                                                                                                           |
 
 **Practical rule**: filter the outbound list strictly to BVs. KvK API provides this filter via `rechtsvorm` field. Eenmanszaak and VOF go on a different channel (LinkedIn DM is still tricky — see below — but content + inbound is safe).
 
@@ -36,7 +36,7 @@ Practical impact: LinkedIn outreach also filtered to BV-owner profiles in Phase 
 
 ## WhatsApp Business outreach
 
-Unambiguously covered by Tw 11.7. Cold WhatsApp to a number obtained without consent is **non-compliant** for sole traders and **high-risk** even for BV contacts (the number is usually personal). 
+Unambiguously covered by Tw 11.7. Cold WhatsApp to a number obtained without consent is **non-compliant** for sole traders and **high-risk** even for BV contacts (the number is usually personal).
 
 **Verdict: do not cold WhatsApp.** Use WhatsApp only after a relationship is established (inbound lead, signed prospect, existing client).
 
@@ -66,23 +66,24 @@ LIA template: 1-page Notion doc per outbound campaign. Date, purpose, audience s
 ## EU AI Act note (separate from outbound, but related)
 
 If we ever use AI to generate hyper-personalised outbound at scale, the AP could argue the processing is "systematic + at scale" → may push the relationship into a higher-risk band. We:
+
 - Personalise within reason (token replacement, light context-aware spinning)
 - Do NOT feed personal data scraped from LinkedIn to an LLM for "deep personalisation"
 - Do NOT use AI-generated voice for cold outreach
 
 ## What this means operationally
 
-| Activity | Allowed | Filter |
-|---|---|---|
-| Cold email to `info@plumber-bv.nl` | Yes (opt-out) | BV only |
-| Cold email to `jan@plumber-eenmanszaak.nl` | **No** | Excluded by KvK rechtsvorm filter |
-| LinkedIn connection request, no pitch | Yes | All |
-| LinkedIn DM, commercial pitch | Yes (opt-out) | BV-owner profiles only |
-| Cold call (manual, kantoornummer) | Yes (opt-out) | Confirmed BV only — playbook §0 |
-| Cold call to eenmanszaak/VOF/zzp or an 06 | **No** | All |
-| Cold WhatsApp | **No** | All |
-| Newsletter signup → drip | Yes | Anyone who opted in |
-| Lead-form submission → personal follow-up | Yes | Anyone who submitted |
+| Activity                                   | Allowed       | Filter                            |
+| ------------------------------------------ | ------------- | --------------------------------- |
+| Cold email to `info@plumber-bv.nl`         | Yes (opt-out) | BV only                           |
+| Cold email to `jan@plumber-eenmanszaak.nl` | **No**        | Excluded by KvK rechtsvorm filter |
+| LinkedIn connection request, no pitch      | Yes           | All                               |
+| LinkedIn DM, commercial pitch              | Yes (opt-out) | BV-owner profiles only            |
+| Cold call (manual, kantoornummer)          | Yes (opt-out) | Confirmed BV only — playbook §0   |
+| Cold call to eenmanszaak/VOF/zzp or an 06  | **No**        | All                               |
+| Cold WhatsApp                              | **No**        | All                               |
+| Newsletter signup → drip                   | Yes           | Anyone who opted in               |
+| Lead-form submission → personal follow-up  | Yes           | Anyone who submitted              |
 
 ## Compliance triggers (when to re-check)
 

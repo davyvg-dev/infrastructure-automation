@@ -6,5 +6,5 @@
  * n8n function nodes, future Node scripts) only ever import from here.
  */
 
-export * from "./schema.js";
-export { createDb, type Db } from "./client.js";
+export * from './schema.js'
+export { createDb, type Db } from './client.js'

@@ -4,10 +4,11 @@ Scope: agentic marketing state of the art, automatable vs. human functions, prog
 
 ## 1. State of the art: agentic marketing for solo founders (2025–2026)
 
-**What demonstrably works is narrower than the hype.** The credible pattern is a *pipeline of specialized agents with human review at every meaningful boundary* — researcher → writer → critic → publisher. Architecturally identical to the growth-engine Klantkraan already runs. (Averi: https://www.averi.ai/how-to/ai-agent-marketing-how-autonomous-ai-is-changing-content-ops-in-2026, Naturaily: https://naturaily.com/blog/ai-agents-for-content-creation)
+**What demonstrably works is narrower than the hype.** The credible pattern is a _pipeline of specialized agents with human review at every meaningful boundary_ — researcher → writer → critic → publisher. Architecturally identical to the growth-engine Klantkraan already runs. (Averi: https://www.averi.ai/how-to/ai-agent-marketing-how-autonomous-ai-is-changing-content-ops-in-2026, Naturaily: https://naturaily.com/blog/ai-agents-for-content-creation)
 
 SaaStr "20 agents in 10 months" (https://www.saastr.com/stop-learning-ai-start-doing-ai-the-20-agents-running-saastr):
-- **"Hero purchases" fail** — automating something already working sets an impossibly high bar. **"Layup roles" win** — automate work *nobody is doing at all* (for Klantkraan: SEO pages, nurture emails, GEO monitoring are layups).
+
+- **"Hero purchases" fail** — automating something already working sets an impossibly high bar. **"Layup roles" win** — automate work _nobody is doing at all_ (for Klantkraan: SEO pages, nurture emails, GEO monitoring are layups).
 - **Training beats tooling** — ~30 days setup, then **~1 hour/day of ongoing agent supervision**. Realistic target: 15–30 min/day approval-queue habit.
 - Most "multi-agent marketing platforms" are single agents with branding; buy none.
 
@@ -15,25 +16,26 @@ Skepticism: viral solo-founder numbers ("$2M ARR in 8 months") come from vendor 
 
 ## 2. Automatable end-to-end vs. still-human
 
-| Function | Verdict |
-|---|---|
-| Content drafting + repurposing | E2E automatable (with approval gate) |
-| SEO page generation from structured data | E2E automatable (data-backed pages only) |
-| Email nurture sequences | E2E automatable once written |
-| Lead scoring/enrichment | E2E automatable (needs KvK API — known blocker) |
-| Analytics/reporting | E2E automatable (cron agent → digest) |
-| GBP posts, NAP audits, rank tracking | E2E automatable (GBP API since late-2025) |
-| Ad creative generation | Automatable, but see next |
-| **Ad buying (PMax / Advantage+)** | **NOT viable yet** — needs ~30 conversions/mo (PMax) or 50+ leads/wk; cold B2B Meta CPL $400–800. Algorithms starve at Klantkraan volume. (miniloop, optimumclick) |
-| Review responses | Banned by constraint (automated reply) |
-| Strategy, positioning, partnerships, sales | Human |
+| Function                                   | Verdict                                                                                                                                                            |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Content drafting + repurposing             | E2E automatable (with approval gate)                                                                                                                               |
+| SEO page generation from structured data   | E2E automatable (data-backed pages only)                                                                                                                           |
+| Email nurture sequences                    | E2E automatable once written                                                                                                                                       |
+| Lead scoring/enrichment                    | E2E automatable (needs KvK API — known blocker)                                                                                                                    |
+| Analytics/reporting                        | E2E automatable (cron agent → digest)                                                                                                                              |
+| GBP posts, NAP audits, rank tracking       | E2E automatable (GBP API since late-2025)                                                                                                                          |
+| Ad creative generation                     | Automatable, but see next                                                                                                                                          |
+| **Ad buying (PMax / Advantage+)**          | **NOT viable yet** — needs ~30 conversions/mo (PMax) or 50+ leads/wk; cold B2B Meta CPL $400–800. Algorithms starve at Klantkraan volume. (miniloop, optimumclick) |
+| Review responses                           | Banned by constraint (automated reply)                                                                                                                             |
+| Strategy, positioning, partnerships, sales | Human                                                                                                                                                              |
 
 ## 3. Programmatic SEO after 2025: alive, but only the data-product kind
 
 **pSEO is not dead — cheap pSEO is.**
+
 - Google March 2024 scaled-content-abuse action deindexed 1,400+ sites; failure pattern = ≥80–90% unedited AI content + velocity. Aug 2025 spam update flags city pages ~95% identical. (Rankability, digitalapplied, flashcrafter)
 - What works: pages expressing a **data product** — boilerplate under ~60–75%, real data layer per page, hub-and-spoke linking, **20–60 pages per build**. (topicalmap.ai, aiappsapi)
-- HN practitioner (5 yrs pSEO): durable templates = **use-case × industry × platform × country × "alternative/vs"** — maps to *trade-vertical pages*, not city pages. (HN 47551534)
+- HN practitioner (5 yrs pSEO): durable templates = **use-case × industry × platform × country × "alternative/vs"** — maps to _trade-vertical pages_, not city pages. (HN 47551534)
 - **AI Overviews NL**: live since May 2025; trigger on only ~5.2% of Dutch queries (informational long-tail, where pos-1 CTR drops ~58%). **Target commercial/transactional Dutch queries** ("telefoonservice loodgieter"). (youvia, yourfellow)
 - **GEO**: schema + FAQ + citable stats = 30–40% higher AI-answer visibility; ~47% of brands have no GEO strategy. llms.txt unproven — ship it, expect nothing. (yotpo, postaimarketing, llmpulse)
 
@@ -46,6 +48,7 @@ Options: n8n HITL, custom Python + cron, **Claude Code scheduled/headless agents
 n8n Telegram approval: no queue, no history, no diff — worse than the existing custom Telegram ledger. **Do not adopt n8n.**
 
 Winning architecture (half-built already):
+
 - systemd timers on Hetzner firing Claude Code headless jobs per marketing loop
 - **one shared approval queue** — extend growth-engine Telegram approval to all artefact types (posts, SEO pages, emails, videos)
 - **one CLI command center** — extend `board` to `marketing board`: pending approvals, pages live/indexed, GSC clicks, list growth, nurture stats, agent-run health

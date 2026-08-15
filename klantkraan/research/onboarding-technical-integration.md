@@ -5,8 +5,9 @@ Calendar, and (B) get the chat widget onto the client's existing site. Optimised
 effort and LEAST founder time, for a non-technical tradesperson (plumber/roofer/installer), solo-founder DFY.
 
 Our stack (verified in repo):
+
 - `ai-receptionist/app/calendar_store.py` — the integration seam. Two functions, `availability(on_date, days)`
-  and `book(customer_name, contact, service, slot)`. CLAUDE.md rule: *swap the bodies, keep the signatures.*
+  and `book(customer_name, contact, service, slot)`. CLAUDE.md rule: _swap the bodies, keep the signatures._
   Timezone already sourced from config (`business.timezone`, default `Europe/Amsterdam`). This is exactly
   where a Google Calendar client plugs in.
 - `ai-receptionist/app/server.py` — FastAPI. `POST /chat` (optional `CHAT_API_KEY` via `x-api-key` header,
@@ -28,18 +29,18 @@ no Google verification/review process. This is the lowest-friction path on both 
 
 ### The three approaches compared
 
-| | (i) Service account + client shares calendar **[RECOMMENDED]** | (ii) OAuth 2.0 click-through consent | (iii) Client makes a new dedicated calendar for us |
-|---|---|---|---|
-| Client effort | Share one calendar, pick "Make changes to events". ~1 min, all inside Google Calendar they already use. | Click a Google consent screen; must trust our app; sees scary "unverified app" warning until we pass Google's OAuth verification. | Same share step as (i) **plus** first create a new calendar. More steps, more confusion. |
-| Founder effort | One-time: create project, enable API, make service account, download JSON key. Then per client: paste their calendar ID into their config. | One-time: build OAuth flow, consent screen, **submit for Google verification** (weeks, sensitive scope review), store + refresh per-client tokens. | Same as (i). |
-| Ongoing maintenance | None. Service-account key doesn't expire. | Refresh tokens can be revoked (password change, 6-month inactivity, security events) → re-consent. | None. |
-| Works for personal @gmail.com? | **Yes** (see authoritative answer below). | Yes. | Yes. |
-| Reads/writes the client's real working calendar? | Yes — their existing calendar, no data migration. | Yes. | No — a *separate* calendar; if the client keeps booking jobs into their normal calendar, we can't see it. Defeats the purpose. |
-| Verdict | **Winner.** Least effort, no verification gauntlet, no token upkeep. | Overkill; verification + token refresh is a lot of founder time for a solo DFY. | Only as a privacy option (see below), not the default. |
+|                                                  | (i) Service account + client shares calendar **[RECOMMENDED]**                                                                             | (ii) OAuth 2.0 click-through consent                                                                                                               | (iii) Client makes a new dedicated calendar for us                                                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Client effort                                    | Share one calendar, pick "Make changes to events". ~1 min, all inside Google Calendar they already use.                                    | Click a Google consent screen; must trust our app; sees scary "unverified app" warning until we pass Google's OAuth verification.                  | Same share step as (i) **plus** first create a new calendar. More steps, more confusion.                                       |
+| Founder effort                                   | One-time: create project, enable API, make service account, download JSON key. Then per client: paste their calendar ID into their config. | One-time: build OAuth flow, consent screen, **submit for Google verification** (weeks, sensitive scope review), store + refresh per-client tokens. | Same as (i).                                                                                                                   |
+| Ongoing maintenance                              | None. Service-account key doesn't expire.                                                                                                  | Refresh tokens can be revoked (password change, 6-month inactivity, security events) → re-consent.                                                 | None.                                                                                                                          |
+| Works for personal @gmail.com?                   | **Yes** (see authoritative answer below).                                                                                                  | Yes.                                                                                                                                               | Yes.                                                                                                                           |
+| Reads/writes the client's real working calendar? | Yes — their existing calendar, no data migration.                                                                                          | Yes.                                                                                                                                               | No — a _separate_ calendar; if the client keeps booking jobs into their normal calendar, we can't see it. Defeats the purpose. |
+| Verdict                                          | **Winner.** Least effort, no verification gauntlet, no token upkeep.                                                                       | Overkill; verification + token refresh is a lot of founder time for a solo DFY.                                                                    | Only as a privacy option (see below), not the default.                                                                         |
 
-**When (iii) is still useful:** as a *variant* of (i), not a replacement. If a client is squeamish about us
+**When (iii) is still useful:** as a _variant_ of (i), not a replacement. If a client is squeamish about us
 seeing personal appointments, have them create one calendar named e.g. "Klantkraan afspraken", keep their
-jobs there, and share *that* one with the service account. Same service-account mechanism, narrower data
+jobs there, and share _that_ one with the service account. Same service-account mechanism, narrower data
 exposure. Only recommend if the client raises privacy — otherwise it adds a step and risks the "invisible
 second calendar" failure mode.
 
@@ -47,7 +48,7 @@ second calendar" failure mode.
 
 **Yes — for reading availability and creating/editing events on the shared calendar, simple ACL sharing is
 sufficient and domain-wide delegation (DWD) is NOT required.** DWD only exists to impersonate users inside a
-Google Workspace *domain*; a consumer @gmail.com account has no domain and no admin console, so DWD is not
+Google Workspace _domain_; a consumer @gmail.com account has no domain and no admin console, so DWD is not
 even available to it — and it isn't needed. The service account is just another grantee on the calendar's
 access-control list (ACL). Grant it the **writer** role ("Make changes to events") and it can list, insert,
 update and delete events on that calendar via the API. This is confirmed by Google's own Calendar API
@@ -56,6 +57,7 @@ Community answers ("share the actual user calendar with the service account… t
 the call to list/update/delete/insert events").
 
 Sources:
+
 - Google — Calendar sharing / ACL roles: https://developers.google.com/workspace/calendar/api/concepts/sharing
 - Google Calendar Community — sharing a calendar with a service-account email to insert/update events:
   https://groups.google.com/g/google-calendar-api/c/MySzyAXq12Q
@@ -68,7 +70,7 @@ A service account **cannot add attendees / send guest invitations** on a consume
 API returns **`forbiddenForServiceAccounts`**. This is the single most-reported service-account calendar
 error.
 
-**Why it does not affect us:** our booking doesn't need to invite the *customer* as a Google Calendar guest.
+**Why it does not affect us:** our booking doesn't need to invite the _customer_ as a Google Calendar guest.
 We create the event ON THE PLUMBER'S calendar with the customer's name/phone/service in the event **title and
 description** (e.g. summary "Klantkraan: Lekkage — Jan de Vries 06-12345678"). No `attendees[]` array → no
 invitation logic → no `forbiddenForServiceAccounts`. The customer already got their confirmation through the
@@ -76,6 +78,7 @@ chat/WhatsApp thread; the plumber gets the job in their calendar. Rule for our `
 **never populate the `attendees` field** unless/until we move a client to Workspace + DWD.
 
 Sources:
+
 - Google issue tracker — service accounts can't invite attendees without DWD: https://issuetracker.google.com/issues/408598694
 - Community write-up of `forbiddenForServiceAccounts` + DWD fix: https://www.technetexperts.com/service-account-dwd-calendar-attendees/
 
@@ -129,6 +132,7 @@ would need to accept; a service account does not.)
 ### How it lands in our code
 
 In `calendar_store.py`, keep `availability()` and `book()` signatures; swap the bodies:
+
 - `availability()` → call `service.freebusy().query()` (scope `calendar.readonly` or `calendar`) or
   `events().list(timeMin,timeMax,singleEvents=True,orderBy='startTime')` on the client's calendar ID, then
   subtract busy blocks from the config-generated opening-hours slots (logic we already have).
@@ -141,7 +145,7 @@ In `calendar_store.py`, keep `availability()` and `book()` signatures; swap the 
 
 ### Failure modes to watch
 
-- **Personal @gmail.com vs Google Workspace:** Both work with simple sharing. Workspace admins can *restrict*
+- **Personal @gmail.com vs Google Workspace:** Both work with simple sharing. Workspace admins can _restrict_
   external sharing to free/busy-only at the domain level — if a Workspace client's share silently downgrades
   to free/busy, we can read availability but `insert` will 403. Fix: their admin allows full sharing, or use
   a dedicated calendar they own. Consumer Gmail has no such restriction.
@@ -182,11 +186,11 @@ client's page source.
 
 ### Embedding options compared
 
-| Option | UX | CORS? | Effort to install | Best for |
-|---|---|---|---|---|
-| **One-line `<script>` that injects a floating bubble → opens an `<iframe>` to our hosted page** | Floating "Chat" bubble bottom-right, expands to our widget in an iframe. Feels native. | **None** — iframe content is served from *our* origin, so its `fetch('/chat')` is same-origin. Embedding an iframe cross-domain needs no CORS. | Paste one line into a "custom code / header" box. | **Recommended default** for sites the client (or we) can edit. |
-| **Raw `<iframe>` embed** (client pastes an `<iframe src>`) | Inline box wherever they place it; no floating bubble unless they style it. | None (same as above). | Paste an iframe tag; may need sizing tweaks. | Page-builders whose "embed" only accepts an iframe/HTML block (Google Sites, some Wix blocks). |
-| **Full-page hosted link** (`chat.klantkraan.nl/<client>` or `<client>.klantkraan.nl`) | Separate page/tab; a button/menu link "Plan een afspraak" points to it. | None. | Add one hyperlink/button. Lowest possible skill. | **Universal fallback** — works even when the client can't add ANY code, and on mobile. |
+| Option                                                                                          | UX                                                                                     | CORS?                                                                                                                                          | Effort to install                                 | Best for                                                                                       |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| **One-line `<script>` that injects a floating bubble → opens an `<iframe>` to our hosted page** | Floating "Chat" bubble bottom-right, expands to our widget in an iframe. Feels native. | **None** — iframe content is served from _our_ origin, so its `fetch('/chat')` is same-origin. Embedding an iframe cross-domain needs no CORS. | Paste one line into a "custom code / header" box. | **Recommended default** for sites the client (or we) can edit.                                 |
+| **Raw `<iframe>` embed** (client pastes an `<iframe src>`)                                      | Inline box wherever they place it; no floating bubble unless they style it.            | None (same as above).                                                                                                                          | Paste an iframe tag; may need sizing tweaks.      | Page-builders whose "embed" only accepts an iframe/HTML block (Google Sites, some Wix blocks). |
+| **Full-page hosted link** (`chat.klantkraan.nl/<client>` or `<client>.klantkraan.nl`)           | Separate page/tab; a button/menu link "Plan een afspraak" points to it.                | None.                                                                                                                                          | Add one hyperlink/button. Lowest possible skill.  | **Universal fallback** — works even when the client can't add ANY code, and on mobile.         |
 
 Recommendation: **ship the one-line script (iframe-injection floating bubble) as the primary**, and **always
 also give them the full-page hosted link** as the no-code fallback. The script tag is a thin loader we host
@@ -226,7 +230,7 @@ their web host. Instead:
 1. **Host a standalone booking page on a subdomain WE control** — e.g. `https://<clientnaam>.klantkraan.nl`
    or `https://chat.klantkraan.nl/<client>`. It's literally our existing `web/index.html` served with that
    client's config. Zero client effort, zero CORS, we own the whole stack.
-2. Give the client a **link + button** to place wherever they *can* reach: their Google Business Profile
+2. Give the client a **link + button** to place wherever they _can_ reach: their Google Business Profile
    ("Afspraak maken"/website link), Instagram/Facebook bio, WhatsApp Business greeting, email signature,
    footer of quotes/invoices, a QR code on the van or a flyer. Many trades get more traffic from Google
    Business Profile than their own site anyway — the link works everywhere.
@@ -239,7 +243,7 @@ functional, just without the floating bubble on their domain.
 
 - **CORS:** With the recommended iframe/hosted-page architecture, the browser's request to `/chat` originates
   from our own domain → **same-origin → no CORS headers needed**, and our current `server.py` (which has no
-  `CORSMiddleware`) works as-is. Only if we ever let widget JS run on the *client's* domain and call `/chat`
+  `CORSMiddleware`) works as-is. Only if we ever let widget JS run on the _client's_ domain and call `/chat`
   directly would we need CORS — and then we must set `Access-Control-Allow-Origin` to a **specific allowlist
   of client domains** (never `*` if we also send credentials/the API key). Avoid that path; the iframe keeps
   it simple and more secure.
@@ -279,6 +283,7 @@ code at all.
 ## Fallback decision trees
 
 **Calendar (A):**
+
 1. Consumer @gmail.com? → Service account + share "Make changes to events". Done. (Default, ~all trades.)
 2. Google Workspace + admin blocks external full-share? → their admin allows full sharing for our SA email,
    OR client makes a dedicated calendar they own and shares that.
@@ -288,6 +293,7 @@ code at all.
    domain-wide delegation. Not needed for the standard booking flow.
 
 **Widget (B):**
+
 1. Client can edit their site AND platform allows script? (WordPress/Wix/Squarespace) → one-line script,
    floating bubble.
 2. Platform is script-restricted/iframe-only? (Google Sites, some builders) → iframe or full-page URL embed.
@@ -296,6 +302,7 @@ code at all.
 4. No website at all? → same hosted page is their booking page; link from Google Business Profile + socials.
 
 ## Sources
+
 - Google — Calendar API sharing / ACL roles: https://developers.google.com/workspace/calendar/api/concepts/sharing
 - Google — freeBusy.query reference: https://developers.google.com/workspace/calendar/api/v3/reference/freebusy/query
 - Google — Calendar API errors (403 rate limit, quotaUser, backoff): https://developers.google.com/workspace/calendar/api/guides/errors

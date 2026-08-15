@@ -32,13 +32,14 @@ Placeholders below: `{{bedrijf}}`, `{{voornaam}}` (prospect), `{{demo-link}}`, `
 
 ## 1. LinkedIn — connect (no pitch), then demo on a hand-raise
 
-Compliant path for sole traders: connect + a genuine *question* first (kill-list #1 carve-out).
+Compliant path for sole traders: connect + a genuine _question_ first (kill-list #1 carve-out).
 The demo only goes out once they've replied — at that point you're answering interest, not
 sending an unsolicited commercial DM. All manual, no HeyReach.
 
 **T1 — connection request:** no note.
 
 **T2 — day 1 after they accept (a question, not a pitch):**
+
 ```
 Dank voor de connectie {{voornaam}}.
 
@@ -48,6 +49,7 @@ voor installatie- en klusbedrijven en ben benieuwd hoe jij het oplost.
 ```
 
 **T3 — only if they reply with any interest → send THEIR demo:**
+
 ```
 Ik heb er even eentje voor {{bedrijf}} klaargezet — met jullie diensten erin.
 Stel 'm gerust een lastige vraag, hij houdt stand: {{demo-link}}
@@ -57,6 +59,7 @@ Je betaalt pas als je 'm wilt houden.
 ```
 
 **T4 — day 12, no reply (breakup):**
+
 ```
 Laatste bericht, beloofd. Mocht het ooit spelen — de demo voor {{bedrijf}}
 blijft staan: {{demo-link}}. Succes met de zaak.
@@ -68,6 +71,7 @@ blijft staan: {{demo-link}}. Succes met de zaak.
 
 They opted in via the lead form, so a direct pitch is fine. Speed is everything (2-4x close under
 15 min). WhatsApp if they left a number, else email.
+
 ```
 Hoi {{voornaam}}, je vroeg net een demo aan via Klantkraan.
 
@@ -89,6 +93,7 @@ identified sender (the BV + KvK in the footer satisfies art. 11.7 — no founder
 accurate subject, real afmeld-link. Do NOT send this to eenmanszaak/VOF.
 
 **Onderwerp:** `Een AI-receptionist voor {{bedrijf}} — 14 dagen gratis`
+
 ```
 Beste {{voornaam}},
 
@@ -122,10 +127,12 @@ klantkraan.nl · Geen interesse? Antwoord met "stop" en je hoort niets meer.
 Not electronic, outside the telemarketing rules. Highest close rate; book the demo on the spot.
 
 **Opener (question-led, same as LinkedIn):**
+
 > "Even uit nieuwsgierigheid — als jullie op een klus zitten en de telefoon gaat, wie neemt 'm
 > dan op?" → laat de pijn even landen → "Ik bouw iets dat dat opvangt. Mag ik je 'm laten zien?"
 
 **Leave-behind (kaartje met QR):**
+
 ```
 Mis nooit meer een klant.
 
@@ -136,6 +143,7 @@ Scan en praat met een AI-receptionist — 24/7, in het Nederlands.
 ```
 
 **Same-day follow-up (na een gesprek, met hun eigen demo):**
+
 ```
 Leuk je te spreken vandaag. Ik heb 'm even op {{bedrijf}} gezet zoals beloofd:
 {{demo-link}}. Zeg 't maar als ik 'm 14 dagen gratis voor je live mag zetten.
@@ -149,6 +157,7 @@ Leuk je te spreken vandaag. Ik heb 'm even op {{bedrijf}} gezet zoals beloofd:
 The fastest pilots. Ask everyone in your network; make forwarding effortless.
 
 **The ask (to a contact):**
+
 ```
 Ken jij een loodgieter, installateur of dakdekker die vaak klanten misloopt
 omdat-ie de telefoon niet kan opnemen tijdens een klus? Ik zet voor 10
@@ -157,6 +166,7 @@ Mag ik je vragen er één aan me voor te stellen?
 ```
 
 **Message once introduced:**
+
 ```
 Hoi {{voornaam}}, {{tussenpersoon}} bracht ons in contact. Ik heb alvast een
 AI-receptionist voor {{bedrijf}} klaargezet — probeer 'm gerust: {{demo-link}}.

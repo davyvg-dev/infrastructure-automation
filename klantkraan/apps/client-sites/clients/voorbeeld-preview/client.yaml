@@ -12,21 +12,21 @@
 modus: preview
 
 bedrijf:
-  naam: "Voorbeeld Loodgietersbedrijf"
-  vak: "loodgieter"
-  telefoon: "+31 6 12 34 56 78" # voorbeeldnummer (copy-lint-ok)
+  naam: 'Voorbeeld Loodgietersbedrijf'
+  vak: 'loodgieter'
+  telefoon: '+31 6 12 34 56 78' # voorbeeldnummer (copy-lint-ok)
   adres:
-    plaats: "Zeist"
+    plaats: 'Zeist'
   werkgebied:
-    - "Zeist"
-    - "Utrecht"
-    - "De Bilt"
+    - 'Zeist'
+    - 'Utrecht'
+    - 'De Bilt'
 
 branding:
   # Afgeleid van het logo of de huisstijl van de prospect; het schema eist dat
   # witte tekst er leesbaar op blijft.
-  kleur_primair: "#1f4d45"
-  kleur_accent: "#c2703d"
+  kleur_primair: '#1f4d45'
+  kleur_accent: '#c2703d'
 
 # De vormgeving. Deze fixture staat bewust NIET op de standaardwaarden: samen met
 # voorbeeld-dakdekker (die geen stijl-blok heeft en dus de standaard bouwt) laten de
@@ -42,30 +42,30 @@ stijl:
   foto: randloos # de fotoband loopt door tot de schermrand
 
 diensten:
-  - naam: "Lekkage opsporen en verhelpen"
-    omschrijving: "Wij zoeken de oorzaak van de lekkage op en repareren hem meteen."
-  - naam: "Ontstoppen"
-    omschrijving: "Verstopte afvoer, gootsteen of toilet weer doorstromend krijgen."
-  - naam: "Sanitair vervangen"
-    omschrijving: "Kraan, toilet of douche vervangen, inclusief aansluiten en afwerken."
-  - naam: "Cv-ketel onderhoud"
-    omschrijving: "Jaarlijkse controle en onderhoud zodat uw ketel blijft draaien."
+  - naam: 'Lekkage opsporen en verhelpen'
+    omschrijving: 'Wij zoeken de oorzaak van de lekkage op en repareren hem meteen.'
+  - naam: 'Ontstoppen'
+    omschrijving: 'Verstopte afvoer, gootsteen of toilet weer doorstromend krijgen.'
+  - naam: 'Sanitair vervangen'
+    omschrijving: 'Kraan, toilet of douche vervangen, inclusief aansluiten en afwerken.'
+  - naam: 'Cv-ketel onderhoud'
+    omschrijving: 'Jaarlijkse controle en onderhoud zodat uw ketel blijft draaien.'
 
 openingstijden:
-  maandag: ["08:00", "17:00"]
-  dinsdag: ["08:00", "17:00"]
-  woensdag: ["08:00", "17:00"]
-  donderdag: ["08:00", "17:00"]
-  vrijdag: ["08:00", "17:00"]
+  maandag: ['08:00', '17:00']
+  dinsdag: ['08:00', '17:00']
+  woensdag: ['08:00', '17:00']
+  donderdag: ['08:00', '17:00']
+  vrijdag: ['08:00', '17:00']
 
 spoed:
   beschikbaar: true
-  tekst: "Bij een lekkage of een verstopping komen wij dezelfde dag langs. Bel ons en wij bespreken meteen wat er nodig is."
+  tekst: 'Bij een lekkage of een verstopping komen wij dezelfde dag langs. Bel ons en wij bespreken meteen wat er nodig is.'
 
 usps:
-  - "Vaste prijs vooraf afgesproken"
-  - "Eigen monteurs uit de regio"
-  - "Nette afwerking, geen rommel achteraf"
+  - 'Vaste prijs vooraf afgesproken'
+  - 'Eigen monteurs uit de regio'
+  - 'Nette afwerking, geen rommel achteraf'
 
 # receptionist: false is verplicht bij een voorstel; wij claimen niets namens
 # een bedrijf dat nog geen klant is.

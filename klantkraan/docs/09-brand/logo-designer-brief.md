@@ -37,11 +37,11 @@
 
 ## Pictogram direction — pick ONE
 
-| Direction | Description | Risk |
-|---|---|---|
-| **A. The valve** | A circular tap-valve / stopcock simplified to 4–6 lines. Reads as a tap or a thermostatic valve. | Can read as a Wi-Fi icon if oversimplified. |
-| **B. The K-tap** | A lowercase `k` whose lower diagonal turns into a tap spout. Type-glyph hybrid. | Hardest to execute well. Only pick this if your portfolio shows type-glyph skill. |
-| **C. The flow** | A short curved line emerging from a square base, drop at the end. | Most generic — easy escape if A and B fail. |
+| Direction        | Description                                                                                      | Risk                                                                              |
+| ---------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| **A. The valve** | A circular tap-valve / stopcock simplified to 4–6 lines. Reads as a tap or a thermostatic valve. | Can read as a Wi-Fi icon if oversimplified.                                       |
+| **B. The K-tap** | A lowercase `k` whose lower diagonal turns into a tap spout. Type-glyph hybrid.                  | Hardest to execute well. Only pick this if your portfolio shows type-glyph skill. |
+| **C. The flow**  | A short curved line emerging from a square base, drop at the end.                                | Most generic — easy escape if A and B fail.                                       |
 
 **Recommended attempt**: A and C, two versions of each. Skip B unless you have type-glyph hybrid samples in your portfolio.
 
@@ -68,11 +68,11 @@
 
 ## Colour usage in the logo
 
-| Token | Hex | Use |
-|---|---|---|
-| `--kraan-blue` | `#0F4C81` | Primary brand colour. Wordmark and pictogram default. |
-| `--kraan-cream` | `#FAF6EE` | Background. **NOT** to be used inside the mark — only behind it. |
-| `--kraan-rust` | `#C75A2B` | **DO NOT** use in the logo. Reserved for accent moments in the marketing site only. |
+| Token           | Hex       | Use                                                                                 |
+| --------------- | --------- | ----------------------------------------------------------------------------------- |
+| `--kraan-blue`  | `#0F4C81` | Primary brand colour. Wordmark and pictogram default.                               |
+| `--kraan-cream` | `#FAF6EE` | Background. **NOT** to be used inside the mark — only behind it.                    |
+| `--kraan-rust`  | `#C75A2B` | **DO NOT** use in the logo. Reserved for accent moments in the marketing site only. |
 
 Two-colour version: kraan-blue + a single shade of itself (e.g. `#0a3960` darker), nothing else.
 

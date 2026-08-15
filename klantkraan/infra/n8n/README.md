@@ -25,16 +25,16 @@ docker cp $(docker ps -qf name=n8n):/home/node/.n8n/exports/ ./infra/n8n/
 
 Then commit the changed JSON files. Convention: **one file per workflow, file name = `meta.name` in kebab-case**. The eight core workflows are:
 
-| File | Trigger | Purpose |
-|---|---|---|
-| `missed-call-back.json` | Webhook `POST /webhook/cm/missed-call` | CM.com missed-call → suppression check → SMS |
-| `review-request.json` | Webhook `POST /webhook/job-done` | Job done → +2h SMS, +7d email fallback |
-| `call-summary-router.json` | Webhook `POST /webhook/synthflow/call-end` | Synthflow call end → Neon + Attio + escalation |
-| `client-onboarding.json` | Webhook `POST /webhook/signwell/signed` | Day 0/7/14/21/30 onboarding cadence |
-| `daily-stats-sms.json` | Cron 18:00 CET | Per-client daily-stats SMS (D1–D14 post-go-live) |
-| `weekly-stats-email.json` | Cron Monday 08:00 CET | Per-client weekly email + dashboard screenshot |
-| `contract-signed.json` | Webhook `POST /webhook/signwell/contract-signed` | SignWell signed → DB + Slack + chain to onboarding |
-| `mrr-snapshot.json` | Cron daily 23:50 CET | Mollie active subs → Neon `mrr_snapshots` + Notion |
+| File                       | Trigger                                          | Purpose                                            |
+| -------------------------- | ------------------------------------------------ | -------------------------------------------------- |
+| `missed-call-back.json`    | Webhook `POST /webhook/cm/missed-call`           | CM.com missed-call → suppression check → SMS       |
+| `review-request.json`      | Webhook `POST /webhook/job-done`                 | Job done → +2h SMS, +7d email fallback             |
+| `call-summary-router.json` | Webhook `POST /webhook/synthflow/call-end`       | Synthflow call end → Neon + Attio + escalation     |
+| `client-onboarding.json`   | Webhook `POST /webhook/signwell/signed`          | Day 0/7/14/21/30 onboarding cadence                |
+| `daily-stats-sms.json`     | Cron 18:00 CET                                   | Per-client daily-stats SMS (D1–D14 post-go-live)   |
+| `weekly-stats-email.json`  | Cron Monday 08:00 CET                            | Per-client weekly email + dashboard screenshot     |
+| `contract-signed.json`     | Webhook `POST /webhook/signwell/contract-signed` | SignWell signed → DB + Slack + chain to onboarding |
+| `mrr-snapshot.json`        | Cron daily 23:50 CET                             | Mollie active subs → Neon `mrr_snapshots` + Notion |
 
 ## Diffable JSON convention
 
@@ -49,6 +49,7 @@ Then commit the changed JSON files. Convention: **one file per workflow, file na
 ## `meta.version`
 
 Bump `meta.version` when **any of**:
+
 - A node's `parameters` shape changes (added/removed field, expression rewrite).
 - Suppression-check semantics change (e.g., new opt-out source table).
 - An outbound template body changes (SMS or email).
@@ -107,16 +108,16 @@ After import:
 
 ## Who can edit which workflows
 
-| Workflow | Editor | Reviewer |
-|---|---|---|
-| `missed-call-back.json` | Founder + VA | Founder |
-| `review-request.json` | Founder + VA | Founder |
-| `call-summary-router.json` | **Founder only** (touches AI Act compliance path) | Founder |
-| `client-onboarding.json` | Founder + VA | Founder |
-| `daily-stats-sms.json` | Founder + VA | Founder |
-| `weekly-stats-email.json` | Founder + VA | Founder |
-| `contract-signed.json` | **Founder only** (DB writes + Slack secret) | Founder |
-| `mrr-snapshot.json` | **Founder only** (finance data) | Founder |
+| Workflow                   | Editor                                            | Reviewer |
+| -------------------------- | ------------------------------------------------- | -------- |
+| `missed-call-back.json`    | Founder + VA                                      | Founder  |
+| `review-request.json`      | Founder + VA                                      | Founder  |
+| `call-summary-router.json` | **Founder only** (touches AI Act compliance path) | Founder  |
+| `client-onboarding.json`   | Founder + VA                                      | Founder  |
+| `daily-stats-sms.json`     | Founder + VA                                      | Founder  |
+| `weekly-stats-email.json`  | Founder + VA                                      | Founder  |
+| `contract-signed.json`     | **Founder only** (DB writes + Slack secret)       | Founder  |
+| `mrr-snapshot.json`        | **Founder only** (finance data)                   | Founder  |
 
 The VA never edits a `Code` node containing AI Act validation logic — that's a deliberate guard against accidental compliance regression.
 

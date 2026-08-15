@@ -6,16 +6,16 @@
 
 ## Their tiers
 
-| | Free | Starter | Advanced | Business | Enterprise |
-|---|---|---|---|---|---|
-| Monthly | €0 | **€99** | **€199** | **€399** | custom |
-| Conversations/mo | 50 | 250 | 500 | 1.000 | custom |
-| AI model | fast | **fast** | **advanced** | advanced | advanced |
-| AI Actions per agent | 0 | 1 | 5 | 10 | — |
-| AI instructions per agent | 15 | 25 | 50 | 100 | — |
-| Account users | 1 | 1 | 1 | 1 | — |
-| WhatsApp / Messenger / IG / e-mail | — | ✅ | ✅ | ✅ | ✅ |
-| Watermelon branding removed | — | — | — | ✅ | ✅ |
+|                                    | Free | Starter  | Advanced     | Business | Enterprise |
+| ---------------------------------- | ---- | -------- | ------------ | -------- | ---------- |
+| Monthly                            | €0   | **€99**  | **€199**     | **€399** | custom     |
+| Conversations/mo                   | 50   | 250      | 500          | 1.000    | custom     |
+| AI model                           | fast | **fast** | **advanced** | advanced | advanced   |
+| AI Actions per agent               | 0    | 1        | 5            | 10       | —          |
+| AI instructions per agent          | 15   | 25       | 50           | 100      | —          |
+| Account users                      | 1    | 1        | 1            | 1        | —          |
+| WhatsApp / Messenger / IG / e-mail | —    | ✅       | ✅           | ✅       | ✅         |
+| Watermelon branding removed        | —    | —        | —            | ✅       | ✅         |
 
 Add-ons on every paid tier: **€25/mo per extra user**, **€25/mo per 250 extra conversations**,
 €25/mo per extra agent. Yearly billing saves 15%. No cancellation period. Free onboarding
@@ -32,16 +32,16 @@ build the pitch on the cap — it won't survive contact with an honest prospect.
 has no calendar integration — not Google, not Outlook, not any booking system. Their integration
 list is Shopify, WooCommerce, Lightspeed, Magento, BigCommerce, Channable, Sendcloud, Picqer,
 Monta, Returnless, Returnista: a webshop order-and-returns stack. Their own description of the
-AI Agent is *"Automatically answer common questions like order status, returns and delivery
-times."* Listed industries are e-commerce, education, healthcare, municipalities, leisure. No
+AI Agent is _"Automatically answer common questions like order status, returns and delivery
+times."_ Listed industries are e-commerce, education, healthcare, municipalities, leisure. No
 trades. Watermelon deflects support tickets; Klantkraan puts a job in the calendar. For a
-loodgieter, "plan die afspraak in" *is* the product, and Watermelon's answer is to hand the
+loodgieter, "plan die afspraak in" _is_ the product, and Watermelon's answer is to hand the
 conversation to a human in the inbox.
 
 **2. €99 buys software; €299 buys a working receptionist.** Someone has to write the 25 AI
 instructions, upload the tariffs, scrape the site, run the Meta business verification for the
 WhatsApp Business API, test it, and keep it current when prices change. On Watermelon that someone
-is the loodgieter. The gap between €99 and €299 *is* that labour, and it is recurring — tariffs
+is the loodgieter. The gap between €99 and €299 _is_ that labour, and it is recurring — tariffs
 and services drift. This is the whole argument, and it's the same argument as objection #5
 ("geen tijd om dit te leren"), which is already the highest-frequency real objection.
 
@@ -52,9 +52,9 @@ WhatsApp, two seats — is **€199 + €25 = €224/mo**, with their logo on yo
 own hours, and still no booking. Against €299 done-for-you with calendar booking, that is a €75
 gap. Quote it at Advanced, never let the conversation sit at €99.
 
-**4. The bot pauses when the limit is hit.** Verbatim: *"When you reach your limit, your AI Agent
-will pause until your conversations renew."* And: *"Do internal tests count as conversations?
-Yes."* A product sold on never missing a lead that goes silent mid-month is badly positioned
+**4. The bot pauses when the limit is hit.** Verbatim: _"When you reach your limit, your AI Agent
+will pause until your conversations renew."_ And: _"Do internal tests count as conversations?
+Yes."_ A product sold on never missing a lead that goes silent mid-month is badly positioned
 against itself, and the setup testing eats the first month's allowance. Real, but secondary — at
 trade volumes it rarely binds. Use it as a closing detail, not as the opener.
 

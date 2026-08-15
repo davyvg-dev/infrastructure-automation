@@ -5,16 +5,16 @@
 
 ## Layout
 
-| Path | Purpose |
-|---|---|
-| `docker/docker-compose.yml` | Caddy + n8n + Uptime Kuma stack |
-| `docker/.env.example` | Env-var template; real values from Bitwarden |
-| `caddy/Caddyfile` | Reverse proxy + security headers |
-| `scripts/deploy.sh` | rsync + remote `docker compose up -d` + healthcheck wait + Healthchecks ping |
-| `scripts/borg-backup.sh` | Nightly Postgres + n8n-volume backup to Borgbase |
-| `scripts/restore-drill.md` | Monthly tabletop restore checklist |
-| `n8n/` | Workflow JSON exports (managed by `n8n export:workflow`) |
-| `terraform/` | Optional IaC for Cloudflare + Hetzner (not in scope for v0.1) |
+| Path                        | Purpose                                                                      |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `docker/docker-compose.yml` | Caddy + n8n + Uptime Kuma stack                                              |
+| `docker/.env.example`       | Env-var template; real values from Bitwarden                                 |
+| `caddy/Caddyfile`           | Reverse proxy + security headers                                             |
+| `scripts/deploy.sh`         | rsync + remote `docker compose up -d` + healthcheck wait + Healthchecks ping |
+| `scripts/borg-backup.sh`    | Nightly Postgres + n8n-volume backup to Borgbase                             |
+| `scripts/restore-drill.md`  | Monthly tabletop restore checklist                                           |
+| `n8n/`                      | Workflow JSON exports (managed by `n8n export:workflow`)                     |
+| `terraform/`                | Optional IaC for Cloudflare + Hetzner (not in scope for v0.1)                |
 
 ## Pre-requisites
 
@@ -51,14 +51,14 @@ What the script does, in order:
 
 ## Verify after deploy
 
-| Check | Command | Expected |
-|---|---|---|
-| Containers up | `ssh $KK_HOST 'docker compose -f /mnt/data/docker/docker-compose.yml ps'` | All `running` + `healthy` |
-| n8n reachable | `curl -fsS https://n8n.klantkraan.nl/healthz` | `{"status":"ok"}` |
-| Status page reachable | `curl -fsSI https://status.klantkraan.nl/` | `200 OK` |
-| Certs minted | `ssh $KK_HOST 'ls /mnt/data/caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/'` | two domain directories |
-| n8n DB connection | n8n editor → Settings → check no banner about DB connectivity | green |
-| Smoke workflow | Trigger `daily-stats-sms` manually in n8n | Green run + Healthchecks beacon |
+| Check                 | Command                                                                                             | Expected                        |
+| --------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------- |
+| Containers up         | `ssh $KK_HOST 'docker compose -f /mnt/data/docker/docker-compose.yml ps'`                           | All `running` + `healthy`       |
+| n8n reachable         | `curl -fsS https://n8n.klantkraan.nl/healthz`                                                       | `{"status":"ok"}`               |
+| Status page reachable | `curl -fsSI https://status.klantkraan.nl/`                                                          | `200 OK`                        |
+| Certs minted          | `ssh $KK_HOST 'ls /mnt/data/caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/'` | two domain directories          |
+| n8n DB connection     | n8n editor → Settings → check no banner about DB connectivity                                       | green                           |
+| Smoke workflow        | Trigger `daily-stats-sms` manually in n8n                                                           | Green run + Healthchecks beacon |
 
 ## Roll back
 
@@ -73,15 +73,15 @@ Cloudflare Pages (marketing site) and Workers (API) roll back separately via `wr
 
 ## Where secrets live
 
-| Secret | Location |
-|---|---|
-| n8n basic-auth, encryption key | Bitwarden vault `klantkraan-infra` → item `n8n` |
-| Neon Postgres credentials | Bitwarden → item `neon-klantkraan_n8n` |
-| Borgbase repo + passphrase | Bitwarden → item `borgbase` |
-| Healthchecks ping URLs | Bitwarden → item `healthchecks` (one note, multiple URLs) |
-| Cloudflare API token | Bitwarden → item `cloudflare-api` (used by `wrangler` and `terraform`) |
-| Hetzner API token | Bitwarden → item `hetzner-api` (used by `hcloud` CLI) |
-| SSH keys | `~/.ssh/`, never in vault; rotate via `ssh-keygen` + Hetzner console |
+| Secret                         | Location                                                               |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| n8n basic-auth, encryption key | Bitwarden vault `klantkraan-infra` → item `n8n`                        |
+| Neon Postgres credentials      | Bitwarden → item `neon-klantkraan_n8n`                                 |
+| Borgbase repo + passphrase     | Bitwarden → item `borgbase`                                            |
+| Healthchecks ping URLs         | Bitwarden → item `healthchecks` (one note, multiple URLs)              |
+| Cloudflare API token           | Bitwarden → item `cloudflare-api` (used by `wrangler` and `terraform`) |
+| Hetzner API token              | Bitwarden → item `hetzner-api` (used by `hcloud` CLI)                  |
+| SSH keys                       | `~/.ssh/`, never in vault; rotate via `ssh-keygen` + Hetzner console   |
 
 `.env` on the production host is the only deployed copy of the n8n + Neon + Borg secrets. Treat the host like a vault: ssh-key-only, no password auth, fail2ban watching.
 

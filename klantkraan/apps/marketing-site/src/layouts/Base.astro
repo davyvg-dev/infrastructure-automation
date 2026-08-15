@@ -94,11 +94,25 @@ const siteSchema = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {/* Preload the two first-paint fonts (body + hero headline, latin subset) to
+    {
+      /* Preload the two first-paint fonts (body + hero headline, latin subset) to
         cut the font swap flash on the LCP text. crossorigin is required for the
-        preload to match the @font-face fetch (fonts load in CORS mode). */}
-    <link rel="preload" href="/fonts/hanken-400-latin.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/bricolage-800-latin.woff2" as="font" type="font/woff2" crossorigin />
+        preload to match the @font-face fetch (fonts load in CORS mode). */
+    }
+    <link
+      rel="preload"
+      href="/fonts/hanken-400-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/bricolage-800-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <meta name="generator" content={Astro.generator} />
     <meta name="google-site-verification" content="hSoNEwz-lNJiLCr4fTF43SHaNp0BgJvocv3BFgUhbvI" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
@@ -131,8 +145,10 @@ const siteSchema = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0f1c1e" />
-    {/* Structured data describes a page to search engines, so emitting it on a page we
-        told them not to index is a contradiction they flag rather than resolve. */}
+    {
+      /* Structured data describes a page to search engines, so emitting it on a page we
+        told them not to index is a contradiction they flag rather than resolve. */
+    }
     {!noindex && <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />}
     <ClientRouter />
   </head>

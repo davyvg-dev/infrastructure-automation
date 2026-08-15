@@ -9,6 +9,7 @@ suggested_week: 3
 # Peiling: hoeveel calls mis je? (engagement)
 
 ## Voice notes voor founder
+
 - Pure betrokkenheid, geen pitch. Reacties verhogen je bereik in de groep, zodat latere value-posts beter landen.
 - Werkt het best als losse vraag-post, niet als Facebook-poll-widget (in veel groepen uitgeschakeld).
 

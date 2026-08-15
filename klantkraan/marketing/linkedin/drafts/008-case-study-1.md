@@ -4,12 +4,13 @@ publish_week: 3
 post_type: case_study_reveal
 status: holdback
 character_count: 1243
-holdback_reason: "Needs real pilot-1 data — publish 30 days after first paying loodgieter starts."
+holdback_reason: 'Needs real pilot-1 data — publish 30 days after first paying loodgieter starts.'
 ---
 
 # Case study #1 — geanonimiseerd (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - HOLDBACK. Deze post is een skeleton. Niet publiceren tot pilot #1 minimaal 30 dagen draait én de pilotklant schriftelijk toestemming heeft gegeven voor anonieme cijfers in een case study.
 - Vervang ALLE [PLACEHOLDER]-blokken hieronder met écht data uit het pilot-dashboard. Het pilot-dashboard zit in `/r/[slug]` op klantkraan.nl — getallen rechtstreeks daaruit kopiëren.
 - Anonimiseer: vermijd plaatsnaam (Den Haag → "in de Randstad"), familienaam, eenmanszaak-naam.
@@ -24,12 +25,14 @@ holdback_reason: "Needs real pilot-1 data — publish 30 days after first paying
 Hier zijn de cijfers — niet de marketing-versie.
 
 Voor (4 weken vóór Klantkraan, eigen schatting):
-- [X] inkomende calls per week, schatting [Y%] niet opgenomen
+
+- [x] inkomende calls per week, schatting [Y%] niet opgenomen
 - Gemiddelde reactie-tijd na voicemail: [Z] uur
 - Aantal Google-reviews: [N], laatste review [M] maanden geleden
 
 Na (30 dagen Klantkraan):
-- [X] inkomende calls geregistreerd, [Y%] direct beantwoord door AI
+
+- [x] inkomende calls geregistreerd, [Y%] direct beantwoord door AI
 - Gemiddelde reactie-tijd: [Z] seconden
 - Aantal nieuwe Google-reviews via SMS-flow: [N]
 - Geboekte klussen: [N], waarvan [M] spoedklussen 's avonds
@@ -39,6 +42,7 @@ Wat hem het meest verbaasde (zijn quote, parafraseerd):
 "[QUOTE — vraag pilot-klant naar één concrete verandering. Voorbeeld: 'Ik kreeg gisteren een review terwijl ik op een dak stond — dat had ik anders nooit gevraagd.']"
 
 Wat we hebben geleerd:
+
 - [LESSON 1 — bv. spoedtoeslag-vraag liep vaak fout, prompt v2 opgelost]
 - [LESSON 2 — bv. 's avonds-flow had aparte tariefstructuur nodig]
 - [LESSON 3 — bv. review-SMS werkte beter op zaterdagochtend dan vrijdagavond]
@@ -55,11 +59,11 @@ Volledig pilot-rapport (geanonimiseerd) als PDF: klantkraan.nl — DM voor een k
 
 ## Wat in te vullen na pilot
 
-| Placeholder | Bron |
-|---|---|
-| [X] calls voor | Pilot-klant vragen — schatting |
-| [X] calls na | Synthflow-dashboard + Attio-events |
-| [Y%] opgenomen | Synthflow `call_picked` / totaal |
-| [Z] reactie-tijd | Synthflow gemiddelde ring-tot-pickup |
-| [N] reviews | Google Business Profile / Attio review-tag |
-| Quote | DM-gesprek met pilot, schriftelijke OK |
+| Placeholder      | Bron                                       |
+| ---------------- | ------------------------------------------ |
+| [X] calls voor   | Pilot-klant vragen — schatting             |
+| [X] calls na     | Synthflow-dashboard + Attio-events         |
+| [Y%] opgenomen   | Synthflow `call_picked` / totaal           |
+| [Z] reactie-tijd | Synthflow gemiddelde ring-tot-pickup       |
+| [N] reviews      | Google Business Profile / Attio review-tag |
+| Quote            | DM-gesprek met pilot, schriftelijke OK     |

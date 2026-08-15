@@ -79,8 +79,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
 })
 
 // Only append the brand suffix when the title stays within ~65 chars.
-const pageTitle =
-  post.data.title.length <= 52 ? `${post.data.title} | Klantkraan` : post.data.title
+const pageTitle = post.data.title.length <= 52 ? `${post.data.title} | Klantkraan` : post.data.title
 ---
 
 <Base title={pageTitle} description={post.data.description} canonical={canonical}>
@@ -130,9 +129,7 @@ const pageTitle =
       )
     }
 
-    <footer
-      class="mt-12 border-t border-(--color-line) pt-8 text-small text-(--color-dim)"
-    >
+    <footer class="mt-12 border-t border-(--color-line) pt-8 text-small text-(--color-dim)">
       Geschreven door {post.data.author}. Vragen of feedback?
       <a href="/demo/" class="no-underline hover:underline">Probeer de demo</a> of bekijk de
       <a href="/prijzen/" class="no-underline hover:underline">prijzen</a>.

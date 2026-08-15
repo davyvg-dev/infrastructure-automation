@@ -14,18 +14,19 @@ The receptionist only offers real calendar slots, never invents prices or advice
 
 ## The tiers
 
-| | **Chat** | **Compleet** (upsell) |
-|---|---|---|
-| **Price** | €299 / mo | €499 / mo |
-| Websitechat + WhatsApp receptionist (24/7, Dutch) | ✅ | ✅ |
-| Beantwoordt vragen (diensten, tarieven, FAQ) | ✅ | ✅ |
-| Plant afspraken in de agenda | ✅ | ✅ |
-| Vangt leads en terugbelverzoeken | ✅ | ✅ |
-| Done-for-you setup en tuning | ✅ | ✅ |
-| Maandelijks rapport | ✅ | ✅ |
-| AI-telefonist (voice) op eigen Nederlands nummer | — | ✅ |
+|                                                   | **Chat**  | **Compleet** (upsell) |
+| ------------------------------------------------- | --------- | --------------------- |
+| **Price**                                         | €299 / mo | €499 / mo             |
+| Websitechat + WhatsApp receptionist (24/7, Dutch) | ✅        | ✅                    |
+| Beantwoordt vragen (diensten, tarieven, FAQ)      | ✅        | ✅                    |
+| Plant afspraken in de agenda                      | ✅        | ✅                    |
+| Vangt leads en terugbelverzoeken                  | ✅        | ✅                    |
+| Done-for-you setup en tuning                      | ✅        | ✅                    |
+| Maandelijks rapport                               | ✅        | ✅                    |
+| AI-telefonist (voice) op eigen Nederlands nummer  | —         | ✅                    |
 
 **Both tiers include:**
+
 - Eenmalige setup €249 (waived for pilot clients)
 - Monthly cancel (30-day opzegtermijn)
 - First month 50% off (NOT free — preserves perceived value)
@@ -33,23 +34,24 @@ The receptionist only offers real calendar slots, never invents prices or advice
 - All prices excl. 21% BTW
 
 **Commitment discounts:**
+
 - 6-month prepay: 15% off
 - 12-month prepay: 20% off (and locked-in pricing if annual rate index changes)
 
 **Status (2026-07-13):** only Chat is sellable today. The voice agent is dormant; Compleet is quoted as the upgrade path, never sold before voice is verified live. No third tier — the old top Premium tier is killed.
 
-**Compleet price is under review (2026-07-30).** Secretaresse.ai sells voice + chat + WhatsApp at **€397/mo flat, unlimited conversations**, €497 setup — €5.261 year 1 against Compleet's €6.237, and they are unmetered where Compleet is 750 min + €0,40/min. They target *vakspecialisten* (loodgieters, elektriciens, hoveniers) by name. Compleet's €499/750-min structure was priced on the Synthflow margin model; voice has since moved to self-hosted LiveKit. **Do not requote Compleet until real LiveKit per-minute COGS is on paper**; then decide between €449 flat with a fair-use cap (preferred) and holding €499 unmetered. Chat at €299 is unaffected and structurally stronger — they have no text-only tier, so their floor to first payment is €894 against our €149. Full teardown: `research/secretaresse-ai-2026-07-30.md`.
+**Compleet price is under review (2026-07-30).** Secretaresse.ai sells voice + chat + WhatsApp at **€397/mo flat, unlimited conversations**, €497 setup — €5.261 year 1 against Compleet's €6.237, and they are unmetered where Compleet is 750 min + €0,40/min. They target _vakspecialisten_ (loodgieters, elektriciens, hoveniers) by name. Compleet's €499/750-min structure was priced on the Synthflow margin model; voice has since moved to self-hosted LiveKit. **Do not requote Compleet until real LiveKit per-minute COGS is on paper**; then decide between €449 flat with a fair-use cap (preferred) and holding €499 unmetered. Chat at €299 is unaffected and structurally stronger — they have no text-only tier, so their floor to first payment is €894 against our €149. Full teardown: `research/secretaresse-ai-2026-07-30.md`.
 
 ## Why this structure wins
 
-| Lever | Effect |
-|---|---|
-| Two tiers (€299/€499) | No decoy needed. Chat is a low-friction entry under every NL voice-tool bundle; Compleet anchors the value of voice at +€200. |
-| Low setup (€249, waived for pilots) | Beats NL Gold Lemon (€199 + €899 setup) and agency setups of €1,500+. |
-| Monthly cancel | Destroys the Podium-style 12-mo lock-in objection — a known #1 NL trade pain. |
-| First month 50% off | Better than "free" — paid attention is more honest than free anything. |
-| 30-day guarantee | Risk reversal. Costs us almost nothing because COGS is tiny. |
-| Prepay 15–20% off | Pulls cash forward, predicts MRR, signals strong intent. |
+| Lever                               | Effect                                                                                                                        |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Two tiers (€299/€499)               | No decoy needed. Chat is a low-friction entry under every NL voice-tool bundle; Compleet anchors the value of voice at +€200. |
+| Low setup (€249, waived for pilots) | Beats NL Gold Lemon (€199 + €899 setup) and agency setups of €1,500+.                                                         |
+| Monthly cancel                      | Destroys the Podium-style 12-mo lock-in objection — a known #1 NL trade pain.                                                 |
+| First month 50% off                 | Better than "free" — paid attention is more honest than free anything.                                                        |
+| 30-day guarantee                    | Risk reversal. Costs us almost nothing because COGS is tiny.                                                                  |
+| Prepay 15–20% off                   | Pulls cash forward, predicts MRR, signals strong intent.                                                                      |
 
 ## What we do NOT offer
 
@@ -63,10 +65,10 @@ The receptionist only offers real calendar slots, never invents prices or advice
 
 COGS assumptions are provisional (see `07-finance/cogs-per-tier.md`); text conversations via the Claude API cost cents, so Chat margin is structurally higher than the old voice-first tiers.
 
-| Tier | List | COGS (est.) | GM% |
-|---|---|---|---|
-| Chat | €299 | ~€10 | ~96.7% |
-| Compleet | €499 | ~€35 | ~93.0% |
+| Tier                                                   | List     | COGS (est.) | GM%        |
+| ------------------------------------------------------ | -------- | ----------- | ---------- |
+| Chat                                                   | €299     | ~€10        | ~96.7%     |
+| Compleet                                               | €499     | ~€35        | ~93.0%     |
 | **Blended (70% Chat / 30% Compleet, once voice live)** | **€359** | **~€17.50** | **~95.1%** |
 
 Until voice ships, the realistic planning ARPU is **€299** (100% Chat); net ~€285 after ~5% prepay-discount drag.
@@ -81,6 +83,7 @@ Until voice ships, the realistic planning ARPU is **€299** (100% Chat); net ~�
 ## Tier upgrade triggers (account-management lever)
 
 A Chat client is a Compleet candidate when:
+
 - They mention missed calls or "ik kan mijn telefoon niet bijhouden" in a check-in, OR
 - Their chat log shows repeated "kan ik iemand bellen?" requests, OR
 - They have staff answering phones during work hours.

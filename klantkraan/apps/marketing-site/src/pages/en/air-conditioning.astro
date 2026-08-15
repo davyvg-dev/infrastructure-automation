@@ -14,9 +14,18 @@ interface PainStat {
 }
 
 const painStats: PainStat[] = [
-  { value: '24/7', caption: "the receptionist answers. A no-cooling question at 9pm gets a reply on the spot." },
-  { value: '28%', caption: "of calls to tradespeople go unanswered, usually because you're on a job." },
-  { value: '€450', caption: 'average value of a missed enquiry. One saved install pays for months.' },
+  {
+    value: '24/7',
+    caption: 'the receptionist answers. A no-cooling question at 9pm gets a reply on the spot.',
+  },
+  {
+    value: '28%',
+    caption: "of calls to tradespeople go unanswered, usually because you're on a job.",
+  },
+  {
+    value: '€450',
+    caption: 'average value of a missed enquiry. One saved install pays for months.',
+  },
 ]
 
 interface Feature {
@@ -29,7 +38,7 @@ const features: Feature[] = [
   {
     icon: 'message-square',
     title: 'Handles the summer rush',
-    body: "Answers questions on your website and via WhatsApp, in natural English, evenings and weekends included. Quotes your own rates for a service, a recharge or a new install, and tells an urgent no-cooling call apart from a routine maintenance booking.",
+    body: 'Answers questions on your website and via WhatsApp, in natural English, evenings and weekends included. Quotes your own rates for a service, a recharge or a new install, and tells an urgent no-cooling call apart from a routine maintenance booking.',
   },
   {
     icon: 'calendar-check',
@@ -118,22 +127,12 @@ const faqSchema = {
         </h1>
         <p class="mt-6 max-w-2xl text-h3 text-dim">
           A digital receptionist on your website and WhatsApp that recognises an urgent no-cooling
-          call and doesn't confuse it with a routine service booking. Catches the summer rush and the
-          after-hours enquiries. Evenings and weekends included.
+          call and doesn't confuse it with a routine service booking. Catches the summer rush and
+          the after-hours enquiries. Evenings and weekends included.
         </p>
         <div class="mt-10 btn-row">
-          <a
-            href="/en/demo/"
-            class="btn btn-primary btn-lg"
-          >
-            Try the demo
-          </a>
-          <a
-            href="/en/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            See pricing
-          </a>
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
         </div>
       </div>
       <div class="hidden text-(--color-sodium) md:block">
@@ -219,12 +218,14 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">The maths</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Run the numbers.
-      </h2>
-      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
+      <h2 class="mt-3 font-display text-h1 text-chalk">Run the numbers.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
         <p class="text-h3 text-chalk">
-          Miss 5 enquiries a week at €450? That's <strong class="text-(--color-sodium)">around €39,000 in lost revenue a year</strong>.
+          Miss 5 enquiries a week at €450? That's <strong class="text-(--color-sodium)"
+            >around €39,000 in lost revenue a year</strong
+          >.
         </p>
         <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One extra install from the summer rush covers the
@@ -232,18 +233,8 @@ const faqSchema = {
           sweating through a 40°C afternoon waiting for a callback.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href="/en/demo/"
-            class="btn btn-primary btn-lg"
-          >
-            Try the demo
-          </a>
-          <a
-            href="/en/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            See pricing
-          </a>
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
         </div>
         <p class="mt-6 text-micro text-dim">
           Amounts excl. 21% VAT. Illustrative example based on a €450 average missed-enquiry value
@@ -258,9 +249,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Questions</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Frequently asked questions.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -292,26 +281,14 @@ const faqSchema = {
   <!-- 6. Final CTA (blue) -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h2 class="font-display text-h1 text-chalk">
-        Ready for the next heatwave?
-      </h2>
+      <h2 class="font-display text-h1 text-chalk">Ready for the next heatwave?</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Try the live demo. Then you'll know whether it recognises an urgent no-cooling call and how
         it tells that apart from a routine service question.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/en/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Try the demo
-        </a>
-        <a
-          href="/en/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          See pricing
-        </a>
+        <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+        <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
       </div>
     </div>
   </section>

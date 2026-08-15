@@ -18,7 +18,7 @@ interface PainStat {
 const painStats: PainStat[] = [
   { value: '28%', caption: 'of your calls go unanswered.' },
   { value: '€450', caption: 'average value per missed job.' },
-  { value: '0', caption: 'reviews for every job you don\'t pick up.' },
+  { value: '0', caption: "reviews for every job you don't pick up." },
 ]
 
 interface Feature {
@@ -31,17 +31,17 @@ const features: Feature[] = [
   {
     icon: 'message-square',
     title: 'Knows your call-out charges by heart',
-    body: 'Answers customer questions on your website and via WhatsApp, in natural English. Evenings and weekends too. Never quotes a rate you haven\'t set yourself.',
+    body: "Answers customer questions on your website and via WhatsApp, in natural English. Evenings and weekends too. Never quotes a rate you haven't set yourself.",
   },
   {
     icon: 'calendar-check',
     title: 'Appointments straight into your calendar',
-    body: 'The receptionist books callback and job appointments straight into your calendar, only in the slots you\'ve opened up. No phone tag, no back-and-forth email.',
+    body: "The receptionist books callback and job appointments straight into your calendar, only in the slots you've opened up. No phone tag, no back-and-forth email.",
   },
   {
     icon: 'phone',
     title: 'Leads and callback requests on your phone',
-    body: 'Every lead and callback request lands on your phone as a message, with the name, number and the customer\'s question. No customer gets lost in a voicemail.',
+    body: "Every lead and callback request lands on your phone as a message, with the name, number and the customer's question. No customer gets lost in a voicemail.",
   },
 ]
 
@@ -55,21 +55,21 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: 'With one small script that we install for you. You don\'t have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.',
+    a: "With one small script that we install for you. You don't have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
   },
   {
-    q: 'And what if I\'m on site and can\'t respond?',
-    a: 'That\'s exactly what this is built for. The receptionist answers the question (emergency, new job, existing customer, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back when it suits you.',
+    q: "And what if I'm on site and can't respond?",
+    a: "That's exactly what this is built for. The receptionist answers the question (emergency, new job, existing customer, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back when it suits you.",
   },
   {
-    q: 'Can the customer tell it\'s AI?',
-    a: 'Yes. Every conversation opens by telling your customer they\'re chatting with a digital assistant, on behalf of your business. That isn\'t a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.',
+    q: "Can the customer tell it's AI?",
+    a: "Yes. Every conversation opens by telling your customer they're chatting with a digital assistant, on behalf of your business. That isn't a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
   {
     q: 'What if the AI says something wrong about my prices?',
-    a: 'That can\'t happen. The assistant only quotes rates you\'ve set in your own system: call-out charge, hourly rate, emergency surcharge, materials mark-up. Unknown prices are never made up; the customer gets a callback request instead. We test every configuration before you go live.',
+    a: "That can't happen. The assistant only quotes rates you've set in your own system: call-out charge, hourly rate, emergency surcharge, materials mark-up. Unknown prices are never made up; the customer gets a callback request instead. We test every configuration before you go live.",
   },
   {
     q: 'What happens to the customer data?',
@@ -79,7 +79,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Cancel monthly, really?',
-    a: 'Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who\'d rather pay 6 or 12 months up front there\'s a discount (15% and 20% respectively), but that\'s a choice, not the default.',
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively), but that's a choice, not the default.",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -121,18 +121,8 @@ const faqSchema = {
           same subscription.
         </p>
         <div class="mt-10 btn-row">
-          <a
-            href="/en/demo/"
-            class="btn btn-primary btn-lg"
-          >
-            Try the demo
-          </a>
-          <a
-            href="/en/rekentool/"
-            class="btn btn-ghost btn-lg"
-          >
-            Work out your ROI
-          </a>
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/rekentool/" class="btn btn-ghost btn-lg"> Work out your ROI </a>
         </div>
       </div>
       <div class="hidden text-(--color-sodium) md:block">
@@ -194,11 +184,10 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Modules</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        What Klantkraan does for plumbers.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">What Klantkraan does for plumbers.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Three modules. One monthly price. Built for the plumber who spends more time under a sink than by the phone.
+        Three modules. One monthly price. Built for the plumber who spends more time under a sink
+        than by the phone.
       </p>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
@@ -220,35 +209,27 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">The maths</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Do the maths.
-      </h2>
-      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
+      <h2 class="mt-3 font-display text-h1 text-chalk">Do the maths.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
         <p class="text-h3 text-chalk">
-          Miss 10 calls a week at €450 each? That's <strong class="text-(--color-sodium)">over €77,000 in lost revenue a year</strong>.
+          Miss 10 calls a week at €450 each? That's <strong class="text-(--color-sodium)"
+            >over €77,000 in lost revenue a year</strong
+          >.
         </p>
         <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One extra emergency job a month and you break even.
           Everything after that is your margin.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href="/en/rekentool/"
-            class="btn btn-primary btn-lg"
-          >
-            Open the calculator
-          </a>
-          <a
-            href="/en/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            See pricing
-          </a>
+          <a href="/en/rekentool/" class="btn btn-primary btn-lg"> Open the calculator </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
         </div>
         <p class="mt-6 text-micro text-dim">
-          Amounts exclude 21% VAT. Example based on an industry average of €450 per call
-          (source: Aira / Invoca missed-call benchmarks) and the assumption that roughly 1 in 3
-          missed calls would have turned into a paying job (33% conversion rate).
+          Amounts exclude 21% VAT. Example based on an industry average of €450 per call (source:
+          Aira / Invoca missed-call benchmarks) and the assumption that roughly 1 in 3 missed calls
+          would have turned into a paying job (33% conversion rate).
         </p>
       </div>
     </div>
@@ -258,9 +239,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Questions</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Frequently asked questions.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -292,26 +271,14 @@ const faqSchema = {
   <!-- 8. Final CTA band (blue) -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <h2 class="font-display text-h1 text-chalk">
-        Ready to stop missing jobs?
-      </h2>
+      <h2 class="font-display text-h1 text-chalk">Ready to stop missing jobs?</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Try the live demo. In one conversation you'll see how the receptionist answers a question
         about call-out charges and puts an appointment in the calendar.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/en/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Try the demo
-        </a>
-        <a
-          href="/en/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          See pricing
-        </a>
+        <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+        <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
       </div>
     </div>
   </section>

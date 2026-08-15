@@ -37,7 +37,9 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
       </p>
 
       <!-- Desktop: live embed inline. -->
-      <div class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4">
+      <div
+        class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4"
+      >
         <iframe
           src={DEMO_SRC}
           title="Live chat with Klantkraan's digital receptionist"
@@ -47,9 +49,13 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
       </div>
 
       <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). -->
-      <div class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden">
+      <div
+        class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden"
+      >
         <div class="flex items-center gap-3">
-          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)">
+          <span
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)"
+          >
             <Icon name="message-square" class="h-5 w-5" />
           </span>
           <div class="min-w-0">
@@ -57,7 +63,9 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
             <p class="text-small text-(--color-dim)">Digital assistant · replies instantly</p>
           </div>
         </div>
-        <p class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)">
+        <p
+          class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)"
+        >
           Chat like a customer: ask a question or request an appointment. Opens full-screen.
         </p>
         <button
@@ -98,15 +106,17 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">The WhatsApp channel</h3>
             <p class="mt-2 text-body text-(--color-dim)">
-              The same receptionist on the channel your customers already use every day. Anyone who'd
-              rather message than call gets an instant answer.
+              The same receptionist on the channel your customers already use every day. Anyone
+              who'd rather message than call gets an instant answer.
             </p>
           </div>
         </article>
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
           <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-sodium)" />
           <div>
-            <h3 class="font-display text-h3 text-(--color-chalk)">An appointment in the calendar</h3>
+            <h3 class="font-display text-h3 text-(--color-chalk)">
+              An appointment in the calendar
+            </h3>
             <p class="mt-2 text-body text-(--color-dim)">
               You see live how a customer question turns into a booked appointment in the calendar.
               No phone tag, no back-and-forth email.
@@ -116,7 +126,9 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
           <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
           <div>
-            <h3 class="font-display text-h3 text-(--color-chalk)">Lead notification on your phone</h3>
+            <h3 class="font-display text-h3 text-(--color-chalk)">
+              Lead notification on your phone
+            </h3>
             <p class="mt-2 text-body text-(--color-dim)">
               Every lead and every callback request lands straight on your phone as a message, with
               name, number and the customer's question.
@@ -130,30 +142,20 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
   <!-- 3. Prefer a personal demo? (cream). Secondary path -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
-        <h2 class="font-display text-h2 text-(--color-chalk)">
-          Prefer a personal demo?
-        </h2>
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Prefer a personal demo?</h2>
         <p class="mt-3 max-w-2xl text-body text-(--color-dim)">
           We set the receptionist up on your own services and rates and walk through it with you.
           You won't get a sales pitch and you're not committing to anything.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener"
-            class="btn btn-primary btn-lg"
-          >
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">
             <Icon name="message-circle" class="h-5 w-5" />
             <span>WhatsApp us now</span>
           </a>
-          <a
-            href={mailLink}
-            class="btn btn-ghost btn-lg"
-          >
-            Prefer email?
-          </a>
+          <a href={mailLink} class="btn btn-ghost btn-lg"> Prefer email? </a>
         </div>
         <p class="mt-3 text-small text-(--color-dim)">
           Usually a reply within one working day, straight from the owner.
@@ -163,9 +165,14 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
   </section>
 
   <!-- 4. AI-disclosure (stone-100, with rust-bordered card) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-labelledby="ai-act">
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-labelledby="ai-act"
+  >
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
+      >
         <h2 id="ai-act" class="font-display text-h2 text-(--color-sodium)">
           AI disclosure (EU AI Act art. 50)
         </h2>
@@ -176,14 +183,15 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
         <blockquote
           class="mt-4 rounded-(--radius-button) border border-dashed border-(--color-line) bg-[rgba(0,0,0,0.22)] p-3 md:p-4 font-mono text-small text-(--color-sodium-soft)"
         >
-          "Hi, you're chatting with {`{{agent_name}}`}, the digital assistant at {`{{business_name}}`}.
-          How can I help?"
+          "Hi, you're chatting with {`{{agent_name}}`}, the digital assistant at {
+            `{{business_name}}`
+          }. How can I help?"
         </blockquote>
         <ul class="mt-4 space-y-2 text-small text-(--color-dim)">
           <li>The disclosure is never switched off, not even at a customer's request.</li>
           <li>
-            If your customer asks "Am I talking to a human?", the assistant answers honestly that
-            it is a digital assistant and that the message goes straight to the owner.
+            If your customer asks "Am I talking to a human?", the assistant answers honestly that it
+            is a digital assistant and that the message goes straight to the owner.
           </li>
         </ul>
         <p class="mt-4 text-small">
@@ -201,18 +209,8 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
         Take a look at the two plans. The demo stays one click away.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/en/prijzen/"
-          class="btn btn-primary btn-lg"
-        >
-          See pricing
-        </a>
-        <a
-          href="/en/"
-          class="btn btn-ghost btn-lg"
-        >
-          Back to overview
-        </a>
+        <a href="/en/prijzen/" class="btn btn-primary btn-lg"> See pricing </a>
+        <a href="/en/" class="btn btn-ghost btn-lg"> Back to overview </a>
       </div>
     </div>
   </section>
@@ -228,7 +226,10 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
   </div>
 
   <style>
-    #demo-overlay { background: #0f1c1e; overscroll-behavior: contain; }
+    #demo-overlay {
+      background: #0f1c1e;
+      overscroll-behavior: contain;
+    }
   </style>
 
   <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->

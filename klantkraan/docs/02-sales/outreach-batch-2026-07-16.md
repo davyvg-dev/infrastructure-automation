@@ -43,18 +43,18 @@ instead of a link (best for a cold first touch anyway).
 
 ## The 10 at a glance
 
-| # | Bedrijf | Stad | Vak | E-mail | Demo link |
-|---|---------|------|-----|--------|-----------|
-| 1 | Visser & Van der Hell Loodgietersbedrijf B.V. | Rotterdam | loodgieter | info@visservanderhell.nl | https://demo.klantkraan.nl/?client=visser-van-der-hell |
-| 2 | Lohmann Groep B.V. | Rotterdam | loodgieter | info@lohmannbv.nl | https://demo.klantkraan.nl/?client=lohmann |
-| 3 | Loodgieter Utrecht B.V. | Utrecht | loodgieter | info@loodgieterutrechtbv.nl | https://demo.klantkraan.nl/?client=loodgieter-utrecht-bv |
-| 4 | Herfst B.V. | Amsterdam | loodgieter | info@herfstbv.nl | https://demo.klantkraan.nl/?client=herfst |
-| 5 | W.J. van der Herp B.V. | Den Haag | loodgieter | info@vanderherp.nl | https://demo.klantkraan.nl/?client=van-der-herp |
-| 6 | Derwort Loodgieters B.V. | Delft | loodgieter | info@derwort.nu | https://demo.klantkraan.nl/?client=derwort |
-| 7 | T.I.B. Verkuylen B.V. | Leiden | loodgieter | info@tib-verkuylen.nl | https://demo.klantkraan.nl/?client=verkuylen |
-| 8 | Duckdekker B.V. | Den Haag | dakdekker | info@duckdekker.nl | https://demo.klantkraan.nl/?client=duckdekker |
-| 9 | AJ Dakwerken B.V. | Hilversum | dakdekker | info@ajdakwerken.nl | https://demo.klantkraan.nl/?client=aj-dakwerken |
-| 10 | VDP Dakbedekking B.V. | Rotterdam | dakdekker | info@vdpdakbedekking.nl | https://demo.klantkraan.nl/?client=vdp-dakbedekking |
+| #   | Bedrijf                                       | Stad      | Vak        | E-mail                      | Demo link                                                |
+| --- | --------------------------------------------- | --------- | ---------- | --------------------------- | -------------------------------------------------------- |
+| 1   | Visser & Van der Hell Loodgietersbedrijf B.V. | Rotterdam | loodgieter | info@visservanderhell.nl    | https://demo.klantkraan.nl/?client=visser-van-der-hell   |
+| 2   | Lohmann Groep B.V.                            | Rotterdam | loodgieter | info@lohmannbv.nl           | https://demo.klantkraan.nl/?client=lohmann               |
+| 3   | Loodgieter Utrecht B.V.                       | Utrecht   | loodgieter | info@loodgieterutrechtbv.nl | https://demo.klantkraan.nl/?client=loodgieter-utrecht-bv |
+| 4   | Herfst B.V.                                   | Amsterdam | loodgieter | info@herfstbv.nl            | https://demo.klantkraan.nl/?client=herfst                |
+| 5   | W.J. van der Herp B.V.                        | Den Haag  | loodgieter | info@vanderherp.nl          | https://demo.klantkraan.nl/?client=van-der-herp          |
+| 6   | Derwort Loodgieters B.V.                      | Delft     | loodgieter | info@derwort.nu             | https://demo.klantkraan.nl/?client=derwort               |
+| 7   | T.I.B. Verkuylen B.V.                         | Leiden    | loodgieter | info@tib-verkuylen.nl       | https://demo.klantkraan.nl/?client=verkuylen             |
+| 8   | Duckdekker B.V.                               | Den Haag  | dakdekker  | info@duckdekker.nl          | https://demo.klantkraan.nl/?client=duckdekker            |
+| 9   | AJ Dakwerken B.V.                             | Hilversum | dakdekker  | info@ajdakwerken.nl         | https://demo.klantkraan.nl/?client=aj-dakwerken          |
+| 10  | VDP Dakbedekking B.V.                         | Rotterdam | dakdekker  | info@vdpdakbedekking.nl     | https://demo.klantkraan.nl/?client=vdp-dakbedekking      |
 
 **How to work it:** ~30 min/day. Send 3–4 cold emails, log replies, and run the LinkedIn track in
 parallel for the same names. Replace `[jouw naam]` with your own signature. Reply to any interest
@@ -415,12 +415,12 @@ Warmer than cold email, and compliant even for sole traders: connect + a genuine
 demo only on a reply. Full sequence in `demo-outreach.md §1`. Short version:
 
 - **T1** — connection request, no note.
-- **T2** (day 1 after accept, a question not a pitch): *"Dank voor de connectie. Korte vraag: nemen
+- **T2** (day 1 after accept, a question not a pitch): _"Dank voor de connectie. Korte vraag: nemen
   jullie zelf de telefoon op buiten kantooruren, of loopt dat via voicemail? Ik bouw
-  AI-receptionisten voor installatie- en dakbedrijven en ben benieuwd hoe jij het oplost."*
-- **T3** (only on any interested reply → send their demo): *"Ik heb er even eentje voor
+  AI-receptionisten voor installatie- en dakbedrijven en ben benieuwd hoe jij het oplost."_
+- **T3** (only on any interested reply → send their demo): _"Ik heb er even eentje voor
   {bedrijf} klaargezet — met jullie diensten erin: {demo-link uit de tabel}. Bevalt het? Dan zet
-  ik 'm 14 dagen gratis en volledig ingericht voor je live."*
+  ik 'm 14 dagen gratis en volledig ingericht voor je live."_
 - **T4** (day 12, no reply): one-line breakup, demo link stays up.
 
 ---
@@ -434,4 +434,7 @@ demo only on a reply. Full sequence in `demo-outreach.md §1`. Short version:
 - No invented prices anywhere — the bot books and says the monteur confirms the tarief on locatie.
 - The `likely-BV`/`unknown` prospects in the CSV are **not** in this batch; KvK-verify them before
   any cold approach.
+
+```
+
 ```

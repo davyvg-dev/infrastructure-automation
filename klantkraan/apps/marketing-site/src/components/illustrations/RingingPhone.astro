@@ -11,7 +11,8 @@ interface Props {
   class?: string
   'aria-label'?: string
 }
-const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Rinkelende telefoon' } = Astro.props
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Rinkelende telefoon' } =
+  Astro.props
 ---
 
 <svg
@@ -40,18 +41,18 @@ const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Rinkelende te
        Q188 192 175 200
        Q145 215 105 195
        Q75 178 65 145 Z"
-  />
+  ></path>
   <!-- Spiral cord coming from earpiece -->
-  <path d="M75 95 Q60 78 80 70 Q98 64 92 50 Q88 38 102 36" />
+  <path d="M75 95 Q60 78 80 70 Q98 64 92 50 Q88 38 102 36"></path>
   <!-- Sound waves — left side (earpiece) -->
-  <path d="M42 105 Q34 115 42 125" />
-  <path d="M30 95 Q18 115 30 135" />
+  <path d="M42 105 Q34 115 42 125"></path>
+  <path d="M30 95 Q18 115 30 135"></path>
   <!-- Sound waves — right side (mouthpiece) -->
-  <path d="M195 168 Q203 178 195 188" />
-  <path d="M207 158 Q219 178 207 198" />
+  <path d="M195 168 Q203 178 195 188"></path>
+  <path d="M207 158 Q219 178 207 198"></path>
   <!-- Subtle ring indicator (small star/dot above) -->
-  <circle cx="120" cy="28" r="3" fill="currentColor" stroke="none" />
-  <path d="M120 38 L120 48" />
-  <path d="M105 32 L98 25" />
-  <path d="M135 32 L142 25" />
+  <circle cx="120" cy="28" r="3" fill="currentColor" stroke="none"></circle>
+  <path d="M120 38 L120 48"></path>
+  <path d="M105 32 L98 25"></path>
+  <path d="M135 32 L142 25"></path>
 </svg>

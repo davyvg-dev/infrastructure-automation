@@ -9,6 +9,7 @@ character_count: 1174
 # Wat een AI-call eigenlijk klinkt — transcript (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 2, post 5) zegt: "screen-rec clip 30s live demo van AI-call". Op publicatie-moment is het publieke demo-nummer er nog niet (CM.com signup geparkeerd). Daarom als transcript-post, niet als video — werkt nog steeds: lezers visualiseren de cadans terwijl ze lezen.
 - Hook test: "Hier is letterlijk wat een AI-receptionist zegt." — geen marketing, een transcript. Authenticiteit > polish.
 - Cadans: dialoogstructuur met "K:" / "AI:" prefixes leest snel. Eén regel per beurt.

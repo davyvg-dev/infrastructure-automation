@@ -38,7 +38,7 @@ Hier wordt het vaak misleidend verkocht, dus we zijn direct.
 - Hij **kan geen offerte op maat schrijven** voor een badkamerrenovatie. Hij plant wel een opname-afspraak en stuurt het intakeformulier.
 - Hij **kan een boze klant niet kalmeren** zoals een mens dat kan. Bij sterke emotie geeft hij het gesprek aan u door, met een directe melding op uw telefoon.
 - Hij **kan niet onderhandelen over prijs**. Hij noemt uw tarief, punt.
-- Hij **vervangt geen monteur**. Een AI-telefoniste vervangt het stuk werk *vóór* de monteur: de opname, de planning, de bevestiging.
+- Hij **vervangt geen monteur**. Een AI-telefoniste vervangt het stuk werk _vóór_ de monteur: de opname, de planning, de bevestiging.
 
 Wie u een AI verkoopt die "alles" kan, verkoopt lucht. Een goede AI doet drie of vier dingen goed. De rest wijst hij netjes af, zodat u kunt werken.
 
@@ -80,7 +80,7 @@ Onder **artikel 50 van de EU AI Act** moet u uw klanten expliciet melden dat ze 
 
 Onze standaardbegroeting in de chat luidt:
 
-> *Goedendag, u chat met de digitale assistent van \[Bedrijf]. Dit gesprek wordt gevoerd door een AI-systeem. Waarmee kan ik u helpen?*
+> _Goedendag, u chat met de digitale assistent van \[Bedrijf]. Dit gesprek wordt gevoerd door een AI-systeem. Waarmee kan ik u helpen?_
 
 Klanten vinden dit prima. Sterker: ze waarderen de directheid. Wie u een product verkoopt dat deze disclosure verstopt of "optioneel" maakt, brengt u in juridisch risico. Vraag er altijd naar.
 

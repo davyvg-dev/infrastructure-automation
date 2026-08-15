@@ -9,6 +9,7 @@ character_count: 1151
 # Intro — Wat ik bouw en waarom (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Hook test: "Vandaag launch ik Klantkraan." moet sterk genoeg zijn om de "see more" door te tikken. Eerste regel staat alleen.
 - Cadans-controle: korte zinnen, max 1 idee per regel. Witregels tussen blokken voor mobiel.
 - Persoonlijk maken: pas "een loodgieter belde mij gisteren" aan naar een echt voorbeeld als die er was.
@@ -30,11 +31,13 @@ Dat is geen lui-probleem. Dat is een structuurprobleem.
 Eén misgelopen badkamer = €1.800 omzet weg. Per week. Per vakman.
 
 Bestaande tools lossen dit half op:
+
 - Voice-only agencies kennen geen voorrijkosten of spoedtoeslag.
 - Lead-marketplaces zoals Werkspot? Vakmensen vertrouwen die niet.
 - US-tools zoals Podium? 12 maanden lock-in en geen AVG.
 
 Klantkraan is anders:
+
 - Eén vaste prijs, drie modules.
 - Per maand opzegbaar, geen setup-kosten.
 - EU-hosted, AI Act-disclosure ingebouwd.

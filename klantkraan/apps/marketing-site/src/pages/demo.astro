@@ -24,13 +24,15 @@ import { waLink, mailLink } from '../data/contact'
         </span>
       </div>
       <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
-        Een echte voorbeeld-receptionist, hieronder in uw browser. Stel een vraag of plan
-        een afspraak. Geen verplichting.
+        Een echte voorbeeld-receptionist, hieronder in uw browser. Stel een vraag of plan een
+        afspraak. Geen verplichting.
       </p>
 
       <!-- Desktop: live embed inline. No on-screen keyboard, so no viewport
            fight — the iframe sits happily in the page. -->
-      <div class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4">
+      <div
+        class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4"
+      >
         <iframe
           src="https://demo-168-119-173-25.sslip.io/?embed=1"
           title="Live chat met de digitale receptionist van Klantkraan"
@@ -44,9 +46,13 @@ import { waLink, mailLink } from '../data/contact'
       <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). An inline
            fixed-height iframe fights the iOS keyboard; a full-viewport overlay
            lets the chat own the screen so the keyboard never hides it. -->
-      <div class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden">
+      <div
+        class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden"
+      >
         <div class="flex items-center gap-3">
-          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)">
+          <span
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)"
+          >
             <Icon name="message-square" class="h-5 w-5" />
           </span>
           <div class="min-w-0">
@@ -54,7 +60,9 @@ import { waLink, mailLink } from '../data/contact'
             <p class="text-small text-(--color-dim)">Digitale assistent · reageert direct</p>
           </div>
         </div>
-        <p class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)">
+        <p
+          class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)"
+        >
           Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.
         </p>
         <button
@@ -69,8 +77,9 @@ import { waLink, mailLink } from '../data/contact'
 
       <p class="mt-3 text-small text-(--color-dim)">
         Dit is een voorbeeldbedrijf. Bij uw eigen receptionist staan uw diensten, tarieven en
-        werkgebied ingesteld. Heeft u een sportschool? <a href="/demo/sportscholen/">Probeer de
-        sportschool-demo</a>.
+        werkgebied ingesteld. Heeft u een sportschool? <a href="/demo/sportscholen/"
+          >Probeer de sportschool-demo</a
+        >.
       </p>
     </div>
   </section>
@@ -114,7 +123,9 @@ import { waLink, mailLink } from '../data/contact'
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
           <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
           <div>
-            <h3 class="font-display text-h3 text-(--color-chalk)">Lead-notificatie op uw telefoon</h3>
+            <h3 class="font-display text-h3 text-(--color-chalk)">
+              Lead-notificatie op uw telefoon
+            </h3>
             <p class="mt-2 text-body text-(--color-dim)">
               Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam,
               nummer en de vraag van de klant.
@@ -128,30 +139,20 @@ import { waLink, mailLink } from '../data/contact'
   <!-- 3. Liever een persoonlijke demo? (cream) — secondary path -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
-        <h2 class="font-display text-h2 text-(--color-chalk)">
-          Liever een persoonlijke demo?
-        </h2>
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Liever een persoonlijke demo?</h2>
         <p class="mt-3 max-w-2xl text-body text-(--color-dim)">
-          Wij zetten de receptionist op uw eigen diensten en tarieven en lopen hem met u door.
-          U krijgt geen verkooppraatje en zit nergens aan vast.
+          Wij zetten de receptionist op uw eigen diensten en tarieven en lopen hem met u door. U
+          krijgt geen verkooppraatje en zit nergens aan vast.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noopener"
-            class="btn btn-primary btn-lg"
-          >
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">
             <Icon name="message-circle" class="h-5 w-5" />
             <span>WhatsApp ons direct</span>
           </a>
-          <a
-            href={mailLink}
-            class="btn btn-ghost btn-lg"
-          >
-            Liever per e-mail
-          </a>
+          <a href={mailLink} class="btn btn-ghost btn-lg"> Liever per e-mail </a>
         </div>
         <p class="mt-3 text-small text-(--color-dim)">
           Antwoord meestal binnen één werkdag, direct van de eigenaar.
@@ -161,9 +162,14 @@ import { waLink, mailLink } from '../data/contact'
   </section>
 
   <!-- 4. AI-disclosure (stone-100, with rust-bordered card) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-labelledby="ai-act">
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-labelledby="ai-act"
+  >
     <div class="mx-auto max-w-5xl px-6">
-      <div class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
+      >
         <h2 id="ai-act" class="font-display text-h2 text-(--color-sodium)">
           AI-disclosure (EU AI Act art. 50)
         </h2>
@@ -180,9 +186,8 @@ import { waLink, mailLink } from '../data/contact'
         <ul class="mt-4 space-y-2 text-small text-(--color-dim)">
           <li>De disclosure wordt nooit uitgeschakeld, ook niet op klantverzoek.</li>
           <li>
-            Vraagt uw klant "Ben ik met een mens in gesprek?" dan antwoordt de assistent eerlijk
-            dat zij een digitale assistent is en dat het bericht direct bij de eigenaar
-            terechtkomt.
+            Vraagt uw klant "Ben ik met een mens in gesprek?" dan antwoordt de assistent eerlijk dat
+            zij een digitale assistent is en dat het bericht direct bij de eigenaar terechtkomt.
           </li>
         </ul>
         <p class="mt-4 text-small">
@@ -201,18 +206,8 @@ import { waLink, mailLink } from '../data/contact'
         blijft daarna één klik verwijderd.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/rekentool/"
-          class="btn btn-primary btn-lg"
-        >
-          Open de rekentool
-        </a>
-        <a
-          href="/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          Bekijk prijzen
-        </a>
+        <a href="/rekentool/" class="btn btn-primary btn-lg"> Open de rekentool </a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
       </div>
     </div>
   </section>
@@ -220,11 +215,7 @@ import { waLink, mailLink } from '../data/contact'
   <!-- Full-screen demo overlay (mobile). Fixed = outside page scroll flow; its
        height is set to window.visualViewport by /js/demo-embed.js so the iOS
        keyboard never hides the chat. The iframe is injected on first open. -->
-  <div
-    id="demo-overlay"
-    class="fixed inset-0 z-[70] hidden overflow-hidden"
-    aria-hidden="true"
-  >
+  <div id="demo-overlay" class="fixed inset-0 z-[70] hidden overflow-hidden" aria-hidden="true">
   </div>
 
   <style>
@@ -232,7 +223,10 @@ import { waLink, mailLink } from '../data/contact'
        marketing page can never show through around or under the chat — even while the
        keyboard animates. Matches the chat's own light/dark background so any strip
        left beside the keyboard is invisible rather than a jarring block of colour. */
-    #demo-overlay { background: #0f1c1e; overscroll-behavior: contain; }
+    #demo-overlay {
+      background: #0f1c1e;
+      overscroll-behavior: contain;
+    }
   </style>
 
   <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self').

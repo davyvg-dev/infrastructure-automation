@@ -43,9 +43,7 @@ export const localeHome = { nl: '/', en: '/en/', es: '/es/' } as const
 
 /** The pair a path belongs to, or null when the path has no translation. */
 export function pairForPath(path: string): LocalePair | null {
-  return (
-    localePairs.find((p) => p.nl === path || p.en === path || p.es === path) ?? null
-  )
+  return localePairs.find((p) => p.nl === path || p.en === path || p.es === path) ?? null
 }
 
 /**

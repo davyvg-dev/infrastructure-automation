@@ -9,6 +9,7 @@ character_count: 1199
 # 10 vragen die je AI-receptionist moet kunnen beantwoorden (intern — niet gepubliceerd)
 
 ## Voice notes voor founder
+
 - Calendar (week 3, post 10) zegt: listicle "10 vragen die je AI-receptionist moet kunnen beantwoorden". Werkt op LI omdat het concreet test-bare criteria geeft — lezer kan z'n eigen flow ertegen houden.
 - Hook test: "Hier zijn 10 vragen. Belt de jouwe? Test het." — uitnodigend, geen verkoop in de hook.
 - Cadans: 10 items, één regel per vraag. Geen uitleg in de post — laat lezer zelf de "ja/nee"-check doen.

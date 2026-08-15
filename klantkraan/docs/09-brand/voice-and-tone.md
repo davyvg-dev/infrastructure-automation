@@ -14,46 +14,46 @@
 
 We use one **brand voice** but vary **tone** by channel.
 
-| Channel | Tone | Sentence length | Personality |
-|---|---|---|---|
-| Marketing site H1 / hero | Punchy, declarative | <12 words | Confident vakman buddy |
-| Marketing site body | Practical, scannable | 8–18 words | Operator who built it himself |
-| Cold email | Personal, low-key | 12–22 words | Founder writing on a phone |
-| LinkedIn post (founder) | Build-in-public, opinionated | 15–25 words / line | Same person, just sharper |
-| LinkedIn DM | Direct, one-question-only | <30 words total | Like texting a friend |
-| Synthflow voice | Calm, professional, friendly | 10–14 words spoken | Trained receptionist with 5 yrs exp |
-| Missed-call SMS | Brief, useful, no hard sell | <160 chars | Helpful colleague |
-| Review request SMS | Polite, low-pressure | <160 chars | Grateful, not begging |
-| Offerte PDF | Formal-but-warm | Crisp paragraphs | Professional supplier |
-| MSA / DPA / SLA | Legal-formal | Legal sentences | Defensible, no jokes |
-| Onboarding emails | Stepwise, hand-holdy | 12–20 words | The friend who already did this |
-| Support reply | Direct, take-ownership | As short as possible | "Ik los het op." |
-| Status page / incident | Factual, complete, no spin | Bullet-tight | Operator on call |
+| Channel                  | Tone                         | Sentence length      | Personality                         |
+| ------------------------ | ---------------------------- | -------------------- | ----------------------------------- |
+| Marketing site H1 / hero | Punchy, declarative          | <12 words            | Confident vakman buddy              |
+| Marketing site body      | Practical, scannable         | 8–18 words           | Operator who built it himself       |
+| Cold email               | Personal, low-key            | 12–22 words          | Founder writing on a phone          |
+| LinkedIn post (founder)  | Build-in-public, opinionated | 15–25 words / line   | Same person, just sharper           |
+| LinkedIn DM              | Direct, one-question-only    | <30 words total      | Like texting a friend               |
+| Synthflow voice          | Calm, professional, friendly | 10–14 words spoken   | Trained receptionist with 5 yrs exp |
+| Missed-call SMS          | Brief, useful, no hard sell  | <160 chars           | Helpful colleague                   |
+| Review request SMS       | Polite, low-pressure         | <160 chars           | Grateful, not begging               |
+| Offerte PDF              | Formal-but-warm              | Crisp paragraphs     | Professional supplier               |
+| MSA / DPA / SLA          | Legal-formal                 | Legal sentences      | Defensible, no jokes                |
+| Onboarding emails        | Stepwise, hand-holdy         | 12–20 words          | The friend who already did this     |
+| Support reply            | Direct, take-ownership       | As short as possible | "Ik los het op."                    |
+| Status page / incident   | Factual, complete, no spin   | Bullet-tight         | Operator on call                    |
 
 ## 3. Persona of the writer
 
-Internal stand-in to keep voice consistent across channels: *Marc, 41, ex-loodgieter, ran a 4-man shop in Utrecht for 8 jaar, switched into tech because his wife was tired of him doing offertes at 11pm op zondag. He hates marketing-speak and writes how he talks. Plain ABN, occasional "ff" and "even" in informal contexts. Never apologises for being practical.*
+Internal stand-in to keep voice consistent across channels: _Marc, 41, ex-loodgieter, ran a 4-man shop in Utrecht for 8 jaar, switched into tech because his wife was tired of him doing offertes at 11pm op zondag. He hates marketing-speak and writes how he talks. Plain ABN, occasional "ff" and "even" in informal contexts. Never apologises for being practical._
 
 Every piece of copy should pass: **"Would Marc say this out loud?"**
 
 ## 4. Words we use
 
-| Use | Instead of |
-|---|---|
-| `Klantenmotor` (own category) | "AI receptionist", "marketing platform" |
-| `Vakman`, `vakvrouw` | "ondernemer", "professional", "MKB'er" |
-| `Loodgieter`, `dakdekker` | "installateur" (too broad) |
-| `Klus`, `klusje` | "project", "opdracht" |
-| `Afspraak`, `terugbelafspraak` | "lead", "conversie" |
-| `Voorrijkosten`, `spoedtoeslag`, `materiaalopslag` | "extra costs", "additional fees" |
-| `Gemiste oproep` | "missed connection", "unanswered call" |
-| `Per maand opzegbaar` | "no lock-in", "flexible terms" |
-| `BTW-inclusief` | "incl. tax" |
-| `€450` (full digits, euro symbol first) | "EUR 450" or "450 euro" |
-| `binnen 60 seconden`, `binnen 4 uur`, `binnen 24 uur` | "shortly", "soon", "in a timely manner" |
-| `Wij`, `we` (founder-as-team) | "ons team van experts" (we are one person) |
-| `U` opening, switch to `je` when caller does | always-`je` (too casual for first contact) |
-| `Even` (sparingly, when natural) | "Snel" (overused) |
+| Use                                                   | Instead of                                 |
+| ----------------------------------------------------- | ------------------------------------------ |
+| `Klantenmotor` (own category)                         | "AI receptionist", "marketing platform"    |
+| `Vakman`, `vakvrouw`                                  | "ondernemer", "professional", "MKB'er"     |
+| `Loodgieter`, `dakdekker`                             | "installateur" (too broad)                 |
+| `Klus`, `klusje`                                      | "project", "opdracht"                      |
+| `Afspraak`, `terugbelafspraak`                        | "lead", "conversie"                        |
+| `Voorrijkosten`, `spoedtoeslag`, `materiaalopslag`    | "extra costs", "additional fees"           |
+| `Gemiste oproep`                                      | "missed connection", "unanswered call"     |
+| `Per maand opzegbaar`                                 | "no lock-in", "flexible terms"             |
+| `BTW-inclusief`                                       | "incl. tax"                                |
+| `€450` (full digits, euro symbol first)               | "EUR 450" or "450 euro"                    |
+| `binnen 60 seconden`, `binnen 4 uur`, `binnen 24 uur` | "shortly", "soon", "in a timely manner"    |
+| `Wij`, `we` (founder-as-team)                         | "ons team van experts" (we are one person) |
+| `U` opening, switch to `je` when caller does          | always-`je` (too casual for first contact) |
+| `Even` (sparingly, when natural)                      | "Snel" (overused)                          |
 
 ## 5. Words we never use
 
@@ -129,6 +129,7 @@ Davy
 ```
 
 Notes:
+
 - Lowercase opener (`zag dat`) — niet `Zag dat`. Persoonlijker.
 - Geen "ik hoop dat het goed gaat". Tijdverspilling.
 - Eén vraag. Eén CTA.
@@ -152,6 +153,7 @@ Updates volgen.
 ```
 
 Notes:
+
 - Korte regels, witregels tussen — leesbaar op mobiel.
 - Eén harde getal.
 - Eén werkelijkheid-moment ("onder een keukenkast").
@@ -179,6 +181,7 @@ Wat kan ik voor u betekenen?
 ```
 
 Notes:
+
 - AI-disclosure direct na eerste zin — EU AI Act Art. 50, niet-onderhandelbaar (zie `04-legal/ai-act-disclosure.md`).
 - Geen "Hoi" of "Hé" — vakman verwacht een professionele opening.
 - "Wat kan ik voor u betekenen" — klassieke Nederlandse zakelijke opener, geen import-vertaling.
@@ -191,6 +194,7 @@ Klik om terug te bellen: <link> — of antwoord met "ja" voor een terugbelafspra
 ```
 
 Notes:
+
 - Geen "Wij zijn momenteel druk bezig" — klinkt als afwimpel.
 - Eén link, één tekstuele fallback.
 - "Hoi" mag in SMS — context maakt het direct, niet onbeleefd.
@@ -214,14 +218,14 @@ ETA herstel: 30 minuten. Updates elke 15 min.
 
 ## 9. Things to test (hold this voice accountable)
 
-| Test | How |
-|---|---|
-| "Read it out loud" — does the sentence breathe? | Read every H1, every email, every SMS aloud. If you stumble, rewrite. |
-| Marc test — would the persona say this? | Imagine Marc reading it. Cut anything he'd skim. |
-| Word-count test | If a paragraph is >60 words on the marketing site, split. |
-| Adjective-count test | Max 2 adjectives per paragraph in marketing copy. |
-| Anglicism test | No "leverage", "engagement", "performance" unless context truly demands. |
-| Number test | At least one concrete number every 100 words on a landing page. |
+| Test                                            | How                                                                      |
+| ----------------------------------------------- | ------------------------------------------------------------------------ |
+| "Read it out loud" — does the sentence breathe? | Read every H1, every email, every SMS aloud. If you stumble, rewrite.    |
+| Marc test — would the persona say this?         | Imagine Marc reading it. Cut anything he'd skim.                         |
+| Word-count test                                 | If a paragraph is >60 words on the marketing site, split.                |
+| Adjective-count test                            | Max 2 adjectives per paragraph in marketing copy.                        |
+| Anglicism test                                  | No "leverage", "engagement", "performance" unless context truly demands. |
+| Number test                                     | At least one concrete number every 100 words on a landing page.          |
 
 ## 10. Forbidden under any condition
 

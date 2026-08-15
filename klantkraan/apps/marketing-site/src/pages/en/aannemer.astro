@@ -35,7 +35,7 @@ const features: Feature[] = [
   {
     icon: 'calendar-check',
     title: 'Appointments straight into your calendar',
-    body: 'Consultation and measuring-up appointments are booked straight into your calendar, only in the slots you\'ve released yourself. No phone tag, no back-and-forth email between two renovations.',
+    body: "Consultation and measuring-up appointments are booked straight into your calendar, only in the slots you've released yourself. No phone tag, no back-and-forth email between two renovations.",
   },
   {
     icon: 'phone',
@@ -54,25 +54,25 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: 'With one small script that we install for you. You don\'t have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.',
+    a: "With one small script that we install for you. You don't have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
   },
   {
-    q: 'And when I\'m on site?',
-    a: 'That\'s exactly what this is built for. The receptionist answers the question (quote request, variation query, supplier, complaint), qualifies new enquiries by postcode and project type, and books an appointment in your calendar. You get a summary by WhatsApp or email. You can call back on your break.',
+    q: "And when I'm on site?",
+    a: "That's exactly what this is built for. The receptionist answers the question (quote request, variation query, supplier, complaint), qualifies new enquiries by postcode and project type, and books an appointment in your calendar. You get a summary by WhatsApp or email. You can call back on your break.",
   },
   {
     q: 'What if three customers ask for a quote at the same time?',
     a: 'The receptionist handles conversations in parallel. No queue. Ten customers can chat or message at once, and all ten get an answer straight away. Emergencies (a leak, damage, an insurance claim) are recognised and separated from scheduling enquiries.',
   },
   {
-    q: 'Can the customer tell it\'s AI?',
-    a: 'Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. That isn\'t a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.',
+    q: "Can the customer tell it's AI?",
+    a: "Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. That isn't a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
   {
     q: 'What if the AI says something wrong about my rates or availability?',
-    a: 'That can\'t happen. The assistant only states what you\'ve put into your system yourself: call-out charges, the hourly inspection rate, lead times on your schedule, holiday periods. Unknown questions are never made up; instead the customer gets a callback request. We test every configuration before you go live.',
+    a: "That can't happen. The assistant only states what you've put into your system yourself: call-out charges, the hourly inspection rate, lead times on your schedule, holiday periods. Unknown questions are never made up; instead the customer gets a callback request. We test every configuration before you go live.",
   },
   {
     q: 'What happens to the customer data?',
@@ -82,7 +82,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Cancel monthly, really?',
-    a: 'Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. If you\'d rather pay 6 or 12 months up front there\'s a discount (15% and 20% respectively).',
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. If you'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively).",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -123,18 +123,8 @@ const faqSchema = {
           and via WhatsApp. No more missed enquiries.
         </p>
         <div class="mt-10 btn-row">
-          <a
-            href="/en/demo/"
-            class="btn btn-primary btn-lg"
-          >
-            Try the demo
-          </a>
-          <a
-            href="/en/rekentool/"
-            class="btn btn-ghost btn-lg"
-          >
-            Work out your ROI
-          </a>
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/rekentool/" class="btn btn-ghost btn-lg"> Work out your ROI </a>
         </div>
       </div>
       <div class="hidden text-(--color-sodium) md:block">
@@ -200,7 +190,8 @@ const faqSchema = {
         What Klantkraan does for building contractors.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Three modules. One monthly price. For the contractor who's on site when their best prospect calls.
+        Three modules. One monthly price. For the contractor who's on site when their best prospect
+        calls.
       </p>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
@@ -222,35 +213,28 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">The maths</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Do the maths.
-      </h2>
-      <div class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10">
+      <h2 class="mt-3 font-display text-h1 text-chalk">Do the maths.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
         <p class="text-h3 text-chalk">
-          Miss 2 quote requests a month at €12,000 each? That's <strong class="text-(--color-sodium)">around €95,000 in lost revenue a year</strong>.
+          Miss 2 quote requests a month at €12,000 each? That's <strong
+            class="text-(--color-sodium)">around €95,000 in lost revenue a year</strong
+          >.
         </p>
         <p class="mt-4 text-body text-dim">
-          Klantkraan Chat is €299 a month. One extra renovation a year covers well over three years of subscription. After that,
-          every missed prospect you win back is pure profit.
+          Klantkraan Chat is €299 a month. One extra renovation a year covers well over three years
+          of subscription. After that, every missed prospect you win back is pure profit.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href="/en/rekentool/"
-            class="btn btn-primary btn-lg"
-          >
-            Open the calculator
-          </a>
-          <a
-            href="/en/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            See pricing
-          </a>
+          <a href="/en/rekentool/" class="btn btn-primary btn-lg"> Open the calculator </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
         </div>
         <p class="mt-6 text-micro text-dim">
           Amounts exclude 21% VAT. Example based on the industry average of €12k per
-          renovation/refurbishment quote (source: BNA / Aedes 2024 benchmarks) and the assumption that
-          roughly 1 in 3 missed enquiries would have turned into a paying job (33% conversion rate).
+          renovation/refurbishment quote (source: BNA / Aedes 2024 benchmarks) and the assumption
+          that roughly 1 in 3 missed enquiries would have turned into a paying job (33% conversion
+          rate).
         </p>
       </div>
     </div>
@@ -260,9 +244,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
       <p class="eyebrow">Questions</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">
-        Frequently asked questions.
-      </h2>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -302,18 +284,8 @@ const faqSchema = {
         suppliers apart. And how that lands in your WhatsApp.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/en/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Try the demo
-        </a>
-        <a
-          href="/en/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          See pricing
-        </a>
+        <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+        <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
       </div>
     </div>
   </section>

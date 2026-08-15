@@ -127,22 +127,12 @@ const serviceSchema = {
         {niche.label} in <span class="text-(--color-sodium)">{city.name}</span>.
       </h1>
       <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
-        Een Nederlandstalige digitale receptionist op uw website en WhatsApp die uw tarieven kent
-        en klantvragen 24/7 beantwoordt. Ook wanneer u in {city.name} op locatie zit.
+        Een Nederlandstalige digitale receptionist op uw website en WhatsApp die uw tarieven kent en
+        klantvragen 24/7 beantwoordt. Ook wanneer u in {city.name} op locatie zit.
       </p>
       <div class="mt-10 btn-row">
-        <a
-          href="/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Probeer de demo
-        </a>
-        <a
-          href="/rekentool/"
-          class="btn btn-ghost btn-lg"
-        >
-          Bereken uw ROI
-        </a>
+        <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+        <a href="/rekentool/" class="btn btn-ghost btn-lg"> Bereken uw ROI </a>
       </div>
       <p class="mt-8 text-small text-(--color-dim)">
         Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
@@ -177,9 +167,7 @@ const serviceSchema = {
   <!-- 4. Three modules -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">
-        Modules
-      </p>
+      <p class="eyebrow">Modules</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">
         Wat Klantkraan doet voor {niche.labelPlural} in {city.name}.
       </h2>
@@ -202,9 +190,7 @@ const serviceSchema = {
   <!-- 5. Neighbourhood + price context -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">
-        Werkgebied
-      </p>
+      <p class="eyebrow">Werkgebied</p>
       <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
         Wij ondersteunen {niche.labelPlural} in heel {city.name}.
       </h2>
@@ -213,7 +199,9 @@ const serviceSchema = {
           city.neighbourhoods.slice(0, -1).join(', ')
         } en {city.neighbourhoods[city.neighbourhoods.length - 1]}.
       </p>
-      <ul class="mt-6 grid max-w-3xl grid-cols-2 gap-2 text-body text-(--color-dim) sm:grid-cols-3 md:grid-cols-4">
+      <ul
+        class="mt-6 grid max-w-3xl grid-cols-2 gap-2 text-body text-(--color-dim) sm:grid-cols-3 md:grid-cols-4"
+      >
         {city.neighbourhoods.map((b) => <li class="font-mono text-small">· {b}</li>)}
       </ul>
       <p class="mt-8 max-w-3xl text-body text-(--color-dim)">{city.priceContext}</p>
@@ -223,36 +211,29 @@ const serviceSchema = {
   <!-- 6. ROI snippet -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">
-        Rekensom
-      </p>
+      <p class="eyebrow">Rekensom</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Reken het even na.</h2>
       <div
         class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-(--color-chalk)">
-          Mist u 10 oproepen per week à €{jobValueWithTier.toLocaleString('nl-NL')} in {city.name}? Dat is
+          Mist u 10 oproepen per week à €{jobValueWithTier.toLocaleString('nl-NL')} in {city.name}?
+          Dat is
           <strong class="text-(--color-sodium)">
-            €{(jobValueWithTier * 10 * 52 * 0.33).toLocaleString('nl-NL', { maximumFractionDigits: 0 })} verloren omzet per jaar
+            €{
+              (jobValueWithTier * 10 * 52 * 0.33).toLocaleString('nl-NL', {
+                maximumFractionDigits: 0,
+              })
+            } verloren omzet per jaar
           </strong>.
         </p>
         <p class="mt-4 text-body text-(--color-dim)">
-          Klantkraan Chat is €299 per maand. Voor {niche.labelPlural} in {city.name} verdiend zodra
-          u één extra klus per maand herwint. Wat erna binnenkomt is marge.
+          Klantkraan Chat is €299 per maand. Voor {niche.labelPlural} in {city.name} verdiend zodra u
+          één extra klus per maand herwint. Wat erna binnenkomt is marge.
         </p>
         <div class="mt-6 btn-row">
-          <a
-            href="/rekentool/"
-            class="btn btn-primary btn-lg"
-          >
-            Open de rekentool
-          </a>
-          <a
-            href="/prijzen/"
-            class="btn btn-ghost btn-lg"
-          >
-            Bekijk de tarieven
-          </a>
+          <a href="/rekentool/" class="btn btn-primary btn-lg"> Open de rekentool </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
         </div>
         <p class="mt-6 text-micro text-(--color-dim)">
           Bedragen excl. 21% BTW. Tarief geïndexeerd op {city.name} ({city.priceTier}) bovenop het
@@ -265,15 +246,11 @@ const serviceSchema = {
   <!-- 7. FAQ -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">
-        Vragen
-      </p>
+      <p class="eyebrow">Vragen</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">
         Veelgestelde vragen over {niche.labelPlural} in {city.name}.
       </h2>
-      <div
-        class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)"
-      >
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
             <details class="group py-4">
@@ -304,9 +281,7 @@ const serviceSchema = {
   <!-- 8. Internal-linking block -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">
-        Verder lezen
-      </p>
+      <p class="eyebrow">Verder lezen</p>
       <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
         Andere {niche.labelPlural}-pagina's en diensten.
       </h2>
@@ -330,10 +305,7 @@ const serviceSchema = {
               <ul class="mt-3 space-y-1 text-body text-(--color-dim)">
                 {lateralCities.map((c) => (
                   <li>
-                    <a
-                      href={`/${c}/${nicheSlug}/`}
-                      class="text-(--color-sodium) underline"
-                    >
+                    <a href={`/${c}/${nicheSlug}/`} class="text-(--color-sodium) underline">
                       {niche.label} in {cities[c].name}
                     </a>
                   </li>
@@ -351,10 +323,7 @@ const serviceSchema = {
               <ul class="mt-3 space-y-1 text-body text-(--color-dim)">
                 {sameCityCrossNiches.map((n) => (
                   <li>
-                    <a
-                      href={`/${citySlug}/${n}/`}
-                      class="text-(--color-sodium) underline"
-                    >
+                    <a href={`/${citySlug}/${n}/`} class="text-(--color-sodium) underline">
                       {niches[n].label} in {city.name}
                     </a>
                   </li>
@@ -374,22 +343,13 @@ const serviceSchema = {
         Klaar om geen klus in {city.name} meer te missen?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Een live demo via WhatsApp is de snelste manier om te zien wat Klantkraan voor uw bedrijf
-        in {city.name} doet.
+        Een live demo via WhatsApp is de snelste manier om te zien wat Klantkraan voor uw bedrijf in {
+          city.name
+        } doet.
       </p>
       <div class="mt-8 btn-row">
-        <a
-          href="/demo/"
-          class="btn btn-primary btn-lg"
-        >
-          Probeer de demo
-        </a>
-        <a
-          href="/prijzen/"
-          class="btn btn-ghost btn-lg"
-        >
-          Bekijk prijzen
-        </a>
+        <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
       </div>
     </div>
   </section>

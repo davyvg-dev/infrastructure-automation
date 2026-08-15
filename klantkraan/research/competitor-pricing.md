@@ -14,44 +14,44 @@
 
 ### Category A — Lead Marketplaces
 
-| # | Company | URL | Est. | Pricing Model | Price (excl. BTW) | Contract | Guarantee | Key Differentiator | Traction |
-|---|---------|-----|------|--------------|------------------|----------|----------|-------------------|---------|
-| 1 | Werkspot | werkspot.nl | 2006 | Per lead (variable) + optional subscription | Lead: €3–€75/lead (size-dependent); Basic sub: €29.95/mo; Premium sub: €49.95/mo | Month-to-month | None stated | Market leader; part of Angi/IAC group since 2013; 8,000+ registered tradespeople | Trustpilot: 3.8 / 7,400+ reviews |
-| 2 | Homedeal | homedeal.nl | 2002 | Per lead + mandatory monthly subscription | Lead: €40–€80 (shared with 3–5 competitors); subscription: [not publicly available — behind intake] | [not publicly available] | None stated | Large consumer brand; 2,000+ professionals listed | Trustpilot: 3.8 / ~493 reviews |
-| 3 | Slimster | slimster.nl | 2011 | Per lead, no subscription | Lead: €15–€40/lead | Month-to-month | None stated | Focus on sustainability / warmtepomp / renovatie; strong content SEO | Trustpilot: 3.5 / 25 reviews |
-| 4 | Trustoo | trustoo.nl | ~2018 | Per lead (varies by industry), optional premium profile | Lead: €20–€45/lead; premium profile: [behind login — verified absent] | Month-to-month | None stated | Emphasis on verified licences and genuine reviews; 2-hour priority for premium | [not publicly available] |
-| 5 | OfferteAdviseur | offerteadviseur.nl | [not publicly available] | Per lead | Aannemer leads: €12.50/lead (verified on pricing page, which returned 503 at time of research — figure from aggregator source) | Month-to-month | None stated | Free for consumers; broad category coverage | 4.5 / 744 Google reviews |
-| 6 | Klussendirect | klussendirect.nl | ~2024 | Free for tradespeople (freemium); revenue from featured listings | €0 lead cost; paid featured/profile tiers: [not publicly available] | Month-to-month | None stated | Only major platform with zero per-lead cost; direct consumer contact; positioned as Werkspot killer | Trustpilot: 4.9 / 1,250+ reviews |
-| 7 | Zoofy | zoofy.nl | ~2016 | Commission/margin model; platform assigns jobs | Fixed consumer price set by platform; tradesperson margin: [not publicly available — commission percentage not disclosed] | [not publicly available] | None stated | Instant booking without quotes; speed positioning | Trustpilot: 4.5 / 4,074 reviews |
-| 8 | KlusUp | klusup.nl | [not publicly available] | Subscription | €49/month | Month-to-month | None stated | Small-job focus; instant booking | [not publicly available] |
-| 9 | Klussi | klussi.nl | [not publicly available] | Fixed price per booking (consumer-side) | Consumer-facing fixed prices; tradesperson terms: [not publicly available] | [not publicly available] | None stated | 50% discounts on repeat bookings; no call-out fees | [not publicly available] |
+| #   | Company         | URL                | Est.                     | Pricing Model                                                    | Price (excl. BTW)                                                                                                              | Contract                 | Guarantee   | Key Differentiator                                                                                  | Traction                         |
+| --- | --------------- | ------------------ | ------------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------ | ----------- | --------------------------------------------------------------------------------------------------- | -------------------------------- |
+| 1   | Werkspot        | werkspot.nl        | 2006                     | Per lead (variable) + optional subscription                      | Lead: €3–€75/lead (size-dependent); Basic sub: €29.95/mo; Premium sub: €49.95/mo                                               | Month-to-month           | None stated | Market leader; part of Angi/IAC group since 2013; 8,000+ registered tradespeople                    | Trustpilot: 3.8 / 7,400+ reviews |
+| 2   | Homedeal        | homedeal.nl        | 2002                     | Per lead + mandatory monthly subscription                        | Lead: €40–€80 (shared with 3–5 competitors); subscription: [not publicly available — behind intake]                            | [not publicly available] | None stated | Large consumer brand; 2,000+ professionals listed                                                   | Trustpilot: 3.8 / ~493 reviews   |
+| 3   | Slimster        | slimster.nl        | 2011                     | Per lead, no subscription                                        | Lead: €15–€40/lead                                                                                                             | Month-to-month           | None stated | Focus on sustainability / warmtepomp / renovatie; strong content SEO                                | Trustpilot: 3.5 / 25 reviews     |
+| 4   | Trustoo         | trustoo.nl         | ~2018                    | Per lead (varies by industry), optional premium profile          | Lead: €20–€45/lead; premium profile: [behind login — verified absent]                                                          | Month-to-month           | None stated | Emphasis on verified licences and genuine reviews; 2-hour priority for premium                      | [not publicly available]         |
+| 5   | OfferteAdviseur | offerteadviseur.nl | [not publicly available] | Per lead                                                         | Aannemer leads: €12.50/lead (verified on pricing page, which returned 503 at time of research — figure from aggregator source) | Month-to-month           | None stated | Free for consumers; broad category coverage                                                         | 4.5 / 744 Google reviews         |
+| 6   | Klussendirect   | klussendirect.nl   | ~2024                    | Free for tradespeople (freemium); revenue from featured listings | €0 lead cost; paid featured/profile tiers: [not publicly available]                                                            | Month-to-month           | None stated | Only major platform with zero per-lead cost; direct consumer contact; positioned as Werkspot killer | Trustpilot: 4.9 / 1,250+ reviews |
+| 7   | Zoofy           | zoofy.nl           | ~2016                    | Commission/margin model; platform assigns jobs                   | Fixed consumer price set by platform; tradesperson margin: [not publicly available — commission percentage not disclosed]      | [not publicly available] | None stated | Instant booking without quotes; speed positioning                                                   | Trustpilot: 4.5 / 4,074 reviews  |
+| 8   | KlusUp          | klusup.nl          | [not publicly available] | Subscription                                                     | €49/month                                                                                                                      | Month-to-month           | None stated | Small-job focus; instant booking                                                                    | [not publicly available]         |
+| 9   | Klussi          | klussi.nl          | [not publicly available] | Fixed price per booking (consumer-side)                          | Consumer-facing fixed prices; tradesperson terms: [not publicly available]                                                     | [not publicly available] | None stated | 50% discounts on repeat bookings; no call-out fees                                                  | [not publicly available]         |
 
 ### Category B — SEO / Google Ads Agencies Targeting Trades
 
-| # | Company | URL | Est. | Pricing Model | Price (excl. BTW) | Contract | Guarantee | Key Differentiator | Traction |
-|---|---------|-----|------|--------------|------------------|----------|----------|-------------------|---------|
-| 10 | VakmanMarketing | vakmanmarketing.nl | [not publicly available] | Retainer (subscription) | [behind intake — verified absent]; accepts max 5 clients/month | [not publicly available] | "20+ leads/maand or free work until achieved" | Hardest guarantee in the market; 300+ bouw bedrijven served; named case studies | 300+ clients; €85M+ revenue claimed for clients |
-| 11 | Rocket Marketing | rocketmarketing.nl | [not publicly available] | Retainer (subscription) | [behind intake — verified absent]; call 085 238 8100 | [not publicly available] | None stated | Full-service; local SEO for aannemers; 5.0 Google (45 reviews) | 5.0 / 45 Google reviews |
-| 12 | OMA (Online Marketing Agency) | onlinemarketingagency.nl | [not publicly available] | Retainer (subscription, monthly) | [behind intake — verified absent]; call 085 016 3286 | Month-to-month (no long-term stated) | None stated | Full channel mix: SEO, SEA, CRO, email, social; construction/installation focus | [not publicly available] |
-| 13 | Drijfveer Media | drijfveermedia.nl | [not publicly available] | Retainer | [not publicly available] | [not publicly available] | None stated | Specialised in aannemers; Assen-based regional agency | [not publicly available] |
-| 14 | LeadLead | leadlead.nl | [not publicly available] | Fixed monthly subscription (all-in) | From €699/month (website + hosting + SEO + Google Ads + CRM) | Month-to-month (consultation required) | None stated | All-in: website + marketing + CRM in one invoice; targets loodgieters, installateurs, aannemers explicitly | [not publicly available] |
-| 15 | Leadsmaster | leadsmaster.nl | [not publicly available] | Custom retainer | [behind intake — verified absent]; custom quote via +31 30 207 2008 | [not publicly available] | ROI-focused positioning ("one job pays back the campaign") | Premium renovation leads; entire funnel managed | [not publicly available] |
+| #   | Company                       | URL                      | Est.                     | Pricing Model                       | Price (excl. BTW)                                                   | Contract                               | Guarantee                                                  | Key Differentiator                                                                                         | Traction                                        |
+| --- | ----------------------------- | ------------------------ | ------------------------ | ----------------------------------- | ------------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| 10  | VakmanMarketing               | vakmanmarketing.nl       | [not publicly available] | Retainer (subscription)             | [behind intake — verified absent]; accepts max 5 clients/month      | [not publicly available]               | "20+ leads/maand or free work until achieved"              | Hardest guarantee in the market; 300+ bouw bedrijven served; named case studies                            | 300+ clients; €85M+ revenue claimed for clients |
+| 11  | Rocket Marketing              | rocketmarketing.nl       | [not publicly available] | Retainer (subscription)             | [behind intake — verified absent]; call 085 238 8100                | [not publicly available]               | None stated                                                | Full-service; local SEO for aannemers; 5.0 Google (45 reviews)                                             | 5.0 / 45 Google reviews                         |
+| 12  | OMA (Online Marketing Agency) | onlinemarketingagency.nl | [not publicly available] | Retainer (subscription, monthly)    | [behind intake — verified absent]; call 085 016 3286                | Month-to-month (no long-term stated)   | None stated                                                | Full channel mix: SEO, SEA, CRO, email, social; construction/installation focus                            | [not publicly available]                        |
+| 13  | Drijfveer Media               | drijfveermedia.nl        | [not publicly available] | Retainer                            | [not publicly available]                                            | [not publicly available]               | None stated                                                | Specialised in aannemers; Assen-based regional agency                                                      | [not publicly available]                        |
+| 14  | LeadLead                      | leadlead.nl              | [not publicly available] | Fixed monthly subscription (all-in) | From €699/month (website + hosting + SEO + Google Ads + CRM)        | Month-to-month (consultation required) | None stated                                                | All-in: website + marketing + CRM in one invoice; targets loodgieters, installateurs, aannemers explicitly | [not publicly available]                        |
+| 15  | Leadsmaster                   | leadsmaster.nl           | [not publicly available] | Custom retainer                     | [behind intake — verified absent]; custom quote via +31 30 207 2008 | [not publicly available]               | ROI-focused positioning ("one job pays back the campaign") | Premium renovation leads; entire funnel managed                                                            | [not publicly available]                        |
 
 ### Category C — Productized Marketing + Light Automation
 
-| # | Company | URL | Est. | Pricing Model | Price (excl. BTW) | Contract | Guarantee | Key Differentiator | Traction |
-|---|---------|-----|------|--------------|------------------|----------|----------|-------------------|---------|
-| 16 | Klusio | klusio.nl | [not publicly available] | Tiered SaaS subscription | Starter €199/mo; Professional €399/mo; Expert €699/mo | Month-to-month; no contract | "Measurable growth in 30 days or next month free" | SEO + automated content + AI chatbot + AI voice telefonist bundled; named case studies | 30+ active clients |
-| 17 | Vakman-online | vakman-online.nl | [not publicly available] | One-time + subscription hybrid | Website €499 one-time (or included); Growth package €197/mo + €250 setup | Month-to-month | "60-second missed call WhatsApp auto-response" | Automation-first: missed call recovery, review collection, appointment scheduling; 7-day setup | [not publicly available] |
-| 18 | Leadmodule (072design) | 072design.nl | [not publicly available] | SaaS subscription | Basis €49/mo; Pro €79/mo; Premium €119/mo (all excl. BTW) | 3-month minimum, then monthly | None stated | Interactive on-site calculators convert existing web traffic to structured leads; 14 modules (energy, renovation, interiors) | [not publicly available] |
-| 19 | ViVortis | vivortis.nl | [not publicly available] | Per-lead (flexible monthly) | From €5/lead; minimum 20 qualified leads/month | Month-to-month; no setup cost | Minimum 20 leads/month or not charged | B2C and B2B lead gen for installateurs; heat pump leads specific product | 150+ clients; 4.9 / 134 reviews |
+| #   | Company                | URL              | Est.                     | Pricing Model                  | Price (excl. BTW)                                                        | Contract                      | Guarantee                                         | Key Differentiator                                                                                                           | Traction                        |
+| --- | ---------------------- | ---------------- | ------------------------ | ------------------------------ | ------------------------------------------------------------------------ | ----------------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| 16  | Klusio                 | klusio.nl        | [not publicly available] | Tiered SaaS subscription       | Starter €199/mo; Professional €399/mo; Expert €699/mo                    | Month-to-month; no contract   | "Measurable growth in 30 days or next month free" | SEO + automated content + AI chatbot + AI voice telefonist bundled; named case studies                                       | 30+ active clients              |
+| 17  | Vakman-online          | vakman-online.nl | [not publicly available] | One-time + subscription hybrid | Website €499 one-time (or included); Growth package €197/mo + €250 setup | Month-to-month                | "60-second missed call WhatsApp auto-response"    | Automation-first: missed call recovery, review collection, appointment scheduling; 7-day setup                               | [not publicly available]        |
+| 18  | Leadmodule (072design) | 072design.nl     | [not publicly available] | SaaS subscription              | Basis €49/mo; Pro €79/mo; Premium €119/mo (all excl. BTW)                | 3-month minimum, then monthly | None stated                                       | Interactive on-site calculators convert existing web traffic to structured leads; 14 modules (energy, renovation, interiors) | [not publicly available]        |
+| 19  | ViVortis               | vivortis.nl      | [not publicly available] | Per-lead (flexible monthly)    | From €5/lead; minimum 20 qualified leads/month                           | Month-to-month; no setup cost | Minimum 20 leads/month or not charged             | B2C and B2B lead gen for installateurs; heat pump leads specific product                                                     | 150+ clients; 4.9 / 134 reviews |
 
 ### Category D — Dutch AI Voice / Automation Operators
 
-| # | Company | URL | Est. | Pricing Model | Price (excl. BTW) | Contract | Guarantee | Key Differentiator | Traction |
-|---|---------|-----|------|--------------|------------------|----------|----------|-------------------|---------|
-| 20 | Voicelabs (Robin) | voicelabs.nl | [not publicly available] | Tiered SaaS subscription | Start: €299/mo (1,000 min); Custom: contact for quote | 14-day trial; monthly | 81% autonomous resolution claimed | Dutch-language AI telephonist; integrates WhatsApp, web chatbot; targets healthcare, real estate, SME — not trades specifically | 30+ active customer teams |
-| 21 | Klusio (Voice AI) | klusio.nl/features/voice-ai | [not publicly available] | Bundled in subscription (no separate charge) | Included in €199–€699/mo plans | Month-to-month | Included in 30-day results guarantee | AI telefonist for trades specifically; no per-call charge; bundled with SEO + content | 30+ active clients (shared with main platform) |
+| #   | Company           | URL                         | Est.                     | Pricing Model                                | Price (excl. BTW)                                     | Contract              | Guarantee                            | Key Differentiator                                                                                                              | Traction                                       |
+| --- | ----------------- | --------------------------- | ------------------------ | -------------------------------------------- | ----------------------------------------------------- | --------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| 20  | Voicelabs (Robin) | voicelabs.nl                | [not publicly available] | Tiered SaaS subscription                     | Start: €299/mo (1,000 min); Custom: contact for quote | 14-day trial; monthly | 81% autonomous resolution claimed    | Dutch-language AI telephonist; integrates WhatsApp, web chatbot; targets healthcare, real estate, SME — not trades specifically | 30+ active customer teams                      |
+| 21  | Klusio (Voice AI) | klusio.nl/features/voice-ai | [not publicly available] | Bundled in subscription (no separate charge) | Included in €199–€699/mo plans                        | Month-to-month        | Included in 30-day results guarantee | AI telefonist for trades specifically; no per-call charge; bundled with SEO + content                                           | 30+ active clients (shared with main platform) |
 
 ---
 
@@ -85,6 +85,7 @@ LOW PRICE        [Werkspot]         [Klusio Starter AI]
 ```
 
 **Observations from the grid:**
+
 - Bottom-left is crowded: commodity lead marketplaces competing on price.
 - Top-left: opaque agency retainers with no automation; no public pricing.
 - Bottom-right to mid-right: nascent — Klusio at the low end, Vakman-online with light automation.
@@ -116,6 +117,7 @@ The EU AI Act art. 50 disclosure for AI voice agents is a regulatory requirement
 "Productized inbound lead system for Dutch trade BVs: AI voice intake + exclusive SEO-driven leads + CRM workflow — €X/month, guaranteed Y leads or partial refund, BV-clients only."
 
 This combines:
+
 - The guarantee mechanic of VakmanMarketing (without the opaque price)
 - The automation depth of Klusio Expert (without the ZZP positioning)
 - An AI voice layer no competitor has productized for trades
@@ -128,19 +130,20 @@ This combines:
 
 ### What the market charges (verified ranges)
 
-| Segment | Low end | High end | Notes |
-|---------|---------|---------|-------|
-| Per-lead marketplaces | €3/lead (Werkspot, small jobs) | €80/lead (Homedeal) | Shared leads; 15–30% conversion |
-| Subscription + per-lead | €30/mo + €10–€45/lead | €50/mo + €40–€80/lead | Hybrid; Werkspot + Homedeal |
-| SEO/Ads agencies | €699/mo (LeadLead entry) | €3,500+/mo (premium full-service) | Behind intake; no guarantee |
-| Productized automation | €197/mo (Vakman-online) | €699/mo (Klusio Expert) | New entrants; thin traction |
-| AI voice standalone | €299/mo (Voicelabs Robin) | Custom | Not targeted at trades |
+| Segment                 | Low end                        | High end                          | Notes                           |
+| ----------------------- | ------------------------------ | --------------------------------- | ------------------------------- |
+| Per-lead marketplaces   | €3/lead (Werkspot, small jobs) | €80/lead (Homedeal)               | Shared leads; 15–30% conversion |
+| Subscription + per-lead | €30/mo + €10–€45/lead          | €50/mo + €40–€80/lead             | Hybrid; Werkspot + Homedeal     |
+| SEO/Ads agencies        | €699/mo (LeadLead entry)       | €3,500+/mo (premium full-service) | Behind intake; no guarantee     |
+| Productized automation  | €197/mo (Vakman-online)        | €699/mo (Klusio Expert)           | New entrants; thin traction     |
+| AI voice standalone     | €299/mo (Voicelabs Robin)      | Custom                            | Not targeted at trades          |
 
 ### Realistic Klantkraan price band
 
 **Recommended: €349–€499/month** (excl. BTW) for the core SKU.
 
 Rationale:
+
 - Above Klusio Starter (€199) and Vakman-online (€197) — signals more substance.
 - Below Klusio Expert (€699) and agency retainers (€699–€3,500) — accessible to mid-size trade BVs without a marketing budget.
 - A €20k–€80k/year trade BV can justify €350–€500/month if the guaranteed lead count covers the cost in one job.
@@ -182,4 +185,4 @@ Rationale:
 - Market platform comparison overview: https://www.cobouw.nl/285975/vijf-online-platforms-in-de-bouw-wat-zijn-de-grootste-verschillen
 - Werkspot Trustpilot 3.8 / 7,400+ reviews: https://www.trustpilot.com/review/www.werkspot.nl
 
-*Research conducted May 2026. Pricing verified via direct page fetch or noted as "[behind intake — verified absent]" or "[not publicly available]" where no public figure was found. No numbers were invented.*
+_Research conducted May 2026. Pricing verified via direct page fetch or noted as "[behind intake — verified absent]" or "[not publicly available]" where no public figure was found. No numbers were invented._

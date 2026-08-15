@@ -71,11 +71,14 @@ const sameVertical = allPseo
 
 const dateFmt = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
 const typeLabel =
-  page.data.type === 'probleem' ? 'Probleem' : page.data.type === 'vergelijking' ? 'Vergelijking' : 'Gids'
+  page.data.type === 'probleem'
+    ? 'Probleem'
+    : page.data.type === 'vergelijking'
+      ? 'Vergelijking'
+      : 'Gids'
 
 // Only append the brand suffix when the title stays within ~65 chars.
-const pageTitle =
-  page.data.title.length <= 52 ? `${page.data.title} | Klantkraan` : page.data.title
+const pageTitle = page.data.title.length <= 52 ? `${page.data.title} | Klantkraan` : page.data.title
 
 const schemas = [
   breadcrumbSchema([
@@ -130,9 +133,7 @@ const schemas = [
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-3xl px-6">
       <p class="eyebrow">Bronnen</p>
-      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
-        De cijfers op deze pagina.
-      </h2>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">De cijfers op deze pagina.</h2>
       <ul class="mt-6 space-y-4">
         {
           page.data.stats.map((stat) => (
@@ -210,9 +211,7 @@ const schemas = [
   <!-- 6. CTA -->
   <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
     <div class="mx-auto max-w-3xl px-6">
-      <h2 class="font-display text-h1 text-(--color-chalk)">
-        Zien wat Klantkraan voor u opneemt?
-      </h2>
+      <h2 class="font-display text-h1 text-(--color-chalk)">Zien wat Klantkraan voor u opneemt?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         De demo laat in twee minuten zien hoe de digitale receptionist uw klantvragen beantwoordt,
         ook wanneer u op locatie zit.

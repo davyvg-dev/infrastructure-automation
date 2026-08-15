@@ -9,6 +9,7 @@ suggested_week: 1
 # De prijs van een gemiste call (value-only)
 
 ## Voice notes voor founder
+
 - Hook = concreet rekensommetje, geen verzonnen klant of percentage. "Stel" framing zoals LinkedIn 004.
 - Geen link in de body: veel groepen verwijderen posts met links automatisch. Laat mensen reageren of een bericht sturen.
 - Doel = discussie starten ("hoeveel mis jij?"), niet verkopen.
@@ -24,6 +25,7 @@ Doe dat keer vijftig weken.
 De meeste vakmensen die ik spreek onderschatten dit, want een gemiste call maakt geen geluid. Je ziet nooit de omzet die je niet kreeg.
 
 Drie dingen om na te gaan:
+
 - Belt je nummer door naar voicemail of naar een mens?
 - Hoe vaak bel je 's avonds nog terug, eerlijk?
 - Weet je hoeveel inkomende calls je per week krijgt? De meesten gokken te laag.

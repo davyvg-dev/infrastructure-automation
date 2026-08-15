@@ -45,7 +45,7 @@ You can't just type any `*.ns.cloudflare.com` — Cloudflare assigns specific NS
 
 5. **Write these two values down.** You'll paste them into TransIP next.
 
-Repeat for `klantkraan.com`. Cloudflare will assign a *different* pair of nameservers per zone.
+Repeat for `klantkraan.com`. Cloudflare will assign a _different_ pair of nameservers per zone.
 
 ## Step 2 — Confirm what TransIP shows
 

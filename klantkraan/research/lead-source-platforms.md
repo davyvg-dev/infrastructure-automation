@@ -27,13 +27,14 @@ KvK SBI code matched to trade category. Valid ID required. For regulated trades 
 **Trustpilot (trustpilot.com/review/www.werkspot.nl)**  
 ~7,300 reviews. The bulk are consumer-side (positive: quick match, easy UI). Vakman-side reviews are a different story — see below.
 
-**Vakman-side complaints (Radar forum, Klacht.nl, Higherlevel.nl, Wandgrimeurs blog — multiple threads 2022–2025)**  
-- Win rate disclosed by Adaptoo analysis: 20–30 %, meaning vakman must pay for 3–5 leads to convert one job.  
-- Effective cost per won job: ~**€208** (Adaptoo calculation).  
-- Lead price inconsistency: €28 charged on a €200 job; €8 on a €1,000 job — logic opaque and disputed by users.  
-- One ZZP forum user reported paying >€500 for contacts who never replied.  
-- Customer service reachable only by ticket; 48-hour response SLA poorly met per Radar threads.  
-- No brand stickiness: customers return to Werkspot for next job rather than calling the vakman directly.  
+**Vakman-side complaints (Radar forum, Klacht.nl, Higherlevel.nl, Wandgrimeurs blog — multiple threads 2022–2025)**
+
+- Win rate disclosed by Adaptoo analysis: 20–30 %, meaning vakman must pay for 3–5 leads to convert one job.
+- Effective cost per won job: ~**€208** (Adaptoo calculation).
+- Lead price inconsistency: €28 charged on a €200 job; €8 on a €1,000 job — logic opaque and disputed by users.
+- One ZZP forum user reported paying >€500 for contacts who never replied.
+- Customer service reachable only by ticket; 48-hour response SLA poorly met per Radar threads.
+- No brand stickiness: customers return to Werkspot for next job rather than calling the vakman directly.
 - "Who bids fast and cheap wins" — race-to-bottom dynamic destroys margins for quality operators.
 
 **Vakman-side praises**  
@@ -44,9 +45,10 @@ Volume of leads is high; useful for starting vaks who need pipeline quickly.
 **BV vs consumer split**  
 Primarily B2C (homeowner-driven). Jobs range from €100 tap repairs to €15,000 bathroom renovations. Mid-size residential projects (€500–€5,000) dominate. Not a B2B platform; not suited for commercial or infrastructure projects.
 
-**Typical lead pricing range (Werkspot)**  
-- Small job (leaking tap, painting a room): €4–€15  
-- Mid job (bathroom renovation, CV install): €15–€40  
+**Typical lead pricing range (Werkspot)**
+
+- Small job (leaking tap, painting a room): €4–€15
+- Mid job (bathroom renovation, CV install): €15–€40
 - Specialist/regulated work: €40–€75
 
 **Klantkraan recommendation:** PRIMARY COMPARISON FOIL. Every Klantkraan sales conversation with a trade BV starts here. The "I already pay Werkspot" objection is answered with the €208 effective acquisition cost and the no-repeat-customer problem.
@@ -67,11 +69,12 @@ KvK registration required. Background screening, online reputation check, portfo
 **Trustpilot (trustpilot.com/review/homedeal.nl)**  
 ~493 reviews (NL). Predominantly consumer-side. Consumer satisfaction mixed — positives on quick response, negatives on contractors collecting deposits then ghosting (one user lost ~€550 to a near-bankrupt contractor; Homedeal expressed sympathy but took no action).
 
-**Vakman-side complaints (Klussendirect comparison, Trustpilot vakman reviews)**  
-- Lead shared with up to 4 other professionals — high competition per job.  
-- Costs accumulate even when job does not proceed (consumer no-show, price shock, changed mind).  
-- No transparency on pricing before sign-up.  
-- Some users report receiving no jobs despite paying for access.  
+**Vakman-side complaints (Klussendirect comparison, Trustpilot vakman reviews)**
+
+- Lead shared with up to 4 other professionals — high competition per job.
+- Costs accumulate even when job does not proceed (consumer no-show, price shock, changed mind).
+- No transparency on pricing before sign-up.
+- Some users report receiving no jobs despite paying for access.
 - Communication mediated through platform initially — reduces direct rapport.
 
 **Vakman-side praises**  
@@ -100,9 +103,10 @@ Not publicly detailed. Standard KvK check implied; sustainability installer cert
 **Feedback Company rating:** 8.7/10 from 1,022 reviews (primarily consumer-side).  
 **Trustpilot (nl.trustpilot.com/review/slimster.nl):** present but lower volume than Werkspot.
 
-**Vakman-side complaints (Klussendirect, Nederlandreview)**  
-- Lower lead volume than Werkspot or Homedeal — not viable as sole acquisition channel for general trades.  
-- Customers who complained post-sign-up report submitting contact data then facing spam/multiple follow-up calls from too many competitors.  
+**Vakman-side complaints (Klussendirect, Nederlandreview)**
+
+- Lower lead volume than Werkspot or Homedeal — not viable as sole acquisition channel for general trades.
+- Customers who complained post-sign-up report submitting contact data then facing spam/multiple follow-up calls from too many competitors.
 - €15–€40 per lead with no conversion guarantee is still expensive if volume is thin.
 
 **Vakman-side praises**  
@@ -131,10 +135,11 @@ KvK check; review-based scoring; ongoing satisfaction monitoring. No explicit in
 **Trustpilot (trustpilot.com/review/trustoo.nl)**  
 ~3,910 reviews, 4 stars. Mix of consumer and vakman reviews.
 
-**Vakman-side complaints (Klussendirect, Trustpilot vakman reviews)**  
-- "Betaal per contact, ook als klant niet reageert" — same structural flaw as all pay-per-lead platforms.  
-- One vakman: "I feel genuinely deceived and ripped off."  
-- Curated top-10 limits visibility for newer businesses with fewer reviews — self-reinforcing for established players.  
+**Vakman-side complaints (Klussendirect, Trustpilot vakman reviews)**
+
+- "Betaal per contact, ook als klant niet reageert" — same structural flaw as all pay-per-lead platforms.
+- One vakman: "I feel genuinely deceived and ripped off."
+- Curated top-10 limits visibility for newer businesses with fewer reviews — self-reinforcing for established players.
 - Platform-mediated initial contact reduces direct relationship.
 
 **Vakman-side praises**  
@@ -160,8 +165,9 @@ Pay-per-lead, no subscription, no registration fees, no cancellation notice peri
 **Vetting**  
 Manual lead quality review before sending. KvK implied. Exclusive option limits competition. Phone support available (praised in reviews).
 
-**Vakman-side feedback (Nederlandreview, Klussendirect, Google reviews)**  
-- Positives: phone-accessible customer support (rare in this space); pricing described as "one of the best in the Netherlands" by one reviewer; manual lead check reduces junk.  
+**Vakman-side feedback (Nederlandreview, Klussendirect, Google reviews)**
+
+- Positives: phone-accessible customer support (rare in this space); pricing described as "one of the best in the Netherlands" by one reviewer; manual lead check reduces junk.
 - Negatives: Some reviewers report low lead quality at €35/lead; overall volume lower than Werkspot.
 
 **Sentiment summary:** Positively differentiated by phone support and manual quality filter. Still a pay-per-lead model but with better guardrails than Werkspot.
@@ -180,10 +186,11 @@ B2C. Residential renovations and services. Job range €500–€15,000.
 **Business model**  
 Lead shared with up to 6 businesses at **€10–€40 per lead** depending on sector. Active since 2009; 3,000+ SME partners.
 
-**Vakman-side complaints (ZZP forum, Ervaringendelen, Nederlandreview 2022–2025)**  
-- Leads frequently unreachable or fake — customers claim they never signed up.  
-- Per-lead cost charged regardless; complaint process described as opaque and slow.  
-- Up to 6 businesses share one lead — highest competition ratio of any platform reviewed.  
+**Vakman-side complaints (ZZP forum, Ervaringendelen, Nederlandreview 2022–2025)**
+
+- Leads frequently unreachable or fake — customers claim they never signed up.
+- Per-lead cost charged regardless; complaint process described as opaque and slow.
+- Up to 6 businesses share one lead — highest competition ratio of any platform reviewed.
 - One month cancellation notice required.
 
 **Sentiment summary:** Most negative of all platforms reviewed from vakman perspective. Near-fraudulent lead quality complaints appear repeatedly across multiple independent sources.
@@ -206,10 +213,11 @@ Consumer posts job free. Professionals see jobs in their area. Accept job → co
 **Vetting**  
 Screening process exists but criticized as "a sham" in Radar forum thread. Multiple complaints about unvetted contractors passing through.
 
-**Vakman-side complaints (Radar, Klacht.nl 2023–2025)**  
-- Screening "is a wassen neus" (worthless) per Radar forum.  
-- Not phone-reachable; support is online-only.  
-- Commission model means margin pressure on small jobs.  
+**Vakman-side complaints (Radar, Klacht.nl 2023–2025)**
+
+- Screening "is a wassen neus" (worthless) per Radar forum.
+- Not phone-reachable; support is online-only.
+- Commission model means margin pressure on small jobs.
 - Some contractors describe arriving at jobs with no clarity on scope/cost.
 
 **Vakman-side praises**  
@@ -257,28 +265,28 @@ All platforms in this study are **primarily B2C** — homeowners and renters see
 
 ### Typical Job Value Ranges by Platform
 
-| Platform     | Typical Consumer Job Range |
-|--------------|---------------------------|
-| Werkspot     | €100–€5,000               |
-| Homedeal     | €500–€10,000              |
-| Zoofy        | €100–€2,000               |
-| Trustoo      | €2,000–€50,000            |
-| Slimster     | €3,000–€20,000 (energy)   |
-| OfferteAdviseur | €500–€15,000           |
-| Advanza      | €200–€5,000               |
+| Platform        | Typical Consumer Job Range |
+| --------------- | -------------------------- |
+| Werkspot        | €100–€5,000                |
+| Homedeal        | €500–€10,000               |
+| Zoofy           | €100–€2,000                |
+| Trustoo         | €2,000–€50,000             |
+| Slimster        | €3,000–€20,000 (energy)    |
+| OfferteAdviseur | €500–€15,000               |
+| Advanza         | €200–€5,000                |
 
 ### Trade Willingness-to-Pay for a Warm Lead
 
 Based on published and disclosed CPL data across platforms (Leadsprijzen.nl, Adaptoo, Klussendirect analysis, OfferteAdviseur reviews):
 
-| Trade             | Disclosed CPL Range (market) | Notes                              |
-|-------------------|------------------------------|------------------------------------|
-| Installateur/CV   | €15–€50                      | Higher for regulated gas/electric  |
-| Loodgieter        | €7–€40                       | Wide variance by job type          |
-| Dakdekker         | €8–€25                       | Mid-range; high seasonal spike     |
-| Aannemer (verbouw)| €12–€80                      | Large projects justify higher CPL  |
-| Schilder          | €9–€30                       | Competitive; thin margins          |
-| Solar/warmtepomp  | €15–€35                      | Slimster/specialist platforms      |
+| Trade              | Disclosed CPL Range (market) | Notes                             |
+| ------------------ | ---------------------------- | --------------------------------- |
+| Installateur/CV    | €15–€50                      | Higher for regulated gas/electric |
+| Loodgieter         | €7–€40                       | Wide variance by job type         |
+| Dakdekker          | €8–€25                       | Mid-range; high seasonal spike    |
+| Aannemer (verbouw) | €12–€80                      | Large projects justify higher CPL |
+| Schilder           | €9–€30                       | Competitive; thin margins         |
+| Solar/warmtepomp   | €15–€35                      | Slimster/specialist platforms     |
 
 Key insight: trades pay **€7–€80 per lead** depending on the trade and expected job value. At a 20–30 % win rate (Werkspot benchmark), the **effective cost per won job is €30–€400** before any labour cost. A dakdekker winning one in four leads at €25 each pays €100 to acquire a job; if that job is €800, the lead platform absorbs 12.5 % of revenue before a single tile is laid.
 
@@ -286,18 +294,18 @@ Key insight: trades pay **€7–€80 per lead** depending on the trade and exp
 
 ## Summary Ranking Table
 
-| Platform        | Vakman Sentiment | Lead Quality | CPL (€) | Competition/Lead | Klantkraan Action        |
-|-----------------|-----------------|--------------|---------|-----------------|--------------------------|
-| Werkspot        | Very negative   | Medium       | 15–75   | 3–5             | Primary foil in sales    |
-| Advanza         | Very negative   | Poor         | 10–40   | Up to 6         | Foil / "worst case" example |
-| Homedeal        | Negative        | Medium       | 40–80   | Up to 4         | Foil alongside Werkspot  |
-| Zoofy           | Mixed           | Medium-low   | Commission only | 3–4   | Context: "even fair models fail" |
-| Trustoo         | Mixed-positive  | Medium-high  | 20–45   | 2–3             | Mild competitor on quality angle |
-| Slimster        | Neutral (niche) | Medium-high  | 15–40   | Max 3           | Niche only (energy installs) |
-| OfferteAdviseur | Mildly positive | Medium-high  | ~35     | Max 3           | Potential partner / integration |
-| Bouwoffertes    | Insufficient data | Unknown   | Unknown | Up to 6         | Peripheral                |
-| Bouwentree      | No data         | —            | —       | —               | Remove from list          |
-| Vakman.nl       | No data         | —            | —       | —               | Remove from list          |
+| Platform        | Vakman Sentiment  | Lead Quality | CPL (€)         | Competition/Lead | Klantkraan Action                |
+| --------------- | ----------------- | ------------ | --------------- | ---------------- | -------------------------------- |
+| Werkspot        | Very negative     | Medium       | 15–75           | 3–5              | Primary foil in sales            |
+| Advanza         | Very negative     | Poor         | 10–40           | Up to 6          | Foil / "worst case" example      |
+| Homedeal        | Negative          | Medium       | 40–80           | Up to 4          | Foil alongside Werkspot          |
+| Zoofy           | Mixed             | Medium-low   | Commission only | 3–4              | Context: "even fair models fail" |
+| Trustoo         | Mixed-positive    | Medium-high  | 20–45           | 2–3              | Mild competitor on quality angle |
+| Slimster        | Neutral (niche)   | Medium-high  | 15–40           | Max 3            | Niche only (energy installs)     |
+| OfferteAdviseur | Mildly positive   | Medium-high  | ~35             | Max 3            | Potential partner / integration  |
+| Bouwoffertes    | Insufficient data | Unknown      | Unknown         | Up to 6          | Peripheral                       |
+| Bouwentree      | No data           | —            | —               | —                | Remove from list                 |
+| Vakman.nl       | No data           | —            | —               | —                | Remove from list                 |
 
 ---
 

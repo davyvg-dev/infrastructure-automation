@@ -22,27 +22,27 @@ Datum: {{06-08-2026}} • Offertenummer: KK-2026-08-01 • Geldig tot: {{20-08-2
 - Overdag op werkdagen rinkelt uw eigen telefoon zoals nu; de doorschakeltijden stellen we bij de installatie samen in
 - Neemt adres en contactgegevens op met verificatie tegen het officiële adresregister (BAG/PDOK)
 - Melding met naam, adres en telefoonnummer wordt direct naar u doorgestuurd
-- Transcript en samenvatting van ieder gesprek, plus maandelijkse rapportage*
+- Transcript en samenvatting van ieder gesprek, plus maandelijkse rapportage\*
 
 \* Voldoet aan de wettelijke transparantie-eis voor AI aan de telefoon (EU AI Act, artikel 50)
 
 ## Prijs
 
-| | excl. BTW | incl. 21% BTW |
-|---|---|---|
-| Abonnement per maand, inclusief 1.500 belminuten | € 685,00 | € 828,85 |
-| Belminuten boven 1.500 per minuut | € 0,40 | € 0,48 |
-| Eenmalige installatie | € 1.395,00 | € 1.687,95 |
+|                                                  | excl. BTW  | incl. 21% BTW |
+| ------------------------------------------------ | ---------- | ------------- |
+| Abonnement per maand, inclusief 1.500 belminuten | € 685,00   | € 828,85      |
+| Belminuten boven 1.500 per minuut                | € 0,40     | € 0,48        |
+| Eenmalige installatie                            | € 1.395,00 | € 1.687,95    |
 
 De doorschakeling vanaf uw huidige telefooncentrale loopt via uw eigen telefonie-aanbieder, waarvan de belkosten (indicatie € 35 tot € 50 per maand) voor uw rekening zijn.
 
 ## Betaalschema
 
-| Moment | Omschrijving | excl. BTW | incl. BTW |
-|---|---|---|---|
-| Bij ondertekening | 50% installatie | € 697,50 | € 843,98 |
-| Bij oplevering | 50% installatie + eerste maand | € 1.382,50 | € 1.672,83 |
-| Daarna maandelijks | Abonnement | € 685,00 | € 828,85 |
+| Moment             | Omschrijving                   | excl. BTW  | incl. BTW  |
+| ------------------ | ------------------------------ | ---------- | ---------- |
+| Bij ondertekening  | 50% installatie                | € 697,50   | € 843,98   |
+| Bij oplevering     | 50% installatie + eerste maand | € 1.382,50 | € 1.672,83 |
+| Daarna maandelijks | Abonnement                     | € 685,00   | € 828,85   |
 
 De aanbetaling verloopt via iDEAL (betaallink: payment-links.mollie.com/payment/aSnDhBoYJguZ6Xokb6nTk, geldig tot 20-08-2026). De betaling bij oplevering registreert direct de automatische incasso; de maandtermijnen lopen daarna via SEPA-incasso.
 
@@ -58,6 +58,6 @@ De aanbetaling verloopt via iDEAL (betaallink: payment-links.mollie.com/payment/
 
 ## Akkoord
 
-Naam: ______________________ Functie: ______________________
+Naam: **********\_\_********** Functie: **********\_\_**********
 
-Datum: ______________________ Handtekening: ______________________
+Datum: **********\_\_********** Handtekening: **********\_\_**********

@@ -94,8 +94,7 @@ mijn.verbonden.nl feature.
 - [x] Dynamic variables fixed the single-tenant way: all five DRS values inlined into the
       live prompt + first message; only `{{system__caller_id}}` remains (telephony supplies it).
       Multi-client = revisit the initiation webhook.
-- [ ] DRS (or founder screen-share): belplan step 3 Vaste Bestemming + beltijd 20–25 s
-      + nummerweergave "Oorspronkelijke Beller"; keypress-confirm OFF; openingstijden
+- [ ] DRS (or founder screen-share): belplan step 3 Vaste Bestemming + beltijd 20–25 s + nummerweergave "Oorspronkelijke Beller"; keypress-confirm OFF; openingstijden
       closed branch → same number.
 - [ ] One test call through the full chain: check CLI passthrough shows the caller's
       number, agent confirms it, lead lands in data collection.

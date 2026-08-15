@@ -43,7 +43,7 @@ Drie van de vier zijn op te lossen met communicatie. Niet met meer personeel.
 
 Stuur **binnen 2 minuten** na de boeking een SMS:
 
-> *Bedankt \[voornaam], wij komen \[datum] tussen \[tijd] bij u langs voor de opname. Voorrijkosten €X (eenmalig, BTW incl.). Antwoord met "ja" om te bevestigen of "verzet" om een nieuw moment te kiezen.*
+> _Bedankt \[voornaam], wij komen \[datum] tussen \[tijd] bij u langs voor de opname. Voorrijkosten €X (eenmalig, BTW incl.). Antwoord met "ja" om te bevestigen of "verzet" om een nieuw moment te kiezen._
 
 Drie dingen gebeuren tegelijk: de afspraak staat zwart-op-wit, de prijs is helder, en u krijgt een actieve **"ja"** of een vroege afzegging. Geen stiltes meer.
 
@@ -53,7 +53,7 @@ Effect op no-shows: **−25 tot −35%** alleen al door deze eerste SMS.
 
 De avond ervoor om 18:00 een tweede SMS:
 
-> *Hoi \[voornaam], morgen tussen \[tijd] komen wij langs voor de opname. Lukt het nog? Antwoord "ja" of bel \[nummer]. Tot morgen.*
+> _Hoi \[voornaam], morgen tussen \[tijd] komen wij langs voor de opname. Lukt het nog? Antwoord "ja" of bel \[nummer]. Tot morgen._
 
 Klanten die anders 's avonds laat zouden afzeggen, doen dat nu. U krijgt 18 uur om het gat te vullen met een andere afspraak. Vaak iemand uit de wachtlijst die graag eerder geholpen wordt.
 
@@ -63,7 +63,7 @@ Effect bovenop laag 1: **nog eens −20 tot −30%**.
 
 Voor opnames boven de **€150 omzet** of buiten een straal van 15 km loont een korte AI-bevestiging op de ochtend zelf, rond 08:30:
 
-> *Goedendag, u spreekt met de virtuele assistent van \[Bedrijf]. Vandaag om \[tijd] komt onze monteur langs voor de opname. Lukt het nog? Druk 1 voor ja, 2 voor verzetten, 3 om iemand te spreken.*
+> _Goedendag, u spreekt met de virtuele assistent van \[Bedrijf]. Vandaag om \[tijd] komt onze monteur langs voor de opname. Lukt het nog? Druk 1 voor ja, 2 voor verzetten, 3 om iemand te spreken._
 
 Klanten die anders thuis weg waren gegaan ("oh ja, vergeten") drukken 1 en zijn er. Klanten die wilden afzeggen maar het uitstelden, drukken 2. U boekt een ander.
 
