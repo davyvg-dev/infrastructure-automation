@@ -32,9 +32,19 @@ export interface Toon {
   /** Werkgebied section heading and body. */
   gebiedKop: string
   gebiedTekst: string
+  /**
+   * Nav label for the same section. Separate from gebiedKop because the header is a row
+   * of three short words and "Waar u ons vindt" wraps it.
+   */
+  gebiedNav: string
   /** Final CTA heading and body. */
   slotKop: string
   slotTekst: string
+  /** The line under "Onze diensten", on the homepage and on the diensten page. */
+  dienstenTekst: string
+  dienstenPaginaTekst: string
+  /** Contact page <meta description>, for a client with no e-mail address. */
+  contactOmschrijving: string
   /** Homepage <title> and <meta description>. */
   titel: string
   omschrijving: string
@@ -72,10 +82,17 @@ export function toon(config: ClientConfig): Toon {
       werkwijze: `Een ${bedrijf.vak} zoeken en geen zin in gedoe? Zo werken wij: u belt of loopt binnen, u vertelt wat u zoekt, en wij zeggen eerlijk wat er mogelijk is en wanneer u terechtkunt.`,
       bereik: `${naam} zit in ${plaats}. Onze klanten komen uit ${gebied}. U spreekt altijd iemand die het vak zelf doet.`,
       gebiedKop: 'Waar u ons vindt',
+      gebiedNav: 'Bezoek ons',
       gebiedTekst: `${naam} zit in ${plaats}. Onze klanten komen onder meer uit ${gebied}. Kom gerust langs of bel even, dan zetten wij u in de agenda.`,
       slotKop: 'Maak een afspraak',
       slotTekst:
         'Bel ons even en zeg wat u zoekt. U hoort direct wanneer u terechtkunt, zonder omwegen.',
+      // "Klus" is a trade's word for a job. A barber does not do klussen, and the word is
+      // the kind of small wrongness a reader feels without being able to name it.
+      dienstenTekst:
+        'Dit is waar u ons voor belt. Zoekt u iets anders? Vraag het gerust, wij denken met u mee.',
+      dienstenPaginaTekst: `Hieronder ziet u waar ${naam} u mee helpt. Staat wat u zoekt er niet bij? Bel ons gerust, dan hoort u direct of wij u kunnen helpen.`,
+      contactOmschrijving: `Neem contact op met ${naam} in ${plaats}. Bel ${bedrijf.telefoon} om een afspraak te maken.`,
       titel: `${naam} | ${vak} in ${plaats}`,
       omschrijving: `${naam} is uw ${bedrijf.vak} in ${plaats}. Bel ${bedrijf.telefoon} om een afspraak te maken.`,
       // "Voor", never "in": the shop is not in that neighbourhood, the customer is.
@@ -98,10 +115,15 @@ export function toon(config: ClientConfig): Toon {
     werkwijze: `Een ${bedrijf.vak} nodig en geen zin in gedoe? Zo werken wij: u legt uw situatie uit, wij komen kijken en u ontvangt een heldere offerte voordat het werk begint. Geen verrassingen achteraf.`,
     bereik: `${naam} werkt in ${gebied}. U spreekt altijd met iemand die het werk zelf kent, en wij laten de werkplek netjes achter.`,
     gebiedKop: 'Werkgebied',
+    gebiedNav: 'Werkgebied',
     gebiedTekst: `${naam} werkt in ${gebied}. Woont u net daarbuiten? Bel gerust, vaak kunnen wij toch iets voor u betekenen.`,
     slotKop: 'Vertel ons wat er speelt',
     slotTekst:
       'Bel ons en leg uw situatie voor. U krijgt direct een eerlijk antwoord en een duidelijke afspraak.',
+    dienstenTekst:
+      'Dit is waar u ons voor belt. Staat uw klus er niet bij? Vraag het gerust, wij denken met u mee.',
+    dienstenPaginaTekst: `Hieronder ziet u waar ${naam} u mee helpt. Twijfelt u of uw klus erbij staat? Bel ons gerust, dan hoort u direct of wij u kunnen helpen.`,
+    contactOmschrijving: `Neem contact op met ${naam} in ${plaats}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`,
     titel: `${naam} | ${vak} in ${plaats} en omgeving`,
     omschrijving: `${naam} is uw ${bedrijf.vak} in ${gebied}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`,
     plaatsKop: (p) => `${vak} in ${p}`,

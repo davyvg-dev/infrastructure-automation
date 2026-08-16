@@ -2,12 +2,14 @@
 import Icon from './Icon.astro'
 import { loadClient } from '../lib/client'
 import { telHref } from '../lib/format'
+import { toon } from '../lib/toon'
 
 // Header: bedrijfsnaam (or logo), compact nav, phone prominent on desktop.
 // Mobile relies on the sticky call bar (StickyCallBar.astro) for the CTA.
 const { config, logoUrl } = loadClient()
 const { bedrijf } = config
 const tel = telHref(bedrijf.telefoon)
+const t = toon(config)
 ---
 
 <header class="border-b border-(--color-line) bg-(--color-card)">
@@ -20,7 +22,9 @@ const tel = telHref(bedrijf.telefoon)
     </a>
     <nav aria-label="Hoofdmenu" class="flex items-center gap-5 text-small font-medium">
       <a href="/diensten/" class="text-(--color-ink) no-underline hover:underline">Diensten</a>
-      <a href="/#werkgebied" class="text-(--color-ink) no-underline hover:underline">Werkgebied</a>
+      <a href="/#werkgebied" class="text-(--color-ink) no-underline hover:underline"
+        >{t.gebiedNav}</a
+      >
       <a href="/contact/" class="text-(--color-ink) no-underline hover:underline">Contact</a>
       <a href={tel} class="btn btn-call hidden md:inline-flex">
         <Icon name="phone" class="h-4 w-4" />

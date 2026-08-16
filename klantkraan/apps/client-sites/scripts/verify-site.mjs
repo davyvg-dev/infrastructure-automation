@@ -492,6 +492,15 @@ if (!fs.existsSync(path.join(APP_ROOT, 'clients', slug, 'fotos'))) {
   )
 }
 if (!isPreview) notes.push('/voorwaarden/ is a generic placeholder: adapt it before go-live')
+// For a locatie bedrijf that page is not merely generic, it is about the wrong
+// transaction: it talks offerte, oplevering and garantie op het werk, which is a trade's
+// contract and not a barber's. Said on every build, preview included, because a proposal
+// that converts carries these terms with it.
+if (bedrijf.bedrijfstype === 'locatie') {
+  notes.push(
+    '/voorwaarden/ describes offertes and oplevering, which a locatie bedrijf does not have: rewrite it before this site sells anything',
+  )
+}
 
 const mode = isPreview ? 'VOORSTEL (preview)' : 'LIVE'
 if (failures.length) {

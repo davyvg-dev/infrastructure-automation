@@ -3,9 +3,11 @@ import Base from '../layouts/Base.astro'
 import Diensten from '../components/Diensten.astro'
 import FinalCta from '../components/FinalCta.astro'
 import { loadClient } from '../lib/client'
+import { toon } from '../lib/toon'
 
 const { config } = loadClient()
 const { bedrijf } = config
+const t = toon(config)
 const title = `Diensten | ${bedrijf.naam}`
 const description = `Overzicht van de diensten van ${bedrijf.naam}: ${config.diensten
   .map((d) => d.naam.toLowerCase())
@@ -15,10 +17,7 @@ const description = `Overzicht van de diensten van ${bedrijf.naam}: ${config.die
 <Base title={title} description={description}>
   <section class="mx-auto max-w-5xl px-6 pt-10 md:pt-12">
     <h1 class="text-h1">Onze diensten</h1>
-    <p class="mt-4 max-w-2xl text-(--color-mist)">
-      Hieronder ziet u waar {bedrijf.naam} u mee helpt. Twijfelt u of uw klus erbij staat? Bel ons gerust,
-      dan hoort u direct of wij u kunnen helpen.
-    </p>
+    <p class="mt-4 max-w-2xl text-(--color-mist)">{t.dienstenPaginaTekst}</p>
   </section>
   <Diensten compact />
   <FinalCta />

@@ -46,8 +46,12 @@ function alleZinnen(t: Toon): string[] {
     t.bereik,
     t.gebiedKop,
     t.gebiedTekst,
+    t.gebiedNav,
     t.slotKop,
     t.slotTekst,
+    t.dienstenTekst,
+    t.dienstenPaginaTekst,
+    t.contactOmschrijving,
     t.titel,
     t.omschrijving,
   ]
@@ -87,6 +91,19 @@ const RIJDT_NAAR_DE_KLANT = [
 test('locatie belooft nergens dat het bedrijf naar de klant komt', () => {
   for (const zin of alleZinnen(toon(config('locatie')))) {
     for (const patroon of RIJDT_NAAR_DE_KLANT) {
+      assert.ok(!patroon.test(zin), `locatie zegt "${zin}" en dat matcht ${patroon}`)
+    }
+  }
+})
+
+// The other half of the register, and the half that is easier to miss: not a promise
+// about travelling, just the wrong noun. A barber has no klus and writes no offerte, and
+// those words read as slightly-off to a customer who cannot say why.
+const VAKMANSTAAL = [/\bklus\b/i, /offerte/i, /oplevering/i]
+
+test('locatie gebruikt geen woorden uit de bouw', () => {
+  for (const zin of alleZinnen(toon(config('locatie')))) {
+    for (const patroon of VAKMANSTAAL) {
       assert.ok(!patroon.test(zin), `locatie zegt "${zin}" en dat matcht ${patroon}`)
     }
   }

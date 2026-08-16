@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro'
 import Icon from '../components/Icon.astro'
 import { loadClient } from '../lib/client'
 import { adresRegels, openingstijdenRegels, telHref, waHref } from '../lib/format'
+import { toon } from '../lib/toon'
 
 // Contact: tel, WhatsApp (when present), e-mail, adres, openingstijden.
 // Deliberately NO contact form: forms need spam handling and delay the
@@ -14,7 +15,7 @@ const adres = adresRegels(bedrijf.adres)
 const title = `Contact | ${bedrijf.naam}`
 const description = bedrijf.email
   ? `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon} of stuur een e-mail naar ${bedrijf.email}.`
-  : `Neem contact op met ${bedrijf.naam} in ${bedrijf.adres.plaats}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`
+  : toon(config).contactOmschrijving
 ---
 
 <Base title={title} description={description}>
