@@ -3,6 +3,9 @@
 clients/*
 !clients/voorbeeld-dakdekker/
 !clients/voorbeeld-preview/
+# The locatie counterpart to the dakdekker fixture, and equally fictional. Tracked so the
+# register has a worked example in the repo and not only in someone's working copy.
+!clients/voorbeeld-kapper-rotterdam/
 dist/
 .astro/
 # Search scratch for `stock-photos.py zoek`: two dozen unpicked frames per vak, worth
