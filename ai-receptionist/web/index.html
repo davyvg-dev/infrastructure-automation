@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Digitale receptionist</title>
+  <style>
+    /* Klantkraan dispatch palette — must match the marketing site tokens
+     * (klantkraan/apps/marketing-site/src/styles/global.css @theme). One look,
+     * no light/dark swap: the brand is the dark panel. */
+    :root {
+      --bg: #0f1c1e; --panel: #16292b; --ink: #f4efe6; --muted: #93a6a2;
+      --bot: #1c3335; --me: #ffb84d; --me-ink: #0f1c1e; --line: #26403f;
+      --ok: #63d3ab;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: dark; }
+    html, body { height: 100%; margin: 0; width: 100%; max-width: 100%; overflow-x: hidden; }
+    body {
+      background: var(--bg); color: var(--ink);
+      font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+    }
+    .card {
+      width: 100%; max-width: min(440px, 100%); height: min(680px, 92vh);
+      background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    /* Embedded in the widget iframe: fill it edge-to-edge, the bubble/panel is the frame. */
+    body.embed { padding: 0; background: transparent; display: block; }
+    body.embed .card {
+      max-width: none; height: 100%; border: 0; border-radius: 0; box-shadow: none;
+    }
+    header {
+      padding: 14px 16px; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); flex: none; }
+    header .who { flex: 1; min-width: 0; }
+    header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+    header span { color: var(--muted); font-size: 12px; }
+    #close {
+      display: none; flex: none; width: 30px; height: 30px; padding: 0; border: 0;
+      border-radius: 8px; background: transparent; color: var(--muted);
+      font-size: 20px; line-height: 1; cursor: pointer;
+    }
+    #close:hover { background: var(--bot); color: var(--ink); }
+    body.embed #close { display: block; }
+    #log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .msg { max-width: 82%; padding: 9px 13px; border-radius: 14px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; }
+    .bot { background: var(--bot); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .me  { background: var(--me); color: var(--me-ink); align-self: flex-end; border-bottom-right-radius: 4px; }
+    .typing { color: var(--muted); font-style: italic; }
+    form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); }
+    input {
+      flex: 1; min-width: 0; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px;
+      background: var(--bg); color: var(--ink); font-size: 15px;
+    }
+    input::placeholder { color: var(--muted); }
+    input:focus { outline: 2px solid var(--me); outline-offset: 1px; }
+    button.send {
+      padding: 0 16px; border: 0; border-radius: 10px; background: var(--me);
+      color: var(--me-ink); font-weight: 600; cursor: pointer;
+    }
+    button.send:disabled { opacity: .5; cursor: default; }
+    /* When the chat fills the whole screen (widget/iframe embed), pad the input
+     * row past the phone's rounded corners, notch and home indicator so the
+     * text field and Versturen button are never clipped by the safe area. */
+    body.embed form {
+      padding-left: calc(12px + env(safe-area-inset-left));
+      padding-right: calc(12px + env(safe-area-inset-right));
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <header>
+      <span class="dot"></span>
+      <div class="who">
+        <h1 id="biz">Assistant</h1>
+        <span id="subtitle"></span>
+      </div>
+      <button id="close" type="button" aria-label="Sluiten">&times;</button>
+    </header>
+    <div id="log"></div>
+    <form id="form">
+      <input id="input" autocomplete="off" />
+      <button id="send" class="send" type="submit"></button>
+    </form>
+  </div>
+
+  <script>
+    // UI chrome per locale (the config is source of truth via /config; defaults to Dutch,
+    // the target market). The actual greeting — which carries the EU AI Act art. 50
+    // disclosure — always comes from the server, never from this table.
+    const STRINGS = {
+      nl: {
+        subtitle: 'Digitale assistent · reageert direct',
+        placeholder: 'Typ een bericht…',
+        send: 'Versturen',
+        error: 'Sorry, er ging iets mis. Probeer het opnieuw.',
+        greeting: 'Hoi! Waarmee kan ik je helpen?',
+      },
+      en: {
+        subtitle: 'AI receptionist · replies instantly',
+        placeholder: 'Type a message…',
+        send: 'Send',
+        error: 'Sorry, something went wrong. Please try again.',
+        greeting: 'Hi! How can I help?',
+      },
+    };
+
+    const log = document.getElementById('log');
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const send = document.getElementById('send');
+    const closeBtn = document.getElementById('close');
+    let sessionId = null;
+    let t = STRINGS.nl;
+
+    // Embedded inside the widget iframe, or opened as a standalone hosted page (fallback)?
+    const embedded = new URLSearchParams(location.search).get('embed') === '1'
+      || window.self !== window.top;
+    if (embedded) document.body.classList.add('embed');
+
+    // Branded demo: the hosted link carries ?client=<slug>. Forward it to the API on every
+    // call so the backend swaps in that client's config; without it every link shows the
+    // default business.
+    const clientSlug = new URLSearchParams(location.search).get('client');
+    const clientQ = clientSlug ? ('?client=' + encodeURIComponent(clientSlug)) : '';
+
+    closeBtn.addEventListener('click', () => {
+      parent.postMessage({ type: 'klantkraan-widget', action: 'close' }, '*');
+    });
+
+    function applyStrings() {
+      document.documentElement.lang = t === STRINGS.en ? 'en' : 'nl';
+      document.getElementById('subtitle').textContent = t.subtitle;
+      input.placeholder = t.placeholder;
+      send.textContent = t.send;
+    }
+
+    function bubble(text, cls) {
+      const el = document.createElement('div');
+      el.className = 'msg ' + cls;
+      el.textContent = text;
+      log.appendChild(el);
+      log.scrollTop = log.scrollHeight;
+      return el;
+    }
+
+    async function init() {
+      applyStrings();
+      try {
+        const cfg = await (await fetch('/config' + clientQ)).json();
+        t = STRINGS[cfg.locale] || STRINGS.nl;
+        applyStrings();
+        document.getElementById('biz').textContent = cfg.name;
+        document.title = cfg.name;
+        bubble(cfg.greeting, 'bot');
+      } catch {
+        bubble(t.greeting, 'bot');
+      }
+      if (!embedded) input.focus();
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      bubble(text, 'me');
+      input.value = '';
+      input.focus();
+      send.disabled = true;
+      const typing = bubble('…', 'bot typing');
+      try {
+        const res = await fetch('/chat' + clientQ, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId, message: text }),
+        });
+        const data = await res.json();
+        sessionId = data.session_id;
+        typing.remove();
+        bubble(data.reply, 'bot');
+      } catch {
+        typing.remove();
+        bubble(t.error, 'bot');
+      } finally {
+        send.disabled = false;
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

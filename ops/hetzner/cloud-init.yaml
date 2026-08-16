@@ -1,0 +1,27 @@
+#cloud-config
+# First-boot setup for the Klantkraan ops server (Ubuntu 24.04).
+# Installs Python + rsync + Caddy (official repo, per caddyserver docs 2026-07)
+# and creates the unprivileged user the services run as.
+
+users:
+  - name: klantkraan
+    shell: /bin/bash
+    lock_passwd: true
+
+package_update: true
+packages:
+  - python3-venv
+  - rsync
+  - git
+  - debian-keyring
+  - debian-archive-keyring
+  - apt-transport-https
+  - curl
+
+runcmd:
+  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  - curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
+  - apt-get update
+  - apt-get install -y caddy
+  - mkdir -p /opt/klantkraan
+  - chown klantkraan:klantkraan /opt/klantkraan

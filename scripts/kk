@@ -1,0 +1,660 @@
+#!/usr/bin/env python3
+"""kk — Klantkraan command center dispatcher.
+
+Thin dispatcher over CLIs that already exist and own their state.
+Resolves the repo root once, cds per verb, picks the right venv.
+Adds no services, no databases, no daemons.
+
+Usage: kk <verb> [args]   (kk help for the verb list)
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import shlex
+import subprocess
+import sys
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+
+SERVER_IP = "168.119.173.25"
+HEALTH_URL = f"https://demo-{SERVER_IP.replace('.', '-')}.sslip.io/health"
+OUTREACH_DAILY_CAP = 6
+
+# Files whose contents decide what the receptionist says or does. deploy.sh rsyncs the
+# whole repo and restarts the service, so a change here ships live to the number clients
+# call and must clear the goldens first. A deploy that touches none of them cannot move
+# a golden, and paying for 14 simulated Opus conversations to prove that is waste.
+EVAL_SURFACE = (
+    "ai-receptionist/app/receptionist.py",   # the prompt and the tool-use loop
+    "ai-receptionist/app/tools.py",          # tool schemas + dispatch
+    "ai-receptionist/app/settings.py",       # which config a request resolves to
+    "ai-receptionist/app/rdw.py",            # kenteken lookup (apk-kenteken golden)
+    "ai-receptionist/app/calendar_store.py",  # slots + bookings (booking goldens)
+    "ai-receptionist/app/listings_store.py",  # inventory search (makelaar goldens)
+    "ai-receptionist/app/evals.py",          # the goldens themselves
+    "ai-receptionist/config/",               # business.yaml + every client yaml
+)
+# SHA of the tree the server last received, written after a successful deploy. Absent or
+# unreadable means "we cannot know what changed", which the gate reads as "run everything".
+DEPLOY_MARKER = ".kk/deployed-server"
+
+# kk health runs this on the server: OnFailure alerts (kk-alert@) deliver via Telegram or
+# e-mail, and with neither configured every unit failure lands only in the journal — the
+# exact silent-failure hole the alerting exists to close, so surface it on every health run.
+ALERT_CONFIG_CHECK = (
+    "cd /opt/klantkraan/ai-receptionist && "
+    'if { grep -q "^OWNER_TELEGRAM_CHAT_ID=." .env && '
+    'grep -qE "^(NOTIFY_TELEGRAM_TOKEN|TELEGRAM_BOT_TOKEN)=." .env; } || '
+    '{ grep -q "^OWNER_EMAIL=." .env && grep -q "^RESEND_API_KEY=." .env; }; then '
+    'echo "alerts: delivery configured"; else '
+    'echo "ALERTS UNCONFIGURED: unit failures only land in the journal.'
+    " Set OWNER_TELEGRAM_CHAT_ID (python -m app.notify chatid) or OWNER_EMAIL +"
+    ' RESEND_API_KEY in ai-receptionist/.env on the server."; fi'
+)
+
+# short name -> systemd unit on the Hetzner box
+LOG_UNITS = {
+    "app": "ai-receptionist",
+    "chat": "ai-receptionist",
+    "watchdog": "ai-receptionist-watchdog",
+    "retention": "ai-receptionist-retention",
+    "analyst": "ai-receptionist-analyst",
+    "digest": "ai-receptionist-digest",
+    "growth": "growth-engine",
+    "seo": "growth-engine-seo",
+    "status": "klantkraan-status",
+    "cursus": "klantkraan-cursus",
+    "caddy": "caddy",
+}
+
+# Where `kk status push` lands the Mac-side deal/outreach snapshot on the server: the
+# status generator falls back to this file when the host has no pipeline data.
+SNAPSHOT_REMOTE = "/opt/klantkraan/ai-receptionist/data/status-snapshot.json"
+
+# Where the growth-engine bot stores Telegram-approved nieuwsbrief editions (rsync-durable,
+# vertical-scoped like all its state); `kk nieuwsbrief send` ships the newest one unless
+# --file names it.
+NEWSLETTERS_REMOTE = "/opt/klantkraan/growth-engine/data/trades/newsletters"
+_NB_RUN = (
+    "cd /opt/klantkraan/ai-receptionist && "
+    "runuser -u klantkraan -- .venv/bin/python -m app.nieuwsbrief "
+)
+
+USAGE = """\
+kk — Klantkraan command center
+
+  kk board                       deal pipeline + outreach sequence boards
+  kk deal <sub> [args]           passthrough to app.pipeline (default: board)
+  kk outreach [board]            sequence board
+  kk outreach send [args]        real send, --limit forced to <= 6
+  kk outreach dry|dump [args]    dry run / write .eml files
+  kk outreach stop <slug> --replied|--opt-out|--bounced
+  kk cursus [sub] [args]         passthrough to app.cursus (default: board)
+  kk nieuwsbrief [board]         verstuurde edities (server-side ledger)
+  kk nieuwsbrief send [--dry] [--file <naam.md>]   ship the newest approved edition
+  kk content                     growth-engine draft queues per vertical (read-only)
+  kk leads [n]                   last n records across the local lead stores (default 20)
+  kk evals [list|<name|pack>]    run chat goldens (default: run all)
+  kk billing [sub] [args]        passthrough to app.billing (default: status)
+  kk status                      full status board in the terminal (local data)
+  kk status open                 render the HTML status page and open it
+  kk status push                 push the deal/outreach snapshot to the server page
+  kk health                      watchdog check+deep, server timers, /health
+  kk logs <unit|alias> [n]       journalctl on the server (default 150 lines)
+  kk site new "<Naam>" --url <url> [--near <plaats>] [--voorbeeld <url>]...
+                                 scrape a prospect into a voorstel-config; --voorbeeld takes
+                                 the skin off a site he likes, else the factory composes one
+  kk site fotos <slug>           cut web renditions from clients/<slug>/foto-bron/ originals
+  kk site build|check <slug>     build + fact gate (check: gate only, on the existing dist)
+  kk site check <slug> --vloot   also measure the distance to every other site we have built
+  kk site check <slug> --tells   also run the AI-tell linter over the built pages
+  kk site open <slug>            build + gate, then serve it locally
+  kk site deploy <slug>          ship the voorstel to <slug>.klant-preview.pages.dev
+  kk site deploy <slug> --live   ship a paying client's site to its own Pages project
+  kk deploy site|server          site: typecheck+build+wrangler; server: gate (goldens when
+                                 the agent surface changed, else config check) then deploy.sh
+  kk help                        this text
+"""
+
+
+class UsageError(Exception):
+    pass
+
+
+@dataclass
+class Step:
+    cwd: Path
+    argv: list[str]
+    tolerant: bool = field(default=False)  # nonzero exit does not abort the verb
+    env: dict[str, str] | None = field(default=None)  # merged over os.environ
+
+
+def repo_root() -> Path:
+    # kk lives at <root>/scripts/kk; resolve() follows PATH symlinks
+    return Path(__file__).resolve().parent.parent
+
+
+def _venv_py(root: Path, app: str) -> str:
+    return str(root / app / ".venv" / "bin" / "python")
+
+
+def _air(root: Path, *module_args: str, tolerant: bool = False) -> Step:
+    air = root / "ai-receptionist"
+    return Step(air, [_venv_py(root, "ai-receptionist"), "-m", *module_args], tolerant)
+
+
+def _air_script(root: Path, script: str, *args: str) -> Step:
+    """A plain script run with the ai-receptionist venv, cwd'd into the app so the
+    script's app.* imports resolve (the status generator needs both)."""
+    air = root / "ai-receptionist"
+    return Step(air, [_venv_py(root, "ai-receptionist"), script, *args])
+
+
+def touches_eval_surface(paths: list[str]) -> bool:
+    return any(p.startswith(EVAL_SURFACE) for p in paths)
+
+
+def _git_lines(root: Path, *args: str) -> list[str] | None:
+    """git stdout as non-empty lines, or None when git cannot answer — no repo, an
+    unknown ref, git missing. Callers treat None as 'assume the worst'."""
+    try:
+        proc = subprocess.run(["git", "-C", str(root), *args],
+                              capture_output=True, text=True, check=False)
+    except OSError:
+        return None
+    if proc.returncode != 0:
+        return None
+    return [ln for ln in proc.stdout.splitlines() if ln.strip()]
+
+
+def changed_since_deploy(root: Path) -> list[str] | None:
+    """Repo-relative paths that differ from the tree the server last received —
+    committed and uncommitted alike, since deploy.sh rsyncs the working tree, not
+    HEAD. None when the answer is unknowable."""
+    try:
+        last = (root / DEPLOY_MARKER).read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if not last:
+        return None
+    committed = _git_lines(root, "diff", "--name-only", f"{last}..HEAD")
+    if committed is None:  # marker SHA gone: rebase, fresh clone, pruned history
+        return None
+    dirty = _git_lines(root, "status", "--porcelain")
+    if dirty is None:
+        return None
+    # porcelain is "XY path", or "XY old -> new" for a rename; the new path is what ships
+    paths = committed + [ln[3:].split(" -> ")[-1].strip('"') for ln in dirty]
+    # our own bookkeeping is never a deploy input (and is gitignored in this repo anyway)
+    return [p for p in paths if not p.startswith(DEPLOY_MARKER.split("/")[0] + "/")]
+
+
+def evals_gate(root: Path) -> Step:
+    """The pre-deploy gate. Goldens when the agent's behavior surface moved (or when
+    we cannot tell); the offline config check otherwise — that still catches a broken
+    yaml, without 14 live conversations proving a systemd timer didn't change the prompt."""
+    changed = changed_since_deploy(root)
+    if changed is None:
+        print("kk: no deploy marker to compare against — running all goldens")
+    elif touches_eval_surface(changed):
+        print("kk: agent surface changed since the last deploy — running all goldens")
+    else:
+        print(f"kk: agent surface untouched since the last deploy ({len(changed)} other "
+              "files changed) — offline config check only, no goldens")
+        return _air(root, "app.selftest", "config")
+    return _air(root, "app.evals", "run", "all")
+
+
+# --------------------------------------------------------------------------- #
+# Client sites: scrape, build, verify, ship
+# --------------------------------------------------------------------------- #
+
+# All proposals live in one Pages project, one branch per prospect, so speculative sites
+# never eat into the 100-projects-per-account cap that real client sites need.
+PREVIEW_PROJECT = "klant-preview"
+_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,62}$")
+
+
+def _client_dir(root: Path, slug: str) -> Path:
+    if not _SLUG_RE.match(slug or ""):
+        raise UsageError(f"{slug!r} is not a client slug (lowercase letters, digits, hyphens)")
+    return root / "klantkraan" / "apps" / "client-sites" / "clients" / slug
+
+
+def site_modus(root: Path, slug: str) -> str:
+    """'preview' or 'live', read straight from the yaml.
+
+    kk is stdlib-only, so this greps the one line it needs rather than parsing YAML. The
+    build parses the file properly a second later; this exists so a deploy can refuse to
+    put a proposal on a client's project (or a paying client's site on the shared preview
+    host) before any bytes move.
+    """
+    path = _client_dir(root, slug) / "client.yaml"
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        clients = _client_dir(root, "x").parent
+        known = sorted(p.name for p in clients.iterdir() if p.is_dir()) if clients.is_dir() else []
+        raise UsageError(
+            f"no config at {path}. Known clients: {', '.join(known) or '(none)'}"
+        ) from None
+    match = re.search(r"^modus:\s*([a-z]+)", text, re.MULTILINE)
+    if not match or match.group(1) not in ("preview", "live"):
+        raise UsageError(f"{path} has no usable `modus:` line (preview or live)")
+    return match.group(1)
+
+
+def _site_steps(root: Path, slug: str, *, check_only: bool = False) -> list[Step]:
+    app = root / "klantkraan" / "apps" / "client-sites"
+    env = {"CLIENT": slug}
+    build = [] if check_only else [Step(app, ["pnpm", "build"], env=env)]
+    return [*build, Step(app, ["pnpm", "check"], env=env)]
+
+
+def plan_site(args: list[str], root: Path) -> list[Step]:
+    sub = args[0] if args else ""
+    rest = args[1:]
+
+    if sub == "new":
+        if not rest:
+            raise UsageError(
+                'kk site new "<Bedrijfsnaam>" --url <url> [--near <plaats>] '
+                "[--voorbeeld <url>]..."
+            )
+        return [_air(root, "app.sitedraft", *rest)]
+
+    if sub == "fotos":
+        # Cut the renditions from a client's own originals. Separate verb rather than a step
+        # inside `build` because it is the slow, occasional half: the originals change when
+        # the client sends new photographs, not on every build, and Pillow re-encoding seven
+        # frames on every `kk site open` would make the fast loop slow for no reason. The
+        # build fails loudly when the manifest is stale, which is what keeps the two in step.
+        if not rest:
+            raise UsageError("kk site fotos <slug>")
+        return [
+            Step(
+                root / "klantkraan" / "apps" / "client-sites",
+                [
+                    _venv_py(root, "growth-engine"),
+                    "scripts/client-fotos.py",
+                    rest[0],
+                ],
+            )
+        ]
+
+    if sub in ("build", "check", "open", "deploy"):
+        if not rest:
+            raise UsageError(f"kk site {sub} <slug>")
+        slug, flags = rest[0], rest[1:]
+        app = root / "klantkraan" / "apps" / "client-sites"
+
+        if sub == "check":
+            # --vloot answers what one build cannot see: how close is this site to every other
+            # site the factory has made? Opt-in until the fleet passes it (PLAN steps 2-3);
+            # wired into every build today it would fail every build today.
+            extra = []
+            if "--vloot" in flags:
+                extra.append(Step(app, ["pnpm", "vloot"], env={"CLIENT": slug}))
+            if "--tells" in flags:
+                extra.append(Step(app, ["pnpm", "tell-lint"], env={"CLIENT": slug}))
+            return [*_site_steps(root, slug, check_only=True), *extra]
+        if sub == "build":
+            return _site_steps(root, slug)
+        if sub == "open":
+            # Build, verify, then serve: eyeballing an unverified build is how a wrong
+            # phone number gets approved by a human who was looking at the photos.
+            return [*_site_steps(root, slug), Step(app, ["pnpm", "preview"], env={"CLIENT": slug})]
+
+        live = "--live" in flags
+        modus = site_modus(root, slug)
+        if live and modus != "live":
+            raise UsageError(
+                f"{slug} is a voorstel (modus: preview) and cannot go live. Fill in KvK, btw-id, "
+                "adres, e-mail and domein and set modus: live first."
+            )
+        if not live and modus == "live":
+            raise UsageError(
+                f"{slug} is a paying client (modus: live); use `kk site deploy {slug} --live` "
+                f"instead of putting it on the shared {PREVIEW_PROJECT} host."
+            )
+        project = f"client-{slug}" if live else PREVIEW_PROJECT
+        branch = "production" if live else slug
+        return [
+            *_site_steps(root, slug),
+            Step(app, ["pnpm", "dlx", "wrangler@4", "pages", "deploy", "./dist",
+                       f"--project-name={project}", f"--branch={branch}"]),
+        ]
+
+    raise UsageError("kk site new|fotos|build|check|open|deploy")
+
+
+def enforce_outreach_limit(args: list[str]) -> list[str]:
+    """Force --limit <= OUTREACH_DAILY_CAP; inject the cap when absent."""
+    out = list(args)
+    limit = None
+    for i, a in enumerate(out):
+        if a == "--limit":
+            if i + 1 >= len(out):
+                raise UsageError("--limit needs a value")
+            limit = out[i + 1]
+        elif a.startswith("--limit="):
+            limit = a.split("=", 1)[1]
+    if limit is not None:
+        try:
+            n = int(limit)
+        except ValueError:
+            raise UsageError(f"--limit must be a number, got {limit!r}")
+        if n > OUTREACH_DAILY_CAP:
+            raise UsageError(
+                f"daily outreach cap is {OUTREACH_DAILY_CAP}; refusing --limit {n}"
+            )
+        return out
+    return out + ["--limit", str(OUTREACH_DAILY_CAP)]
+
+
+def plan(verb: str, args: list[str], root: Path) -> list[Step]:
+    if verb == "board":
+        return [
+            _air(root, "app.pipeline", "board"),
+            _air(root, "scripts.sequence", "board"),
+        ]
+
+    if verb == "deal":
+        return [_air(root, "app.pipeline", *(args or ["board"]))]
+
+    if verb == "outreach":
+        sub, rest = (args[0], args[1:]) if args else ("board", [])
+        if sub == "board":
+            return [_air(root, "scripts.sequence", "board")]
+        if sub == "stop":
+            return [_air(root, "scripts.sequence", "stop", *rest)]
+        if sub == "send":
+            capped = enforce_outreach_limit(rest)
+            return [_air(root, "scripts.outreach_send", "--send", *capped)]
+        if sub == "dry":
+            return [_air(root, "scripts.outreach_send", *rest)]
+        if sub == "dump":
+            return [_air(root, "scripts.outreach_send", "--dump", *rest)]
+        raise UsageError(f"unknown outreach subverb: {sub}")
+
+    if verb == "evals":
+        if not args:
+            return [_air(root, "app.evals", "run", "all")]
+        if args == ["list"]:
+            return [_air(root, "app.evals")]
+        return [_air(root, "app.evals", "run", *args)]
+
+    if verb == "billing":
+        return [_air(root, "app.billing", *(args or ["status"]))]
+
+    if verb == "cursus":
+        # Local board shows demo data only; the live ledger is on the server
+        # (kk logs cursus). Sends from the Mac use the Mac .env's Resend key.
+        return [_air(root, "app.cursus", *(args or ["board"]))]
+
+    if verb == "nieuwsbrief":
+        # Broadcasts run on the server: the subscriber ledger lives there, and the
+        # approved editions land in the rsync-durable growth-engine data dir. runuser
+        # keeps the ledger files owned by the app user, not root.
+        sub = args[0] if args else "board"
+        if sub == "board":
+            return [Step(root, ["ssh", f"root@{SERVER_IP}", _NB_RUN + "board"])]
+        if sub == "send":
+            flags = args[1:]
+            dry = "--dry" in flags
+            named = [a for a in flags if a not in ("--dry",)]
+            fname = None
+            if named:
+                if named[0] != "--file" or len(named) != 2:
+                    raise UsageError("usage: kk nieuwsbrief send [--dry] [--file <naam.md>]")
+                fname = named[1]
+                if "/" in fname or not fname.endswith(".md"):
+                    raise UsageError("--file takes a bare .md name from the newsletters dir")
+            pick = (
+                f'f="{NEWSLETTERS_REMOTE}/{fname}"; [ -f "$f" ]'
+                if fname
+                else f'f=$(ls -t {NEWSLETTERS_REMOTE}/*.md 2>/dev/null | head -1); [ -n "$f" ]'
+            )
+            cmd = (
+                f"{pick} || {{ echo 'geen goedgekeurde editie in {NEWSLETTERS_REMOTE}'; "
+                'exit 2; }; echo "editie: $f"; '
+                + _NB_RUN
+                + 'send --file "$f"'
+                + (" --dry" if dry else "")
+            )
+            return [Step(root, ["ssh", f"root@{SERVER_IP}", cmd])]
+        raise UsageError(f"unknown nieuwsbrief subverb: {sub}")
+
+    if verb == "status":
+        gen = str(root / "ops" / "status" / "generate.py")
+        sub = args[0] if args else "ansi"
+        if sub == "ansi":
+            return [_air_script(root, gen, "--ansi")]
+        if sub == "open":
+            page = "/tmp/kk-status.html"
+            return [
+                _air_script(root, gen, "--html", page),
+                Step(root, ["open", page]),
+            ]
+        if sub == "push":
+            snap = "/tmp/kk-status-snapshot.json"
+            return [
+                _air_script(root, gen, "--snapshot", snap),
+                Step(root, ["scp", snap, f"root@{SERVER_IP}:{SNAPSHOT_REMOTE}"]),
+                Step(root, ["ssh", f"root@{SERVER_IP}",
+                            (f"chown klantkraan:klantkraan {SNAPSHOT_REMOTE} && "
+                             "systemctl start klantkraan-status.service")]),
+            ]
+        raise UsageError(f"unknown status subverb: {sub}")
+
+    if verb == "health":
+        return [
+            _air(root, "app.watchdog", "--check", tolerant=True),
+            _air(root, "app.watchdog", "--deep", tolerant=True),
+            Step(
+                root,
+                ["ssh", f"root@{SERVER_IP}",
+                 "systemctl", "list-timers", "--all", "--no-pager"],
+                tolerant=True,
+            ),
+            Step(
+                root,
+                ["ssh", f"root@{SERVER_IP}",
+                 "systemctl", "list-units", "--failed", "--no-pager"],
+                tolerant=True,
+            ),
+            Step(root, ["ssh", f"root@{SERVER_IP}", ALERT_CONFIG_CHECK], tolerant=True),
+            Step(root, ["curl", "-sS", "-m", "10", HEALTH_URL], tolerant=True),
+        ]
+
+    if verb == "logs":
+        if not args:
+            raise UsageError("kk logs <unit|alias> [lines]")
+        unit = LOG_UNITS.get(args[0], args[0])
+        lines = args[1] if len(args) > 1 else "150"
+        return [
+            Step(
+                root,
+                ["ssh", f"root@{SERVER_IP}",
+                 "journalctl", "-u", unit, "-n", lines, "--no-pager"],
+            )
+        ]
+
+    if verb == "site":
+        return plan_site(args, root)
+
+    if verb == "deploy":
+        target = args[0] if args else ""
+        if target == "site":
+            site = root / "klantkraan" / "apps" / "marketing-site"
+            return [
+                Step(site, ["npm", "run", "typecheck"]),
+                Step(site, ["npm", "run", "build"]),
+                Step(site, ["pnpm", "dlx", "wrangler@4", "pages", "deploy",
+                            "./dist", "--branch=production",
+                            "--project-name=klantkraan-marketing"]),
+            ]
+        if target == "server":
+            marker = root / DEPLOY_MARKER
+            record = (f"mkdir -p {shlex.quote(str(marker.parent))} && "
+                      f"git rev-parse HEAD > {shlex.quote(str(marker))}")
+            return [
+                evals_gate(root),  # gate: any failure aborts
+                Step(root, [str(root / "ops" / "hetzner" / "deploy.sh"), SERVER_IP]),
+                # Record what the server now has, so the next deploy can scope its gate.
+                # Tolerant: the deploy already succeeded, and a missing marker only costs
+                # the next deploy a full eval run.
+                Step(root, ["sh", "-c", record], tolerant=True),
+            ]
+        raise UsageError("kk deploy site|server")
+
+    raise UsageError(f"unknown verb: {verb}")
+
+
+# --------------------------------------------------------------------------- #
+# Read-only local verbs (no subprocess): content + leads
+# --------------------------------------------------------------------------- #
+
+
+def _age(iso: str | None) -> str:
+    if not iso:
+        return "age ?"
+    try:
+        then = datetime.fromisoformat(iso)
+        days = (datetime.now(then.tzinfo) - then).days
+    except ValueError:
+        return "age ?"
+    return "today" if days < 1 else f"{days}d old"
+
+
+def _load_json(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"  ⚠ unreadable: {path.name} ({exc})", file=sys.stderr)
+        return None
+
+
+def _load_jsonl(path: Path) -> list[dict]:
+    records = []
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        print(f"  ⚠ unreadable: {path.name} ({exc})", file=sys.stderr)
+        return records
+    for line in lines:
+        try:
+            records.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue  # append-only file; a torn line must not hide the rest
+    return records
+
+
+def cmd_content(root: Path, args: list[str]) -> int:
+    """Board over growth-engine's per-vertical draft queues. Read-only."""
+    queues = sorted((root / "growth-engine" / "data").glob("*/queue.json"))
+    if not queues:
+        print("no content queues found under growth-engine/data/")
+        return 1
+    for qp in queues:
+        drafts = _load_json(qp)
+        if not isinstance(drafts, list):
+            continue
+        counts: dict[str, int] = {}
+        for d in drafts:
+            status = d.get("status", "?")
+            counts[status] = counts.get(status, 0) + 1
+        dry = sum(1 for d in drafts if d.get("dry_run"))
+        summary = ", ".join(f"{n} {s}" for s, n in sorted(counts.items()))
+        note = f"  ({dry} dry-run)" if dry else ""
+        print(f"{qp.parent.name.upper()} — {len(drafts)} drafts: {summary}{note}")
+        for d in drafts:
+            if d.get("status") == "pending":
+                print(f"  pending  {d.get('id', '?')}  {_age(d.get('created_at')):>8}  "
+                      f"{d.get('topic', '?')}")
+        for d in drafts:
+            for key, val in d.items():
+                if key.endswith("_error"):
+                    print(f"  ⚠ {d.get('id', '?')}  {key[:-6]} push failed: {val}")
+        print()
+    return 0
+
+
+def cmd_leads(root: Path, args: list[str]) -> int:
+    """Merged view over the four lead stores in ai-receptionist/data. Read-only.
+
+    The live stores are on the Hetzner box; local files hold demo/test data only.
+    """
+    limit = int(args[0]) if args and args[0].isdigit() else 20
+    data = root / "ai-receptionist" / "data"
+    rows: list[tuple[str, str, str, str, str, str]] = []  # (at, kind, client, who, contact, detail)
+
+    for p in sorted(data.glob("messages*.json")):
+        client = p.stem.removeprefix("messages").lstrip("-") or "default"
+        for m in _load_json(p) or []:
+            rows.append((m.get("at", ""), "message", m.get("client", client),
+                         m.get("customer_name", "?"), m.get("contact", "?"),
+                         (m.get("message") or "").replace("\n", " ")))
+    for r in _load_jsonl(data / "leads.jsonl") if (data / "leads.jsonl").exists() else []:
+        contact = r.get("telefoon") or r.get("email") or "?"
+        rows.append((r.get("at", ""), "site-lead", "klantkraan.nl",
+                     r.get("naam", "?"), contact, f"plan: {r.get('plan', '?')}"))
+    for p in sorted(data.glob("listing-leads-*.jsonl")):
+        for r in _load_jsonl(p):
+            rows.append((r.get("at", ""), "listing", r.get("client", p.stem),
+                         r.get("customer_name", "?"), r.get("contact", "?"),
+                         (r.get("notes") or "").replace("\n", " ")))
+    for p in sorted(data.glob("bookings*.json")):
+        client = p.stem.removeprefix("bookings").lstrip("-") or "default"
+        for b in _load_json(p) or []:
+            rows.append((b.get("created_at", ""), "booking", client,
+                         b.get("customer_name", "?"), b.get("contact", "?"),
+                         f"{b.get('service', '?')} @ {b.get('slot', '?')}"))
+
+    rows.sort(key=lambda r: r[0], reverse=True)
+    print(f"LEADS — {len(rows)} records across local stores "
+          f"(demo/test data; live stores are on the server: kk logs app)")
+    for at, kind, client, who, contact, detail in rows[:limit]:
+        print(f"  {at:19.19}  {kind:9}  {client:22.22}  {who:18.18}  {contact:26.26}  "
+              f"{detail:.48}")
+    if len(rows) > limit:
+        print(f"  … {len(rows) - limit} more (kk leads {len(rows)} shows all)")
+    return 0
+
+
+LOCAL_VERBS = {"content": cmd_content, "leads": cmd_leads}
+
+
+def run(steps: list[Step]) -> int:
+    worst = 0
+    for step in steps:
+        env = {**os.environ, **step.env} if step.env else None
+        proc = subprocess.run(step.argv, cwd=step.cwd, check=False, env=env)
+        if proc.returncode != 0:
+            if not step.tolerant:
+                return proc.returncode
+            worst = worst or proc.returncode
+    return worst
+
+
+def main(argv: list[str]) -> int:
+    if not argv or argv[0] in ("help", "-h", "--help"):
+        print(USAGE)
+        return 0
+    try:
+        local = LOCAL_VERBS.get(argv[0])
+        if local is not None:
+            return local(repo_root(), argv[1:])
+        return run(plan(argv[0], argv[1:], repo_root()))
+    except UsageError as e:
+        print(f"kk: {e}", file=sys.stderr)
+        print(USAGE, file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

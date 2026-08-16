@@ -1,0 +1,236 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import { waLink, mailLink } from '../../data/contact'
+
+// Spanish demo embeds the airco (Mallorca) config on the shared demo origin
+// (already CSP-allowlisted in public/_headers). Same origin + client as the
+// Dutch/English demo, so no _headers change needed. The embedded receptionist
+// replies in its own config language.
+const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&embed=1'
+---
+
+<Base
+  lang="es"
+  title="Demo: pruebe la recepcionista digital de Klantkraan"
+  description="Pruebe la recepcionista digital de Klantkraan en su navegador. Haga una pregunta o pida una cita. ¿Prefiere una demo personalizada con sus servicios?"
+  centered={false}
+  stickyCta={false}
+>
+  <!-- 1. Hero + live embed, front and center (cream) -->
+  <section class="py-8 md:py-14">
+    <div class="mx-auto max-w-3xl px-6">
+      <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="font-display text-h1 md:text-hero text-(--color-chalk)">
+          Pruebe la <span class="text-(--color-sodium)">recepcionista digital</span>.
+        </h1>
+        <span
+          class="inline-flex shrink-0 items-center gap-2 rounded-full bg-(--color-panel) px-3 py-1 eyebrow"
+        >
+          <span class="h-2 w-2 rounded-full bg-(--color-sodium)"></span> Demo en vivo
+        </span>
+      </div>
+      <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
+        Una recepcionista de ejemplo, real y en vivo, aquí mismo en su navegador. Haga una pregunta
+        o pida una cita. Sin compromiso.
+      </p>
+
+      <!-- Desktop: live embed inline. -->
+      <div
+        class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4"
+      >
+        <iframe
+          src={DEMO_SRC}
+          title="Chat en vivo con la recepcionista digital de Klantkraan"
+          loading="lazy"
+          class="block h-[600px] w-full rounded-(--radius-button) border border-(--color-line)"
+        ></iframe>
+      </div>
+
+      <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). -->
+      <div
+        class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)"
+          >
+            <Icon name="message-square" class="h-5 w-5" />
+          </span>
+          <div class="min-w-0">
+            <p class="font-display text-h3 text-(--color-chalk)">Illa Air Conditioning</p>
+            <p class="text-small text-(--color-dim)">Asistente digital · responde al instante</p>
+          </div>
+        </div>
+        <p
+          class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)"
+        >
+          Chatee como un cliente: haga una pregunta o pida una cita. Se abre a pantalla completa.
+        </p>
+        <button
+          type="button"
+          data-demo-open
+          class="mt-4 btn btn-primary btn-lg w-full justify-center"
+        >
+          <Icon name="message-circle" class="h-5 w-5" />
+          <span>Iniciar la demo</span>
+        </button>
+      </div>
+
+      <p class="mt-3 text-small text-(--color-dim)">
+        Este es un negocio de ejemplo. Su propia recepcionista se configura con sus servicios,
+        tarifas y zona de cobertura.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. What you see in the demo (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">La demo</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Lo que ve en la demo.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="message-square" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Chat en su propia web</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              La recepcionista responde preguntas sobre sus servicios, tarifas y zona de cobertura.
+              En lenguaje natural, las 24 horas del día, y solo con la información que usted mismo
+              configura.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="message-circle" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">El canal de WhatsApp</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              La misma recepcionista en el canal que sus clientes ya usan a diario. Quien prefiere
+              escribir antes que llamar recibe una respuesta al instante.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Una cita en el calendario</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Ve en directo cómo la pregunta de un cliente se convierte en una cita agendada en el
+              calendario. Sin llamadas cruzadas ni correos de ida y vuelta.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Aviso de cliente en su móvil</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Cada cliente y cada solicitud de llamada llega directamente a su móvil como un
+              mensaje, con el nombre, el número y la pregunta del cliente.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Prefer a personal demo? (cream). Secondary path -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">¿Prefiere una demo personalizada?</h2>
+        <p class="mt-3 max-w-2xl text-body text-(--color-dim)">
+          Configuramos la recepcionista con sus propios servicios y tarifas y la repasamos con
+          usted. No le soltamos un discurso de venta y no se compromete a nada.
+        </p>
+        <div class="mt-6 btn-row">
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>Escríbanos por WhatsApp</span>
+          </a>
+          <a href={mailLink} class="btn btn-ghost btn-lg"> Prefiero el correo </a>
+        </div>
+        <p class="mt-3 text-small text-(--color-dim)">
+          Normalmente recibirá respuesta en un día laborable, directamente del propietario.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. AI-disclosure (stone-100, with rust-bordered card) -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-labelledby="ai-act"
+  >
+    <div class="mx-auto max-w-5xl px-6">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 id="ai-act" class="font-display text-h2 text-(--color-sodium)">
+          Declaración de IA (Reglamento de IA de la UE art. 50)
+        </h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          La recepcionista es una IA. Comunicarlo es una obligación legal. Lo hacemos en la primera
+          frase de cada conversación, palabra por palabra:
+        </p>
+        <blockquote
+          class="mt-4 rounded-(--radius-button) border border-dashed border-(--color-line) bg-[rgba(0,0,0,0.22)] p-3 md:p-4 font-mono text-small text-(--color-sodium-soft)"
+        >
+          "Hola, está hablando con {`{{agent_name}}`}, el asistente digital de {
+            `{{business_name}}`
+          }. ¿En qué puedo ayudarle?"
+        </blockquote>
+        <ul class="mt-4 space-y-2 text-small text-(--color-dim)">
+          <li>La declaración no se desactiva nunca, ni siquiera a petición del cliente.</li>
+          <li>
+            Si su cliente pregunta "¿Estoy hablando con una persona?", la recepcionista responde con
+            honestidad que es un asistente digital y que el mensaje llega directamente al
+            propietario.
+          </li>
+        </ul>
+        <p class="mt-4 text-small">
+          Consulte todos los detalles en nuestra <a href="/legal/ai-disclosure/"
+            >declaración de IA</a
+          >.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. End CTA band (blue) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-(--color-chalk)">¿Prefiere ver antes los números?</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Eche un vistazo a los dos planes. La demo sigue a un clic de distancia.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/es/prijzen/" class="btn btn-primary btn-lg"> Ver precios </a>
+        <a href="/es/" class="btn btn-ghost btn-lg"> Volver al inicio </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full-screen demo overlay (mobile). See /js/demo-embed.js. data-demo-src
+       feeds the iframe URL + the allowed message origin. -->
+  <div
+    id="demo-overlay"
+    class="fixed inset-0 z-[70] hidden overflow-hidden"
+    data-demo-src={DEMO_SRC}
+    aria-hidden="true"
+  >
+  </div>
+
+  <style>
+    #demo-overlay {
+      background: #0f1c1e;
+      overscroll-behavior: contain;
+    }
+  </style>
+
+  <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+  <script src="/js/demo-embed.js?v=5" type="module" is:inline></script>
+</Base>

@@ -1,0 +1,236 @@
+---
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import { waLink, mailLink } from '../data/contact'
+---
+
+<Base
+  title="Demo: probeer de digitale receptionist van Klantkraan"
+  description="Probeer de digitale receptionist van Klantkraan direct in uw browser. Stel een vraag of plan een afspraak. Liever een persoonlijke demo? Stuur een WhatsApp."
+  centered={false}
+  stickyCta={false}
+>
+  <!-- 1. Hero + live embed, front and center (cream) -->
+  <section class="py-8 md:py-14">
+    <div class="mx-auto max-w-3xl px-6">
+      <div class="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="font-display text-h1 md:text-hero text-(--color-chalk)">
+          Probeer de <span class="text-(--color-sodium)">digitale receptionist</span>.
+        </h1>
+        <span
+          class="inline-flex shrink-0 items-center gap-2 rounded-full bg-(--color-panel) px-3 py-1 eyebrow"
+        >
+          <span class="h-2 w-2 rounded-full bg-(--color-sodium)"></span> Live demo
+        </span>
+      </div>
+      <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
+        Een echte voorbeeld-receptionist, hieronder in uw browser. Stel een vraag of plan een
+        afspraak. Geen verplichting.
+      </p>
+
+      <!-- Desktop: live embed inline. No on-screen keyboard, so no viewport
+           fight — the iframe sits happily in the page. -->
+      <div
+        class="mt-6 hidden rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-3 shadow-sm md:block md:p-4"
+      >
+        <iframe
+          src="https://demo-168-119-173-25.sslip.io/?embed=1"
+          title="Live chat met de digitale receptionist van Klantkraan"
+          loading="lazy"
+          width="800"
+          height="600"
+          class="block h-[600px] w-full rounded-(--radius-button) border border-(--color-line)"
+        ></iframe>
+      </div>
+
+      <!-- Mobile: launch the chat full-screen (see /js/demo-embed.js). An inline
+           fixed-height iframe fights the iOS keyboard; a full-viewport overlay
+           lets the chat own the screen so the keyboard never hides it. -->
+      <div
+        class="mt-6 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 shadow-sm md:hidden"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--color-panel) text-(--color-sodium)"
+          >
+            <Icon name="message-square" class="h-5 w-5" />
+          </span>
+          <div class="min-w-0">
+            <p class="font-display text-h3 text-(--color-chalk)">Van Dijk Installatietechniek</p>
+            <p class="text-small text-(--color-dim)">Digitale assistent · reageert direct</p>
+          </div>
+        </div>
+        <p
+          class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)"
+        >
+          Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.
+        </p>
+        <button
+          type="button"
+          data-demo-open
+          class="mt-4 btn btn-primary btn-lg w-full justify-center"
+        >
+          <Icon name="message-circle" class="h-5 w-5" />
+          <span>Start de demo</span>
+        </button>
+      </div>
+
+      <p class="mt-3 text-small text-(--color-dim)">
+        Dit is een voorbeeldbedrijf. Bij uw eigen receptionist staan uw diensten, tarieven en
+        werkgebied ingesteld. Heeft u een sportschool? <a href="/demo/sportscholen/"
+          >Probeer de sportschool-demo</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Wat u ziet in de demo (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">De demo</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Wat u ziet in de demo.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="message-square" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Chat op uw eigen site</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              De receptionist beantwoordt vragen over uw diensten, tarieven en werkgebied. In vlot
+              Nederlands, 24 uur per dag, en alleen met informatie die u zelf heeft ingesteld.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="message-circle" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Het WhatsApp-kanaal</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Dezelfde receptionist op het kanaal dat uw klanten al dagelijks gebruiken. Wie liever
+              appt dan belt, krijgt direct antwoord.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">Een afspraak in de agenda</h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              U ziet live hoe een klantvraag eindigt als geplande afspraak in de agenda. Zonder
+              telefoontag, zonder heen-en-weer-mailen.
+            </p>
+          </div>
+        </article>
+        <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+          <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <div>
+            <h3 class="font-display text-h3 text-(--color-chalk)">
+              Lead-notificatie op uw telefoon
+            </h3>
+            <p class="mt-2 text-body text-(--color-dim)">
+              Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam,
+              nummer en de vraag van de klant.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Liever een persoonlijke demo? (cream) — secondary path -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Liever een persoonlijke demo?</h2>
+        <p class="mt-3 max-w-2xl text-body text-(--color-dim)">
+          Wij zetten de receptionist op uw eigen diensten en tarieven en lopen hem met u door. U
+          krijgt geen verkooppraatje en zit nergens aan vast.
+        </p>
+        <div class="mt-6 btn-row">
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>WhatsApp ons direct</span>
+          </a>
+          <a href={mailLink} class="btn btn-ghost btn-lg"> Liever per e-mail </a>
+        </div>
+        <p class="mt-3 text-small text-(--color-dim)">
+          Antwoord meestal binnen één werkdag, direct van de eigenaar.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. AI-disclosure (stone-100, with rust-bordered card) -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-labelledby="ai-act"
+  >
+    <div class="mx-auto max-w-5xl px-6">
+      <div
+        class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
+      >
+        <h2 id="ai-act" class="font-display text-h2 text-(--color-sodium)">
+          AI-disclosure (EU AI Act art. 50)
+        </h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          De receptionist is een AI. Dat is wettelijk verplicht om te vermelden. Dat doen wij in de
+          eerste zin van elk gesprek, woord voor woord:
+        </p>
+        <blockquote
+          class="mt-4 rounded-(--radius-button) border border-dashed border-(--color-line) bg-[rgba(0,0,0,0.22)] p-3 md:p-4 font-mono text-small text-(--color-sodium-soft)"
+        >
+          "Goedendag, u chat met {`{{agent_naam}}`}, de digitale assistent van {`{{bedrijfsnaam}}`}.
+          Waarmee kan ik u helpen?"
+        </blockquote>
+        <ul class="mt-4 space-y-2 text-small text-(--color-dim)">
+          <li>De disclosure wordt nooit uitgeschakeld, ook niet op klantverzoek.</li>
+          <li>
+            Vraagt uw klant "Ben ik met een mens in gesprek?" dan antwoordt de assistent eerlijk dat
+            zij een digitale assistent is en dat het bericht direct bij de eigenaar terechtkomt.
+          </li>
+        </ul>
+        <p class="mt-4 text-small">
+          Lees de volledige toelichting in onze <a href="/legal/ai-disclosure/">AI-disclosure</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Eind-CTA band (blue) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-(--color-chalk)">Liever eerst de cijfers?</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Reken uit wat gemiste klantvragen u nu kosten, of bekijk de twee abonnementen. De demo
+        blijft daarna één klik verwijderd.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/rekentool/" class="btn btn-primary btn-lg"> Open de rekentool </a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full-screen demo overlay (mobile). Fixed = outside page scroll flow; its
+       height is set to window.visualViewport by /js/demo-embed.js so the iOS
+       keyboard never hides the chat. The iframe is injected on first open. -->
+  <div id="demo-overlay" class="fixed inset-0 z-[70] hidden overflow-hidden" aria-hidden="true">
+  </div>
+
+  <style>
+    /* Full-screen solid backdrop behind the chat iframe. It is never resized, so the
+       marketing page can never show through around or under the chat — even while the
+       keyboard animates. Matches the chat's own light/dark background so any strip
+       left beside the keyboard is invisible rather than a jarring block of colour. */
+    #demo-overlay {
+      background: #0f1c1e;
+      overscroll-behavior: contain;
+    }
+  </style>
+
+  <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self').
+       ?v bumps the cache key — the plain path briefly cached the SPA fallback as
+       text/html during a deploy-propagation race; bump this on future edits. -->
+  <script src="/js/demo-embed.js?v=5" type="module" is:inline></script>
+</Base>

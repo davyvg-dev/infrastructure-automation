@@ -1,0 +1,122 @@
+# Voorbeeldsite voor een barbershop in Rotterdam. ALLE gegevens zijn fictief: het
+# bedrijf bestaat niet, het nummer is een voorbeeldnummer en er is geen KvK, btw-id,
+# e-mailadres, adres of domein. Modus preview houdt dat legaal; die velden worden niet
+# verzonnen om het schema tevreden te stellen.
+#
+# Dit is de eerste site op bedrijfstype: locatie. Een barbier rijdt niet naar de klant,
+# dus het werkgebied betekent hier de wijken waar klanten VANDAAN komen, en de kopij
+# spreekt van een afspraak in plaats van langskomen (zie src/lib/toon.ts).
+
+modus: preview
+
+bedrijf:
+  naam: 'Voorbeeld Barbier'
+  # `kapper` en niet `barbier`: het vak is de sleutel waarop de stock-set wordt
+  # opgezocht (stock/kapper/), en "Kapper in Rotterdam" is gewoon Nederlands voor
+  # wat een barbershop doet.
+  vak: 'kapper'
+  bedrijfstype: 'locatie'
+  telefoon: '+31 6 12 34 56 78' # voorbeeldnummer (copy-lint-ok)
+  adres:
+    plaats: 'Rotterdam'
+  # Wijken, geen steden: bij bedrijfstype locatie zijn dit de buurten waar de klanten
+  # vandaan komen. De pagina's heten daarom "Kapper voor Kralingen".
+  werkgebied:
+    - 'Kralingen'
+    - 'Cool'
+    - 'Delfshaven'
+    - 'Blijdorp'
+    - 'Kop van Zuid'
+
+branding:
+  # Diep groen: het interieurframe in de stock-set heeft een groene wand, en deze
+  # tint haalt 8.9:1 tegen wit, ruim boven de 5.25 die het schema eist.
+  kleur_primair: '#1e463c'
+  # Messing als accent, de klassieke barbierskleur naast donker groen.
+  kleur_accent: '#b4762a'
+
+# Samengesteld door `python -m app.sitestyle --vak kapper --naam "Voorbeeld Barbier"
+# --kleur '#1e463c' --accent '#b4762a'`; geen referentiesites.
+stijl:
+  # Een barbier is verzorgend handwerk en geen zwaar bouw- of dakwerk, dus de brede industriële
+  # letter past niet; grotesk houdt de kop zakelijk en rustig.
+  letterontwerp: grotesk
+  # De naam Voorbeeld Barbier telt 17 tekens en blijft in een halve kolom binnen twee regels,
+  # dus groot kan zonder de belknop weg te duwen.
+  schaal: groot
+  # Het accent met tint 33 en de warme uitstraling van een barbierszaak vragen geen harde
+  # hoeken; zacht sluit aan bij verzorgingswerk zonder spoedkarakter.
+  vorm: zacht
+  # Kapperswerk gaat om afspraken vooraf, niet om spoed, dus de informatie mag uit elkaar staan
+  # en het beeld ruimte krijgen.
+  ritme: ruim
+  # Het accent heeft tint 33 en 62% verzadiging, dus warm; zandkleurig papier draagt die warmte,
+  # koelgrijs zou ermee vloeken.
+  palet: zand
+  # De primaire kleur is met lichtheid 20 en 40% verzadiging donker en ingehouden, dus grote
+  # gekleurde vlakken blijven rustig in plaats van schreeuwerig.
+  kleuring: royaal
+  # Een barbier verkoopt het resultaat en het interieur; beeld dat tot de rand doorloopt laat
+  # dat zien in plaats van het in een kader weg te zetten.
+  foto: randloos
+
+# Wat deze site NIET heeft. Van de zestien echte Nederlandse vaksites die voor het plan van
+# 2026-08-16 zijn bekeken had geen enkele afspraakzaak (kapper, trimsalon, tandarts) een
+# werkgebied-sectie: die zaken zetten hun adres en bereikbaarheid neer, geen lijst plaatsen.
+# De wijkpagina's blijven wel bestaan en staan in de voettekst, want daar zoeken klanten op.
+# De usp-strook gaat eruit omdat de drie punten hieronder ook in de tekst staan; twee keer
+# hetzelfde zeggen is precies hoe een sjabloon een pagina vult.
+indeling:
+  weglaten:
+    - werkgebied
+    - usps
+
+# De zinnen die van deze zaak zijn in plaats van van het sjabloon. Let op het register: een
+# barbier rijdt nergens heen, dus niets hieronder belooft dat ("wij komen langs" is de fout
+# die src/lib/toon.test.ts afvangt). Alles is te herleiden tot de diensten en de
+# openingstijden hierboven.
+teksten:
+  kop: 'Knippen en scheren aan de rand van Kralingen'
+  belofte: 'U belt of loopt binnen, en u zit bij dezelfde barbier als de vorige keer.'
+  intro_kop: 'Er staat tijd voor u ingepland'
+  werkwijze: 'Wij knippen op afspraak, zodat niemand met een jas over de arm staat te wachten. Is er een stoel vrij, dan bent u ook zonder afspraak welkom. Zeg wat u wilt of laat het aan ons over, allebei is goed.'
+  bereik: 'De zaak zit in Rotterdam. Onze klanten komen uit Kralingen, Cool, Delfshaven, Blijdorp en Kop van Zuid, en op donderdagavond uit de rest van de stad.'
+  diensten_tekst: 'Dit staat op de stoel te gebeuren. Wilt u iets anders, vraag het gerust.'
+  slot_kop: 'Even bellen voor een stoel'
+  slot_tekst: 'Bel ons en zeg wanneer het u schikt. U hoort direct wanneer u terechtkunt.'
+
+diensten:
+  - naam: 'Knippen'
+    omschrijving: 'Wassen, knippen en afwerken met tondeuse of schaar, precies zoals u het wilt.'
+  - naam: 'Fade en tondeusewerk'
+    omschrijving: 'Strak verlopend kort werk, van de nek omhoog opgebouwd in meerdere lengtes.'
+  - naam: 'Baard bijwerken'
+    omschrijving: 'Baard op lengte brengen, contouren zetten en de lijnen strak afwerken.'
+  - naam: 'Scheren met het mes'
+    omschrijving: 'Klassiek nat scheren met warme doek, scheerzeep en het rechte mes.'
+  - naam: 'Kinderknipbeurt'
+    omschrijving: 'Rustig knippen voor kinderen, met de tijd die daarvoor nodig is.'
+
+openingstijden:
+  dinsdag: ['09:00', '18:00']
+  woensdag: ['09:00', '18:00']
+  donderdag: ['09:00', '21:00']
+  vrijdag: ['09:00', '18:00']
+  zaterdag: ['08:30', '17:00']
+
+# Een barbier heeft geen spoeddienst. beschikbaar: false toont het paneel als
+# "Liever direct contact?" naast de openingstijden, in plaats van een 24-uursbelofte
+# die niemand hier waarmaakt.
+spoed:
+  beschikbaar: false
+  tekst: 'Bel gerust tijdens openingstijden. Staat er iemand op de stoel, probeer het dan even later opnieuw.'
+
+usps:
+  - 'Vaste barbier, u zit steeds bij dezelfde handen'
+  - 'Ook zonder afspraak welkom als er een stoel vrij is'
+  - 'Donderdag doorlopend open tot negen uur'
+
+# Geen reviews: een verzonnen bedrijf met klantcitaten is een verzonnen citaat.
+# Het schema blokkeert ze bij modus: preview sowieso.
+
+receptionist: false

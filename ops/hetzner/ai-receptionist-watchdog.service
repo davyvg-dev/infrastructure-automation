@@ -1,0 +1,12 @@
+[Unit]
+Description=Klantkraan receptionist watchdog (liveness + deep chat probe, self-heal + Telegram alert)
+After=network-online.target ai-receptionist.service
+Wants=network-online.target
+OnFailure=kk-alert@%n.service
+
+[Service]
+Type=oneshot
+# root so it can `systemctl restart ai-receptionist`; loads creds from the app .env itself.
+User=root
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.watchdog

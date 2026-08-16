@@ -1,0 +1,78 @@
+---
+import Icon from './Icon.astro'
+import { loadClient } from '../lib/client'
+import { openingstijdenRegels, telHref } from '../lib/format'
+
+// Openingstijden + spoedbeleid in one panel.
+const { config } = loadClient()
+const { bedrijf } = config
+const regels = openingstijdenRegels(config.openingstijden)
+---
+
+<section
+  class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)"
+>
+  <div class="card grid gap-8 p-8 md:grid-cols-2">
+    <div>
+      <h2 class="flex items-center gap-2 text-h3">
+        <Icon name="clock" class="h-5 w-5 text-(--brand-primary)" />
+        <span>Openingstijden</span>
+      </h2>
+      <ul role="list" class="mt-4 max-w-xs space-y-1 text-small text-(--color-mist)">
+        {
+          regels.map((r) => (
+            <li class="flex justify-between gap-6">
+              <span>{r.dag}</span>
+              <span>{r.tijden}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      {
+        config.spoed.beschikbaar ? (
+          <>
+            <h2 class="flex items-center gap-2 text-h3">
+              <Icon name="phone" class="h-5 w-5 text-(--brand-primary)" />
+              <span>Spoed?</span>
+            </h2>
+            <p class="mt-4 text-small text-(--color-mist)">
+              {config.spoed.tekst ??
+                'Bij spoed kunt u ons altijd bellen. Wij overleggen direct met u wat er nodig is en wanneer wij er kunnen zijn.'}
+            </p>
+          </>
+        ) : (
+          <>
+            <h2 class="flex items-center gap-2 text-h3">
+              <Icon name="phone" class="h-5 w-5 text-(--brand-primary)" />
+              <span>Liever direct contact?</span>
+            </h2>
+            <p class="mt-4 text-small text-(--color-mist)">
+              {/* Same `spoed.tekst` the other branch spends. It used to be read only when
+                  spoed was available, so every business without a storingsdienst shipped this
+                  identical sentence -- which made it the longest shared passage left in the
+                  fleet once `teksten:` had covered the rest (found by pnpm vloot on the
+                  second kapper, 2026-08-16). A shop that has something better to say about
+                  being reachable can now say it. */}
+              {config.spoed.tekst ??
+                'Bel ons tijdens openingstijden, dan overleggen wij direct met u wat er nodig is.'}
+            </p>
+          </>
+        )
+      }
+      {
+        config.receptionist && (
+          <p class="mt-3 text-small text-(--color-mist)">
+            Buiten openingstijden wordt uw telefoontje of chatbericht direct aangenomen en bij ons
+            gemeld, dag en nacht.
+          </p>
+        )
+      }
+      <a href={telHref(bedrijf.telefoon)} class="btn btn-call mt-5">
+        <Icon name="phone" class="h-5 w-5" />
+        <span>Bel {bedrijf.telefoon}</span>
+      </a>
+    </div>
+  </div>
+</section>

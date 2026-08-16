@@ -1,0 +1,259 @@
+@import 'tailwindcss';
+@import './fonts.css';
+
+/*
+ * Client-site template tokens. Light, calm, trustworthy: the opposite of a
+ * flashy agency site.
+ *
+ * Every value below is a DEFAULT. Base.astro writes the resolved skin onto
+ * <html> as inline custom properties, which win over these because <html> is
+ * :root and an inline declaration outranks the stylesheet's rule for the same
+ * element. Tailwind v4 compiles utilities to var() references rather than
+ * inlining the values, so overriding the property re-skins every utility that
+ * reads it. src/lib/stijl.ts owns which combinations exist.
+ *
+ * Two brand hooks come from client.yaml the same way:
+ *   --brand-primary  dark enough for white text (validated in the Zod schema)
+ *   --brand-accent   decorative highlights only (never text on white)
+ *
+ * Fonts: self-hosted woff2 only, never a CDN stylesheet. Zero external requests
+ * is what lets a client site ship without a cookie banner, and that is a property
+ * of where the bytes come from, not of whether there are any. Which face a site
+ * uses is stijl.letterontwerp; `systeem` keeps the pure system stack.
+ */
+@theme {
+  --color-paper: #faf9f7; /* page base */
+  --color-card: #ffffff; /* raised surface */
+  --color-ink: #20262c; /* primary text */
+  --color-mist: #5a646e; /* muted text */
+  --color-line: #e5e1da; /* hairline borders */
+
+  /* Alternating band surfaces: --color-card by default, tinted with the client's
+   * own primary when the skin asks for it (stijl.kleuring). */
+  --band-bg: var(--color-card);
+  --band-line: var(--color-line);
+
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* h1/h2 only. Equal to --font-sans until a skin sets a display face. */
+  --font-display:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --display-tracking: -0.015em;
+
+  /* Every preferred term is `<rem> + <vw>`, never a bare `vw`: a clamp whose middle term
+   * is pure viewport width does not respond to browser zoom, which is a WCAG 1.4.4
+   * failure. See SCHAAL_TOKENS in src/lib/stijl.ts. */
+  --text-h1: clamp(1.9rem, 1.51rem + 1.65vw, 3rem);
+  --text-h1--line-height: 1.08;
+  --text-h1--font-weight: 800;
+
+  --text-h2: clamp(1.45rem, 1.26rem + 0.83vw, 2rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--font-weight: 700;
+
+  --text-h3: 1.15rem;
+  --text-h3--line-height: 1.3;
+  --text-h3--font-weight: 700;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+
+  /* Measure (stijl.maat): how wide the page runs, and how wide the words inside it are
+   * allowed to run. Three tokens, because widening the container must not widen the prose
+   * with it -- that is how a wide site ends up with 110-character lines. */
+  --maat-kolom: 64rem; /* page container: header, sections, footer */
+  --maat-band: 72rem; /* the photo band, wider than the page it interrupts */
+  --maat-kop: 42rem; /* headings and the lead line under them */
+  --maat-tekst: 48rem; /* running body text */
+  --maat-gutter: 1.5rem; /* page gutter, left and right */
+
+  --radius-card: 0.75rem;
+  --radius-button: 0.625rem;
+  --radius-foto: 1.25rem;
+
+  /* Section rhythm. Components spend these instead of literal py-* steps so the
+   * whole page breathes on one axis (stijl.ritme); the band pair is the photo
+   * section, which has always carried more air than the text sections. */
+  --ritme-y: 2.25rem;
+  --ritme-y-md: 3rem;
+  --ritme-band-y: 3.5rem;
+  --ritme-band-y-md: 5rem;
+
+  /* Photography (stijl.foto): how wide the work grid may run, the gutter it keeps
+   * when it does, and the corner on each frame. */
+  --foto-kolom: 72rem;
+  --foto-gutter: 1.5rem;
+  --foto-radius: var(--radius-foto);
+  --foto-tegel-radius: var(--radius-card);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    overflow-x: clip;
+  }
+
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  /* h1 and h2 carry the display face and the skin's tracking; h3 stays in the body
+   * face at every pairing (see LETTER_TOKENS in src/lib/stijl.ts for why).
+   *
+   * The two wrapping properties are the FLOOR and are not decoration. Dutch builds
+   * compounds a headline cannot break: `rioolontstoppingsservice` is 24 unbreakable
+   * characters and overflows a 360px viewport at display size no matter how short the
+   * sentence around it is. `hyphens: auto` needs a language to hyphenate against and gets
+   * one from <html lang="nl"> in Base.astro, so this costs nothing and works today.
+   *
+   * `text-wrap: balance` is cosmetic and is deliberately NOT on the h1. Per Chrome's own
+   * docs it "won't change the inline-size of the element", so it never prevented a pixel
+   * of overflow, and it silently switches itself off past six wrapped lines in Chromium
+   * (ten in Firefox) -- inert on exactly the headlines that have a problem. Worse, next to
+   * `hyphens: auto` it is actively harmful on a long headline: balancing is free to spend a
+   * hyphen to even the lines out, and the kapper fixture's H1 came back as "Knippen en
+   * sche-/ren aan de rand" at 1440px, where greedy wrapping fits "Knippen en scheren" on
+   * one line with room to spare. A hyphenated hero headline on a desktop screen reads as a
+   * rendering fault. So the h1 wraps greedily and only hyphenates when a line genuinely
+   * cannot take the next word.
+   *
+   * h2 and h3 keep it: their lines are short, they rarely reach the six-line cliff, and an
+   * even two-line heading is worth more there than the risk of a spent hyphen.
+   *
+   * The length ceiling that keeps a kop from reaching six lines is a schema rule, not a CSS
+   * one; see ClientSchemaChecked in src/lib/client.ts. */
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+    /* Cap the LINE, not the container -- and cap it in `ch`, which resolves against the
+     * element's own font-size. This is the one measured technique from the award reference
+     * set that could not be expressed as a rem token: a rem cap that suits an 88px headline
+     * is four times too wide for a 20px one, so a shared `--maat-kop` either lets the
+     * display type run to eight words a line or squeezes the body copy to nothing. The only
+     * site in that set authoring its measures explicitly (schyns.de) caps display lines at
+     * 12-25ch and prose at 44-48ch for exactly this reason.
+     *
+     * 24ch rather than the 12-16ch those sites use: their headlines are two English words
+     * ("Pure Nature"), and a Dutch trade headline is "Plat dak, pannen of zink: wij houden
+     * het dicht". At 24ch that sets in two lines at every schaal, which is the shape a
+     * headline wants; at 14ch it would be five. */
+    max-width: 24ch;
+  }
+
+  /* Hyphenation everywhere EXCEPT the h1. `hyphens: auto` is not a last resort -- the
+   * browser spends a hyphen whenever it improves the line breaking, and at display size in
+   * a half-width hero column that is most lines. The kapper fixture came back as "Knippen
+   * en sche-/ren aan de rand van Kralingen", which is correct Dutch syllabification and
+   * still reads as a rendering fault on a 1440px screen.
+   *
+   * `overflow-wrap: break-word` stays on the h1 and is the actual floor: unlike hyphens it
+   * only acts when a single word cannot fit a line by itself, which is the
+   * `rioolontstoppingsservice` case and nothing else. The break lands without a hyphen,
+   * which is uglier than a hyphen but happens roughly never, against a hyphen that was
+   * happening on every second line. */
+  h2,
+  h3 {
+    hyphens: auto;
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    letter-spacing: var(--display-tracking);
+  }
+
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  h3 {
+    letter-spacing: -0.015em;
+  }
+
+  a {
+    color: var(--brand-primary, var(--color-ink));
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-primary, var(--color-ink));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-button);
+    padding: 0.75rem 1.35rem;
+    font-weight: 600;
+    text-decoration: none;
+    min-height: 2.75rem;
+  }
+
+  /* Primary CTA everywhere: click-to-call. */
+  .btn-call {
+    background-color: var(--brand-primary);
+    color: #ffffff;
+  }
+
+  .btn-call:hover {
+    filter: brightness(1.15);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--brand-primary);
+    color: var(--brand-primary);
+    background-color: transparent;
+  }
+
+  .btn-outline:hover {
+    background-color: color-mix(in oklab, var(--brand-primary) 8%, transparent);
+  }
+
+  .card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

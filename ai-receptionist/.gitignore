@@ -1,0 +1,15 @@
+.env
+.venv/
+data/
+__pycache__/
+*.pyc
+
+# Real prospect/client configs carry third-party PII (company names, phone numbers).
+# Never commit them; they still rsync to the server on deploy. READMEs stay tracked.
+config/prospects/*.yaml
+config/clients/*.yaml
+# ...except the fictional fitness showcase (a symlink to fitness-demo.yaml, no PII).
+!config/clients/fitness.yaml
+# ...and the fictional real-estate listings showcase (no PII).
+!config/clients/solvista-demo.yaml
+build/

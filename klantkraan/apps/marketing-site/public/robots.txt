@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://klantkraan.nl/sitemap-index.xml

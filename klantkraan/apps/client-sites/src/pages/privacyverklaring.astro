@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro'
+import { loadClient } from '../lib/client'
+import { adresRegels, telHref } from '../lib/format'
+
+// AVG-basics for a static site without cookies, analytics or forms. When the
+// client also has the Klantkraan receptionist, Klantkraan is named as
+// verwerker for telefoon- en chatafhandeling.
+const { config } = loadClient()
+const { bedrijf } = config
+const title = `Privacyverklaring | ${bedrijf.naam}`
+const description = `Hoe ${bedrijf.naam} omgaat met uw persoonsgegevens wanneer u belt, mailt of appt. Deze website gebruikt geen cookies en geen trackers.`
+---
+
+<Base title={title} description={description}>
+  <article
+    class="mx-auto max-w-(--maat-tekst) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)"
+  >
+    <h1 class="text-h1">Privacyverklaring</h1>
+    <p class="mt-4 text-(--color-mist)">
+      {bedrijf.naam} gaat zorgvuldig om met uw persoonsgegevens. In deze verklaring leest u welke gegevens
+      wij verwerken, waarom en hoe lang.
+    </p>
+
+    <h2 class="mt-10 text-h3">Wie wij zijn</h2>
+    <p class="mt-3 text-(--color-mist)">
+      {bedrijf.naam}, {adresRegels(bedrijf.adres).join(', ')}.
+      {bedrijf.kvk && ` KvK: ${bedrijf.kvk}.`} U bereikt ons via
+      <a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a>{
+        bedrijf.email && (
+          <Fragment>
+            {' of '}
+            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>
+          </Fragment>
+        )
+      }.
+    </p>
+
+    <h2 class="mt-10 text-h3">Geen cookies, geen trackers</h2>
+    <p class="mt-3 text-(--color-mist)">
+      Deze website plaatst geen cookies, gebruikt geen analytics en laadt niets van andere partijen.
+      Uw bezoek aan deze site wordt door ons niet gevolgd. Daarom ziet u hier ook geen
+      cookiemelding.
+    </p>
+
+    <h2 class="mt-10 text-h3">Welke gegevens wij verwerken</h2>
+    <p class="mt-3 text-(--color-mist)">
+      Wij verwerken alleen de gegevens die u zelf aan ons geeft wanneer u belt, mailt of een
+      WhatsApp-bericht stuurt: uw naam, uw telefoonnummer of e-mailadres, uw adres wanneer dat voor
+      de klus nodig is, en de inhoud van uw vraag of melding.
+    </p>
+
+    <h2 class="mt-10 text-h3">Waarvoor wij die gegevens gebruiken</h2>
+    <p class="mt-3 text-(--color-mist)">
+      Wij gebruiken uw gegevens om uw vraag te beantwoorden, een afspraak of offerte te maken en de
+      klus uit te voeren, inclusief de administratie die daarbij hoort (zoals een factuur). De
+      grondslag daarvoor is de uitvoering van een overeenkomst of het contact dat u zelf met ons
+      opneemt.
+    </p>
+
+    <h2 class="mt-10 text-h3">Met wie wij gegevens delen</h2>
+    <p class="mt-3 text-(--color-mist)">
+      Wij verkopen uw gegevens nooit. Wij delen ze alleen met partijen die wij nodig hebben om ons
+      werk te doen, zoals onze websitehoster en ons boekhoudpakket. Met deze partijen zijn afspraken
+      gemaakt over de bescherming van uw gegevens.
+    </p>
+    {
+      config.receptionist && (
+        <p class="mt-3 text-(--color-mist)">
+          Onze telefoon- en chatafhandeling wordt verzorgd door Klantkraan (klantkraan.nl) als
+          verwerker. Wanneer u ons belt of een chatbericht stuurt, kan een digitale assistent van
+          Klantkraan uw melding aannemen; die assistent maakt dat altijd zelf aan u duidelijk. Uw
+          gegevens worden daarbij binnen de Europese Unie verwerkt en alleen gebruikt om uw melding
+          bij ons te bezorgen.
+        </p>
+      )
+    }
+
+    <h2 class="mt-10 text-h3">Hoe lang wij gegevens bewaren</h2>
+    <p class="mt-3 text-(--color-mist)">
+      Wij bewaren uw gegevens niet langer dan nodig voor het doel waarvoor u ze gaf. Administratie
+      bewaren wij zolang de wettelijke bewaarplicht dat vraagt.
+    </p>
+
+    <h2 class="mt-10 text-h3">Uw rechten</h2>
+    <p class="mt-3 text-(--color-mist)">
+      U mag uw gegevens inzien, laten aanpassen of laten verwijderen. {
+        bedrijf.email ? (
+          <Fragment>
+            Stuur daarvoor een e-mail naar
+            <a href={`mailto:${bedrijf.email}`}>{bedrijf.email}</a>.
+          </Fragment>
+        ) : (
+          <Fragment>
+            Bel ons daarvoor via <a href={telHref(bedrijf.telefoon)}>{bedrijf.telefoon}</a>.
+          </Fragment>
+        )
+      } Bent u niet tevreden over hoe wij met uw gegevens omgaan? Dan kunt u een klacht indienen bij de
+      Autoriteit Persoonsgegevens.
+    </p>
+  </article>
+</Base>

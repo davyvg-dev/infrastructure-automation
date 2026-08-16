@@ -1,0 +1,186 @@
+---
+/*
+ * "What the receptionist takes over".
+ *
+ * Desktop: the photo bleeds off the left edge and the duties sit in hairline-
+ * divided rows on the right. The bleed is deliberate — it is the one place the
+ * page breaks the max-w-5xl column, so the eye gets a rest between the hero and
+ * the demo.
+ *
+ * Mobile (2026-07-28): the same two pieces stack, but the heading is laid ON the
+ * photo instead of under it. Stacked, the photo was a 224px letterbox strip with
+ * dead air on both sides of it — decoration that cost a screenful of scroll and
+ * earned nothing. Overlaid, the photo is the chapter opener: one square frame,
+ * the eyebrow and h2 on its lit bottom edge, the duties starting immediately
+ * after. One h2 in the DOM either way — the layout is grid placement, not a
+ * second copy of the markup.
+ */
+import Icon from '../Icon.astro'
+
+interface Duty {
+  icon: 'message-square' | 'calendar-check' | 'phone-call'
+  title: string
+  text: string
+}
+
+interface Props {
+  t: {
+    eyebrow: string
+    heading: string
+    photoAlt: string
+    items: Duty[]
+  }
+}
+
+const { t } = Astro.props
+---
+
+<section id="nachtdienst" class="kk-duties scroll-mt-24">
+  <div class="kk-duties-photo">
+    <img
+      src="/photos/installateurs.jpg"
+      srcset="/photos/installateurs-sm.jpg 700w, /photos/installateurs.jpg 1400w"
+      sizes="(min-width: 768px) 50vw, 100vw"
+      width="1400"
+      height="900"
+      loading="lazy"
+      decoding="async"
+      alt={t.photoAlt}
+    />
+  </div>
+
+  <div class="kk-duties-body">
+    <div class="kk-duties-head">
+      <span class="eyebrow">{t.eyebrow}</span>
+      <h2 class="mt-3.5 font-display text-h2 text-balance">{t.heading}</h2>
+    </div>
+
+    <ul class="kk-duties-list divide-y divide-(--color-line)" role="list">
+      {
+        t.items.map((duty) => (
+          <li class="grid grid-cols-[auto_1fr] gap-4 py-5 first:pt-0 last:pb-0">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-(--color-panel-2) text-(--color-sodium)">
+              <Icon name={duty.icon} class="h-5 w-5" />
+            </span>
+            <div>
+              <h3 class="font-display text-h3 text-(--color-chalk)">{duty.title}</h3>
+              <p class="mt-1.5 text-body text-(--color-dim)">{duty.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .kk-duties {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 1.5rem 0 2.5rem;
+  }
+  /* The wrapper exists for the desktop column; on mobile its two children have to
+   * become grid items of the section itself so the head can share a cell with
+   * the photo. */
+  .kk-duties-body {
+    display: contents;
+  }
+
+  /* ---- the photo ---- */
+  .kk-duties-photo {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    grid-column: 1;
+    grid-row: 1;
+    /* Square: a 1400x900 source still supplies ~900px of pixels to a 390px
+     * column at 2x, and a portrait phone can hold it without swallowing the
+     * whole viewport. */
+    aspect-ratio: 1 / 1;
+  }
+  .kk-duties-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+    filter: brightness(0.86) saturate(0.85);
+  }
+  /* Feather the trailing edge into the page so the photo reads as part of the
+   * night, not a bright rectangle pasted onto it — and so the heading that sits
+   * on that edge stays legible over any crop. */
+  .kk-duties-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(15, 28, 30, 0.2) 0%,
+      transparent 26%,
+      rgba(15, 28, 30, 0.7) 62%,
+      rgba(15, 28, 30, 0.97) 100%
+    );
+  }
+
+  /* ---- the heading, laid on the photo's lit edge ---- */
+  .kk-duties-head {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    align-self: end;
+    padding: 0 1.5rem 1.5rem;
+  }
+  .kk-duties-head h2 {
+    text-shadow: 0 1px 18px rgba(15, 28, 30, 0.75);
+  }
+
+  .kk-duties-list {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 1.75rem 1.5rem 0;
+  }
+
+  /* ---- desktop: back to two columns, heading above the list ---- */
+  @media (min-width: 768px) {
+    .kk-duties {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: stretch;
+      gap: 3.5rem;
+      padding: 4.5rem 0;
+    }
+    .kk-duties-body {
+      display: block;
+      align-self: center;
+      max-width: 30rem;
+      padding: 0 1.5rem 0 0;
+    }
+    .kk-duties-photo {
+      grid-column: 1;
+      grid-row: 1;
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 25rem;
+      border-radius: 0 1.25rem 1.25rem 0;
+      border: 1px solid var(--color-line);
+      border-left: 0;
+    }
+    .kk-duties-photo::after {
+      background: linear-gradient(
+        to right,
+        rgba(15, 28, 30, 0.25) 0%,
+        transparent 40%,
+        rgba(15, 28, 30, 0.7) 100%
+      );
+    }
+    .kk-duties-head {
+      padding: 0;
+    }
+    .kk-duties-head h2 {
+      text-shadow: none;
+    }
+    .kk-duties-list {
+      margin-top: 2rem;
+      padding: 0;
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+/*
+ * Closing band: one buy button first, demo and a human conversation as the
+ * lower-commitment alternatives.
+ */
+
+interface Cta {
+  label: string
+  href: string
+  external?: boolean
+}
+
+interface Props {
+  t: {
+    h2a: string
+    h2on: string
+    sub: string
+    primary: Cta
+    ghosts: Cta[]
+  }
+}
+
+const { t } = Astro.props
+---
+
+<section class="kk-final-sec">
+  <div class="kk-final">
+    <h2 class="kk-final-h2">{t.h2a} <span class="on">{t.h2on}</span></h2>
+    <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">{t.sub}</p>
+    <div class="mt-8 btn-row justify-center">
+      <a href={t.primary.href} class="btn btn-primary btn-lg">{t.primary.label}</a>
+      {
+        t.ghosts.map((cta) => (
+          <a
+            href={cta.href}
+            class="btn btn-ghost btn-lg"
+            target={cta.external ? '_blank' : undefined}
+            rel={cta.external ? 'noopener' : undefined}
+          >
+            {cta.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Full-bleed on a phone, a framed panel from tablet up: at 390px a card inset
+   * inside the gutter turns the closing image into a thumbnail. */
+  .kk-final-sec {
+    padding: 3.5rem 0 4rem;
+  }
+  @media (min-width: 768px) {
+    .kk-final-sec {
+      padding: 5rem 1.5rem;
+    }
+  }
+
+  /* The page closes on a lit panel rather than more flat night — the last thing
+   * on screen should look like the light it is selling. Deliberately photo-free:
+   * a picture behind centred copy drops the sub-line's contrast and the close is
+   * the one place nothing may compete with the button. */
+  .kk-final {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 64rem;
+    padding: 3.5rem 1.5rem 4rem;
+    text-align: center;
+    border-block: 1px solid var(--color-line);
+    background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
+  }
+  .kk-final::before {
+    content: '';
+    position: absolute;
+    inset: -60% 20% auto;
+    height: 130%;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgba(255, 184, 77, 0.22), transparent 70%);
+  }
+  @media (min-width: 768px) {
+    .kk-final {
+      padding: 4.5rem 3rem 5rem;
+      border: 1px solid var(--color-line);
+      border-radius: 1.5rem;
+    }
+  }
+
+  .kk-final-h2 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-size: clamp(2.2rem, 5.6vw, 4rem);
+    line-height: 1;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .kk-final-h2 .on {
+    color: var(--color-sodium);
+  }
+</style>

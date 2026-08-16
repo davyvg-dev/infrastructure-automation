@@ -1,0 +1,300 @@
+---
+import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
+import Icon from '../components/Icon.astro'
+import Stat from '../components/Stat.astro'
+import Dumbbell from '../components/illustrations/Dumbbell.astro'
+import RiskReversal from '../components/RiskReversal.astro'
+import PhotoBand from '../components/PhotoBand.astro'
+
+// Sportscholen landing page — first non-trades vertical. Follows the /loodgieters
+// template structure; copy per klantkraan/docs/09-brand/voice-and-tone.md (u-form,
+// concrete cijfers, no emojis), with gym vocabulary (proefles, abonnement, rooster)
+// instead of trade nouns. Links to the fitness demo at /demo/sportscholen/.
+
+interface PainStat {
+  value: string
+  caption: string
+}
+
+const painStats: PainStat[] = [
+  {
+    value: "'s Avonds",
+    caption: 'komen de meeste proefles-aanvragen binnen, precies wanneer de balie dicht is.',
+  },
+  {
+    value: '21×',
+    caption: 'meer kans op contact wanneer u een lead binnen 5 minuten beantwoordt.',
+  },
+  { value: '€480', caption: 'jaarwaarde van één gemist lid, bij €40 per maand.' },
+]
+
+interface Feature {
+  icon: 'phone' | 'message-square' | 'calendar-check'
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    icon: 'message-square',
+    title: 'Antwoord op elk bericht, ook om 22:00',
+    body: 'Beantwoordt vragen over abonnementen, openingstijden en lessen, op uw website en via WhatsApp, in vlot Nederlands. Ook in het weekend. Noemt nooit een tarief dat u niet zelf heeft ingesteld.',
+  },
+  {
+    icon: 'calendar-check',
+    title: 'Proeflessen direct in de agenda',
+    body: 'De receptionist plant proeflessen, rondleidingen en PT-kennismakingen rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. De lead van 22:00 staat de volgende ochtend gewoon ingepland.',
+  },
+  {
+    icon: 'phone',
+    title: 'Elke lead op uw telefoon',
+    body: 'Elke proefles-aanvraag en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam, nummer en de vraag. Geen lead blijft hangen in een onbeantwoorde DM.',
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+  href?: string
+  linkLabel?: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'Hoe komt de receptionist op mijn website?',
+    a: 'Met één klein scriptje dat wij voor u installeren. U hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
+  },
+  {
+    q: 'Wij hebben al een balie. Wat voegt dit toe?',
+    a: 'De balie is er tijdens de les, in het weekend en om 22:00 niet, en dat zijn precies de momenten waarop mensen naar een sportschool zoeken. De receptionist vangt alles op wat buiten baliedienst binnenkomt, plant de proefles in en laat uw team doen waar het goed in is: de vloer.',
+  },
+  {
+    q: 'Hoort de bezoeker dat het AI is?',
+    a: 'Ja. Elk gesprek opent met de melding dat men met een digitale assistent chat, namens uw sportschool. Dat is geen marketingkeuze maar een wettelijke verplichting onder artikel 50 van de Europese AI-wet. De disclosure blijft altijd aan staan.',
+    href: '/legal/ai-disclosure/',
+    linkLabel: 'Lees de volledige AI-disclosure',
+  },
+  {
+    q: 'Wat als de AI iets verkeerd zegt over abonnementsprijzen?',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf heeft ingesteld: abonnementen, proefles, personal training. Onbekende prijzen worden niet verzonnen; de bezoeker krijgt dan een terugbelverzoek of adviesgesprek aangeboden. Wij testen elke configuratie voor u live gaat.',
+  },
+  {
+    q: 'Kan hij ook opzeggingen en pauzes afhandelen?',
+    a: 'Hij vangt ze netjes op: de assistent noteert het verzoek, plant desgewenst een gesprek in en geeft het direct aan u door. Beslissingen over abonnementen blijven bij uw team. De assistent zorgt alleen dat het verzoek nooit blijft liggen.',
+  },
+  {
+    q: 'Wat gebeurt er met de gegevens van mijn leden?',
+    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren chatgesprekken 30 dagen, tenzij u korter wenst. De volledige leverancierslijst staat openbaar in ons sub-processorregister.',
+    href: '/legal/dpa/',
+    linkLabel: 'Bekijk DPA en privacyverklaring',
+  },
+  {
+    q: 'Per maand opzegbaar, echt waar?',
+    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail, wanneer u wilt. De receptionist loopt tot het einde van de betaalde maand, daarna incasseren wij niets meer. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
+    href: '/legal/voorwaarden/',
+    linkLabel: 'Lees de algemene voorwaarden',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<Base
+  title="Sportschool leden werven: digitale receptionist voor proeflessen"
+  description="Digitale receptionist voor sportscholen. Beantwoordt vragen over abonnementen en lessen en plant proeflessen in uw agenda, ook 's avonds en in het weekend."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-chalk">
+          De <span class="text-(--color-sodium)">Klantenmotor</span> voor sportscholen.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-dim">
+          Staat u les te geven? Dan beantwoordt onze digitale receptionist de vraag over
+          abonnementen of de proefles, op uw website en via WhatsApp, met uw rooster en tarieven
+          paraat. 's Avonds, weekend, feestdagen. De proefles staat direct in uw agenda.
+        </p>
+        <div class="mt-10 btn-row">
+          <a href="/demo/sportscholen/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
+        </div>
+      </div>
+      <div class="hidden text-(--color-sodium) md:block">
+        <Dumbbell class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
+      <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">AVG + AI Act art. 50</p>
+            <p class="text-small text-dim">Disclosure standaard aan</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">Gehost in de EU</p>
+            <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">Vlot Nederlands</p>
+            <p class="text-small text-dim">Kent uw rooster + abonnementen</p>
+          </div>
+        </li>
+      </ul>
+      <p class="mt-8 text-small text-dim">
+        Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="sportscholen"
+      alt="Lid meldt zich bij de balie van de sportschool"
+      caption="Druk aan de balie. Uw receptionist antwoordt wél."
+      focus="50% 40%"
+    />
+  </section>
+
+  <!-- 1b. Risk-reversal -->
+  <RiskReversal />
+
+  <!-- 2. Pijn-stats trio (stone-100) -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Wat een gemiste lead kost"
+  >
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
+    </div>
+  </section>
+
+  <!-- 3. Wat Klantkraan doet voor sportscholen (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Wat Klantkraan doet voor sportscholen.</h2>
+      <p class="mt-4 max-w-2xl text-body text-dim">
+        Drie modules. Eén maandprijs. Gebouwd voor de eigenaar die vaker op de vloer staat dan
+        achter de balie.
+      </p>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          features.map((feature) => (
+            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
+              <div>
+                <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
+                <p class="mt-2 text-body text-dim">{feature.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ROI snippet (cream; inner white card) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Rekensom</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Reken het even na.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
+        <p class="text-h3 text-chalk">
+          Blijven er 4 proefles-aanvragen per maand onbeantwoord, à €480 jaarwaarde? Dat is
+          <strong class="text-(--color-sodium)">ruim €23.000 gemiste omzet per jaar</strong>.
+        </p>
+        <p class="mt-4 text-body text-dim">
+          Klantkraan Chat is €299 per maand. Eén extra lid per maand en u staat quitte. Elk lid
+          daarna is uw marge.
+        </p>
+        <div class="mt-6 btn-row">
+          <a href="/demo/sportscholen/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
+        </div>
+        <p class="mt-6 text-micro text-dim">
+          Bedragen excl. 21% BTW. Voorbeeld op basis van €40 per maand gemiddeld abonnementstarief
+          en een gemiddelde lidmaatschapsduur van 12 maanden; de 5-minuten-responscijfers komen uit
+          het lead-response-onderzoek van Harvard Business Review / InsideSales.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FAQ (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Vragen</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          faqs.map((faq) => (
+            <details class="group py-4">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-chalk marker:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                  />
+                </span>
+              </summary>
+              <p class="mt-3 text-body text-dim">{faq.a}</p>
+              {faq.href && faq.linkLabel && (
+                <p class="mt-3 text-small">
+                  <a href={faq.href} class="underline">
+                    {faq.linkLabel}
+                  </a>
+                </p>
+              )}
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Eind-CTA band (blue) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-chalk">Klaar om geen proefles meer te missen?</h2>
+      <p class="mt-4 max-w-2xl text-body text-dim">
+        Probeer de live demo van een sportschool-receptionist. In één gesprek ziet u hoe een vraag
+        over het abonnement eindigt als geplande proefles in de agenda.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/demo/sportscholen/" class="btn btn-primary btn-lg"> Probeer de demo </a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

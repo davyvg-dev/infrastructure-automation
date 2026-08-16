@@ -6,12 +6,8 @@ __pycache__/
 .Python
 build/
 develop-eggs/
-dist/
-downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -20,8 +16,13 @@ wheels/
 .installed.cfg
 *.egg
 
+# Node / build outputs
+dist/
+node_modules/
+
 # Virtual Environment
 venv/
+.venv/
 ENV/
 env/
 
@@ -41,4 +42,16 @@ infra_automation.log
 credentials.json
 
 # Ansible
-*.retry 
+*.retry
+
+# macOS
+.DS_Store
+
+# Wrangler local state
+.wrangler/
+
+# Claude Code parallel-session worktrees
+.claude/worktrees/
+
+# kk deploy marker (what the server last received)
+.kk/

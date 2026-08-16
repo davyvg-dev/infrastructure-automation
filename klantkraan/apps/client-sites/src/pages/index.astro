@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro'
+import Hero from '../components/Hero.astro'
+import Intro from '../components/Intro.astro'
+import Diensten from '../components/Diensten.astro'
+import Werk from '../components/Werk.astro'
+import Werkgebied from '../components/Werkgebied.astro'
+import Usps from '../components/Usps.astro'
+import Reviews from '../components/Reviews.astro'
+import SpoedPanel from '../components/SpoedPanel.astro'
+import FinalCta from '../components/FinalCta.astro'
+import { loadClient, toont } from '../lib/client'
+import { toon } from '../lib/toon'
+
+// The section order is still one design and still not per-client: what a site may do is
+// leave a section OUT (config.indeling.weglaten, capped at two). Sixteen real Dutch trade
+// sites read for the 2026-08-16 plan run 6-13 sections and every one of them is missing
+// something obvious; shipping all nine, filled and symmetric, is identifiable because
+// nothing is missing.
+const { config } = loadClient()
+const t = toon(config)
+---
+
+<Base title={t.titel} description={t.omschrijving}>
+  <Hero />
+  {toont(config, 'intro') && <Intro />}
+  <Diensten />
+  {toont(config, 'werk') && <Werk />}
+  {toont(config, 'werkgebied') && <Werkgebied />}
+  {toont(config, 'usps') && <Usps />}
+  <Reviews />
+  <SpoedPanel />
+  <FinalCta />
+</Base>

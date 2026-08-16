@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import { waLink } from '../data/contact'
+import { company } from '../data/company'
+---
+
+<Base
+  title="Over Klantkraan: wie het bouwt en waarom"
+  description="Klantkraan is een handelsnaam van T4 Software Consulting BV, gebouwd door één ICT-ondernemer. Nederlands gehost, AVG-compliant, geen externe investeerders."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">
+        Over <span class="text-(--color-sodium)">Klantkraan</span>
+      </h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Een kant-en-klaar abonnement waarmee Nederlandse ondernemers geen klantvraag meer missen.
+        Gebouwd door één ICT-ondernemer, gehost in Nederland, zonder externe investeerders.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Bedrijf + waar staan wij voor (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
+      <div>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Het bedrijf</h2>
+        <dl class="mt-4 text-body text-(--color-dim)">
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Handelsnaam</dt>
+          <dd>Klantkraan</dd>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Juridische entiteit</dt>
+          <dd>T4 Software Consulting BV</dd>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">KvK-nummer</dt>
+          <dd class="font-mono break-all">{company.kvk}</dd>
+          {
+            company.btw && (
+              <Fragment>
+                <dt class="mt-3 text-small text-(--color-dim) first:mt-0">BTW-nummer</dt>
+                <dd class="font-mono break-all">{company.btw}</dd>
+              </Fragment>
+            )
+          }
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Vestiging</dt>
+          <dd>Nederland</dd>
+          <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Contact</dt>
+          <dd><a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a></dd>
+        </dl>
+      </div>
+
+      <div>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Waar staan wij voor</h2>
+        <ul class="mt-4 space-y-3 text-body text-(--color-dim)">
+          <li>
+            <strong>Nederlands gehost.</strong> Klantdata staat bij Cloudflare EU + Neon EU + Hetzner
+            FSN1. Geen US-data-export.
+          </li>
+          <li>
+            <strong>AVG-compliant by default.</strong> Standaard verwerkersovereenkomst (DPA), Art. 30
+            register, sub-processor lijst openbaar.
+          </li>
+          <li>
+            <strong>EU AI Act art. 50.</strong> De AI-disclosure staat in elk gesprek en kan niet worden
+            uitgezet, ook niet op verzoek.
+          </li>
+          <li>
+            <strong>Maandelijks opzegbaar.</strong> Geen vendor lock-in, geen jaarcontract als standaard.
+            U blijft omdat het werkt, niet omdat het moet.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Wie bouwt Klantkraan (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">De oprichter</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Wie bouwt Klantkraan</h2>
+
+      <div class="mt-8 grid gap-6 md:gap-10 md:grid-cols-[auto_1fr] md:items-start">
+        <div
+          class="flex h-24 w-24 items-center justify-center rounded-full bg-(--color-sodium) font-display text-h1 text-(--color-night)"
+          aria-hidden="true"
+        >
+          K
+        </div>
+
+        <div class="max-w-2xl space-y-4 text-body text-(--color-dim)">
+          <p>
+            Klantkraan wordt gebouwd door één Nederlandse ICT-ondernemer onder de BV
+            <strong>T4 Software Consulting</strong>, waaronder Klantkraan als handelsnaam is
+            geregistreerd. Geen externe investeerders, geen VC-druk, geen groeicijfers die boven
+            klantkwaliteit gaan.
+          </p>
+          <p>
+            De bouw is bewust solo: één persoon ontwerpt de AI-receptionist, bouwt de koppelingen en
+            stemt elke configuratie af op het bedrijf. Bij een vraag wordt u niet via support-tier
+            1, 2 en 3 geleid. U spreekt direct met de eigenaar.
+          </p>
+          <p>
+            Achtergrond: jarenlang software bouwen voor MKB-klanten via T4 Software Consulting.
+            Klantkraan neemt wat voor één klant goed werkt en maakt het herhaalbaar voor de
+            vakbranche: loodgieters, dakdekkers, elektriciens, installateurs, aannemers, schilders.
+          </p>
+          <p class="pt-2 text-small text-(--color-dim)">
+            <a
+              href="mailto:hallo@klantkraan.nl"
+              class="text-(--color-sodium) underline underline-offset-4 hover:no-underline"
+              >hallo@klantkraan.nl</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Waarom Klantkraan bestaat (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Waarom</p>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Waarom Klantkraan bestaat</h2>
+      <div class="mt-6 max-w-3xl space-y-4 text-body text-(--color-dim)">
+        <p>
+          Klantkraan komt voort uit een simpele observatie: volgens brancheschattingen mist de
+          gemiddelde Nederlandse loodgieter, dakdekker of installateur zo'n 28% van zijn oproepen.
+          Niet uit onwil: hij staat op het dak, op de ladder, of bij een andere klant. En ongeveer 1
+          op de 3 van die gemiste oproepen was een betalende klus geworden, gemiddeld €450, die nu
+          naar de concurrent gaat.
+        </p>
+        <p>
+          De oplossingen die er waren, voelden niet kloppend. Te duur (€899 setup + €199/mnd),
+          twaalfmaandscontracten, of zo'n Amerikaans pakket dat geen voorrijkosten kent en niet weet
+          wat een spoedtarief is. Wij wilden iets bouwen dat klinkt alsof het bij de zaak hoort:
+          vlot Nederlands, weet wat een geiser is, beleefd maar to-the-point.
+        </p>
+        <p>
+          Klantkraan is dat: een digitale receptionist via websitechat en WhatsApp die vragen
+          beantwoordt, afspraken inplant en leads vangt, met een AI-telefonist op een eigen nummer
+          erbovenop. Done-for-you opgezet, maandelijks opzegbaar. Gebouwd door iemand die zelf ICT
+          runt, gehost in Europa.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Downloads + spreek de oprichter (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 md:grid-cols-3">
+      <div>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Verwerkersovereenkomst</h2>
+        <p class="mt-4 text-body text-(--color-dim)">
+          Onze standaard DPA, vóór ondertekening leesbaar. Juridisch getoetst, geen aparte
+          onderhandeling nodig.
+        </p>
+        <a href="/legal/dpa/" class="mt-4 btn btn-ghost"> Bekijk DPA </a>
+      </div>
+      <div>
+        <h2 class="font-display text-h2 text-(--color-chalk)">KvK-uittreksel</h2>
+        <p class="mt-4 text-body text-(--color-dim)">
+          Officieel uittreksel handelsregister voor Klantkraan onder T4 Software Consulting BV. Voor
+          uw eigen leveranciersdossier. Op aanvraag, dezelfde werkdag in uw inbox.
+        </p>
+        <a
+          href="mailto:hallo@klantkraan.nl?subject=KvK-uittreksel%20opvragen"
+          class="mt-4 btn btn-ghost"
+        >
+          Vraag uittreksel op
+        </a>
+      </div>
+      <div>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Spreek de oprichter</h2>
+        <p class="mt-4 text-body text-(--color-dim)">
+          Vragen die geen demo nodig hebben? Stuur een WhatsApp of e-mail. Antwoord meestal binnen
+          één werkdag, direct van de eigenaar.
+        </p>
+        <div class="mt-4 btn-row">
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary">
+            <Icon name="message-circle" class="h-5 w-5" />
+            <span>WhatsApp</span>
+          </a>
+          <a href="mailto:hallo@klantkraan.nl" class="btn btn-ghost"> E-mail </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,12 @@
+[Unit]
+Description=Weekly Search Console report
+
+[Timer]
+# Monday 08:00. Weekly rather than daily on purpose: search moves slowly, and a daily
+# ranking report trains you to ignore it.
+OnCalendar=Mon *-*-* 08:00:00
+Persistent=true
+AccuracySec=5min
+
+[Install]
+WantedBy=timers.target

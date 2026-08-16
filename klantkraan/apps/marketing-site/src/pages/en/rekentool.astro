@@ -1,0 +1,208 @@
+---
+import Base from '../../layouts/Base.astro'
+import CursusForm from '../../components/CursusForm.astro'
+---
+
+<Base
+  lang="en"
+  title="ROI calculator: what missed calls cost you | Klantkraan"
+  description="Work out in 10 seconds how much revenue you lose to missed calls, and how quickly Klantkraan pays for itself."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">
+        What does a <span class="text-(--color-sodium)">missed call</span> cost you?
+      </h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Enter your numbers. The calculator shows straight away how many jobs you lose in a year and
+        how quickly each Klantkraan plan pays for itself.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Form + results (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
+      <form
+        id="roi-form"
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        onsubmit="return false"
+      >
+        <div class="space-y-6">
+          <div>
+            <label for="calls" class="block text-body font-medium text-(--color-chalk)">
+              How many calls do you get per week?
+            </label>
+            <input
+              id="calls"
+              name="calls"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              min="0"
+              step="1"
+              value="40"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+          </div>
+          <div>
+            <label for="missed" class="block text-body font-medium text-(--color-chalk)">
+              % of calls you miss today
+            </label>
+            <input
+              id="missed"
+              name="missed"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              min="0"
+              max="100"
+              step="1"
+              value="28"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              Industry estimate: 28% for installation and roofing trades.
+            </p>
+          </div>
+          <div>
+            <label for="value" class="block text-body font-medium text-(--color-chalk)">
+              Average customer value per job (€)
+            </label>
+            <input
+              id="value"
+              name="value"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              min="0"
+              step="10"
+              value="450"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              Default €450, the average plumbing job.
+            </p>
+          </div>
+        </div>
+      </form>
+
+      <aside
+        class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Your loss in numbers</h2>
+        <div class="mt-4 space-y-4">
+          <div>
+            <p class="text-small text-(--color-dim)">Missed calls per year</p>
+            <p
+              id="out-missed-year"
+              class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
+            >
+              0
+            </p>
+          </div>
+          <div>
+            <p class="text-small text-(--color-dim)">Lost revenue per year</p>
+            <p
+              id="out-lost-revenue"
+              class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
+            >
+              €0
+            </p>
+            <p class="mt-1 text-small text-(--color-dim)">
+              Assumption: roughly 1 in 3 missed calls would have become a paying job.
+            </p>
+          </div>
+        </div>
+
+        <hr class="my-6 border-(--color-line)" />
+
+        <h3 class="font-display text-h3 text-(--color-chalk)">Klantkraan payback time</h3>
+        <ul class="mt-3 space-y-2 text-body text-(--color-dim)">
+          <li>
+            Chat (€299/mo): <span id="out-payback-chat" class="font-mono">–</span>
+          </li>
+          <li>
+            Compleet (€499/mo): <span id="out-payback-compleet" class="font-mono">–</span>
+          </li>
+        </ul>
+        <p class="mt-4 text-small text-(--color-dim)">
+          "Payback time" = the number of months until the plan is paid for by the revenue you win
+          back.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 3. How we calculate (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Method</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">How we calculate</h2>
+      <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
+        <li>Missed calls per year = calls per week × 52 × (% missed / 100).</li>
+        <li>
+          Lost revenue per year = missed calls × customer value × 33% conversion. So we only count 1
+          in 3 missed calls as a lost job; without a callback system, most callers give up.
+        </li>
+        <li>
+          Payback time = plan price ÷ (lost revenue per year ÷ 12). The bigger your pile of missed
+          jobs, the faster Klantkraan pays for itself.
+        </li>
+      </ul>
+      <a href="/en/demo/" class="mt-8 btn btn-primary btn-lg">
+        Have us check it live on your numbers
+      </a>
+    </div>
+  </section>
+
+  <!-- 4. Werkspot math (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Lead platforms</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        And what does a job through Werkspot cost?
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        On lead platforms you pay per lead, and the same lead also goes to your competitors. Whoever
+        responds first wins the job; the rest paid too. Compare that with a fixed price for your own
+        channel, where every caller simply gets answered.
+      </p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">€3&ndash;75</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            for a single lead on Werkspot, even when the job goes to someone else.
+          </p>
+        </div>
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">&plusmn;€208</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            in lead fees per job actually won, as calculated by
+            <a href="https://adaptoo.nl/blog/werkspot-kosten" class="underline">Adaptoo</a>.
+          </p>
+        </div>
+        <div class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-chalk)">€0 per lead</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            through your own number and website. Klantkraan is a fixed monthly price, however many
+            jobs you take on.
+          </p>
+        </div>
+      </div>
+      <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
+        Your own channel also grows in value: every review, every returning customer and every
+        referral belongs to you, not to the platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. E-mail course opt-in (cream). The calculator above stays e-mail-free: the form is
+       a separate, optional offer. Markup + fallback contract live in CursusForm.astro. -->
+  <CursusForm lang="en" />
+
+  <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+  <script src="/js/rekentool.js" type="module" is:inline></script>
+</Base>

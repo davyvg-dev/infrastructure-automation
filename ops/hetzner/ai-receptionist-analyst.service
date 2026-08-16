@@ -1,0 +1,12 @@
+[Unit]
+Description=Klantkraan nightly analyst (Claude reads finished transcripts -> per-client insights)
+After=network-online.target ai-receptionist.service
+Wants=network-online.target
+OnFailure=kk-alert@%n.service
+
+[Service]
+Type=oneshot
+# app user: reads data/analytics.db + the app .env (ANTHROPIC_API_KEY, OVERSIGHT_ANALYST_MODEL).
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.oversight analyze

@@ -1,0 +1,344 @@
+---
+// context7: Astro 5 dynamic routes — /llmstxt/astro_build_llms-full_txt (2026-05-20)
+// Static output mode: we return a placeholder example path from getStaticPaths
+// so the route is registered at build, then hydrate per-slug data client-side
+// from the Worker API (PUBLIC_API_BASE + /api/dashboard/:slug).
+//
+// Spec: klantkraan/docs/03-delivery/dashboard-spec.md
+// API contract: klantkraan/apps/api/src/routes/dashboard.ts
+
+import Base from '../../layouts/Base.astro'
+
+export async function getStaticPaths() {
+  // Empty static catalogue: every slug is resolved at runtime by the client
+  // script via fetch. The placeholder path keeps Astro happy in static mode.
+  return [{ params: { slug: 'example' } }]
+}
+
+const { slug } = Astro.params
+---
+
+<Base
+  title="Klantkraan dashboard"
+  description="Per-klant KPI-overzicht: gesprekken, boekingen, reviews en teruggewonnen klanten."
+  noindex
+>
+  <section id="kk-dashboard" data-slug={slug} class="space-y-10" aria-busy="true">
+    <header class="space-y-2">
+      <p class="text-small text-(--color-dim)">Klantkraan dashboard</p>
+      <h1 class="font-display text-h1 text-(--color-chalk)" id="kk-title">
+        Dashboard laden&hellip;
+      </h1>
+      <p class="text-small text-(--color-dim)" id="kk-generated"></p>
+    </header>
+
+    <!-- KPI tiles -->
+    <section aria-label="Kerncijfers">
+      <div class="grid gap-4 sm:grid-cols-3" id="kk-kpis">
+        <article
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
+          <p class="text-small text-(--color-dim)">Teruggewonnen klanten (30d)</p>
+          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="recoveries">
+            &mdash;
+          </p>
+        </article>
+        <article
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
+          <p class="text-small text-(--color-dim)">Totaal boekingen</p>
+          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="bookings">&mdash;</p>
+        </article>
+        <article
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
+          <p class="text-small text-(--color-dim)">Gemiddelde review</p>
+          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="rating">&mdash;</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Recent calls -->
+    <section aria-label="Recente oproepen" class="space-y-4">
+      <h2 class="font-display text-h2 text-(--color-chalk)">Recente oproepen</h2>
+      <ul
+        id="kk-calls"
+        class="divide-y divide-(--color-line) rounded-(--radius-card) border border-(--color-line) bg-(--color-panel)"
+      >
+        <li class="px-6 py-4 text-small text-(--color-dim)">Laden&hellip;</li>
+      </ul>
+    </section>
+
+    <!-- Bookings -->
+    <section aria-label="Boekingen" class="space-y-4">
+      <h2 class="font-display text-h2 text-(--color-chalk)">Boekingen</h2>
+      <ul
+        id="kk-bookings"
+        class="divide-y divide-(--color-line) rounded-(--radius-card) border border-(--color-line) bg-(--color-panel)"
+      >
+        <li class="px-6 py-4 text-small text-(--color-dim)">Laden&hellip;</li>
+      </ul>
+    </section>
+
+    <!-- Reviews -->
+    <section aria-label="Reviews" class="space-y-4">
+      <h2 class="font-display text-h2 text-(--color-chalk)">Reviews</h2>
+      <ul id="kk-reviews" class="grid gap-4 sm:grid-cols-2">
+        <li
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6 text-small text-(--color-dim)"
+        >
+          Laden&hellip;
+        </li>
+      </ul>
+    </section>
+
+    <!-- Error state (hidden by default) -->
+    <div
+      id="kk-error"
+      role="alert"
+      hidden
+      class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+    >
+      <p class="font-display text-h3 text-(--color-sodium)" id="kk-error-title">Er ging iets mis</p>
+      <p class="mt-2 text-body text-(--color-dim)" id="kk-error-body">
+        We konden uw dashboard nu niet laden. Probeer het later opnieuw.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Mirror the Worker contract so we are type-safe under strict TS.
+  interface RecentCall {
+    id: string
+    started_at: string
+    duration_s: number
+    outcome: string
+  }
+  interface Booking {
+    id: string
+    when: string
+    service: string
+  }
+  interface Review {
+    id: string
+    rating: number
+    text: string
+    created_at: string
+  }
+  interface DashboardPayload {
+    client_id: string
+    slug: string
+    generated_at: string
+    recent_calls: RecentCall[]
+    bookings: Booking[]
+    reviews: Review[]
+    missed_call_recoveries: { last_30d: number }
+  }
+
+  const SLUG_RE = /^[a-z0-9-]{2,80}$/
+  const API_BASE =
+    (import.meta.env.PUBLIC_API_BASE as string | undefined) ?? 'https://api.klantkraan.nl'
+
+  const root = document.getElementById('kk-dashboard')
+  if (!root) throw new Error('kk-dashboard root missing')
+
+  const slug = root.dataset.slug ?? ''
+  const title = document.getElementById('kk-title')
+  const generated = document.getElementById('kk-generated')
+  const errorBox = document.getElementById('kk-error')
+  const errorTitle = document.getElementById('kk-error-title')
+  const errorBody = document.getElementById('kk-error-body')
+  const callsEl = document.getElementById('kk-calls')
+  const bookingsEl = document.getElementById('kk-bookings')
+  const reviewsEl = document.getElementById('kk-reviews')
+
+  function showError(heading: string, body: string): void {
+    if (title) title.textContent = heading
+    if (generated) generated.textContent = ''
+    if (errorBox) errorBox.hidden = false
+    if (errorTitle) errorTitle.textContent = heading
+    if (errorBody) errorBody.textContent = body
+    root!.setAttribute('aria-busy', 'false')
+    // Clear placeholder skeletons in the lists.
+    if (callsEl) callsEl.innerHTML = ''
+    if (bookingsEl) bookingsEl.innerHTML = ''
+    if (reviewsEl) reviewsEl.innerHTML = ''
+  }
+
+  function escapeHtml(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+  }
+
+  function fmtDateTime(iso: string): string {
+    try {
+      const d = new Date(iso)
+      return d.toLocaleString('nl-NL', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    } catch {
+      return iso
+    }
+  }
+
+  function fmtDate(iso: string): string {
+    try {
+      const d = new Date(iso)
+      return d.toLocaleDateString('nl-NL', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      })
+    } catch {
+      return iso
+    }
+  }
+
+  function fmtDuration(s: number): string {
+    if (!Number.isFinite(s) || s < 0) return '—'
+    const m = Math.floor(s / 60)
+    const r = s % 60
+    return m > 0 ? `${m}m ${r}s` : `${r}s`
+  }
+
+  function renderKpis(p: DashboardPayload): void {
+    const recoveriesEl = root!.querySelector<HTMLElement>('[data-kpi="recoveries"]')
+    const bookingsKpiEl = root!.querySelector<HTMLElement>('[data-kpi="bookings"]')
+    const ratingEl = root!.querySelector<HTMLElement>('[data-kpi="rating"]')
+
+    if (recoveriesEl) recoveriesEl.textContent = String(p.missed_call_recoveries.last_30d)
+    if (bookingsKpiEl) bookingsKpiEl.textContent = String(p.bookings.length)
+
+    if (ratingEl) {
+      if (p.reviews.length === 0) {
+        ratingEl.textContent = '—'
+      } else {
+        const avg =
+          p.reviews.reduce((acc, r) => acc + (Number.isFinite(r.rating) ? r.rating : 0), 0) /
+          p.reviews.length
+        ratingEl.textContent = `${avg.toFixed(1)} / 5`
+      }
+    }
+  }
+
+  function renderCalls(calls: RecentCall[]): void {
+    if (!callsEl) return
+    if (calls.length === 0) {
+      callsEl.innerHTML =
+        '<li class="px-6 py-4 text-small text-(--color-dim)">Nog geen oproepen geregistreerd.</li>'
+      return
+    }
+    callsEl.innerHTML = calls
+      .map(
+        (c) => `
+        <li class="flex flex-wrap items-baseline justify-between gap-3 px-6 py-4">
+          <div>
+            <p class="text-body text-(--color-chalk)">${escapeHtml(c.outcome)}</p>
+            <p class="text-small text-(--color-dim)">${escapeHtml(fmtDateTime(c.started_at))}</p>
+          </div>
+          <p class="font-mono text-small text-(--color-dim)">${escapeHtml(fmtDuration(c.duration_s))}</p>
+        </li>
+      `,
+      )
+      .join('')
+  }
+
+  function renderBookings(bookings: Booking[]): void {
+    if (!bookingsEl) return
+    if (bookings.length === 0) {
+      bookingsEl.innerHTML =
+        '<li class="px-6 py-4 text-small text-(--color-dim)">Nog geen boekingen geregistreerd.</li>'
+      return
+    }
+    bookingsEl.innerHTML = bookings
+      .map(
+        (b) => `
+        <li class="flex flex-wrap items-baseline justify-between gap-3 px-6 py-4">
+          <p class="text-body text-(--color-chalk)">${escapeHtml(b.service)}</p>
+          <p class="text-small text-(--color-dim)">${escapeHtml(fmtDateTime(b.when))}</p>
+        </li>
+      `,
+      )
+      .join('')
+  }
+
+  function renderReviews(reviews: Review[]): void {
+    if (!reviewsEl) return
+    if (reviews.length === 0) {
+      reviewsEl.innerHTML =
+        '<li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6 text-small text-(--color-dim)">Nog geen reviews ontvangen.</li>'
+      return
+    }
+    reviewsEl.innerHTML = reviews
+      .map((r) => {
+        const stars = '★'.repeat(Math.max(0, Math.min(5, Math.round(r.rating))))
+        return `
+        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+          <p class="text-small text-(--color-sodium)" aria-label="${r.rating} van 5 sterren">${stars}</p>
+          <p class="mt-2 text-body text-(--color-chalk)">${escapeHtml(r.text)}</p>
+          <p class="mt-3 text-small text-(--color-dim)">${escapeHtml(fmtDate(r.created_at))}</p>
+        </li>
+      `
+      })
+      .join('')
+  }
+
+  async function load(): Promise<void> {
+    if (!SLUG_RE.test(slug)) {
+      showError(
+        'Onbekende klant',
+        'Deze dashboard-link is niet geldig. Controleer de URL of vraag uw contactpersoon om een nieuwe link.',
+      )
+      return
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/dashboard/${slug}`, {
+        headers: { accept: 'application/json' },
+      })
+
+      if (res.status === 404) {
+        showError(
+          'Onbekende klant',
+          'We konden geen dashboard vinden voor deze link. Controleer de URL of neem contact op met Klantkraan.',
+        )
+        return
+      }
+
+      if (!res.ok) {
+        showError(
+          'Dashboard tijdelijk niet beschikbaar',
+          `De server gaf een onverwachte reactie (status ${res.status}). Probeer het later opnieuw.`,
+        )
+        return
+      }
+
+      const data = (await res.json()) as DashboardPayload
+      if (title) title.textContent = `Dashboard: ${data.slug}`
+      if (generated) {
+        generated.textContent = `Bijgewerkt op ${fmtDateTime(data.generated_at)}`
+      }
+      renderKpis(data)
+      renderCalls(data.recent_calls)
+      renderBookings(data.bookings)
+      renderReviews(data.reviews)
+      root!.setAttribute('aria-busy', 'false')
+    } catch {
+      showError(
+        'Dashboard tijdelijk niet beschikbaar',
+        'We konden de gegevens nu niet ophalen. Controleer uw internetverbinding en probeer het opnieuw.',
+      )
+    }
+  }
+
+  void load()
+</script>

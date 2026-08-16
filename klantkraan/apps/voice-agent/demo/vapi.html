@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Klantkraan — Voice demo slotenmaker</title>
+<style>
+  body { margin:0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+         background:#0f1c1e; color:#e8ecec; min-height:100vh;
+         display:flex; align-items:center; justify-content:center; }
+  .card { text-align:center; max-width:26rem; padding:2rem; }
+  h1 { font-size:1.4rem; margin:0 0 .5rem; }
+  h1 span { color:#ffb84d; }
+  p { color:#9fb0b0; line-height:1.5; }
+  button#call { margin-top:1.5rem; background:#ffb84d; color:#0f1c1e; border:0;
+    padding:1rem 2rem; font-size:1.1rem; font-weight:700; border-radius:.5rem;
+    cursor:pointer; min-height:44px; }
+  button#call.live { background:#e05d5d; color:#fff; }
+  #status { margin-top:1rem; font-size:.9rem; color:#9fb0b0; min-height:1.2em; }
+  .fine { margin-top:2rem; font-size:.75rem; color:#5f7070; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Praat met de digitale receptionist <span>— slotenmaker-demo</span></h1>
+  <p>Klik op de knop en spreek gewoon Nederlands. Probeer: &ldquo;Ik sta buitengesloten&rdquo; of &ldquo;Wat kost een nieuw slot?&rdquo;</p>
+  <button id="call">Start het gesprek</button>
+  <div id="status"></div>
+  <p class="fine">Dit is een demonstratie van Klantkraan. U spreekt met een digitale assistent, geen mens.</p>
+</div>
+<script type="module">
+  import Vapi from "https://esm.sh/@vapi-ai/web";
+  const vapi = new Vapi("3923c4df-8cda-4015-b51c-4bf8f9fc551e");
+  const ASSISTANT = "e7bc4f02-0d41-4f1a-b9e8-71d8309cdc24";
+  const btn = document.getElementById("call");
+  const status = document.getElementById("status");
+  let live = false;
+  btn.onclick = () => {
+    if (live) { vapi.stop(); return; }
+    status.textContent = "Verbinden…";
+    vapi.start(ASSISTANT);
+  };
+  vapi.on("call-start", () => { live = true; btn.textContent = "Ophangen"; btn.classList.add("live"); status.textContent = "Verbonden — zeg maar iets."; });
+  vapi.on("call-end",   () => { live = false; btn.textContent = "Start het gesprek"; btn.classList.remove("live"); status.textContent = "Gesprek beëindigd."; });
+  vapi.on("error", (e) => { status.textContent = "Fout: " + (e?.message || JSON.stringify(e)); console.log("vapi error", e); });
+</script>
+</body>
+</html>

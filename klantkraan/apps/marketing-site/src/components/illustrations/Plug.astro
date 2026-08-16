@@ -1,0 +1,50 @@
+---
+/*
+ * Single-line illustration — Type-F (Schuko / Europlug) wall plug
+ * with cable, approaching a socket. Used on /elektricien hero.
+ */
+interface Props {
+  class?: string
+  'aria-label'?: string
+}
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Stekker en stopcontact' } =
+  Astro.props
+---
+
+<svg
+  viewBox="0 0 240 240"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={ariaLabel}
+  class={className}
+>
+  <!-- Wall plate (Schuko socket on the right) -->
+  <circle cx="180" cy="120" r="50"></circle>
+  <!-- Inner socket recess -->
+  <circle cx="180" cy="120" r="38"></circle>
+  <!-- Two pin holes -->
+  <circle cx="170" cy="120" r="3" fill="currentColor" stroke="none"></circle>
+  <circle cx="190" cy="120" r="3" fill="currentColor" stroke="none"></circle>
+  <!-- Earth-clip notches (top + bottom of outer ring) -->
+  <line x1="180" y1="82" x2="180" y2="92"></line>
+  <line x1="180" y1="148" x2="180" y2="158"></line>
+
+  <!-- Plug body (rounded square, left side) -->
+  <rect x="55" y="100" width="55" height="40" rx="8"></rect>
+  <!-- Two prongs sticking right toward the socket -->
+  <line x1="110" y1="113" x2="135" y2="113"></line>
+  <line x1="110" y1="127" x2="135" y2="127"></line>
+
+  <!-- Cable curving down + back -->
+  <path d="M55 120 Q30 125 30 150 Q30 180 55 195 L85 200"></path>
+  <!-- Strain relief notches near cable entry -->
+  <line x1="55" y1="110" x2="48" y2="108"></line>
+  <line x1="55" y1="130" x2="48" y2="132"></line>
+
+  <!-- Tiny spark icon between prongs and socket -->
+  <path d="M122 113 L118 118 L122 118 L120 124"></path>
+</svg>

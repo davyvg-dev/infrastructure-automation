@@ -1,0 +1,52 @@
+---
+/*
+ * Single-line illustration — wall-mounted radiator (panelradiator)
+ * with a thermostatic knob. Used on /installateur hero.
+ */
+interface Props {
+  class?: string
+  'aria-label'?: string
+}
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Radiator' } = Astro.props
+---
+
+<svg
+  viewBox="0 0 240 240"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={ariaLabel}
+  class={className}
+>
+  <!-- Outer body (rounded rectangle) -->
+  <rect x="40" y="55" width="160" height="115" rx="6"></rect>
+  <!-- Vertical fins -->
+  <line x1="64" y1="62" x2="64" y2="163"></line>
+  <line x1="82" y1="62" x2="82" y2="163"></line>
+  <line x1="100" y1="62" x2="100" y2="163"></line>
+  <line x1="118" y1="62" x2="118" y2="163"></line>
+  <line x1="136" y1="62" x2="136" y2="163"></line>
+  <line x1="154" y1="62" x2="154" y2="163"></line>
+  <line x1="172" y1="62" x2="172" y2="163"></line>
+  <!-- Top header pipe (slim bar) -->
+  <line x1="40" y1="68" x2="200" y2="68"></line>
+  <!-- Bottom header pipe -->
+  <line x1="40" y1="157" x2="200" y2="157"></line>
+  <!-- Inlet pipe (right side, going up + thermostat) -->
+  <path d="M200 110 L218 110 L218 80"></path>
+  <!-- Thermostat knob -->
+  <circle cx="218" cy="68" r="10"></circle>
+  <line x1="218" y1="60" x2="218" y2="65"></line>
+  <!-- Outlet pipe (left side, going down to floor) -->
+  <path d="M40 145 L25 145 L25 200 L60 200"></path>
+  <!-- Floor line (wall mount hint) -->
+  <line x1="20" y1="210" x2="220" y2="210"></line>
+  <!-- Mounting bracket dots -->
+  <circle cx="60" cy="50" r="2.5" fill="currentColor" stroke="none"></circle>
+  <circle cx="180" cy="50" r="2.5" fill="currentColor" stroke="none"></circle>
+  <line x1="60" y1="50" x2="60" y2="55"></line>
+  <line x1="180" y1="50" x2="180" y2="55"></line>
+</svg>

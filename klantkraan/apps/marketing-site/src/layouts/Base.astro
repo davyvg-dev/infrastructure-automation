@@ -1,0 +1,177 @@
+---
+import '../styles/global.css'
+import { ClientRouter } from 'astro:transitions'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import StickyMobileCta from '../components/StickyMobileCta.astro'
+import { company } from '../data/company'
+import { contact } from '../data/contact'
+import { pairForPath } from '../data/i18n'
+
+interface Props {
+  title: string
+  description: string
+  /** Page language — drives <html lang>, og:locale, the skip-link, and the shared chrome. */
+  lang?: 'nl' | 'en' | 'es'
+  canonical?: string
+  /**
+   * When true (default): wrap <slot /> in a centered max-w-5xl main.
+   * When false: emit a bare <main id="main"> so individual sections can
+   * own their own bg + width (used by pages with full-bleed alt-bg sections).
+   */
+  centered?: boolean
+  /** When true: emit a robots noindex meta (private pages like /r/ dashboards). */
+  noindex?: boolean
+  /**
+   * When true (default): render the sticky mobile CTA bar + reserve body
+   * bottom-padding for it. Set false on pages that own the bottom of the
+   * viewport (e.g. /demo, where the fixed bar overlaps the live chat).
+   */
+  stickyCta?: boolean
+}
+
+const {
+  title,
+  description,
+  lang = 'nl',
+  canonical,
+  centered = true,
+  noindex = false,
+  stickyCta = true,
+} = Astro.props
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
+const ogImage = new URL('/og-default.png', Astro.site).toString()
+const ogLocale = lang === 'en' ? 'en_GB' : lang === 'es' ? 'es_ES' : 'nl_NL'
+const skipLabel =
+  lang === 'en'
+    ? 'Skip to main content'
+    : lang === 'es'
+      ? 'Ir al contenido principal'
+      : 'Ga naar hoofdinhoud'
+
+// hreflang: pages that exist in more than one language advertise each other (and
+// an x-default pointing at the Dutch original). Pairs come from src/data/i18n.ts,
+// the same map the header's language switcher uses, so the two can't drift. A
+// locale link is only emitted when that locale actually has a twin for the page.
+const localePair = pairForPath(Astro.url.pathname)
+const nlAltUrl = localePair ? new URL(localePair.nl, Astro.site).toString() : null
+const enAltUrl = localePair?.en ? new URL(localePair.en, Astro.site).toString() : null
+const esAltUrl = localePair?.es ? new URL(localePair.es, Astro.site).toString() : null
+
+// Site-wide structured data: who runs this site (Organization) + what it is
+// (WebSite). Company registration details come from src/data/company.ts.
+const siteUrl = new URL('/', Astro.site).toString()
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}#organization`,
+      name: company.tradeName,
+      url: siteUrl,
+      logo: new URL('/favicon.svg', Astro.site).toString(),
+      legalName: company.legalName,
+      identifier: {
+        '@type': 'PropertyValue',
+        propertyID: 'KVK',
+        value: company.kvk,
+      },
+      email: contact.email,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}#website`,
+      name: company.tradeName,
+      url: siteUrl,
+      publisher: { '@id': `${siteUrl}#organization` },
+    },
+  ],
+}
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      /* Preload the two first-paint fonts (body + hero headline, latin subset) to
+        cut the font swap flash on the LCP text. crossorigin is required for the
+        preload to match the @font-face fetch (fonts load in CORS mode). */
+    }
+    <link
+      rel="preload"
+      href="/fonts/hanken-400-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/bricolage-800-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="google-site-verification" content="hSoNEwz-lNJiLCr4fTF43SHaNp0BgJvocv3BFgUhbvI" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonicalUrl} />
+    {
+      localePair && (
+        <>
+          <link rel="alternate" hreflang="nl" href={nlAltUrl} />
+          {enAltUrl && <link rel="alternate" hreflang="en" href={enAltUrl} />}
+          {esAltUrl && <link rel="alternate" hreflang="es" href={esAltUrl} />}
+          <link rel="alternate" hreflang="x-default" href={nlAltUrl} />
+        </>
+      )
+    }
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:site_name" content="Klantkraan" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#0f1c1e" />
+    {
+      /* Structured data describes a page to search engines, so emitting it on a page we
+        told them not to index is a contradiction they flag rather than resolve. */
+    }
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />}
+    <ClientRouter />
+  </head>
+  <body class={stickyCta ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-sodium) focus:px-4 focus:py-2 focus:text-(--color-night) focus:no-underline"
+    >
+      {skipLabel}
+    </a>
+    <Header lang={lang} />
+    {
+      centered ? (
+        <main id="main" class="mx-auto max-w-5xl px-6 py-10 md:py-16">
+          <slot />
+        </main>
+      ) : (
+        <main id="main">
+          <slot />
+        </main>
+      )
+    }
+    <Footer lang={lang} />
+    {stickyCta && <StickyMobileCta lang={lang} />}
+  </body>
+</html>

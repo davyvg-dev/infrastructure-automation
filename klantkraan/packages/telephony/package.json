@@ -1,0 +1,22 @@
+{
+  "_ctx7": "context7: twilio /websites/twilio (2026-05-20). CM.com NOT indexed in ctx7 as of 2026-05-20 — adapter built from existing apps/api signing.ts + docs/08-tech/stack-decisions.md ground truth.",
+  "name": "@kk/telephony",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250513.0",
+    "typescript": "^5.7.2"
+  }
+}

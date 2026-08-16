@@ -1,0 +1,11 @@
+# Needs the modern API surface (adaptive thinking + output_config) used in generate.py.
+anthropic>=0.116,<1
+python-telegram-bot[job-queue]>=21.6
+tweepy>=4.14
+PyYAML>=6.0
+python-dotenv>=1.0
+# Image cards (src/media.py) — pure-Pillow rendering, no system tools needed.
+Pillow>=10.4
+# RS256 signing for the Search Console service-account JWT (src/seo.py). This one
+# dependency replaces google-auth + google-api-python-client and their tree.
+cryptography>=43.0

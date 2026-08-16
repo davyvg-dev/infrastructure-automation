@@ -1,0 +1,658 @@
+"""FastAPI server: serves the web chat widget and hosts the WhatsApp (Twilio) webhook.
+
+All channels share the conversation store in `sessions.py`, so the web widget, Telegram
+bot, and WhatsApp all talk to the same receptionist.
+"""
+
+from __future__ import annotations
+
+import base64
+import hashlib
+import hmac
+import html
+import json
+import logging
+import os
+import re
+import threading
+import time
+import uuid
+from collections import deque
+from contextlib import asynccontextmanager
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Literal
+from urllib.parse import urlsplit
+
+from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
+from starlette.concurrency import run_in_threadpool
+
+from . import billing, cursus, notify, sessions, suppression, takeover
+from .channels import voice_missed, whatsapp
+from .settings import MissingSetting, business, clear_slug, ensure_dirs, resolve_slug, use_slug
+
+log = logging.getLogger(__name__)
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    # Owner-command poller for WhatsApp takeover; a no-op unless Telegram env is configured.
+    takeover.start()
+    yield
+
+
+app = FastAPI(title="AI Receptionist demo", lifespan=_lifespan)
+_WEB = Path(__file__).resolve().parent.parent / "web"
+
+# The marketing site (klantkraan.nl) posts signup leads here cross-origin; the chat widget
+# never needs CORS (it runs same-origin inside an iframe), so this allowlist exists only
+# for /api/lead. Pages deploy previews match via the regex so a deploy can be verified
+# before DNS points at it.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.getenv(
+        "CORS_ALLOW_ORIGINS", "https://klantkraan.nl,https://www.klantkraan.nl"
+    ).split(","),
+    allow_origin_regex=r"https://[a-z0-9-]+\.klantkraan-marketing\.pages\.dev",
+    allow_methods=["GET", "POST"],
+    allow_headers=["content-type"],
+)
+
+# Per-IP sliding-window rate limit on /chat: every request is a paid Claude call, so an
+# open endpoint is a token-cost hole. Behind Caddy/nginx the client IP comes from
+# X-Forwarded-For; bare-exposed, request.client is used (spoofable — deploy behind a proxy).
+_RATE_LIMIT_PER_MINUTE = int(os.getenv("CHAT_RATE_LIMIT_PER_MINUTE", "20"))
+_rate_lock = threading.Lock()
+_hits: dict[str, deque[float]] = {}
+
+
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+def _activate(request: Request):
+    """Bind the request to a client config (by Host subdomain, or an explicit override) for
+    the rest of this call. Returns a token to pass to clear_slug() in a finally block."""
+    override = request.query_params.get("client") or request.headers.get("x-client-slug")
+    return use_slug(resolve_slug(request.headers.get("host"), override))
+
+
+def _rate_ok(ip: str) -> bool:
+    now = time.monotonic()
+    with _rate_lock:
+        if len(_hits) > 10_000:  # crude memory bound under address-spraying
+            _hits.clear()
+        window = _hits.setdefault(ip, deque())
+        while window and now - window[0] > 60:
+            window.popleft()
+        if len(window) >= _RATE_LIMIT_PER_MINUTE:
+            return False
+        window.append(now)
+        return True
+
+
+class ChatIn(BaseModel):
+    session_id: str | None = None
+    message: str = Field(max_length=2000)
+
+
+class ChatOut(BaseModel):
+    session_id: str
+    reply: str
+
+
+@app.get("/")
+def index() -> FileResponse:
+    return FileResponse(_WEB / "index.html")
+
+
+@app.get("/widget.js")
+def widget_js() -> FileResponse:
+    # The one-line loader a client pastes on their own site. It injects a floating bubble
+    # and an iframe back to this origin, so the chat stays same-origin (no CORS, no key
+    # leak). index.html is frameable by default (we never send X-Frame-Options); if a proxy
+    # sits in front, don't let it add one. Short cache so updates still propagate.
+    return FileResponse(
+        _WEB / "widget.js",
+        media_type="text/javascript",
+        headers={"Cache-Control": "public, max-age=300"},
+    )
+
+
+@app.get("/health")
+def health(request: Request) -> dict[str, str]:
+    # Liveness probe for Caddy/Uptime Kuma; also confirms the (routed) config loads.
+    token = _activate(request)
+    try:
+        return {"status": "ok", "business": business()["business"]["name"]}
+    finally:
+        clear_slug(token)
+
+
+@app.get("/config")
+def config(request: Request) -> dict[str, str]:
+    token = _activate(request)
+    try:
+        cfg = business()
+        return {
+            "name": cfg["business"]["name"],
+            "greeting": sessions.greeting(),
+            # Drives the widget's UI chrome only; defaults to Dutch (the target market).
+            "locale": cfg.get("locale", "nl"),
+        }
+    finally:
+        clear_slug(token)
+
+
+@app.post("/chat", response_model=ChatOut)
+def chat(body: ChatIn, request: Request) -> ChatOut:
+    # Sync def → FastAPI runs it in a threadpool, so the blocking Claude call is fine.
+    api_key = os.getenv("CHAT_API_KEY")
+    if api_key and request.headers.get("x-api-key") != api_key:
+        raise HTTPException(status_code=401, detail="Invalid API key.")
+    if not _rate_ok(_client_ip(request)):
+        raise HTTPException(status_code=429, detail="Too many messages — try again in a minute.")
+    session_id = body.session_id or uuid.uuid4().hex
+    token = _activate(request)
+    try:
+        reply = sessions.respond("web", session_id, body.message)
+    except Exception as exc:
+        log.exception("chat turn failed (session %s)", session_id)
+        notify.owner_exception(exc, context="chat")
+        raise HTTPException(
+            status_code=503, detail="The receptionist is temporarily unavailable."
+        ) from exc
+    finally:
+        clear_slug(token)
+    return ChatOut(session_id=session_id, reply=reply)
+
+
+# Format gates, mirrored in the /aanmelden page script. Deliberately loose: enough to
+# catch typos ("jan@devries", "06-12"), not to referee every national numbering plan.
+_EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
+_PHONE_RE = re.compile(r"^\+?[0-9]{8,15}$")
+
+# Which version of /legal/voorwaarden + /legal/dpa a buyer accepted: the later `lastUpdated`
+# of the two pages. Bump it in the same commit that changes either document, or the
+# acceptance record starts pointing at text nobody agreed to.
+TERMS_VERSION = "2026-07-29"
+
+
+class LeadIn(BaseModel):
+    naam: str = Field(min_length=1, max_length=200)
+    bedrijf: str = Field(default="", max_length=200)
+    telefoon: str = Field(default="", max_length=50)
+    email: str = Field(default="", max_length=200)
+    vak: str = Field(default="", max_length=100)
+    plan: str = Field(default="", max_length=50)
+    bericht: str = Field(default="", max_length=2000)
+    # The client's own website: what the scrape-first pre-build runs on (onboarding playbook
+    # §2). Optional, because a trade without a site is still a customer, and a required field
+    # here costs more signups than it saves build minutes. NOT called `website` — that name
+    # belongs to the honeypot below and always has.
+    site: str = Field(default="", max_length=300)
+    # Honeypot: a hidden field humans never see. Bots that fill it get a silent 200.
+    website: str = Field(default="", max_length=500)
+
+    @field_validator("site")
+    @classmethod
+    def _site_shape(cls, v: str) -> str:
+        """Normalise to something scrapeable, and never reject. A typo'd website must not be
+        able to fail a €299 checkout, so anything that doesn't look like a host is kept
+        verbatim for the founder to read rather than thrown away or 422'd."""
+        raw = v.strip()
+        if not raw or " " in raw or "." not in raw:
+            return raw
+        if not raw.lower().startswith(("http://", "https://")):
+            raw = "https://" + raw
+        return raw[:300]
+
+    @field_validator("email")
+    @classmethod
+    def _email_shape(cls, v: str) -> str:
+        if v.strip() and not _EMAIL_RE.match(v.strip()):
+            raise ValueError("ongeldig e-mailadres")
+        return v
+
+    @field_validator("telefoon")
+    @classmethod
+    def _phone_shape(cls, v: str) -> str:
+        digits = re.sub(r"[\s().\-]", "", v)
+        if digits and not _PHONE_RE.match(digits):
+            raise ValueError("ongeldig telefoonnummer")
+        return v
+
+    @model_validator(mode="after")
+    def _reachable(self) -> LeadIn:
+        if not (self.telefoon.strip() or self.email.strip()):
+            raise ValueError("telefoon of email is verplicht")
+        return self
+
+
+# The signup form posts here two ways: fetch() with JSON (the enhanced path) and, whenever
+# that script cannot run (blocked, stale HTML referencing a purged bundle, JS off), the
+# browser submits the form natively as form-encoded. The native caller is *navigating*, so
+# it must get 303 redirects — into Mollie on success, back to the form on bad input.
+_SITE_ORIGIN_RE = re.compile(
+    r"^https://(www\.)?klantkraan\.nl$|^https://[a-z0-9-]+\.klantkraan-marketing\.pages\.dev$"
+)
+
+
+async def _lead_payload(request: Request) -> tuple[dict[str, object], bool]:
+    """Return (fields, native): JSON from the site's fetch path, form-encoded otherwise."""
+    if (request.headers.get("content-type") or "").lower().startswith("application/json"):
+        raw = await request.json()
+        return (raw if isinstance(raw, dict) else {}), False
+    form = await request.form()
+    return {k: str(v) for k, v in form.items()}, True
+
+
+def _form_urls(request: Request) -> tuple[str, str]:
+    """(thanks_url, retry_url) for a native form poster, locale-aware via the Referer.
+    Only allowlisted site origins are echoed back — anything else gets the defaults."""
+    ref = urlsplit(request.headers.get("referer") or "")
+    origin = f"{ref.scheme}://{ref.netloc}"
+    path = ref.path or "/aanmelden/"
+    if not _SITE_ORIGIN_RE.match(origin):
+        origin, path = "https://klantkraan.nl", "/aanmelden/"
+    prefix = next((p for p in ("/en", "/es") if path.startswith(p + "/")), "")
+    return f"{origin}{prefix}/bedankt/", f"{origin}{path}?fout=1"
+
+
+async def _signup(request: Request, buy: bool) -> Response:
+    """Shared body of /api/lead and /api/checkout. The lead ALWAYS persists before any
+    Mollie call, and Mollie trouble degrades to no checkout — never to a lost lead."""
+    data, native = await _lead_payload(request)
+    thanks, retry = _form_urls(request)
+
+    def reject(status: int, detail: str) -> Response:
+        if native:
+            return RedirectResponse(retry, status_code=303)
+        raise HTTPException(status_code=status, detail=detail)
+
+    if not _rate_ok(f"lead:{_client_ip(request)}"):
+        return reject(429, "Too many requests — try again in a minute.")
+    if buy and native and (data.get("plan") or "chat") not in ("chat", "compleet"):
+        buy = False  # the no-JS form posts every plan to /api/checkout; interest-only = lead
+    try:
+        body = CheckoutIn.model_validate(data) if buy else LeadIn.model_validate(data)
+    except ValidationError:
+        return reject(422, "Invalid input.")
+
+    ok_body: dict[str, object] = {"ok": True, "checkout_url": None} if buy else {"ok": True}
+    if body.website.strip():  # honeypot tripped: pretend success, store nothing
+        return RedirectResponse(thanks, status_code=303) if native else JSONResponse(ok_body)
+
+    lead = body.model_dump(exclude={"website"})
+    if buy:
+        lead["checkout"] = True  # persisted so paid/abandoned can be cross-checked
+        # What was accepted, and when. Without this the checkbox proves nothing later.
+        lead["akkoord_versie"] = TERMS_VERSION
+        lead["akkoord_op"] = datetime.now(UTC).isoformat(timespec="seconds")
+    result = await run_in_threadpool(notify.site_lead, lead)
+    if not result["ok"]:
+        # Neither disk nor Telegram took the lead — the caller must get its fallback.
+        return reject(503, "Could not save your request.")
+    if not buy:
+        return RedirectResponse(thanks, status_code=303) if native else JSONResponse(ok_body)
+
+    def create_checkout() -> str | None:
+        try:
+            customer_id = billing.create_customer(
+                body.bedrijf.strip() or body.naam.strip(), body.email.strip()
+            )
+            return billing.create_first_payment(
+                customer_id,
+                billing.first_month_net(body.plan),
+                f"Klantkraan {billing.plan_label(body.plan)} eerste maand",
+                body.plan,
+            )
+        except Exception as exc:
+            # The founder already got the lead ping above; this extra one says "send the
+            # payment link by hand" (python -m app.billing checkout).
+            log.exception("checkout creation failed for lead %s", body.naam)
+            notify.owner_exception(exc, context="checkout")
+            return None
+
+    checkout_url = await run_in_threadpool(create_checkout)
+    if native:
+        # No checkout URL means the lead is safe but Mollie is not reachable — the thanks
+        # page's "wij nemen contact op" copy covers exactly that.
+        return RedirectResponse(checkout_url or thanks, status_code=303)
+    return JSONResponse({"ok": True, "checkout_url": checkout_url})
+
+
+@app.post("/api/lead")
+async def lead(request: Request) -> Response:
+    return await _signup(request, buy=False)
+
+
+class CheckoutIn(LeadIn):
+    """The buy path. Mollie needs a billing email. Both plans sell self-serve since voice
+    went live (2026-08-04): chat, and compleet with the AI-telefonist."""
+
+    email: str = Field(min_length=3, max_length=200)
+    plan: Literal["chat", "compleet"] = "chat"
+    # Acceptance of the voorwaarden + DPA. Required here and NOT on LeadIn on purpose: an
+    # interest lead agrees to nothing, but nobody starts a SEPA mandate without a contract.
+    akkoord: str = Field(default="", max_length=20)
+
+    @model_validator(mode="after")
+    def _billing_email(self) -> CheckoutIn:
+        if not self.email.strip():
+            raise ValueError("email is verplicht voor betaling")
+        return self
+
+    @model_validator(mode="after")
+    def _accepted_terms(self) -> CheckoutIn:
+        # AVG art. 28 wants the processor agreement in writing BEFORE we process the client's
+        # end-customer data, and unaccepted voorwaarden make the notice period, the liability
+        # cap and the AI-Act clauses hard to lean on. Fail closed: no acceptance, no payment.
+        if self.akkoord.strip().lower() not in ("ja", "on", "true", "1"):
+            raise ValueError("akkoord met de voorwaarden en verwerkersovereenkomst is verplicht")
+        return self
+
+
+@app.post("/api/checkout")
+async def checkout(request: Request) -> Response:
+    """One POST from /aanmelden: save the lead, then send the buyer into Mollie checkout.
+    JSON callers get {ok, checkout_url}; native form posts get a 303 straight to Mollie."""
+    return await _signup(request, buy=True)
+
+
+# --- e-mailcursus: opt-in + afmelden ------------------------------------------------------
+# The rekentool offers the free 4-part course (app/cursus.py owns copy, ledger, schedule).
+# Same two-path contract as the signup form: fetch() with JSON, or a native form post that
+# gets 303'd back to the page it came from with ?cursus=ok|fout for the page to render.
+
+
+class CursusIn(BaseModel):
+    email: str = Field(min_length=3, max_length=200)
+    naam: str = Field(default="", max_length=200)
+    # Honeypot, same name and contract as LeadIn's: bots that fill it get a silent success.
+    website: str = Field(default="", max_length=500)
+
+    @field_validator("email")
+    @classmethod
+    def _email_shape(cls, v: str) -> str:
+        if not _EMAIL_RE.match(v.strip()):
+            raise ValueError("ongeldig e-mailadres")
+        return v.strip()
+
+
+def _cursus_urls(request: Request) -> tuple[str, str]:
+    """(ok_url, fout_url) for a native form poster: back to the page the form is on, with a
+    query flag. Only allowlisted site origins are echoed back."""
+    ref = urlsplit(request.headers.get("referer") or "")
+    origin = f"{ref.scheme}://{ref.netloc}"
+    path = ref.path or "/rekentool/"
+    if not _SITE_ORIGIN_RE.match(origin):
+        origin, path = "https://klantkraan.nl", "/rekentool/"
+    return f"{origin}{path}?cursus=ok", f"{origin}{path}?cursus=fout"
+
+
+@app.post("/api/cursus")
+async def cursus_optin(request: Request) -> Response:
+    """Subscribe an address and fire lesson 1 immediately. A failed send never fails the
+    opt-in: the subscriber is in the ledger and the daily timer is the catch-all."""
+    data, native = await _lead_payload(request)
+    ok_url, fout_url = _cursus_urls(request)
+
+    def reject(status: int, detail: str) -> Response:
+        if native:
+            return RedirectResponse(fout_url, status_code=303)
+        raise HTTPException(status_code=status, detail=detail)
+
+    if not _rate_ok(f"cursus:{_client_ip(request)}"):
+        return reject(429, "Too many requests — try again in a minute.")
+    try:
+        body = CursusIn.model_validate(data)
+    except ValidationError:
+        return reject(422, "Invalid input.")
+    if body.website.strip():  # honeypot tripped: pretend success, store nothing
+        return RedirectResponse(ok_url, status_code=303) if native else JSONResponse({"ok": True})
+
+    def subscribe() -> dict:
+        sub = cursus.add(body.email, name=body.naam.strip() or None, source="site")
+        who = f"{body.email} ({body.naam.strip()})" if body.naam.strip() else body.email
+        notify.owner(f"Nieuwe cursus-inschrijving: {who}")
+        return cursus.send_due(only=sub["email"])
+
+    try:
+        report = await run_in_threadpool(subscribe)
+    except (Exception, SystemExit) as exc:  # SystemExit = corrupt ledger refusing writes
+        log.exception("cursus opt-in failed for %s", body.email)
+        notify.owner_exception(exc, context="cursus-optin")
+        # The founder must still get the address: an opt-in that hit a broken store is a
+        # real lead that would otherwise vanish with the 503.
+        await run_in_threadpool(notify.owner, f"Cursus-inschrijving NIET opgeslagen: {body.email}")
+        return reject(503, "Could not save your signup.")
+    if report["failed"]:
+        log.warning("cursus lesson 1 not sent to %s; the daily timer retries", body.email)
+    return RedirectResponse(ok_url, status_code=303) if native else JSONResponse({"ok": True})
+
+
+def _afmeld_page(body_html: str, status: int = 200) -> HTMLResponse:
+    return HTMLResponse(
+        '<!doctype html><html lang="nl"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<meta name="robots" content="noindex"><title>E-mailcursus afmelden</title>'
+        "<style>body{font-family:system-ui,sans-serif;max-width:34rem;margin:4rem auto;"
+        "padding:0 1.5rem;color:#1f2937;line-height:1.6}"
+        "button{background:#b45309;color:#fff;border:0;border-radius:6px;"
+        "padding:.7rem 1.4rem;font-size:1rem;cursor:pointer}</style></head>"
+        f"<body>{body_html}</body></html>",
+        status_code=status,
+    )
+
+
+_AFMELD_INVALID = (
+    "<h1>Link niet geldig</h1>"
+    "<p>Deze afmeldlink klopt niet. Gebruik de link onderaan een van de lessen, "
+    "of stuur een reactie op de les en dan regelen wij het.</p>"
+)
+
+
+@app.get("/cursus/uitschrijven")
+async def cursus_uitschrijven(request: Request) -> HTMLResponse:
+    """Confirmation page, not the act itself: mail scanners prefetch GET links, and a
+    prefetch must never unsubscribe anyone. The button below does the POST."""
+    email = request.query_params.get("e", "")
+    tok = request.query_params.get("t", "")
+    if not cursus.verify_token(email, tok):
+        return _afmeld_page(_AFMELD_INVALID, status=404)
+    safe = html.escape(email, quote=True)
+    return _afmeld_page(
+        "<h1>Afmelden</h1>"
+        f"<p>Wilt u zich afmelden voor de e-mailcursus over gemiste omzet? "
+        f"U ontvangt dan geen lessen meer op {safe}.</p>"
+        # No action attribute: the form posts back to this URL, query string included.
+        '<form method="post"><button>Ja, meld mij af</button></form>'
+    )
+
+
+@app.post("/cursus/uitschrijven")
+async def cursus_uitschrijven_post(request: Request) -> HTMLResponse:
+    """The confirm button lands here, and so does an RFC 8058 one-click POST from a mail
+    client; both carry e/t in the query string of the afmeldlink."""
+    email = request.query_params.get("e", "")
+    tok = request.query_params.get("t", "")
+    if not cursus.verify_token(email, tok):
+        return _afmeld_page(_AFMELD_INVALID, status=404)
+    try:
+        await run_in_threadpool(cursus.stop, email)
+    except (Exception, SystemExit) as exc:
+        # An afmelding that silently fails is a legal problem, not just a bug.
+        log.exception("cursus afmelding failed for %s", email)
+        notify.owner_exception(exc, context="cursus-afmelden")
+        raise HTTPException(status_code=503, detail="Tijdelijk niet beschikbaar.") from None
+    return _afmeld_page(
+        "<h1>U bent afgemeld</h1>"
+        "<p>U ontvangt geen lessen meer van de e-mailcursus. Weer aanmelden kan altijd "
+        "via de rekentool op klantkraan.nl.</p>"
+    )
+
+
+# Mollie payment ids only — anything else is not a webhook we ever asked for.
+_MOLLIE_ID_RE = re.compile(r"^tr_[A-Za-z0-9]+$")
+
+
+@app.post("/api/mollie/webhook")
+async def mollie_webhook(request: Request) -> dict[str, bool]:
+    """Mollie pings this with a form-encoded `id=tr_...`; billing fetches the payment back
+    from the API for truth. Mollie retries on any non-200, so: handled or hopeless -> 200
+    fast; Mollie itself unreachable (or the key not configured yet) -> 503 to keep the
+    retry train alive until we can fetch truth."""
+    if not _rate_ok(f"mollie:{_client_ip(request)}"):
+        raise HTTPException(status_code=429, detail="Too many requests — try again in a minute.")
+    form = await request.form()
+    payment_id = str(form.get("id") or "")
+    if not _MOLLIE_ID_RE.match(payment_id):
+        raise HTTPException(status_code=400, detail="Invalid payment id.")
+    try:
+        result = await run_in_threadpool(billing.handle_webhook, payment_id)
+        log.info("mollie webhook %s -> %s", payment_id, result.get("action"))
+    except (billing.MollieUnreachable, MissingSetting) as exc:
+        log.warning("mollie webhook %s deferred: %s", payment_id, exc)
+        raise HTTPException(status_code=503, detail="Temporarily unavailable.") from exc
+    except Exception as exc:
+        # A broken payment stays broken — 200 so Mollie stops retrying, but the founder hears
+        # about it (the event may involve real money).
+        log.exception("mollie webhook %s failed", payment_id)
+        notify.owner_exception(exc, context="mollie-webhook")
+    return {"ok": True}
+
+
+# --- Resend delivery events (svix-signed) -------------------------------------------------
+
+_SVIX_TOLERANCE_S = 300
+
+
+def _verify_svix(
+    secret: str,
+    msg_id: str,
+    timestamp: str,
+    signatures: str,
+    body: bytes,
+    now: float | None = None,
+) -> bool:
+    """Verify a svix-signed webhook (docs.svix.com, "verifying payloads manually"):
+    HMAC-SHA256 over "<id>.<timestamp>.<body>", keyed with the base64 part of the
+    whsec_ secret; the signature header is a space-delimited list of "v1,<base64>"
+    candidates. Constant-time compare; timestamps outside the tolerance are replays."""
+    try:
+        ts = int(timestamp)
+    except (TypeError, ValueError):
+        return False
+    if abs((now if now is not None else time.time()) - ts) > _SVIX_TOLERANCE_S:
+        return False
+    try:
+        key = base64.b64decode(secret.split("_", 1)[-1])
+    except (ValueError, TypeError):
+        return False
+    signed = f"{msg_id}.{timestamp}.".encode() + body
+    expected = base64.b64encode(hmac.new(key, signed, hashlib.sha256).digest()).decode()
+    for candidate in signatures.split():
+        version, _, sig = candidate.partition(",")
+        if version == "v1" and hmac.compare_digest(expected, sig):
+            return True
+    return False
+
+
+@app.post("/api/resend/webhook")
+async def resend_webhook(request: Request) -> dict[str, bool]:
+    """Resend delivery events. Two types matter: a Permanent bounce halts the cursus for
+    that address (delivery-side halt, NOT suppression — a dead mailbox says nothing about
+    consent), and a spam complaint is a consent signal, so halt AND suppress. Everything
+    else is a 200 no-op. Unconfigured secret -> 503, so svix keeps retrying until the
+    founder sets RESEND_WEBHOOK_SECRET and no event is lost. No rate limit on purpose: a
+    broadcast can bounce in bursts and the signature check is the gate."""
+    secret = os.environ.get("RESEND_WEBHOOK_SECRET", "")
+    if not secret:
+        raise HTTPException(status_code=503, detail="Webhook not configured.")
+    body = await request.body()
+    if not _verify_svix(
+        secret,
+        request.headers.get("svix-id", ""),
+        request.headers.get("svix-timestamp", ""),
+        request.headers.get("svix-signature", ""),
+        body,
+    ):
+        raise HTTPException(status_code=401, detail="Bad signature.")
+    try:
+        event = json.loads(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid JSON.") from exc
+    etype = event.get("type")
+    data = event.get("data") or {}
+    recipients = [str(a) for a in (data.get("to") or [])]
+
+    def handle() -> None:
+        if etype == "email.bounced":
+            if (data.get("bounce") or {}).get("type") != "Permanent":
+                return  # a temporary failure is not a dead mailbox
+            for addr in recipients:
+                if cursus.stop(addr, bounced=True):
+                    log.info("resend webhook: bounce halted cursus for %s", addr)
+        elif etype == "email.complained":
+            for addr in recipients:
+                cursus.stop(addr)  # suppresses too, when the address is a subscriber
+                suppression.suppress(cursus.normalize(addr))
+                log.info("resend webhook: complaint suppressed %s", addr)
+
+    await run_in_threadpool(handle)
+    return {"ok": True}
+
+
+@app.post("/whatsapp")
+async def whatsapp_webhook(request: Request) -> Response:
+    form = await request.form()
+    params = {k: str(v) for k, v in form.items()}
+    signature = request.headers.get("X-Twilio-Signature")
+    body, status = await run_in_threadpool(whatsapp.handle, str(request.url), signature, params)
+    return Response(content=body, media_type="application/xml", status_code=status)
+
+
+@app.post("/voice/missed")
+async def voice_missed_webhook(request: Request) -> Response:
+    form = await request.form()
+    params = {k: str(v) for k, v in form.items()}
+    signature = request.headers.get("X-Twilio-Signature")
+    body, status = await run_in_threadpool(
+        voice_missed.handle, str(request.url), signature, params
+    )
+    return Response(content=body, media_type="application/xml", status_code=status)
+
+
+@app.exception_handler(Exception)
+async def _report_unhandled(request: Request, exc: Exception) -> Response:
+    # Backstop for any route that doesn't report on its own. HTTPException keeps its default
+    # handler, so /chat's 503 (already reported above) never reaches here — no double-fire.
+    notify.owner_exception(exc, context=request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Internal server error."})
+
+
+def main() -> None:
+    import uvicorn
+
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO"),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
+    ensure_dirs()
+    # Default binds localhost; set HOST=0.0.0.0 when serving behind Caddy on the VPS.
+    uvicorn.run(
+        "app.server:app",
+        host=os.getenv("HOST", "127.0.0.1"),
+        port=int(os.getenv("PORT", "8000")),
+        reload=False,
+    )
+
+
+if __name__ == "__main__":
+    main()

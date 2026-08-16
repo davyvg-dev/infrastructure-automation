@@ -1,0 +1,28 @@
+---
+// Custom 404. Astro builds this to dist/404.html; Cloudflare Pages serves it
+// with a real HTTP 404 for any unmatched path. Without it, Pages falls back to
+// index.html with a 200 — a soft 404 that reads as duplicate content to crawlers.
+import Base from '../layouts/Base.astro'
+---
+
+<Base
+  title="Pagina niet gevonden (404) | Klantkraan"
+  description="Deze pagina bestaat niet of is verplaatst. Ga terug naar de homepage of bekijk de prijzen en demo van Klantkraan."
+  noindex={true}
+  stickyCta={false}
+>
+  <section class="py-16 md:py-24">
+    <div class="mx-auto max-w-2xl px-6 text-center">
+      <p class="font-mono text-small uppercase tracking-wide text-(--color-dim)">Fout 404</p>
+      <h1 class="mt-3 font-display text-hero text-(--color-chalk)">Deze pagina bestaat niet</h1>
+      <p class="mt-6 text-h3 text-(--color-dim)">
+        De link klopt niet meer of de pagina is verplaatst. Kies hieronder waar u naartoe wilt.
+      </p>
+      <div class="mt-8 btn-row justify-center">
+        <a href="/" class="btn btn-primary"> Naar de homepage </a>
+        <a href="/prijzen/" class="btn btn-ghost"> Prijzen </a>
+        <a href="/demo/" class="btn btn-ghost"> Demo </a>
+      </div>
+    </div>
+  </section>
+</Base>

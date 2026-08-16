@@ -1,0 +1,18 @@
+# Tool config only — this app ships as a plain module tree (see requirements.txt), not a
+# packaged distribution, so there is deliberately no [build-system] or [project] table.
+
+[tool.ruff]
+target-version = "py311"   # matches the app's Python floor (see CLAUDE.md)
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+# The formatter owns line wrapping; a handful of long comments/strings can't be wrapped and
+# are fine as-is, so E501 is not a lint error.
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+# Offline unit tests only (API calls mocked). Run: python -m pytest
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"

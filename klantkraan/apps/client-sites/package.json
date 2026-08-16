@@ -1,0 +1,33 @@
+{
+  "name": "@kk/client-sites",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "_ctx7": {
+    "astro": "5.x patterns mirrored from @kk/marketing-site (static output, no adapter)",
+    "tailwindcss": "v4 via @tailwindcss/vite, same as @kk/marketing-site"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "node scripts/verify-site.mjs",
+    "vloot": "node scripts/vloot.mjs",
+    "tell-lint": "node scripts/tell-lint.mjs",
+    "test": "node --test 'src/**/*.test.ts'",
+    "typecheck": "astro check",
+    "lint": "echo 'lint: see prettier:check at the workspace root'"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/vite": "^4.0.0",
+    "astro": "^5.1.0",
+    "tailwindcss": "^4.0.0",
+    "yaml": "^2.6.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.2"
+  }
+}

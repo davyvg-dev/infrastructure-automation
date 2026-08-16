@@ -1,0 +1,340 @@
+---
+import Icon from './Icon.astro'
+import { branches } from '../data/branches'
+import { localeUrls } from '../data/i18n'
+
+interface Props {
+  lang?: 'nl' | 'en' | 'es'
+}
+const { lang = 'nl' } = Astro.props
+
+// Gidsen + blog are Dutch-only, so the EN/ES navs drop them; everything else
+// in these navs has an /en/ and /es/ twin.
+const navByLang = {
+  nl: [
+    { href: '/prijzen/', label: 'Prijzen' },
+    { href: '/rekentool/', label: 'Rekentool' },
+    { href: '/gidsen/', label: 'Gidsen' },
+    { href: '/blog/', label: 'Blog' },
+    { href: '/demo/', label: 'Demo' },
+    { href: '/over/', label: 'Over' },
+  ],
+  en: [
+    { href: '/en/prijzen/', label: 'Pricing' },
+    { href: '/en/rekentool/', label: 'Calculator' },
+    { href: '/en/demo/', label: 'Demo' },
+    { href: '/en/over/', label: 'About' },
+  ],
+  es: [
+    { href: '/es/prijzen/', label: 'Precios' },
+    { href: '/es/rekentool/', label: 'Calculadora' },
+    { href: '/es/demo/', label: 'Demo' },
+    { href: '/es/over/', label: 'Nosotros' },
+  ],
+} as const
+const nav = navByLang[lang]
+
+// Trades dropdown, resolved per language from the shared branch list. ES trade
+// cornerstones don't exist yet, so ES reuses the English cornerstones.
+const branchLinks = branches.map((b) => ({
+  href: lang === 'nl' ? b.href : `/en/${b.slug}/`,
+  label: lang === 'es' ? b.labelPluralEs : lang === 'en' ? b.labelPluralEn : b.labelPlural,
+}))
+const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' : '/en/voor-wie/'
+const homeHref = lang === 'nl' ? '/' : lang === 'es' ? '/es/' : '/en/'
+
+// Language switcher: an inline NL | EN | ES segmented control. Targets come
+// from src/data/i18n.ts (the same map that drives hreflang); a page with no
+// twin in a locale falls back to that locale's home.
+const urls = localeUrls(Astro.url.pathname)
+const switchAria = {
+  nl: {
+    nl: 'Deze pagina in het Nederlands',
+    en: 'Deze pagina in het Engels',
+    es: 'Deze pagina in het Spaans',
+  },
+  en: {
+    nl: 'View this page in Dutch',
+    en: 'View this page in English',
+    es: 'View this page in Spanish',
+  },
+  es: {
+    nl: 'Ver esta página en neerlandés',
+    en: 'Ver esta página en inglés',
+    es: 'Ver esta página en español',
+  },
+}[lang]
+const langSwitch = (['nl', 'en', 'es'] as const).map((code) => ({
+  code,
+  label: code.toUpperCase(),
+  href: urls[code],
+  // Prefix the accessible name with the visible label ("ES") so it contains the
+  // visible text — WCAG 2.5.3 label-in-name. Without it, aria-label alone
+  // ("Deze pagina in het Spaans") mismatches the visible "ES".
+  aria: `${code.toUpperCase()}: ${switchAria[code]}`,
+  current: code === lang,
+}))
+
+const T = {
+  nl: {
+    mainNav: 'Hoofdnavigatie',
+    forWho: 'Voor wie?',
+    forWhoAria: 'Voor welke branches',
+    allBranches: 'Alle branches →',
+    openMenu: 'Menu openen',
+    mobileNav: 'Mobiele hoofdnavigatie',
+    langSwitcher: 'Taalkeuze',
+  },
+  en: {
+    mainNav: 'Main navigation',
+    forWho: "Who it's for",
+    forWhoAria: 'Which trades',
+    allBranches: 'All trades →',
+    openMenu: 'Open menu',
+    mobileNav: 'Mobile main navigation',
+    langSwitcher: 'Language',
+  },
+  es: {
+    mainNav: 'Navegación principal',
+    forWho: '¿Para quién?',
+    forWhoAria: 'Para qué sectores',
+    allBranches: 'Todos los sectores →',
+    openMenu: 'Abrir menú',
+    mobileNav: 'Navegación principal móvil',
+    langSwitcher: 'Idioma',
+  },
+} as const
+const t = T[lang]
+---
+
+<header
+  class="sticky top-0 z-30 border-b border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] backdrop-blur-md"
+>
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+    <a
+      href={homeHref}
+      class="flex items-center gap-2.5 font-display text-h3 font-extrabold text-(--color-chalk) no-underline"
+    >
+      <span class="kk-lamp" aria-hidden="true"></span>klantkraan
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:block" aria-label={t.mainNav}>
+      <ul class="flex items-center gap-4 md:gap-6 text-small">
+        <li class="relative">
+          <details class="group" data-branches-dropdown="desktop">
+            <summary
+              class="flex cursor-pointer list-none items-center gap-1 text-(--color-dim) marker:hidden hover:text-(--color-chalk)"
+              aria-label={t.forWhoAria}
+            >
+              <span>{t.forWho}</span>
+              <Icon
+                name="chevron-down"
+                class="h-4 w-4 transition-transform group-open:rotate-180"
+              />
+            </summary>
+            <ul
+              class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-2"
+            >
+              {
+                branchLinks.map((b) => (
+                  <li>
+                    <a
+                      href={b.href}
+                      class="block rounded-(--radius-button) px-3 py-2 text-(--color-chalk) no-underline hover:bg-(--color-panel-2)"
+                    >
+                      {b.label}
+                    </a>
+                  </li>
+                ))
+              }
+              <li class="mt-1 border-t border-(--color-line) pt-1">
+                <a
+                  href={hubHref}
+                  class="block rounded-(--radius-button) px-3 py-2 text-(--color-sodium) no-underline hover:bg-(--color-panel-2)"
+                >
+                  {t.allBranches}
+                </a>
+              </li>
+            </ul>
+          </details>
+        </li>
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="text-(--color-dim) no-underline transition-colors hover:text-(--color-chalk)"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <div
+            class="inline-flex items-center overflow-hidden rounded-(--radius-button) border border-(--color-line) font-mono text-micro"
+            role="group"
+            aria-label={t.langSwitcher}
+          >
+            {
+              langSwitch.map((s, i) =>
+                s.current ? (
+                  <span
+                    aria-current="true"
+                    class:list={[
+                      'px-2 py-1 bg-(--color-sodium) font-bold text-(--color-night)',
+                      i > 0 && 'border-l border-(--color-line)',
+                    ]}
+                  >
+                    {s.label}
+                  </span>
+                ) : (
+                  <a
+                    href={s.href}
+                    hreflang={s.code}
+                    lang={s.code}
+                    aria-label={s.aria}
+                    class:list={[
+                      'px-2 py-1 text-(--color-dim) no-underline hover:bg-(--color-panel) hover:text-(--color-chalk)',
+                      i > 0 && 'border-l border-(--color-line)',
+                    ]}
+                  >
+                    {s.label}
+                  </a>
+                ),
+              )
+            }
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <button
+      id="mobile-menu-toggle"
+      type="button"
+      class="flex h-11 w-11 items-center justify-center rounded-(--radius-button) text-(--color-chalk) md:hidden"
+      aria-label={t.openMenu}
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg
+        class="pointer-events-none h-6 w-6"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line data-icon-open x1="3" y1="6" x2="21" y2="6"></line>
+        <line data-icon-open x1="3" y1="12" x2="21" y2="12"></line>
+        <line data-icon-open x1="3" y1="18" x2="21" y2="18"></line>
+        <line data-icon-close class="hidden" x1="6" y1="6" x2="18" y2="18"></line>
+        <line data-icon-close class="hidden" x1="6" y1="18" x2="18" y2="6"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <nav
+    id="mobile-menu"
+    class="hidden border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] backdrop-blur-md md:hidden"
+    aria-label={t.mobileNav}
+    hidden
+  >
+    <ul class="mx-auto flex max-w-5xl flex-col">
+      <li class="border-b border-(--color-line)">
+        <details data-branches-dropdown="mobile" class="group">
+          <summary
+            class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-chalk) marker:hidden"
+          >
+            <span>{t.forWho}</span>
+            <Icon name="chevron-down" class="h-5 w-5 transition-transform group-open:rotate-180" />
+          </summary>
+          <ul class="bg-(--color-panel)">
+            {
+              branchLinks.map((b) => (
+                <li class="border-t border-(--color-line)">
+                  <a
+                    href={b.href}
+                    class="block px-10 py-3 text-body text-(--color-chalk) no-underline"
+                  >
+                    {b.label}
+                  </a>
+                </li>
+              ))
+            }
+            <li class="border-t border-(--color-line)">
+              <a
+                href={hubHref}
+                class="block px-10 py-3 text-body text-(--color-sodium) no-underline"
+              >
+                {t.allBranches}
+              </a>
+            </li>
+          </ul>
+        </details>
+      </li>
+      {
+        nav.map((item) => (
+          <li class="border-b border-(--color-line)">
+            <a href={item.href} class="block px-6 py-4 text-body text-(--color-chalk) no-underline">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="border-b border-(--color-line) px-6 py-4 last:border-b-0">
+        <div
+          class="flex overflow-hidden rounded-(--radius-button) border border-(--color-line) font-mono text-small"
+          role="group"
+          aria-label={t.langSwitcher}
+        >
+          {
+            langSwitch.map((s, i) =>
+              s.current ? (
+                <span
+                  aria-current="true"
+                  class:list={[
+                    'flex-1 py-2 text-center bg-(--color-sodium) font-bold text-(--color-night)',
+                    i > 0 && 'border-l border-(--color-line)',
+                  ]}
+                >
+                  {s.label}
+                </span>
+              ) : (
+                <a
+                  href={s.href}
+                  aria-label={s.aria}
+                  class:list={[
+                    'flex-1 py-2 text-center text-(--color-chalk) no-underline hover:bg-(--color-panel)',
+                    i > 0 && 'border-l border-(--color-line)',
+                  ]}
+                >
+                  {s.label}
+                </a>
+              ),
+            )
+          }
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  /* The "light stays on" lamp: a small sodium dot that breathes. */
+  .kk-lamp {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--color-sodium);
+    flex: none;
+    animation: kk-pulse 2.6s ease-out infinite;
+  }
+</style>
+
+<!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+<script src="/js/header-menu.js" type="module" is:inline></script>

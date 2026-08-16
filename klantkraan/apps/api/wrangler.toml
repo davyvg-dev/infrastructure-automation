@@ -1,0 +1,55 @@
+# context7: Hono v4.6.14 (/websites/hono_dev), Workers SDK 2026-05-20 (/cloudflare/workers-sdk)
+# Klantkraan edge API. Routed via Cloudflare zone klantkraan.nl.
+# Do NOT commit secrets here. Use `wrangler secret put <NAME>` per the README.
+
+name = "klantkraan-api"
+main = "src/index.ts"
+compatibility_date = "2026-05-20"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = false
+
+# Custom domain (not a zone route): wrangler auto-provisions the DNS record +
+# cert for api.klantkraan.nl. The bare route form needed a manually created DNS
+# record, which never existed — the hostname didn't resolve until 2026-08-05.
+[[routes]]
+pattern = "api.klantkraan.nl"
+custom_domain = true
+
+# -----------------------------------------------------------------------------
+# Observability — keep tail logs on. Sentry forwarding lives in src/index.ts.
+# -----------------------------------------------------------------------------
+[observability]
+enabled = true
+
+# -----------------------------------------------------------------------------
+# KV — dashboard cache for GET /api/dashboard/:slug (5-minute TTL).
+# Create with: wrangler kv namespace create KV_DASHBOARD
+# Then paste the returned id below and uncomment.
+# -----------------------------------------------------------------------------
+# [[kv_namespaces]]
+# binding = "KV_DASHBOARD"
+# id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+# -----------------------------------------------------------------------------
+# Secrets (set via `wrangler secret put <NAME>`, never put plaintext here):
+#   ATTIO_API_KEY              Attio CRM bearer token
+#   CM_API_KEY                 CM.com Voice + SMS API key
+#   SYNTHFLOW_API_KEY          Synthflow API key
+#   MOLLIE_API_KEY             Mollie payments key
+#   SIGNWELL_WEBHOOK_SECRET    HMAC secret for SignWell webhooks
+#   CALCOM_WEBHOOK_SECRET      HMAC secret for Cal.com webhooks
+#   CM_WEBHOOK_SECRET          HMAC secret for CM.com webhooks
+#   SYNTHFLOW_WEBHOOK_SECRET   HMAC secret for Synthflow webhooks
+#   MOLLIE_WEBHOOK_SECRET      HMAC secret for Mollie webhooks
+#   UNSUBSCRIBE_TOKEN_SECRET   HMAC secret for unsubscribe links
+#   NEON_DATABASE_URL          Neon HTTP-driver URL
+#   SENTRY_DSN                 Sentry DSN
+#   WEBHOOK_N8N_URL            n8n webhook base URL for forwarded events
+#   MONEYBIRD_API_KEY          Moneybird invoicing token
+#   MONEYBIRD_ADMIN_ID         Moneybird administration id
+#   ELEVENLABS_API_KEY         ElevenLabs key for voice-demo outbound calls
+# -----------------------------------------------------------------------------
+
+# Local development vars (non-secret defaults). Override in `.dev.vars`.
+[vars]
+ENV = "development"

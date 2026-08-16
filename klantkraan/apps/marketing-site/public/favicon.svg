@@ -1,0 +1,7 @@
+<!-- The lamp that stays on: the brand device from the header, drawn as geometry so
+     it needs no font and stays legible at 16px. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#0f1c1e"/>
+  <circle cx="16" cy="16" r="10" fill="#ffb84d" opacity="0.18"/>
+  <circle cx="16" cy="16" r="6" fill="#ffb84d"/>
+</svg>

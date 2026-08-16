@@ -1,0 +1,9 @@
+anthropic>=0.69
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9
+PyYAML>=6.0
+python-dotenv>=1.0
+python-telegram-bot>=21.6
+twilio>=9.0
+google-auth>=2.0  # only for the Google Calendar provider (calendar.provider: google)

@@ -1,0 +1,169 @@
+---
+import Icon from './Icon.astro'
+import { HERO_VORM, heroToontFoto, loadClient } from '../lib/client'
+import { telHref, waHref } from '../lib/format'
+import { toon } from '../lib/toon'
+
+// Hero: one promise, one number to call. Adapted from the marketing-site dakdekkers Hero,
+// stripped of statistics (no-stats policy: zero numeric claims).
+//
+// Never text-over-photo, in any arrangement. The stock heroes are bright at the top (grey
+// sky, white workshop wall) and white copy over that needs a scrim heavy enough to muddy
+// the photograph it is there to show. So the copy always keeps a surface it is legible on
+// and the photograph is placed next to it or under it.
+//
+// Which of the three placements this client gets is `indeling.hero`; the vocabulary and the
+// reasoning are in src/lib/indeling.ts. What does NOT vary, in any arrangement: the phone
+// number appears as a real tel: link with the digits rendered as text, above the fold, with
+// a second channel beside it. The 60-site survey found that to be the single mechanical
+// difference between the trade sites that work and the award-tier ones that do not (the
+// award tier averages 0.9 tel: links a homepage and 29% carry none at all), so it is
+// invariant here rather than a thing an arrangement is allowed to move.
+const { config, beeld } = loadClient()
+const { bedrijf } = config
+// Two registers: a mobiel bedrijf promises to come to you, a locatie bedrijf promises a
+// slot in its agenda. Both sentences live in lib/toon.ts.
+const t = toon(config)
+// Same honesty rule as the work section: the client's own photo is their work, a stock
+// frame is only ever "een dakdekker". The loader has already picked between the two sets
+// and says which it handed over, so this component no longer re-derives that.
+const hero = beeld.set.hero
+const bron = hero?.src ?? null
+// Two independent reasons there may be no photograph in the hero: the vak has no hero crop
+// and the client sent nothing, or the site chose `typografisch` and does not want one.
+const vorm = HERO_VORM[config.indeling.hero]
+const heroSrc = heroToontFoto(config.indeling.hero) ? bron : null
+const heroAlt = beeld.eigen ? `Werk van ${bedrijf.naam}` : (hero?.alt ?? '')
+// The -sm rendition is 750px wide. Beside the copy the photo is never drawn wider than
+// ~46vw so that covers a phone at 2x; full width under the copy it covers 1x only, which is
+// the right trade for a frame that is no longer the first thing on the screen. Both sets
+// carry one now -- client photos used to have no second rendition at all, which is half of
+// what scripts/client-fotos.py exists to fix.
+const heroSm = hero ? hero.src.replace(/\.webp$/, '-sm.webp') : null
+// Split: the photo is absolutely positioned into the right half and bleeds off the edge.
+// Stacked: it is a normal block under the copy, running the full width of the section.
+const gesplitst = heroSrc !== null && vorm.kolommen
+const gestapeld = heroSrc !== null && vorm.fotoBreed
+---
+
+<section class="relative border-b border-(--color-line) bg-(--color-card)">
+  {
+    gesplitst && (
+      <div class="md:absolute md:inset-y-0 md:right-0 md:w-[46%]">
+        <img
+          src={heroSrc}
+          srcset={heroSm ? `${heroSm} 750w, ${heroSrc} 1500w` : undefined}
+          sizes={heroSm ? '(min-width: 768px) 46vw, 100vw' : undefined}
+          width={hero?.width}
+          height={hero?.height}
+          alt={heroAlt}
+          fetchpriority="high"
+          decoding="async"
+          class="aspect-3/2 w-full object-cover md:aspect-auto md:h-full md:rounded-l-(--foto-radius)"
+        />
+      </div>
+    )
+  }
+  {
+    /*
+     * The grid is conditional on there BEING a photograph beside the copy. It used to be
+     * unconditional, so a vak with no stock hero and a client with no photos of their own got
+     * a half-width column of copy against a half-width column of nothing -- the comment above
+     * promised the copy would "simply span the page" and the markup never did it. Found by
+     * building voorbeeld-kapper-rotterdam and looking at the screen.
+     *
+     * minmax(0, 1fr) rather than 1fr: a grid track is minmax(auto, 1fr) by default and
+     * therefore refuses to shrink below its longest word, so a Dutch compound in the H1
+     * (rioolontstoppingsservice) widens the track instead of breaking, and the overflow-wrap
+     * floor in global.css never gets a chance to act. Same reason for min-w-0 on the column.
+     */
+  }
+  {
+    /*
+     * Stacked heroes drop most of the copy block's bottom padding: the photograph below is
+     * already a large amount of visual air, and the full py-20 on top of it left a ~270px
+     * band of empty paper between the call button and the frame. Measured at 1440x900.
+     */
+  }
+  <div
+    class:list={[
+      'relative mx-auto max-w-(--maat-kolom) px-(--maat-gutter) pt-10 md:pt-20',
+      gestapeld ? 'pb-8 md:pb-10' : 'pb-10 md:pb-20',
+      gesplitst && 'md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]',
+    ]}
+  >
+    {
+      /*
+       * No wrapper cap on this column. The two things inside it want different measures and
+       * one max-width cannot serve both: the H1 is capped in `ch` against its own font-size
+       * (global.css), which is the only way one rule suits a 34px headline and an 88px one,
+       * while the promise underneath is body copy and takes --maat-kop. Capping the wrapper
+       * at --maat-kop instead put an 88px headline in a 416px column, ran it to five lines
+       * and pushed the call button below the fold. Measured at 1440x900, not guessed.
+       */
+    }
+    <div class:list={['min-w-0', gesplitst && 'md:pr-8']}>
+      <h1 class="text-h1">
+        {t.kop}
+      </h1>
+      <p class="mt-5 max-w-(--maat-kop) text-(--color-mist)">
+        {t.belofte}
+        {config.spoed.beschikbaar && ' Ook bij spoed staan wij voor u klaar.'}
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <a href={telHref(bedrijf.telefoon)} class="btn btn-call text-lg">
+          <Icon name="phone" class="h-5 w-5" />
+          <span>Bel {bedrijf.telefoon}</span>
+        </a>
+        {
+          bedrijf.whatsapp ? (
+            <a
+              href={waHref(bedrijf.whatsapp)}
+              target="_blank"
+              rel="noopener"
+              class="btn btn-outline"
+            >
+              <Icon name="whatsapp" class="h-5 w-5" />
+              <span>Stuur een WhatsApp</span>
+            </a>
+          ) : (
+            <a href="/diensten/" class="btn btn-outline">
+              Bekijk onze diensten
+            </a>
+          )
+        }
+      </div>
+      {
+        config.receptionist && (
+          <p class="mt-4 text-small text-(--color-mist)">
+            Dag en nacht bereikbaar, ook buiten werktijd nemen wij uw melding direct aan.
+          </p>
+        )
+      }
+    </div>
+  </div>
+  {
+    /*
+     * Stacked: the photograph runs the full width of the section under the copy, at a
+     * letterbox ratio so it stays a band rather than becoming the whole first screen. It
+     * spends --foto-kolom and --foto-gutter, so `foto: randloos` sends it to both edges the
+     * same way it does the work band, and the two photographic moments on the page agree
+     * about whether this site frames its pictures or lets them bleed.
+     */
+    gestapeld && (
+      <div class="mx-auto max-w-(--foto-kolom) px-(--foto-gutter) pb-10 md:pb-16">
+        <img
+          src={heroSrc}
+          srcset={heroSm ? `${heroSm} 750w, ${heroSrc} 1500w` : undefined}
+          sizes="(min-width: 768px) 100vw, 100vw"
+          width={hero?.width}
+          height={hero?.height}
+          alt={heroAlt}
+          fetchpriority="high"
+          decoding="async"
+          class="aspect-3/2 w-full rounded-(--foto-radius) object-cover md:aspect-[21/9]"
+        />
+      </div>
+    )
+  }
+</section>

@@ -1,0 +1,51 @@
+---
+import Icon from './Icon.astro'
+import { loadClient } from '../lib/client'
+import { telHref, waHref } from '../lib/format'
+import { toon } from '../lib/toon'
+
+// Final CTA band: brand-primary surface, click-to-call as the only real action.
+const { config } = loadClient()
+const { bedrijf } = config
+const t = toon(config)
+---
+
+<section class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) pb-4">
+  <div
+    class="rounded-(--radius-card) p-8 text-white md:p-12"
+    style="background-color: var(--brand-primary)"
+  >
+    <h2 class="text-h2">{t.slotKop}</h2>
+    {
+      /*
+       * Full white, not white/85. The heading already carries the hierarchy at
+       * text-h2; the 15% the subline used to give back was bought against
+       * --brand-primary, and a brand colour sitting near the schema's floor has
+       * nothing to give -- no alpha below 1.0 clears 4.5:1 there.
+       */
+    }
+    <p class="mt-3 max-w-(--maat-kop)">{t.slotTekst}</p>
+    <div class="mt-7 flex flex-wrap items-center gap-4">
+      <a
+        href={telHref(bedrijf.telefoon)}
+        class="btn bg-white text-(--brand-primary) hover:bg-white/90"
+      >
+        <Icon name="phone" class="h-5 w-5" />
+        <span>Bel {bedrijf.telefoon}</span>
+      </a>
+      {
+        bedrijf.whatsapp && (
+          <a
+            href={waHref(bedrijf.whatsapp)}
+            target="_blank"
+            rel="noopener"
+            class="btn border border-white/60 text-white hover:bg-white/10"
+          >
+            <Icon name="whatsapp" class="h-5 w-5" />
+            <span>Stuur een WhatsApp</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

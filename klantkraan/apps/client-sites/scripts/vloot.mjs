@@ -1,0 +1,335 @@
+#!/usr/bin/env node
+// vloot.mjs -- how far is this site from every other site the factory has built?
+//
+//   CLIENT=<slug> node scripts/vloot.mjs          compare, report, record
+//   CLIENT=<slug> node scripts/vloot.mjs --droog  compare and report, record nothing
+//
+// verify-site.mjs asks whether one site is correct. This asks whether it is DIFFERENT, which
+// is a property no single build can see: two voorstellen are each individually perfect and
+// still ruinous if the prospects compare them. Measured 2026-08-16, before anything was
+// changed: voorbeeld-schilder and kk-skintest -- different vak, different plaats, five of
+// seven skin axes apart -- shared 42% of their 6-grams and a 35-word identical passage.
+// Nobody knew, because nothing measured it. That is the whole reason this file exists:
+// variety that is not measured decays back to the default within a month.
+//
+// Three distances, because the sameness has three layers (research/PLAN-site-factory-anti-
+// template-2026-08-16.md):
+//
+//   kopie     6-gram Jaccard over the rendered <main>. Words.
+//   silhouet  the ordered section/heading skeleton, hashed. Bones.
+//   huid      how many of the seven stijl axes differ, plus hue. Paint -- the layer TODO R
+//             already fixed, checked here so it cannot quietly regress.
+//   fotos     reported, never failed on: two clients of one vak share a stock set and so
+//             share every photograph, and no build can conjure a second one.
+//
+// Deliberately NOT wired into `pnpm check` yet. Today every fixture without a `teksten:` block
+// fails the copy threshold, which is the finding, not a reason to block every build. It goes
+// into the build gate when the whole fleet passes it.
+//
+// Fingerprints live in vloot/<slug>.json so a comparison costs no rebuild of the fleet. They
+// hold the site's rendered copy, so .gitignore treats them exactly like clients/: the three
+// fixtures are tracked and everything else stays in the working copy, because a paying
+// client's text is theirs and does not belong in this repo.
+
+import fs from 'node:fs'
+import path from 'node:path'
+import crypto from 'node:crypto'
+import { fileURLToPath } from 'node:url'
+import { parse } from 'yaml'
+
+const APP_ROOT = fileURLToPath(new URL('..', import.meta.url))
+const DIST = path.join(APP_ROOT, 'dist')
+const VLOOT = path.join(APP_ROOT, 'vloot')
+
+// --- thresholds -------------------------------------------------------------------------
+//
+// Each one is the point past which a reader who has seen both sites would notice. They are
+// not statistical: they are where the longest shared passage stops being a stock phrase
+// ("bel ons gerust") and starts being a paragraph.
+const KOPIE_MAX = 0.15 // 6-gram Jaccard against any sibling
+const HUID_MIN = 2 // stijl axes that must differ from any sibling (of 8)
+const N = 6 // gram size: long enough that a shared clause is a real echo
+
+const GRENZEN = { KOPIE_MAX, HUID_MIN }
+
+// The skin axes, all of them. `maat` was added 2026-08-16 and left out of this list for
+// exactly one build, which is long enough: an axis the gate does not read is an axis two
+// clients can share without the number moving.
+const ASSEN = ['letterontwerp', 'schaal', 'vorm', 'ritme', 'palet', 'kleuring', 'foto', 'maat']
+
+// The composition axes. These belong to the SILHOUETTE rather than to the skin: they decide
+// what shape the page is, not what colour. Folded into the silhouette hash below, because the
+// tag sequence alone cannot see them -- a `lijst` of diensten and a grid of `kaarten` are both
+// a <section> followed by a run of <h3>, so two sites with visibly different bones hashed
+// identical and the gate reported "silhouet IDENTIEK" while looking at two different pages.
+const VORM_ASSEN = ['hero', 'diensten']
+
+const slug = process.env.CLIENT
+if (!slug) {
+  console.error('[vloot] set CLIENT=<slug>')
+  process.exit(2)
+}
+const droog = process.argv.includes('--droog')
+
+// --- reading a site ----------------------------------------------------------------------
+
+const ENTITEITEN = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'",
+  '&nbsp;': ' ',
+  '&euro;': '€',
+}
+
+/**
+ * The rendered words of <main>, normalised.
+ *
+ * <main> and not the whole page on purpose. The preview banner is asserted verbatim by
+ * verify-site.mjs, the header is a name and a phone number, and the footer is an address:
+ * chrome that is identical by law or by fact, and counting it as sameness would bury the
+ * signal we are actually after. What is left is the document the prospect judges.
+ */
+function hoofdtekst(html) {
+  const main = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i)
+  if (!main) return ''
+  let t = main[1].replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+  t = t.replace(/<[^>]+>/g, ' ')
+  for (const [ent, chr] of Object.entries(ENTITEITEN)) t = t.split(ent).join(chr)
+  t = t.replace(/&#(\d+);/g, (_, d) => String.fromCharCode(Number(d)))
+  return t.replace(/\s+/g, ' ').trim().toLowerCase()
+}
+
+/**
+ * The skeleton: section and heading tags inside <main>, in document order.
+ *
+ * Words-free on purpose -- this is the half of the fingerprint that a copy rewrite must not
+ * be able to move. It catches section count, section order, and how many cards each grid
+ * holds (the run of h3s), which together are what a reader recognises as "the same page".
+ */
+function silhouet(html) {
+  const main = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i)
+  if (!main) return []
+  return [...main[1].matchAll(/<(section|h1|h2|h3)[ >]/gi)].map((m) => m[1].toLowerCase())
+}
+
+/**
+ * The photographs on the homepage, as paths.
+ *
+ * The stock sets are per vak, so two clients of the same trade get pixel-identical
+ * photography however far apart their copy and their skin are -- the loudest same-vak tell
+ * left after the copy layer, and one no amount of writing can fix. Measured rather than
+ * failed on: the fix is a second stock set or the client's own photos, neither of which is
+ * something a build can conjure, so the gate's job here is to say so out loud instead of
+ * reporting a clean distance that quietly excludes the pictures.
+ */
+function fotos(html) {
+  return [...html.matchAll(/["'](\/stock\/[a-z0-9-]+\.webp)["']/gi)]
+    .map((m) => m[1])
+    .filter((src) => !src.endsWith('-sm.webp'))
+    .sort()
+}
+
+function grammen(tekst) {
+  const w = tekst.split(' ').filter(Boolean)
+  const set = new Set()
+  for (let i = 0; i + N <= w.length; i++) set.add(w.slice(i, i + N).join(' '))
+  return set
+}
+
+/** The longest run of words this text shares with a sibling's gram set, as words. */
+function langstePassage(tekst, andereGrammen) {
+  const w = tekst.split(' ').filter(Boolean)
+  let best = [],
+    cur = []
+  for (let i = 0; i + N <= w.length; i++) {
+    if (andereGrammen.has(w.slice(i, i + N).join(' '))) {
+      if (cur.length === 0) cur = w.slice(i, i + N)
+      else cur.push(w[i + N - 1])
+      if (cur.length > best.length) best = cur
+    } else cur = []
+  }
+  return best
+}
+
+const jaccard = (a, b) => {
+  if (a.size === 0 && b.size === 0) return 0
+  let gedeeld = 0
+  for (const g of a) if (b.has(g)) gedeeld++
+  return gedeeld / (a.size + b.size - gedeeld)
+}
+
+// --- hue, for the skin distance ----------------------------------------------------------
+
+/** Hue in degrees. Two clients on the same axes but 180 degrees apart are not "the same". */
+function tint(hex) {
+  const m = /^#?([\da-f]{6})$/i.exec(hex ?? '')
+  if (!m) return null
+  const n = parseInt(m[1], 16)
+  const r = ((n >> 16) & 255) / 255,
+    g = ((n >> 8) & 255) / 255,
+    b = (n & 255) / 255
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b),
+    d = max - min
+  if (d === 0) return 0
+  const h =
+    max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4
+  return (h * 60 + 360) % 360
+}
+
+const tintVerschil = (a, b) => {
+  if (a === null || b === null) return null
+  const d = Math.abs(a - b) % 360
+  return Math.round(d > 180 ? 360 - d : d)
+}
+
+// --- this site ---------------------------------------------------------------------------
+
+const yamlPad = path.join(APP_ROOT, 'clients', slug, 'client.yaml')
+if (!fs.existsSync(yamlPad)) {
+  console.error(`[vloot] no config at ${path.relative(APP_ROOT, yamlPad)}`)
+  process.exit(2)
+}
+const cfg = parse(fs.readFileSync(yamlPad, 'utf8'))
+
+const indexPad = path.join(DIST, 'index.html')
+if (!fs.existsSync(indexPad)) {
+  console.error(`[vloot] no dist/index.html. Run: CLIENT=${slug} pnpm build`)
+  process.exit(2)
+}
+const html = fs.readFileSync(indexPad, 'utf8')
+// Same guard verify-site.mjs carries: comparing one client's config against another
+// client's build produces numbers that mean nothing and look fine.
+if (!html.includes(cfg.bedrijf?.naam ?? ' ')) {
+  console.error(
+    `[vloot] dist/ never mentions "${cfg.bedrijf?.naam}": it was built for another client. ` +
+      `Run: CLIENT=${slug} pnpm build`,
+  )
+  process.exit(2)
+}
+
+const tekst = hoofdtekst(html)
+const skelet = silhouet(html)
+const mijn = {
+  slug,
+  vak: cfg.bedrijf?.vak ?? null,
+  bedrijfstype: cfg.bedrijf?.bedrijfstype ?? 'mobiel',
+  modus: cfg.modus ?? null,
+  stijl: Object.fromEntries(ASSEN.map((as) => [as, cfg.stijl?.[as] ?? null])),
+  indeling: Object.fromEntries(VORM_ASSEN.map((as) => [as, cfg.indeling?.[as] ?? null])),
+  kleur: cfg.branding?.kleur_primair ?? null,
+  // The rendered tag sequence AND the composition axes that the tag sequence cannot express.
+  silhouet: crypto
+    .createHash('sha1')
+    .update([skelet.join(','), ...VORM_ASSEN.map((as) => cfg.indeling?.[as] ?? '')].join('|'))
+    .digest('hex')
+    .slice(0, 12),
+  fotos: fotos(html),
+  secties: skelet.filter((t) => t === 'section').length,
+  skelet: skelet.join(' '),
+  tekst,
+}
+
+// --- the fleet ---------------------------------------------------------------------------
+
+fs.mkdirSync(VLOOT, { recursive: true })
+const broers = fs
+  .readdirSync(VLOOT)
+  .filter((f) => f.endsWith('.json') && f !== `${slug}.json`)
+  .map((f) => JSON.parse(fs.readFileSync(path.join(VLOOT, f), 'utf8')))
+
+const mijnGrammen = grammen(mijn.tekst)
+
+const afstanden = broers
+  .map((b) => {
+    const bg = grammen(b.tekst ?? '')
+    const huid = ASSEN.filter((as) => mijn.stijl[as] !== b.stijl?.[as]).length
+    return {
+      slug: b.slug,
+      vak: b.vak,
+      kopie: jaccard(mijnGrammen, bg),
+      passage: langstePassage(mijn.tekst, bg),
+      zelfdeSilhouet: b.silhouet === mijn.silhouet,
+      zelfdeFotos:
+        mijn.fotos.length > 0 && JSON.stringify(b.fotos ?? []) === JSON.stringify(mijn.fotos),
+      huid,
+      tint: tintVerschil(tint(mijn.kleur), tint(b.kleur)),
+    }
+  })
+  .sort((a, b) => b.kopie - a.kopie)
+
+// --- report ------------------------------------------------------------------------------
+
+const pct = (v) => `${(v * 100).toFixed(1)}%`
+const fouten = []
+
+console.log(
+  `[vloot] ${slug} (${mijn.vak ?? 'geen vak'}, ${mijn.bedrijfstype}) tegen ${afstanden.length} ` +
+    `${afstanden.length === 1 ? 'ander site' : 'andere sites'}, ${mijn.secties} secties.`,
+)
+
+if (afstanden.length === 0) {
+  console.log('  · eerste site in de vloot: niets om tegen af te zetten.')
+} else {
+  for (const a of afstanden.slice(0, 3)) {
+    const merk = a.kopie > KOPIE_MAX ? 'X' : '·'
+    console.log(
+      `  ${merk} ${a.slug} (${a.vak ?? '?'}): kopie ${pct(a.kopie)}, ` +
+        `huid ${a.huid}/${ASSEN.length} assen${a.tint === null ? '' : ` + ${a.tint} graden tint`}` +
+        `, silhouet ${a.zelfdeSilhouet ? 'IDENTIEK' : 'anders'}`,
+    )
+    if (a.zelfdeFotos) {
+      console.log(
+        `      dezelfde ${mijn.fotos.length} fotos: beide draaien op de stock-set van ${a.vak}`,
+      )
+    }
+    if (a.passage.length >= 8) {
+      const p = a.passage.join(' ')
+      console.log(
+        `      langste gedeelde passage (${a.passage.length} woorden): ` +
+          `"${p.length > 110 ? `${p.slice(0, 110)}...` : p}"`,
+      )
+    }
+  }
+  if (afstanden.length > 3) console.log(`  · ${afstanden.length - 3} verder weg, niet getoond.`)
+
+  // 1. Words.
+  const teDichtbij = afstanden.filter((a) => a.kopie > KOPIE_MAX)
+  for (const a of teDichtbij) {
+    fouten.push(
+      `kopie ${pct(a.kopie)} tegen ${a.slug} (drempel ${pct(KOPIE_MAX)}): twee prospects die ` +
+        'elkaars voorstel lezen, lezen dezelfde zinnen',
+    )
+  }
+
+  // 2. Bones. Two sites of the SAME vak with the same skeleton is the unforgivable case;
+  //    a kapper and a dakdekker sharing bones is what PLAN step 3 exists to fix, so it is
+  //    reported above and not failed here.
+  for (const a of afstanden.filter((a) => a.zelfdeSilhouet && a.vak && a.vak === mijn.vak)) {
+    fouten.push(
+      `zelfde silhouet als ${a.slug}, en dat is hetzelfde vak: twee ${a.vak}s met dezelfde botten`,
+    )
+  }
+
+  // 3. Paint. TODO R already solved this; the check is here so it cannot regress quietly.
+  for (const a of afstanden.filter((a) => a.huid < HUID_MIN)) {
+    fouten.push(
+      `huid ${a.huid}/${ASSEN.length} assen anders dan ${a.slug} (minimaal ${HUID_MIN}): de skin-composer ` +
+        'gaf twee klanten vrijwel dezelfde look',
+    )
+  }
+}
+
+if (!droog) {
+  fs.writeFileSync(path.join(VLOOT, `${slug}.json`), `${JSON.stringify(mijn, null, 2)}\n`)
+}
+
+if (fouten.length) {
+  console.error(`\n[vloot] ${fouten.length} keer te dicht bij de rest van de vloot:`)
+  for (const f of fouten) console.error(`  - ${f}`)
+  console.error(`\n  drempels: ${JSON.stringify(GRENZEN)}`)
+  process.exit(1)
+}
+console.log('[vloot] ver genoeg van de rest.')

@@ -1,0 +1,196 @@
+---
+import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
+import CostReceipt from '../components/home/CostReceipt.astro'
+import DemoSection from '../components/home/DemoSection.astro'
+import Duties from '../components/home/Duties.astro'
+import FinalCta from '../components/home/FinalCta.astro'
+import Hero from '../components/home/Hero.astro'
+import HowItWorks from '../components/home/HowItWorks.astro'
+import Roadmap from '../components/home/Roadmap.astro'
+import Transparency from '../components/home/Transparency.astro'
+import { waLink } from '../data/contact'
+
+const hero = {
+  status: 'Antwoordt nu op site en WhatsApp',
+  h1a: 'Het licht blijft',
+  h1on: 'aan.',
+  sub:
+    'U staat op de ladder, op het dak, of u slaapt. Uw beste klant heeft nú een vraag. De ' +
+    'digitale receptionist van Klantkraan beantwoordt hem op uw site en WhatsApp, plant de ' +
+    'afspraak en vangt elk terugbelverzoek. Dag en nacht.',
+  ctaPrimary: 'Start vandaag',
+  ctaPrimaryHref: '/aanmelden/',
+  ctaGhost: 'Probeer de demo',
+  ctaGhostHref: '#demo',
+  proof: [
+    { icon: 'message-circle' as const, label: 'Direct te proberen, geen account' },
+    { icon: 'calendar-check' as const, label: 'Per maand opzegbaar' },
+    { icon: 'shield-check' as const, label: 'AVG-proof, EU-gehost' },
+  ],
+  panelAria:
+    'Gesprek om 23:47: een klant met een lekkage stelt een vraag, de digitale receptionist plant een afspraak op dinsdag 09:00 en zet een terugbelverzoek klaar voor de eigenaar.',
+  threadName: 'Klantkraan',
+  threadSub: 'Reageert direct',
+  liveTs: 'Vannacht 23:47',
+  disclosure: 'U chat met een digitale assistent.',
+  customerMsg: 'Ik heb een lekkage onder de gootsteen, kan er morgen iemand komen?',
+  recepMsg: 'Vervelend, dat pakken we op. Morgen 09:00 is vrij. Zal ik dat voor u vastzetten?',
+  stampStrong: 'INGEPLAND',
+  stampDetail: 'di 09:00 · terugbelverzoek klaar voor de eigenaar',
+}
+
+const duties = {
+  eyebrow: 'De nachtdienst',
+  heading: 'Wat de receptionist overneemt terwijl u werkt.',
+  photoAlt: 'Installateur die met een zaklamp een buitenunit nakijkt',
+  items: [
+    {
+      icon: 'message-square' as const,
+      title: 'Beantwoordt elke vraag',
+      text: 'Kent uw tarieven, diensten en werkgebied. Geen verzonnen prijzen, alleen wat u heeft ingesteld.',
+    },
+    {
+      icon: 'calendar-check' as const,
+      title: 'Plant de afspraak',
+      text: 'Direct in uw agenda, alleen op momenten die écht vrij zijn. De klant kiest een slot, u ziet het meteen.',
+    },
+    {
+      icon: 'phone-call' as const,
+      title: 'Vangt het terugbelverzoek',
+      text: 'Kan het niet meteen? De receptionist noteert naam, nummer en klus. U belt terug wie er écht toe doet.',
+    },
+  ],
+}
+
+const demo = {
+  eyebrow: 'Probeer het zelf',
+  heading: 'Praat met de receptionist. Nu, zonder account.',
+  sub:
+    'Geen belrobot die klinkt als een collega, maar tekst op de plek waar uw klant al zit: ' +
+    'uw site en WhatsApp. Stel een vraag of plan een afspraak, precies zoals een klant zou ' +
+    'doen, direct in uw browser.',
+  asksLabel: 'Stel bijvoorbeeld:',
+  asks: [
+    'Wat kost het vervangen van een kraan?',
+    'Kan er morgenochtend iemand langskomen?',
+    'Werken jullie ook in Haarlem?',
+  ],
+  iframeTitle: 'Live chat met de digitale receptionist van Klantkraan',
+  mobileName: 'Van Dijk Installatietechniek',
+  mobileTag: 'Digitale assistent · reageert direct',
+  mobileHint: 'Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.',
+  mobileCta: 'Start de demo',
+  trust: 'Voorbeeldbedrijf · bij uw eigen receptionist staan uw diensten en tarieven ingesteld',
+}
+
+const kosten = {
+  eyebrow: 'De rekening van een donkere avond',
+  heading: 'Elke onbeantwoorde vraag is een opdracht die naar de concurrent loopt.',
+  sub:
+    'Dit is een voorbeeld. Reken het na met uw eigen aantallen, dan ziet u precies wat een ' +
+    'maand gemiste oproepen u kost.',
+  ariaLabel: 'Voorbeeldberekening van misgelopen omzet',
+  cap: 'Voorbeeld · 40 oproepen per week',
+  lines: [
+    { k: 'Oproepen per maand', v: '173' },
+    { k: 'Gemist (brancheschatting 28%)', v: '48' },
+    { k: 'Was een klus geworden (1 op 3)', v: '16' },
+    { k: '× waarde per klus', v: '€450' },
+  ],
+  resultK: 'Misgelopen omzet',
+  resultV: '± €7.200/mnd',
+  ctaLabel: 'Reken met uw eigen cijfers',
+  ctaHref: '/rekentool/',
+}
+
+const eerlijk = {
+  eyebrow: 'Eerlijk over AI',
+  heading: 'Het licht staat aan. Er valt niets te verbergen.',
+  quote: 'U chat met een digitale assistent.',
+  bullets: [
+    'Zo begint elk gesprek, voordat er iets anders gebeurt.',
+    'Vanaf 2 augustus 2026 is die melding verplicht onder artikel 50 van de EU AI Act. Wij doen het nu al.',
+    'Waar een belrobot wordt verkocht met "niemand hoort het verschil", zegt onze receptionist gewoon wie hij is. Uw klant weet waar hij aan toe is, u riskeert geen boete.',
+  ],
+  linkLabel: 'Lees de volledige disclosure',
+  linkHref: '/legal/ai-disclosure/',
+}
+
+const starten = {
+  eyebrow: 'Zo start u',
+  heading: 'Vandaag aangemeld, deze week live.',
+  steps: [
+    {
+      title: 'Meld u aan',
+      text: 'Vijf minuten werk. U rekent direct af via Mollie: eerste maand €149,50, daarna €299 per maand, excl. btw.',
+    },
+    {
+      title: 'Wij bouwen uw receptionist',
+      text: 'Binnen één werkdag bellen we om uw diensten, tarieven en agenda door te nemen. U hoeft niets te bouwen.',
+    },
+    {
+      title: 'Live op uw site en WhatsApp',
+      text: 'U test hem zelf en geeft akkoord. Vanaf dat moment neemt hij elke vraag aan, dag en nacht.',
+    },
+  ],
+  note: 'Per maand opzegbaar. Geen jaarcontract, geen verborgen verlenging; opzeggen per mail, geen opzegtermijn.',
+}
+
+const roadmap = {
+  eyebrow: 'Waar dit heen gaat',
+  heading: 'Vandaag de voordeur. Straks het kantoor.',
+  sub:
+    'De receptionist is het begin, niet het eindpunt. Hij neemt de voordeur over: alles wat ' +
+    'binnenkomt terwijl u werkt. Daarachter zit het papierwerk dat u nu ’s avonds aan de ' +
+    'keukentafel doet. Daar werken we naartoe, samen met de eerste klanten.',
+  nowLabel: 'Wat hij nu doet',
+  now: [
+    'Beantwoordt vragen op uw site en WhatsApp, dag en nacht',
+    'Plant afspraken in uw eigen agenda',
+    'Vangt terugbelverzoeken met naam, nummer en klus',
+    'Meldt zichzelf als digitale assistent, in elk gesprek',
+  ],
+  laterLabel: 'Wat we bouwen',
+  laterNote: 'Nog niet beschikbaar. Dit zit niet in uw abonnement en u betaalt er nu niet voor.',
+  later: [
+    'Offertes die zichzelf opvolgen als de klant niet reageert',
+    'Afspraakherinneringen, zodat er niemand voor niets uitrijdt',
+    'Reviewverzoeken op het moment dat de klus net klaar is',
+    'Factuurherinneringen voor wat blijft openstaan',
+  ],
+  footnote:
+    'Welke van deze als eerste komt, bepalen de klanten die er dan zijn, niet wij. Vraagt u iets ' +
+    'wat er niet in zit? Dan zeggen we dat, en wanneer het er wel is.',
+}
+
+const finalCta = {
+  h2a: 'Zet het licht',
+  h2on: 'aan.',
+  sub:
+    'Probeer de demo en stel de receptionist een vraag alsof u een klant bent. Bevalt het? Meld ' +
+    'u aan en wij regelen de rest, u hoeft niets te bouwen.',
+  primary: { label: 'Start vandaag', href: '/aanmelden/' },
+  ghosts: [
+    { label: 'Probeer de demo', href: '/demo/' },
+    { label: 'Plan een kennismaking', href: waLink, external: true },
+  ],
+}
+---
+
+<Base
+  title="AI-receptionist voor uw bedrijf: websitechat & WhatsApp | Klantkraan"
+  description="AI-receptionist op uw website en WhatsApp: beantwoordt vragen, plant afspraken en vangt leads, dag en nacht. Done-for-you setup. Per maand opzegbaar."
+  centered={false}
+>
+  <Hero t={hero} />
+  <Duties t={duties} />
+  <DemoSection t={demo} />
+  <CostReceipt t={kosten} />
+  <Transparency t={eerlijk} />
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
+  <Roadmap t={roadmap} />
+  <HowItWorks t={starten} />
+  <FinalCta t={finalCta} />
+</Base>

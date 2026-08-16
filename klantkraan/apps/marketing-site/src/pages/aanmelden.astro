@@ -1,0 +1,406 @@
+---
+import Base from '../layouts/Base.astro'
+import { waLink } from '../data/contact'
+
+const trades = [
+  { value: 'loodgieter', label: 'Loodgieter' },
+  { value: 'dakdekker', label: 'Dakdekker' },
+  { value: 'installateur', label: 'Installateur' },
+  { value: 'elektricien', label: 'Elektricien' },
+  { value: 'aannemer', label: 'Aannemer' },
+  { value: 'schilder', label: 'Schilder' },
+  { value: 'sportschool', label: 'Sportschool' },
+  { value: 'anders', label: 'Anders' },
+]
+
+const inputClass =
+  'mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)'
+---
+
+<Base
+  title="Aanmelden: start met uw AI-receptionist | Klantkraan"
+  description="Meld uw bedrijf aan voor Klantkraan Chat (€299) of Compleet met AI-telefonist (€499 per maand). Wij nemen binnen één werkdag contact op en verzorgen de volledige setup."
+  centered={false}
+  stickyCta={false}
+>
+  <!-- 1. Hero -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">Aan de slag</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Laat hieronder uw gegevens achter. Wij bellen u binnen één werkdag om uw diensten, tarieven
+        en agenda door te nemen. De setup doen wij, u hoeft niets te bouwen.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Form + next steps -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start"
+    >
+      <!-- method+action are the zero-JS fallback: if the page script can't run, the browser
+           posts the form itself and the API answers with a 303 straight into Mollie. -->
+      <form
+        id="lead-form"
+        method="POST"
+        action="https://demo.klantkraan.nl/api/checkout"
+        data-astro-reload
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+      >
+        <div class="space-y-6">
+          <div>
+            <label for="naam" class="block text-body font-medium text-(--color-chalk)">Naam</label>
+            <input
+              id="naam"
+              name="naam"
+              type="text"
+              required
+              autocomplete="name"
+              class={inputClass}
+            />
+          </div>
+          <div>
+            <label for="bedrijf" class="block text-body font-medium text-(--color-chalk)">
+              Bedrijfsnaam
+            </label>
+            <input
+              id="bedrijf"
+              name="bedrijf"
+              type="text"
+              autocomplete="organization"
+              class={inputClass}
+            />
+          </div>
+          <div class="grid gap-6 sm:grid-cols-2 sm:gap-4">
+            <div>
+              <label for="telefoon" class="block text-body font-medium text-(--color-chalk)">
+                Telefoon
+              </label>
+              <input
+                id="telefoon"
+                name="telefoon"
+                type="tel"
+                autocomplete="tel"
+                pattern={'\\+?[\\d \\-\\(\\)\\.]{8,20}'}
+                title="Minimaal 8 cijfers, spaties en streepjes mogen"
+                class={inputClass}
+              />
+            </div>
+            <div>
+              <label for="email" class="block text-body font-medium text-(--color-chalk)">
+                E-mail
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                class={inputClass}
+              />
+            </div>
+          </div>
+          <p id="contact-hint" class="-mt-3 text-small text-(--color-dim)">
+            E-mail is nodig voor de betaalbevestiging, telefoon mag erbij.
+          </p>
+          <div>
+            <label for="vak" class="block text-body font-medium text-(--color-chalk)">
+              Vak of branche
+            </label>
+            <select id="vak" name="vak" class={inputClass}>
+              {trades.map((t) => <option value={t.value}>{t.label}</option>)}
+            </select>
+          </div>
+          <!-- type="text", not type="url": the browser would reject "uwbedrijf.nl" for want
+               of a scheme and block the submit. The API normalises it instead. -->
+          <div>
+            <label for="site" class="block text-body font-medium text-(--color-chalk)">
+              Website <span class="font-normal text-(--color-dim)">(optioneel)</span>
+            </label>
+            <input
+              id="site"
+              name="site"
+              type="text"
+              inputmode="url"
+              placeholder="uwbedrijf.nl"
+              autocomplete="url"
+              class={inputClass}
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              Dan kennen wij uw diensten en werkgebied voordat u iets hoeft uit te leggen.
+            </p>
+          </div>
+          <fieldset>
+            <legend class="block text-body font-medium text-(--color-chalk)">Abonnement</legend>
+            <div class="mt-2 space-y-2">
+              <label
+                class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3"
+              >
+                <input
+                  type="radio"
+                  name="plan"
+                  value="chat"
+                  checked
+                  class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)"
+                />
+                <span class="text-body text-(--color-chalk)">
+                  Chat
+                  <span class="block text-small text-(--color-dim)">
+                    eerste maand €149,50, daarna €299 per maand, excl. btw &middot; websitechat +
+                    WhatsApp &middot; maandelijks opzegbaar
+                  </span>
+                </span>
+              </label>
+              <label
+                class="flex items-start gap-3 rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3"
+              >
+                <input
+                  type="radio"
+                  name="plan"
+                  value="compleet"
+                  class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)"
+                />
+                <span class="text-body text-(--color-chalk)">
+                  Compleet
+                  <span class="block text-small text-(--color-dim)">
+                    eerste maand €249,50, daarna €499 per maand, excl. btw &middot; chat + WhatsApp
+                    + AI-telefonist &middot; incl. 750 belminuten/mnd, daarna €0,40/min &middot;
+                    maandelijks opzegbaar
+                  </span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <div>
+            <label for="bericht" class="block text-body font-medium text-(--color-chalk)">
+              Bericht <span class="font-normal text-(--color-dim)">(optioneel)</span>
+            </label>
+            <textarea id="bericht" name="bericht" rows="3" class={inputClass}></textarea>
+          </div>
+          <!-- Only shown on the paying plan: an interest lead agrees to nothing, but nobody
+               starts a SEPA mandate without accepting the contract that governs it. -->
+          <div id="akkoord-row">
+            <label class="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="akkoord"
+                name="akkoord"
+                value="ja"
+                required
+                class="mt-0.5 h-[1.15rem] w-[1.15rem] shrink-0 accent-(--color-sodium)"
+              />
+              <span class="text-small text-(--color-dim)">
+                Ik ga akkoord met de
+                <a href="/legal/voorwaarden/" class="underline">algemene voorwaarden</a>
+                en de
+                <a href="/legal/dpa/" class="underline">verwerkersovereenkomst</a>.
+              </span>
+            </label>
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <p id="lead-error" class="hidden text-small text-(--color-sodium)" role="alert"></p>
+          <button
+            type="submit"
+            id="lead-submit"
+            class="btn btn-primary btn-lg w-full justify-center"
+          >
+            Aanmelden en betalen
+          </button>
+          <p id="pay-note" class="text-small text-(--color-dim)">
+            U betaalt veilig via Mollie, onder meer met iDEAL. Na de betaling nemen wij contact op
+            voor de setup.
+          </p>
+          <p class="text-small text-(--color-dim)">
+            Wij gebruiken uw gegevens alleen om contact op te nemen. Zie ons
+            <a href="/legal/privacy/" class="underline">privacybeleid</a>.
+          </p>
+          <!-- The escape hatch the sticky bar used to be, now inline and quiet: on this
+               page a floating amber button sat next to an identical amber pay button. -->
+          <p class="text-small text-(--color-dim)">
+            Liever eerst even overleggen?
+            <a href={waLink} target="_blank" rel="noopener" class="underline">WhatsApp ons</a>.
+          </p>
+        </div>
+      </form>
+
+      <div>
+        <aside
+          id="lead-success"
+          class="hidden rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+        >
+          <h2 class="font-display text-h2 text-(--color-chalk)">Aanmelding ontvangen</h2>
+          <p class="mt-3 text-body text-(--color-dim)">
+            Bedankt. Wij nemen binnen één werkdag contact met u op om de volgende stap in te
+            plannen.
+          </p>
+        </aside>
+        <aside
+          id="lead-steps"
+          class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        >
+          <h2 class="font-display text-h2 text-(--color-chalk)">Wat er daarna gebeurt</h2>
+          <ol class="mt-4 space-y-3 text-body text-(--color-dim)">
+            <li>
+              <span class="font-mono text-small text-(--color-sodium)">1.</span>
+              Wij bellen binnen één werkdag en nemen uw diensten, tarieven en agenda door.
+            </li>
+            <li>
+              <span class="font-mono text-small text-(--color-sodium)">2.</span>
+              Wij bouwen en koppelen uw receptionist. Done-for-you, u levert alleen de kennis.
+            </li>
+            <li>
+              <span class="font-mono text-small text-(--color-sodium)">3.</span>
+              U test hem zelf, geeft akkoord en de receptionist gaat live op uw site en WhatsApp.
+            </li>
+          </ol>
+          <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+            Aanmelden verplicht u tot niets. Wij nemen eerst contact op om alles door te nemen.
+            Maandelijks opzegbaar, eerste maand 50% korting.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Honeypot: parked off-screen so humans never see it; bots that fill it are dropped. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const API = 'https://demo.klantkraan.nl'
+  const COPY = {
+    payButton: 'Aanmelden en betalen',
+    leadButton: 'Verstuur aanmelding',
+    payHint: 'E-mail is nodig voor de betaalbevestiging, telefoon mag erbij.',
+    leadHint: 'Telefoon of e-mail is genoeg, allebei mag ook.',
+    redirecting: 'Doorsturen naar de betaalpagina…',
+    needName: 'Vul uw naam in.',
+    needEmail: 'Vul uw e-mailadres in. Daar sturen we de betaalbevestiging heen.',
+    needContact: 'Vul een telefoonnummer of e-mailadres in.',
+    needTerms: 'Zet even een vinkje bij de voorwaarden en de verwerkersovereenkomst.',
+    badEmail: 'Dat e-mailadres lijkt niet te kloppen. Controleer het even.',
+    badPhone: 'Dat telefoonnummer lijkt niet te kloppen. Controleer het even.',
+    invalid: 'Er ging iets mis met uw aanmelding. Controleer uw gegevens en probeer het opnieuw.',
+    sendFailed:
+      'Versturen is niet gelukt. Mail ons op <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>, dan pakken wij het direct op.',
+  }
+
+  function initLeadForm() {
+    const form = document.getElementById('lead-form') as HTMLFormElement | null
+    if (!form || form.dataset.bound) return
+    form.dataset.bound = '1'
+
+    // ?plan=chat | ?plan=compleet preselects the radio. Old "compleet-interesse" links
+    // (pre-voice-launch outreach) land on the buyable compleet plan.
+    const wanted = new URLSearchParams(window.location.search).get('plan')
+    const plan = wanted === 'compleet-interesse' ? 'compleet' : wanted
+    if (plan) {
+      const radio = form.querySelector<HTMLInputElement>(`input[name="plan"][value="${plan}"]`)
+      if (radio) radio.checked = true
+    }
+
+    const errorEl = document.getElementById('lead-error') as HTMLElement
+    const submitBtn = document.getElementById('lead-submit') as HTMLButtonElement
+    const isPaying = () =>
+      ['chat', 'compleet'].includes(
+        form.querySelector<HTMLInputElement>('input[name="plan"]:checked')?.value ?? '',
+      )
+
+    // Both plans buy now (checkout); any non-paying plan value files an interest lead.
+    // Email is only a hard requirement when paying (Mollie needs it for the confirmation).
+    const emailInput = document.getElementById('email') as HTMLInputElement
+    const akkoordInput = document.getElementById('akkoord') as HTMLInputElement | null
+    const sync = () => {
+      submitBtn.textContent = isPaying() ? COPY.payButton : COPY.leadButton
+      emailInput.required = isPaying()
+      const hint = document.getElementById('contact-hint')
+      if (hint) hint.textContent = isPaying() ? COPY.payHint : COPY.leadHint
+      document.getElementById('pay-note')?.classList.toggle('hidden', !isPaying())
+      // Terms acceptance rides with the paying plan, so a `required` checkbox can never
+      // block an interest lead that does not need it.
+      document.getElementById('akkoord-row')?.classList.toggle('hidden', !isPaying())
+      if (akkoordInput) akkoordInput.required = isPaying()
+    }
+    form
+      .querySelectorAll<HTMLInputElement>('input[name="plan"]')
+      .forEach((radio) => radio.addEventListener('change', sync))
+    sync()
+
+    const fail = (html: string) => {
+      errorEl.innerHTML = html
+      errorEl.classList.remove('hidden')
+      submitBtn.disabled = false
+      sync()
+    }
+
+    // A native (no-JS) post that bounced on validation lands back here with ?fout=1.
+    if (new URLSearchParams(window.location.search).has('fout')) fail(COPY.invalid)
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault()
+      errorEl.classList.add('hidden')
+      const data = new FormData(form)
+      const value = (name: string) => String(data.get(name) ?? '').trim()
+      const paying = isPaying()
+
+      if (!value('naam')) return fail(COPY.needName)
+      if (paying && !value('email')) return fail(COPY.needEmail)
+      if (!paying && !value('telefoon') && !value('email')) return fail(COPY.needContact)
+      // Same format gates as the API (server.py LeadIn): loose on purpose, catches typos.
+      if (value('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value('email')))
+        return fail(COPY.badEmail)
+      if (value('telefoon') && !/^\+?[0-9]{8,15}$/.test(value('telefoon').replace(/[\s().-]/g, '')))
+        return fail(COPY.badPhone)
+      if (paying && !value('akkoord')) return fail(COPY.needTerms)
+
+      submitBtn.disabled = true
+      try {
+        const resp = await fetch(paying ? `${API}/api/checkout` : `${API}/api/lead`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            naam: value('naam'),
+            bedrijf: value('bedrijf'),
+            telefoon: value('telefoon'),
+            email: value('email'),
+            vak: value('vak'),
+            site: value('site'),
+            plan: value('plan'),
+            bericht: value('bericht'),
+            akkoord: value('akkoord'),
+            website: value('website'),
+          }),
+        })
+        if (!resp.ok) throw new Error(String(resp.status))
+        const body = await resp.json().catch(() => ({}))
+        if (body.checkout_url) {
+          // Straight into Mollie; /bedankt/ catches the return. The lead is already saved,
+          // so a buyer who bails out of checkout is a follow-up call, not a loss.
+          submitBtn.textContent = COPY.redirecting
+          window.location.assign(body.checkout_url)
+          return
+        }
+        form.classList.add('hidden')
+        document.getElementById('lead-steps')?.classList.add('hidden')
+        document.getElementById('lead-success')?.classList.remove('hidden')
+      } catch {
+        fail(COPY.sendFailed)
+      }
+    })
+  }
+
+  document.addEventListener('astro:page-load', initLeadForm)
+</script>

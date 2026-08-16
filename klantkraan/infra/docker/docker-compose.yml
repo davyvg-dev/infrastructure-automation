@@ -1,0 +1,138 @@
+# context7: n8n v1.111.0 (docker.n8n.io/n8nio/n8n:1.111.0)
+# context7: Caddy v2 (caddy:2-alpine)
+# Host: Hetzner CX22 (2 vCPU / 4 GB / 40 GB attached volume mounted at /mnt/data)
+
+name: kk-prod
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: kk-caddy
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - /mnt/data/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /mnt/data/caddy/data:/data
+      - /mnt/data/caddy/config:/config
+    networks: [kk-prod]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://127.0.0.1:80']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:1.111.0
+    container_name: kk-n8n
+    restart: unless-stopped
+    environment:
+      - N8N_HOST=n8n.klantkraan.nl
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - N8N_EDITOR_BASE_URL=https://n8n.klantkraan.nl/
+      - WEBHOOK_URL=https://n8n.klantkraan.nl/
+      - N8N_PROXY_HOPS=1
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=${PG_HOST}
+      - DB_POSTGRESDB_DATABASE=${PG_DB}
+      - DB_POSTGRESDB_USER=${PG_USER}
+      - DB_POSTGRESDB_PASSWORD=${PG_PASS}
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_SCHEMA=public
+      # Neon serves its TLS chain via an intermediate CA not in n8n's bundled trust store; verifying
+      # the hostname is still done, only the chain validation is relaxed. Acceptable for a managed
+      # provider on a private connection; revisit if/when Neon ships its CA in distroless trust roots.
+      - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
+      - GENERIC_TIMEZONE=Europe/Amsterdam
+      - TZ=Europe/Amsterdam
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_VERSION_NOTIFICATIONS_ENABLED=false
+      - N8N_PERSONALIZATION_ENABLED=false
+      - NODE_ENV=production
+    volumes:
+      - /mnt/data/n8n:/home/node/.n8n
+      - /mnt/data/n8n/files:/files
+    networks: [kk-prod]
+    depends_on:
+      caddy:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.20'
+          memory: 2560M
+        reservations:
+          memory: 512M
+    healthcheck:
+      test: ['CMD-SHELL', 'wget --spider -q http://127.0.0.1:5678/healthz || exit 1']
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: kk-uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - /mnt/data/uptime-kuma:/app/data
+    networks: [kk-prod]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 384M
+    healthcheck:
+      test: ['CMD-SHELL', 'node /app/extra/healthcheck.js || exit 1']
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+
+  # Borgmatic runs in-container with the borg-backup.sh script invoked via cron-on-host.
+  # Two equivalent paths — pick one, do not run both:
+  #   (A) HOST CRON (recommended for CX22 — fewer moving parts):
+  #       /etc/cron.d/kk-borg-backup:
+  #         0 3 * * * klantkraan /mnt/data/scripts/borg-backup.sh >> /var/log/borg-backup.log 2>&1
+  #   (B) CONTAINERISED (uncomment block below if host cron is undesirable). Reads the same
+  #       env file and mounts the same data so behaviour is identical to host-cron mode.
+  #
+  # borgmatic:
+  #   image: ghcr.io/borgmatic-collective/borgmatic:1.9
+  #   container_name: kk-borgmatic
+  #   restart: unless-stopped
+  #   env_file: .env
+  #   environment:
+  #     - TZ=Europe/Amsterdam
+  #     - BORGMATIC_CRON=0 3 * * *
+  #   volumes:
+  #     - /mnt/data:/mnt/data
+  #     - /mnt/data/borg/cache:/root/.cache/borg
+  #     - /mnt/data/borg/config:/root/.config/borg
+  #     - /mnt/data/borg/ssh:/root/.ssh:ro
+  #     - ../scripts/borg-backup.sh:/usr/local/bin/borg-backup.sh:ro
+  #   networks: [kk-prod]
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: "0.40"
+  #         memory: 512M
+
+networks:
+  kk-prod:
+    name: kk-prod
+    driver: bridge

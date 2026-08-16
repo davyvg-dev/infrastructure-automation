@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro'
+import { loadClient } from '../lib/client'
+
+// USP checklist (2 to 4 items from client.yaml).
+const { config } = loadClient()
+---
+
+<section class="border-y border-(--band-line) bg-(--band-bg)">
+  <div class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)">
+    <h2 class="text-h2">Waarom {config.bedrijf.naam}</h2>
+    <ul role="list" class="mt-8 grid gap-5 sm:grid-cols-2">
+      {
+        config.usps.map((usp) => (
+          <li class="flex items-start gap-3">
+            <Icon name="check" class="mt-1 h-5 w-5 shrink-0 text-(--brand-primary)" />
+            <span>{usp}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

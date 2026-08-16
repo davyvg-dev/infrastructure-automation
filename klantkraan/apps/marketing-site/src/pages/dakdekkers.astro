@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
+import VerderLezen from '../components/VerderLezen.astro'
+import Hero from '../components/dakdekkers/Hero.astro'
+import PainStats from '../components/dakdekkers/PainStats.astro'
+import Features from '../components/dakdekkers/Features.astro'
+import StormScenario from '../components/dakdekkers/StormScenario.astro'
+import RoiSnippet from '../components/dakdekkers/RoiSnippet.astro'
+import Faq from '../components/dakdekkers/Faq.astro'
+import CityLinks from '../components/dakdekkers/CityLinks.astro'
+import FinalCta from '../components/dakdekkers/FinalCta.astro'
+import RiskReversal from '../components/RiskReversal.astro'
+import PhotoBand from '../components/PhotoBand.astro'
+---
+
+<Base
+  title="Dakdekker klanten werven: AI-receptionist met storm-protocol"
+  description="AI-receptionist voor dakdekkers, per maand opzegbaar. Storm-protocol escaleert spoed-lekkages direct, plant inspecties in uw agenda en vangt leads, 24/7."
+  centered={false}
+>
+  <Hero />
+
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="dakdekkers"
+      alt="Dakdekker aan het werk op een hellend dak"
+      caption="Boven op het dak. Uw receptionist antwoordt wél."
+      focus="50% 38%"
+    />
+  </section>
+
+  <RiskReversal />
+  <PainStats />
+  <Features />
+  <StormScenario />
+  <RoiSnippet />
+  <Faq />
+  <CityLinks />
+  <!-- Verder lezen: gids + blog voor deze branche -->
+  <VerderLezen vertical="dakdekker" />
+
+  <FinalCta />
+
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
+</Base>

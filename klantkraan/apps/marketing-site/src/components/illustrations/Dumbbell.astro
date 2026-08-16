@@ -1,0 +1,35 @@
+---
+/*
+ * Single-line illustration — dumbbell. Used on /sportscholen hero and the
+ * /voor-wie hub card. Same stroke style as TapValve/StormCloud.
+ */
+interface Props {
+  class?: string
+  'aria-label'?: string
+}
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Halter' } = Astro.props
+---
+
+<svg
+  viewBox="0 0 240 240"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={ariaLabel}
+  class={className}
+>
+  <!-- Bar -->
+  <line x1="78" y1="120" x2="162" y2="120"></line>
+  <!-- Inner plates (tall, rounded) -->
+  <rect x="58" y="78" width="20" height="84" rx="6"></rect>
+  <rect x="162" y="78" width="20" height="84" rx="6"></rect>
+  <!-- Outer plates (shorter) -->
+  <rect x="38" y="92" width="20" height="56" rx="6"></rect>
+  <rect x="182" y="92" width="20" height="56" rx="6"></rect>
+  <!-- Bar end stubs -->
+  <line x1="28" y1="120" x2="38" y2="120"></line>
+  <line x1="202" y1="120" x2="212" y2="120"></line>
+</svg>

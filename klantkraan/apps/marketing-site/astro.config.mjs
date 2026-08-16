@@ -1,0 +1,59 @@
+// context7: Astro 5 (/llmstxt/astro_build_llms-full_txt, 2026-05-20)
+//           @astrojs/sitemap (/withastro/docs, 2026-05-20)
+//           Tailwind v4 via @tailwindcss/vite (/tailwindlabs/tailwindcss.com)
+import { defineConfig } from 'astro/config'
+import cloudflare from '@astrojs/cloudflare'
+import sitemap from '@astrojs/sitemap'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  site: 'https://klantkraan.nl',
+  output: 'static',
+  // Cloudflare Pages serves /path/ (directory build format); trailing-slash
+  // internal URLs avoid a 308 redirect hop on every link.
+  trailingSlash: 'always',
+  adapter: cloudflare({
+    platformProxy: {
+      enabled: true,
+    },
+  }),
+  integrations: [
+    sitemap({
+      // /r/* are private per-client dashboards; prospect demos are link-only
+      // (noindex) — keep them out of the sitemap. /demo/sportscholen stays in:
+      // that one is a public vertical page. /bedankt/ pages are noindex
+      // post-checkout confirmations; listing them trips a GSC
+      // "noindex page in sitemap" alert.
+      filter: (page) =>
+        !page.includes('/r/') &&
+        !['/demo/cool-global', '/demo/dhz', '/demo/solvista', '/bedankt'].some(
+          (p) => page.includes(p),
+        ),
+      // Stamp every entry with the build date so crawlers see fresh lastmod
+      // values on each deploy.
+      serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
+    }),
+  ],
+  vite: {
+    plugins: [tailwindcss()],
+    build: {
+      // The CSP in public/_headers is script-src 'self' (no inline). Below this
+      // limit Vite inlines bundled page scripts into the HTML, where the browser
+      // refuses to run them — 0 forces every script into an external /_astro/ file.
+      // context7: Astro 5 vite.build.assetsInlineLimit (2026-07-28)
+      assetsInlineLimit: 0,
+    },
+    server: {
+      allowedHosts: ['.trycloudflare.com'],
+    },
+  },
+  i18n: {
+    locales: ['nl', 'en', 'es'],
+    defaultLocale: 'nl',
+    routing: {
+      // Dutch stays at the root (/prijzen/); English lives under /en/ (/en/prijzen/),
+      // Spanish under /es/ (/es/prijzen/) — both keep the Dutch route names.
+      prefixDefaultLocale: false,
+    },
+  },
+})

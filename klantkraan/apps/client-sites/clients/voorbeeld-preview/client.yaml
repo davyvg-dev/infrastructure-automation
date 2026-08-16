@@ -1,0 +1,87 @@
+# Fixture voor een VOORSTEL-build (modus: preview). ALLE gegevens zijn fictief.
+#
+# Zo ziet een client.yaml eruit die uit openbare bronnen is opgebouwd voordat er
+# een klant is: geen KvK, geen btw-id, geen e-mailadres, geen straat/postcode en
+# geen eigen domein, want die staan niet betrouwbaar op een website. Ze worden
+# ook niet verzonnen: het schema staat toe dat ze ontbreken zolang modus preview
+# is, en blokkeert de live-build totdat ze er wel zijn.
+#
+# Deze map heeft bewust geen fotos/: de foto's van een prospect zijn niet van ons
+# om over te nemen, dus een voorstel draait altijd op de kleurvlak-fallback.
+
+modus: preview
+
+bedrijf:
+  naam: 'Voorbeeld Loodgietersbedrijf'
+  vak: 'loodgieter'
+  telefoon: '+31 6 12 34 56 78' # voorbeeldnummer (copy-lint-ok)
+  adres:
+    plaats: 'Zeist'
+  werkgebied:
+    - 'Zeist'
+    - 'Utrecht'
+    - 'De Bilt'
+
+branding:
+  # Afgeleid van het logo of de huisstijl van de prospect; het schema eist dat
+  # witte tekst er leesbaar op blijft.
+  kleur_primair: '#1f4d45'
+  kleur_accent: '#c2703d'
+
+# De vormgeving. Deze fixture staat bewust NIET op de standaardwaarden: samen met
+# voorbeeld-dakdekker (die geen stijl-blok heeft en dus de standaard bouwt) laten de
+# twee fixtures zien wat de woordenlijst doet. Elke as mag ontbreken; wat ontbreekt
+# valt terug op de standaard. Zie src/lib/stijl.ts voor de toegestane waarden.
+stijl:
+  letterontwerp: redactioneel # serif-kop, grotesk broodtekst
+  schaal: groot # grote kop die het eerste scherm draagt
+  vorm: scherp # rechte hoeken op kaarten, knoppen en fotos
+  ritme: ruim # galerielucht tussen de secties
+  palet: zand # warm redactioneel grijs in plaats van koel wit
+  kleuring: royaal # de banden krijgen een tint van de merkkleur
+  foto: randloos # de fotoband loopt door tot de schermrand
+
+# De zinnen die van deze prospect zijn in plaats van van het sjabloon. Bij een voorstel
+# schrijft `app.sitedraft` ze uit de openbare bronnen van de prospect; alles hier is te
+# herleiden tot de diensten en het werkgebied hierboven. Elke sleutel is optioneel en valt
+# terug op src/lib/toon.ts, dus een prospect waarover de bronnen weinig zeggen krijgt gewoon
+# het register en geen verzonnen verhaal.
+teksten:
+  kop: 'Lekkage, verstopping of een ketel die het opgeeft'
+  belofte: 'U legt uit wat er misgaat, wij komen langs met het gereedschap dat daarbij hoort.'
+  intro_kop: 'Wij zeggen het als het meevalt'
+  werkwijze: 'De meeste lekkages zijn kleiner dan ze lijken en sommige verstoppingen zitten twee meter verderop dan u denkt. Wij zoeken eerst uit wat er werkelijk aan de hand is en vertellen het u, ook als de rekening daardoor korter wordt.'
+  bereik: 'Wij werken in Zeist, Utrecht en De Bilt. U spreekt de loodgieter die ook langskomt, niet een planner die hem nog moet bellen.'
+  diensten_tekst: 'Dit is waar de telefoon meestal voor gaat. Staat uw probleem er niet bij? Beschrijf het even, dan hoort u of wij het doen.'
+  slot_kop: 'Vertel wat er lekt'
+  slot_tekst: 'Bel ons en leg uit wat u ziet of hoort. U hoort meteen of het kan wachten en wanneer wij kunnen komen.'
+
+diensten:
+  - naam: 'Lekkage opsporen en verhelpen'
+    omschrijving: 'Wij zoeken de oorzaak van de lekkage op en repareren hem meteen.'
+  - naam: 'Ontstoppen'
+    omschrijving: 'Verstopte afvoer, gootsteen of toilet weer doorstromend krijgen.'
+  - naam: 'Sanitair vervangen'
+    omschrijving: 'Kraan, toilet of douche vervangen, inclusief aansluiten en afwerken.'
+  - naam: 'Cv-ketel onderhoud'
+    omschrijving: 'Jaarlijkse controle en onderhoud zodat uw ketel blijft draaien.'
+
+openingstijden:
+  maandag: ['08:00', '17:00']
+  dinsdag: ['08:00', '17:00']
+  woensdag: ['08:00', '17:00']
+  donderdag: ['08:00', '17:00']
+  vrijdag: ['08:00', '17:00']
+
+spoed:
+  beschikbaar: true
+  tekst: 'Bij een lekkage of een verstopping komen wij dezelfde dag langs. Bel ons en wij bespreken meteen wat er nodig is.'
+
+usps:
+  - 'Vaste prijs vooraf afgesproken'
+  - 'Eigen monteurs uit de regio'
+  - 'Nette afwerking, geen rommel achteraf'
+
+# receptionist: false is verplicht bij een voorstel; wij claimen niets namens
+# een bedrijf dat nog geen klant is.
+receptionist: false
