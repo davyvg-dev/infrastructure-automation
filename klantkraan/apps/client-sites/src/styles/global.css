@@ -40,11 +40,14 @@
     system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --display-tracking: -0.015em;
 
-  --text-h1: clamp(1.9rem, 4.5vw, 3rem);
+  /* Every preferred term is `<rem> + <vw>`, never a bare `vw`: a clamp whose middle term
+   * is pure viewport width does not respond to browser zoom, which is a WCAG 1.4.4
+   * failure. See SCHAAL_TOKENS in src/lib/stijl.ts. */
+  --text-h1: clamp(1.9rem, 1.51rem + 1.65vw, 3rem);
   --text-h1--line-height: 1.08;
   --text-h1--font-weight: 800;
 
-  --text-h2: clamp(1.45rem, 3vw, 2rem);
+  --text-h2: clamp(1.45rem, 1.26rem + 0.83vw, 2rem);
   --text-h2--line-height: 1.15;
   --text-h2--font-weight: 700;
 
@@ -57,6 +60,15 @@
 
   --text-small: 0.875rem;
   --text-small--line-height: 1.5;
+
+  /* Measure (stijl.maat): how wide the page runs, and how wide the words inside it are
+   * allowed to run. Three tokens, because widening the container must not widen the prose
+   * with it -- that is how a wide site ends up with 110-character lines. */
+  --maat-kolom: 64rem; /* page container: header, sections, footer */
+  --maat-band: 72rem; /* the photo band, wider than the page it interrupts */
+  --maat-kop: 42rem; /* headings and the lead line under them */
+  --maat-tekst: 48rem; /* running body text */
+  --maat-gutter: 1.5rem; /* page gutter, left and right */
 
   --radius-card: 0.75rem;
   --radius-button: 0.625rem;
@@ -108,17 +120,65 @@
   }
 
   /* h1 and h2 carry the display face and the skin's tracking; h3 stays in the body
-   * face at every pairing (see LETTER_TOKENS in src/lib/stijl.ts for why). */
+   * face at every pairing (see LETTER_TOKENS in src/lib/stijl.ts for why).
+   *
+   * The two wrapping properties are the FLOOR and are not decoration. Dutch builds
+   * compounds a headline cannot break: `rioolontstoppingsservice` is 24 unbreakable
+   * characters and overflows a 360px viewport at display size no matter how short the
+   * sentence around it is. `hyphens: auto` needs a language to hyphenate against and gets
+   * one from <html lang="nl"> in Base.astro, so this costs nothing and works today.
+   *
+   * `text-wrap: balance` is cosmetic and is deliberately NOT on the h1. Per Chrome's own
+   * docs it "won't change the inline-size of the element", so it never prevented a pixel
+   * of overflow, and it silently switches itself off past six wrapped lines in Chromium
+   * (ten in Firefox) -- inert on exactly the headlines that have a problem. Worse, next to
+   * `hyphens: auto` it is actively harmful on a long headline: balancing is free to spend a
+   * hyphen to even the lines out, and the kapper fixture's H1 came back as "Knippen en
+   * sche-/ren aan de rand" at 1440px, where greedy wrapping fits "Knippen en scheren" on
+   * one line with room to spare. A hyphenated hero headline on a desktop screen reads as a
+   * rendering fault. So the h1 wraps greedily and only hyphenates when a line genuinely
+   * cannot take the next word.
+   *
+   * h2 and h3 keep it: their lines are short, they rarely reach the six-line cliff, and an
+   * even two-line heading is worth more there than the risk of a spent hyphen.
+   *
+   * The length ceiling that keeps a kop from reaching six lines is a schema rule, not a CSS
+   * one; see ClientSchemaChecked in src/lib/client.ts. */
+  h1,
+  h2,
+  h3 {
+    overflow-wrap: break-word;
+  }
+
+  /* Hyphenation everywhere EXCEPT the h1. `hyphens: auto` is not a last resort -- the
+   * browser spends a hyphen whenever it improves the line breaking, and at display size in
+   * a half-width hero column that is most lines. The kapper fixture came back as "Knippen
+   * en sche-/ren aan de rand van Kralingen", which is correct Dutch syllabification and
+   * still reads as a rendering fault on a 1440px screen.
+   *
+   * `overflow-wrap: break-word` stays on the h1 and is the actual floor: unlike hyphens it
+   * only acts when a single word cannot fit a line by itself, which is the
+   * `rioolontstoppingsservice` case and nothing else. The break lands without a hyphen,
+   * which is uglier than a hyphen but happens roughly never, against a hyphen that was
+   * happening on every second line. */
+  h2,
+  h3 {
+    hyphens: auto;
+  }
+
   h1,
   h2 {
     font-family: var(--font-display);
     letter-spacing: var(--display-tracking);
+  }
+
+  h2,
+  h3 {
     text-wrap: balance;
   }
 
   h3 {
     letter-spacing: -0.015em;
-    text-wrap: balance;
   }
 
   a {

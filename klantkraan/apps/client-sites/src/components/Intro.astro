@@ -8,9 +8,11 @@ const { config } = loadClient()
 const t = toon(config)
 ---
 
-<section class="mx-auto max-w-5xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)">
-  <h2 class="max-w-2xl text-h2">{t.introKop}</h2>
-  <div class="mt-5 grid max-w-3xl gap-4 text-(--color-mist)">
+<section
+  class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)"
+>
+  <h2 class="max-w-(--maat-kop) text-h2">{t.introKop}</h2>
+  <div class="mt-5 grid max-w-(--maat-tekst) gap-4 text-(--color-mist)">
     <p>{t.werkwijze}</p>
     <p>{t.bereik}</p>
   </div>

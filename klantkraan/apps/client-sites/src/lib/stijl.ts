@@ -29,6 +29,7 @@ export const RITMES = ['dicht', 'normaal', 'ruim'] as const
 export const PALETTEN = ['warm', 'koel', 'neutraal', 'zand'] as const
 export const KLEURINGEN = ['spaarzaam', 'royaal'] as const
 export const FOTOZETTINGEN = ['ingekaderd', 'randloos'] as const
+export const MATEN = ['smal', 'normaal', 'breed'] as const
 
 export type Letterontwerp = (typeof LETTERONTWERPEN)[number]
 export type Schaal = (typeof SCHALEN)[number]
@@ -37,6 +38,7 @@ export type Ritme = (typeof RITMES)[number]
 export type Palet = (typeof PALETTEN)[number]
 export type Kleuring = (typeof KLEURINGEN)[number]
 export type Fotozetting = (typeof FOTOZETTINGEN)[number]
+export type Maat = (typeof MATEN)[number]
 
 export interface Stijl {
   letterontwerp: Letterontwerp
@@ -46,6 +48,7 @@ export interface Stijl {
   palet: Palet
   kleuring: Kleuring
   foto: Fotozetting
+  maat: Maat
 }
 
 /**
@@ -62,6 +65,7 @@ export const STANDAARD_STIJL: Stijl = {
   palet: 'warm',
   kleuring: 'spaarzaam',
   foto: 'ingekaderd',
+  maat: 'normaal',
 }
 
 type Tokens = Record<string, string>
@@ -160,19 +164,28 @@ export function fontDirs(naam: Letterontwerp): string[] {
 // Sizes only. Weight and tracking belong to the typeface, not to the scale, and are set
 // by the letterontwerp axis. Every step is a clamp() so the scale is fluid rather than
 // stepped: a trade site is read on a phone in a van as often as on a desktop.
+//
+// Every preferred term is `<rem> + <vw>`, never a bare `vw`. A clamp whose middle term is
+// pure viewport width does not respond to browser zoom at all -- the glyphs stay the same
+// physical size while the page around them grows -- which is a WCAG 2.2 SC 1.4.4 (Resize
+// Text) failure, and the audience for these sites is the half of it least likely to be
+// reading at 100%. The rem carries the zoom, the vw carries the fluidity. Each pair is
+// solved to hold the old endpoints: the minimum at a 375px phone and the maximum at a
+// 1440px desktop, so the scale looks the same on both and only the middle of the range
+// (and the zoom behaviour) moves.
 const SCHAAL_TOKENS: Record<Schaal, Tokens> = {
   // Dense and businesslike. Suits a client with many diensten, where the page is long
   // and a huge H1 would push the first real information below the fold.
   compact: {
-    '--text-h1': 'clamp(1.65rem, 3.6vw, 2.35rem)',
-    '--text-h2': 'clamp(1.3rem, 2.4vw, 1.65rem)',
+    '--text-h1': 'clamp(1.65rem, 1.4rem + 1.05vw, 2.35rem)',
+    '--text-h2': 'clamp(1.3rem, 1.18rem + 0.53vw, 1.65rem)',
     '--text-h3': '1.05rem',
     '--text-body': '1rem',
     '--text-small': '0.8125rem',
   },
   normaal: {
-    '--text-h1': 'clamp(1.9rem, 4.5vw, 3rem)',
-    '--text-h2': 'clamp(1.45rem, 3vw, 2rem)',
+    '--text-h1': 'clamp(1.9rem, 1.51rem + 1.65vw, 3rem)',
+    '--text-h2': 'clamp(1.45rem, 1.26rem + 0.83vw, 2rem)',
     '--text-h3': '1.15rem',
     '--text-body': '1.0625rem',
     '--text-small': '0.875rem',
@@ -185,11 +198,72 @@ const SCHAAL_TOKENS: Record<Schaal, Tokens> = {
   // 68px that ran to five lines and pushed the call button off a 1000px screen. A trade
   // site that hides its phone number below the fold has lost the only conversion it has.
   groot: {
-    '--text-h1': 'clamp(2.1rem, 5vw, 3.5rem)',
-    '--text-h2': 'clamp(1.7rem, 3.8vw, 2.6rem)',
+    '--text-h1': 'clamp(2.1rem, 1.61rem + 2.1vw, 3.5rem)',
+    '--text-h2': 'clamp(1.7rem, 1.38rem + 1.35vw, 2.6rem)',
     '--text-h3': '1.25rem',
     '--text-body': '1.125rem',
     '--text-small': '0.9375rem',
+  },
+}
+
+// --- measure --------------------------------------------------------------------------
+//
+// How wide the page is allowed to be, and how wide the words inside it are allowed to run.
+//
+// This was the last hardcoded dimension in the template: `max-w-5xl` appeared as a literal
+// nineteen times, `max-w-2xl` eight, `max-w-3xl` three, and no axis could move any of them.
+// Every site the factory built was therefore the same 64rem column down the middle of
+// whatever screen it landed on -- which is the silhouette a visitor reads before they read
+// a word, and the one the reference sites differ on most.
+//
+// Three tokens because a page has three different measures and conflating them is how a
+// wide site ends up with 110-character lines:
+//   --maat-kolom  the page container: header, sections, footer
+//   --maat-band   the photo band, deliberately wider than the page it interrupts
+//   --maat-kop    headings and the lead line under them, which want a shorter measure
+//   --maat-tekst  running body text
+// Widening the container therefore does NOT widen the prose in step with it. `breed` buys
+// air in the margins and a longer photo band, not a longer line.
+//
+// `normaal` is exactly what every existing site already had (64/42/48rem, 1.5rem gutter),
+// so a client.yaml written before this axis existed builds the same bytes.
+const MAAT_TOKENS: Record<Maat, Tokens> = {
+  // A tight editorial column. Suits a site with little to say and one good photograph:
+  // the narrower the column, the more the whitespace reads as confidence rather than as a
+  // section someone forgot to fill.
+  smal: {
+    '--maat-kolom': '56rem',
+    '--maat-band': '64rem',
+    '--maat-kop': '34rem',
+    '--maat-tekst': '40rem',
+    '--maat-gutter': '1.5rem',
+  },
+  normaal: {
+    '--maat-kolom': '64rem',
+    '--maat-band': '72rem',
+    '--maat-kop': '42rem',
+    '--maat-tekst': '48rem',
+    '--maat-gutter': '1.5rem',
+  },
+  // The gallery end. The container grows 12rem and the prose grows 2, so the extra width
+  // lands in the margins and on the photographs, which is where the reference sites put it.
+  // The gutter grows with it: a 76rem column with a 1.5rem gutter has its text nearly
+  // touching the edge of a 1280px laptop screen.
+  // The gallery end. The container grows 20rem across the axis and the prose grows 8, so
+  // the extra width lands in the margins and on the photographs, which is where the
+  // reference sites put it.
+  //
+  // `--maat-tekst` deliberately does NOT grow past `normaal`: 48rem is about 90 characters
+  // of Dutch body text at 1.0625rem, which is already past the 45-75 a typographer would
+  // ask for. The widest page in the vocabulary is therefore the one with the most margin,
+  // not the one with the longest line. The gutter grows instead -- a 76rem column with a
+  // 1.5rem gutter has its text nearly touching the edge of a 1280px laptop screen.
+  breed: {
+    '--maat-kolom': '76rem',
+    '--maat-band': '84rem',
+    '--maat-kop': '44rem',
+    '--maat-tekst': '48rem',
+    '--maat-gutter': '2rem',
   },
 }
 
@@ -326,9 +400,15 @@ const FOTO_TOKENS: Record<Fotozetting, Tokens> = {
   // corner than the work tiles, which sit next to the dienst cards and match them. Folding
   // them into one value looks tidier in this file and visibly re-rounds the tiles on every
   // existing site, so they stay separate and only `randloos` squares both at once.
+  // Spends the page's own band width rather than a pinned number, so `maat` moves the
+  // photo column with the rest of the page and the two axes cannot disagree about how wide
+  // the site is. At `maat: normaal` --maat-band is the 72rem this token was pinned at
+  // before the axis existed, which is what keeps an older client.yaml building the same
+  // bytes. Werk's eyebrow and H2 read --maat-band directly, so when `randloos` sends the
+  // photographs to the edges below, the heading above them stays on the framed line.
   ingekaderd: {
-    '--foto-kolom': '72rem',
-    '--foto-gutter': '1.5rem',
+    '--foto-kolom': 'var(--maat-band)',
+    '--foto-gutter': 'var(--maat-gutter)',
     '--foto-radius': 'var(--radius-foto)',
     '--foto-tegel-radius': 'var(--radius-card)',
   },
@@ -352,6 +432,7 @@ export function resolveStijl(stijl: Stijl): Tokens {
   return {
     ...fontTokens(stijl.letterontwerp),
     ...SCHAAL_TOKENS[stijl.schaal],
+    ...MAAT_TOKENS[stijl.maat],
     ...VORM_TOKENS[stijl.vorm],
     ...RITME_TOKENS[stijl.ritme],
     ...PALET_TOKENS[stijl.palet],

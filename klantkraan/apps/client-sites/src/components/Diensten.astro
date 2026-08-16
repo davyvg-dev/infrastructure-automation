@@ -2,8 +2,19 @@
 import { loadClient } from '../lib/client'
 import { toon } from '../lib/toon'
 
-// Diensten grid: name + short description per service, from client.yaml.
+// Diensten: name + short description per service, from client.yaml.
 // No prices anywhere (pilot rule: prices are never published).
+//
+// Three arrangements, chosen by `indeling.diensten`. The three-column grid of bordered,
+// rounded cards was the only one for the factory's whole life, and it is the single
+// most-flagged "this came out of a generator" component there is -- the 60-site trade
+// survey found the good sites overwhelmingly run a numbered list or a two-column index
+// instead, and reserve cards for things that are genuinely card-shaped (a product, a
+// person). The alternatives are also strictly cheaper: no borders, no radius, no shadow,
+// nothing for `vorm` to get wrong.
+//
+// What all three share, because it is what a visitor came for: the name of the job in the
+// words a customer would use, and one line saying what it involves.
 interface Props {
   /** Heading level for the section title: homepage uses h2, /diensten/ uses none. */
   compact?: boolean
@@ -16,25 +27,87 @@ const t = toon(config)
 // because the page already has <h1>Onze diensten</h1>, so h3 would skip a level.
 // Visual size is the text-h3 class either way, only the semantics move.
 const CardHeading = compact ? 'h2' : 'h3'
+const vorm = config.indeling.diensten
+// Two digits, so a list of ten does not shift its left edge at the tenth row.
+const nummer = (i: number) => String(i + 1).padStart(2, '0')
 ---
 
-<section class="mx-auto max-w-5xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)" id="diensten">
+<section
+  class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)"
+  id="diensten"
+>
   {
     !compact && (
       <>
         <h2 class="text-h2">Onze diensten</h2>
-        <p class="mt-3 max-w-2xl text-(--color-mist)">{t.dienstenTekst}</p>
+        <p class="mt-3 max-w-(--maat-kop) text-(--color-mist)">{t.dienstenTekst}</p>
       </>
     )
   }
-  <ul role="list" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-    {
-      config.diensten.map((dienst) => (
-        <li class="card p-6">
-          <CardHeading class="text-h3">{dienst.naam}</CardHeading>
-          <p class="mt-2 text-small text-(--color-mist)">{dienst.omschrijving}</p>
-        </li>
-      ))
-    }
-  </ul>
+
+  {
+    vorm === 'kaarten' && (
+      <ul role="list" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {config.diensten.map((dienst) => (
+          <li class="card p-6">
+            <CardHeading class="text-h3">{dienst.naam}</CardHeading>
+            <p class="mt-2 text-small text-(--color-mist)">{dienst.omschrijving}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    /*
+     * The list. One job per row, a hairline between rows, the number set in the brand
+     * colour in a narrow first column. No box, so nothing can be left orphaned on a last
+     * row -- which is the `weesrij` tell the linter has to catch on the card grid, and
+     * which this arrangement cannot produce by construction.
+     *
+     * The description sits in its own column on desktop and under the name on a phone,
+     * so the names form a scannable vertical list at the width where scanning matters.
+     */
+    vorm === 'lijst' && (
+      <ul role="list" class="mt-8 border-t border-(--color-line)">
+        {config.diensten.map((dienst, i) => (
+          <li class="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-4 gap-y-1 border-b border-(--color-line) py-5 md:grid-cols-[3rem_minmax(0,18rem)_minmax(0,1fr)] md:gap-x-8 md:py-7">
+            <span
+              aria-hidden="true"
+              class="text-small font-semibold tabular-nums text-(--brand-primary)"
+            >
+              {nummer(i)}
+            </span>
+            <CardHeading class="text-h3">{dienst.naam}</CardHeading>
+            <p class="col-start-2 text-small text-(--color-mist) md:col-start-3">
+              {dienst.omschrijving}
+            </p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    /*
+     * The index. Two columns of rows on desktop, each row a name with its line under it,
+     * separated by hairlines rather than boxed. Reads like the contents page of a
+     * brochure. Suits a business with six to eight short services where the list
+     * arrangement would run down the page further than the section deserves.
+     *
+     * columns rather than grid: a masonry-style column fill keeps every row its natural
+     * height, so a two-line description does not stretch a whole grid row and leave a gap
+     * next to it. Same reason the work band uses it.
+     */
+    vorm === 'index' && (
+      <ul role="list" class="mt-8 gap-x-12 md:columns-2">
+        {config.diensten.map((dienst) => (
+          <li class="mb-0 break-inside-avoid border-b border-(--color-line) py-4">
+            <CardHeading class="text-h3">{dienst.naam}</CardHeading>
+            <p class="mt-1 text-small text-(--color-mist)">{dienst.omschrijving}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </section>

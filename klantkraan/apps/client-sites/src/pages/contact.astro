@@ -19,9 +19,11 @@ const description = bedrijf.email
 ---
 
 <Base title={title} description={description}>
-  <section class="mx-auto max-w-5xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)">
+  <section
+    class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)"
+  >
     <h1 class="text-h1">Contact</h1>
-    <p class="mt-4 max-w-2xl text-(--color-mist)">
+    <p class="mt-4 max-w-(--maat-kop) text-(--color-mist)">
       Bellen werkt het snelst: u legt uw situatie uit en wij plannen direct een afspraak in.
       {
         config.receptionist &&

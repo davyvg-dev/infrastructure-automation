@@ -10,7 +10,7 @@ const reviews = config.reviews
 
 {
   reviews.length > 0 && (
-    <section class="mx-auto max-w-5xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)">
+    <section class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)">
       <h2 class="text-h2">Wat klanten zeggen</h2>
       <ul role="list" class="mt-8 grid gap-5 md:grid-cols-3">
         {reviews.map((review) => (

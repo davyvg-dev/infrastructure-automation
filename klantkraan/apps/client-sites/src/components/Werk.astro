@@ -27,36 +27,23 @@ import { loadClient } from '../lib/client'
 // trade name repeated five times, and the sites that do this best (Van Wijnen, Zecc)
 // caption nothing and let the heading carry the meaning. Synthesising "Pannendak
 // Utrecht" under a stock photo would read as a case study we never did.
-const { config, fotos, stock } = loadClient()
+const { config, beeld } = loadClient()
 const { bedrijf } = config
 
-// Hero.astro spends fotos[0] on the hero, so the gallery starts at the second photo; a
-// client who supplied exactly one photo gets a hero and no gallery rather than the same
-// frame twice. Capped so a client who sends forty holiday snaps still gets a page.
-const ownTiles = fotos.slice(1, 10)
-const own = ownTiles.length > 0
-
-// Client photos have no rendition pipeline (intake asks for web-ready files), so their
-// ratios are unknown at build time. Forcing them into the same tall/wide rhythm as the
-// stock set both reserves the box -- no reflow as they load -- and gives every client
-// site the same considered stagger. The cycle starts tall and puts the landscape frames
-// at 2 and 5, matching how the stock sets are cut.
-const CYCLE = ['tall', 'wide', 'tall', 'wide', 'tall', 'wide'] as const
-const tiles = own
-  ? ownTiles.map((src, i) => ({
-      src,
-      shape: CYCLE[i % CYCLE.length],
-      width: 0,
-      height: 0,
-      alt: `Werk van ${bedrijf.naam}`,
-    }))
-  : stock.tiles.map((t) => ({
-      src: t.src,
-      shape: t.height > t.width ? ('tall' as const) : ('wide' as const),
-      width: t.width,
-      height: t.height,
-      alt: t.alt,
-    }))
+// Both sources now arrive in one shape. Client photographs used to be raw uploads with no
+// rendition pipeline, so their ratios were unknown at build time and this component had to
+// force them into an assumed tall/wide cycle with width/height of 0 -- which meant every
+// client who supplied their own photos got a page that reflowed as it loaded, and the tile
+// shape was a guess that the CSS then cropped to. scripts/client-fotos.py cuts them to the
+// same four renditions the stock sets use, so the crop is real and the box is honest.
+const own = beeld.eigen
+const tiles = beeld.set.tiles.map((t) => ({
+  src: t.src,
+  shape: t.height > t.width ? ('tall' as const) : ('wide' as const),
+  width: t.width,
+  height: t.height,
+  alt: t.alt,
+}))
 
 // Every stock tile carries its own Dutch description of what is in the frame (from
 // stock/<vak>/alt.json), never a claim about who did the work. One shared sentence would
@@ -65,8 +52,8 @@ const tiles = own
 // A client's own photos are their work and say so.
 //
 // Tiles are drawn ~357px wide on a three-column desktop and ~342px in the single-column
-// phone layout, so the -sm rendition covers a 1x phone and the full file covers 2x;
-// stock only, since a client photo has no second rendition to point at.
+// phone layout, so the -sm rendition covers a 1x phone and the full file covers 2x. Both
+// sources have one: client photographs are cut to the same renditions as the stock sets.
 const srcset = (src: string, w: number) =>
   `${src.replace(/\.webp$/, '-sm.webp')} ${w / 2}w, ${src} ${w}w`
 ---
@@ -75,11 +62,11 @@ const srcset = (src: string, w: number) =>
   tiles.length > 0 && (
     <section aria-labelledby="werk-titel" class="border-y border-(--band-line) bg-(--band-foto-bg)">
       <div class="py-(--ritme-band-y) md:py-(--ritme-band-y-md)">
-        <div class="mx-auto max-w-6xl px-6">
+        <div class="mx-auto max-w-(--maat-band) px-(--maat-gutter)">
           <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
             {own ? 'Ons werk' : 'Sfeerbeeld'}
           </p>
-          <h2 id="werk-titel" class="mt-4 max-w-2xl text-h2">
+          <h2 id="werk-titel" class="mt-4 max-w-(--maat-kop) text-h2">
             {own ? 'Een greep uit ons werk.' : `Zo ziet het werk van een ${bedrijf.vak} eruit.`}
           </h2>
         </div>
@@ -110,12 +97,10 @@ const srcset = (src: string, w: number) =>
               <li class="mb-4 break-inside-avoid">
                 <img
                   src={src}
-                  srcset={own ? undefined : srcset(src, width)}
-                  sizes={
-                    own ? undefined : '(min-width: 768px) 357px, (min-width: 640px) 45vw, 90vw'
-                  }
-                  width={own ? undefined : width}
-                  height={own ? undefined : height}
+                  srcset={srcset(src, width)}
+                  sizes="(min-width: 768px) 357px, (min-width: 640px) 45vw, 90vw"
+                  width={width}
+                  height={height}
                   alt={alt}
                   loading="lazy"
                   decoding="async"

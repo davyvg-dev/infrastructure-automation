@@ -25,6 +25,7 @@ import {
   FOTOZETTINGEN,
   KLEURINGEN,
   LETTERONTWERPEN,
+  MATEN,
   PALETTEN,
   RITMES,
   SCHALEN,
@@ -40,7 +41,7 @@ import manifest from '../../fonts/manifest.json' with { type: 'json' }
 
 const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 
-/** Every stijl the vocabulary can express: 4 x 3 x 3 x 3 x 4 x 2 x 2. */
+/** Every stijl the vocabulary can express: 4 x 3 x 3 x 3 x 4 x 2 x 2 x 3. */
 function alleStijlen(): Stijl[] {
   const out: Stijl[] = []
   for (const letterontwerp of LETTERONTWERPEN)
@@ -50,7 +51,8 @@ function alleStijlen(): Stijl[] {
           for (const palet of PALETTEN)
             for (const kleuring of KLEURINGEN)
               for (const foto of FOTOZETTINGEN)
-                out.push({ letterontwerp, schaal, vorm, ritme, palet, kleuring, foto })
+                for (const maat of MATEN)
+                  out.push({ letterontwerp, schaal, vorm, ritme, palet, kleuring, foto, maat })
   return out
 }
 
@@ -121,6 +123,7 @@ test('the axes write disjoint properties', () => {
     ['palet', PALETTEN.map((v) => ({ palet: v }))],
     ['kleuring', KLEURINGEN.map((v) => ({ kleuring: v }))],
     ['foto', FOTOZETTINGEN.map((v) => ({ foto: v }))],
+    ['maat', MATEN.map((v) => ({ maat: v }))],
   ]
   for (const [naam, waarden] of axes) {
     // Which properties this axis moves: the ones whose value is not the same for every
@@ -295,6 +298,58 @@ test('the schalen are ordered at every step', () => {
   }
 })
 
+test('no fluid step sizes itself on viewport width alone', () => {
+  // WCAG 2.2 SC 1.4.4. `clamp(1.9rem, 4.5vw, 3rem)` -- what every step used to be -- does
+  // not respond to browser zoom: the viewport unit is measured in CSS pixels, which zoom
+  // does not change, so the glyphs stay put while the page around them grows. A reader at
+  // 200% gets a headline that is now, relatively, half the size it was. The preferred term
+  // has to carry a rem for the zoom to have anything to act on.
+  //
+  // Checked across every combination rather than over SCHAAL_TOKENS, so a later axis that
+  // introduces a fluid token of its own is held to the same rule.
+  for (const stijl of ALLE) {
+    for (const [prop, value] of Object.entries(resolveStijl(stijl))) {
+      const preferred = value.match(/^clamp\(\s*[^,]+,\s*([^,]+),\s*[^)]+\)$/)?.[1]
+      if (!preferred) continue
+      assert.ok(
+        !/v(w|h|min|max)/.test(preferred) || /r?em/.test(preferred),
+        `${prop} scales on viewport alone: "${value}" (${JSON.stringify(stijl)})`,
+      )
+    }
+  }
+})
+
+test('every fluid step still meets its endpoints at a phone and at a desktop', () => {
+  // The rem+vw rewrite is only safe if it did not quietly resize the pages that already
+  // exist. Each pair was solved to hold the old bounds at the two viewports that matter,
+  // so the clamp must bottom out at or below its minimum on a 375px phone and reach its
+  // maximum by a 1440px desktop -- outside that band the clamp itself takes over and the
+  // preferred term is not what the reader sees.
+  const px = (value: string, viewport: number) => {
+    const m = value.match(/^([\d.]+)rem \+ ([\d.]+)vw$/)
+    assert.ok(m, `preferred term is not "<rem> + <vw>": "${value}"`)
+    return Number(m![1]) * 16 + (Number(m![2]) / 100) * viewport
+  }
+  for (const schaal of SCHALEN) {
+    const tokens = resolveStijl(met({ schaal }))
+    for (const prop of ['--text-h1', '--text-h2']) {
+      const clamp = tokens[prop].match(/^clamp\(\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/)
+      assert.ok(clamp, `${schaal} ${prop} is not a clamp`)
+      const [min, preferred, max] = [rem(clamp![1]) * 16, clamp![2], rem(clamp![3]) * 16]
+      // Within half a pixel: the coefficients are rounded to two decimals on purpose, so
+      // they stay readable in the stylesheet.
+      assert.ok(
+        Math.abs(px(preferred, 375) - min) < 0.5,
+        `${schaal} ${prop} is ${px(preferred, 375).toFixed(1)}px at 375, want ${min}px`,
+      )
+      assert.ok(
+        Math.abs(px(preferred, 1440) - max) < 0.5,
+        `${schaal} ${prop} is ${px(preferred, 1440).toFixed(1)}px at 1440, want ${max}px`,
+      )
+    }
+  }
+})
+
 test('no schaal grows the h1 past what a long Dutch company name survives', () => {
   // Q9's finding, from a build rather than a test: the h1 is "<bedrijf.naam>: vakwerk waar u
   // op kunt rekenen." in a half-width hero column. At 68px a 28-character name ran to five
@@ -327,6 +382,95 @@ test('the ritmes are ordered and the photo band always carries more air', () => 
     // Wider viewport, more air, never less.
     assert.ok(rem(t['--ritme-y-md']) > rem(t['--ritme-y']), `${ritme} md is not roomier`)
     assert.ok(rem(t['--ritme-band-y-md']) > rem(t['--ritme-band-y']), `${ritme} band md`)
+  }
+})
+
+test('the maten are ordered and the prose never outgrows the page', () => {
+  const perMaat = MATEN.map((m) => resolveStijl(met({ maat: m })))
+  for (const prop of [
+    '--maat-kolom',
+    '--maat-band',
+    '--maat-kop',
+    '--maat-tekst',
+    '--maat-gutter',
+  ]) {
+    const breedtes = perMaat.map((t) => rem(t[prop]))
+    for (let i = 1; i < breedtes.length; i++) {
+      // Weak ordering: the gutter is allowed to stay put between two maten, the columns
+      // are not, and the loop below is what separates those two cases.
+      assert.ok(
+        breedtes[i] >= breedtes[i - 1],
+        `${prop}: ${MATEN[i]} (${breedtes[i]}) is narrower than ${MATEN[i - 1]} (${breedtes[i - 1]})`,
+      )
+    }
+  }
+  for (const [i, maat] of MATEN.entries()) {
+    const t = perMaat[i]
+    const [kolom, band, kop, tekst] = [
+      '--maat-kolom',
+      '--maat-band',
+      '--maat-kop',
+      '--maat-tekst',
+    ].map((p) => rem(t[p]))
+    // A reading measure wider than the container it sits in is a token that does nothing:
+    // the container clips it and the founder moves a knob with no effect on the page.
+    assert.ok(tekst < kolom, `${maat}: text measure ${tekst} is not inside the ${kolom} column`)
+    // The photo band interrupts the page by being wider than it. A band narrower than the
+    // text above it reads as a mistake rather than as a frame.
+    assert.ok(band > kolom, `${maat}: band ${band} is not wider than the ${kolom} column`)
+    // Headings want a shorter line than running text, not a longer one. This is the
+    // relationship that stops a wide site setting its H2 across the full column.
+    assert.ok(kop < tekst, `${maat}: heading measure ${kop} is not under the text measure ${tekst}`)
+  }
+})
+
+test('a wider page buys margin and photographs, not longer lines', () => {
+  // The failure this exists for: scaling every measure by the same factor, which is what
+  // makes a "roomier" site read as a harder one to read. Body text at 1.0625rem lands
+  // around 8.5px per character, so 48rem is already ~90 characters -- past the 45-75 a
+  // typographer would ask for, and the ceiling this axis must not push through.
+  const smal = resolveStijl(met({ maat: 'smal' }))
+  const breed = resolveStijl(met({ maat: 'breed' }))
+  const groei = (prop: string) => rem(breed[prop]) - rem(smal[prop])
+  assert.ok(
+    groei('--maat-tekst') <= groei('--maat-kolom') / 2,
+    `the container grows ${groei('--maat-kolom')}rem against ${groei('--maat-tekst')}rem of prose`,
+  )
+  for (const maat of MATEN) {
+    const tekst = rem(resolveStijl(met({ maat }))['--maat-tekst'])
+    assert.ok(tekst >= 38 && tekst <= 48, `${maat} sets running text across ${tekst}rem`)
+  }
+})
+
+test('maat normaal is the width every site had before the axis existed', () => {
+  // Same promise as STANDAARD_STIJL itself: the literals this axis replaced were
+  // max-w-5xl (64rem), max-w-2xl (42rem), max-w-3xl (48rem) and px-6 (1.5rem), and a
+  // client.yaml written before `maat` must still build those bytes.
+  const t = resolveStijl(met({ maat: 'normaal' }))
+  assert.equal(t['--maat-kolom'], '64rem')
+  assert.equal(t['--maat-kop'], '42rem')
+  assert.equal(t['--maat-tekst'], '48rem')
+  assert.equal(t['--maat-gutter'], '1.5rem')
+  assert.equal(STANDAARD_STIJL.maat, 'normaal')
+})
+
+test('the framed photo band is wider than the page and follows it', () => {
+  // --foto-kolom used to be pinned at 72rem while the page was pinned at 64: the band was
+  // deliberately the wider of the two. Now that `maat` moves the page, a pinned band would
+  // end up NARROWER than the column it sits in at maat: breed, which reads as a mistake
+  // rather than as a frame. Deriving it keeps the relationship at every maat.
+  for (const maat of MATEN) {
+    const t = resolveStijl(met({ maat, foto: 'ingekaderd' }))
+    assert.equal(deref(t, t['--foto-kolom']), t['--maat-band'])
+    assert.equal(deref(t, t['--foto-gutter']), t['--maat-gutter'])
+  }
+  // At the default that is the 72rem/1.5rem the token was pinned at before the axis.
+  const standaard = resolveStijl(STANDAARD_STIJL)
+  assert.equal(rem(standaard['--maat-band']), 72)
+  assert.equal(rem(standaard['--maat-gutter']), 1.5)
+  // Bleeding still overrides both, whatever the maat says.
+  for (const maat of MATEN) {
+    assert.equal(resolveStijl(met({ maat, foto: 'randloos' }))['--foto-kolom'], '100%')
   }
 })
 

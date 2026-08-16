@@ -10,7 +10,7 @@ const { bedrijf } = config
 const t = toon(config)
 ---
 
-<section class="mx-auto max-w-5xl px-6 pb-4">
+<section class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) pb-4">
   <div
     class="rounded-(--radius-card) p-8 text-white md:p-12"
     style="background-color: var(--brand-primary)"
@@ -24,7 +24,7 @@ const t = toon(config)
        * nothing to give -- no alpha below 1.0 clears 4.5:1 there.
        */
     }
-    <p class="mt-3 max-w-2xl">{t.slotTekst}</p>
+    <p class="mt-3 max-w-(--maat-kop)">{t.slotTekst}</p>
     <div class="mt-7 flex flex-wrap items-center gap-4">
       <a
         href={telHref(bedrijf.telefoon)}

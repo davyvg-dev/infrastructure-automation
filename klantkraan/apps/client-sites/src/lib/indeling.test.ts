@@ -11,7 +11,12 @@ import assert from 'node:assert/strict'
 import {
   ClientSchema,
   ClientSchemaChecked,
+  DIENSTVORMEN,
+  HEROS,
+  HERO_VORM,
+  STANDAARD_INDELING,
   WEGLAATBAAR,
+  heroToontFoto,
   toont,
   type ClientConfig,
 } from './client.ts'
@@ -58,6 +63,59 @@ test('alleen de vier secties die een site echt kan missen', () => {
       `${verboden} mag niet weggelaten kunnen worden`,
     )
   }
+})
+
+// --- de compositie: hero en diensten ---------------------------------------------------
+
+test('een yaml met alleen weglaten krijgt nog steeds de oude compositie', () => {
+  // Same promise STANDAARD_STIJL makes about the skin. The live fleet's client.yaml files
+  // predate both axes, and a site that silently changed its hero on the next deploy is the
+  // one failure mode a default exists to prevent.
+  assert.deepEqual(indeling.parse(undefined), STANDAARD_INDELING)
+  assert.deepEqual(indeling.parse({ weglaten: ['usps'] }), {
+    ...STANDAARD_INDELING,
+    weglaten: ['usps'],
+  })
+  assert.equal(STANDAARD_INDELING.hero, 'gesplitst')
+  assert.equal(STANDAARD_INDELING.diensten, 'kaarten')
+})
+
+test('de compositie neemt elke waarde uit de woordenschat en niets anders', () => {
+  for (const hero of HEROS) assert.equal(indeling.parse({ hero }).hero, hero)
+  for (const diensten of DIENSTVORMEN) {
+    assert.equal(indeling.parse({ diensten }).diensten, diensten)
+  }
+  // The R3 fixture bug in its indeling form: a value from one axis put on the other rides
+  // to a Zod refusal at build time unless the enum catches it here.
+  assert.ok(!indeling.safeParse({ hero: 'kaarten' }).success)
+  assert.ok(!indeling.safeParse({ diensten: 'gesplitst' }).success)
+  assert.ok(!indeling.safeParse({ hero: 'plaat' }).success)
+})
+
+test('elke hero-vorm is een andere vorm', () => {
+  // An axis whose values resolve to the same arrangement is a knob wired to nothing: the
+  // founder picks a different hero and the page does not move.
+  const gezien = new Set(HEROS.map((h) => JSON.stringify(HERO_VORM[h])))
+  assert.equal(gezien.size, HEROS.length, 'twee hero-waarden leveren dezelfde vorm op')
+  for (const hero of HEROS) {
+    const vorm = HERO_VORM[hero]
+    // The photo is either beside the copy or under it. Both at once would draw the hero
+    // frame twice on one screen, which no arrangement wants.
+    assert.ok(!(vorm.kolommen && vorm.fotoBreed), `${hero} zet de foto twee keer neer`)
+    // A hero that draws no photograph must not ask for a column to put one in.
+    if (!heroToontFoto(hero)) {
+      assert.equal(vorm.kolommen, false, `${hero} vraagt een fotokolom zonder foto`)
+      assert.equal(vorm.fotoBreed, false, `${hero} vraagt een fotoband zonder foto`)
+    }
+  }
+})
+
+test('precies een hero-vorm laat de foto weg', () => {
+  // Sized deliberately: `typografisch` is the honest arrangement for a vak whose stock set
+  // has no hero frame worth the first screen, and a second photo-less value would just be
+  // the same page with different padding.
+  const zonder = HEROS.filter((h) => !heroToontFoto(h))
+  assert.deepEqual(zonder, ['typografisch'])
 })
 
 test('een kop die de belknop onder de vouw duwt komt er niet doorheen', () => {

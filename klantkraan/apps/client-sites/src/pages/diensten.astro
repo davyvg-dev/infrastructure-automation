@@ -15,9 +15,9 @@ const description = `Overzicht van de diensten van ${bedrijf.naam}: ${config.die
 ---
 
 <Base title={title} description={description}>
-  <section class="mx-auto max-w-5xl px-6 pt-10 md:pt-12">
+  <section class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) pt-10 md:pt-12">
     <h1 class="text-h1">Onze diensten</h1>
-    <p class="mt-4 max-w-2xl text-(--color-mist)">{t.dienstenPaginaTekst}</p>
+    <p class="mt-4 max-w-(--maat-kop) text-(--color-mist)">{t.dienstenPaginaTekst}</p>
   </section>
   <Diensten compact />
   <FinalCta />

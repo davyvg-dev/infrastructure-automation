@@ -30,9 +30,9 @@ const andere = bedrijf.werkgebied.filter((p) => p !== plaats)
 
 <Base title={t.plaatsTitel(plaats)} description={t.plaatsOmschrijving(plaats)}>
   <section class="border-b border-(--color-line) bg-(--color-card)">
-    <div class="mx-auto max-w-5xl px-6 py-14 md:py-20">
+    <div class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-14 md:py-20">
       <h1 class="text-h1">{t.plaatsKop(plaats)}</h1>
-      <p class="mt-5 max-w-2xl text-(--color-mist)">{t.plaatsTekst(plaats)}</p>
+      <p class="mt-5 max-w-(--maat-kop) text-(--color-mist)">{t.plaatsTekst(plaats)}</p>
       <a href={telHref(bedrijf.telefoon)} class="btn btn-call mt-8">
         <Icon name="phone" class="h-5 w-5" />
         <span>Bel {bedrijf.telefoon}</span>
@@ -44,7 +44,7 @@ const andere = bedrijf.werkgebied.filter((p) => p !== plaats)
 
   {
     andere.length > 0 && (
-      <section class="mx-auto max-w-5xl px-6 pb-4">
+      <section class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) pb-4">
         <p class="text-small text-(--color-mist)">{t.plaatsAndere(plaats, andere)}</p>
       </section>
     )

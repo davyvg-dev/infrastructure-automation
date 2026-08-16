@@ -31,6 +31,7 @@ import {
   FOTOZETTINGEN,
   KLEURINGEN,
   LETTERONTWERPEN,
+  MATEN,
   PALETTEN,
   RITMES,
   SCHALEN,
@@ -38,6 +39,13 @@ import {
   VORMEN,
   type Stijl,
 } from './stijl.ts'
+import {
+  DIENSTVORMEN as DIENSTVORMEN_,
+  HEROS as HEROS_,
+  STANDAARD_INDELING as STANDAARD_INDELING_,
+  WEGLAATBAAR as WEGLAATBAAR_,
+  type Weglaatbaar as Weglaatbaar_,
+} from './indeling.ts'
 
 export const DAGEN = [
   'maandag',
@@ -56,9 +64,21 @@ export type Dag = (typeof DAGEN)[number]
 export const BEDRIJFSTYPEN = ['mobiel', 'locatie'] as const
 export type Bedrijfstype = (typeof BEDRIJFSTYPEN)[number]
 
-/** Homepage sections a site may do without. See `indeling.weglaten` for why these four. */
-export const WEGLAATBAAR = ['intro', 'werk', 'werkgebied', 'usps'] as const
-export type Weglaatbaar = (typeof WEGLAATBAAR)[number]
+// The composition vocabulary lives in ./indeling.ts, next to the skin vocabulary in
+// ./stijl.ts. Re-exported here because client.ts is what every component imports and
+// `toont` (below) needs the same names.
+export {
+  DIENSTVORMEN,
+  HEROS,
+  HERO_VORM,
+  STANDAARD_INDELING,
+  WEGLAATBAAR,
+  heroToontFoto,
+  type Dienstvorm,
+  type Hero,
+  type Indeling,
+  type Weglaatbaar,
+} from './indeling.ts'
 
 /**
  * Does this site have that section?
@@ -68,7 +88,7 @@ export type Weglaatbaar = (typeof WEGLAATBAAR)[number]
  * to `/#werkgebied`. A nav item pointing at an anchor the page does not contain is the kind
  * of defect that builds, passes every gate, and is only found by clicking it.
  */
-export function toont(config: ClientConfig, sectie: Weglaatbaar): boolean {
+export function toont(config: ClientConfig, sectie: Weglaatbaar_): boolean {
   return !config.indeling.weglaten.includes(sectie)
 }
 
@@ -173,6 +193,7 @@ export const ClientSchema = z.object({
       palet: z.enum(PALETTEN).default(STANDAARD_STIJL.palet),
       kleuring: z.enum(KLEURINGEN).default(STANDAARD_STIJL.kleuring),
       foto: z.enum(FOTOZETTINGEN).default(STANDAARD_STIJL.foto),
+      maat: z.enum(MATEN).default(STANDAARD_STIJL.maat),
     })
     .default(STANDAARD_STIJL),
   // Which sections this site does NOT have.
@@ -188,17 +209,24 @@ export const ClientSchema = z.object({
   // footer are how a visitor calls the business or learns when it is open, and a site that
   // drops one of those is not sparse, it is broken. Reviews already drop out on their own
   // when there are none, which in preview mode is always.
+  //
+  // `hero` and `diensten` are the other half of the block: not which sections exist, but
+  // how the two that carry the page are arranged. See src/lib/indeling.ts for the values
+  // and why each one is on offer. Both default to what the template always did, so a
+  // client.yaml carrying only `weglaten` builds the same bytes it did before they existed.
   indeling: z
     .object({
       weglaten: z
-        .array(z.enum(WEGLAATBAAR))
+        .array(z.enum(WEGLAATBAAR_))
         // At most two, so the page keeps at least six sections. Below that a trade site
         // stops reading as sparse and starts reading as unfinished, which costs the trust
         // the sparseness was buying.
         .max(2, 'hoogstens twee secties weglaten, anders oogt de pagina onaf')
         .default([]),
+      hero: z.enum(HEROS_).default(STANDAARD_INDELING_.hero),
+      diensten: z.enum(DIENSTVORMEN_).default(STANDAARD_INDELING_.diensten),
     })
-    .default({ weglaten: [] }),
+    .default(STANDAARD_INDELING_),
   // The sentences that are this client's rather than this template's.
   //
   // Every one of these has a default in lib/toon.ts, one per bedrijfstype, and those
@@ -231,6 +259,31 @@ export const ClientSchema = z.object({
       slot_kop: z.string().optional(),
       slot_tekst: z.string().optional(),
     })
+    .optional(),
+  // The client's own photographs, in the order the page uses them: the first is the hero
+  // and the share card, the rest are the work band, in the tall/wide rhythm the band's
+  // multi-column fill needs.
+  //
+  // Named on purpose. `fotos/` used to be read with readdir().sort() and `fotos[0]` became
+  // the hero, so which photograph led the site was decided by ALPHABETICAL ORDER -- adding
+  // `afspraak.jpg` silently replaced the hero and renaming a file reshuffled the band. A
+  // client cannot guess that rule and nothing reported it. Here the role is the position in
+  // this list and nothing else moves it.
+  //
+  // The files named are the ORIGINALS in `foto-bron/`, at whatever size and format the
+  // client sent (iPhone HEIC included). scripts/client-fotos.py cuts the renditions the
+  // page actually loads. Absent means this site runs on the vak's stock set, which is
+  // always the case on a voorstel.
+  fotos: z
+    .array(
+      z.object({
+        /** Filename inside clients/<slug>/foto-bron/, e.g. "dak-hoofdweg.jpg". */
+        bestand: z.string().min(3),
+        /** Dutch description of what is in the frame. Required: these are content photos. */
+        alt: z.string().min(10),
+      }),
+    )
+    .max(7, 'maximaal zeven: een hero plus zes tegels, anders loopt de fotoband scheef')
     .optional(),
   diensten: z
     .array(
@@ -412,21 +465,34 @@ export interface StockSet {
   og: StockPhoto | null
 }
 
+/**
+ * The photographs this site draws, and whose they are.
+ *
+ * One structure for both sources, because the page treats them identically in every way
+ * except two: the client's own work gets the "Ons werk" heading and an alt that says whose
+ * work it is, while a stock frame is only ever "zo ziet het werk van een dakdekker eruit".
+ * That honesty rule is the whole reason `eigen` travels with the set rather than being
+ * re-derived per component -- Hero and Werk got it right independently once and would not
+ * keep doing so.
+ */
+export interface Beeld {
+  set: StockSet
+  /** True when these are the client's own photographs rather than the vak's stock set. */
+  eigen: boolean
+}
+
 export interface LoadedClient {
   slug: string
   config: ClientConfig
   /** Resolved skin, defaults filled in. Same object as config.stijl, named for the layout. */
   stijl: Stijl
-  /** Public URL paths of the client's photos (/fotos/...), excluding the logo. */
-  fotos: string[]
   /**
-   * Public URL paths (/stock/...) of the stock set for this client's vak, used by the
-   * photo sections when the client supplied no photos of their own -- which is always
-   * the case on a voorstel, where we do not take a prospect's images. All roles are
-   * empty/null when no set exists for the vak yet; the page then falls back to
-   * photo-free layouts.
+   * The photographs the page draws: the client's own when `client.yaml` names them and
+   * scripts/client-fotos.py has cut them, otherwise the stock set for their vak -- which
+   * is always the case on a voorstel, where we do not take a prospect's images. Both roles
+   * are empty/null when neither exists; the page then falls back to photo-free layouts.
    */
-  stock: StockSet
+  beeld: Beeld
   /** Public URL path of the logo, when configured and present. */
   logoUrl: string | null
   siteUrl: string
@@ -485,17 +551,61 @@ export function loadClient(): LoadedClient {
 
   const fotosDir = path.join(clientDir, 'fotos')
   const logoFile = config.branding.logo ?? null
-  let fotos: string[] = []
   let logoUrl: string | null = null
-  if (fs.existsSync(fotosDir)) {
-    const files = fs.readdirSync(fotosDir).sort()
-    fotos = files.filter((f) => FOTO_EXT.test(f) && f !== logoFile).map((f) => `/fotos/${f}`)
-    if (logoFile && files.includes(logoFile)) logoUrl = `/fotos/${logoFile}`
-  }
+  if (logoFile && fs.existsSync(path.join(fotosDir, logoFile))) logoUrl = `/fotos/${logoFile}`
   if (logoFile && !logoUrl) {
     fail(
       `branding.logo is set to "${logoFile}" but clients/${slug}/fotos/${logoFile} does not exist.`,
     )
+  }
+
+  // The client's own set, read from the manifest scripts/client-fotos.py writes -- never
+  // from the directory listing. Reading the directory is what made the hero depend on
+  // alphabetical order; the manifest carries the role, the rendition's real pixel size and
+  // the Dutch alt for each file, which is everything the page needs to reserve the box and
+  // describe the picture.
+  //
+  // A `fotos:` block with no manifest is a build failure rather than a silent fallback to
+  // stock: the client sent photographs and paid for a site that shows them, and quietly
+  // showing a stranger's stock instead is the worst of the available behaviours.
+  const eigen: StockSet = { tiles: [], hero: null, og: null }
+  if (config.fotos && config.fotos.length > 0) {
+    const manifestPath = path.join(fotosDir, 'fotos.json')
+    if (!fs.existsSync(manifestPath)) {
+      fail(
+        `clients/${slug}/client.yaml names ${config.fotos.length} photo(s) but ` +
+          `clients/${slug}/fotos/fotos.json does not exist. Cut the renditions first:\n` +
+          `  growth-engine/.venv/bin/python klantkraan/apps/client-sites/scripts/client-fotos.py ${slug}`,
+      )
+    }
+    const entries: Array<{
+      bestand: string
+      rol: 'hero' | 'wide' | 'tall'
+      breedte: number
+      hoogte: number
+      alt: string
+    }> = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+    // Stale-manifest guard. The originals and the renditions are two directories that can
+    // drift, and the failure is invisible: the page renders the photo the client replaced
+    // last month because nobody re-ran the script.
+    if (entries.length !== config.fotos.length) {
+      fail(
+        `clients/${slug}/fotos/fotos.json describes ${entries.length} photo(s) but ` +
+          `client.yaml names ${config.fotos.length}. Re-run scripts/client-fotos.py ${slug}.`,
+      )
+    }
+    for (const entry of entries) {
+      const foto = {
+        src: `/fotos/${entry.bestand}`,
+        width: entry.breedte,
+        height: entry.hoogte,
+        alt: entry.alt,
+      }
+      if (entry.rol === 'hero') eigen.hero = foto
+      else eigen.tiles.push(foto)
+    }
+    const og = path.join(fotosDir, 'og.webp')
+    if (fs.existsSync(og)) eigen.og = { src: '/fotos/og.webp', ...SHAPES.og, alt: '' }
   }
 
   // Stock set for the vak: only consulted when the client supplied no photos, and only
@@ -506,7 +616,8 @@ export function loadClient(): LoadedClient {
   const vak = config.bedrijf.vak
   const stockDir = fileURLToPath(new URL(`../../stock/${vak}/`, import.meta.url))
   const stock: StockSet = { tiles: [], hero: null, og: null }
-  if (fotos.length === 0 && fs.existsSync(stockDir)) {
+  const heeftEigen = eigen.hero !== null || eigen.tiles.length > 0
+  if (!heeftEigen && fs.existsSync(stockDir)) {
     const files = fs.readdirSync(stockDir).filter((f) => FOTO_EXT.test(f) && !f.includes('-sm.'))
     // Written by scripts/stock-photos.py alongside the images. A missing entry is a
     // build failure rather than a silent empty alt: an undescribed photo is exactly the
@@ -553,8 +664,7 @@ export function loadClient(): LoadedClient {
     slug,
     config,
     stijl: config.stijl,
-    fotos,
-    stock,
+    beeld: { set: heeftEigen ? eigen : stock, eigen: heeftEigen },
     logoUrl,
     // A proposal is always served from the preview host, even when we already
     // know the prospect's domain: canonicals must never point at their own site.

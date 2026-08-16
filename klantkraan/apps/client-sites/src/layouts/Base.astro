@@ -4,7 +4,7 @@ import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import PreviewBanner from '../components/PreviewBanner.astro'
 import StickyCallBar from '../components/StickyCallBar.astro'
-import { loadClient } from '../lib/client'
+import { heroToontFoto, loadClient } from '../lib/client'
 import { openingHoursSpecification } from '../lib/format'
 import { toon } from '../lib/toon'
 import { stijlStyle } from '../lib/stijl'
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { title, description } = Astro.props
-const { config, stijl, siteUrl, logoUrl, isPreview, fotos, stock } = loadClient()
+const { config, stijl, siteUrl, logoUrl, isPreview, beeld } = loadClient()
 const t = toon(config)
 const { bedrijf } = config
 
@@ -33,7 +33,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString()
 // which is where these links actually get passed around: the site had no photograph to
 // cut one from. Prefer the vak's 1200x630 crop; a client with their own photos gets
 // their first one, at whatever ratio it happens to be, which still beats nothing.
-const ogImage = stock.og?.src ?? fotos[0] ?? null
+const ogImage = beeld.set.og?.src ?? beeld.set.hero?.src ?? null
 const ogUrl = ogImage ? `${siteUrl}${ogImage}` : null
 
 // Preload the hero photo, which is the LCP element on the one page that has it. The
@@ -41,11 +41,14 @@ const ogUrl = ogImage ? `${siteUrl}${ogImage}` : null
 // the discovery order and this is the largest byte on the page; the hint moves it ahead.
 // Homepage only -- Hero.astro renders nowhere else, and preloading an image a page never
 // draws is a wasted round trip on every other page.
+// `heroToontFoto` is read here too: a `typografisch` hero draws no photograph at all, and
+// preloading the vak's hero crop for a page that never references it is a wasted round trip
+// on the one request that is meant to be fastest.
 const heroPreload =
-  Astro.url.pathname === '/' && !fotos[0] && stock.hero
+  Astro.url.pathname === '/' && heroToontFoto(config.indeling.hero) && beeld.set.hero
     ? {
-        href: stock.hero.src,
-        srcset: `${stock.hero.src.replace(/\.webp$/, '-sm.webp')} 750w, ${stock.hero.src} 1500w`,
+        href: beeld.set.hero.src,
+        srcset: `${beeld.set.hero.src.replace(/\.webp$/, '-sm.webp')} 750w, ${beeld.set.hero.src} 1500w`,
       }
     : null
 // A proposal says so in the tab title too: screenshots and shared links travel
@@ -118,10 +121,10 @@ const schema = isPreview
         <>
           <meta property="og:image" content={ogUrl} />
           <meta name="twitter:card" content="summary_large_image" />
-          {stock.og && (
+          {beeld.set.og && (
             <>
-              <meta property="og:image:width" content={String(stock.og.width)} />
-              <meta property="og:image:height" content={String(stock.og.height)} />
+              <meta property="og:image:width" content={String(beeld.set.og.width)} />
+              <meta property="og:image:height" content={String(beeld.set.og.height)} />
             </>
           )}
         </>
