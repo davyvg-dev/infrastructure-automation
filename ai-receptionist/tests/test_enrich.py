@@ -13,6 +13,9 @@ from scripts.enrich import (
     domain_candidates,
     emails_in,
     headline,
+    kvk_in,
+    normalise_phone,
+    phones_in,
     verify,
 )
 
@@ -101,3 +104,62 @@ def test_headline_reads_title_and_h1_only():
     head = headline(html)
     assert "herfstbv" in head and "dakwerk" in head
     assert "ietsanders" not in head
+
+
+# --- what the page publishes besides an address -------------------------------------
+# Every trap below sat in a real Dutch footer alongside the number we wanted. The IBAN
+# one is not hypothetical: it matched as a telephone number until it was excluded.
+
+FOOTER = """
+<footer>
+  <p>Kerkstraat 12, 3011 AB Rotterdam</p>
+  <p>Tel: <a href="tel:+31(0)10-412 57 00">010-412 57 00</a></p>
+  <p>Mobiel: 06 12 34 56 78</p>
+  <p>KvK-nummer: 24398765 &middot; BTW: NL812345678B01</p>
+  <p>IBAN NL91 ABNA 0417 1643 00 &middot; &copy; 2026, sinds 1987</p>
+</footer>
+"""
+
+
+def test_a_tel_link_is_believed_before_anything_in_the_body():
+    assert phones_in(FOOTER)[0] == "0104125700"
+
+
+def test_an_iban_is_not_a_telephone_number():
+    assert "0417164300" not in phones_in(FOOTER)
+
+
+def test_a_postcode_a_btw_id_and_a_year_are_not_telephone_numbers():
+    for trap in ("3011 AB", "NL812345678B01", "1987", "24398765"):
+        assert normalise_phone(trap) == ""
+
+
+def test_every_written_form_of_one_number_normalises_to_the_same_string():
+    forms = ["010-412 57 00", "(010) 4125700", "+31(0)10-412 57 00", "0031 10 412 5700"]
+    assert {normalise_phone(f) for f in forms} == {"0104125700"}
+
+
+def test_the_number_is_read_when_the_page_only_writes_it_out():
+    html = "<div>Bel ons op 0182-334455. IBAN NL91ABNA0417164300.</div>"
+    assert phones_in(html) == ["0182334455"]
+
+
+def test_the_kvk_number_is_only_read_where_the_page_labels_it_one():
+    assert kvk_in(FOOTER) == "24398765"
+    assert kvk_in("<p>Kamer van Koophandel nr. 87654321</p>") == "87654321"
+    assert kvk_in("<p>Postbus 12345678, sinds 1987</p>") == ""
+
+
+def test_a_trade_named_after_its_city_is_never_proved_by_its_name():
+    """Measured 2026-08-16: loodgieterutrecht.nl passed the title test for Loodgieter
+    Utrecht B.V. and belongs to a different company. Trade plus place is not an identity."""
+    html = "<title>Loodgieter Utrecht - 24/7 spoedservice</title>"
+    assert verify(html, "", "Loodgieter Utrecht B.V.", rank=0) is None
+    # ...but its own KVK number still settles it.
+    page = "<title>Loodgieter Utrecht</title><footer>KvK 24398765</footer>"
+    assert verify(page, "24398765", "Loodgieter Utrecht B.V.", rank=0) == "kvk-nummer"
+
+
+def test_a_real_surname_beside_a_place_still_proves_the_name():
+    html = "<title>Dak Garantie Amsterdam B.V.</title>"
+    assert verify(html, "", "Dak Garantie Amsterdam B.V.", rank=0) == "naam"

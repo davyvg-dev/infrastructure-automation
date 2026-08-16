@@ -21,17 +21,30 @@ name has to appear in the page's own <title>, never merely somewhere in the body
 distinction is exactly what stopped Loodgietersbedrijf Meijer resolving onto the stranger
 at meijer.nl. A site that proves neither is dropped rather than guessed at.
 
-Measured against the 23 prospects whose real addresses are known, this finds 30% of them
-outright. That run had no KVK numbers to check, so it exercised only the weaker of the
-two proofs; a live run carries one for every company and should do better, by how much
-nobody has measured yet.
+The site is then read for everything it publishes, not the address alone: a telephone
+number and the company's own KVK number come off the same page for free. The number
+matters more than the address for a trade, who answers a mobile and does not read e-mail.
+The KVK number matters because it turns a name the rep typed into a register key.
 
-The other 70% land in a worklist CSV with a search URL per company, which is about thirty
-seconds of a human's time each and much better than thirty seconds of guessing.
+Measured 2026-08-16 against the 24 NL prospects whose contacts are known, given nothing
+but the business name: 8 domains resolved, and on those 8 the page yielded 8 telephone
+numbers, 7 e-mail addresses and 5 KVK numbers. Six match the pipeline record exactly. One
+(Smits Installaties) resolved onto smitsinstallaties.nl where the record says
+smits-installaties.nl, and nothing short of a KVK number can say which is theirs; one
+(Duckdekker) publishes an 085 number the record does not carry. So: extraction is close to
+free once a domain resolves, and resolving the domain is the whole problem -- two thirds
+never got that far and land in worklist.csv with a search URL, about thirty seconds of a
+human each.
+
+Read that precision honestly. A name-only proof is a guess with a good prior, not a fact,
+and the two doubtful rows above are both name-only. A KVK number from the register turns
+every one of them into certainty, which is what `sourcing.py` supplies and what the
+--names mode, by construction, does not have.
 
     python -m scripts.enrich                       # dry: resolve + verify, report only
     python -m scripts.enrich --write               # write enriched.csv + worklist.csv
     python -m scripts.enrich --limit 20            # trial run over the first 20
+    python -m scripts.enrich --names clips.txt --json out.json   # a rep's LinkedIn clips
 
 Polite by construction: one worker, a real User-Agent, robots.txt honoured, and a pause
 between hosts. It reads pages a company publishes for exactly this purpose.
@@ -51,7 +64,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import urllib.robotparser
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -67,6 +80,32 @@ DELAY = 1.0  # between hosts
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 KVK_RE = re.compile(r"\b(\d{8})\b")
 TAG_RE = re.compile(r"<[^>]+>")
+
+# A bare run of eight digits is a postcode-plus-something as often as it is a KVK number,
+# so the number is only believed when the page labels it one. Dutch sites write it a dozen
+# ways -- "KvK-nummer:", "KVK nr.", "Kamer van Koophandel" -- hence the loose gap.
+KVK_LABEL_RE = re.compile(r"(?:kvk|kamer\s+van\s+koophandel)[^0-9]{0,24}(\d{8})", re.I)
+
+# tel: links are the only place a phone number is unambiguously marked as one. Everything
+# else on a Dutch page that looks like a number might be a postcode, a BTW id or a year.
+TEL_HREF_RE = re.compile(r'href=["\']tel:([^"\']+)["\']', re.I)
+
+# The text fallback, deliberately narrow: 06-nummers, 3-digit area codes (010, 020, 070),
+# 4-digit area codes (0182, 0341), 0800/0900 service numbers, and the +31 forms of each.
+# Separators are optional and free-form because every site invents its own.
+PHONE_TEXT_RE = re.compile(
+    r"(?<![0-9A-Za-z])(?:\+31[\s\-.]?\(?0?\)?[\s\-.]?|0)"
+    r"(?:6[\s\-.]?(?:\d[\s\-.]?){8}"
+    r"|[1-9]\d[\s\-.]?(?:\d[\s\-.]?){7}"
+    r"|[1-9]\d{2}[\s\-.]?(?:\d[\s\-.]?){6})"
+    r"(?![\d])"
+)
+
+# Blanked before the fallback runs. A Dutch bank account is ten digits that pass every test
+# a phone number passes -- NL91 ABNA 0417 1643 00 yields 0417164300 -- and it sits in the
+# same footer as the number we actually want. Guarding the pattern is not enough: spaced
+# IBANs put a legal separator exactly where the match wants to start.
+IBAN_RE = re.compile(r"\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]){10,30}\b")
 
 # What the company does, not which company it is -- useless for telling two Rotterdam
 # plumbers apart. Dropped to find the distinctive part of a name.
@@ -101,6 +140,91 @@ CONNECTIVES = {"en", "van", "der", "den", "de", "het", "zn", "zonen", "gebr"}
 
 GENERIC = TRADE_WORDS | CONNECTIVES
 
+# Where the company works, not which company it is. Only ever used to refuse a name-based
+# proof: a name made of nothing but a trade and a place identifies no one. Collisions with
+# real surnames (Bergen, Ede) cost a missed hit, never a wrong one -- the company lands in
+# worklist.csv for a human instead of on a stranger's telephone number.
+PLACE_WORDS = {
+    "alkmaar",
+    "almere",
+    "alphen",
+    "amersfoort",
+    "amstelveen",
+    "amsterdam",
+    "apeldoorn",
+    "arnhem",
+    "assen",
+    "barneveld",
+    "bergen",
+    "breda",
+    "brunssum",
+    "capelle",
+    "delft",
+    "deventer",
+    "doetinchem",
+    "dordrecht",
+    "drachten",
+    "ede",
+    "eindhoven",
+    "emmen",
+    "enschede",
+    "etten",
+    "geleen",
+    "goes",
+    "gouda",
+    "groningen",
+    "haag",
+    "haarlem",
+    "hardenberg",
+    "heerlen",
+    "helmond",
+    "hertogenbosch",
+    "hilversum",
+    "hoogeveen",
+    "hoorn",
+    "houten",
+    "ijsselstein",
+    "kampen",
+    "katwijk",
+    "kerkrade",
+    "leeuwarden",
+    "leiden",
+    "lelystad",
+    "maastricht",
+    "middelburg",
+    "nieuwegein",
+    "nijmegen",
+    "oosterhout",
+    "oss",
+    "purmerend",
+    "rijswijk",
+    "roermond",
+    "roosendaal",
+    "rotterdam",
+    "schiedam",
+    "sittard",
+    "sneek",
+    "spijkenisse",
+    "terneuzen",
+    "tiel",
+    "tilburg",
+    "uden",
+    "utrecht",
+    "veenendaal",
+    "veghel",
+    "velsen",
+    "venlo",
+    "vlaardingen",
+    "vlissingen",
+    "waalwijk",
+    "weert",
+    "woerden",
+    "zaanstad",
+    "zeist",
+    "zoetermeer",
+    "zwolle",
+}
+
 # Stripped from the name before anything else. Splitting on word boundaries instead ate
 # the B of T.I.B. Verkuylen and lost tib-verkuylen.nl.
 LEGAL_FORM_RE = re.compile(r"\s*\b(b\.?\s?v\.?|n\.?\s?v\.?|v\.?o\.?f\.?)\s*$", re.I)
@@ -132,6 +256,8 @@ class Hit:
     kvk: str
     domain: str = ""
     email: str = ""
+    phone: str = ""
+    kvk_found: str = ""  # the KVK number the site publishes, when the register gave us none
     verified_by: str = ""  # "kvk-nummer" | "naam" | ""
     note: str = ""
 
@@ -253,6 +379,60 @@ def emails_in(html: str, domain: str) -> list[str]:
     return sorted(clean, key=rank)
 
 
+def normalise_phone(raw: str) -> str:
+    """A Dutch number in one shape, or "" if it is not one.
+
+    Sites publish the same number a dozen ways -- 010-412 57 00, (010) 4125700,
+    +31(0)10 412 5700 -- and the pipeline record, the suppression list and Notion all have
+    to agree on which of them is "the number", or an opt-out silently stops matching.
+    National 0-prefixed form is the one a Dutch reader recognises, so that is the one kept.
+    """
+    digits = re.sub(r"[^\d+]", "", raw)
+    if digits.startswith("+31"):
+        digits = "0" + digits[3:].lstrip("0")
+    elif digits.startswith("0031"):
+        digits = "0" + digits[4:].lstrip("0")
+    digits = re.sub(r"\D", "", digits)
+    if len(digits) != 10 or not digits.startswith("0") or digits[1] == "0":
+        return ""
+    return digits
+
+
+def phones_in(html: str) -> list[str]:
+    """Published telephone numbers, the ones the page marks as such first.
+
+    A tel: href is the only unambiguous signal -- the site itself is asserting "this is a
+    phone number". Free text is guesswork by comparison, which is why the fallback pattern
+    only accepts real Dutch number shapes: a postcode, a BTW id and a KVK number all look
+    like phone numbers to a loose regex, and all three sit in the same footer.
+    """
+    out: list[str] = []
+    for m in TEL_HREF_RE.finditer(html):
+        n = normalise_phone(m.group(1))
+        if n and n not in out:
+            out.append(n)
+    if out:
+        return out
+    text = IBAN_RE.sub(" ", TAG_RE.sub(" ", html))
+    for m in PHONE_TEXT_RE.finditer(text):
+        n = normalise_phone(m.group(0))
+        if n and n not in out:
+            out.append(n)
+    return out
+
+
+def kvk_in(html: str) -> str:
+    """The KVK number the site publishes, or "".
+
+    Worth reading even though sourcing.py normally supplies one: a prospect the rep clipped
+    off LinkedIn has no register lookup behind it, and Dutch law makes a company print this
+    number on its own website. That turns a name into a register key for nothing.
+    """
+    text = TAG_RE.sub(" ", html)
+    m = KVK_LABEL_RE.search(text)
+    return m.group(1) if m else ""
+
+
 def headline(html: str) -> str:
     """The page's <title> and <h1>, letters and digits only.
 
@@ -285,6 +465,15 @@ def verify(html: str, kvk: str, name: str, *, rank: int) -> str | None:
     if not head:
         return None
     words = collapse_initials(re.findall(r"[a-z0-9]+", LEGAL_FORM_RE.sub("", name).lower()))
+
+    # A trade named after its city -- "Loodgieter Utrecht", "Dakdekker Amsterdam" -- owns no
+    # distinctive word, and every competitor in that city owns a near-identical domain. The
+    # ground-truth run proved it: loodgieterutrecht.nl passed the title test for Loodgieter
+    # Utrecht B.V. and belongs to somebody else, whose number would then have been dialled.
+    # Trade plus place is not an identity. Only the KVK number above can prove one of these.
+    if not [w for w in words if w not in GENERIC and w not in PLACE_WORDS]:
+        return None
+
     needle = "".join(w for w in words if w not in CONNECTIVES)
     if len(needle) > 5 and needle in head:
         return "naam"
@@ -318,18 +507,28 @@ def resolve(c: Candidate) -> Hit:
 
         hit.domain, hit.verified_by = domain, proof
         found = emails_in(html, domain)
-        if not found:  # the homepage often only links to the contact page
+        phones = phones_in(html)
+        hit.kvk_found = kvk_in(html)
+
+        # The homepage usually only links to the contact page. Walk it while anything is
+        # still missing, not just when the address is -- a trade that publishes its number
+        # on every page may still keep the mailbox and the KVK number on /contact alone.
+        if not (found and phones and hit.kvk_found):
             for path in contact_paths(html):
                 page = fetch(urllib.parse.urljoin(f"https://{domain}", path))
                 time.sleep(DELAY)
-                if page:
-                    found = emails_in(page, domain)
-                    if found:
-                        break
-        if found:
-            hit.email = found[0]
-            return hit
-        hit.note = "site verified, no address published"
+                if not page:
+                    continue
+                found = found or emails_in(page, domain)
+                phones = phones or phones_in(page)
+                hit.kvk_found = hit.kvk_found or kvk_in(page)
+                if found and phones and hit.kvk_found:
+                    break
+
+        hit.email = found[0] if found else ""
+        hit.phone = phones[0] if phones else ""
+        if not (hit.email or hit.phone):
+            hit.note = "site verified, publishes neither address nor number"
         return hit
     if not hit.note:
         hit.note = "no domain resolved"
@@ -350,31 +549,61 @@ def contact_paths(html: str) -> list[str]:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--in", dest="src", default=str(OUT / "qualified.json"))
+    ap.add_argument(
+        "--names",
+        help="a text file of company names, one per line, optional ', City' suffix. "
+        "For prospects that never came from the register -- a rep's LinkedIn clips.",
+    )
     ap.add_argument("--limit", type=int, help="only the first N companies")
     ap.add_argument("--write", action="store_true", help="write the CSVs (default: report only)")
+    ap.add_argument("--json", dest="json_out", help="also dump every hit as JSON to this path")
     args = ap.parse_args()
 
-    src = Path(args.src)
-    if not src.exists():
-        sys.exit(f"{src} missing -- run `python -m scripts.sourcing qualify` first")
-    rows = json.loads(src.read_text())[: args.limit]
-    if not rows:
+    if args.names:
+        src = Path(args.names)
+        if not src.exists():
+            sys.exit(f"{src} missing")
+        candidates = []
+        for line in src.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            name, _, city = line.partition(",")
+            candidates.append(Candidate(kvk="", name=name.strip(), city=city.strip(), trade=""))
+        candidates = candidates[: args.limit]
+    else:
+        src = Path(args.src)
+        if not src.exists():
+            sys.exit(f"{src} missing -- run `python -m scripts.sourcing qualify` first")
+        candidates = [Candidate(**row) for row in json.loads(src.read_text())[: args.limit]]
+    if not candidates:
         sys.exit(f"{src} is empty")
 
     hits = []
-    for i, row in enumerate(rows, 1):
-        hit = resolve(Candidate(**row))
+    for i, c in enumerate(candidates, 1):
+        hit = resolve(c)
         hits.append(hit)
-        mark = hit.email or hit.note
-        print(f"[{i:3}/{len(rows)}] {hit.company[:34]:34} {mark}")
+        mark = " ".join(x for x in (hit.email, hit.phone) if x) or hit.note
+        print(f"[{i:3}/{len(candidates)}] {hit.company[:34]:34} {mark}")
 
-    found = [h for h in hits if h.email]
-    print(f"\n{len(found)}/{len(hits)} addresses found ({len(found) * 100 // max(len(hits), 1)}%)")
+    n = len(hits)
+    mailable = [h for h in hits if h.email]
+    callable_ = [h for h in hits if h.phone]
+    reachable = [h for h in hits if h.email or h.phone]
+    kvks = [h for h in hits if h.kvk_found]
+    print(f"\n{len(reachable)}/{n} reachable ({len(reachable) * 100 // max(n, 1)}%)")
+    print(f"  {len(mailable):4} with an e-mail address")
+    print(f"  {len(callable_):4} with a telephone number")
+    print(f"  {len(kvks):4} with a KVK number read off the site")
     by_proof: dict[str, int] = {}
-    for h in found:
+    for h in reachable:
         by_proof[h.verified_by] = by_proof.get(h.verified_by, 0) + 1
-    for proof, n in by_proof.items():
-        print(f"  {n:4} verified by {proof}")
+    for proof, count in by_proof.items():
+        print(f"  {count:4} verified by {proof}")
+
+    if args.json_out:
+        Path(args.json_out).write_text(json.dumps([asdict(h) for h in hits], indent=2))
+        print(f"\n{n} -> {args.json_out}")
 
     if not args.write:
         print("\nreport only -- re-run with --write to save")
@@ -383,11 +612,24 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     with (OUT / "enriched.csv").open("w", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["slug", "company_name", "kvk", "email", "website", "verified_by"])
-        for h in found:
-            w.writerow([h.slug, h.company, h.kvk, h.email, f"https://{h.domain}", h.verified_by])
+        w.writerow(
+            ["slug", "company_name", "kvk", "kvk_site", "email", "phone", "website", "verified_by"]
+        )
+        for h in reachable:
+            w.writerow(
+                [
+                    h.slug,
+                    h.company,
+                    h.kvk,
+                    h.kvk_found,
+                    h.email,
+                    h.phone,
+                    f"https://{h.domain}",
+                    h.verified_by,
+                ]
+            )
 
-    misses = [h for h in hits if not h.email]
+    misses = [h for h in hits if not (h.email or h.phone)]
     with (OUT / "worklist.csv").open("w", newline="") as fh:
         w = csv.writer(fh)
         w.writerow(["company_name", "kvk", "why", "search"])
@@ -395,7 +637,7 @@ def main() -> None:
             query = urllib.parse.quote_plus(f"{h.company} contact")
             w.writerow([h.company, h.kvk, h.note, f"https://duckduckgo.com/?q={query}"])
 
-    print(f"\n{len(found)} -> {OUT}/enriched.csv")
+    print(f"\n{len(reachable)} -> {OUT}/enriched.csv")
     print(f"{len(misses)} -> {OUT}/worklist.csv (search URL each; ~30s of a human per row)")
 
 
