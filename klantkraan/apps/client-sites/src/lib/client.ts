@@ -159,6 +159,39 @@ export const ClientSchema = z.object({
       foto: z.enum(FOTOZETTINGEN).default(STANDAARD_STIJL.foto),
     })
     .default(STANDAARD_STIJL),
+  // The sentences that are this client's rather than this template's.
+  //
+  // Every one of these has a default in lib/toon.ts, one per bedrijfstype, and those
+  // defaults are identical on every site of that register: measured 2026-08-16, two mobiel
+  // voorstellen for different vakken in different towns shared a 40-word passage made of
+  // exactly these slots. Filling them in is what makes two sites read as two businesses.
+  // Written by `app.sitedraft` from the prospect's own sources, or by hand; every key is
+  // optional and an absent one falls back to the register default.
+  //
+  // No `min()` on the strings and no list of allowed values: these are Dutch sentences a
+  // human reads before the site ships, and a schema cannot tell a good one from a bad one.
+  // What the schema CAN do is keep them out of the places copy must not go, which is why
+  // the price ban and the placeholder ban live in the fact gate over the rendered page
+  // rather than here.
+  teksten: z
+    .object({
+      /** The H1. */
+      kop: z.string().optional(),
+      /** Hero subline, under the H1. */
+      belofte: z.string().optional(),
+      /** Intro heading. */
+      intro_kop: z.string().optional(),
+      /** Intro, first paragraph: how working with them goes. */
+      werkwijze: z.string().optional(),
+      /** Intro, second paragraph: where they are, or where they go. */
+      bereik: z.string().optional(),
+      /** The line under "Onze diensten". */
+      diensten_tekst: z.string().optional(),
+      /** Closing CTA heading and body. */
+      slot_kop: z.string().optional(),
+      slot_tekst: z.string().optional(),
+    })
+    .optional(),
   diensten: z
     .array(
       z.object({

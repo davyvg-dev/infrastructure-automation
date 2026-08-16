@@ -369,3 +369,28 @@ def test_write_config_round_trips_and_never_overwrites(tmp_path: Path) -> None:
 
     with pytest.raises(DraftError, match="bestaat al"):
         sitedraft.write_config("jansen", config, tmp_path)
+
+
+def test_teksten_travel_to_the_yaml_in_page_order() -> None:
+    # The founder reads this block as copy before he sends the voorstel, so it is written in
+    # the order the visitor meets the sentences, not in whatever order the model emitted.
+    draft = {
+        **DRAFT,
+        "slot_kop": "Vertel wat er lekt",
+        "kop": "Lekkage, verstopping of een ketel die het opgeeft",
+        "werkwijze": "De meeste lekkages zijn kleiner dan ze lijken.",
+    }
+    config = sitedraft.build_config("Jansen Loodgieters", EXTRACTION, draft)
+    assert list(config["teksten"]) == ["kop", "werkwijze", "slot_kop"]
+    # And it sits above diensten, where the reader meets it.
+    keys = list(config)
+    assert keys.index("teksten") < keys.index("diensten")
+
+
+def test_a_prospect_the_sources_say_nothing_about_keeps_the_register() -> None:
+    # No teksten at all, and blank ones, are the same case: the key is absent and
+    # client-sites/src/lib/toon.ts supplies the register sentence. A written-but-empty
+    # heading would render as a blank <h2> and pass every gate there is.
+    leeg = sitedraft.build_config("Jansen", EXTRACTION, {**DRAFT, "kop": "   ", "belofte": ""})
+    assert "teksten" not in leeg
+    assert leeg == sitedraft.build_config("Jansen", EXTRACTION, DRAFT)

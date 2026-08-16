@@ -17,7 +17,12 @@ import { BEDRIJFSTYPEN } from './client.ts'
 import { toon, type Toon } from './toon.ts'
 
 /** A config with only the fields toon() reads. */
-function config(bedrijfstype: 'mobiel' | 'locatie', over: Record<string, unknown> = {}) {
+/** `over` overrides fields on bedrijf; `top` overrides the config itself (teksten). */
+function config(
+  bedrijfstype: 'mobiel' | 'locatie',
+  over: Record<string, unknown> = {},
+  top: Record<string, unknown> = {},
+) {
   return {
     bedrijf: {
       naam: 'Testbedrijf',
@@ -33,6 +38,7 @@ function config(bedrijfstype: 'mobiel' | 'locatie', over: Record<string, unknown
       { naam: 'Scheren', omschrijving: 'x' },
       { naam: 'Baard bijwerken', omschrijving: 'x' },
     ],
+    ...top,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any
 }
@@ -40,8 +46,9 @@ function config(bedrijfstype: 'mobiel' | 'locatie', over: Record<string, unknown
 /** Every string a register produces, including the per-plaats ones. */
 function alleZinnen(t: Toon): string[] {
   const vast = [
-    t.aanhef,
+    t.kop,
     t.belofte,
+    t.introKop,
     t.werkwijze,
     t.bereik,
     t.gebiedKop,
@@ -119,10 +126,13 @@ test('locatie zet de stad waar het bedrijf zit, niet de wijk, in de plaatskop', 
 
 test('mobiel houdt de zinnen die op live sites staan', () => {
   const t = toon(config('mobiel', { vak: 'dakdekker', naam: 'Voorbeeld Dakwerken' }))
-  assert.equal(t.aanhef, 'Dakdekker in Rotterdam en omgeving')
+  assert.equal(t.kop, 'Dakdekker in Rotterdam en omgeving')
   assert.equal(t.gebiedKop, 'Werkgebied')
   assert.equal(t.slotKop, 'Vertel ons wat er speelt')
-  assert.match(t.belofte, /u belt, wij komen langs en u weet vooraf waar u aan toe bent\.$/)
+  // The promise is word for word what live sites have said since the template shipped. Only
+  // the capital moved: it used to follow the "Van <d1> en <d2> tot <d3>:" tricolon that was
+  // removed on 2026-08-16, so the sentence now starts the line instead of continuing one.
+  assert.equal(t.belofte, 'U belt, wij komen langs en u weet vooraf waar u aan toe bent.')
   assert.match(t.werkwijze, /^Een dakdekker nodig en geen zin in gedoe\?/)
   assert.match(t.plaatsTekst('Kralingen'), /Vanuit Rotterdam zijn wij snel in Kralingen\./)
   // The client's own town gets the other half of that ternary.
@@ -130,6 +140,44 @@ test('mobiel houdt de zinnen die op live sites staan', () => {
     t.plaatsTekst('Rotterdam'),
     /Ons bedrijf zit in Rotterdam, dus wij zijn snel bij u\./,
   )
+})
+
+test('geen enkele register-zin is nog een drieslag', () => {
+  // "Van <d1> en <d2> tot <d3>:" was a hardcoded rule of three -- the copy tell every
+  // detector regexes for -- and it broke into nonsense as soon as a dienst name contained
+  // "en". scripts/tell-lint.mjs catches it on the rendered page; this catches it at the
+  // source, so it cannot come back in a register that has no fixture built for it.
+  const drieslag = /\bvan\s+[^.:;]{3,45}\s+en\s+[^.:;]{3,45}\s+tot\s+[^.:;]{3,45}/i
+  for (const type of ['mobiel', 'locatie'] as const) {
+    for (const zin of alleZinnen(toon(config(type)))) {
+      assert.ok(!drieslag.test(zin), `${type} zegt "${zin}" en dat is een drieslag`)
+    }
+  }
+})
+
+test('teksten uit client.yaml winnen van de register-zin', () => {
+  const eigen = {
+    kop: 'Al dertig jaar het dak van de Rivierenbuurt',
+    intro_kop: 'Wij komen kijken voordat wij iets beloven',
+    slot_tekst: 'Bel even, dan staan wij morgen op uw dak.',
+  }
+  const t = toon(config('mobiel', {}, { teksten: eigen }))
+  assert.equal(t.kop, eigen.kop)
+  assert.equal(t.introKop, eigen.intro_kop)
+  assert.equal(t.slotTekst, eigen.slot_tekst)
+  // Everything not given falls back, so one good sentence never costs the rest.
+  assert.equal(t.slotKop, toon(config('mobiel')).slotKop)
+  assert.equal(t.werkwijze, toon(config('mobiel')).werkwijze)
+})
+
+test('zonder teksten-blok verandert er niets aan het register', () => {
+  // The live fleet has no `teksten:` and must render the bytes it rendered before the block
+  // existed. An empty block is the same case and is worth pinning separately: a drafter
+  // that emits `teksten: {}` for a prospect it could say nothing new about must not be a
+  // different site from one that omits it.
+  const kaal = toon(config('mobiel'))
+  const leeg = toon(config('mobiel', {}, { teksten: {} }))
+  assert.deepEqual(alleZinnen(leeg), alleZinnen(kaal))
 })
 
 test('areaServed claimt alleen City als het bedrijf er ook heen rijdt', () => {

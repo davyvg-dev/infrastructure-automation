@@ -598,10 +598,31 @@ check`: every fixture fails the copy threshold today, which is the finding, and 
       `wenkbrauw` (the eyebrow on two sections) on every fixture, plus `weesrij` on the
       four-dienst one; the rules that stay silent stay in anyway, to pin what the drafter
       prompt is already preventing.
-- [ ] S2: `stem` — H1/intro/slot frames chosen by seed, today's strings kept as
-      `stem: standaard` so the `mobiel` register stays byte-identical for live clients
-      (`toon.test.ts:120-133` pins it). Delete the tricolon at `toon.ts:81`/`:114`. Extend the
-      sitedraft schema with `kop`, `introkop`, `slotkop`.
+- [x] S2 (this commit): the copy layer, and NOT as a seeded set of frames. A vocabulary of N
+      voices only moves the collision from "everyone" to "one in N", and the sentences a
+      business needs are the ones a vocabulary cannot hold: a dak is not judged from the
+      pavement, a verstopping sits two metres from where you think. So `client.yaml` gains an
+      optional `teksten:` block (8 slots: kop, belofte, intro_kop, werkwijze, bereik,
+      diensten_tekst, slot_kop, slot_tekst), merged OVER the register default per key, and
+      `app.sitedraft` writes it from the prospect's own sources. One good sentence never
+      costs the rest, an absent key is the register, and a live client without the block
+      renders the bytes it rendered yesterday (pinned by a test, empty block included).
+      The H1 moved out of Hero.astro into `toon.ts` as `kop` and the tracked uppercase
+      eyebrow above it is GONE: it was the badge-above-the-headline pattern, the highest-
+      scored tell in the taxonomy, and its content (vak + plaats) is what nearly every real
+      Dutch trade site puts in the H1 anyway. Two tells removed by deleting one element.
+      Tricolon deleted from both registers; the promise itself is untouched and still pinned,
+      only the capital moved. What it did, measured: dakdekker 23.8% -> 5.8%, kapper 8.6% ->
+      3.9%, preview-vs-skintest 88.0% -> 33.5% (only one of that pair has `teksten`). The
+      three fixtures with the block are all under the 15% threshold and the four without are
+      all over it, which is as clean a causal read as this gets.
+      NOTE, found by doing it: removing the tricolon RAISED the copy numbers on its own
+      (23.8% from 22.5%), because the mad-lib was the one per-client fragment in that
+      sentence. A tell and a differentiator can be the same string; only the gate showed it.
+      OPEN: `NAAM_MAX_GROOT = 34` in sitestyle.py withdraws `schaal: groot` on a long company
+      name, measured when the H1 was `<naam>: vakwerk waar u op kunt rekenen.` The name is no
+      longer in the H1, so the rule now guards the wrong string -- conservative today, and
+      blind to a long `teksten.kop`. Re-measure it against the new headline.
 - [ ] S3: vak profiles (`bouw` / `afspraak` / `portfolio`) driving section omission — real
       trade sites are credible partly because they are incomplete, and no real appointment-
       trade site in a 16-site survey had a werkgebied section at all.

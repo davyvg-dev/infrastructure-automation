@@ -104,9 +104,40 @@ _SCHEMA: dict = {
         "usps": {"type": "array", "items": {"type": "string"}},
         "spoed_beschikbaar": {"type": "boolean"},
         "spoed_tekst": {"type": "string"},
+        # The sentences that used to belong to the template and now belong to the business.
+        #
+        # Until 2026-08-16 the copy around the diensten came from one of two fixed registers
+        # in client-sites/src/lib/toon.ts, so every mobiel voorstel said the same ~15
+        # sentences with the nouns swapped: two prospects, different vakken, different towns,
+        # shared a 40-word identical passage. These eight fields are what makes two
+        # voorstellen two businesses. Not required: each one falls back to the register when
+        # the sources say nothing worth writing, which is the honest outcome for a thin
+        # prospect and a great deal better than an invented story.
+        "kop": {"type": "string"},
+        "belofte": {"type": "string"},
+        "intro_kop": {"type": "string"},
+        "werkwijze": {"type": "string"},
+        "bereik": {"type": "string"},
+        "diensten_tekst": {"type": "string"},
+        "slot_kop": {"type": "string"},
+        "slot_tekst": {"type": "string"},
     },
     "required": ["vak", "plaats", "werkgebied", "diensten", "usps", "spoed_beschikbaar", "spoed_tekst"],
 }
+
+# The `teksten:` keys, in the order a reader meets them on the page. Order matters: the
+# founder reads the block as copy before he sends the voorstel, and a headline sitting under
+# a closing line reads as a mistake in the tool.
+_TEKST_VELDEN = (
+    "kop",
+    "belofte",
+    "intro_kop",
+    "werkwijze",
+    "bereik",
+    "diensten_tekst",
+    "slot_kop",
+    "slot_tekst",
+)
 
 _SYSTEM = (
     "Je schrijft de Nederlandse tekst voor een voorstel-website van een vakbedrijf (loodgieter, "
@@ -127,7 +158,29 @@ _SYSTEM = (
     "dat niet zo, zet hem op false en schrijf in `spoed_tekst` alleen hoe men contact opneemt.\n"
     "7. `diensten`: minimaal drie, maximaal acht. `omschrijving` is een of twee zinnen over wat "
     "de dienst voor de klant oplost.\n"
-    "8. `werkgebied`: alleen plaatsen die in de bronnen staan, maximaal vijf, `plaats` als eerste."
+    "8. `werkgebied`: alleen plaatsen die in de bronnen staan, maximaal vijf, `plaats` als eerste.\n"
+    "9. De acht tekstvelden (`kop`, `belofte`, `intro_kop`, `werkwijze`, `bereik`, "
+    "`diensten_tekst`, `slot_kop`, `slot_tekst`) zijn de zinnen op de pagina zelf. Zonder "
+    "die velden krijgt elk bedrijf dezelfde standaardzinnen, dus schrijf ze alsof je ze voor "
+    "dit ene bedrijf schrijft:\n"
+    "   - `kop` is de H1, de grootste tekst op het scherm. Noem het vak en waar ze zitten, of "
+    "iets concreets wat dit bedrijf doet. Nooit de bedrijfsnaam zelf: die staat al in de "
+    "kop van de pagina.\n"
+    "   - `belofte` is een zin onder de kop over wat de klant krijgt als hij belt.\n"
+    "   - `intro_kop` en `werkwijze` gaan over hoe zij werken. Wees specifiek over dit vak: "
+    "een dak beoordeel je niet vanaf de stoep, een verstopping zit zelden waar je hem "
+    "verwacht. Zulke zinnen kan geen ander bedrijf overnemen.\n"
+    "   - `bereik` zegt waar zij werken of waar hun klanten vandaan komen.\n"
+    "   - `slot_kop` en `slot_tekst` sluiten de pagina af met de reden om te bellen.\n"
+    "   Geen opsomming van drie ('van X en Y tot Z'), geen drie bijvoeglijke naamwoorden "
+    "achter elkaar, en niet elke kop een zelfstandig naamwoord van twee woorden: dat is "
+    "precies hoe automatisch gegenereerde tekst eruitziet. Laat een veld leeg als de bronnen "
+    "je niets geven om over te schrijven; een weggelaten zin valt terug op een nette "
+    "standaardzin en dat is beter dan een verzonnen verhaal.\n"
+    "10. Rijdt dit bedrijf naar de klant, of komt de klant naar hen toe? Bij een winkel, "
+    "salon of praktijk (kapper, tandarts, trimsalon, garage) mag geen enkele zin beloven dat "
+    "jullie langskomen, en gebruik dan ook geen bouwwoorden als 'klus', 'offerte' of "
+    "'oplevering'."
 )
 
 
@@ -277,6 +330,21 @@ def vak_van(draft: dict) -> str:
     return draft["vak"].strip().lower()
 
 
+def _teksten_van(draft: dict) -> dict:
+    """The `teksten:` block, in page order, with the empty ones left out.
+
+    The model is told to skip a field it has nothing to say about, and it takes that offer
+    often on a thin prospect. Dropping the empties here rather than in the template keeps the
+    fallback in one place: an absent key means the register sentence, and there is no second
+    kind of absence to reason about.
+    """
+    return {
+        veld: draft[veld].strip()
+        for veld in _TEKST_VELDEN
+        if isinstance(draft.get(veld), str) and draft[veld].strip()
+    }
+
+
 def build_config(
     name: str,
     extraction: dict,
@@ -323,6 +391,11 @@ def build_config(
         # Right after branding because that is what it is: the skin the colours sit in.
         # Absent means the pre-vocabulary look, which is a valid config, not a broken one.
         **({"stijl": stijl} if stijl else {}),
+        # Only the fields the model actually filled. An empty string is not a sentence, and
+        # writing one would override the register default with nothing -- the site would
+        # render a blank heading and pass every gate, because every gate here checks that
+        # copy is absent-or-legal, not that it is present.
+        **({"teksten": teksten} if (teksten := _teksten_van(draft)) else {}),
         "diensten": [
             {"naam": d["naam"].strip(), "omschrijving": d["omschrijving"].strip()}
             for d in draft["diensten"][:8]

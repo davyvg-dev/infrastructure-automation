@@ -31,6 +31,20 @@ branding:
   kleur_primair: '#24435c'
   kleur_accent: '#e0862f'
 
+# De zinnen die van dit bedrijf zijn in plaats van van het sjabloon. Elke sleutel is
+# optioneel en valt terug op src/lib/toon.ts; wat hier staat is wat twee sites van elkaar
+# laat verschillen. Alles hieronder is te herleiden tot de diensten en het werkgebied
+# hierboven: geen jaartallen, geen keurmerken, geen garanties die nergens vandaan komen.
+teksten:
+  kop: 'Plat dak, pannen of zink: wij houden het dicht'
+  belofte: 'Wij komen kijken, u hoort wat er aan de hand is, en pas daarna gaat er iemand het dak op.'
+  intro_kop: 'Eerst het dak op, dan pas een prijs'
+  werkwijze: 'Een dak beoordeel je niet vanaf de stoep. Wij klimmen erop, zoeken uit waar het water vandaan komt en leggen uit wat er moet gebeuren. Daarna krijgt u een offerte waar alles in staat.'
+  bereik: 'Wij werken in Nieuwegein, Utrecht, IJsselstein en Houten. Uw dak wordt gedaan door onze eigen dakdekkers, en wat wij naar boven meenemen halen wij ook weer op.'
+  diensten_tekst: 'Van een enkele lekkage tot een compleet nieuw dak. Twijfelt u wat uw dak nodig heeft? Laat ons even kijken.'
+  slot_kop: 'Laat ons even op het dak kijken'
+  slot_tekst: 'Bel ons en beschrijf wat u ziet. Wij plannen een inspectie en u weet daarna waar u aan toe bent.'
+
 diensten:
   - naam: 'Daklekkage verhelpen'
     omschrijving: 'Wij sporen de lek op en dichten hem duurzaam, ook bij een plat dak.'

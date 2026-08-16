@@ -21,10 +21,21 @@ import type { ClientConfig } from './client.ts'
 import { capitalize, somOp } from './format.ts'
 
 export interface Toon {
-  /** Hero eyebrow, above the H1. */
-  aanhef: string
-  /** Hero subline, after the three service names. */
+  /**
+   * The H1. Lived in Hero.astro as `<naam>: vakwerk waar u op kunt rekenen.` until
+   * 2026-08-16, which made the largest text on the first screen the same sentence for a
+   * barber and a dakdekker, and was also wrong about the market: nearly every real Dutch
+   * trade site puts vak + plaats in the H1 ("Timmerman in Waalwijk en omgeving"). This
+   * factory had that in a tracked uppercase eyebrow ABOVE the H1 -- the badge-above-the-
+   * headline pattern, which is the single most-scored tell in the taxonomy. So the eyebrow
+   * is gone from the hero and its content is the headline, which is one fewer element and
+   * two fewer tells.
+   */
+  kop: string
+  /** Hero subline. */
   belofte: string
+  /** Intro heading. Hardcoded in Intro.astro until 2026-08-16. */
+  introKop: string
   /** Intro, first paragraph: how working with them goes. */
   werkwijze: string
   /** Intro, second paragraph: where they are, or where they go. */
@@ -63,22 +74,49 @@ export interface Toon {
 }
 
 export function toon(config: ClientConfig): Toon {
+  const basis = standaardToon(config)
+  // Per-client copy from client.yaml, written by app.sitedraft off the prospect's own
+  // sources or by hand. It merges OVER the register default rather than replacing the
+  // block, so a client who has one good sentence gets that one sentence and keeps the rest
+  // -- and a client with none renders exactly the bytes they rendered before `teksten`
+  // existed, which is what keeps the live fleet still.
+  const eigen = config.teksten ?? {}
+  return {
+    ...basis,
+    ...(eigen.kop ? { kop: eigen.kop } : {}),
+    ...(eigen.belofte ? { belofte: eigen.belofte } : {}),
+    ...(eigen.intro_kop ? { introKop: eigen.intro_kop } : {}),
+    ...(eigen.werkwijze ? { werkwijze: eigen.werkwijze } : {}),
+    ...(eigen.bereik ? { bereik: eigen.bereik } : {}),
+    ...(eigen.diensten_tekst ? { dienstenTekst: eigen.diensten_tekst } : {}),
+    ...(eigen.slot_kop ? { slotKop: eigen.slot_kop } : {}),
+    ...(eigen.slot_tekst ? { slotTekst: eigen.slot_tekst } : {}),
+  }
+}
+
+function standaardToon(config: ClientConfig): Toon {
   const { bedrijf } = config
   const vak = capitalize(bedrijf.vak)
   const naam = bedrijf.naam
   const plaats = bedrijf.adres.plaats
   const gebied = somOp(bedrijf.werkgebied)
-  const [d1, d2, d3] = config.diensten.slice(0, 3).map((d) => d.naam.toLowerCase())
 
   if (bedrijf.bedrijfstype === 'locatie') {
     return {
       // No "en omgeving": a shop is in one place, and claiming a radius it does not
       // travel is the first sentence that would give the template away.
-      aanhef: `${vak} in ${plaats}`,
+      kop: `${vak} in ${plaats}`,
       // "Wij komen langs" inverted. Deliberately not "u loopt binnen" alone -- plenty of
       // locatie vakken (tandarts, hondentrimmer) run on appointment only, and the copy
       // has to be true for all of them.
-      belofte: `Van ${d1} en ${d2} tot ${d3}: u belt voor een afspraak en u weet vooraf waar u aan toe bent.`,
+      //
+      // The `Van <d1> en <d2> tot <d3>:` prefix this line carried until 2026-08-16 is gone.
+      // It was a hardcoded rule of three -- the copy tell every detector regexes for -- and
+      // it broke into nonsense the moment a dienst name contained "en": "Van lekkage
+      // opsporen en verhelpen en ontstoppen tot sanitair vervangen". The diensten it was
+      // naming are three sections further down the same page anyway.
+      belofte: `U belt voor een afspraak en u weet vooraf waar u aan toe bent.`,
+      introKop: 'Duidelijke afspraken, nette afwerking',
       werkwijze: `Een ${bedrijf.vak} zoeken en geen zin in gedoe? Zo werken wij: u belt of loopt binnen, u vertelt wat u zoekt, en wij zeggen eerlijk wat er mogelijk is en wanneer u terechtkunt.`,
       bereik: `${naam} zit in ${plaats}. Onze klanten komen uit ${gebied}. U spreekt altijd iemand die het vak zelf doet.`,
       gebiedKop: 'Waar u ons vindt',
@@ -110,8 +148,11 @@ export function toon(config: ClientConfig): Toon {
   // mobiel: the copy every client site had before this file existed. Changing a sentence
   // here changes every live trade site, so it is kept verbatim on purpose.
   return {
-    aanhef: `${vak} in ${plaats} en omgeving`,
-    belofte: `Van ${d1} en ${d2} tot ${d3}: u belt, wij komen langs en u weet vooraf waar u aan toe bent.`,
+    kop: `${vak} in ${plaats} en omgeving`,
+    // Tricolon prefix dropped 2026-08-16, see the locatie branch for why. The promise
+    // itself is untouched: it is live on paying clients and pinned by toon.test.ts.
+    belofte: `U belt, wij komen langs en u weet vooraf waar u aan toe bent.`,
+    introKop: 'Duidelijke afspraken, nette afwerking',
     werkwijze: `Een ${bedrijf.vak} nodig en geen zin in gedoe? Zo werken wij: u legt uw situatie uit, wij komen kijken en u ontvangt een heldere offerte voordat het werk begint. Geen verrassingen achteraf.`,
     bereik: `${naam} werkt in ${gebied}. U spreekt altijd met iemand die het werk zelf kent, en wij laten de werkplek netjes achter.`,
     gebiedKop: 'Werkgebied',

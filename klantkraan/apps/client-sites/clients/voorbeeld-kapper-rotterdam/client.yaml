@@ -60,6 +60,20 @@ stijl:
   # dat zien in plaats van het in een kader weg te zetten.
   foto: randloos
 
+# De zinnen die van deze zaak zijn in plaats van van het sjabloon. Let op het register: een
+# barbier rijdt nergens heen, dus niets hieronder belooft dat ("wij komen langs" is de fout
+# die src/lib/toon.test.ts afvangt). Alles is te herleiden tot de diensten en de
+# openingstijden hierboven.
+teksten:
+  kop: 'Knippen en scheren aan de rand van Kralingen'
+  belofte: 'U belt of loopt binnen, en u zit bij dezelfde barbier als de vorige keer.'
+  intro_kop: 'Er staat tijd voor u ingepland'
+  werkwijze: 'Wij knippen op afspraak, zodat niemand met een jas over de arm staat te wachten. Is er een stoel vrij, dan bent u ook zonder afspraak welkom. Zeg wat u wilt of laat het aan ons over, allebei is goed.'
+  bereik: 'De zaak zit in Rotterdam. Onze klanten komen uit Kralingen, Cool, Delfshaven, Blijdorp en Kop van Zuid, en op donderdagavond uit de rest van de stad.'
+  diensten_tekst: 'Dit staat op de stoel te gebeuren. Wilt u iets anders, vraag het gerust.'
+  slot_kop: 'Even bellen voor een stoel'
+  slot_tekst: 'Bel ons en zeg wanneer het u schikt. U hoort direct wanneer u terechtkunt.'
+
 diensten:
   - naam: 'Knippen'
     omschrijving: 'Wassen, knippen en afwerken met tondeuse of schaar, precies zoals u het wilt.'

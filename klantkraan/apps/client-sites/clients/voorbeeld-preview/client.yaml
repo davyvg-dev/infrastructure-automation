@@ -41,6 +41,21 @@ stijl:
   kleuring: royaal # de banden krijgen een tint van de merkkleur
   foto: randloos # de fotoband loopt door tot de schermrand
 
+# De zinnen die van deze prospect zijn in plaats van van het sjabloon. Bij een voorstel
+# schrijft `app.sitedraft` ze uit de openbare bronnen van de prospect; alles hier is te
+# herleiden tot de diensten en het werkgebied hierboven. Elke sleutel is optioneel en valt
+# terug op src/lib/toon.ts, dus een prospect waarover de bronnen weinig zeggen krijgt gewoon
+# het register en geen verzonnen verhaal.
+teksten:
+  kop: 'Lekkage, verstopping of een ketel die het opgeeft'
+  belofte: 'U legt uit wat er misgaat, wij komen langs met het gereedschap dat daarbij hoort.'
+  intro_kop: 'Wij zeggen het als het meevalt'
+  werkwijze: 'De meeste lekkages zijn kleiner dan ze lijken en sommige verstoppingen zitten twee meter verderop dan u denkt. Wij zoeken eerst uit wat er werkelijk aan de hand is en vertellen het u, ook als de rekening daardoor korter wordt.'
+  bereik: 'Wij werken in Zeist, Utrecht en De Bilt. U spreekt de loodgieter die ook langskomt, niet een planner die hem nog moet bellen.'
+  diensten_tekst: 'Dit is waar de telefoon meestal voor gaat. Staat uw probleem er niet bij? Beschrijf het even, dan hoort u of wij het doen.'
+  slot_kop: 'Vertel wat er lekt'
+  slot_tekst: 'Bel ons en leg uit wat u ziet of hoort. U hoort meteen of het kan wachten en wanneer wij kunnen komen.'
+
 diensten:
   - naam: 'Lekkage opsporen en verhelpen'
     omschrijving: 'Wij zoeken de oorzaak van de lekkage op en repareren hem meteen.'
