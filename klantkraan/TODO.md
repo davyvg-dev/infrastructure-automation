@@ -765,6 +765,105 @@ from their real CSS at 1440px, against 11 Dutch trade sites from our own outreac
       the schema's own message, which is the failure the offer now prevents. 418 python tests,
       49 node tests.
 
+### U. The financial plan, measured against 2026 reality (2026-08-16) — PARKED
+
+Seven agents stress-tested the unit economics. Six findings files, ~25,600 words with sources, in
+`research/finance-feasibility-2026-08-16/` — `STATE.md` indexes them. The session limit killed the
+COGS agent before it wrote anything; every other dimension came back. **Parked on founder's
+instruction 2026-08-16 — resume from here.**
+
+The finding that reframes the rest: **0 paying clients, EUR 0 MRR, 30 cold emails, 0 replies, 1
+logged phone call ever** — and 103 commits of engineering in the six days the sprint was supposed to
+be dialing. The plan models a revenue business making a distribution decision; the repo is a
+product-engineering business that has not started selling. Corrected numbers: churn 1.84%/mo ->
+**4.0%** (LTV 15k -> **7.2k**, ceiling **50 clients** not ~109), cash CAC 150-250 -> **300-700**,
+fully loaded ~400 -> **2,000-3,500**, core TAM 143k -> **~6,200** (SAM ~2,000), months to 10 clients
+-> **9-12**.
+
+- [ ] U1: **the two deals expiring this week.** DRS replied "zeker geïnteresseerd" 2026-08-13 with a
+      NEW unpriced ask (customer->monteur dispatch) and nobody answered; offerte AND the live Mollie
+      link both expire **20-08**. Cool Global expires **24-08**. These are the only revenue on the
+      table and neither has a pipeline record. Answer DRS first, price the dispatch ask as a
+      separate project.
+- [ ] U2: **unblock invoicing.** `BILLING_SELLER_BTW=NL004800098B81` already exists in
+      `apps/marketing-site/src/data/company.ts` and was never written to the prod env; the only real
+      work is deciding the establishment address. ~10 min + one decision, and it sits in front of
+      every euro. Art. 37 Wet OB: BTW on a defective invoice is owed anyway while the client cannot
+      deduct it — all liability, no benefit. Cheapest to fix at zero clients; retroactive repair
+      means telling your first customers the paperwork was wrong. Supersedes §P8.
+- [ ] U3: **dial.** 50/week sustained is the only path that produces 10 clients inside a year
+      (playbook: 1-2 demos/wk -> 1.3-2.6 clients/mo -> 4-8 months). Riool sprint was already
+      scheduled for the week of 24-08. Nothing else on this list matters more.
+- [ ] U4: **qualify on measured inbound volume before selling.** The dominant churn driver is
+      selling to trades whose sites get too little traffic for the product to prove itself, and CBS
+      86116NED says **43% of small construction firms have no website at all** (only 5% of 2-10 wp
+      firms use AI of any kind). Ask about call volume on call one; disqualify honestly.
+- [ ] U5: **delete the Google Ads channel** — it is wrong in kind, not degree. Measured on Ahrefs
+      NL: "AI telefoniste" returns TWO keywords, both <100/mo; the entire antwoordservice cluster
+      has 2 terms above 100/mo out of 71. The EUR 400/mo cannot be spent. Reallocate to partnerships,
+      and replace the 10% rev-share (EUR 29.90/mo is too small to motivate a boekhouder) with a
+      EUR 300-500 one-off bounty.
+- [ ] U6: **stop selling Compleet.** Both live offers are voice deals served by a vendor ElevenLabs
+      agent, not the LiveKit stack the unit economics assume, and `offer-and-pricing.md` forbids it
+      until voice is verified live. DRS at 1,500 included minutes is ~EUR 192/mo COGS on EUR 685 =
+      **72% GM, not 93%** — the blended 95.1% does not survive the deals actually on the table.
+- [ ] U7: **correct the finance docs** rather than leaving two contradictory sets of numbers in the
+      repo. `unit-economics.md`: churn 4%/mo, LTV 7.2k, the "EUR 600 CAC still yields 15x+" claim
+      (it is 12.0x), the ~109-client terminal book. Tax reserve **30% not 35%** (35% is only right at
+      ~EUR 99.5k profit; at EUR 40k it over-reserves EUR 8,500) — but price every marginal euro above
+      EUR 40k at ~46%. Draw needs **14 Chat clients, not 13**. Install fee is **EUR 0 for the first
+      ten** by written policy (waived for pilots AND all founding members), so the EUR 500 average is
+      ~EUR 5,000 of phantom cash. 10 clients = **EUR 2,361/mo free cash**, not EUR 2,836.
+- [ ] U8: **BTW mechanics the plan gets wrong.** BTW on the EUR 894 prepay is due **immediately on
+      receipt** (art. 13 lid 2 Wet OB), not spread over six months — EUR 187.74 in that quarter,
+      while goed koopmansgebruik lets you book only the earned slice as profit. And the 30-day
+      guarantee must refund **EUR 361.79 gross**, not EUR 299 — fix that wording, and state whether it
+      covers the installation fee and the prepay. Do NOT opt into the KOR: clients are BVs who
+      reclaim, so it buys no price advantage and forfeits input BTW on the API/hosting lines this
+      business is made of.
+- [ ] U9: **liability cap in the AV + DPA, before insurance.** ISO AI exclusions went live 1 Jan
+      2026, 60+ P&C groups filed, and NL brokers name the excluded profile outright — "zelflerende
+      systemen zonder menselijke controle". A standard beroepsaansprakelijkheid policy likely pays
+      nothing for the one thing we sell; affirmative AI cover is EUR 390-1,170/mo, unaffordable until
+      ~EUR 150k revenue. An uncapped DPA indemnity is contractually assumed liability, uninsured, and
+      **personal** while the founder is an eenmanszaak. NLdigital caps ICT suppliers at EUR 500k.
+      Corrected premium line: **EUR 165-340/mo**, not 150-200. Stay eenmanszaak — BV costs
+      EUR 3-5k/yr until ~EUR 97-114k profit; the liability argument for a BV is real but is answered
+      more cheaply by the cap.
+- [ ] U10: **positioning is now false in two places.** "The ONLY text-first + trades + art.50 player"
+      — art. 50 became applicable 2026-08-02 and is a compliance floor for every competitor, and
+      LoodgieterAI (EUR 297 Pro, loodgieter-specific, bundles voice + chat + CRM + SEO), Klusio
+      (EUR 199 with AI telefonist included), Watermelon (EUR 199 / free under 50 conversations) and
+      Trengo (EUR 299 *with voice*) all ship it. InstallatieTelefoniste cut EUR 0,25 -> EUR 0,15/min
+      in the six days since our own research. Rewrite the claim.
+- [ ] U11: **the ICP is priced wrong.** At EUR 3,588/yr Klantkraan costs **1.6-4x the entire annual
+      communications budget** of a 2-5 person installatiebedrijf (CBS 81156ned: comms = 0.25% of
+      omzet). Below ~8-9 staff it costs more than phones + mobile + internet combined. So: it is a
+      new budget line, never a substitution — pitch revenue recovery ("one saved spoed job pays for
+      it"), never cost saving. Decide deliberately between moving up-market to 5-9 staff and adding a
+      EUR 149-199 tier that fits the budget they already have.
+- [ ] U12: **COGS is the one dimension never measured** — that agent died before writing a line.
+      WhatsApp moved to per-message pricing during 2025, so the EUR 3.00 WhatsApp line in
+      `cogs-per-tier.md` is the prime suspect and Chat EUR 10 / Compleet EUR 35 are both unvalidated.
+      Also unmodelled: Hetzner amortised at 30 clients/box is EUR 0.50, but at 10 clients it is
+      EUR 1.50 and at 1 client ~EUR 15. Re-run this research.
+- [ ] U13: **three mutually inconsistent first-client prices are live simultaneously** — VoltWerk's
+      improvised call terms (free month, then EUR 150, then EUR 300, no expiry attached),
+      founding-member (EUR 149 then EUR 299, capped at 30-09-2026 or 10 clients), and
+      `pilot-to-paid.md`'s "founding 10 prijsvast EUR 299 for 12 months" which the canonical doc
+      never mentions. `pilot-offer.md` was superseded 2026-07-24 but four docs still sell the retired
+      free 14-day pilot, flagged "pending alignment" 23 days ago. Pick one and retire the rest.
+- [ ] U14: **the risk register has fired and nobody logged it.** R-COM-01 bounce >3% (actual 5.6% of
+      prospects), R-FIN-01 cash bridge, R-COM-03 content stalls, and the weekly-KPI escalation "MRR
+      <80% of plan for 2 weeks" (actual: 0% of plan for three months). 55 rows, no dates, no status,
+      never reviewed. The 90-day retrospective was due ~2026-08-15 and
+      `01-strategy/quarterly-{YYYY-Qn}.md` does not exist.
+- [ ] U15: **founder throughput wall at 15-22 active clients** (~21-29 h/wk against a stated 12-15
+      h/wk budget), i.e. it arrives BEFORE the 14 clients needed to cover a EUR 3,500 draw. The
+      EUR 600/mo VA at 12 clients is affordable (12 x EUR 289 = EUR 3,468) but lands exactly at the
+      wall, and four planning docs disagree on when 12 clients happens. Not binding yet — at 0
+      clients the constraint is initiation, not throughput.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
