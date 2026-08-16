@@ -1,9 +1,9 @@
 # How a delivered site gets edited without breaking
 
-Founder requirement, verbatim: *"every website I deliver needs to be editable in an easy
+Founder requirement, verbatim: _"every website I deliver needs to be editable in an easy
 way. So if I were to generate a website off a template, the user (me and the client) need to
 be able to easily make changes (photos, copy, etc) without breaking any existing
-functionality. That last point is crucial."*
+functionality. That last point is crucial."_
 
 Researched 2026-08-16 against every serious option. This is the decision doc; §1 is the
 recommendation and §5 is what remains to be built. **Nothing in §5 is built yet** — §4 is,
@@ -77,7 +77,7 @@ change Thursday's closing time and swap the photo of the van.
 3. He sees his own site's fields in Dutch, in the order they appear on the page, with the
    current values filled in. Not YAML. Not a file tree.
 4. He changes `donderdag` from `18:00` to `21:00`. The field will not accept `9 uur 's
-   avonds` — it says, in Dutch, that it wants `uu:mm`.
+avonds` — it says, in Dutch, that it wants `uu:mm`.
 5. He drags a photo off his phone onto the van picture. It is 11MB and HEIC. It is accepted,
    converted and resized before it is stored — not rejected with an error he cannot act on.
 6. He presses **Bekijk wijziging**. He gets a link to his site as it will look. Not live yet.
@@ -96,13 +96,13 @@ is the weakest possible place to put this: Storyblok shipped API-side enforcemen
 field limits only in **May 2026**, having been UI-only for years, which is what "validated in
 the CMS" is worth.
 
-| # | Layer | Catches |
-|---|---|---|
-| 1 | Field validation at edit time (from the Zod schema) | wrong shape, missing required field, bad time format, over-length H1 |
-| 2 | **The same Zod schema at build time** (`ClientSchemaChecked`) | anything that reached the file another way — a hand edit, an import, a script |
-| 3 | The fact gate over the rendered HTML (`pnpm check`) | prices, placeholders, a missing legal field on a live build — things a schema cannot see because they are about the *output* |
-| 4 | The build fails closed | a broken config produces no deploy, so **the last good version stays up** |
-| 5 | Preview deploy before promote | everything the first four cannot: does it actually look right |
+| #   | Layer                                                         | Catches                                                                                                                      |
+| --- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Field validation at edit time (from the Zod schema)           | wrong shape, missing required field, bad time format, over-length H1                                                         |
+| 2   | **The same Zod schema at build time** (`ClientSchemaChecked`) | anything that reached the file another way — a hand edit, an import, a script                                                |
+| 3   | The fact gate over the rendered HTML (`pnpm check`)           | prices, placeholders, a missing legal field on a live build — things a schema cannot see because they are about the _output_ |
+| 4   | The build fails closed                                        | a broken config produces no deploy, so **the last good version stays up**                                                    |
+| 5   | Preview deploy before promote                                 | everything the first four cannot: does it actually look right                                                                |
 
 Layer 2 is the load-bearing one and it already exists. Layer 1 is a convenience that makes
 layer 2 fire less often.
@@ -151,7 +151,7 @@ breaking anything" clause:
 5. **Auth** — Cloudflare Access + one-time PIN is **€0 up to 50 users** and zero code. Seats
    never auto-free (revoking does not release one; only removing does), and Pages' Access
    wiring has two documented traps: the toggle does not cover the bare `*.pages.dev`, and a
-   custom domain must be added *before* the policy. Above 50 clients, or to avoid seat
+   custom domain must be added _before_ the policy. Above 50 clients, or to avoid seat
    management, an HMAC magic link on a Worker plus Resend (free tier covers the volume). ~1d.
 6. **The write path** — a Worker committing `client.yaml` via `PUT /repos/.../contents/...`
    with a GitHub App installation token. **The commit is itself the build trigger**: a push
@@ -164,7 +164,7 @@ breaking anything" clause:
 ### The one architectural decision the founder has to make
 
 **Cloudflare Pages cannot promote a preview to production without re-uploading.** There is no
-promote endpoint; rollback only targets prior *production* deployments. So step 7 of the
+promote endpoint; rollback only targets prior _production_ deployments. So step 7 of the
 client's story ("Zet online") means a second build, and the thing he approved is not
 byte-for-byte the thing that goes live.
 

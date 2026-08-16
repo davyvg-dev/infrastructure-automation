@@ -10,10 +10,15 @@
     "ritme": "ruim",
     "palet": "zand",
     "kleuring": "royaal",
-    "foto": "randloos"
+    "foto": "randloos",
+    "maat": null
+  },
+  "indeling": {
+    "hero": null,
+    "diensten": null
   },
   "kleur": "#1e463c",
-  "silhouet": "2bf6bc884be1",
+  "silhouet": "5f7bda385291",
   "fotos": [
     "/stock/kapper-2-tall.webp",
     "/stock/kapper-3-wide.webp",

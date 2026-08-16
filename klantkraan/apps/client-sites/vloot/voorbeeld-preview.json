@@ -10,10 +10,15 @@
     "ritme": "ruim",
     "palet": "zand",
     "kleuring": "royaal",
-    "foto": "randloos"
+    "foto": "randloos",
+    "maat": null
+  },
+  "indeling": {
+    "hero": null,
+    "diensten": null
   },
   "kleur": "#1f4d45",
-  "silhouet": "0e1544ff787f",
+  "silhouet": "b4e1953398bc",
   "fotos": [
     "/stock/loodgieter-1-tall.webp",
     "/stock/loodgieter-3-wide.webp",

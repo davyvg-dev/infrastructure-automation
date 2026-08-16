@@ -10,10 +10,15 @@
     "ritme": null,
     "palet": null,
     "kleuring": null,
-    "foto": null
+    "foto": null,
+    "maat": null
+  },
+  "indeling": {
+    "hero": null,
+    "diensten": null
   },
   "kleur": "#24435c",
-  "silhouet": "a5d4c0dd4a24",
+  "silhouet": "6a1939dc5557",
   "fotos": [
     "/stock/dakdekker-2-tall.webp",
     "/stock/dakdekker-3-wide.webp",
