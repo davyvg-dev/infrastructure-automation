@@ -735,9 +735,35 @@ from their real CSS at 1440px, against 11 Dutch trade sites from our own outreac
       geen voorrijkosten") rather than quality adjectives: the highest-value structural
       finding in the trade survey is that the good sites answer "will this man rip me off?"
       before "what do you do?".
-- [ ] T10: `app.sitestyle` does not know about `maat`, `royaal`, `hero` or `diensten` yet, so
-      the composer never chooses them — only `/example-site` and a human do. Teach it the new
-      axes, including the cross-axis rule.
+- [x] T10 (this commit): the composer chooses all ten axes, and the two blocks now come out of
+      one call. `maat` and the composition axes were invisible to `app.sitestyle` (it parsed
+      seven constants out of `stijl.ts` and nothing out of `indeling.ts`), and `royaal` was
+      worse than invisible: SCHALEN already carried it, so the composer could return it while
+      `indeling.hero` defaulted to `gesplitst` — the one combination the schema refuses. Every
+      composed `royaal` was therefore a voorstel that did not build, and nothing said so until
+      the founder ran `pnpm build`. Reproduced on a real fixture and then fixed: `zonder_botsing`
+      takes one of the two out of the OFFER, so the model cannot return the pair at all
+      (the same argument as the closed vocabulary — an enum is a rule, a sentence in the prompt
+      is advice). Which one goes is measured, not preferred: a reference setting its display
+      type at 72px+ (the midpoint between what `groot` can express at 56 and what `royaal`
+      sets at 88) IS a big-headline site, so `gesplitst` leaves; with no reference there is no
+      such number, so the split hero the 60-site trade survey endorses stands and `royaal`
+      leaves. `royaal` stays reachable without a reference on the clients whose hero shortlist
+      came up without `gesplitst`: 32 of 200 names, measured. Two new measurements, because a
+      model cannot read `maat` off nothing: `container_px` (the page width, and tell #1 of the
+      award study — 1140/1170/1200/1320 hit 11 of 11 trade sites) and the `drie_kolommen` /
+      `raster_spannen` pair that tell #24 separates the two populations with. Second hole found
+      by doing it: `royaal` also caps `teksten.kop` at 55 characters and the composer had never
+      seen the headline, so `KOP_MAX` is now parsed out of `client.ts` (55/70/90) exactly the
+      way the vocabulary is parsed out of `stijl.ts`, and a kop that does not fit withdraws the
+      scale rather than failing the build — the four drafted koppen in the fleet run 43-48
+      characters, so this bites on the long ones only. `sitedraft` writes the `indeling:` block
+      alongside `stijl:` (the choices are data, the reasons are comments above them), and hands
+      the composer the drafted kop and the dienst count. Verified end to end: a composed
+      `royaal` + `gestapeld` + `maat: breed` + `diensten: lijst` config builds and passes
+      `pnpm check` over 9 pages; flipping that one yaml line to `gesplitst` fails the build with
+      the schema's own message, which is the failure the offer now prevents. 418 python tests,
+      49 node tests.
 
 ## Phase 0 — Planning docs
 

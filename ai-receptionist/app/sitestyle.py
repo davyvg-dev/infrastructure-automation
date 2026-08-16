@@ -8,9 +8,19 @@ and, with no reference to point at, the factory composes a look itself:
 
     python -m app.sitestyle --vak dakdekker --naam "Dakwerken Bos" --kleur "#1f3a5f"
 
-Prints the `stijl:` block for a clients/<slug>/client.yaml. The founder points at sites he
-likes instead of describing them; the reference drives the SKIN ONLY (see TODO section R),
-so layout and section order are untouched by everything below.
+Prints the `stijl:` and `indeling:` blocks for a clients/<slug>/client.yaml. The founder
+points at sites he likes instead of describing them.
+
+Two blocks because there are two decisions. `stijl:` is the paint -- type, colour, rhythm,
+radius, measure. `indeling:` is the silhouette: how the hero and the diensten are arranged,
+which is what a visitor reads before they read a word. Section ORDER is still untouched, and
+`indeling.weglaten` is not chosen here: which section a business can do without is a question
+about what that business has to say.
+
+One rule crosses the two blocks and is the only one that does. `schaal: royaal` sets the H1
+at 88px and needs the whole column for it; `hero: gesplitst` gives the headline half a
+column. ClientSchemaChecked refuses the pair, so no offer built here may contain both -- see
+`zonder_botsing`.
 
 Two halves, and the split is the whole point:
 
@@ -68,21 +78,34 @@ _MODEL = {"id": "claude-opus-5", "effort": "medium"}
 
 _UA = "KlantkraanIntake/1.0 (+https://klantkraan.nl)"
 
-# The design vocabulary, single-sourced from the resolver that has to render it.
-STIJL_TS = (
-    settings.ROOT.parent / "klantkraan" / "apps" / "client-sites" / "src" / "lib" / "stijl.ts"
-)
+# The design vocabulary, single-sourced from the modules that have to render it.
+_LIB = settings.ROOT.parent / "klantkraan" / "apps" / "client-sites" / "src" / "lib"
+STIJL_TS = _LIB / "stijl.ts"
+INDELING_TS = _LIB / "indeling.ts"
+CLIENT_TS = _LIB / "client.ts"
 
-# TS constant -> client.yaml key. Both halves are load-bearing: the TS name is what we parse
-# out of stijl.ts, the yaml key is what the Zod schema expects back.
+# client.yaml block -> (the module it is declared in, {TS constant: yaml key}). All three
+# halves are load-bearing: the file we parse, the TS name inside it, and the yaml key the Zod
+# schema expects back. Two blocks because the skin and the composition are two decisions the
+# founder reads separately -- `stijl:` is the paint, `indeling:` is the silhouette.
 _AS_CONST = {
-    "LETTERONTWERPEN": "letterontwerp",
-    "SCHALEN": "schaal",
-    "VORMEN": "vorm",
-    "RITMES": "ritme",
-    "PALETTEN": "palet",
-    "KLEURINGEN": "kleuring",
-    "FOTOZETTINGEN": "foto",
+    "stijl": (
+        STIJL_TS,
+        {
+            "LETTERONTWERPEN": "letterontwerp",
+            "SCHALEN": "schaal",
+            "VORMEN": "vorm",
+            "RITMES": "ritme",
+            "PALETTEN": "palet",
+            "KLEURINGEN": "kleuring",
+            "FOTOZETTINGEN": "foto",
+            # New axes go at the END of a block, never above an existing one: the composer's
+            # shortlists are rotated by an axis's POSITION here, so inserting one higher up
+            # renumbers every axis below it and silently redesigns every composed site.
+            "MATEN": "maat",
+        },
+    ),
+    "indeling": (INDELING_TS, {"HEROS": "hero", "DIENSTVORMEN": "diensten"}),
 }
 
 # Fetch budget. A reference site is read once, by hand, for one voorstel; these caps exist so
@@ -101,33 +124,72 @@ class StyleError(RuntimeError):
 _CONST_RE = re.compile(r"export const (\w+) = \[(.*?)\] as const", re.S)
 _QUOTED_RE = re.compile(r"'([a-z]+)'")
 
-_vocabulaire: dict[str, list[str]] | None = None
+_vocabulaire: dict[str, dict[str, list[str]]] | None = None
 
 
-def vocabulaire() -> dict[str, list[str]]:
-    """{axis: [allowed values]}, read from stijl.ts and cached.
+def per_blok() -> dict[str, dict[str, list[str]]]:
+    """{client.yaml block: {axis: [allowed values]}}, read from the TS modules and cached.
 
-    Parsed rather than restated because these two files have to agree exactly: a value only
-    this module knows about would pass the API schema here and fail Zod at build time.
+    Parsed rather than restated because these files have to agree exactly: a value only this
+    module knows about would pass the API schema here and fail Zod at build time.
     """
     global _vocabulaire
     if _vocabulaire is not None:
         return _vocabulaire
+    blokken: dict[str, dict[str, list[str]]] = {}
+    for blok, (bron, constanten) in _AS_CONST.items():
+        try:
+            source = bron.read_text(encoding="utf-8")
+        except OSError as err:
+            raise StyleError(f"kan de vocabulaire niet lezen ({bron}): {err}") from err
+        found = {name: _QUOTED_RE.findall(body) for name, body in _CONST_RE.findall(source)}
+        axes: dict[str, list[str]] = {}
+        for const, key in constanten.items():
+            values = found.get(const)
+            if not values:
+                raise StyleError(
+                    f"{bron.name} bevat geen bruikbare `{const}`; is de vocabulaire hernoemd?"
+                )
+            axes[key] = values
+        blokken[blok] = axes
+    _vocabulaire = blokken
+    return blokken
+
+
+def vocabulaire() -> dict[str, list[str]]:
+    """{axis: [allowed values]} across both blocks, in the order they are written."""
+    return {axis: values for axes in per_blok().values() for axis, values in axes.items()}
+
+
+# The H1 length ceilings ClientSchemaChecked enforces per schaal, parsed out of client.ts for
+# the same reason the vocabulary is parsed out of stijl.ts. `schaal: royaal` sets the H1 at
+# 88px and caps the headline at 55 characters, `groot` at 70; a composer that does not know
+# that offers a scale the drafted kop does not fit, and the founder finds out at build time.
+_KOP_MAX_RE = re.compile(r"const KOP_MAX[^{]*\{([^}]*)\}")
+_KOP_PAAR_RE = re.compile(r"(\w+)\s*:\s*(\d+)")
+_KOP_STANDAARD_RE = re.compile(r"KOP_MAX\[[^\]]*\]\s*\?\?\s*(\d+)")
+
+_maxima: tuple[dict[str, int], int] | None = None
+
+
+def kop_maxima() -> tuple[dict[str, int], int]:
+    """({schaal: max characters}, the ceiling every other schaal gets)."""
+    global _maxima
+    if _maxima is not None:
+        return _maxima
     try:
-        source = STIJL_TS.read_text(encoding="utf-8")
+        source = CLIENT_TS.read_text(encoding="utf-8")
     except OSError as err:
-        raise StyleError(f"kan de stijl-vocabulaire niet lezen ({STIJL_TS}): {err}") from err
-    found = {name: _QUOTED_RE.findall(body) for name, body in _CONST_RE.findall(source)}
-    axes: dict[str, list[str]] = {}
-    for const, key in _AS_CONST.items():
-        values = found.get(const)
-        if not values:
-            raise StyleError(
-                f"{STIJL_TS.name} bevat geen bruikbare `{const}`; is de vocabulaire hernoemd?"
-            )
-        axes[key] = values
-    _vocabulaire = axes
-    return axes
+        raise StyleError(f"kan {CLIENT_TS} niet lezen: {err}") from err
+    blok = _KOP_MAX_RE.search(source)
+    standaard = _KOP_STANDAARD_RE.search(source)
+    if not blok or not standaard:
+        raise StyleError(
+            f"{CLIENT_TS.name} bevat geen leesbare KOP_MAX; is de koplengte-regel hernoemd?"
+        )
+    per_schaal = {k: int(v) for k, v in _KOP_PAAR_RE.findall(blok.group(1))}
+    _maxima = (per_schaal, int(standaard.group(1)))
+    return _maxima
 
 
 # The length of `bedrijf.naam` above which the `groot` type scale is withdrawn.
@@ -142,17 +204,73 @@ def vocabulaire() -> dict[str, list[str]]:
 NAAM_MAX_GROOT = 34
 
 
-def allowed(naam: str | None = None) -> dict[str, list[str]]:
+def allowed(naam: str | None = None, kop: str | None = None) -> dict[str, list[str]]:
     """The vocabulary minus the values this particular client cannot have.
 
-    Applied to both paths, because it is a property of the client rather than of the mode:
-    a reference site with a 64px display face is no reason to set a 39-character company
-    name at `groot`, and the resulting page is the same page either way.
+    Applied to both paths, because these are properties of the client rather than of the
+    mode: a reference site with a 64px display face is no reason to set a 39-character
+    company name at `groot`, and a reference with a 96px one is no reason to set a
+    58-character headline at `royaal`. The resulting page is the same page either way, and
+    the checked schema refuses both -- on the founder's machine, after the voorstel was
+    written.
     """
     axes = {axis: list(values) for axis, values in vocabulaire().items()}
     if naam and len(naam.strip()) >= NAAM_MAX_GROOT:
         axes["schaal"] = [v for v in axes["schaal"] if v != "groot"]
+    if kop and kop.strip():
+        maxima, standaard = kop_maxima()
+        tekens = len(kop.strip())
+        past = [s for s in axes["schaal"] if maxima.get(s, standaard) >= tekens]
+        # Never empty the axis. A headline no scale can carry is a copy problem, and the
+        # checked schema says so in those words; an empty enum is a 400 from the API and a
+        # run thrown away for a sentence the founder can shorten.
+        if past:
+            axes["schaal"] = past
     return axes
+
+
+# The measured display size at 1440 above which a reference is asking for the whole column.
+# `groot` tops out at 56px and `royaal` sets 88px, so 72 is the midpoint between the two
+# steps; the award set that motivated `royaal` runs 96-320px, far enough above the boundary
+# that nothing near it is being read as a big headline by accident.
+DISPLAY_HELE_KOLOM = 72.0
+
+
+def zonder_botsing(
+    axes: dict[str, list[str]], display_px: float | None = None
+) -> dict[str, list[str]]:
+    """The offer, minus whichever half of the one illegal combination has to go.
+
+    `schaal: royaal` and `hero: gesplitst` cannot appear on the same site: 88px of H1 in the
+    split hero's half-width column is about five characters a line, which is the exact
+    failure R4 measured. ClientSchemaChecked refuses the pair -- at build time, on the
+    founder's machine, after the voorstel was written. Taking one of the two values out of
+    the offer means the model cannot return the pair at all, which is the same reason the
+    vocabulary is closed rather than described.
+
+    Which of the two goes is decided by the evidence, not by preference. A reference
+    measured at DISPLAY_HELE_KOLOM or above IS a big-headline site, so there the arrangement
+    that cannot hold one is what leaves. With no reference there is no such number, so the
+    arrangement stands and `royaal` leaves: the split hero is what the 60-site trade survey
+    endorses for a vakbedrijf, and 88px of Dutch headline is the exceptional move. The
+    composer still reaches `royaal` on the clients whose hero shortlist came up without
+    `gesplitst` on it: 32 of 200 names, measured.
+    """
+    schaal = axes.get("schaal", [])
+    hero = axes.get("hero", [])
+    if "royaal" not in schaal or "gesplitst" not in hero:
+        return axes
+    zonder_gesplitst = [h for h in hero if h != "gesplitst"]
+    zonder_royaal = [s for s in schaal if s != "royaal"]
+    if display_px is not None and display_px >= DISPLAY_HELE_KOLOM and zonder_gesplitst:
+        return {**axes, "hero": zonder_gesplitst}
+    if zonder_royaal:
+        return {**axes, "schaal": zonder_royaal}
+    # Only reachable if `schaal` had been narrowed to `royaal` alone, which no rule above
+    # can do -- but an empty enum is a 400, so say what happened instead of sending it.
+    if zonder_gesplitst:
+        return {**axes, "hero": zonder_gesplitst}
+    raise StyleError("geen geldige combinatie van schaal en hero over voor deze klant")
 
 
 # `systeem` is the one value the composer is never offered. It is not a look, it is what a
@@ -178,7 +296,7 @@ def _seed(naam: str) -> int:
     return int.from_bytes(hashlib.blake2b(genormaliseerd.encode(), digest_size=8).digest(), "big")
 
 
-def candidates(naam: str) -> dict[str, list[str]]:
+def candidates(naam: str, kop: str | None = None) -> dict[str, list[str]]:
     """Per-axis shortlists for the composer, rotated by the client's name.
 
     Why the composer is not simply handed the whole vocabulary: its inputs are the vak, the
@@ -190,19 +308,29 @@ def candidates(naam: str) -> dict[str, list[str]]:
 
     What it is not: a preset. The shortlist says which two values are on the table, the
     model still has to argue from the vak and the colours which of them this client gets.
+    The one place a shortlist can come back with a single value is the schaal of a client
+    whose hero shortlist holds `gesplitst` and whose schaal shortlist held `royaal`: there
+    the cross-axis rule made the choice, and it is not the model's to make.
     """
-    zaad = _seed(naam)
+    beschikbaar = allowed(naam, kop)
     out: dict[str, list[str]] = {}
-    for i, (axis, values) in enumerate(allowed(naam).items()):
-        pool = [v for v in values if v not in _NIET_COMPONEERBAAR.get(axis, frozenset())]
-        if len(pool) <= _KANDIDATEN:
-            out[axis] = pool
-            continue
-        # A separate slice of the digest per axis, so the axes rotate independently: one
-        # shared offset would tie palet to vorm and give the whole vocabulary seven looks.
-        start = (zaad >> (7 * i)) % len(pool)
-        out[axis] = [pool[(start + n) % len(pool)] for n in range(_KANDIDATEN)]
-    return out
+    for blok, axes in per_blok().items():
+        # A separate digest per block, not one running index across both: numbering the
+        # composition axes 8 and 9 of the same digest would have run it out of bits (the
+        # ninth axis would only ever see one), and adding a block above the skin would
+        # renumber every skin axis and redesign every site composed before today.
+        zaad = _seed(naam if blok == "stijl" else f"{naam} {blok}")
+        for i, axis in enumerate(axes):
+            niet = _NIET_COMPONEERBAAR.get(axis, frozenset())
+            pool = [v for v in beschikbaar[axis] if v not in niet]
+            if len(pool) <= _KANDIDATEN:
+                out[axis] = pool
+                continue
+            # A separate slice of the digest per axis, so the axes rotate independently: one
+            # shared offset would tie palet to vorm and give the whole vocabulary seven looks.
+            start = (zaad >> (7 * i)) % len(pool)
+            out[axis] = [pool[(start + n) % len(pool)] for n in range(_KANDIDATEN)]
+    return zonder_botsing(out)
 
 
 _HEX_OK = re.compile(r"^#[0-9a-fA-F]{6}$")
@@ -545,6 +673,12 @@ _TEKST = re.compile(r"(^|[\s,>+~])(html|body|p)\b|:root", re.I)
 _PAGINA = re.compile(r"(^|[\s,>+~])(html|body)\b|:root", re.I)
 _BEELD = re.compile(r"\b(img|figure|picture|image|photo|foto)\b", re.I)
 _VOL_BEELD = re.compile(r"100vw|calc\(\s*50%\s*-\s*50vw\s*\)|100dvw")
+# Three equal columns, the shape `diensten: kaarten` renders. Tell #24 of the award study:
+# award sites place items on a grid with unequal spans (median 2.5 span declarations, 0
+# uses of repeat(3,1fr)); templates repeat thirds. An `fr` is required so a three-up row of
+# fixed-width boxes is not counted as a fluid grid.
+_DRIE_KOLOMMEN = re.compile(r"repeat\(\s*3\s*,[^)]*fr|(?:^|\s)1fr\s+1fr\s+1fr(?:\s|$)", re.I)
+_SPAN = re.compile(r"span\b|/")
 
 
 def measure(url: str) -> dict:
@@ -570,6 +704,9 @@ def measure(url: str) -> dict:
     achtergronden: Counter[str] = Counter()
     pagina_bg: str | None = None
     beeld_radius: list[float] = []
+    containers: list[float] = []
+    drie_kolommen = 0
+    raster_spannen = 0
     vol_beeld = len(_VOL_BEELD.findall(css))
 
     for selector, body in _iter_rules(_COMMENT_RE.sub(" ", css)):
@@ -639,6 +776,19 @@ def measure(url: str) -> dict:
                     r = round(float(nums[0]) / float(nums[1]), 2)
                     if 0.1 < r < 10:
                         ratios.append(r)
+            elif prop == "max-width":
+                # How wide the page is allowed to be, which is the whole of the `maat` axis
+                # and the one dimension nothing measured before it existed. Bounded because a
+                # max-width on a button or a tooltip says nothing about the page container.
+                breedte = _px(value)
+                if breedte is not None and 480 <= breedte <= 1920:
+                    containers.append(breedte)
+            elif prop == "grid-template-columns":
+                if _DRIE_KOLOMMEN.search(value):
+                    drie_kolommen += 1
+            elif prop in ("grid-column", "grid-area"):
+                if _SPAN.search(value):
+                    raster_spannen += 1
 
     for entry in google:
         webfonts.add(entry["familie"])
@@ -670,6 +820,9 @@ def measure(url: str) -> dict:
         "radius_px": _stat(radii),
         "pil_vormen": pillen,
         "sectie_padding_px": _stat(padding),
+        "container_px": _stat(containers),
+        "drie_kolommen": drie_kolommen,
+        "raster_spannen": raster_spannen,
         "pagina_achtergrond": hsl(pagina_bg) if pagina_bg else None,
         "achtergrondkleuren": [{**hsl(c), "voorkomen": n} for c, n in achtergronden.most_common(8)],
         "beeld_radius_px": _stat(beeld_radius),
@@ -726,14 +879,20 @@ def schema(axes: dict[str, list[str]] | None = None) -> dict:
     }
 
 
-# Appended to both prompts. The schema already makes it impossible to return `groot` for a
-# long name; this exists so the model does not spend its reasoning wanting a value that is
-# not there, and does not write a `reden` explaining a scale it was never offered.
-_LANGE_NAAM = (
-    "\n\nDe bedrijfsnaam staat voluit in de H1, in een halve kolom. Is die naam lang, dan "
-    f"is de schaal `groot` niet beschikbaar (vanaf {NAAM_MAX_GROOT} tekens): de kop zet dan "
-    "vijf regels en duwt de belknop van het eerste scherm. Staat een waarde niet in de "
-    "aangeboden lijst, dan bestaat hij voor deze site niet -- noem hem dan ook niet."
+# Appended to both prompts. The schema already makes it impossible to return a value that was
+# withdrawn; this exists so the model does not spend its reasoning wanting one that is not
+# there, and does not write a `reden` explaining a scale it was never offered.
+_WEGGELATEN = (
+    "\n\nNiet elke waarde staat voor elke site op tafel:\n"
+    f"- Een lange bedrijfsnaam (vanaf {NAAM_MAX_GROOT} tekens) haalt de schaal `groot` weg: "
+    "de kop zet dan vijf regels en duwt de belknop van het eerste scherm.\n"
+    "- Een lange kop haalt de grote schalen weg om dezelfde reden. `royaal` draagt 55 "
+    "tekens kop, `groot` 70.\n"
+    "- `schaal: royaal` zet de H1 op 88px en heeft daarvoor de HELE kolom nodig; "
+    "`hero: gesplitst` geeft de kop een halve kolom. Die twee sluiten elkaar uit, dus "
+    "hoogstens een van beide staat in de aangeboden lijsten.\n"
+    "Staat een waarde niet in de aangeboden lijst, dan bestaat hij voor deze site niet -- "
+    "noem hem dan ook niet."
 )
 
 _SYSTEM = (
@@ -763,9 +922,24 @@ _SYSTEM = (
     "6. De as `kleuring` gaat over hoeveel merkkleur de pagina draagt: vlakken met "
     "verzadigde achtergronden zijn `royaal`, een pagina van wit en grijs met alleen "
     "gekleurde knoppen is `spaarzaam`.\n"
-    "7. `redenen`: per as een zin in het Nederlands die de meting noemt waarop je de keuze "
+    "7. De as `maat` is de breedte van de pagina en staat in `container_px`. De vocabulaire "
+    "zet `smal` op ~900px, `normaal` op ~1024px en `breed` op ~1216px; kies de waarde die "
+    "het dichtst bij de gemeten container ligt. Die maat bepaalt de marges en de fotoband, "
+    "niet de regellengte: de leesbreedte is in de vocabulaire bewust smaller dan de "
+    "container.\n"
+    "8. De assen `hero` en `diensten` gaan over de INDELING, en daar meet CSS minder van dan "
+    "van de huid. `hero`: een voorbeeldsite zonder enige gemeten foto "
+    "(`beeldverhoudingen` leeg, `beeld_radius_px` null) leest als `typografisch`; een die "
+    "haar beeld tot de rand laat lopen (`volle_breedte_beeld` hoog) als `gestapeld`; beeld "
+    "in de kolom naast de tekst als `gesplitst`.\n"
+    "9. `diensten`: `drie_kolommen` telt hoe vaak de voorbeeldsite drie gelijke kolommen "
+    "neerzet, `raster_spannen` hoe vaak ze items ONGELIJK op een raster plaatst. Overheerst "
+    "het eerste, dan is dat `kaarten`; plaatst de site haar items of scheidt ze met lijnen "
+    "in plaats van met kaders, dan is dat `lijst` (genummerde regels) of `index` (twee "
+    "kolommen zonder kaders).\n"
+    "10. `redenen`: per as een zin in het Nederlands die de meting noemt waarop je de keuze "
     "baseert ('kop 56px op 18px tekst'). Geen marketingtaal, geen uitroeptekens."
-) + _LANGE_NAAM
+) + _WEGGELATEN
 
 # The composing path. Same job, but the evidence is what a prospect always has instead of
 # what a reference site measures: the trade, the name and the brand colours.
@@ -795,20 +969,53 @@ _COMPONEER_SYSTEM = (
     "6. `ritme` en `foto`: veel witruimte en beeld dat tot de rand doorloopt is wat een "
     "vakbedrijf onderscheidt van een brochure. Weeg dat tegen het vak -- spoedwerk wil de "
     "informatie dichter op elkaar dan renovatiewerk.\n"
-    "7. `redenen`: per as een zin in het Nederlands die het gegeven noemt waarop je de "
+    "7. `maat` is hoe breed de pagina staat. Een vak dat verkoopt door te LATEN ZIEN "
+    "(timmerman, hovenier, schilder) draagt `breed`: die breedte gaat naar de marges en de "
+    "fotoband, niet naar langere regels. Spoedwerk met een korte pagina staat beter op "
+    "`smal` of `normaal`.\n"
+    "8. `hero` is de indeling van het eerste scherm. `gesplitst` (tekst links, foto rechts) "
+    "is precies hoe elke site eruitzag die deze fabriek bouwde voordat deze as bestond -- "
+    "kies hem omdat hij bij dit vak past, niet omdat hij er staat. `gestapeld` geeft de kop "
+    "de hele kolom en de foto de volle breedte. `typografisch` heeft geen foto en is de "
+    "eerlijke keuze voor een vak zonder beeld dat het eerste scherm waard is; ongeveer een "
+    "derde van de echte Nederlandse vaksites opent zo.\n"
+    "9. `diensten`: het raster van drie omkaderde kaarten is het meest herkende onderdeel "
+    "van een gegenereerde site. `lijst` (genummerde regels op haarlijnen) past bij 4-6 "
+    "diensten, `index` (twee kolommen, geen kaders) bij 7-8 korte. `kaarten` mag, maar dan "
+    "noem je in de reden waarom dit bedrijf er beter van wordt.\n"
+    "10. `redenen`: per as een zin in het Nederlands die het gegeven noemt waarop je de "
     "keuze baseert ('merkkleur tint 212 en 51% verzadiging, dus koel papier'). Geen "
     "marketingtaal, geen uitroeptekens."
-) + _LANGE_NAAM
+) + _WEGGELATEN
 
 
 def _axes_block(axes: dict[str, list[str]]) -> str:
     return "Aangeboden waarden per as:\n" + json.dumps(axes, ensure_ascii=False, indent=2)
 
 
-def _user_message(facts: list[dict], vak: str | None, axes: dict[str, list[str]]) -> str:
+def _pagina_block(kop: str | None, diensten: int | None) -> list[str]:
+    """What the page itself already holds. Both bear on an axis: the kop is what `schaal`
+    has to set, the number of diensten is what `diensten` has to arrange -- four cards in a
+    three-column grid leave one alone on the last row, and `lijst` and `index` cannot."""
+    blocks = []
+    if kop and kop.strip():
+        blocks.append(f"De kop (H1) op deze pagina: {kop.strip()!r} ({len(kop.strip())} tekens).")
+    if diensten:
+        blocks.append(f"Aantal diensten dat de pagina toont: {diensten}.")
+    return blocks
+
+
+def _user_message(
+    facts: list[dict],
+    vak: str | None,
+    axes: dict[str, list[str]],
+    kop: str | None = None,
+    diensten: int | None = None,
+) -> str:
     blocks = []
     if vak:
         blocks.append(f"Het vakbedrijf waarvoor de site gebouwd wordt: {vak}.")
+    blocks.extend(_pagina_block(kop, diensten))
     blocks.append(f"Gemeten kenmerken van {len(facts)} voorbeeldsite(s):")
     blocks.append(json.dumps(facts, ensure_ascii=False, indent=2))
     blocks.append(_axes_block(axes))
@@ -816,11 +1023,16 @@ def _user_message(facts: list[dict], vak: str | None, axes: dict[str, list[str]]
     return "\n".join(blocks)
 
 
-def _componeer_message(vak: str, naam: str, kleuren: dict, axes: dict[str, list[str]]) -> str:
-    blocks = [
-        f"Vak: {vak}.",
-        f"Bedrijfsnaam: {naam} ({len(naam.strip())} tekens). Die naam staat voluit in de H1.",
-    ]
+def _componeer_message(
+    vak: str,
+    naam: str,
+    kleuren: dict,
+    axes: dict[str, list[str]],
+    kop: str | None = None,
+    diensten: int | None = None,
+) -> str:
+    blocks = [f"Vak: {vak}.", f"Bedrijfsnaam: {naam} ({len(naam.strip())} tekens)."]
+    blocks.extend(_pagina_block(kop, diensten))
     if kleuren:
         blocks.append("Merkkleuren:\n" + json.dumps(kleuren, ensure_ascii=False, indent=2))
     else:
@@ -850,16 +1062,47 @@ def _choose(system: str, message: str, axes: dict[str, list[str]]) -> dict:
     return check_stijl(json.loads(text), axes)
 
 
-def map_to_stijl(facts: list[dict], vak: str | None = None, naam: str | None = None) -> dict:
+def gemeten_display(facts: list[dict]) -> float | None:
+    """The reference's display size in px at the assumed viewport, or None.
+
+    The first reference that yields one rather than the largest, to match the rule the prompt
+    already gives the model for references that disagree: follow the first site. `kop1_px`
+    when the stylesheet names its headings, the top of the size histogram when it does not
+    (a compiled stylesheet names .styles_heading__x7f2 and the named fields stay empty).
+    """
+    for feit in facts:
+        kop1 = (feit.get("kop1_px") or {}).get("max")
+        if kop1:
+            return float(kop1)
+        groottes = feit.get("tekstgroottes_px") or []
+        if groottes:
+            return float(max(s["px"] for s in groottes))
+    return None
+
+
+def map_to_stijl(
+    facts: list[dict],
+    vak: str | None = None,
+    naam: str | None = None,
+    kop: str | None = None,
+    diensten: int | None = None,
+) -> dict:
     """Measurements in, named vocabulary values out. The whole vocabulary is on offer here:
     the reference decides the look, and narrowing it further would be us overruling the site
-    the founder pointed at. The one exception is the client's own name (see `allowed`)."""
-    axes = allowed(naam)
-    return _choose(_SYSTEM, _user_message(facts, vak, axes), axes)
+    the founder pointed at. The exceptions are the client's own name and headline (see
+    `allowed`) and the one cross-axis rule, which the reference's own display size settles
+    (see `zonder_botsing`)."""
+    axes = zonder_botsing(allowed(naam, kop), gemeten_display(facts))
+    return _choose(_SYSTEM, _user_message(facts, vak, axes, kop, diensten), axes)
 
 
 def compose_stijl(
-    vak: str, naam: str, kleur_primair: str | None = None, kleur_accent: str | None = None
+    vak: str,
+    naam: str,
+    kleur_primair: str | None = None,
+    kleur_accent: str | None = None,
+    kop: str | None = None,
+    diensten: int | None = None,
 ) -> dict:
     """No reference: compose a look from the vak, the name and the client's own colours.
 
@@ -873,8 +1116,9 @@ def compose_stijl(
         kleuren["primair"] = hsl(_check_hex(kleur_primair))
     if kleur_accent:
         kleuren["accent"] = hsl(_check_hex(kleur_accent))
-    axes = candidates(naam)
-    return _choose(_COMPONEER_SYSTEM, _componeer_message(vak, naam, kleuren, axes), axes)
+    axes = candidates(naam, kop)
+    message = _componeer_message(vak, naam, kleuren, axes, kop, diensten)
+    return _choose(_COMPONEER_SYSTEM, message, axes)
 
 
 def check_stijl(raw: dict, axes: dict[str, list[str]] | None = None) -> dict:
@@ -889,33 +1133,46 @@ def check_stijl(raw: dict, axes: dict[str, list[str]] | None = None) -> dict:
 # --- output -------------------------------------------------------------------------------
 
 
-def keuzes(stijl: dict) -> dict:
-    """The seven chosen values alone, without `redenen`.
+def keuzes(stijl: dict) -> dict[str, dict]:
+    """The chosen values per client.yaml block, without `redenen`.
 
-    The reasons belong above the block as comments (see `as_yaml`), never in it as data: a
-    client.yaml key the Zod schema has never heard of is silently dropped on a good day and
-    an error on a bad one, and either way it is not a design parameter.
+    Two blocks, because the answer now covers two: `stijl:` is the paint and `indeling:` is
+    the silhouette. `indeling.weglaten` is deliberately not in it -- which section a business
+    can do without is a question about what that business has to say, not about how it looks,
+    and the schema defaults it to "leave nothing out".
+
+    The reasons belong above each key as comments (see `blokken`), never in the block as
+    data: a client.yaml key the Zod schema has never heard of is silently dropped on a good
+    day and an error on a bad one, and either way it is not a design parameter.
     """
-    return {axis: stijl[axis] for axis in vocabulaire()}
+    return {blok: {axis: stijl[axis] for axis in axes} for blok, axes in per_blok().items()}
+
+
+def blokken(stijl: dict) -> dict[str, str]:
+    """{top-level client.yaml key: that block as yaml, each choice's reason above it}.
+
+    Written by hand rather than through yaml.dump because the comments are the point: the
+    founder reads these blocks to decide whether the analyser understood the reference, and a
+    bare list of ten words does not let him.
+    """
+    redenen = stijl.get("redenen", {})
+    uit: dict[str, str] = {}
+    for blok, axes in per_blok().items():
+        lines = [f"{blok}:"]
+        for axis in axes:
+            # Collapsed first so a reason containing a newline cannot break out of the comment
+            # and produce a client.yaml that does not parse; wrapped second because these run
+            # to 180 characters and the founder reads them in an editor, not `less -S`.
+            reden = " ".join(str(redenen.get(axis, "")).split())
+            lines.extend(f"  # {line}" for line in textwrap.wrap(reden, width=92))
+            lines.append(f"  {axis}: {stijl[axis]}")
+        uit[blok] = "\n".join(lines)
+    return uit
 
 
 def as_yaml(stijl: dict) -> str:
-    """The `stijl:` block, with each choice's reason as the comment above it.
-
-    Written by hand rather than through yaml.dump because the comments are the point: the
-    founder reads this block to decide whether the analyser understood the reference, and a
-    bare list of seven words does not let him.
-    """
-    redenen = stijl.get("redenen", {})
-    lines = ["stijl:"]
-    for axis in vocabulaire():
-        # Collapsed first so a reason containing a newline cannot break out of the comment
-        # and produce a client.yaml that does not parse; wrapped second because these run to
-        # 180 characters and the founder reads them in an editor, not through `less -S`.
-        reden = " ".join(str(redenen.get(axis, "")).split())
-        lines.extend(f"  # {line}" for line in textwrap.wrap(reden, width=92))
-        lines.append(f"  {axis}: {stijl[axis]}")
-    return "\n".join(lines)
+    """Both blocks, in the order they are written into client.yaml."""
+    return "\n".join(blokken(stijl).values())
 
 
 def main(argv: list[str]) -> int:
@@ -942,6 +1199,16 @@ def main(argv: list[str]) -> int:
     )
     parser.add_argument("--accent", help="Accent colour (#rrggbb), same.")
     parser.add_argument(
+        "--kop",
+        help="The page's H1 (teksten.kop). Withdraws the scales it does not fit: `royaal` "
+        "carries 55 characters, `groot` 70.",
+    )
+    parser.add_argument(
+        "--diensten",
+        type=int,
+        help="How many diensten the page shows, which is what `indeling.diensten` arranges.",
+    )
+    parser.add_argument(
         "--feiten",
         action="store_true",
         help="Print what the model would be given as JSON and stop (no API call).",
@@ -954,7 +1221,7 @@ def main(argv: list[str]) -> int:
             if args.feiten:
                 print(json.dumps(facts, ensure_ascii=False, indent=2))
                 return 0
-            stijl = map_to_stijl(facts, args.vak, args.naam)
+            stijl = map_to_stijl(facts, args.vak, args.naam, args.kop, args.diensten)
         else:
             if not (args.vak and args.naam):
                 raise StyleError(
@@ -979,14 +1246,16 @@ def main(argv: list[str]) -> int:
                                 )
                                 if kleur
                             },
-                            "kandidaten": candidates(args.naam),
+                            "kandidaten": candidates(args.naam, args.kop),
                         },
                         ensure_ascii=False,
                         indent=2,
                     )
                 )
                 return 0
-            stijl = compose_stijl(args.vak, args.naam, args.kleur, args.accent)
+            stijl = compose_stijl(
+                args.vak, args.naam, args.kleur, args.accent, args.kop, args.diensten
+            )
     except StyleError as err:
         print(f"❌ {err}", file=sys.stderr)
         return 1
@@ -995,7 +1264,7 @@ def main(argv: list[str]) -> int:
     # Flushed before the note: stdout is block-buffered when piped into a file and stderr is
     # not, so without this the instructions land above the block they are about.
     sys.stdout.flush()
-    print("\nPlak dit blok in clients/<slug>/client.yaml en bouw met:", file=sys.stderr)
+    print("\nPlak deze blokken in clients/<slug>/client.yaml en bouw met:", file=sys.stderr)
     print("  cd klantkraan/apps/client-sites && CLIENT=<slug> pnpm build", file=sys.stderr)
     return 0
 

@@ -353,7 +353,7 @@ def build_config(
     telefoon: str | None = None,
     kleur_primair: str = DEFAULT_PRIMARY,
     kleur_accent: str = DEFAULT_ACCENT,
-    stijl: dict | None = None,
+    ontwerp: dict[str, dict] | None = None,
 ) -> dict:
     """Assemble the client.yaml body. Preview-only: no legal identifiers are invented."""
     phone_raw = telefoon or (extraction.get("phone") or {}).get("value") or ""
@@ -388,9 +388,10 @@ def build_config(
             "kleur_primair": check_primary(kleur_primair),
             "kleur_accent": check_colour(kleur_accent),
         },
-        # Right after branding because that is what it is: the skin the colours sit in.
-        # Absent means the pre-vocabulary look, which is a valid config, not a broken one.
-        **({"stijl": stijl} if stijl else {}),
+        # Right after branding because that is what they are: the skin the colours sit in,
+        # and the arrangement that skin is painted onto. Absent means the pre-vocabulary
+        # look, which is a valid config, not a broken one.
+        **(ontwerp or {}),
         # Only the fields the model actually filled. An empty string is not a sentence, and
         # writing one would override the register default with nothing -- the site would
         # render a blank heading and pass every gate, because every gate here checks that
@@ -418,18 +419,25 @@ def choose_stijl(
     *,
     kleur_primair: str,
     kleur_accent: str,
+    kop: str | None = None,
+    diensten: int | None = None,
 ) -> dict:
-    """The skin for this proposal: read off the reference sites, or composed when there are
-    none. Returns sitestyle's answer whole -- the axes go into the yaml as data, the reasons
-    above them as comments.
+    """The skin AND the composition for this proposal: read off the reference sites, or
+    composed when there are none. Returns sitestyle's answer whole -- the axes go into the
+    yaml as data, the reasons above them as comments.
+
+    The drafted kop and the number of diensten travel with it because both bear on an axis
+    the checked schema then re-checks: `schaal: royaal` carries 55 characters of headline and
+    `groot` 70, and a three-column dienst grid with four diensten leaves one card alone on the
+    last row. Choosing without them means finding out at build time.
 
     Never a fallback to the default look. Two voorstellen sent in the same week that are
     recognisably the same document is the defect section R exists to fix, and a factory that
     composes only when asked will be asked on the first prospect and never again.
     """
     if voorbeelden:
-        return sitestyle.map_to_stijl(voorbeelden, vak, name)
-    return sitestyle.compose_stijl(vak, name, kleur_primair, kleur_accent)
+        return sitestyle.map_to_stijl(voorbeelden, vak, name, kop, diensten)
+    return sitestyle.compose_stijl(vak, name, kleur_primair, kleur_accent, kop, diensten)
 
 
 _HEADER = """\
@@ -465,26 +473,25 @@ def _dump(fragment: dict) -> str:
     )
 
 
-def dump_config(config: dict, stijl_blok: str | None = None) -> str:
+def dump_config(config: dict, blokken: dict[str, str] | None = None) -> str:
     """The config as yaml, one top-level key at a time.
 
-    Dumped per key rather than in one go so that `stijl:` can be written by sitestyle
-    instead, which puts the reason for each choice in a comment above it. yaml.dump cannot
-    carry a comment, and a skin whose reasoning the founder cannot read is one he cannot
-    judge before the voorstel goes out. Every top-level key dumps the same at indent 0
+    Dumped per key rather than in one go so that `stijl:` and `indeling:` can be written by
+    sitestyle instead, which puts the reason for each choice in a comment above it. yaml.dump
+    cannot carry a comment, and a design whose reasoning the founder cannot read is one he
+    cannot judge before the voorstel goes out. Every top-level key dumps the same at indent 0
     either way, so a config without a block is byte-for-byte what it was before.
     """
+    blokken = blokken or {}
     chunks = [
-        stijl_blok.rstrip("\n")
-        if key == "stijl" and stijl_blok
-        else _dump({key: value}).rstrip("\n")
+        blokken[key].rstrip("\n") if key in blokken else _dump({key: value}).rstrip("\n")
         for key, value in config.items()
     ]
     return "\n".join(chunks) + "\n"
 
 
 def write_config(
-    slug: str, config: dict, out_dir: Path | None = None, stijl_blok: str | None = None
+    slug: str, config: dict, out_dir: Path | None = None, blokken: dict[str, str] | None = None
 ) -> Path:
     root = out_dir or CLIENTS_DIR
     target = root / slug
@@ -492,7 +499,7 @@ def write_config(
     if path.exists():
         raise DraftError(f"{path} bestaat al; verwijder hem of kies een andere --slug")
     target.mkdir(parents=True, exist_ok=True)
-    path.write_text(_HEADER + "\n" + dump_config(config, stijl_blok), encoding="utf-8")
+    path.write_text(_HEADER + "\n" + dump_config(config, blokken), encoding="utf-8")
     return path
 
 
@@ -557,6 +564,9 @@ def main(argv: list[str]) -> int:
                 voorbeelden,
                 kleur_primair=args.kleur,
                 kleur_accent=args.accent,
+                kop=draft.get("kop"),
+                # What the page will really show: build_config caps the list at eight.
+                diensten=len(draft["diensten"][:8]),
             )
         except sitestyle.StyleError as err:
             # The copy call is paid for by now. A voorstel in the default look is worth more
@@ -571,14 +581,14 @@ def main(argv: list[str]) -> int:
             telefoon=args.telefoon,
             kleur_primair=args.kleur,
             kleur_accent=args.accent,
-            stijl=sitestyle.keuzes(stijl) if stijl else None,
+            ontwerp=sitestyle.keuzes(stijl) if stijl else None,
         )
         slug = args.slug or slugify(args.name)
         path = write_config(
             slug,
             config,
             Path(args.out_dir) if args.out_dir else None,
-            stijl_blok=sitestyle.as_yaml(stijl) if stijl else None,
+            blokken=sitestyle.blokken(stijl) if stijl else None,
         )
     except (DraftError, sitestyle.StyleError) as err:
         print(f"❌ {err}", file=sys.stderr)
@@ -591,7 +601,7 @@ def main(argv: list[str]) -> int:
             f"  python -m app.sitestyle --vak {config['bedrijf']['vak']} "
             f'--naam "{args.name}" --kleur {args.kleur} --accent {args.accent}'
         )
-        print("en plak het blok in de client.yaml.")
+        print("en plak de blokken in de client.yaml.")
     print("\nControleer telefoon, plaats en diensten met eigen ogen. Daarna:")
     print(f"  cd klantkraan/apps/client-sites && CLIENT={slug} pnpm build")
     return 0

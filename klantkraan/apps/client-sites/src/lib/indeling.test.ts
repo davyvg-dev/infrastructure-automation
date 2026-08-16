@@ -118,35 +118,61 @@ test('precies een hero-vorm laat de foto weg', () => {
   assert.deepEqual(zonder, ['typografisch'])
 })
 
+/** The smallest config the checked schema accepts, for the rules that span two blocks. */
+const BASIS = {
+  modus: 'preview',
+  bedrijf: {
+    naam: 'Voorbeeld Barbier',
+    vak: 'kapper',
+    telefoon: '+31 6 12 34 56 78',
+    adres: { plaats: 'Rotterdam' },
+    werkgebied: ['Kralingen'],
+  },
+  branding: { kleur_primair: '#1e463c', kleur_accent: '#b4762a' },
+  diensten: [
+    { naam: 'Knippen', omschrijving: 'Wassen, knippen en afwerken.' },
+    { naam: 'Scheren', omschrijving: 'Klassiek nat scheren met het mes.' },
+    { naam: 'Baard', omschrijving: 'Baard op lengte brengen en afwerken.' },
+  ],
+  openingstijden: { dinsdag: ['09:00', '18:00'] },
+  spoed: { beschikbaar: false },
+  usps: ['Vaste barbier', 'Ook zonder afspraak welkom'],
+  receptionist: false,
+}
+
 test('een kop die de belknop onder de vouw duwt komt er niet doorheen', () => {
   // The other half of R4's measurement, re-aimed at the string the H1 now holds. Tested via
   // the checked schema because the cap depends on schaal, which lives in another block.
-  const basis = {
-    modus: 'preview',
-    bedrijf: {
-      naam: 'Voorbeeld Barbier',
-      vak: 'kapper',
-      telefoon: '+31 6 12 34 56 78',
-      adres: { plaats: 'Rotterdam' },
-      werkgebied: ['Kralingen'],
-    },
-    branding: { kleur_primair: '#1e463c', kleur_accent: '#b4762a' },
-    diensten: [
-      { naam: 'Knippen', omschrijving: 'Wassen, knippen en afwerken.' },
-      { naam: 'Scheren', omschrijving: 'Klassiek nat scheren met het mes.' },
-      { naam: 'Baard', omschrijving: 'Baard op lengte brengen en afwerken.' },
-    ],
-    openingstijden: { dinsdag: ['09:00', '18:00'] },
-    spoed: { beschikbaar: false },
-    usps: ['Vaste barbier', 'Ook zonder afspraak welkom'],
-    receptionist: false,
-  }
   const met = (kop: string, schaal: string) =>
-    ClientSchemaChecked.safeParse({ ...basis, stijl: { schaal }, teksten: { kop } })
+    ClientSchemaChecked.safeParse({ ...BASIS, stijl: { schaal }, teksten: { kop } })
 
   assert.ok(met('Knippen en scheren aan de rand van Kralingen', 'groot').success)
   assert.ok(!met('K'.repeat(71), 'groot').success)
   // A smaller scale carries a longer line, so the same headline is fine one step down.
   assert.ok(met('K'.repeat(71), 'normaal').success)
   assert.ok(!met('K'.repeat(91), 'normaal').success)
+})
+
+test('88px kop en een halve kolom is de ene combinatie die niet mag', () => {
+  // The one cross-axis rule in the vocabulary, asserted rather than described. `app.sitestyle`
+  // now mirrors it on the Python side by never offering both values in one call (T10), and a
+  // mirror is only worth having if the thing it mirrors is pinned: were this refusal ever
+  // relaxed here, the composer would keep withdrawing a value for a reason that had gone.
+  const met = (schaal: string, hero: string) =>
+    ClientSchemaChecked.safeParse({ ...BASIS, stijl: { schaal }, indeling: { hero } })
+
+  assert.ok(!met('royaal', 'gesplitst').success)
+  for (const hero of ['gestapeld', 'typografisch']) {
+    assert.ok(met('royaal', hero).success, `royaal + ${hero}`)
+  }
+  // And every other schaal keeps the split hero: it is the arrangement the 60-site trade
+  // survey endorses, so the rule has to be about the 88px and nothing else.
+  for (const schaal of ['compact', 'normaal', 'groot']) {
+    assert.ok(met(schaal, 'gesplitst').success, `${schaal} + gesplitst`)
+  }
+  // The message has to name the way out, because the fix is a different hero and a founder
+  // reading "ongeldig" would reach for a smaller headline instead.
+  const fout = met('royaal', 'gesplitst').error!.issues[0]
+  assert.deepEqual(fout.path, ['stijl', 'schaal'])
+  assert.match(fout.message, /gestapeld/)
 })

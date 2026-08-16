@@ -20,8 +20,11 @@ h1 { font-size: clamp(1.9rem, 4.5vw, 3.5rem); font-weight: 700; letter-spacing: 
 h2 { font-size: 32px; font-weight: 700; }
 p { font-size: 17px; }
 .card { border-radius: 12px; padding: 24px; background: #fffdf9; }
-.knop { border-radius: 9999px; }
+.knop { border-radius: 9999px; max-width: 12rem; }
 .band { padding: 80px 24px; background-color: #e8f0d8; }
+.wrap { max-width: 1200px; }
+.diensten { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sectie__body { grid-column: 6 / -1; }
 figure img { border-radius: 0px; aspect-ratio: 3 / 2; }
 @media (min-width: 768px) { .band { padding-block: 112px; } }
 @font-face { font-family: 'Figtree'; src: url(/f.woff2) format('woff2'); }
@@ -221,6 +224,21 @@ def test_measure_reads_shape_rhythm_and_colour(monkeypatch) -> None:
     assert facts["beeldverhoudingen"] == [{"verhouding": 1.5, "voorkomen": 1}]
 
 
+def test_measure_reads_the_page_width_and_the_grid(monkeypatch) -> None:
+    """The two measurements the composition axes are read off.
+
+    `container_px` is the whole of the `maat` axis and nothing measured it before the axis
+    existed; a max-width on a button is not a page container, so the band is bounded. The
+    grid pair is tell #24 of the award study: award sites place items with unequal spans
+    (median 2.5) and never repeat thirds, templates do the reverse.
+    """
+    facts = _measure(monkeypatch)
+    assert facts["container_px"]["max"] == 1200.0
+    assert facts["container_px"]["metingen"] == 1  # the 12rem button is not a container
+    assert facts["drie_kolommen"] == 1
+    assert facts["raster_spannen"] == 1
+
+
 def test_measure_separates_declared_webfonts_from_used_ones(monkeypatch) -> None:
     facts = _measure(monkeypatch, google=[{"familie": "Archivo", "gewichten": [700]}])
     assert facts["webfonts"] == ["Archivo", "Figtree"]
@@ -249,7 +267,7 @@ def test_measure_all_survives_one_dead_reference(monkeypatch) -> None:
 
 
 def test_vocabulaire_matches_the_resolver() -> None:
-    """The reason this is parsed out of stijl.ts instead of restated in Python.
+    """The reason this is parsed out of stijl.ts and indeling.ts instead of restated here.
 
     A value only sitestyle knows about would pass the API schema and then fail Zod at build
     time, on the founder's machine, after the voorstel was written.
@@ -263,10 +281,41 @@ def test_vocabulaire_matches_the_resolver() -> None:
         "palet",
         "kleuring",
         "foto",
+        "maat",
+        "hero",
+        "diensten",
     }
     assert axes["letterontwerp"] == ["systeem", "grotesk", "industrieel", "redactioneel"]
     assert axes["palet"] == ["warm", "koel", "neutraal", "zand"]
+    # The axes T1-T4 added, and the ones the composer could not reach before T10.
+    assert axes["maat"] == ["smal", "normaal", "breed"]
+    assert axes["schaal"] == ["compact", "normaal", "groot", "royaal"]
+    assert axes["hero"] == ["gesplitst", "gestapeld", "typografisch"]
+    assert axes["diensten"] == ["kaarten", "lijst", "index"]
     assert all(values for values in axes.values())
+
+
+def test_the_two_blocks_are_the_two_client_yaml_keys() -> None:
+    """The skin and the composition are two blocks in client.yaml, so they are two here.
+    Flattening them would put `hero:` under `stijl:`, which the Zod schema does not have."""
+    blokken = sitestyle.per_blok()
+    assert list(blokken) == ["stijl", "indeling"]
+    assert list(blokken["indeling"]) == ["hero", "diensten"]
+    # `weglaten` is the third key of the indeling block and is deliberately not chosen here:
+    # which section a business can do without is a question about what it has to say.
+    assert "weglaten" not in blokken["indeling"]
+    assert list(sitestyle.vocabulaire()) == [
+        axis for axes in blokken.values() for axis in axes
+    ]
+
+
+def test_kop_maxima_are_read_out_of_the_checked_schema() -> None:
+    """Parsed rather than restated, same argument as the vocabulary: a ceiling only this
+    module knew would let the composer offer a scale the drafted kop does not fit, and the
+    founder would find out at build time. A rename in client.ts must fail here, not there."""
+    per_schaal, standaard = sitestyle.kop_maxima()
+    assert per_schaal == {"royaal": 55, "groot": 70}
+    assert standaard == 90
 
 
 def test_schema_offers_only_vocabulary_values() -> None:
@@ -339,6 +388,118 @@ def test_the_rule_reaches_the_reference_path_as_well() -> None:
     # `groot`: it is the same page either way.
     assert "groot" not in sitestyle.candidates("Installatietechniek Van der Veldenhuizen")["schaal"]
     assert "groot" not in sitestyle.allowed("Installatietechniek Van der Veldenhuizen")["schaal"]
+
+
+# --- the headline the schaal has to carry --------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("kop", "over"),
+    [
+        # The real drafted koppen in the fleet run 43-48 characters and fit everything.
+        ("Knippen en scheren aan de rand van Kralingen", ["compact", "normaal", "groot", "royaal"]),
+        # 56: past what an 88px H1 carries, still fine one step down.
+        ("K" * 56, ["compact", "normaal", "groot"]),
+        ("K" * 71, ["compact", "normaal"]),
+        # No scale carries 91 characters. Withdrawing the axis entirely would be a 400 from
+        # the API for a sentence the founder can shorten, so the offer stands and the checked
+        # schema says what is wrong in those words.
+        ("K" * 91, ["compact", "normaal", "groot", "royaal"]),
+        (None, ["compact", "normaal", "groot", "royaal"]),
+    ],
+)
+def test_a_kop_withdraws_the_scales_it_does_not_fit(kop, over: list[str]) -> None:
+    """ClientSchemaChecked caps the H1 per schaal (55 at `royaal`, 70 at `groot`, 90 below).
+    The composer is handed the drafted kop, so it cannot offer a scale that config will be
+    refused for -- which before T10 it could, because `royaal` was in the enum and nothing
+    here had ever seen the headline."""
+    assert sitestyle.allowed("Dakwerken Bos", kop)["schaal"] == over
+
+
+def test_a_long_kop_and_a_long_name_narrow_the_same_axis_together() -> None:
+    assert sitestyle.allowed("Installatietechniek Van der Veldenhuizen", "K" * 56)["schaal"] == [
+        "compact",
+        "normaal",
+    ]
+
+
+# --- the one cross-axis rule ---------------------------------------------------------------
+
+
+def test_no_offer_ever_holds_both_royaal_and_gesplitst() -> None:
+    """The rule the checked schema enforces, enforced one step earlier so the model cannot
+    return the pair at all. 88px of H1 in the split hero's half-width column is about five
+    characters a line -- the exact failure R4 measured.
+
+    Swept over the whole expanded offer space rather than over a few names: every axis
+    combination a shortlist can produce, for a spread of clients, plus both reference-path
+    offers. A single reachable (royaal, gesplitst) is a voorstel that does not build.
+    """
+    import itertools
+
+    aanbiedingen = [sitestyle.candidates(f"Voorbeeldbedrijf {n}") for n in range(60)]
+    aanbiedingen += [sitestyle.candidates(n) for n in ("Bos", "Elektro Jansen", "Dakwerken Bos")]
+    aanbiedingen += [
+        sitestyle.zonder_botsing(sitestyle.allowed(), px)
+        for px in (None, 24.0, 56.0, 71.9, 72.0, 130.0)
+    ]
+    gezien = set()
+    for axes in aanbiedingen:
+        for combinatie in itertools.product(*axes.values()):
+            keuze = dict(zip(axes, combinatie, strict=True))
+            assert not (keuze["schaal"] == "royaal" and keuze["hero"] == "gesplitst"), keuze
+            gezien.add((keuze["schaal"], keuze["hero"]))
+    # And the sweep really covered the interesting corners rather than passing by omission.
+    assert ("royaal", "gestapeld") in gezien
+    assert ("groot", "gesplitst") in gezien
+
+
+def test_the_measured_display_size_decides_which_of_the_two_goes() -> None:
+    """A reference is a measurement, so the measurement settles it: a site setting its
+    display type at 72px or more (the midpoint between what `groot` can express at 56 and
+    what `royaal` sets at 88) IS a big-headline site, and the arrangement that cannot hold
+    one is what leaves. Below it the arrangement stands and `royaal` goes."""
+    heel = sitestyle.zonder_botsing(sitestyle.allowed(), 130.0)
+    assert "royaal" in heel["schaal"]
+    assert heel["hero"] == ["gestapeld", "typografisch"]
+
+    klein = sitestyle.zonder_botsing(sitestyle.allowed(), 48.0)
+    assert "royaal" not in klein["schaal"]
+    assert klein["hero"] == ["gesplitst", "gestapeld", "typografisch"]
+
+    # No measurement is not a small measurement, but it is not evidence for 88px either, so
+    # the split hero -- what the 60-site trade survey endorses -- is what stands.
+    assert sitestyle.zonder_botsing(sitestyle.allowed(), None) == klein
+    # Nothing else moves. A cross-axis rule that quietly narrowed the palet would be a bug
+    # nobody would look for.
+    for axis, values in sitestyle.allowed().items():
+        if axis not in ("schaal", "hero"):
+            assert heel[axis] == klein[axis] == values
+
+
+def test_the_composer_still_reaches_royaal_on_some_clients() -> None:
+    """The cheap way to satisfy the rule is to never offer `royaal`, which would re-open the
+    gap T4 closed: display type on the sixteen award sites runs 96-320px and this factory
+    topped out at 56. So it has to stay reachable without a reference, and it is -- on the
+    clients whose hero shortlist came up without `gesplitst`."""
+    namen = [f"Voorbeeldbedrijf {n}" for n in range(200)]
+    met_royaal = [n for n in namen if "royaal" in sitestyle.candidates(n)["schaal"]]
+    assert 20 <= len(met_royaal) <= 80, f"{len(met_royaal)} van 200"
+    # And where it is offered, the split hero is not.
+    for naam in met_royaal:
+        assert "gesplitst" not in sitestyle.candidates(naam)["hero"]
+
+
+def test_gemeten_display_follows_the_first_reference() -> None:
+    """Same rule the prompt gives the model for references that disagree. `kop1_px` when the
+    stylesheet names its headings, the top of the histogram when it does not -- a compiled
+    stylesheet names .styles_heading__x7f2 and the named fields stay empty."""
+    genoemd = {"kop1_px": {"max": 96.0}, "tekstgroottes_px": [{"px": 300.0, "voorkomen": 1}]}
+    samengesteld = {"kop1_px": None, "tekstgroottes_px": [{"px": 88.0, "voorkomen": 2}]}
+    assert sitestyle.gemeten_display([genoemd, samengesteld]) == 96.0
+    assert sitestyle.gemeten_display([samengesteld]) == 88.0
+    assert sitestyle.gemeten_display([{"kop1_px": None, "tekstgroottes_px": []}]) is None
+    assert sitestyle.gemeten_display([]) is None
 
 
 # --- composing without a reference --------------------------------------------------------
@@ -434,8 +595,54 @@ def test_compose_stijl_sends_the_vak_the_name_and_the_colours_in_hsl(monkeypatch
     assert '"verzadiging": 51' in gezien["message"]
     # And the shortlist travels, so the reasons can name what was on the table.
     assert "Aangeboden waarden per as" in gezien["message"]
-    # The composer is told the rule it is already prevented from breaking.
+    # The composer is told the rules it is already prevented from breaking.
     assert str(sitestyle.NAAM_MAX_GROOT) in gezien["system"]
+    assert "royaal" in gezien["system"] and "gesplitst" in gezien["system"]
+
+
+def test_compose_stijl_sends_the_page_the_axes_have_to_fit(monkeypatch) -> None:
+    """The kop and the number of diensten are what two of the new axes are chosen against:
+    `schaal` has to set that headline, `diensten` has to arrange that many rows. Neither was
+    ever in front of the composer before, and both are re-checked afterwards -- by the schema
+    (the kop cap) and by tell-lint (`weesrij`, the card left alone on the last row)."""
+    gezien = {}
+
+    def vang(system: str, message: str, axes: dict) -> dict:
+        gezien.update(message=message, axes=axes)
+        return {axis: values[0] for axis, values in axes.items()}
+
+    monkeypatch.setattr(sitestyle, "_choose", vang)
+    kop = "Lekkage, verstopping of een ketel die het opgeeft"
+    sitestyle.compose_stijl("loodgieter", "Dakwerken Bos", "#1f3a5f", None, kop, 6)
+    assert kop in gezien["message"]
+    assert f"({len(kop)} tekens)" in gezien["message"]
+    assert "Aantal diensten dat de pagina toont: 6" in gezien["message"]
+    # And the kop reached the offer, not just the prompt.
+    assert gezien["axes"] == sitestyle.candidates("Dakwerken Bos", kop)
+
+
+def test_map_to_stijl_offers_the_composition_axes_too(monkeypatch) -> None:
+    """Both paths end in the same schema and the same yaml, so the reference path has to
+    answer the same ten axes. Before T10 it answered seven and the other three defaulted to
+    the arrangement every site the factory ever built already had."""
+    gezien = {}
+
+    def vang(system: str, message: str, axes: dict) -> dict:
+        gezien.update(system=system, message=message, axes=axes)
+        return {axis: values[0] for axis, values in axes.items()}
+
+    monkeypatch.setattr(sitestyle, "_choose", vang)
+    facts = [{"bron": "https://voorbeeld.nl", "kop1_px": {"max": 96.0}, "container_px": None}]
+    stijl = sitestyle.map_to_stijl(facts, "dakdekker", "Dakwerken Bos")
+    assert set(gezien["axes"]) == set(sitestyle.vocabulaire())
+    assert set(stijl) == set(sitestyle.vocabulaire())
+    # A 96px reference is a big-headline site, so the half-width hero came off the table.
+    assert "gesplitst" not in gezien["axes"]["hero"]
+    assert "royaal" in gezien["axes"]["schaal"]
+    # The measurements the new axes are read off are named in the prompt, or the model is
+    # being asked to choose `maat` from nothing.
+    for veld in ("container_px", "drie_kolommen", "raster_spannen"):
+        assert veld in gezien["system"]
 
 
 def test_compose_stijl_refuses_a_bad_colour_before_paying_for_a_call(monkeypatch) -> None:
@@ -475,12 +682,31 @@ def test_as_yaml_writes_every_axis_with_its_reason() -> None:
     stijl["redenen"] = {"palet": "papier #f5f1ea heeft\n  12% verzadiging"}
     yaml = sitestyle.as_yaml(stijl)
     assert yaml.startswith("stijl:")
+    assert "\nindeling:" in yaml
     for axis, value in stijl.items():
         if axis != "redenen":
             assert f"  {axis}: {value}" in yaml
     # A reason spanning lines would produce a yaml file that does not parse.
     assert "  # papier #f5f1ea heeft 12% verzadiging" in yaml
-    assert len(yaml.splitlines()) == 1 + len(sitestyle.vocabulaire()) + 1
+    # Two block headers, one line per axis, one comment.
+    assert len(yaml.splitlines()) == 2 + len(sitestyle.vocabulaire()) + 1
+
+
+def test_the_blocks_are_the_keys_the_config_carries() -> None:
+    """sitedraft substitutes these for the yaml.dump of the same top-level key, so a key here
+    that the config does not have is a block that silently never gets written."""
+    import yaml as pyyaml
+
+    stijl = {axis: values[0] for axis, values in sitestyle.vocabulaire().items()}
+    stijl["redenen"] = {axis: f"reden voor {axis}" for axis in sitestyle.vocabulaire()}
+    blokken = sitestyle.blokken(stijl)
+    assert list(blokken) == ["stijl", "indeling"]
+    assert pyyaml.safe_load("\n".join(blokken.values())) == sitestyle.keuzes(stijl)
+    # The choices are data and the reasons are comments -- a client.yaml key the Zod schema
+    # has never heard of is silently dropped on a good day and an error on a bad one.
+    assert sitestyle.keuzes(stijl)["indeling"] == {"hero": "gesplitst", "diensten": "kaarten"}
+    assert "redenen" not in sitestyle.keuzes(stijl)["stijl"]
+    assert "# reden voor hero" in blokken["indeling"]
 
 
 def test_as_yaml_wraps_a_long_reason_instead_of_running_off_the_screen() -> None:

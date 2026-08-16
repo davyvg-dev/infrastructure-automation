@@ -174,8 +174,10 @@ STIJL = {
     "palet": "warm",
     "kleuring": "royaal",
     "foto": "randloos",
-    "redenen": {axis: f"reden voor {axis}" for axis in
-                ("letterontwerp", "schaal", "vorm", "ritme", "palet", "kleuring", "foto")},
+    "maat": "breed",
+    "hero": "gestapeld",
+    "diensten": "lijst",
+    "redenen": {axis: f"reden voor {axis}" for axis in sitestyle.vocabulaire()},
 }
 
 
@@ -186,23 +188,26 @@ def test_the_fixture_skin_is_one_the_site_could_actually_be_built_in() -> None:
     sitestyle.check_stijl(STIJL)
 
 
-def test_build_config_puts_the_skin_next_to_the_branding() -> None:
-    config = sitedraft.build_config("X BV", EXTRACTION, DRAFT, stijl=sitestyle.keuzes(STIJL))
+def test_build_config_puts_the_skin_and_the_composition_next_to_the_branding() -> None:
+    config = sitedraft.build_config("X BV", EXTRACTION, DRAFT, ontwerp=sitestyle.keuzes(STIJL))
     assert list(config).index("stijl") == list(config).index("branding") + 1
+    assert list(config).index("indeling") == list(config).index("stijl") + 1
     # The reasons are comments, never config: the Zod schema has no field for them.
     assert "redenen" not in config["stijl"]
     assert config["stijl"]["vorm"] == "scherp"
+    assert config["indeling"] == {"hero": "gestapeld", "diensten": "lijst"}
 
 
 def test_build_config_without_a_skin_writes_no_key_at_all() -> None:
     """Absent `stijl:` is the pre-vocabulary look, which is a valid config. An empty or
     half-filled block would be a different thing entirely."""
-    assert "stijl" not in sitedraft.build_config("X BV", EXTRACTION, DRAFT)
+    config = sitedraft.build_config("X BV", EXTRACTION, DRAFT)
+    assert "stijl" not in config and "indeling" not in config
 
 
 def test_dump_config_without_a_block_is_what_it_always_was() -> None:
-    """The per-key dump exists only so `stijl:` can carry comments; it must not change a
-    single byte of every config that has no such block."""
+    """The per-key dump exists only so `stijl:` and `indeling:` can carry comments; it must
+    not change a single byte of every config that has no such block."""
     config = sitedraft.build_config("Jansen Loodgieters", EXTRACTION, DRAFT)
     assert sitedraft.dump_config(config) == yaml.dump(
         config,
@@ -217,12 +222,13 @@ def test_write_config_keeps_the_reasons_as_comments_and_the_choices_as_data(
     tmp_path: Path,
 ) -> None:
     config = sitedraft.build_config("Jansen Loodgieters", EXTRACTION, DRAFT,
-                                    stijl=sitestyle.keuzes(STIJL))
-    path = sitedraft.write_config("jansen", config, tmp_path, sitestyle.as_yaml(STIJL))
+                                    ontwerp=sitestyle.keuzes(STIJL))
+    path = sitedraft.write_config("jansen", config, tmp_path, sitestyle.blokken(STIJL))
     body = path.read_text(encoding="utf-8")
 
-    # The block the founder reads and the config the build reads are the same seven values.
+    # The blocks the founder reads and the config the build reads are the same ten values.
     assert yaml.safe_load(body) == config
+    assert "# reden voor hero" in body
     assert "# reden voor vorm" in body
     # A comment, so it survives the round trip above without becoming a config key.
     assert "redenen" not in yaml.safe_load(body)["stijl"]
@@ -235,16 +241,21 @@ def test_choose_stijl_composes_when_there_is_nothing_to_point_at(monkeypatch) ->
     calls = {}
     monkeypatch.setattr(
         sitestyle, "compose_stijl",
-        lambda vak, naam, primair, accent: calls.update(
-            vak=vak, naam=naam, primair=primair, accent=accent) or STIJL,
+        lambda vak, naam, primair, accent, kop, diensten: calls.update(
+            vak=vak, naam=naam, primair=primair, accent=accent, kop=kop, diensten=diensten
+        ) or STIJL,
     )
     stijl = sitedraft.choose_stijl(
-        "Dakwerken Bos", "dakdekker", [], kleur_primair="#1f3a5f", kleur_accent="#c2703d"
+        "Dakwerken Bos", "dakdekker", [], kleur_primair="#1f3a5f", kleur_accent="#c2703d",
+        kop="Plat dak, pannen of zink", diensten=5,
     )
     assert stijl is STIJL
     assert calls == {
         "vak": "dakdekker", "naam": "Dakwerken Bos",
         "primair": "#1f3a5f", "accent": "#c2703d",
+        # Both bear on an axis the checked schema then re-checks: `schaal: royaal` carries 55
+        # characters of headline, and four cards in a three-column grid orphan one.
+        "kop": "Plat dak, pannen of zink", "diensten": 5,
     }
 
 
@@ -253,12 +264,16 @@ def test_choose_stijl_reads_the_reference_when_there_is_one(monkeypatch) -> None
         sitestyle, "compose_stijl",
         lambda *a: pytest.fail("composed while a reference site was measured"),
     )
-    monkeypatch.setattr(sitestyle, "map_to_stijl", lambda facts, vak, naam: {**STIJL, "gezien": facts})
+    monkeypatch.setattr(
+        sitestyle, "map_to_stijl",
+        lambda facts, vak, naam, kop, diensten: {**STIJL, "gezien": facts, "gekregen_kop": kop},
+    )
     stijl = sitedraft.choose_stijl(
         "Dakwerken Bos", "dakdekker", [{"bron": "https://zecc.nl"}],
-        kleur_primair="#1f3a5f", kleur_accent="#c2703d",
+        kleur_primair="#1f3a5f", kleur_accent="#c2703d", kop="Plat dak, pannen of zink",
     )
     assert stijl["gezien"] == [{"bron": "https://zecc.nl"}]
+    assert stijl["gekregen_kop"] == "Plat dak, pannen of zink"
 
 
 def test_vak_travels_to_the_skin_exactly_as_the_site_writes_it() -> None:
@@ -351,7 +366,9 @@ def test_main_takes_more_than_one_reference(monkeypatch, tmp_path) -> None:
     assert code == 0
     assert gezien == [[{"bron": "https://a.nl"}, {"bron": "https://b.nl"}]]
     body = (tmp_path / "jansen-loodgieters" / "client.yaml").read_text()
-    assert yaml.safe_load(body)["stijl"] == sitestyle.keuzes(STIJL)
+    geschreven = yaml.safe_load(body)
+    for blok, keuzes in sitestyle.keuzes(STIJL).items():
+        assert geschreven[blok] == keuzes
 
 
 def test_write_config_round_trips_and_never_overwrites(tmp_path: Path) -> None:
