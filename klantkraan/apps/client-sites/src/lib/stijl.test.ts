@@ -350,16 +350,24 @@ test('every fluid step still meets its endpoints at a phone and at a desktop', (
   }
 })
 
-test('no schaal grows the h1 past what a long Dutch company name survives', () => {
-  // Q9's finding, from a build rather than a test: the h1 is "<bedrijf.naam>: vakwerk waar u
-  // op kunt rekenen." in a half-width hero column. At 68px a 28-character name ran to five
-  // lines and pushed the call button off a 1000px screen, and a trade site that hides its
-  // phone number below the fold has lost the only conversion it has. 3.5rem is the cap that
-  // survived; `groot` is additionally withdrawn above 34 characters, in app.sitestyle.
+test('every schaal a split hero can carry stays under the half-column ceiling', () => {
+  // Q9's finding, from a build rather than a test: the h1 sits in a HALF-WIDTH hero column,
+  // and at 68px a long Dutch headline ran to five lines and pushed the call button off a
+  // 1000px screen. A trade site that hides its phone number below the fold has lost the only
+  // conversion it has. 3.5rem is the cap that survived.
+  //
+  // `royaal` is the deliberate exception and the reason this test is phrased around the
+  // arrangement rather than the type: 88px is what the award reference set does, it needs
+  // the whole column to do it, and ClientSchemaChecked refuses it next to `hero: gesplitst`.
+  // The ceiling is a property of the layout, so it is asserted against the layouts that
+  // actually have to survive it.
   for (const schaal of SCHALEN) {
+    if (schaal === 'royaal') continue
     const h1 = resolveStijl(met({ schaal }))['--text-h1']
     assert.ok(rem(h1, 'max') <= 3.5, `${schaal} h1 tops out at ${h1}`)
   }
+  // And the exception is really an exception: it would fail the rule above.
+  assert.ok(rem(resolveStijl(met({ schaal: 'royaal' }))['--text-h1'], 'max') > 3.5)
 })
 
 // --- rhythm and shape ---------------------------------------------------------------------
@@ -438,20 +446,25 @@ test('a wider page buys margin and photographs, not longer lines', () => {
   )
   for (const maat of MATEN) {
     const tekst = rem(resolveStijl(met({ maat }))['--maat-tekst'])
-    assert.ok(tekst >= 38 && tekst <= 48, `${maat} sets running text across ${tekst}rem`)
+    // The band the award reference set measured at: 44-64 characters, which at 1.0625rem
+    // body is roughly 26-38rem. The old literals sat at 48rem (~90ch), well outside it.
+    assert.ok(tekst >= 26 && tekst <= 38, `${maat} sets running text across ${tekst}rem`)
   }
 })
 
-test('maat normaal is the width every site had before the axis existed', () => {
-  // Same promise as STANDAARD_STIJL itself: the literals this axis replaced were
-  // max-w-5xl (64rem), max-w-2xl (42rem), max-w-3xl (48rem) and px-6 (1.5rem), and a
-  // client.yaml written before `maat` must still build those bytes.
+test('maat normaal keeps the old container and deliberately narrows the measure', () => {
+  // The literals this axis replaced were max-w-5xl (64rem), max-w-2xl (42rem), max-w-3xl
+  // (48rem) and px-6 (1.5rem). The CONTAINERS still hold those numbers, so the silhouette of
+  // an existing site did not move.
   const t = resolveStijl(met({ maat: 'normaal' }))
   assert.equal(t['--maat-kolom'], '64rem')
-  assert.equal(t['--maat-kop'], '42rem')
-  assert.equal(t['--maat-tekst'], '48rem')
   assert.equal(t['--maat-gutter'], '1.5rem')
   assert.equal(STANDAARD_STIJL.maat, 'normaal')
+  // The reading measures deliberately did move, and this is the assertion that says so out
+  // loud rather than letting a later reader think it was a slip. 48rem of Dutch body text is
+  // ~90 characters a line; the sixteen award sites measured run 44-64ch. See MAAT_TOKENS.
+  assert.ok(rem(t['--maat-kop']) < 42, 'the heading measure was supposed to come down')
+  assert.ok(rem(t['--maat-tekst']) < 48, 'the prose measure was supposed to come down')
 })
 
 test('the framed photo band is wider than the page and follows it', () => {

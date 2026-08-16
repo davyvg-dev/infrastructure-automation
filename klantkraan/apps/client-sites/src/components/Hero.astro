@@ -94,17 +94,19 @@ const gestapeld = heroSrc !== null && vorm.fotoBreed
   >
     {
       /*
-       * Without a photo beside it the copy runs to --maat-kop rather than to the full column.
-       * A headline set across 64rem is not a bigger headline, it is a harder one to read: the
-       * eye loses the start of the next line. --maat-kop is the measure the vocabulary already
-       * keeps for exactly this.
+       * No wrapper cap on this column. The two things inside it want different measures and
+       * one max-width cannot serve both: the H1 is capped in `ch` against its own font-size
+       * (global.css), which is the only way one rule suits a 34px headline and an 88px one,
+       * while the promise underneath is body copy and takes --maat-kop. Capping the wrapper
+       * at --maat-kop instead put an 88px headline in a 416px column, ran it to five lines
+       * and pushed the call button below the fold. Measured at 1440x900, not guessed.
        */
     }
-    <div class:list={['min-w-0', gesplitst ? 'md:pr-8' : 'max-w-(--maat-kop)']}>
+    <div class:list={['min-w-0', gesplitst && 'md:pr-8']}>
       <h1 class="text-h1">
         {t.kop}
       </h1>
-      <p class="mt-5 text-(--color-mist)">
+      <p class="mt-5 max-w-(--maat-kop) text-(--color-mist)">
         {t.belofte}
         {config.spoed.beschikbaar && ' Ook bij spoed staan wij voor u klaar.'}
       </p>

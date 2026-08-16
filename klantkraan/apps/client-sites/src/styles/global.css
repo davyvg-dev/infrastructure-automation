@@ -148,6 +148,19 @@
   h2,
   h3 {
     overflow-wrap: break-word;
+    /* Cap the LINE, not the container -- and cap it in `ch`, which resolves against the
+     * element's own font-size. This is the one measured technique from the award reference
+     * set that could not be expressed as a rem token: a rem cap that suits an 88px headline
+     * is four times too wide for a 20px one, so a shared `--maat-kop` either lets the
+     * display type run to eight words a line or squeezes the body copy to nothing. The only
+     * site in that set authoring its measures explicitly (schyns.de) caps display lines at
+     * 12-25ch and prose at 44-48ch for exactly this reason.
+     *
+     * 24ch rather than the 12-16ch those sites use: their headlines are two English words
+     * ("Pure Nature"), and a Dutch trade headline is "Plat dak, pannen of zink: wij houden
+     * het dicht". At 24ch that sets in two lines at every schaal, which is the shape a
+     * headline wants; at 14ch it would be five. */
+    max-width: 24ch;
   }
 
   /* Hyphenation everywhere EXCEPT the h1. `hyphens: auto` is not a last resort -- the

@@ -395,7 +395,8 @@ export const ClientSchemaChecked = ClientSchema.superRefine((cfg, ctx) => {
   // characters of H1 at `groot` in a half-width column -- so it is applied to the headline
   // itself here, where the headline actually is.
   const kop = cfg.teksten?.kop
-  const max = cfg.stijl.schaal === 'groot' ? 70 : 90
+  const KOP_MAX: Record<string, number> = { royaal: 55, groot: 70 }
+  const max = KOP_MAX[cfg.stijl.schaal] ?? 90
   if (kop && kop.length > max) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
@@ -404,6 +405,24 @@ export const ClientSchemaChecked = ClientSchema.superRefine((cfg, ctx) => {
         `${kop.length} tekens is te lang voor de H1 bij schaal: ${cfg.stijl.schaal} ` +
         `(maximaal ${max}); de belknop zakt dan onder de vouw. Kort de kop in of ` +
         'zet schaal een stap kleiner.',
+    })
+  }
+  // The one cross-axis rule in the whole vocabulary.
+  //
+  // `schaal: royaal` sets the H1 at 88px, which is what the award reference set does and
+  // what this factory was furthest from. It only works when the headline has the whole
+  // column: in the split hero the copy gets roughly half of it, and 88px in ~460px is about
+  // five characters a line -- the exact failure R4 measured and capped `groot` at 3.5rem to
+  // avoid. Rather than re-cap the type, refuse the combination, because the fix a founder
+  // actually wants here is a different hero and not a smaller headline.
+  if (cfg.stijl.schaal === 'royaal' && cfg.indeling.hero === 'gesplitst') {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['stijl', 'schaal'],
+      message:
+        'schaal: royaal zet de H1 op 88px en dat past niet in de halve kolom van ' +
+        'hero: gesplitst -- de kop loopt dan over vijf regels en duwt de belknop onder de ' +
+        'vouw. Kies indeling.hero: gestapeld of typografisch, of schaal: groot.',
     })
   }
 })

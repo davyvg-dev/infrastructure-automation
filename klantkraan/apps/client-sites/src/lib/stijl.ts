@@ -23,7 +23,7 @@
 // they all say the same things in the same sequence.
 
 export const LETTERONTWERPEN = ['systeem', 'grotesk', 'industrieel', 'redactioneel'] as const
-export const SCHALEN = ['compact', 'normaal', 'groot'] as const
+export const SCHALEN = ['compact', 'normaal', 'groot', 'royaal'] as const
 export const VORMEN = ['scherp', 'zacht', 'rond'] as const
 export const RITMES = ['dicht', 'normaal', 'ruim'] as const
 export const PALETTEN = ['warm', 'koel', 'neutraal', 'zand'] as const
@@ -204,6 +204,32 @@ const SCHAAL_TOKENS: Record<Schaal, Tokens> = {
     '--text-body': '1.125rem',
     '--text-small': '0.9375rem',
   },
+  // The editorial end, and the answer to the one number where this factory was furthest
+  // from the reference set: display type on the sixteen award sites measured at 1440px runs
+  // 96px to 320px with a median around 130px, against a ceiling of 56px here. `groot` was
+  // capped at 3.5rem for a real reason -- a five-line headline in the split hero's
+  // half-width column pushed the call button off a 1000px screen, which is the one thing a
+  // trade site cannot afford -- but that reason is a property of the ARRANGEMENT, not of the
+  // typeface. Given the whole column (`hero: gestapeld` or `typografisch`) the same headline
+  // sets in two lines at 88px.
+  //
+  // So this value exists and the checked schema refuses it next to `hero: gesplitst`. It is
+  // the one cross-axis rule in the vocabulary, and it is here rather than in a comment
+  // because the combination it forbids is exactly the one a model would reach for.
+  //
+  // 5.5rem/88px is short of the 130px median on purpose: those are architecture studios
+  // whose headline is two words, and a Dutch trade headline is "Plat dak, pannen of zink:
+  // wij houden het dicht". Line-height stays 1.08 rather than dropping under 1, for the
+  // same reason -- descenders in a three-line Dutch sentence collide below 1.0.
+  royaal: {
+    '--text-h1': 'clamp(2.4rem, 1.31rem + 4.66vw, 5.5rem)',
+    '--text-h2': 'clamp(1.9rem, 1.48rem + 1.8vw, 3.1rem)',
+    '--text-h3': '1.35rem',
+    // 19px. The award set runs body at 14-20px and several of the strongest sit at 18;
+    // this is the editorial end of the vocabulary, so it takes the top of that band.
+    '--text-body': '1.1875rem',
+    '--text-small': '1rem',
+  },
 }
 
 // --- measure --------------------------------------------------------------------------
@@ -225,8 +251,23 @@ const SCHAAL_TOKENS: Record<Schaal, Tokens> = {
 // Widening the container therefore does NOT widen the prose in step with it. `breed` buys
 // air in the margins and a longer photo band, not a longer line.
 //
-// `normaal` is exactly what every existing site already had (64/42/48rem, 1.5rem gutter),
-// so a client.yaml written before this axis existed builds the same bytes.
+// The reading measures are DELIBERATELY narrower than the literals they replaced, and this
+// is the one place the "an old client.yaml builds the same bytes" promise is broken on
+// purpose. The container widths are unchanged; `--maat-kop` went 42rem -> 26rem and
+// `--maat-tekst` 48rem -> 34rem.
+//
+// Why: 48rem of Dutch body text at 1.0625rem is about NINETY characters a line, and the
+// sixteen award-winning sites measured for research/award-craft-2026-08-16.md run 44-64ch,
+// with the only site authoring it explicitly (schyns.de) capping prose at 44-48ch and
+// display lines at 12-25ch. Ninety is not a stylistic preference away from that, it is
+// past the point where the eye reliably finds the start of the next line. 34rem lands
+// around 64ch and 26rem around 49ch, which is the top of the measured band rather than the
+// middle -- a trade site is read by people who want the fact, not by typographers.
+//
+// The cost of breaking the promise is zero today (no client.yaml in the fleet is a paying
+// client's) and the benefit is the single most-cited difference between the two groups.
+// Container widths still hold the old values at `normaal`, so nothing about the page's
+// silhouette moved.
 const MAAT_TOKENS: Record<Maat, Tokens> = {
   // A tight editorial column. Suits a site with little to say and one good photograph:
   // the narrower the column, the more the whitespace reads as confidence rather than as a
@@ -234,15 +275,15 @@ const MAAT_TOKENS: Record<Maat, Tokens> = {
   smal: {
     '--maat-kolom': '56rem',
     '--maat-band': '64rem',
-    '--maat-kop': '34rem',
-    '--maat-tekst': '40rem',
+    '--maat-kop': '22rem',
+    '--maat-tekst': '30rem',
     '--maat-gutter': '1.5rem',
   },
   normaal: {
     '--maat-kolom': '64rem',
     '--maat-band': '72rem',
-    '--maat-kop': '42rem',
-    '--maat-tekst': '48rem',
+    '--maat-kop': '26rem',
+    '--maat-tekst': '34rem',
     '--maat-gutter': '1.5rem',
   },
   // The gallery end. The container grows 12rem and the prose grows 2, so the extra width
@@ -261,8 +302,8 @@ const MAAT_TOKENS: Record<Maat, Tokens> = {
   breed: {
     '--maat-kolom': '76rem',
     '--maat-band': '84rem',
-    '--maat-kop': '44rem',
-    '--maat-tekst': '48rem',
+    '--maat-kop': '28rem',
+    '--maat-tekst': '36rem',
     '--maat-gutter': '2rem',
   },
 }
