@@ -641,8 +641,25 @@ check`: every fixture fails the copy threshold today, which is the finding, and 
       ceiling R4 measured was still pointed at `bedrijf.naam`, so a drafted `teksten.kop` of
       any length shipped. Re-aimed at the headline in the checked schema, 70 chars at
       `groot` and 90 below it.
+- [x] S4 (this commit): `/example-site` rewritten around the decisions instead of the steps --
+      declare the omissions before building, treat `teksten:` as the job, and end on the two
+      numbers plus a judgement in words. Validated on the hardest case there is: a SECOND
+      kapper (voorbeeld-kapsalon-utrecht), same vak, same register, same stock set as the
+      barbier. 2.4% copy, 7/7 skin axes, different silhouette, tell-lint clean, and the
+      longest shared passage is "bel +31 6 12 34 56 78 bekijk onze diensten" -- the phone
+      number and a button, which is what two sites SHOULD share. Two things the run itself
+      found: the SpoedPanel's no-spoed line was hardcoded, which made it the longest shared
+      passage in the fleet once `teksten:` covered the rest (now spends `spoed.tekst`, which
+      the panel already read on the other branch); and the stock set is per vak, so two
+      kappers get pixel-identical photographs however far apart everything else is. vloot now
+      reports that instead of quietly excluding it from a clean-looking distance.
+- [ ] S5: the photography, now the loudest same-vak tell left. Options, cheapest first: a
+      second stock set per vak (`stock/sets/<vak>-2.json`, the curation is one pass and free),
+      per-client crop/order variation off the same set, or pushing harder for the client's own
+      photos at intake. A voorstel cannot use the prospect's photos, so the first two are what
+      is actually available before a client says yes.
 - [ ] S-later: steps 4-6 of the plan (hero + diensten variants, `volgorde`, `bewijs` slots)
-      are the founder's call after S1-S3 are on screen.
+      are the founder's call after S1-S4 are on screen.
 - [ ] S-free: `--brand-accent` is schema-required, contrast-gated, fed to the composer and
       written onto `<html>` — and read by no component. Spend it or drop it.
 

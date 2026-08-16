@@ -109,6 +109,7 @@ openingstijden:
 # die niemand hier waarmaakt.
 spoed:
   beschikbaar: false
+  tekst: 'Bel gerust tijdens openingstijden. Staat er iemand op de stoel, probeer het dan even later opnieuw.'
 
 usps:
   - 'Vaste barbier, u zit steeds bij dezelfde handen'

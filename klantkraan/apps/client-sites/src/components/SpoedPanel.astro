@@ -47,7 +47,14 @@ const regels = openingstijdenRegels(config.openingstijden)
               <span>Liever direct contact?</span>
             </h2>
             <p class="mt-4 text-small text-(--color-mist)">
-              Bel ons tijdens openingstijden, dan overleggen wij direct met u wat er nodig is.
+              {/* Same `spoed.tekst` the other branch spends. It used to be read only when
+                  spoed was available, so every business without a storingsdienst shipped this
+                  identical sentence -- which made it the longest shared passage left in the
+                  fleet once `teksten:` had covered the rest (found by pnpm vloot on the
+                  second kapper, 2026-08-16). A shop that has something better to say about
+                  being reachable can now say it. */}
+              {config.spoed.tekst ??
+                'Bel ons tijdens openingstijden, dan overleggen wij direct met u wat er nodig is.'}
             </p>
           </>
         )

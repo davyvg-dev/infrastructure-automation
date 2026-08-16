@@ -254,7 +254,9 @@ export const ClientSchema = z.object({
   }),
   spoed: z.object({
     beschikbaar: z.boolean(),
-    // Short client-voice line about how spoed works, shown next to the hours.
+    // Short client-voice line next to the hours. Read whether or not `beschikbaar` is true:
+    // with a storingsdienst it says how spoed works, without one it says how to reach them
+    // during opening hours. A business with neither has a default for both.
     tekst: z.string().optional(),
   }),
   usps: z.array(z.string().min(3)).min(2).max(4),
