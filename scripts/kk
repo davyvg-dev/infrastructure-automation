@@ -109,6 +109,8 @@ kk — Klantkraan command center
                                  scrape a prospect into a voorstel-config; --voorbeeld takes
                                  the skin off a site he likes, else the factory composes one
   kk site build|check <slug>     build + fact gate (check: gate only, on the existing dist)
+  kk site check <slug> --vloot   also measure the distance to every other site we have built
+  kk site check <slug> --tells   also run the AI-tell linter over the built pages
   kk site open <slug>            build + gate, then serve it locally
   kk site deploy <slug>          ship the voorstel to <slug>.klant-preview.pages.dev
   kk site deploy <slug> --live   ship a paying client's site to its own Pages project
@@ -271,7 +273,15 @@ def plan_site(args: list[str], root: Path) -> list[Step]:
         app = root / "klantkraan" / "apps" / "client-sites"
 
         if sub == "check":
-            return _site_steps(root, slug, check_only=True)
+            # --vloot answers what one build cannot see: how close is this site to every other
+            # site the factory has made? Opt-in until the fleet passes it (PLAN steps 2-3);
+            # wired into every build today it would fail every build today.
+            extra = []
+            if "--vloot" in flags:
+                extra.append(Step(app, ["pnpm", "vloot"], env={"CLIENT": slug}))
+            if "--tells" in flags:
+                extra.append(Step(app, ["pnpm", "tell-lint"], env={"CLIENT": slug}))
+            return [*_site_steps(root, slug, check_only=True), *extra]
         if sub == "build":
             return _site_steps(root, slug)
         if sub == "open":

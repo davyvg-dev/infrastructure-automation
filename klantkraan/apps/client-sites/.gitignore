@@ -8,6 +8,13 @@ clients/*
 !clients/voorbeeld-kapper-rotterdam/
 dist/
 .astro/
+# Fleet fingerprints (scripts/vloot.mjs) hold a site's rendered copy, so they follow the
+# clients/ rule exactly: a real client's text never enters git, and the tracked fixtures
+# are kept so a fresh checkout has something to measure a new site against.
+vloot/*
+!vloot/voorbeeld-dakdekker.json
+!vloot/voorbeeld-preview.json
+!vloot/voorbeeld-kapper-rotterdam.json
 # Search scratch for `stock-photos.py zoek`: two dozen unpicked frames per vak, worth
 # nothing once the seven are pinned in stock/sets/. The recipe is the artefact, not this.
 stock/kandidaten/

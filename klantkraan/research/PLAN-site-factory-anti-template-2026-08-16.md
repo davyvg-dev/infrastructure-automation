@@ -13,7 +13,7 @@ fixtures built and looked at in a browser at 1440x900.
 
 R was right about its own problem. The factory had one look and two hex values; it now has
 1728 skins, name-seeded so two prospects in one week cannot collide, self-hosted faces, and a
-resolver test over every combination. On the *cosmetic* half of the AI-tell taxonomy the
+resolver test over every combination. On the _cosmetic_ half of the AI-tell taxonomy the
 factory is already clean, and that is worth stating plainly: zero gradients, zero
 glassmorphism, zero purple, zero fake statistics, zero motion, zero `<script>`, semantic
 markup, real photography, correct contrast. Most generated sites fail on exactly those.
@@ -53,7 +53,7 @@ pair, same photo bleeding right at 46%. The tell moved from "same colours" to "s
 `src/components/Hero.astro:58` — `{bedrijf.naam}: vakwerk waar u op kunt rekenen.`
 
 The largest text on the first screen is the same sentence for a barber and a dakdekker. It
-is also *wrong against the market*: nearly every real Dutch trade site puts vak + plaats in
+is also _wrong against the market_: nearly every real Dutch trade site puts vak + plaats in
 the H1 ("Timmerman in Waalwijk en omgeving"), which this factory demotes to the eyebrow.
 
 ### Where else it is hardcoded
@@ -75,24 +75,23 @@ dienst name contains "en":
 
 The survey killed an assumption the template is built on: that one silhouette fits every vak.
 
-| | bouw/installatie (loodgieter, dakdekker, elektricien, schilder, timmerman, hovenier) | afspraak (kapper, trimsalon, garage, tandarts) |
-|---|---|---|
-| primary CTA | bel / offerte / gratis inspectie | **afspraak maken** |
-| prices | never (at most one indicative m²-prijs) | **prijslijst is a nav item** |
-| openingstijden | absent or footer | **on the homepage, as a table** |
-| spoed | everywhere, often a second number | only tandarts |
-| werkgebied | 8-28 town list, internally linked | **irrelevant** — one address + parkeren/bereikbaarheid |
-| photos | the work, before/after, **the bus** | the salon, **the owner's face** |
-| keurmerken | VCA, Techniek NL, KOMO, VHG | BOVAG/RDW, KNMT, opleiding |
+|                | bouw/installatie (loodgieter, dakdekker, elektricien, schilder, timmerman, hovenier) | afspraak (kapper, trimsalon, garage, tandarts)         |
+| -------------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| primary CTA    | bel / offerte / gratis inspectie                                                     | **afspraak maken**                                     |
+| prices         | never (at most one indicative m²-prijs)                                              | **prijslijst is a nav item**                           |
+| openingstijden | absent or footer                                                                     | **on the homepage, as a table**                        |
+| spoed          | everywhere, often a second number                                                    | only tandarts                                          |
+| werkgebied     | 8-28 town list, internally linked                                                    | **irrelevant** — one address + parkeren/bereikbaarheid |
+| photos         | the work, before/after, **the bus**                                                  | the salon, **the owner's face**                        |
+| keurmerken     | VCA, Techniek NL, KOMO, VHG                                                          | BOVAG/RDW, KNMT, opleiding                             |
 
 The factory builds `werkgebied/<wijk>/` pages for a kapper. No real appointment-trade site
 in the sample had a werkgebied section at all.
 
-**And the finding that inverts the brief:** *too polished and too complete is itself the
-tell.* Every real site is missing something obvious — five of seventeen have no reviews,
-FAQs run to two questions, a "projecten" heading sits above no projects, the copyright says
-2022. One legitimate twenty-year schildersbedrijf ships a six-section, 50 KB homepage. A
-factory that always emits every section, filled and symmetric, is identifiable *because*
+**And the finding that inverts the brief:** _too polished and too complete is itself the
+tell._ Every real site is missing something obvious — five of seventeen have no reviews,
+FAQs run to two questions, a "projecten" heading sits above no projects, the copyright says 2022. One legitimate twenty-year schildersbedrijf ships a six-section, 50 KB homepage. A
+factory that always emits every section, filled and symmetric, is identifiable _because_
 nothing is missing.
 
 The other durable human signal is **published friction**: "wij nemen geen plukhonden meer
@@ -111,7 +110,7 @@ R already discovered the mechanism that makes variety safe:
 It was applied to paint. **Apply it twice more — to bones and to words — and add the one
 gate a vocabulary cannot give you: distance from siblings.**
 
-This is deliberately *not* the thing the founder ruled out on 2026-08-15 ("free-form markup
+This is deliberately _not_ the thing the founder ruled out on 2026-08-15 ("free-form markup
 per client cannot be fact-gated, cannot be checked for reflow"). Nothing below generates
 markup. Every arrangement is a named value that has been built and looked at once, exactly
 like `ritme: ruim`.
@@ -120,13 +119,13 @@ like `ritme: ruim`.
 
 A second block in `client.yaml`, resolved like `stijl:`.
 
-| axis | values | notes |
-|---|---|---|
-| `volgorde` | `standaard`, `bewijs-eerst`, `spoed-eerst`, `plaats-eerst`, `afspraak-eerst` | pre-verified section permutations, each a named editorial logic |
-| `weglaten` | subset of `{intro, werkgebied, usps, werk}` | the counter-intuitive axis: which sections this site does **not** have |
-| `hero` | `gesplitst-rechts` (today), `gesplitst-links`, `plaat`, `typografisch`, `gestapeld` | `typografisch` = no photo, USP bullets — a third of real sites |
-| `diensten` | `kaarten` (today), `lijst`, `index`, `met-foto` | the 3-card grid is the single most-flagged AI component |
-| `nadruk` | `slot`, `spoed`, `werk`, `geen` | which one section gets the big colour moment |
+| axis       | values                                                                              | notes                                                                  |
+| ---------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `volgorde` | `standaard`, `bewijs-eerst`, `spoed-eerst`, `plaats-eerst`, `afspraak-eerst`        | pre-verified section permutations, each a named editorial logic        |
+| `weglaten` | subset of `{intro, werkgebied, usps, werk}`                                         | the counter-intuitive axis: which sections this site does **not** have |
+| `hero`     | `gesplitst-rechts` (today), `gesplitst-links`, `plaat`, `typografisch`, `gestapeld` | `typografisch` = no photo, USP bullets — a third of real sites         |
+| `diensten` | `kaarten` (today), `lijst`, `index`, `met-foto`                                     | the 3-card grid is the single most-flagged AI component                |
+| `nadruk`   | `slot`, `spoed`, `werk`, `geen`                                                     | which one section gets the big colour moment                           |
 
 Cost is low because the seams already exist: `index.astro` is pure composition, no component
 takes layout props, `Werk` and `Reviews` already drop out when empty, and `resolveStijl` is a
@@ -179,15 +178,21 @@ Print the nearest sibling and the number, every time. Today that number is 42% a
 knew, because nothing measures it. Variety that is not measured decays back to the default
 within a month.
 
-### 3.5 `scripts/tell-lint.sh`
+### 3.5 `scripts/tell-lint.mjs`
 
-A `copy-lint.sh` sibling, same shape (grep-only, `# tell-lint-ok` opt-out), over `dist/`:
+A `copy-lint.sh` sibling in intent, over `dist/` rather than source. Node and not bash,
+because these rules count things grep cannot count: how many headings are three words, how
+many cards sit in the last row, how many sections carry the same eyebrow.
 
-`tricolon` (Van X en Y tot Z, adjective triads, `<ul>` with exactly 3 `<li>`) ·
-`parallel-koppen` (all H2s are 1-3-word noun phrases) · `eyebrow` (the tracked uppercase
-label on more than one section) · `wees-kaarten` (orphan row: 5 cards in a 3-column grid) ·
-`vulwoorden` (Dutch buzzword list) · `offerte-dichtheid` ("vrijblijvende offerte" more than
-once) · `vloot-kop` (an H2 set identical to another client's).
+`drieslag` (Van X en Y tot Z) · `parallelle-koppen` (homepage H2s all 1-3-word noun phrases)
+· `titelkast` (Title Case in a Dutch heading, company name excluded) · `wenkbrauw` (the
+tracked uppercase label on more than one section) · `weesrij` (one card alone on the last row
+of a 3-column grid) · `vulwoorden` (the lead-gen phrases the site survey found) ·
+`offerte-dichtheid` · `gedachtestreepje`.
+
+It carries no rules for gradients, glassmorphism, purple, fake statistics, motion or
+`<script>`: the template cannot emit any of them, and a rule that can never fire makes the
+ones that do easier to ignore.
 
 ### 3.6 Free fixes, worth doing regardless
 
@@ -224,8 +229,8 @@ declared before the build and checked after it**:
 4. Run `tell-lint`.
 5. Look at the page against a **named list of the tells the factory can still produce** —
    not "actually look", which is unfalsifiable.
-6. Close with one judgement, in words: *would a Dutch trade owner believe a person made
-   this?* — and the reason.
+6. Close with one judgement, in words: _would a Dutch trade owner believe a person made
+   this?_ — and the reason.
 
 ---
 
@@ -233,15 +238,15 @@ declared before the build and checked after it**:
 
 Each step is independently shippable and independently verifiable, Ralph-style.
 
-| # | step | why first |
-|---|---|---|
-| 1 | `--vloot` distance check + `tell-lint` | measures the problem before changing anything; the 42% becomes a regression test |
-| 2 | H1 frames + kill the tricolon (`stem`, minimal) | biggest visible win, smallest diff, no layout risk |
-| 3 | vak profiles + `weglaten` | omission is cheaper than new layout and buys more credibility |
-| 4 | `hero` + `diensten` variants | the two components a viewer reads first |
-| 5 | `volgorde` + `nadruk` | needs 1-4 in place to be judgeable |
-| 6 | `bewijs` slots | sales value as much as design value |
-| 7 | rewrite `/example-site` around the above | the skill can only gate what exists |
+| #   | step                                            | why first                                                                        |
+| --- | ----------------------------------------------- | -------------------------------------------------------------------------------- |
+| 1   | `--vloot` distance check + `tell-lint`          | measures the problem before changing anything; the 42% becomes a regression test |
+| 2   | H1 frames + kill the tricolon (`stem`, minimal) | biggest visible win, smallest diff, no layout risk                               |
+| 3   | vak profiles + `weglaten`                       | omission is cheaper than new layout and buys more credibility                    |
+| 4   | `hero` + `diensten` variants                    | the two components a viewer reads first                                          |
+| 5   | `volgorde` + `nadruk`                           | needs 1-4 in place to be judgeable                                               |
+| 6   | `bewijs` slots                                  | sales value as much as design value                                              |
+| 7   | rewrite `/example-site` around the above        | the skill can only gate what exists                                              |
 
 Steps 1 and 2 together already move the copy number below 15% and remove the two loudest
 tells. Everything after that is compounding, not corrective.
@@ -271,7 +276,7 @@ fixed. The reasons given then were: free-form markup cannot be fact-gated, canno
 for reflow, and grows the by-eye stage.
 
 A closed composition vocabulary answers all three — it is gated by the same
-`verify-site.mjs`, swept by the same test pattern, and *shrinks* the by-eye stage because
+`verify-site.mjs`, swept by the same test pattern, and _shrinks_ the by-eye stage because
 `--vloot` replaces "does this look like the last one?" with a number. It is the argument that
 justified the skin vocabulary, applied one level up.
 

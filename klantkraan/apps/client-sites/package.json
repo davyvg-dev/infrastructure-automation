@@ -12,6 +12,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "node scripts/verify-site.mjs",
+    "vloot": "node scripts/vloot.mjs",
+    "tell-lint": "node scripts/tell-lint.mjs",
     "test": "node --test 'src/**/*.test.ts'",
     "typecheck": "astro check",
     "lint": "echo 'lint: see prettier:check at the workspace root'"

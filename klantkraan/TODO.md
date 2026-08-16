@@ -573,6 +573,43 @@ reference given, the factory composes a look itself rather than falling back to 
 - NOTE (pre-existing, not from R): `.prettierrc.json` lists `prettier-plugin-astro` but the
   plugin is not installed, so `pnpm format:check` fails repo-wide before any of this.
 
+### S. Website factory — the tells R did not reach (started 2026-08-16)
+
+R parameterised the skin and the sameness moved rather than left. Plan, evidence and the
+founder decision (steps 1-3 now, 4-6 later) in
+`research/PLAN-site-factory-anti-template-2026-08-16.md`. Short version: the factory is clean
+on the cosmetic AI tells and guilty on the structural ones, because the silhouette is one
+design and ~85% of the copy is fixed strings with noun slots.
+
+- [x] S1 (this commit): measure it. `scripts/vloot.mjs` gives the distance from every other
+      site we have built (6-gram Jaccard over `<main>`, a hashed section/heading skeleton, and
+      how many of the seven stijl axes differ), `scripts/tell-lint.mjs` gives the tells a page
+      shows on its own. Both opt-in via `kk site check <slug> --vloot --tells`, NOT in `pnpm
+check`: every fixture fails the copy threshold today, which is the finding, and a gate
+      that blocks every build until S2 lands is a gate that gets removed. What it found on
+      the seven fixtures: five of seven are over the 15% copy threshold against a sibling,
+      every `mobiel` site shares the same 40-word passage (toon.ts `bereik` + Intro +
+      `dienstenTekst` running together), and `kk-skintest` vs `voorbeeld-preview` is 84.8%
+      with a 104-word identical passage, the same skeleton and the same vak. The one genuinely
+      good news is that `voorbeeld-kapper-rotterdam` sits at 4.1%: the `locatie` register
+      already does what S2 proposes to do inside a register, which is the evidence that
+      frames work. `vloot/` follows the `clients/` gitignore rule exactly — a paying client's
+      copy never enters this repo. tell-lint fires on `drieslag` (the hardcoded tricolon) and
+      `wenkbrauw` (the eyebrow on two sections) on every fixture, plus `weesrij` on the
+      four-dienst one; the rules that stay silent stay in anyway, to pin what the drafter
+      prompt is already preventing.
+- [ ] S2: `stem` — H1/intro/slot frames chosen by seed, today's strings kept as
+      `stem: standaard` so the `mobiel` register stays byte-identical for live clients
+      (`toon.test.ts:120-133` pins it). Delete the tricolon at `toon.ts:81`/`:114`. Extend the
+      sitedraft schema with `kop`, `introkop`, `slotkop`.
+- [ ] S3: vak profiles (`bouw` / `afspraak` / `portfolio`) driving section omission — real
+      trade sites are credible partly because they are incomplete, and no real appointment-
+      trade site in a 16-site survey had a werkgebied section at all.
+- [ ] S-later: steps 4-6 of the plan (hero + diensten variants, `volgorde`, `bewijs` slots)
+      are the founder's call after S1-S3 are on screen.
+- [ ] S-free: `--brand-accent` is schema-required, contrast-gated, fed to the composer and
+      written onto `<html>` — and read by no component. Spend it or drop it.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
