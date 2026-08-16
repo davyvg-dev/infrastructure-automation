@@ -60,6 +60,17 @@ stijl:
   # dat zien in plaats van het in een kader weg te zetten.
   foto: randloos
 
+# Wat deze site NIET heeft. Van de zestien echte Nederlandse vaksites die voor het plan van
+# 2026-08-16 zijn bekeken had geen enkele afspraakzaak (kapper, trimsalon, tandarts) een
+# werkgebied-sectie: die zaken zetten hun adres en bereikbaarheid neer, geen lijst plaatsen.
+# De wijkpagina's blijven wel bestaan en staan in de voettekst, want daar zoeken klanten op.
+# De usp-strook gaat eruit omdat de drie punten hieronder ook in de tekst staan; twee keer
+# hetzelfde zeggen is precies hoe een sjabloon een pagina vult.
+indeling:
+  weglaten:
+    - werkgebied
+    - usps
+
 # De zinnen die van deze zaak zijn in plaats van van het sjabloon. Let op het register: een
 # barbier rijdt nergens heen, dus niets hieronder belooft dat ("wij komen langs" is de fout
 # die src/lib/toon.test.ts afvangt). Alles is te herleiden tot de diensten en de

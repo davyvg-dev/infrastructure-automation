@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro'
-import { loadClient } from '../lib/client'
+import { loadClient, toont } from '../lib/client'
 import { telHref } from '../lib/format'
 import { toon } from '../lib/toon'
 
@@ -22,9 +22,16 @@ const t = toon(config)
     </a>
     <nav aria-label="Hoofdmenu" class="flex items-center gap-5 text-small font-medium">
       <a href="/diensten/" class="text-(--color-ink) no-underline hover:underline">Diensten</a>
-      <a href="/#werkgebied" class="text-(--color-ink) no-underline hover:underline"
-        >{t.gebiedNav}</a
-      >
+      {
+        /* Only when the homepage actually has that section: a nav item pointing at an
+         * anchor the page does not contain builds, passes every gate, and is found by
+         * clicking it. The werkgebied still has its own pages and its footer column. */
+        toont(config, 'werkgebied') && (
+          <a href="/#werkgebied" class="text-(--color-ink) no-underline hover:underline">
+            {t.gebiedNav}
+          </a>
+        )
+      }
       <a href="/contact/" class="text-(--color-ink) no-underline hover:underline">Contact</a>
       <a href={tel} class="btn btn-call hidden md:inline-flex">
         <Icon name="phone" class="h-4 w-4" />

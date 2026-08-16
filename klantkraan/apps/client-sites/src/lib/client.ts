@@ -56,6 +56,22 @@ export type Dag = (typeof DAGEN)[number]
 export const BEDRIJFSTYPEN = ['mobiel', 'locatie'] as const
 export type Bedrijfstype = (typeof BEDRIJFSTYPEN)[number]
 
+/** Homepage sections a site may do without. See `indeling.weglaten` for why these four. */
+export const WEGLAATBAAR = ['intro', 'werk', 'werkgebied', 'usps'] as const
+export type Weglaatbaar = (typeof WEGLAATBAAR)[number]
+
+/**
+ * Does this site have that section?
+ *
+ * One function rather than a check per component, because the answer is read in two places
+ * that must agree: index.astro, which renders the section, and Header.astro, whose nav links
+ * to `/#werkgebied`. A nav item pointing at an anchor the page does not contain is the kind
+ * of defect that builds, passes every gate, and is only found by clicking it.
+ */
+export function toont(config: ClientConfig, sectie: Weglaatbaar): boolean {
+  return !config.indeling.weglaten.includes(sectie)
+}
+
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'kleur moet een #rrggbb hex-waarde zijn')
 const tijd = z.string().regex(/^\d{2}:\d{2}$/, 'tijd moet HH:MM zijn, bv. "08:00"')
 const dagdeel = z.tuple([tijd, tijd])
@@ -159,6 +175,30 @@ export const ClientSchema = z.object({
       foto: z.enum(FOTOZETTINGEN).default(STANDAARD_STIJL.foto),
     })
     .default(STANDAARD_STIJL),
+  // Which sections this site does NOT have.
+  //
+  // The counter-intuitive axis, and the one a 16-site survey of real Dutch trade sites
+  // argued hardest for: those sites run 6-13 sections and every single one is missing
+  // something obvious -- no reviews, a two-question FAQ, a "projecten" heading above no
+  // projects. Shipping every section, filled and symmetric, is identifiable BECAUSE nothing
+  // is missing. One concrete case from the same survey: no appointment-trade site (kapper,
+  // trimsalon, tandarts) had a werkgebied section at all.
+  //
+  // Only these four are offered. Hero, diensten, the closing CTA, the hours panel and the
+  // footer are how a visitor calls the business or learns when it is open, and a site that
+  // drops one of those is not sparse, it is broken. Reviews already drop out on their own
+  // when there are none, which in preview mode is always.
+  indeling: z
+    .object({
+      weglaten: z
+        .array(z.enum(WEGLAATBAAR))
+        // At most two, so the page keeps at least six sections. Below that a trade site
+        // stops reading as sparse and starts reading as unfinished, which costs the trust
+        // the sparseness was buying.
+        .max(2, 'hoogstens twee secties weglaten, anders oogt de pagina onaf')
+        .default([]),
+    })
+    .default({ weglaten: [] }),
   // The sentences that are this client's rather than this template's.
   //
   // Every one of these has a default in lib/toon.ts, one per bedrijfstype, and those
@@ -287,6 +327,28 @@ export const ClientSchemaChecked = ClientSchema.superRefine((cfg, ctx) => {
       code: z.ZodIssueCode.custom,
       path: ['reviews'],
       message: 'geen reviews op een voorstel: die zijn niet van ons om over te nemen',
+    })
+  }
+  // A headline long enough to push the call button off the first screen.
+  //
+  // R4 measured this in the browser at 1440x800 and encoded it as `NAAM_MAX_GROOT = 34` in
+  // sitestyle.py, which withdrew `schaal: groot` above 34 characters of bedrijf.naam --
+  // correct while the H1 was `<naam>: vakwerk waar u op kunt rekenen.`, and aimed at the
+  // wrong string since the H1 became `teksten.kop` (S2). That rule now guards a name that is
+  // no longer in the headline, so it is blind in exactly the direction that hurts: a drafted
+  // kop of any length ships. The ceiling is the same one R4 found -- about seventy
+  // characters of H1 at `groot` in a half-width column -- so it is applied to the headline
+  // itself here, where the headline actually is.
+  const kop = cfg.teksten?.kop
+  const max = cfg.stijl.schaal === 'groot' ? 70 : 90
+  if (kop && kop.length > max) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['teksten', 'kop'],
+      message:
+        `${kop.length} tekens is te lang voor de H1 bij schaal: ${cfg.stijl.schaal} ` +
+        `(maximaal ${max}); de belknop zakt dan onder de vouw. Kort de kop in of ` +
+        'zet schaal een stap kleiner.',
     })
   }
 })

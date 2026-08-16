@@ -623,9 +623,24 @@ check`: every fixture fails the copy threshold today, which is the finding, and 
       name, measured when the H1 was `<naam>: vakwerk waar u op kunt rekenen.` The name is no
       longer in the H1, so the rule now guards the wrong string -- conservative today, and
       blind to a long `teksten.kop`. Re-measure it against the new headline.
-- [ ] S3: vak profiles (`bouw` / `afspraak` / `portfolio`) driving section omission — real
-      trade sites are credible partly because they are incomplete, and no real appointment-
-      trade site in a 16-site survey had a werkgebied section at all.
+- [x] S3 (this commit): section omission, and WITHOUT the vak-profile axis the plan sketched.
+      `bedrijfstype` already splits mobiel/locatie, which is the same cut as bouw/afspraak for
+      every vak the factory has built; a third enum for the one portfolio case (hovenier)
+      would be a knob with no second user. What was missing was not a profile, it was the
+      ability to leave a section OUT. `indeling.weglaten` takes up to two of
+      `intro|werk|werkgebied|usps`; hero, diensten, the closing CTA, the hours panel and the
+      footer are not on offer, because a site missing one of those is not sparse, it is
+      broken. Cap of two keeps the page at six sections, which is where the survey put the
+      floor (real sites run 6-13 and every one is missing something obvious; shipping all
+      nine, filled and symmetric, is identifiable BECAUSE nothing is missing). `toont()` is
+      one function read by both index.astro and Header.astro, because the nav links
+      `/#werkgebied` and an anchor the page no longer contains builds, passes every gate and
+      is found by clicking it. voorbeeld-kapper-rotterdam drops werkgebied and usps: no
+      appointment-trade site in the survey had a werkgebied section, and it now builds 6
+      sections against the dakdekker's 9. Also closed the hole S2 opened: the H1 length
+      ceiling R4 measured was still pointed at `bedrijf.naam`, so a drafted `teksten.kop` of
+      any length shipped. Re-aimed at the headline in the checked schema, 70 chars at
+      `groot` and 90 below it.
 - [ ] S-later: steps 4-6 of the plan (hero + diensten variants, `volgorde`, `bewijs` slots)
       are the founder's call after S1-S3 are on screen.
 - [ ] S-free: `--brand-accent` is schema-required, contrast-gated, fed to the composer and
