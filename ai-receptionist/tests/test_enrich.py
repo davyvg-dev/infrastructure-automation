@@ -163,3 +163,10 @@ def test_a_trade_named_after_its_city_is_never_proved_by_its_name():
 def test_a_real_surname_beside_a_place_still_proves_the_name():
     html = "<title>Dak Garantie Amsterdam B.V.</title>"
     assert verify(html, "", "Dak Garantie Amsterdam B.V.", rank=0) == "naam"
+
+
+def test_the_crawlers_own_address_is_never_a_prospects_address():
+    """valkenburgloodgieters.nl prints the visitor User-Agent into the page. Ours carries
+    a contact address, so the crawler read its own footprint back as the prospect's."""
+    html = '<script>var info = {"user_agent":"KlantkraanBot/1.0 (contact davy@klantkraan.nl)"}</script>'
+    assert emails_in(html, "valkenburgloodgieters.nl") == []

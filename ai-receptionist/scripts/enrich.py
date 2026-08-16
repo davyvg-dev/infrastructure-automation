@@ -41,6 +41,17 @@ and the two doubtful rows above are both name-only. A KVK number from the regist
 every one of them into certainty, which is what `sourcing.py` supplies and what the
 --names mode, by construction, does not have.
 
+Hand it the website instead and the same 23 companies go 21 reachable: 18 addresses, all
+18 exactly right, 20 telephone numbers, 18 of them exactly right, and 8 KVK numbers. That
+is the whole argument for the `website` argument. Guessing the domain is the only weak
+link in here; a rep copying the site off a LinkedIn company page in ten seconds removes
+it, and no amount of further cleverness in domain_candidates would come close.
+
+One result in that run was a bug rather than a miss, and it is the reason to measure
+against known answers rather than eyeball a sample: valkenburgloodgieters.nl echoes the
+visitor's User-Agent into its HTML, ours names a contact address, and the crawler read its
+own footprint back as the prospect's e-mail. See JUNK_DOMAIN.
+
     python -m scripts.enrich                       # dry: resolve + verify, report only
     python -m scripts.enrich --write               # write enriched.csv + worklist.csv
     python -m scripts.enrich --limit 20            # trial run over the first 20
@@ -240,6 +251,12 @@ JUNK_DOMAIN = (
     "email.com",
     "godaddy.com",
     "squarespace.com",
+    # Our own, and not paranoia. valkenburgloodgieters.nl runs a WordPress plugin that
+    # prints the visitor's User-Agent into the page, and ours carries a contact address --
+    # so the crawler read its own footprint back and reported davy@klantkraan.nl as the
+    # prospect's e-mail. Escaping defeats stripping the UA string literally; refusing our
+    # own domain cannot be evaded. We are never a prospect's contact address.
+    "klantkraan.nl",
 )
 
 # Preferred in this order: a role address is what a business publishes for new work and
@@ -490,17 +507,39 @@ def verify(html: str, kvk: str, name: str, *, rank: int) -> str | None:
     return None
 
 
-def resolve(c: Candidate) -> Hit:
+def host_of(url: str) -> str:
+    """The bare hostname out of whatever shape a human pasted the address in."""
+    url = url.strip()
+    if not url:
+        return ""
+    if "://" not in url:
+        url = "https://" + url
+    return urllib.parse.urlparse(url).netloc.removeprefix("www.").lower()
+
+
+def resolve(c: Candidate, *, website: str = "") -> Hit:
+    """Everything the company publishes about how to reach it.
+
+    Pass `website` whenever anyone already knows it. The ground-truth run says guessing the
+    domain is the only weak link in here -- it reached 8 of 24 companies, while the pages it
+    did reach gave up a telephone number 8 times out of 8. So thirty seconds of a rep
+    copying the website off a LinkedIn company page is worth more than any amount of extra
+    cleverness in domain_candidates, and it skips the proof problem entirely: a human
+    saying "this is their site" beats a name matched against a page title.
+    """
     hit = Hit(slug=c.slug, company=c.name, kvk=c.kvk)
-    for rank, domain in enumerate(domain_candidates(c.name, c.city)):
+    given = host_of(website)
+    for rank, domain in enumerate([given] if given else domain_candidates(c.name, c.city)):
         if not allowed(domain):
             hit.note = f"{domain}: robots.txt says no"
             continue
         html = fetch(f"https://{domain}") or fetch(f"https://www.{domain}")
         time.sleep(DELAY)
         if not html:
+            hit.note = f"{domain} did not respond"
             continue
-        proof = verify(html, c.kvk, c.name, rank=rank)
+        # A KVK match still upgrades the proof: the rep can paste the wrong URL too.
+        proof = verify(html, c.kvk, c.name, rank=rank) or ("opgegeven" if given else "")
         if not proof:
             hit.note = f"{domain} resolved but is someone else"
             continue
@@ -551,7 +590,8 @@ def main() -> None:
     ap.add_argument("--in", dest="src", default=str(OUT / "qualified.json"))
     ap.add_argument(
         "--names",
-        help="a text file of company names, one per line, optional ', City' suffix. "
+        help="a text file of prospects, one per line, as 'Company, City | website'. "
+        "City and website are both optional; the website is worth far more. "
         "For prospects that never came from the register -- a rep's LinkedIn clips.",
     )
     ap.add_argument("--limit", type=int, help="only the first N companies")
@@ -568,20 +608,23 @@ def main() -> None:
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-            name, _, city = line.partition(",")
-            candidates.append(Candidate(kvk="", name=name.strip(), city=city.strip(), trade=""))
+            who, _, site = line.partition("|")
+            name, _, city = who.partition(",")
+            candidates.append(
+                (Candidate(kvk="", name=name.strip(), city=city.strip(), trade=""), site.strip())
+            )
         candidates = candidates[: args.limit]
     else:
         src = Path(args.src)
         if not src.exists():
             sys.exit(f"{src} missing -- run `python -m scripts.sourcing qualify` first")
-        candidates = [Candidate(**row) for row in json.loads(src.read_text())[: args.limit]]
+        candidates = [(Candidate(**row), "") for row in json.loads(src.read_text())[: args.limit]]
     if not candidates:
         sys.exit(f"{src} is empty")
 
     hits = []
-    for i, c in enumerate(candidates, 1):
-        hit = resolve(c)
+    for i, (c, site) in enumerate(candidates, 1):
+        hit = resolve(c, website=site)
         hits.append(hit)
         mark = " ".join(x for x in (hit.email, hit.phone) if x) or hit.note
         print(f"[{i:3}/{len(candidates)}] {hit.company[:34]:34} {mark}")
