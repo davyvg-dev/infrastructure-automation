@@ -663,6 +663,82 @@ check`: every fixture fails the copy threshold today, which is the finding, and 
 - [ ] S-free: `--brand-accent` is schema-required, contrast-gated, fed to the composer and
       written onto `<html>` — and read by no component. Spend it or drop it.
 
+### T. Website factory — award-level as the default, and an edit that cannot break it (2026-08-16)
+
+Founder ask: make `/example-site` produce a top-tier site by default, and make every
+delivered site editable by the founder AND the client without breaking anything ("that last
+point is crucial"). Research: `research/award-craft-2026-08-16.md` (16 award sites measured
+from their real CSS at 1440px, against 11 Dutch trade sites from our own outreach lists),
+`research/trade-site-craft-2026-08-16.md` (~60 trade sites, 36 measured mechanically),
+`research/PLAN-site-editing-2026-08-16.md` (the editing decision).
+
+- [x] T1: `stijl.maat` — the measure axis. `max-w-5xl` was a literal 19 times, `max-w-2xl` 8,
+      `px-6` 17, and no axis could move any of them. Five tokens, three values, every literal
+      replaced. `--foto-kolom` spends `--maat-band` so the framed band cannot end up narrower
+      than the column it interrupts.
+- [x] T2: the CSS floor, three live defects. Headings had `text-wrap: balance` and nothing
+      else — balance never prevented a pixel of overflow and switches itself off past six
+      wrapped lines, while Dutch compounds (`rioolontstoppingsservice`, 24 unbreakable
+      characters) overflow a 360px viewport regardless of sentence length. Every type step
+      was `clamp(min, Nvw, max)`, a bare viewport unit that does not respond to zoom = WCAG
+      1.4.4 failure; re-solved as rem+vw holding the old endpoints, pinned by a test. And the
+      hero grid was `md:grid-cols-2` unconditionally, so a client with no photos got half a
+      screen of copy against half a screen of nothing — the comment promised the copy would
+      span the page and the markup never did it.
+- [x] T3: `indeling.hero` (gesplitst|gestapeld|typografisch) and `indeling.diensten`
+      (kaarten|lijst|index). Same closed-set mechanism as the skin. `lijst` cannot produce
+      the orphaned last-row card `weesrij` exists to catch.
+- [x] T4: the two numbers the factory was furthest from the reference set on. Display type:
+      award set runs 96–320px at 1440 (median ~130), we topped out at 56px — `schaal: royaal`
+      at 88px, with the schema refusing it next to `hero: gesplitst` (the one cross-axis rule;
+      88px in a half-width column is the exact failure R4 measured). Measure: 48rem of Dutch
+      body text is ~90 characters a line against a measured band of 44–64ch — `--maat-kop`
+      42→26rem, `--maat-tekst` 48→34rem, and headings capped in `ch` because a rem cap that
+      suits an 88px headline is four times too wide for a 20px one. Measured on the kapper:
+      four hyphenated lines in a 460px column → two clean lines at 88px, CTA above the fold.
+- [x] T5: client photographs cannot break a site any more. `kk site fotos <slug>` cuts the
+      same four renditions the stock sets use from whatever the client sent. Verified on a
+      4032px phone JPEG, a portrait with an EXIF rotation flag (Pillow ignores it, every
+      browser honours it, so without correction their best photo ships on its side) and an
+      iPhone HEIC — all three land at 22–26KB. Roles are NAMED: `fotos/` used to be read with
+      `readdir().sort()` and `fotos[0]` became the hero, so which photograph led a client's
+      site was decided by alphabetical order. Dimensions now known (no reflow), alt text
+      required in Dutch, stale manifest fails the build.
+- [ ] T6: **founder decision — preview-then-promote.** Cloudflare Pages cannot promote a
+      preview to production without re-uploading (no promote endpoint; rollback only targets
+      prior production deploys), so "client approves, then it goes live" means a second build
+      and the approved bytes are not the shipped bytes. Workers Static Assets can do it
+      exactly (`versions upload` → stable preview URL → `versions deploy`), and since
+      2026-08-14 an Access policy covers a Worker's previews automatically — but Workers
+      cannot serve custom domains outside Cloudflare zones, which every client keeping their
+      domain at their own registrar needs. Pages can. Decide before T7.
+- [ ] T7: the edit surface. Recommendation and full build order in
+      `research/PLAN-site-editing-2026-08-16.md`: generate the form from the Zod schema we
+      already gate the build with, rather than buy a CMS. Sveltia is the better software and
+      needs a GitHub account (dealbreaker); Decap+DecapBridge solves login and has no image
+      processing at all; Pages CMS solves login well but has no preview, no PR flow, an open
+      413 on phone photos and an unanswered GDPR DPA. And Decap and Sveltia both DESTROY YAML
+      COMMENTS — 39% of `voorbeeld-kapper-rotterdam/client.yaml` on the first save. Cheapest
+      first step, independent of all of it: `.describe()` on every schema field (used zero
+      times today) becomes the form's help text.
+- [ ] T8: tell-lint's second rule family. Both research files hand over ready-made thresholds
+      measured across two populations — contact mechanics (`telefoon-ontbreekt`,
+      `telefoon-te-laat`, `telefoon-onzichtbaar`, `kanaal-eenzaam`), structure (`geen-h1`,
+      `h1-nietszeggend`, `openingstijden-alleen-footer`), and the CSS-side gate (container
+      width on 1140/1170/1200/1320 hit 11 of 11 trade sites and 3 of 16 award sites; unique
+      hex ≤60; positive tracking above 32px). The five that matter most are already satisfied
+      by the template, so they are cheap regression guards rather than new work.
+- [ ] T9: **two findings recorded, not acted on.** Warm cream + amber is now itself a
+      detectable generated-design default and `palet: zand` (#f5f1ea) is exactly that pair —
+      the counter-move is deriving the accent from the vak's own material, which is a real
+      change to `app.sitestyle`. And `usps:` should carry money anxiety ("vaste prijs vooraf,
+      geen voorrijkosten") rather than quality adjectives: the highest-value structural
+      finding in the trade survey is that the good sites answer "will this man rip me off?"
+      before "what do you do?".
+- [ ] T10: `app.sitestyle` does not know about `maat`, `royaal`, `hero` or `diensten` yet, so
+      the composer never chooses them — only `/example-site` and a human do. Teach it the new
+      axes, including the cross-axis rule.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`

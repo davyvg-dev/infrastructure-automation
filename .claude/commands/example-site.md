@@ -66,7 +66,38 @@ growth-engine/.venv/bin/python .../stock-photos.py render --vak <vak>
 Look at what came out before moving on. Two tiles of the same subject on the same surface read as
 filler; that is worth one more `zoek` round, not a shrug.
 
-## c) Decide what this site is NOT
+## c) Decide the composition
+
+Two decisions, both before writing a line of yaml, both in the report.
+
+### c1) How the two load-bearing sections are arranged
+
+`indeling.hero` and `indeling.diensten` (vocabulary and reasoning in
+`src/lib/indeling.ts`). Defaulting both is a decision you have to justify, not a way of
+avoiding one -- `gesplitst` + `kaarten` is what every site the factory built before this
+vocabulary existed looked like.
+
+- **`hero: gesplitst`** copy left, photo bleeding off the right. The headline gets half the
+  column, so it needs `schaal: compact|normaal|groot` and a kop under ~70 characters.
+- **`hero: gestapeld`** copy across the full measure, photograph full width underneath. The
+  headline gets every pixel the page has. Use this when the vak has a hero frame worth
+  looking at and the kop wants room.
+- **`hero: typografisch`** no photograph. Honest for a vak whose stock set has no hero frame
+  worth the first screen, and it loads instantly. About a third of the real Dutch trade
+  sites surveyed open this way.
+- **`diensten: kaarten|lijst|index`.** The three-column grid of bordered cards is the single
+  most-flagged generated-site component there is; `lijst` (numbered rows on hairlines) and
+  `index` (two columns, no boxes) are what the good trade sites run instead. Prefer `lijst`
+  for 4-6 diensten, `index` for 7-8 short ones. Choosing `kaarten` is allowed and needs a
+  reason.
+
+**`schaal: royaal` is the one cross-axis rule.** It sets the H1 at 88px, which is what the
+award reference set does, and the schema refuses it next to `hero: gesplitst` because 88px
+in a half-width column runs to five lines and pushes the call button under the fold. Royaal
+also caps the kop at 55 characters. If you want the big headline, you are choosing
+`gestapeld` or `typografisch` with it.
+
+### c2) What this site is NOT
 
 Do this before writing a line of yaml, and put the answer in the report.
 
@@ -86,6 +117,23 @@ business rather than from variety:
 
 Two is the cap; the schema enforces it. Dropping nothing is a legitimate answer for a
 `mobiel` bedrijf with a lot to say -- but say that you chose it.
+
+### c3) What the good ones do that this template does not yet
+
+From `research/trade-site-craft-2026-08-16.md`, which measured ~60 trade sites. You cannot
+add sections the factory does not have, but you CAN aim the fields it does have:
+
+- **`usps:` should carry money anxiety, not quality adjectives.** The single highest-value
+  structural finding: the good sites answer "will this man rip me off?" before "what do you
+  do?". `Vaste prijs vooraf, geen voorrijkosten binnen Utrecht` beats `Nette afwerking`.
+  Nothing invented -- if you do not know their pricing, write about how they quote, not what
+  they charge.
+- **`spoed.tekst` must contain a time or a mechanism.** "24/7 bereikbaar" has stopped
+  carrying information in this market. "Belt u voor 10:00, dan komen wij vandaag nog langs"
+  is checkable, which is the point.
+- **The H1 formula that measured best is the customer's problem, then a promise with a
+  deadline in it**: `Lekkage? Vandaag nog opgelost.` Best-in-class H1s cluster at 3-9 words.
+  Never the company name, never a bare `<vak> <plaats>` keyword stack.
 
 ## d) Write the config
 
@@ -186,8 +234,15 @@ band means wait and screenshot again, not a bug. Then check these by eye, becaus
 
 1. Is the call button above the fold at 1440x900? A four-line H1 is the usual cause.
 2. Does the photo band show two tiles of the same subject on the same surface?
-3. Does the dienst grid leave one card alone on the last row?
+3. Does the dienst grid leave one card alone on the last row? (`lijst` and `index` cannot.)
 4. Read the H1 and the first paragraph aloud. Could they sit on a competitor's site unchanged?
+5. **Is there a section whose right-hand third is simply empty?** Every text section sets its
+   heading and copy left inside a centred container, so at 1440 the space to the right of the
+   measure is the page's default state, not a choice. It reads as designed when a photograph,
+   a rule or a second column lands in it and as unfinished when three sections do it in a row.
+6. **Does the H1 hyphenate?** It should not: `hyphens` is off for h1 exactly so this shows up
+   as a too-narrow column rather than being quietly papered over. If it does, the kop is too
+   long for the hero arrangement -- change the arrangement or shorten the kop.
 
 On a `locatie` build also grep the built HTML for the mobiel register, because it is valid Dutch
 and nothing else will catch it:
@@ -201,10 +256,10 @@ founder's call.
 
 ## h) Report
 
-Report the slug, the vak and bedrijfstype and why, **which sections you left out and why**, where
-the photos came from (curated now, or an existing set), the resolved `stijl:` block with one line
-per axis, the gate output, **the three `--vloot` numbers and the nearest sibling**, the `--tells`
-result, and the URL.
+Report the slug, the vak and bedrijfstype and why, **the `indeling:` block -- hero, diensten,
+and which sections you left out -- with a reason per line**, where the photos came from
+(curated now, or an existing set), the resolved `stijl:` block with one line per axis, the gate
+output, **the three `--vloot` numbers and the nearest sibling**, the `--tells` result, and the URL.
 
 Close with one judgement in your own words: **would a Dutch trade owner believe a person made
 this?** Give the reason. If the answer is no, say what is wrong with it rather than shipping it

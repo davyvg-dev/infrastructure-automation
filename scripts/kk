@@ -108,6 +108,7 @@ kk — Klantkraan command center
   kk site new "<Naam>" --url <url> [--near <plaats>] [--voorbeeld <url>]...
                                  scrape a prospect into a voorstel-config; --voorbeeld takes
                                  the skin off a site he likes, else the factory composes one
+  kk site fotos <slug>           cut web renditions from clients/<slug>/foto-bron/ originals
   kk site build|check <slug>     build + fact gate (check: gate only, on the existing dist)
   kk site check <slug> --vloot   also measure the distance to every other site we have built
   kk site check <slug> --tells   also run the AI-tell linter over the built pages
@@ -266,6 +267,25 @@ def plan_site(args: list[str], root: Path) -> list[Step]:
             )
         return [_air(root, "app.sitedraft", *rest)]
 
+    if sub == "fotos":
+        # Cut the renditions from a client's own originals. Separate verb rather than a step
+        # inside `build` because it is the slow, occasional half: the originals change when
+        # the client sends new photographs, not on every build, and Pillow re-encoding seven
+        # frames on every `kk site open` would make the fast loop slow for no reason. The
+        # build fails loudly when the manifest is stale, which is what keeps the two in step.
+        if not rest:
+            raise UsageError("kk site fotos <slug>")
+        return [
+            Step(
+                root / "klantkraan" / "apps" / "client-sites",
+                [
+                    _venv_py(root, "growth-engine"),
+                    "scripts/client-fotos.py",
+                    rest[0],
+                ],
+            )
+        ]
+
     if sub in ("build", "check", "open", "deploy"):
         if not rest:
             raise UsageError(f"kk site {sub} <slug>")
@@ -309,7 +329,7 @@ def plan_site(args: list[str], root: Path) -> list[Step]:
                        f"--project-name={project}", f"--branch={branch}"]),
         ]
 
-    raise UsageError("kk site new|build|check|open|deploy")
+    raise UsageError("kk site new|fotos|build|check|open|deploy")
 
 
 def enforce_outreach_limit(args: list[str]) -> list[str]:
