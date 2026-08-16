@@ -11,6 +11,10 @@ steps below already answer; the only thing worth stopping for is a genuine confl
 
 Ralph rule: verify every step before the next; any failure stops the line.
 
+**What this command is for.** Not "a site that builds". A site a Dutch trade owner would believe
+a person made. The factory now measures that in two numbers (§f) and they are the acceptance
+criteria, not decoration: a build that passes the fact gate and fails those is a failed build.
+
 ## a) Read the request
 
 Pull from $ARGUMENTS: the **vak**, the **plaats** (default Amersfoort), and **0-3 reference URLs**.
@@ -28,8 +32,7 @@ Then settle three things yourself and report what you chose:
   `locatie` the `werkgebied` becomes the **neighbourhoods customers travel from**, not towns
   travelled to, so list wijken.
 - **A company name** that reads as obviously fictional (`Voorbeeld <vak>`, `Testbedrijf <vak>`),
-  does not collide with a real firm, and stays **under 34 characters** or the `groot` scale is
-  withdrawn (`sitestyle.py:142`).
+  does not collide with a real firm, and stays **under 34 characters**.
 
 ## b) Stock photos
 
@@ -63,7 +66,28 @@ growth-engine/.venv/bin/python .../stock-photos.py render --vak <vak>
 Look at what came out before moving on. Two tiles of the same subject on the same surface read as
 filler; that is worth one more `zoek` round, not a shrug.
 
-## c) Write the config
+## c) Decide what this site is NOT
+
+Do this before writing a line of yaml, and put the answer in the report.
+
+Sixteen real Dutch trade sites were read for `research/PLAN-site-factory-anti-template-2026-08-16.md`.
+They run 6-13 sections and **every one of them is missing something obvious**. A site that ships
+every section, filled and symmetric, is identifiable precisely because nothing is missing. So
+choose up to two of `intro`, `werk`, `werkgebied`, `usps` to leave out, and justify each from the
+business rather than from variety:
+
+- **`locatie` vakken should usually drop `werkgebied`.** No kapper, trimsalon or tandarts in that
+  survey had one; those businesses publish an address and how to reach it. The wijk pages and the
+  footer column stay either way.
+- Drop `usps` when the same three claims are already in the running copy. Saying it twice is how
+  a template fills a page.
+- Drop `intro` when the vak sells by showing rather than explaining (hovenier, timmerman).
+- Keep `werk` unless the stock set is thin. It is the section that does the most work.
+
+Two is the cap; the schema enforces it. Dropping nothing is a legitimate answer for a
+`mobiel` bedrijf with a lot to say -- but say that you chose it.
+
+## d) Write the config
 
 Write `klantkraan/apps/client-sites/clients/<slug>/client.yaml`, slug kebab-case prefixed
 `voorbeeld-`. If the dir exists, ask before overwriting. Model it on the tracked fixtures:
@@ -79,7 +103,32 @@ mobiel. Non-negotiable:
 - Dutch copy, u-register, 3-8 diensten, 2-4 usps, 1-5 werkgebied plaatsen.
 - `spoed.beschikbaar: false` for most `locatie` vakken. A barber has no emergencies.
 
-## d) Skin
+### The `teksten:` block is the whole job
+
+Eight optional slots -- `kop`, `belofte`, `intro_kop`, `werkwijze`, `bereik`, `diensten_tekst`,
+`slot_kop`, `slot_tekst` -- each falling back to a register default in `src/lib/toon.ts`. Leaving
+them out is legal and it is also how two sites end up sharing forty words. Write all eight.
+
+`kop` is the H1, the largest text on the screen: 70 characters at `schaal: groot`, 90 below it
+(the schema will tell you). Name the vak and where they are, or something concrete this business
+does. Never the company name -- it is already in the header two centimetres above.
+
+The rest is one rule: **write the sentence only this business could have written.** A dak is not
+judged from the pavement. A verstopping sits two metres from where you think. A barber's customer
+does not want to stand holding a coat. That kind of line cannot be lifted onto another site,
+which is exactly the property being bought.
+
+And do not write, ever:
+
+- a rule of three (`Van X en Y tot Z`, three adjectives in a row, three parallel bullets)
+- headings that are all two-word noun phrases -- mix a statement, a question and a label
+- Title Case in a Dutch heading
+- "jarenlange ervaring", "kwaliteit staat voorop", "op maat", "uw betrouwbare partner"
+- em-dashes
+- anything not derivable from the diensten, openingstijden and werkgebied you just wrote: no
+  years, no keurmerken, no guarantees, no company history. A fictional business has no history.
+
+## e) Skin
 
 **With reference URLs** -- measure first, it is free:
 
@@ -102,25 +151,46 @@ Paste the emitted block into the yaml at top level. On the reference path, sanit
 the merge rule (`sitestyle.py:751`): shared traits win, and on disagreement the **first** URL wins.
 A skin that clearly follows the third reference contradicts the rule -- flag it rather than shipping.
 
-## e) Build, gate, serve
+## f) Build, gate, measure
 
 ```sh
-./scripts/kk site build <slug>     # build + fact gate
-./scripts/kk site open <slug>      # the same, then serves it
+./scripts/kk site build <slug>                    # build + fact gate
+./scripts/kk site check <slug> --vloot --tells    # distance from the fleet + the tell linter
 ```
 
-The gate must print `all checks passed`. Notes about a missing e-mail, a stock fallback, or the
-voorwaarden placeholder are expected on a preview build, not failures.
+The fact gate must print `all checks passed`. Notes about a missing e-mail, a stock fallback, or
+the voorwaarden placeholder are expected on a preview build, not failures.
 
-`kk site open` blocks -- it is a server. Run it in the background, read the port from the output
-(do not assume 4321), and give the user the URL.
+Then the two that decide whether this was worth building:
 
-## f) Look at it
+- **`--vloot`** prints the copy overlap, skin distance and silhouette signature against every other
+  site the factory has made. **Over 15% copy against any sibling is a failed build.** Do not
+  lower the threshold; go back to §d and write sentences instead. The number moves a long way for
+  a small amount of honest writing -- a fixture went 23.8% to 5.8% on eight slots.
+- **`--tells`** must come back `schoon`. Each rule names the tell it caught; fix the copy, not
+  the rule.
 
-Open the served page and actually look, at the hero and at the photo band. Lazy-loaded tiles are
-blank for a moment, so a blank band means wait and screenshot again, not a bug. On a `locatie`
-build also grep the built HTML for the mobiel register, because it is valid Dutch and nothing else
-will catch it:
+`--vloot` runs first and stops the line if it fails, so run `--tells` on its own when that happens.
+
+## g) Look at it
+
+```sh
+./scripts/kk site open <slug>
+```
+
+It blocks -- it is a server. Run it in the background, read the port from the output (do not assume
+4321; the marketing site often holds it), and give the user the URL.
+
+Open the page and actually look. Lazy-loaded tiles and the hero are blank for a moment, so a blank
+band means wait and screenshot again, not a bug. Then check these by eye, because no gate can:
+
+1. Is the call button above the fold at 1440x900? A four-line H1 is the usual cause.
+2. Does the photo band show two tiles of the same subject on the same surface?
+3. Does the dienst grid leave one card alone on the last row?
+4. Read the H1 and the first paragraph aloud. Could they sit on a competitor's site unchanged?
+
+On a `locatie` build also grep the built HTML for the mobiel register, because it is valid Dutch
+and nothing else will catch it:
 
 ```sh
 grep -rl "en omgeving\|wij komen langs\|uw klus\|vrijblijvende offerte" dist/*.html dist/*/
@@ -129,11 +199,16 @@ grep -rl "en omgeving\|wij komen langs\|uw klus\|vrijblijvende offerte" dist/*.h
 Only `dist/voorwaarden/` may match: those terms are trades-shaped and rewriting them is the
 founder's call.
 
-## g) Report
+## h) Report
 
-Report the slug, the vak and bedrijfstype you chose and why, where the photos came from (curated
-now, or an existing set), the resolved `stijl:` block with one line per axis, the gate output, and
-the URL. Then STOP.
+Report the slug, the vak and bedrijfstype and why, **which sections you left out and why**, where
+the photos came from (curated now, or an existing set), the resolved `stijl:` block with one line
+per axis, the gate output, **the three `--vloot` numbers and the nearest sibling**, the `--tells`
+result, and the URL.
+
+Close with one judgement in your own words: **would a Dutch trade owner believe a person made
+this?** Give the reason. If the answer is no, say what is wrong with it rather than shipping it
+with a caveat. Then STOP.
 
 Never deploy this: `kk site deploy` puts a site on `klant-preview.pages.dev`, which is for real
 prospects, not fixtures. Do not commit until the founder has eyeballed it. To revert, delete the

@@ -17,6 +17,8 @@ CLIENT=voorbeeld-dakdekker pnpm dev        # local dev server
 CLIENT=voorbeeld-dakdekker pnpm build      # static build -> dist/
 CLIENT=voorbeeld-dakdekker pnpm check      # fact gate: dist/ vs client.yaml
 CLIENT=voorbeeld-dakdekker pnpm preview    # serve the built dist/
+CLIENT=voorbeeld-dakdekker pnpm vloot      # distance from every other site we have built
+CLIENT=voorbeeld-dakdekker pnpm tell-lint  # the AI-tells this page gives off on its own
 pnpm typecheck                             # astro check (no CLIENT needed)
 pnpm test                                  # design vocabulary tests (no CLIENT needed)
 ```
@@ -93,5 +95,31 @@ still asks for ten, and `research/website-aesthetics.md` puts real photos at +35
   (`stock/<vak>/`, see below), and only then to a color block. Never AI images.
 - `/voorwaarden/` is a generic placeholder: adapt per client before go-live.
 - The skin is deliberately not on this list: everything above holds at every point in the design
-  vocabulary, which is what makes varying the look safe. Section order and markup are not part of
-  the vocabulary and are not negotiable per client -- free-form markup cannot be fact-gated.
+  vocabulary, which is what makes varying the look safe. Markup and section ORDER are still not
+  negotiable per client -- free-form markup cannot be fact-gated. What a site may do since
+  2026-08-16 is leave a section out (below).
+
+## What makes two sites two sites
+
+The design vocabulary gave the factory 1728 skins and the sameness moved rather than left: the
+silhouette was one design and the copy was ~85% fixed strings with noun slots. Measured before
+anything changed, two voorstellen for different vakken in different towns shared 42% of their
+phrasing and a 35-word passage. Diagnosis, evidence and plan:
+`research/PLAN-site-factory-anti-template-2026-08-16.md`.
+
+Three things carry it now, and the first two are optional blocks in `client.yaml`:
+
+- **`teksten:`** -- eight slots (`kop`, `belofte`, `intro_kop`, `werkwijze`, `bereik`,
+  `diensten_tekst`, `slot_kop`, `slot_tekst`), each merged over the register default in
+  `src/lib/toon.ts` one key at a time. `kop` is the H1. Written by `app.sitedraft` from the
+  prospect's own sources; an absent key falls back to the register, which is the honest outcome
+  for a thin prospect. This block is what moved a fixture from 23.8% to 5.8%.
+- **`indeling.weglaten:`** -- up to two of `intro`, `werk`, `werkgebied`, `usps`. Real Dutch
+  trade sites run 6-13 sections and every one is missing something obvious; shipping all nine,
+  filled and symmetric, is identifiable because nothing is missing. Hero, diensten, the closing
+  CTA, the hours panel and the footer are not omittable: a site without one of those is not
+  sparse, it is broken.
+- **The two gates**, `pnpm vloot` and `pnpm tell-lint`, both also reachable as
+  `kk site check <slug> --vloot --tells`. Neither is in `pnpm check` yet, because every fixture
+  without a `teksten:` block still fails the copy threshold. Wire them into the build gate once
+  the fleet passes them.
