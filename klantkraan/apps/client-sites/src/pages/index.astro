@@ -10,15 +10,13 @@ import Reviews from '../components/Reviews.astro'
 import SpoedPanel from '../components/SpoedPanel.astro'
 import FinalCta from '../components/FinalCta.astro'
 import { loadClient } from '../lib/client'
-import { capitalize, somOp } from '../lib/format'
+import { toon } from '../lib/toon'
 
 const { config } = loadClient()
-const { bedrijf } = config
-const title = `${bedrijf.naam} | ${capitalize(bedrijf.vak)} in ${bedrijf.adres.plaats} en omgeving`
-const description = `${bedrijf.naam} is uw ${bedrijf.vak} in ${somOp(bedrijf.werkgebied)}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`
+const t = toon(config)
 ---
 
-<Base title={title} description={description}>
+<Base title={t.titel} description={t.omschrijving}>
   <Hero />
   <Intro />
   <Diensten />

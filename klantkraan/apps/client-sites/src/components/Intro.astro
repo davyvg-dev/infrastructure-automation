@@ -1,23 +1,17 @@
 ---
 import { loadClient } from '../lib/client'
-import { somOp } from '../lib/format'
+import { toon } from '../lib/toon'
 
 // Intro: the PainStats slot from the dakdekkers kit, deliberately WITHOUT
 // statistics. Calm reassurance copy, no numeric claims of any kind.
 const { config } = loadClient()
-const { bedrijf } = config
+const t = toon(config)
 ---
 
 <section class="mx-auto max-w-5xl px-6 py-(--ritme-y) md:py-(--ritme-y-md)">
   <h2 class="max-w-2xl text-h2">Duidelijke afspraken, nette afwerking</h2>
   <div class="mt-5 grid max-w-3xl gap-4 text-(--color-mist)">
-    <p>
-      Een {bedrijf.vak} nodig en geen zin in gedoe? Zo werken wij: u legt uw situatie uit, wij komen kijken
-      en u ontvangt een heldere offerte voordat het werk begint. Geen verrassingen achteraf.
-    </p>
-    <p>
-      {bedrijf.naam} werkt in {somOp(bedrijf.werkgebied)}. U spreekt altijd met iemand die het werk
-      zelf kent, en wij laten de werkplek netjes achter.
-    </p>
+    <p>{t.werkwijze}</p>
+    <p>{t.bereik}</p>
   </div>
 </section>

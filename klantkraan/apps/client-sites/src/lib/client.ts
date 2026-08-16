@@ -50,6 +50,12 @@ export const DAGEN = [
 ] as const
 export type Dag = (typeof DAGEN)[number]
 
+// Travels to the customer, or is travelled to. Declared here rather than in lib/toon.ts
+// (which is what reads it) because toon.ts imports ClientConfig from this file, and a
+// runtime constant going back the other way would close the cycle.
+export const BEDRIJFSTYPEN = ['mobiel', 'locatie'] as const
+export type Bedrijfstype = (typeof BEDRIJFSTYPEN)[number]
+
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'kleur moet een #rrggbb hex-waarde zijn')
 const tijd = z.string().regex(/^\d{2}:\d{2}$/, 'tijd moet HH:MM zijn, bv. "08:00"')
 const dagdeel = z.tuple([tijd, tijd])
@@ -89,6 +95,13 @@ export const ClientSchema = z.object({
     // The trade, lowercase singular noun: "dakdekker", "loodgieter", "installateur".
     // Used in template copy ("Uw dakdekker in ...").
     vak: z.string().min(2),
+    // Does the business travel to the customer, or does the customer come to it?
+    // `mobiel` is every trade the template was built for and stays the default, so a
+    // client.yaml written before this field renders exactly what it always did.
+    // `locatie` is the kapper, the tandarts, the hondentrimmer: one address, an agenda
+    // instead of a call-out. It swaps the copy register (see lib/toon.ts) and turns the
+    // werkgebied from towns travelled to into neighbourhoods travelled from.
+    bedrijfstype: z.enum(BEDRIJFSTYPEN).default('mobiel'),
     // Legal identifiers: required for live, absent (never invented) for preview.
     kvk: z
       .string()

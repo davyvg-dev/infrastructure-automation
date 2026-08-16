@@ -4,7 +4,8 @@ import Icon from '../../components/Icon.astro'
 import Diensten from '../../components/Diensten.astro'
 import FinalCta from '../../components/FinalCta.astro'
 import { loadClient } from '../../lib/client'
-import { capitalize, plaatsSlug, somOp, telHref } from '../../lib/format'
+import { plaatsSlug, telHref } from '../../lib/format'
+import { toon } from '../../lib/toon'
 
 // One city-page template, rendered ONLY for the configured werkgebied plaatsen.
 // The schema caps werkgebied at 5, which keeps this under Google's
@@ -23,25 +24,15 @@ interface Props {
 const { plaats } = Astro.props
 const { config } = loadClient()
 const { bedrijf } = config
-const vak = capitalize(bedrijf.vak)
+const t = toon(config)
 const andere = bedrijf.werkgebied.filter((p) => p !== plaats)
-const title = `${vak} in ${plaats} | ${bedrijf.naam}`
-const description = `${bedrijf.naam} is uw ${bedrijf.vak} in ${plaats}. Bel ${bedrijf.telefoon} voor een afspraak of een vrijblijvende offerte.`
 ---
 
-<Base title={title} description={description}>
+<Base title={t.plaatsTitel(plaats)} description={t.plaatsOmschrijving(plaats)}>
   <section class="border-b border-(--color-line) bg-(--color-card)">
     <div class="mx-auto max-w-5xl px-6 py-14 md:py-20">
-      <h1 class="text-h1">{vak} in {plaats}</h1>
-      <p class="mt-5 max-w-2xl text-(--color-mist)">
-        Zoekt u een {bedrijf.vak} in {plaats}? {bedrijf.naam} komt bij u langs, bekijkt de situatie en
-        doet u een heldere offerte voordat het werk begint.
-        {
-          bedrijf.adres.plaats === plaats
-            ? ` Ons bedrijf zit in ${plaats}, dus wij zijn snel bij u.`
-            : ` Vanuit ${bedrijf.adres.plaats} zijn wij snel in ${plaats}.`
-        }
-      </p>
+      <h1 class="text-h1">{t.plaatsKop(plaats)}</h1>
+      <p class="mt-5 max-w-2xl text-(--color-mist)">{t.plaatsTekst(plaats)}</p>
       <a href={telHref(bedrijf.telefoon)} class="btn btn-call mt-8">
         <Icon name="phone" class="h-5 w-5" />
         <span>Bel {bedrijf.telefoon}</span>
@@ -54,9 +45,7 @@ const description = `${bedrijf.naam} is uw ${bedrijf.vak} in ${plaats}. Bel ${be
   {
     andere.length > 0 && (
       <section class="mx-auto max-w-5xl px-6 pb-4">
-        <p class="text-small text-(--color-mist)">
-          Naast {plaats} werken wij ook in {somOp(andere)}.
-        </p>
+        <p class="text-small text-(--color-mist)">{t.plaatsAndere(plaats, andere)}</p>
       </section>
     )
   }

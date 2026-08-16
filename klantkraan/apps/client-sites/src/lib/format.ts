@@ -1,5 +1,7 @@
 // Small presentation helpers shared by layout, components and JSON-LD.
-import { DAGEN, type ClientConfig, type Dag } from './client'
+// Explicit .ts, like the other lib imports: vite resolves either, but `node --test` (which
+// runs the files in this directory directly) only resolves the extension it is given.
+import { DAGEN, type ClientConfig, type Dag } from './client.ts'
 
 /** tel: href for the client's phone number, with the spaces stripped. */
 export function telHref(telefoon: string): string {

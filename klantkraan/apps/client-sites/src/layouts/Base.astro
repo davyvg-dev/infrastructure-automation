@@ -6,6 +6,7 @@ import PreviewBanner from '../components/PreviewBanner.astro'
 import StickyCallBar from '../components/StickyCallBar.astro'
 import { loadClient } from '../lib/client'
 import { openingHoursSpecification } from '../lib/format'
+import { toon } from '../lib/toon'
 import { stijlStyle } from '../lib/stijl'
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
 
 const { title, description } = Astro.props
 const { config, stijl, siteUrl, logoUrl, isPreview, fotos, stock } = loadClient()
+const t = toon(config)
 const { bedrijf } = config
 
 // The two brand hooks and the resolved skin travel together as one inline style on
@@ -73,7 +75,10 @@ const schema = isPreview
         addressLocality: bedrijf.adres.plaats,
         addressCountry: 'NL',
       },
-      areaServed: bedrijf.werkgebied.map((plaats) => ({ '@type': 'City', name: plaats })),
+      // A mobiel bedrijf serves towns it drives to; a locatie bedrijf's werkgebied is the
+      // neighbourhoods its customers travel from, which are not Cities and must not say
+      // they are (see lib/toon.ts gebiedType).
+      areaServed: bedrijf.werkgebied.map((plaats) => ({ '@type': t.gebiedType, name: plaats })),
       openingHoursSpecification: openingHoursSpecification(config.openingstijden),
       ...(logoUrl ? { image: `${siteUrl}${logoUrl}` } : {}),
     }

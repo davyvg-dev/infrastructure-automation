@@ -1,7 +1,8 @@
 ---
 import Icon from './Icon.astro'
 import { loadClient } from '../lib/client'
-import { capitalize, telHref, waHref } from '../lib/format'
+import { telHref, waHref } from '../lib/format'
+import { toon } from '../lib/toon'
 
 // Hero: one promise, one number to call. Adapted from the marketing-site
 // dakdekkers Hero, stripped of statistics (no-stats policy: zero numeric claims).
@@ -16,8 +17,9 @@ import { capitalize, telHref, waHref } from '../lib/format'
 // site reading as one long centred document.
 const { config, fotos, stock } = loadClient()
 const { bedrijf } = config
-const vak = capitalize(bedrijf.vak)
-const [d1, d2, d3] = config.diensten.slice(0, 3).map((d) => d.naam.toLowerCase())
+// Two registers: a mobiel bedrijf promises to come to you, a locatie bedrijf promises a
+// slot in its agenda. Both sentences live in lib/toon.ts.
+const t = toon(config)
 // Same honesty rule as the work section: the client's own photo is their work, a stock
 // frame is only ever "een dakdekker". First own photo wins -- intake asks for the best
 // shot first -- otherwise the vak's hero crop, otherwise no photo at all and the copy
@@ -50,13 +52,13 @@ const heroSm = !fotos[0] && stock.hero ? stock.hero.src.replace(/\.webp$/, '-sm.
   <div class="relative mx-auto max-w-5xl px-6 py-10 md:grid md:grid-cols-2 md:py-20">
     <div class="md:pr-8">
       <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
-        {vak} in {bedrijf.adres.plaats} en omgeving
+        {t.aanhef}
       </p>
       <h1 class="mt-4 text-h1">
         {bedrijf.naam}: vakwerk waar u op kunt rekenen.
       </h1>
       <p class="mt-5 text-(--color-mist)">
-        Van {d1} en {d2} tot {d3}: u belt, wij komen langs en u weet vooraf waar u aan toe bent.
+        {t.belofte}
         {config.spoed.beschikbaar && ' Ook bij spoed staan wij voor u klaar.'}
       </p>
       <div class="mt-8 flex flex-wrap items-center gap-4">
