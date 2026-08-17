@@ -879,11 +879,25 @@ fully loaded ~400 -> **2,000-3,500**, core TAM 143k -> **~6,200** (SAM ~2,000), 
       new budget line, never a substitution — pitch revenue recovery ("one saved spoed job pays for
       it"), never cost saving. Decide deliberately between moving up-market to 5-9 staff and adding a
       EUR 149-199 tier that fits the budget they already have.
-- [ ] U12: **COGS is the one dimension never measured** — that agent died before writing a line.
-      WhatsApp moved to per-message pricing during 2025, so the EUR 3.00 WhatsApp line in
-      `cogs-per-tier.md` is the prime suspect and Chat EUR 10 / Compleet EUR 35 are both unvalidated.
-      Also unmodelled: Hetzner amortised at 30 clients/box is EUR 0.50, but at 10 clients it is
-      EUR 1.50 and at 1 client ~EUR 15. Re-run this research.
+- [x] U12 (measured 2026-08-17, one line still open): `research-cogs.md` written, `cogs-per-tier.md`
+      corrected. **The Claude API line was ~7x understated, and not because the estimate was
+      careless:** EUR 3.00 is very nearly right for Haiku 4.5 (USD 4.17 at 300 conversations),
+      and `config/business.yaml:73` even names Haiku as the switch for high volume — but every
+      client config and both scaffold defaults ship `claude-opus-4-8`, which measures **USD 20.86**.
+      The estimate priced the option; production ships the default. Measured shape: ~3,900 tokens
+      of system prompt plus tools re-sent EVERY turn, so a 3-turn conversation is 12,309 input /
+      319 output and cost scales with turns, not conversations. No prompt caching exists anywhere
+      (`grep -rl cache_control app/` is empty); adding it saves 43%, not 90%, because the 5-minute
+      TTL is shorter than the gap between conversations at 10/day. **The trap:** Haiku 4.5 will
+      not cache a prefix under 4,096 tokens and ours is ~3,900, so "Haiku plus caching" does not
+      compose — the minimum is per-model and not monotonic (Opus 5 512, Opus 4.8 1,024, Haiku
+      4,096). Hetzner: BOTH prior figures were ~3x wrong in the same direction — the repo's own
+      infra doc prices the box at EUR 5.39/mo (CX22 + 40 GB), so EUR 0.18 at 30 clients, EUR 5.39
+      at one, and it is overhead rather than COGS at zero. Chat GM 96.7% -> **~91%** today, ~94%
+      with caching, ~96% on Haiku: the margin is a decision, not a property. n=1, and the turn
+      count is therefore unfixed. **STILL OPEN: the WhatsApp EUR 3.00 line** — this session's
+      web-search budget ran out before it could be checked, and the three questions to answer are
+      listed at the end of `research-cogs.md`. Founder call needed on the model per tier.
 - [ ] U13: **three mutually inconsistent first-client prices are live simultaneously** — VoltWerk's
       improvised call terms (free month, then EUR 150, then EUR 300, no expiry attached),
       founding-member (EUR 149 then EUR 299, capped at 30-09-2026 or 10 clients), and
