@@ -126,7 +126,11 @@ test('locatie zet de stad waar het bedrijf zit, niet de wijk, in de plaatskop', 
 
 test('mobiel houdt de zinnen die op live sites staan', () => {
   const t = toon(config('mobiel', { vak: 'dakdekker', naam: 'Voorbeeld Dakwerken' }))
-  assert.equal(t.kop, 'Dakdekker in Rotterdam en omgeving')
+  // Was 'Dakdekker in Rotterdam en omgeving' until 2026-08-17. That is the bare vak+plaats
+  // stack the 60-site survey found on 4 of 7 NL lead-gen sites, and "en omgeving" names a
+  // service radius rather than a promise, so it did not rescue the line. tell-lint rule 18
+  // fails the build on it now; the question is answered by t.belofte directly underneath.
+  assert.equal(t.kop, 'Een dakdekker nodig in Rotterdam en omgeving?')
   assert.equal(t.gebiedKop, 'Werkgebied')
   assert.equal(t.slotKop, 'Vertel ons wat er speelt')
   // The promise is word for word what live sites have said since the template shipped. Only

@@ -105,7 +105,15 @@ function standaardToon(config: ClientConfig): Toon {
     return {
       // No "en omgeving": a shop is in one place, and claiming a radius it does not
       // travel is the first sentence that would give the template away.
-      kop: `${vak} in ${plaats}`,
+      //
+      // A question, not the bare `<vak> in <plaats>` stack this was until 2026-08-17. That
+      // stack is the SEO-farm signature the 60-site survey found on 4 of 7 NL lead-gen sites,
+      // and tell-lint rule 18 now fails the build on it. The corpus's best headline
+      // ("Lekkage? Vandaag nog opgelost.") states the customer's problem and then answers it,
+      // and the answer is the `belofte` directly underneath. A question is also the only shape
+      // that stays TRUE for every locatie vak without the default promising a slot, a price or
+      // a turnaround that some client cannot keep.
+      kop: `Op zoek naar een ${bedrijf.vak} in ${plaats}?`,
       // "Wij komen langs" inverted. Deliberately not "u loopt binnen" alone -- plenty of
       // locatie vakken (tandarts, hondentrimmer) run on appointment only, and the copy
       // has to be true for all of them.
@@ -146,14 +154,24 @@ function standaardToon(config: ClientConfig): Toon {
   }
 
   // mobiel: the copy every client site had before this file existed. Changing a sentence
-  // here changes every live trade site, so it is kept verbatim on purpose.
+  // here changes every live trade site, so it is kept verbatim on purpose -- with two
+  // exceptions dated 2026-08-17, both forced by a tell-lint rule that measured the old line
+  // against the 60-site survey rather than preferring something else. Safe to make now: there
+  // are no live client sites yet.
   return {
-    kop: `${vak} in ${plaats} en omgeving`,
+    // Was `${vak} in ${plaats} en omgeving`. "en omgeving" adds a service radius, not a
+    // promise, so the line was still the bare vak+plaats stack of rule 18. Same question
+    // shape as the locatie branch; see there for the reasoning.
+    kop: `Een ${bedrijf.vak} nodig in ${plaats} en omgeving?`,
     // Tricolon prefix dropped 2026-08-16, see the locatie branch for why. The promise
     // itself is untouched: it is live on paying clients and pinned by toon.test.ts.
     belofte: `U belt, wij komen langs en u weet vooraf waar u aan toe bent.`,
     introKop: 'Duidelijke afspraken, nette afwerking',
-    werkwijze: `Een ${bedrijf.vak} nodig en geen zin in gedoe? Zo werken wij: u legt uw situatie uit, wij komen kijken en u ontvangt een heldere offerte voordat het werk begint. Geen verrassingen achteraf.`,
+    // "Geen verrassingen achteraf." dropped 2026-08-17: the survey lists it among the phrases
+    // that only appear on the lead-gen end, and tell-lint now allows it only on a page that
+    // states an actual price. The sentence before it already promises a written offerte before
+    // the work starts, which is the same claim with evidence in it, so the tag added nothing.
+    werkwijze: `Een ${bedrijf.vak} nodig en geen zin in gedoe? Zo werken wij: u legt uw situatie uit, wij komen kijken en u ontvangt een heldere offerte voordat het werk begint.`,
     bereik: `${naam} werkt in ${gebied}. U spreekt altijd met iemand die het werk zelf kent, en wij laten de werkplek netjes achter.`,
     gebiedKop: 'Werkgebied',
     gebiedNav: 'Werkgebied',

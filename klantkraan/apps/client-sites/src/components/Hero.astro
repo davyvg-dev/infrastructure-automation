@@ -127,8 +127,20 @@ const gestapeld = heroSrc !== null && vorm.fotoBreed
               <span>Stuur een WhatsApp</span>
             </a>
           ) : (
-            <a href="/diensten/" class="btn btn-outline">
-              Bekijk onze diensten
+            /*
+             * A contact route, not "Bekijk onze diensten". The comment at the top of this file
+             * has always called the second channel invariant and the fallback shipped a
+             * browsing link, so a client without WhatsApp offered exactly one way to reach the
+             * business: the phone. 12 of 15 NL sites in the survey do that, the good ones pair
+             * the number with WhatsApp, an agenda or a form, and a share of customers will not
+             * call a stranger. tell-lint `kanaal-eenzaam` fails the build on it now.
+             *
+             * The label follows the register: a locatie bedrijf sells a slot in its agenda, a
+             * mobiel bedrijf sells a price for a job. Neither wording says "vrijblijvende
+             * offerte", which the hero and the meta description already spend.
+             */
+            <a href="/contact/" class="btn btn-outline">
+              {bedrijf.bedrijfstype === 'locatie' ? 'Afspraak maken' : 'Vraag een prijs op'}
             </a>
           )
         }
