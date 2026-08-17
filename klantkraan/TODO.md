@@ -721,20 +721,41 @@ from their real CSS at 1440px, against 11 Dutch trade sites from our own outreac
       COMMENTS — 39% of `voorbeeld-kapper-rotterdam/client.yaml` on the first save. Cheapest
       first step, independent of all of it: `.describe()` on every schema field (used zero
       times today) becomes the form's help text.
-- [ ] T8: tell-lint's second rule family. Both research files hand over ready-made thresholds
-      measured across two populations — contact mechanics (`telefoon-ontbreekt`,
-      `telefoon-te-laat`, `telefoon-onzichtbaar`, `kanaal-eenzaam`), structure (`geen-h1`,
-      `h1-nietszeggend`, `openingstijden-alleen-footer`), and the CSS-side gate (container
-      width on 1140/1170/1200/1320 hit 11 of 11 trade sites and 3 of 16 award sites; unique
-      hex ≤60; positive tracking above 32px). The five that matter most are already satisfied
-      by the template, so they are cheap regression guards rather than new work.
-- [ ] T9: **two findings recorded, not acted on.** Warm cream + amber is now itself a
-      detectable generated-design default and `palet: zand` (#f5f1ea) is exactly that pair —
-      the counter-move is deriving the accent from the vak's own material, which is a real
-      change to `app.sitestyle`. And `usps:` should carry money anxiety ("vaste prijs vooraf,
-      geen voorrijkosten") rather than quality adjectives: the highest-value structural
-      finding in the trade survey is that the good sites answer "will this man rip me off?"
-      before "what do you do?".
+- [x] T8: tell-lint's second rule family, rules 9-32. Not the cheap regression guards this
+      line predicted: three real defects came out of running it against four clients.
+      `kanaal-eenzaam` on 3 of 4 homepages, because Hero.astro's no-WhatsApp fallback shipped
+      "Bekijk onze diensten" while its own header comment called the second channel invariant,
+      so those clients offered exactly one way to reach the business. The default h1 was the
+      SEO-farm signature on both registers ("Kapper in Rotterdam"; "en omgeving" names a
+      radius, not a promise, so it only hid the line from a 4-word rule) and both are questions
+      now, answered by the belofte underneath. And "Geen verrassingen achteraf." sat in every
+      mobiel `werkwijze` while the sentence before it already promised a written offerte. Two
+      of the new rules were themselves wrong on first run and are narrower now
+      (`telefoon-onzichtbaar` judged per link, so a "Bel nu" button failed a page that shows
+      the number elsewhere; `h1-nietszeggend` called "Contact" a defect on /contact/). Skipped
+      on purpose: `preloader` and `smooth-scroll`, which the template cannot emit. Measured on
+      the way through: 5 unique hex over the whole site against an award median of 30,5 and a
+      trade median of 108.
+- [x] T9 (second half): `usps` must answer the money question. Schema refinement at
+      `modus: live` for a mobiel bedrijf, `verify-site` note at preview. Live-only is the
+      honest scoping and not a softening: `app.sitedraft` rule 3 forbids the drafter from
+      writing prices at all, so a voorstel cannot satisfy it without inventing a price policy
+      for a business that never published one. Checked on the data rather than the page because
+      the mobiel `werkwijze` default already says "een heldere offerte voordat het werk begint",
+      which would pass every site forever on a sentence the client never wrote.
+- [ ] T9 (first half, still open): warm cream + amber is now itself a detectable
+      generated-design default and `palet: zand` (#f5f1ea) is exactly that pair — the
+      counter-move is deriving the accent from the vak's own material, which is a real change
+      to `app.sitestyle`. Untouched.
+- [ ] T11 (found while building T8, founder call): four LOCAL fixtures (kk-skintest,
+      voorbeeld-timmerman, voorbeeld-schilder, voorbeeld-elektricien-amsterdam) share 21-30%
+      of their copy with each other because none has a `teksten:` block, so they all fall back
+      to the same eight register sentences. Not a pipeline defect: `app.sitedraft` drafts the
+      eight texts for every real voorstel, and all three TRACKED fixtures pass `vloot`. It only
+      means the local fleet cannot be used as a distance baseline until those four get their
+      own copy. The two ignored fixtures also carry uncommittable local fixes from 2026-08-17
+      (`indeling.diensten: lijst` on kk-skintest, a money usp on voorbeeld-timmerman, and
+      differentiated usps on kk-skintest) which will be lost on a fresh checkout.
 - [x] T10 (this commit): the composer chooses all ten axes, and the two blocks now come out of
       one call. `maat` and the composition axes were invisible to `app.sitestyle` (it parsed
       seven constants out of `stijl.ts` and nothing out of `indeling.ts`), and `royaal` was
@@ -821,7 +842,23 @@ fully loaded ~400 -> **2,000-3,500**, core TAM 143k -> **~6,200** (SAM ~2,000), 
       covers the installation fee and the prepay. Do NOT opt into the KOR: clients are BVs who
       reclaim, so it buys no price advantage and forfeits input BTW on the API/hosting lines this
       business is made of.
-- [ ] U9: **liability cap in the AV + DPA, before insurance.** ISO AI exclusions went live 1 Jan
+- [x] U9 (contract side done 2026-08-17; insurance side still founder work): the research's
+      premise that the DPA indemnity was uncapped is **wrong** — both docs already capped at 12
+      months fees / EUR 25k. The real hole was that they capped SEPARATELY, so a claimant could
+      argue EUR 25k under the AV plus EUR 25k under the DPA; there is one ceiling across AV +
+      DPA + SLA now, with vrijwaring and regres inside it and a 12-month vervaltermijn. New,
+      because nothing addressed AI output at all: agent statements are preparatory
+      communication on the client's behalf and not an offer by Klantkraan, quoted prices are
+      indicative with the client's confirmation governing (Centraal Beheer excludes "onjuiste
+      kostenraming" by name, so this cannot lean on a policy), and the client owns the accuracy
+      of the source data the agent reads. Art. 12 now states the human oversight that exists,
+      which is `research-insurance.md` item 4's underwriting condition written achievably.
+      **FOUNDER, TWO THINGS:** (1) the broker conversation is still owed — items 1-6 of that
+      file, by clause and form number; (2) `company.ts` says **T4 Software Consulting BV**, KvK
+      90232135, while U9's whole personal-liability argument assumed an eenmanszaak. If the BV
+      exists, "stay eenmanszaak" and the EUR 3-5k/yr comparison are moot; if it does not, the
+      AV names a party that cannot contract. Resolve before any of this is signed.
+- [ ] U9 (superseded detail, kept for the sources): **liability cap in the AV + DPA, before insurance.** ISO AI exclusions went live 1 Jan
       2026, 60+ P&C groups filed, and NL brokers name the excluded profile outright — "zelflerende
       systemen zonder menselijke controle". A standard beroepsaansprakelijkheid policy likely pays
       nothing for the one thing we sell; affirmative AI cover is EUR 390-1,170/mo, unaffordable until
