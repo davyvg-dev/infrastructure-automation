@@ -164,6 +164,13 @@ eventuele gegevensbeschermingseffectbeoordeling (DPIA) en een voorafgaande raadp
 2. De beperking geldt niet bij opzet of bewuste roekeloosheid van Verwerker, en laat de
    rechtstreekse aanspraken van betrokkenen op grond van artikel 82 AVG onverlet — die kunnen niet
    contractueel worden uitgesloten.
+3. De maxima uit lid 1 zijn dezelfde als die uit het aansprakelijkheidsartikel van de
+   hoofdovereenkomst en komen daar niet bovenop: over alle documenten samen geldt één maximum per
+   gebeurtenis en één per kalenderjaar. Ook een vrijwaring of regres onder deze Overeenkomst valt
+   binnen dat maximum.
+4. Elke aanspraak onder deze Overeenkomst vervalt 12 maanden nadat
+   Verwerkingsverantwoordelijke de schade heeft ontdekt of redelijkerwijs had kunnen ontdekken, en
+   in elk geval 24 maanden na de gebeurtenis. Lid 2 blijft onverkort gelden.
 
 ## Artikel 14 — Duur en beëindiging
 
