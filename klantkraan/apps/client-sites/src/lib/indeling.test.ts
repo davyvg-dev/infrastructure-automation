@@ -176,3 +176,51 @@ test('88px kop en een halve kolom is de ene combinatie die niet mag', () => {
   assert.deepEqual(fout.path, ['stijl', 'schaal'])
   assert.match(fout.message, /gestapeld/)
 })
+
+test('een live mobiel bedrijf zonder usp over geld komt er niet doorheen', () => {
+  // The highest-value structural finding in the 60-site trade survey: the good sites answer
+  // "will this man rip me off?" before "what do you do?". Enforced on the data rather than on
+  // the rendered page, because the mobiel `werkwijze` default already promises a written
+  // offerte, so any page-level scan would pass every site on a sentence the client never wrote.
+  const LIVE = {
+    ...BASIS,
+    modus: 'live',
+    domein: 'voorbeeldbarbier.nl',
+    bedrijf: {
+      ...BASIS.bedrijf,
+      kvk: '90232135',
+      btw_id: 'NL004800098B81',
+      email: 'hallo@voorbeeldbarbier.nl',
+      adres: { plaats: 'Rotterdam', straat: 'Voorbeeldstraat 1', postcode: '3011 AA' },
+    },
+  }
+  const met = (usps: string[], extra: Record<string, unknown> = {}) =>
+    ClientSchemaChecked.safeParse({ ...LIVE, ...extra, usps })
+
+  const zonderGeld = ['Eigen monteurs uit de regio', 'Nette afwerking achteraf']
+  assert.ok(!met(zonderGeld).success)
+  const fout = met(zonderGeld).error!.issues[0]
+  assert.deepEqual(fout.path, ['usps'])
+  assert.match(fout.message, /voorrijkosten/)
+
+  // Every wording the NL market actually uses has to satisfy it, or the rule teaches founders
+  // to write one sentence.
+  for (const usp of [
+    'Vaste prijs vooraf',
+    'Geen voorrijkosten binnen Rotterdam',
+    'Uurtarief 65 euro, ook bij spoed',
+    'Heldere offerte voordat het werk begint',
+    'Eerste half uur gratis',
+  ]) {
+    assert.ok(met([usp, ...zonderGeld]).success, usp)
+  }
+
+  // A locatie bedrijf is exempt: a kapper's price is a known small amount and the fact her
+  // customer came for is the agenda.
+  assert.ok(met(zonderGeld, { bedrijf: { ...LIVE.bedrijf, bedrijfstype: 'locatie' } }).success)
+
+  // And a voorstel is exempt, which is the point rather than a loophole: app.sitedraft is
+  // forbidden from writing prices at all, so demanding one here would either fail every
+  // drafted voorstel or invent a price policy for a business that never stated one.
+  assert.ok(met(zonderGeld, { modus: 'preview', receptionist: false }).success)
+})

@@ -425,6 +425,47 @@ export const ClientSchemaChecked = ClientSchema.superRefine((cfg, ctx) => {
         'vouw. Kies indeling.hero: gestapeld of typografisch, of schaal: groot.',
     })
   }
+  // T9: at least one usp has to answer the money question.
+  //
+  // The highest-value structural finding in the 60-site trade survey is that the good sites
+  // answer "will this man rip me off?" before "what do you do?". Its clearest example
+  // (bigblueplumbing.au) makes section two a money-anxiety strip rather than a services list:
+  // "No Hidden Fees / Priced by the job, not by the hour". The NL numbers are public anyway
+  // (uurtarief ~EUR 45-85 ex btw, voorrijkosten ~EUR 25-40, spoedtarief ~EUR 90-145), so
+  // hiding them buys nothing, and only 3 of the measured NL sites name voorrijkosten and 3
+  // name uurtarief. It is an open flank.
+  //
+  // Checked here rather than in tell-lint because the usps are data and this is a rule about
+  // the data. It cannot be checked on the rendered page at all: the mobiel `werkwijze` default
+  // already promises "een heldere offerte voordat het werk begint", so a page-level scan would
+  // pass every mobiel site on a sentence the client did not write and cannot be held to.
+  //
+  // mobiel only. A kapper's price is a known small amount and the fact her customer came for
+  // is the agenda, which is what the locatie register's own usps answer.
+  //
+  // And `live` only, which is not a softening but the other half of the same honesty rule. A
+  // voorstel is drafted from a prospect's own public sources by app.sitedraft, whose rule 3
+  // forbids it from writing prices, tarieven or voorrijkosten at all -- correctly, because a
+  // price policy we invented and put in a stranger's mouth is exactly the fabrication the
+  // preview mode exists to prevent. So the money usp is owed by a client who has confirmed it,
+  // and asked for at the moment the site becomes theirs.
+  const GELD =
+    /prijs|prijzen|tarief|uurtarief|voorrijkosten|offerte|kosten|euro|€|gratis|vast bedrag|no cure/i
+  if (
+    cfg.modus === 'live' &&
+    cfg.bedrijf.bedrijfstype === 'mobiel' &&
+    !cfg.usps.some((u) => GELD.test(u))
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['usps'],
+      message:
+        'geen enkele usp gaat over geld. Een particulier die een vakman zoekt vraagt zich ' +
+        'eerst af of hij afgezet wordt, en pas daarna wat u doet: zet er een over prijs bij ' +
+        '("vaste prijs vooraf", "geen voorrijkosten in <plaats>", "uurtarief EUR 65, ook bij ' +
+        'spoed"). Gemeten op 60 vakbedrijfssites; slechts 3 NL-sites noemen voorrijkosten.',
+    })
+  }
 })
 
 export type ClientConfig = z.infer<typeof ClientSchema>

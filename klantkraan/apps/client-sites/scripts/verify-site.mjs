@@ -128,7 +128,8 @@ sameSet(
 )
 everyPage(`business name "${bedrijf.naam}" on every page`, (h) => h.includes(bedrijf.naam))
 for (const dienst of cfg.diensten) {
-  if (!pages.some((p) => p.html.includes(dienst.naam))) fail(`dienst "${dienst.naam}" never rendered`)
+  if (!pages.some((p) => p.html.includes(dienst.naam)))
+    fail(`dienst "${dienst.naam}" never rendered`)
 }
 
 // 2. City pages: exactly the configured werkgebied, no more. Counted from the built HTML rather
@@ -163,11 +164,17 @@ for (const marker of PLACEHOLDERS) {
   noPage(`placeholder "${marker}"`, (h) => h.includes(marker))
 }
 noPage('a price', (h) => PRICE_RE.test(h.replace(/<[^>]+>/g, ' ')))
-noPage('review/aggregateRating structured data', (h) => /aggregateRating|"@type"\s*:\s*"Review"/.test(h))
+noPage('review/aggregateRating structured data', (h) =>
+  /aggregateRating|"@type"\s*:\s*"Review"/.test(h),
+)
 
 // 5. Zero external requests: what keeps the site cookie-banner-free. A proposal additionally
 // links to klantkraan.nl from its banner (a link is not a request, and it names the sender).
-const allowedHosts = [...(cfg.domein ? [cfg.domein] : []), 'wa.me', ...(isPreview ? ['klantkraan.nl'] : [])]
+const allowedHosts = [
+  ...(cfg.domein ? [cfg.domein] : []),
+  'wa.me',
+  ...(isPreview ? ['klantkraan.nl'] : []),
+]
 const externals = new Set()
 for (const p of pages) {
   for (const m of p.html.matchAll(/(?:href|src)="(https?:\/\/[^"]+)"/g)) {
@@ -175,7 +182,8 @@ for (const p of pages) {
     if (!allowedHosts.includes(host) && !host.endsWith('.pages.dev')) externals.add(host)
   }
 }
-if (externals.size) fail(`external hosts (breaks the no-cookie-banner guarantee): ${[...externals].join(', ')}`)
+if (externals.size)
+  fail(`external hosts (breaks the no-cookie-banner guarantee): ${[...externals].join(', ')}`)
 noPage('executable JavaScript', (h) => /<script(?![^>]*type="application\/ld\+json")/.test(h))
 
 // 6. Mode-specific publishing posture.
@@ -191,7 +199,8 @@ if (isPreview) {
   noPage('LocalBusiness JSON-LD (must not appear on a proposal)', (h) => h.includes('ld+json'))
   if (!/Disallow:\s*\//.test(robots)) fail('robots.txt does not disallow crawling of a proposal')
   if (!/X-Robots-Tag:\s*noindex/.test(headers)) fail('_headers has no X-Robots-Tag: noindex')
-  if (fs.existsSync(path.join(DIST, 'sitemap-index.xml'))) fail('a proposal must not ship a sitemap')
+  if (fs.existsSync(path.join(DIST, 'sitemap-index.xml')))
+    fail('a proposal must not ship a sitemap')
 } else {
   noPage('noindex meta on a live site', (h) => /name="robots" content="noindex/.test(h))
   everyPage('LocalBusiness JSON-LD', (h) => h.includes('ld+json'))
@@ -238,9 +247,11 @@ const rootStyles = pages.map((p) => ({
   style: p.html.match(/<html[^>]*\sstyle="([^"]*)"/)?.[1] ?? null,
 }))
 const skinless = rootStyles.filter((s) => !s.style).map((s) => s.file)
-if (skinless.length) fail(`no skin on <html> (page not built on Base.astro?): ${skinless.join(', ')}`)
+if (skinless.length)
+  fail(`no skin on <html> (page not built on Base.astro?): ${skinless.join(', ')}`)
 const skins = new Set(rootStyles.filter((s) => s.style).map((s) => s.style))
-if (skins.size > 1) fail(`pages disagree about the skin: ${skins.size} different <html> style values`)
+if (skins.size > 1)
+  fail(`pages disagree about the skin: ${skins.size} different <html> style values`)
 
 /** Custom properties as written on <html>, unresolved. */
 const vars = {}
@@ -262,7 +273,14 @@ const hexToRgb = (hex) => {
   return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
 }
 const toHex = (rgb) =>
-  '#' + rgb.map((c) => Math.round(c * 255).toString(16).padStart(2, '0')).join('')
+  '#' +
+  rgb
+    .map((c) =>
+      Math.round(c * 255)
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')
 
 function rgbToOklab([r, g, b]) {
   const [R, G, B] = [r, g, b].map(srgbToLinear)
@@ -379,7 +397,10 @@ const styleSheets = [
   })),
   // Astro inlines a small enough stylesheet into <style>, so both are searched.
   ...pages.flatMap((p) =>
-    [...p.html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => ({ file: p.file, css: m[1] })),
+    [...p.html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => ({
+      file: p.file,
+      css: m[1],
+    })),
   ),
 ]
 const unquote = (s) => s.trim().replace(/^['"]|['"]$/g, '')
@@ -416,7 +437,9 @@ for (const face of faces) {
   }
   for (const url of face.urls) {
     if (/^(https?:)?\/\//.test(url)) {
-      fail(`@font-face "${face.family}" loads ${url} from another host (breaks the no-cookie-banner guarantee)`)
+      fail(
+        `@font-face "${face.family}" loads ${url} from another host (breaks the no-cookie-banner guarantee)`,
+      )
     } else if (!url.startsWith('/')) {
       fail(`@font-face "${face.family}" loads "${url}", which is not a root-relative path`)
     } else if (!fs.existsSync(path.join(DIST, url.slice(1)))) {
@@ -457,10 +480,14 @@ if (!pairing) {
   ]) {
     const lead = unquote((vars[token] ?? '').split(',')[0])
     if (family && lead !== family) {
-      fail(`stijl.letterontwerp "${letterontwerp}" means ${family} for ${token}, but the page leads with "${lead}"`)
+      fail(
+        `stijl.letterontwerp "${letterontwerp}" means ${family} for ${token}, but the page leads with "${lead}"`,
+      )
     }
     if (!family && !SYSTEEMFAMILIES.has(lead)) {
-      fail(`stijl.letterontwerp "${letterontwerp}" is the system stack, but ${token} leads with "${lead}"`)
+      fail(
+        `stijl.letterontwerp "${letterontwerp}" is the system stack, but ${token} leads with "${lead}"`,
+      )
     }
   }
 }
@@ -501,10 +528,27 @@ if (bedrijf.bedrijfstype === 'locatie') {
     '/voorwaarden/ describes offertes and oplevering, which a locatie bedrijf does not have: rewrite it before this site sells anything',
   )
 }
+// The money usp, on a voorstel, where the checked schema deliberately does not demand it.
+// A drafted voorstel may not invent a price policy for a business that never published one
+// (app.sitedraft rule 3 forbids prices outright), so the requirement lands at modus: live --
+// which is a build failure the founder would otherwise meet for the first time on the day the
+// site goes live. Said here instead, while there is still a conversation to have about it.
+if (isPreview && bedrijf.bedrijfstype !== 'locatie') {
+  const GELD =
+    /prijs|prijzen|tarief|uurtarief|voorrijkosten|offerte|kosten|euro|€|gratis|vast bedrag|no cure/i
+  if (!(cfg.usps ?? []).some((u) => GELD.test(u))) {
+    notes.push(
+      'no usp answers the money question, which modus: live will require: ask the client for one ' +
+        '("vaste prijs vooraf", "geen voorrijkosten in <plaats>", "uurtarief EUR 65") before go-live',
+    )
+  }
+}
 
 const mode = isPreview ? 'VOORSTEL (preview)' : 'LIVE'
 if (failures.length) {
-  console.error(`\n[verify-site] ${slug} (${mode}): ${failures.length} FAILURE(S) over ${pages.length} pages:\n`)
+  console.error(
+    `\n[verify-site] ${slug} (${mode}): ${failures.length} FAILURE(S) over ${pages.length} pages:\n`,
+  )
   for (const f of failures) console.error(`  ✗ ${f}`)
   console.error('')
   process.exit(1)

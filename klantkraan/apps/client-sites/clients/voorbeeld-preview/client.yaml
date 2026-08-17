@@ -56,6 +56,11 @@ teksten:
   slot_kop: 'Vertel wat er lekt'
   slot_tekst: 'Bel ons en leg uit wat u ziet of hoort. U hoort meteen of het kan wachten en wanneer wij kunnen komen.'
 
+# Vier diensten in een 3-koloms raster laten er een alleen op de laatste regel achter
+# (tell-lint regel 5, weesrij). `lijst` is de vorm die dat niet kan; zie T3.
+indeling:
+  diensten: lijst
+
 diensten:
   - naam: 'Lekkage opsporen en verhelpen'
     omschrijving: 'Wij zoeken de oorzaak van de lekkage op en repareren hem meteen.'
