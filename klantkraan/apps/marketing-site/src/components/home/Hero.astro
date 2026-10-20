@@ -177,6 +177,57 @@ const { t } = Astro.props
   }
   .kk-h1 .on {
     color: var(--color-sodium);
+    text-shadow: 0 0 0.45em rgba(255, 184, 77, 0.26);
+  }
+
+  /* The signature moment (V3): "aan." starts unlit and switches on as the
+   * customer's message lands in the thread (bubble delay .9s). Two starter blips,
+   * then a slow warm-up from deep amber to sodium, the way a street lamp catches,
+   * while the light behind the thread blooms in step. CSS only, so it replays on
+   * every ClientRouter visit. Outside no-preference the word is simply lit:
+   * the global reduced-motion rule shortens durations but keeps delays, which
+   * would leave the word dark for a second. */
+  @media (prefers-reduced-motion: no-preference) {
+    .kk-h1 .on {
+      animation: kk-ignite 1.5s linear 1s both;
+    }
+    .kk-thread-wrap::before {
+      animation: kk-bloom 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) 1.35s both;
+    }
+  }
+  @keyframes kk-ignite {
+    0%,
+    9%,
+    21% {
+      color: #3c4f4d;
+      text-shadow: none;
+    }
+    5% {
+      color: #d4843a;
+      text-shadow: 0 0 0.3em rgba(255, 150, 60, 0.3);
+    }
+    15% {
+      color: #e3953f;
+      text-shadow: 0 0 0.35em rgba(255, 160, 70, 0.32);
+    }
+    30% {
+      color: #b4622c;
+      text-shadow: 0 0 0.2em rgba(255, 130, 60, 0.18);
+    }
+    100% {
+      color: var(--color-sodium);
+      text-shadow: 0 0 0.45em rgba(255, 184, 77, 0.26);
+    }
+  }
+  @keyframes kk-bloom {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   .kk-sub {
     margin-top: 1.5rem;

@@ -935,7 +935,11 @@ CSP is script-src 'self': bundle everything, no GSAP, no CDN.
       and >=640px tall; phones get the full thread with per-message settle; reduced motion or no
       support gets the finished thread. Verified in Chrome at 1200x654 and 390px. The installateur
       photo left with Duties (V4/V5). EN/ES still render Duties until V6. NOT DEPLOYED.
-- [ ] V3: hero signature moment: the light coming on as a message arrives. One animation, done well.
+- [x] V3: hero signature moment: "aan." starts unlit and switches on as the customer's message
+      lands (two starter blips, then a street-lamp warm-up to sodium) while the halo behind the
+      thread blooms. CSS only, gated on reduced-motion no-preference (the global rule keeps delays,
+      which would leave the word dark). Shared Hero, so EN/ES get it too. Verified frames in Chrome.
+      NOT DEPLOYED.
 - [ ] V4: two image ratios site-wide, cut the homepage to ~6 sections, test a display face.
 - [ ] V5: real photos of the founder and pilot businesses (FOUNDER: phone + daylight is enough).
 - [ ] V6: carry V0 to the EN and ES homepages, then `/deploy-site`.
