@@ -16,9 +16,9 @@ const hero = {
   h1a: 'Het licht blijft',
   h1on: 'aan.',
   sub:
-    'U staat op de ladder, op het dak, of u slaapt. Uw beste klant heeft nú een vraag. De ' +
-    'digitale receptionist van Klantkraan beantwoordt hem op uw site en WhatsApp, plant de ' +
-    'afspraak en vangt elk terugbelverzoek. Dag en nacht.',
+    'U staat op een dak of u ligt al in bed, en net dan stelt een klant een vraag. De digitale ' +
+    'receptionist van Klantkraan beantwoordt hem op uw site en WhatsApp, plant de afspraak en ' +
+    'noteert wie teruggebeld wil worden. Ook om elf uur \'s avonds.',
   ctaPrimary: 'Start vandaag',
   ctaPrimaryHref: '/aanmelden/',
   ctaGhost: 'Probeer de demo',
@@ -41,8 +41,7 @@ const hero = {
 }
 
 const duties = {
-  eyebrow: 'De nachtdienst',
-  heading: 'Wat de receptionist overneemt terwijl u werkt.',
+  heading: 'Wat de receptionist doet terwijl u aan het werk bent.',
   photoAlt: 'Installateur die met een zaklamp een buitenunit nakijkt',
   items: [
     {
@@ -53,23 +52,22 @@ const duties = {
     {
       icon: 'calendar-check' as const,
       title: 'Plant de afspraak',
-      text: 'Direct in uw agenda, alleen op momenten die écht vrij zijn. De klant kiest een slot, u ziet het meteen.',
+      text: 'Direct in uw agenda, alleen op momenten die vrij zijn. De klant kiest een slot, u ziet het meteen.',
     },
     {
       icon: 'phone-call' as const,
       title: 'Vangt het terugbelverzoek',
-      text: 'Kan het niet meteen? De receptionist noteert naam, nummer en klus. U belt terug wie er écht toe doet.',
+      text: 'Kan het niet meteen? De receptionist noteert naam, nummer en klus. U kiest zelf wie u terugbelt.',
     },
   ],
 }
 
 const demo = {
   eyebrow: 'Probeer het zelf',
-  heading: 'Praat met de receptionist. Nu, zonder account.',
+  heading: 'Stel hem een vraag zoals uw klant dat zou doen.',
   sub:
-    'Geen belrobot die klinkt als een collega, maar tekst op de plek waar uw klant al zit: ' +
-    'uw site en WhatsApp. Stel een vraag of plan een afspraak, precies zoals een klant zou ' +
-    'doen, direct in uw browser.',
+    'Dit is een voorbeeldbedrijf, een installateur. Typ een vraag of plan een afspraak. U ' +
+    'heeft er geen account voor nodig.',
   asksLabel: 'Stel bijvoorbeeld:',
   asks: [
     'Wat kost het vervangen van een kraan?',
@@ -85,11 +83,10 @@ const demo = {
 }
 
 const kosten = {
-  eyebrow: 'De rekening van een donkere avond',
-  heading: 'Elke onbeantwoorde vraag is een opdracht die naar de concurrent loopt.',
+  heading: 'Wat gemiste oproepen u per maand kosten.',
   sub:
-    'Dit is een voorbeeld. Reken het na met uw eigen aantallen, dan ziet u precies wat een ' +
-    'maand gemiste oproepen u kost.',
+    'Wie geen antwoord krijgt, belt de volgende in de lijst. Hieronder een voorbeeld met 40 ' +
+    'oproepen per week. In de rekentool vult u uw eigen aantallen in.',
   ariaLabel: 'Voorbeeldberekening van misgelopen omzet',
   cap: 'Voorbeeld · 40 oproepen per week',
   lines: [
@@ -105,21 +102,19 @@ const kosten = {
 }
 
 const eerlijk = {
-  eyebrow: 'Eerlijk over AI',
-  heading: 'Het licht staat aan. Er valt niets te verbergen.',
+  heading: 'Uw klant weet altijd dat hij met een assistent praat.',
   quote: 'U chat met een digitale assistent.',
   bullets: [
-    'Zo begint elk gesprek, voordat er iets anders gebeurt.',
-    'Vanaf 2 augustus 2026 is die melding verplicht onder artikel 50 van de EU AI Act. Wij doen het nu al.',
-    'Waar een belrobot wordt verkocht met "niemand hoort het verschil", zegt onze receptionist gewoon wie hij is. Uw klant weet waar hij aan toe is, u riskeert geen boete.',
+    'Met deze zin begint elk gesprek. U kunt hem niet uitzetten.',
+    'Sinds 2 augustus 2026 is die melding verplicht onder artikel 50 van de EU AI Act.',
+    'Sommige belrobots worden verkocht met de belofte dat niemand het verschil hoort. Daar loopt u een boete mee op. Met Klantkraan niet.',
   ],
   linkLabel: 'Lees de volledige disclosure',
   linkHref: '/legal/ai-disclosure/',
 }
 
 const starten = {
-  eyebrow: 'Zo start u',
-  heading: 'Vandaag aangemeld, deze week live.',
+  heading: 'Zo start u. Binnen een week staat hij live.',
   steps: [
     {
       title: 'Meld u aan',
@@ -138,12 +133,11 @@ const starten = {
 }
 
 const roadmap = {
-  eyebrow: 'Waar dit heen gaat',
-  heading: 'Vandaag de voordeur. Straks het kantoor.',
+  heading: 'Wat hij nu doet, en wat er nog komt.',
   sub:
-    'De receptionist is het begin, niet het eindpunt. Hij neemt de voordeur over: alles wat ' +
-    'binnenkomt terwijl u werkt. Daarachter zit het papierwerk dat u nu ’s avonds aan de ' +
-    'keukentafel doet. Daar werken we naartoe, samen met de eerste klanten.',
+    'Nu vangt de receptionist alles op wat binnenkomt terwijl u werkt. Daarna willen we het ' +
+    'papierwerk aanpakken dat u nu ’s avonds aan de keukentafel doet. Dat bouwen we samen met ' +
+    'de eerste klanten.',
   nowLabel: 'Wat hij nu doet',
   now: [
     'Beantwoordt vragen op uw site en WhatsApp, dag en nacht',
@@ -160,16 +154,16 @@ const roadmap = {
     'Factuurherinneringen voor wat blijft openstaan',
   ],
   footnote:
-    'Welke van deze als eerste komt, bepalen de klanten die er dan zijn, niet wij. Vraagt u iets ' +
-    'wat er niet in zit? Dan zeggen we dat, en wanneer het er wel is.',
+    'Wat als eerste komt, hangt af van waar klanten om vragen. Vraagt u iets wat er nog niet in ' +
+    'zit? Dan zeggen we dat, en wanneer het er wel is.',
 }
 
 const finalCta = {
-  h2a: 'Zet het licht',
-  h2on: 'aan.',
+  h2a: 'Probeer het eerst',
+  h2on: 'zelf.',
   sub:
-    'Probeer de demo en stel de receptionist een vraag alsof u een klant bent. Bevalt het? Meld ' +
-    'u aan en wij regelen de rest, u hoeft niets te bouwen.',
+    'Stel de receptionist in de demo een vraag alsof u een klant bent. Bevalt het? Meld u aan, ' +
+    'dan bellen we binnen één werkdag om hem voor uw bedrijf in te richten.',
   primary: { label: 'Start vandaag', href: '/aanmelden/' },
   ghosts: [
     { label: 'Probeer de demo', href: '/demo/' },

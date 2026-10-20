@@ -25,7 +25,7 @@ interface Duty {
 
 interface Props {
   t: {
-    eyebrow: string
+    eyebrow?: string
     heading: string
     photoAlt: string
     items: Duty[]
@@ -51,8 +51,8 @@ const { t } = Astro.props
 
   <div class="kk-duties-body">
     <div class="kk-duties-head">
-      <span class="eyebrow">{t.eyebrow}</span>
-      <h2 class="mt-3.5 font-display text-h2 text-balance">{t.heading}</h2>
+      {t.eyebrow && <span class="eyebrow">{t.eyebrow}</span>}
+      <h2 class:list={['font-display text-h2 text-balance', t.eyebrow && 'mt-3.5']}>{t.heading}</h2>
     </div>
 
     <ul class="kk-duties-list divide-y divide-(--color-line)" role="list">

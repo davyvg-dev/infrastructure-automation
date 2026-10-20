@@ -1,13 +1,13 @@
 ---
 /*
- * Honest-about-AI: the disclosure quote plus short scannable points instead of a
- * paragraph slab. Same bullet pattern /demo uses for its art. 50 section.
+ * Honest-about-AI. Deliberately NOT a card: every other section on the page is
+ * head + panel, and the one sentence the product opens with reads louder as a
+ * big pull quote on bare night than boxed in like a feature. The points sit
+ * below it as plain columns over a hairline, no check icons.
  */
-import Icon from '../Icon.astro'
-
 interface Props {
   t: {
-    eyebrow: string
+    eyebrow?: string
     heading: string
     quote: string
     bullets: string[]
@@ -24,50 +24,47 @@ const { t } = Astro.props
   class="scroll-mt-24 border-y border-(--color-line) bg-[rgba(0,0,0,0.26)] py-12 md:py-18"
 >
   <div class="mx-auto max-w-5xl px-6">
-    <span class="eyebrow">{t.eyebrow}</span>
-    <h2 class="mt-3.5 max-w-[18em] font-display text-h2 text-balance">{t.heading}</h2>
+    {t.eyebrow && <span class="eyebrow">{t.eyebrow}</span>}
+    <h2 class:list={['max-w-[18em] font-display text-h2 text-balance', t.eyebrow && 'mt-3.5']}>{t.heading}</h2>
 
-    <div class="kk-trans mt-7">
-      <p class="quote">&ldquo;{t.quote}&rdquo;</p>
-      <ul class="mt-6 space-y-3" role="list">
-        {
-          t.bullets.map((bullet) => (
-            <li class="grid grid-cols-[auto_1fr] items-start gap-3 text-body text-[#cdd8d5]">
-              <Icon name="check" class="mt-1 h-4 w-4 text-(--color-sodium)" />
-              <span>{bullet}</span>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="mt-5 text-small">
-        <a href={t.linkHref} class="text-(--color-sodium) underline underline-offset-2">
-          {t.linkLabel}
-        </a>
-      </p>
+    <p class="kk-quote">&ldquo;{t.quote}&rdquo;</p>
+    <div class="kk-points">
+      {t.bullets.map((bullet) => <p>{bullet}</p>)}
     </div>
+    <p class="mt-6 text-small">
+      <a href={t.linkHref} class="text-(--color-sodium) underline underline-offset-2">
+        {t.linkLabel}
+      </a>
+    </p>
   </div>
 </section>
 
 <style>
-  .kk-trans {
-    background: var(--color-panel);
-    border: 1px solid var(--color-line);
-    border-left: 3px solid var(--color-sodium);
-    border-radius: 1rem;
-    padding: 2rem 2.25rem;
-    max-width: 760px;
-  }
-  /* The sentence the product opens with, set as a sentence — it used to sit in a
-   * dashed mono box, which made the most human line on the page look like a
-   * config value. */
-  .kk-trans .quote {
-    margin: 0;
+  .kk-quote {
+    margin: 2rem 0 0;
     font-family: var(--font-display);
-    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
+    font-size: clamp(2rem, 6vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     color: var(--color-sodium-soft);
     text-wrap: balance;
+  }
+  .kk-points {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-line);
+    color: #cdd8d5;
+  }
+  .kk-points p {
+    margin: 0;
+  }
+  @media (min-width: 768px) {
+    .kk-points {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.5rem;
+    }
   }
 </style>
