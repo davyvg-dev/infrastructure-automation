@@ -163,6 +163,45 @@
   }
 }
 
+/* Lenis (src/scripts/smooth-scroll.ts): the two rules from its lenis.css that
+ * apply here. Iframes stop eating the wheel mid-glide, so the page does not
+ * stall when the demo chat passes under the cursor. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Sections settle into place as they enter the viewport, tied to the scroll
+ * itself rather than a timer, so it reads as the page moving, not as effects
+ * firing. Progressive enhancement: without scroll-driven animation support
+ * (or with reduced motion) everything is simply there, nothing is hidden
+ * waiting for JS. The first section is the page hero and is never animated. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main > section:not(:first-child) > .mx-auto > * {
+      /* A fixed distance, not a percentage of the element: a tall grid would
+       * otherwise still be half-faded while its top sits mid-screen. */
+      animation: kk-settle cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 14rem;
+    }
+  }
+}
+
+@keyframes kk-settle {
+  from {
+    opacity: 0;
+    transform: translateY(1.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

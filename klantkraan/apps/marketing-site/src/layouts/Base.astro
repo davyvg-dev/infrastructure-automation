@@ -151,6 +151,9 @@ const siteSchema = {
     }
     {!noindex && <script type="application/ld+json" set:html={JSON.stringify(siteSchema)} />}
     <ClientRouter />
+    <script>
+      import '../scripts/smooth-scroll'
+    </script>
   </head>
   <body class={stickyCta ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
     <a
