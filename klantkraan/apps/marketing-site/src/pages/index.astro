@@ -1,9 +1,9 @@
 ---
 import Base from '../layouts/Base.astro'
 import CursusForm from '../components/CursusForm.astro'
+import Conversation from '../components/home/Conversation.astro'
 import CostReceipt from '../components/home/CostReceipt.astro'
 import DemoSection from '../components/home/DemoSection.astro'
-import Duties from '../components/home/Duties.astro'
 import FinalCta from '../components/home/FinalCta.astro'
 import Hero from '../components/home/Hero.astro'
 import HowItWorks from '../components/home/HowItWorks.astro'
@@ -40,25 +40,58 @@ const hero = {
   stampDetail: 'di 09:00 · terugbelverzoek klaar voor de eigenaar',
 }
 
-const duties = {
+const gesprek = {
   heading: 'Wat de receptionist doet terwijl u aan het werk bent.',
-  photoAlt: 'Installateur die met een zaklamp een buitenunit nakijkt',
-  items: [
+  steps: [
     {
-      icon: 'message-square' as const,
-      title: 'Beantwoordt elke vraag',
-      text: 'Kent uw tarieven, diensten en werkgebied. Geen verzonnen prijzen, alleen wat u heeft ingesteld.',
+      title: 'Beantwoordt de vraag',
+      text: 'Met uw diensten, tarieven en werkgebied. Geen verzonnen prijzen, alleen wat u heeft ingesteld.',
     },
     {
-      icon: 'calendar-check' as const,
       title: 'Plant de afspraak',
-      text: 'Direct in uw agenda, alleen op momenten die vrij zijn. De klant kiest een slot, u ziet het meteen.',
+      text: 'Alleen op momenten die in uw agenda vrij zijn. U ziet het meteen.',
     },
     {
-      icon: 'phone-call' as const,
-      title: 'Vangt het terugbelverzoek',
-      text: 'Kan het niet meteen? De receptionist noteert naam, nummer en klus. U kiest zelf wie u terugbelt.',
+      title: 'Noteert wat niet meteen kan',
+      text: 'Naam, nummer en klus. U kiest zelf wie u terugbelt.',
     },
+  ],
+  threadName: 'Uw installatiebedrijf',
+  threadSub: 'Voorbeeldgesprek',
+  day: 'Dinsdag 22:14',
+  disclosure: 'U chat met een digitale assistent.',
+  threadLabel: 'Voorbeeldgesprek tussen een klant en de digitale receptionist',
+  messages: [
+    {
+      from: 'klant' as const,
+      step: 0,
+      text: 'Goedenavond, mijn cv-ketel doet het niet meer en de druk staat op 0,6. Komen jullie ook in Zoetermeer?',
+    },
+    {
+      from: 'receptionist' as const,
+      step: 0,
+      text: 'Ja, Zoetermeer valt binnen ons werkgebied. Een druk onder de 1 bar kan de oorzaak zijn. Zal ik een monteur voor u inplannen?',
+    },
+    { from: 'klant' as const, step: 1, text: 'Graag, zo vroeg mogelijk.' },
+    {
+      from: 'receptionist' as const,
+      step: 1,
+      text: 'Morgen kan het om 08:00 of om 13:30. Wat past u?',
+    },
+    {
+      from: 'klant' as const,
+      step: 2,
+      text: '8 uur. En kan iemand me een keer bellen over een nieuwe ketel?',
+    },
+    {
+      from: 'receptionist' as const,
+      step: 2,
+      text: 'Staat erin. Ik geef het terugbelverzoek door, dan neemt het bedrijf contact met u op.',
+    },
+  ],
+  slips: [
+    { strong: 'INGEPLAND', detail: 'wo 08:00 · cv-ketel, druk 0,6 bar · Zoetermeer', step: 2 },
+    { strong: 'TERUGBELLEN', detail: 'offerte nieuwe ketel', step: 2 },
   ],
 }
 
@@ -178,7 +211,7 @@ const finalCta = {
   centered={false}
 >
   <Hero t={hero} />
-  <Duties t={duties} />
+  <Conversation t={gesprek} />
   <DemoSection t={demo} />
   <CostReceipt t={kosten} />
   <Transparency t={eerlijk} />

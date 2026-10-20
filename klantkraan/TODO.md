@@ -915,6 +915,31 @@ fully loaded ~400 -> **2,000-3,500**, core TAM 143k -> **~6,200** (SAM ~2,000), 
       wall, and four planning docs disagree on when 12 clients happens. Not binding yet — at 0
       clients the constraint is initiation, not throughput.
 
+### V. Marketing site — less AI, more Mercury (started 2026-10-20)
+
+Founder: "as aesthetically pleasing and not AI-like as possible", Mercury as the reference
+(loves the smooth scroll). Also mined: Rosie (show the product working), Jobber (named real
+tradespeople), Moneybird (Dutch tone, screenshot under the hero), Linear (type as hero). The
+AI tell is sameness: every section eyebrow + heading + three icon cards. Keep the amber.
+CSP is script-src 'self': bundle everything, no GSAP, no CDN.
+
+- [x] V0: NL homepage copy + layout pass (eyebrows dropped, HowItWorks/Transparency/CostReceipt
+      de-carded) (af81945). Committed apart from the self-install thread, which is still
+      uncommitted (aanmelden/bedankt/footer/demo restart/installeren). EN/ES homepages not done yet.
+- [x] V1: smooth scroll + scroll-in reveals (548775c). Lenis 1.3.26 rebuilt per astro:page-load;
+      reveals are CSS `animation-timeline: view()`, progressive enhancement. Verified in Chrome.
+      Same-page anchor links still jump natively, on purpose (ClientRouter owns them). NOT DEPLOYED.
+- [x] V2: Duties replaced on the NL homepage by `home/Conversation.astro`: pinned 300vh section,
+      a cv-ketel conversation at 22:14 written by the scroll (named view timeline, no JS), duty
+      list lights up per step, ends on INGEPLAND + TERUGBELLEN slips. Pins only at >=768px wide
+      and >=640px tall; phones get the full thread with per-message settle; reduced motion or no
+      support gets the finished thread. Verified in Chrome at 1200x654 and 390px. The installateur
+      photo left with Duties (V4/V5). EN/ES still render Duties until V6. NOT DEPLOYED.
+- [ ] V3: hero signature moment: the light coming on as a message arrives. One animation, done well.
+- [ ] V4: two image ratios site-wide, cut the homepage to ~6 sections, test a display face.
+- [ ] V5: real photos of the founder and pilot businesses (FOUNDER: phone + daylight is enough).
+- [ ] V6: carry V0 to the EN and ES homepages, then `/deploy-site`.
+
 ## Phase 0 — Planning docs
 
 ### `00-MASTER-PLAN.md` + `README.md`
