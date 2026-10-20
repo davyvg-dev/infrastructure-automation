@@ -928,18 +928,18 @@ CSP is script-src 'self': bundle everything, no GSAP, no CDN.
       uncommitted (aanmelden/bedankt/footer/demo restart/installeren). EN/ES homepages not done yet.
 - [x] V1: smooth scroll + scroll-in reveals (548775c). Lenis 1.3.26 rebuilt per astro:page-load;
       reveals are CSS `animation-timeline: view()`, progressive enhancement. Verified in Chrome.
-      Same-page anchor links still jump natively, on purpose (ClientRouter owns them). NOT DEPLOYED.
+      Same-page anchor links still jump natively, on purpose (ClientRouter owns them). Deployed 2026-10-20 (16a4dd00).
 - [x] V2: Duties replaced on the NL homepage by `home/Conversation.astro`: pinned 300vh section,
       a cv-ketel conversation at 22:14 written by the scroll (named view timeline, no JS), duty
       list lights up per step, ends on INGEPLAND + TERUGBELLEN slips. Pins only at >=768px wide
       and >=640px tall; phones get the full thread with per-message settle; reduced motion or no
       support gets the finished thread. Verified in Chrome at 1200x654 and 390px. The installateur
-      photo left with Duties (V4/V5). EN/ES still render Duties until V6. NOT DEPLOYED.
+      photo left with Duties (V4/V5). EN/ES still render Duties until V6. Deployed 2026-10-20 (16a4dd00).
 - [x] V3: hero signature moment: "aan." starts unlit and switches on as the customer's message
       lands (two starter blips, then a street-lamp warm-up to sodium) while the halo behind the
       thread blooms. CSS only, gated on reduced-motion no-preference (the global rule keeps delays,
       which would leave the word dark). Shared Hero, so EN/ES get it too. Verified frames in Chrome.
-      NOT DEPLOYED.
+      Deployed 2026-10-20 (16a4dd00), built from a clean HEAD worktree so the uncommitted self-install copy stayed out.
 - [ ] V4: two image ratios site-wide, cut the homepage to ~6 sections, test a display face.
 - [ ] V5: real photos of the founder and pilot businesses (FOUNDER: phone + daylight is enough).
 - [ ] V6: carry V0 to the EN and ES homepages, then `/deploy-site`.
