@@ -1,0 +1,552 @@
+{
+  "name": "client-onboarding",
+  "nodes": [
+    {
+      "id": "44444444-4444-4444-8444-444444444441",
+      "name": "Webhook - SignWell Signed",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 400],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "signwell/signed",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444442",
+      "name": "Parse SignWell Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 400],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Expected: { document_id, client_id, tier (Lite|Pro|Max), owner_voornaam, owner_e164, owner_email, bedrijfsnaam, slug, provider, tally_short_url, loom_link, founder_voornaam, founder_whatsapp }\nconst body = items[0].json.body || items[0].json;\nif (!['Lite','Pro','Max'].includes(body.tier)) {\n  throw new Error('Invalid tier: ' + body.tier);\n}\nfor (const k of ['client_id','owner_voornaam','owner_e164','owner_email','bedrijfsnaam','slug']) {\n  if (!body[k]) throw new Error('Missing required field: ' + k);\n}\nreturn [{ json: body }];"
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444443",
+      "name": "Suppression Check (Owner SMS)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [640, 400],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT EXISTS(SELECT 1 FROM suppression_list WHERE e164_hash = encode(digest($1, 'sha256'), 'hex')) AS sms_suppressed, EXISTS(SELECT 1 FROM suppression_list WHERE email_hash = encode(digest(lower($2), 'sha256'), 'hex')) AS email_suppressed;",
+        "options": {
+          "queryReplacement": "={{ $('Parse SignWell Payload').item.json.owner_e164 }},={{ $('Parse SignWell Payload').item.json.owner_email }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [640, 600],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"onboarding_started\" }"
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444445",
+      "name": "Resend - Day 0 Welcome Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [860, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Klantkraan <welkom@klantkraan.nl>\",\n  \"to\": [\"{{ $('Parse SignWell Payload').item.json.owner_email }}\"],\n  \"subject\": \"Welkom bij Klantkraan — eerste stap\",\n  \"text\": \"Hoi {{ $('Parse SignWell Payload').item.json.owner_voornaam }},\\n\\nWelkom! De komende 8 dagen ben ik vooral op de achtergrond bezig. Wat we van jou nodig hebben:\\n\\n1. Vul de intake in (12 minuten): {{ $('Parse SignWell Payload').item.json.tally_short_url }}\\n2. Bekijk dit korte filmpje (90 sec) over wat er deze week gebeurt: {{ $('Parse SignWell Payload').item.json.loom_link }}\\n3. Donderdag dag 4 stuur ik je de doorschakel-instructies voor {{ $('Parse SignWell Payload').item.json.provider }}.\\n\\nVragen tussendoor? App me direct op {{ $('Parse SignWell Payload').item.json.founder_whatsapp }}.\\n\\nTot zo,\\n{{ $('Parse SignWell Payload').item.json.founder_voornaam }}\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Resend - API Key"
+        }
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444446",
+      "name": "CM.com SMS - Day 0 Welcome",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1080, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"Klantkraan\",\n      \"to\": [{ \"number\": \"={{ $('Parse SignWell Payload').item.json.owner_e164 }}\" }],\n      \"body\": { \"content\": \"Welkom {{ $('Parse SignWell Payload').item.json.owner_voornaam }}! Klantkraan is begonnen. Vul deze intake (12 min, vanaf je telefoon): {{ $('Parse SignWell Payload').item.json.tally_short_url }} Vragen? App {{ $('Parse SignWell Payload').item.json.founder_whatsapp }}\" },\n      \"reference\": \"onboarding-d0-{{ $('Parse SignWell Payload').item.json.client_id }}\"\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444447",
+      "name": "Synthflow - Create Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.synthflow.ai/v2/agents",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $('Parse SignWell Payload').item.json.bedrijfsnaam }} - receptionist\",\n  \"language\": \"nl-NL\",\n  \"template\": \"klantkraan-nl-loodgieter-v1\",\n  \"variables\": {\n    \"bedrijfsnaam\": \"{{ $('Parse SignWell Payload').item.json.bedrijfsnaam }}\",\n    \"agent_naam\": \"Sanne\",\n    \"owner_naam\": \"{{ $('Parse SignWell Payload').item.json.owner_voornaam }}\"\n  },\n  \"ai_act_disclosure_enabled\": true,\n  \"metadata\": { \"client_id\": \"{{ $('Parse SignWell Payload').item.json.client_id }}\" }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Synthflow - API Key"
+        }
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444448",
+      "name": "Cal.com - Create Event Types",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1520, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cal.com/v2/event-types",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "cal-api-version", "value": "2024-06-14" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"lengthInMinutes\": 60,\n  \"title\": \"Afspraak — {{ $('Parse SignWell Payload').item.json.bedrijfsnaam }}\",\n  \"slug\": \"{{ $('Parse SignWell Payload').item.json.slug }}\",\n  \"description\": \"Afspraak ingepland via Klantkraan AI receptionist.\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Cal.com - API Key"
+        }
+      }
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444449",
+      "name": "Update Client Status",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1740, 280],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE clients SET onboarding_stage = 'day-0', onboarding_started_at = NOW() WHERE id = $1::uuid;",
+        "options": {
+          "queryReplacement": "={{ $('Parse SignWell Payload').item.json.client_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "4444444a-4444-4444-8444-44444444444a",
+      "name": "Healthchecks Ping D0",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1960, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_CLIENT_ONBOARDING }}/day-0",
+        "options": {}
+      }
+    },
+    {
+      "id": "4444444b-4444-4444-8444-44444444444b",
+      "name": "Wait Day 7",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2180, 280],
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "4444444c-4444-4444-8444-44444444444c",
+      "name": "CM.com SMS - Day 7 Check-in",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2400, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"Klantkraan\",\n      \"to\": [{ \"number\": \"={{ $('Parse SignWell Payload').item.json.owner_e164 }}\" }],\n      \"body\": { \"content\": \"{{ $('Parse SignWell Payload').item.json.owner_voornaam }}, dag 7: morgen ga je LIVE bij {{ $('Parse SignWell Payload').item.json.bedrijfsnaam }}! Vragen? App {{ $('Parse SignWell Payload').item.json.founder_whatsapp }}\" }\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "4444444d-4444-4444-8444-44444444444d",
+      "name": "Resend - Day 7 Status Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2620, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Klantkraan <welkom@klantkraan.nl>\",\n  \"to\": [\"{{ $('Parse SignWell Payload').item.json.owner_email }}\"],\n  \"subject\": \"Dag 7 — morgen gaan we live\",\n  \"text\": \"Hoi {{ $('Parse SignWell Payload').item.json.owner_voornaam }},\\n\\nMorgen activeren we de doorschakeling. Dashboard: https://klantkraan.nl/r/{{ $('Parse SignWell Payload').item.json.slug }}\\n\\n{{ $('Parse SignWell Payload').item.json.founder_voornaam }}\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Resend - API Key"
+        }
+      }
+    },
+    {
+      "id": "4444444e-4444-4444-8444-44444444444e",
+      "name": "Healthchecks Ping D7",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2840, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_CLIENT_ONBOARDING }}/day-7",
+        "options": {}
+      }
+    },
+    {
+      "id": "4444444f-4444-4444-8444-44444444444f",
+      "name": "Wait Day 14",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [3060, 280],
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "44444450-4444-4444-8444-444444444450",
+      "name": "CM.com SMS - Day 14 Check-in",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3280, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"Klantkraan\",\n      \"to\": [{ \"number\": \"={{ $('Parse SignWell Payload').item.json.owner_e164 }}\" }],\n      \"body\": { \"content\": \"{{ $('Parse SignWell Payload').item.json.owner_voornaam }}, dag 14: 2 weken live. Check-in call vandaag 5 min — zie inbox.\" }\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "44444451-4444-4444-8444-444444444451",
+      "name": "Healthchecks Ping D14",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3500, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_CLIENT_ONBOARDING }}/day-14",
+        "options": {}
+      }
+    },
+    {
+      "id": "44444452-4444-4444-8444-444444444452",
+      "name": "Wait Day 21",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [3720, 280],
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "44444453-4444-4444-8444-444444444453",
+      "name": "CM.com SMS - Day 21 Check-in",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3940, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"Klantkraan\",\n      \"to\": [{ \"number\": \"={{ $('Parse SignWell Payload').item.json.owner_e164 }}\" }],\n      \"body\": { \"content\": \"{{ $('Parse SignWell Payload').item.json.owner_voornaam }}, dag 21: alles draait. Weekly mail komt maandag. Dashboard: https://klantkraan.nl/r/{{ $('Parse SignWell Payload').item.json.slug }}\" }\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "44444454-4444-4444-8444-444444444454",
+      "name": "Healthchecks Ping D21",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4160, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_CLIENT_ONBOARDING }}/day-21",
+        "options": {}
+      }
+    },
+    {
+      "id": "44444455-4444-4444-8444-444444444455",
+      "name": "Wait Day 30",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [4380, 280],
+      "parameters": {
+        "amount": 9,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "44444456-4444-4444-8444-444444444456",
+      "name": "Resend - Day 30 Review Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [4600, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"Klantkraan <welkom@klantkraan.nl>\",\n  \"to\": [\"{{ $('Parse SignWell Payload').item.json.owner_email }}\"],\n  \"subject\": \"Maand 1 review — top-3 recovered calls\",\n  \"text\": \"Hoi {{ $('Parse SignWell Payload').item.json.owner_voornaam }},\\n\\n30 dagen Klantkraan zit erop. Ik bel je vandaag voor de Month-1 review (15 min) + stuur je een Loom met de top-3 recovered calls van deze maand.\\n\\nDashboard: https://klantkraan.nl/r/{{ $('Parse SignWell Payload').item.json.slug }}\\n\\n{{ $('Parse SignWell Payload').item.json.founder_voornaam }}\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Resend - API Key"
+        }
+      }
+    },
+    {
+      "id": "44444457-4444-4444-8444-444444444457",
+      "name": "Mark Onboarding Complete",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [4820, 280],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE clients SET onboarding_stage = 'complete', onboarding_completed_at = NOW() WHERE id = $1::uuid;",
+        "options": {
+          "queryReplacement": "={{ $('Parse SignWell Payload').item.json.client_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "44444458-4444-4444-8444-444444444458",
+      "name": "Healthchecks Ping D30",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [5040, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_CLIENT_ONBOARDING }}/day-30",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - SignWell Signed": {
+      "main": [[
+        { "node": "Parse SignWell Payload", "type": "main", "index": 0 },
+        { "node": "Respond OK", "type": "main", "index": 0 }
+      ]]
+    },
+    "Parse SignWell Payload": {
+      "main": [[{ "node": "Suppression Check (Owner SMS)", "type": "main", "index": 0 }]]
+    },
+    "Suppression Check (Owner SMS)": {
+      "main": [[{ "node": "Resend - Day 0 Welcome Email", "type": "main", "index": 0 }]]
+    },
+    "Resend - Day 0 Welcome Email": {
+      "main": [[{ "node": "CM.com SMS - Day 0 Welcome", "type": "main", "index": 0 }]]
+    },
+    "CM.com SMS - Day 0 Welcome": {
+      "main": [[{ "node": "Synthflow - Create Agent", "type": "main", "index": 0 }]]
+    },
+    "Synthflow - Create Agent": {
+      "main": [[{ "node": "Cal.com - Create Event Types", "type": "main", "index": 0 }]]
+    },
+    "Cal.com - Create Event Types": {
+      "main": [[{ "node": "Update Client Status", "type": "main", "index": 0 }]]
+    },
+    "Update Client Status": {
+      "main": [[{ "node": "Healthchecks Ping D0", "type": "main", "index": 0 }]]
+    },
+    "Healthchecks Ping D0": {
+      "main": [[{ "node": "Wait Day 7", "type": "main", "index": 0 }]]
+    },
+    "Wait Day 7": {
+      "main": [[{ "node": "CM.com SMS - Day 7 Check-in", "type": "main", "index": 0 }]]
+    },
+    "CM.com SMS - Day 7 Check-in": {
+      "main": [[{ "node": "Resend - Day 7 Status Email", "type": "main", "index": 0 }]]
+    },
+    "Resend - Day 7 Status Email": {
+      "main": [[{ "node": "Healthchecks Ping D7", "type": "main", "index": 0 }]]
+    },
+    "Healthchecks Ping D7": {
+      "main": [[{ "node": "Wait Day 14", "type": "main", "index": 0 }]]
+    },
+    "Wait Day 14": {
+      "main": [[{ "node": "CM.com SMS - Day 14 Check-in", "type": "main", "index": 0 }]]
+    },
+    "CM.com SMS - Day 14 Check-in": {
+      "main": [[{ "node": "Healthchecks Ping D14", "type": "main", "index": 0 }]]
+    },
+    "Healthchecks Ping D14": {
+      "main": [[{ "node": "Wait Day 21", "type": "main", "index": 0 }]]
+    },
+    "Wait Day 21": {
+      "main": [[{ "node": "CM.com SMS - Day 21 Check-in", "type": "main", "index": 0 }]]
+    },
+    "CM.com SMS - Day 21 Check-in": {
+      "main": [[{ "node": "Healthchecks Ping D21", "type": "main", "index": 0 }]]
+    },
+    "Healthchecks Ping D21": {
+      "main": [[{ "node": "Wait Day 30", "type": "main", "index": 0 }]]
+    },
+    "Wait Day 30": {
+      "main": [[{ "node": "Resend - Day 30 Review Email", "type": "main", "index": 0 }]]
+    },
+    "Resend - Day 30 Review Email": {
+      "main": [[{ "node": "Mark Onboarding Complete", "type": "main", "index": 0 }]]
+    },
+    "Mark Onboarding Complete": {
+      "main": [[{ "node": "Healthchecks Ping D30", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20",
+    "notes": "Long-running workflow with multiple Wait nodes. Branch-by-tier is implicit: tier-specific copy is injected via the agent template + dashboard slug. Refinement (per-tier branching node) recommended in n8n UI for Pro/Max upsells."
+  }
+}

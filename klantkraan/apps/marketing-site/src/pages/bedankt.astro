@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro'
+---
+
+<Base
+  title="Bedankt | Klantkraan"
+  description="Bedankt voor uw betaling. Wij nemen binnen één werkdag contact op om uw AI-receptionist in te richten."
+  centered={false}
+  noindex
+>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">Bedankt</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Uw betaling is verwerkt via Mollie. Zodra die binnen is, start uw abonnement automatisch en
+        gaan wij voor u aan de slag.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start"
+    >
+      <div
+        class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Wat er nu gebeurt</h2>
+        <ol class="mt-4 space-y-3 text-body text-(--color-dim)">
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">1.</span>
+            Wij bellen binnen één werkdag en nemen uw diensten, tarieven en agenda door.
+          </li>
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">2.</span>
+            Wij bouwen en koppelen uw receptionist. Done-for-you, u levert alleen de kennis.
+          </li>
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">3.</span>
+            U test hem zelf, geeft akkoord en de receptionist gaat live op uw site en WhatsApp.
+          </li>
+        </ol>
+        <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+          Maandelijks opzegbaar; opzeggen per mail, geen opzegtermijn.
+        </p>
+      </div>
+
+      <aside
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Betaling afgebroken of mislukt?</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          Geen zorgen: uw betaallink blijft gewoon geldig, u kunt het later opnieuw proberen. Komt u
+          er niet uit, mail
+          <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>
+          en wij lossen het samen op.
+        </p>
+        <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+          Vragen over uw abonnement of factuur? Mail ons, wij reageren binnen één werkdag.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>

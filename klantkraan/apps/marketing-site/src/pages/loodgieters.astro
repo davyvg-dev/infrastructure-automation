@@ -1,0 +1,322 @@
+---
+import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
+import VerderLezen from '../components/VerderLezen.astro'
+import Icon from '../components/Icon.astro'
+import Stat from '../components/Stat.astro'
+import TapValve from '../components/illustrations/TapValve.astro'
+import RiskReversal from '../components/RiskReversal.astro'
+import PhotoBand from '../components/PhotoBand.astro'
+
+// Loodgieters landing page.
+// Copy follows klantkraan/docs/09-brand/voice-and-tone.md (u-form, no fluff,
+// concrete cijfers, no emojis). Visual rhythm mirrors index.astro.
+
+interface PainStat {
+  value: string
+  caption: string
+}
+
+const painStats: PainStat[] = [
+  { value: '28%', caption: 'van uw oproepen wordt gemist.' },
+  { value: '€450', caption: 'gemiddelde waarde per gemiste klus.' },
+  { value: '0', caption: 'reviews per klus die u niet oppikt.' },
+]
+
+interface Feature {
+  icon: 'phone' | 'message-square' | 'calendar-check'
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    icon: 'message-square',
+    title: 'Kent uw voorrijkosten van buiten',
+    body: "Beantwoordt klantvragen op uw website en via WhatsApp, in vlot Nederlands. Ook 's avonds en in het weekend. Noemt nooit een tarief dat u niet zelf heeft ingesteld.",
+  },
+  {
+    icon: 'calendar-check',
+    title: 'Afspraken direct in uw agenda',
+    body: 'De receptionist plant terugbel- en klusafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail.',
+  },
+  {
+    icon: 'phone',
+    title: 'Leads en terugbelverzoeken op uw telefoon',
+    body: 'Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam, nummer en de vraag van de klant. Geen klant raakt verloren in een voicemail.',
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+  href?: string
+  linkLabel?: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'Hoe komt de receptionist op mijn website?',
+    a: 'Met één klein scriptje dat wij voor u installeren. U hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
+  },
+  {
+    q: 'En wat als ik op locatie zit en niet kan reageren?',
+    a: 'Precies waar dit voor gemaakt is. De receptionist beantwoordt de vraag (spoed, nieuwe klus, bestaande klant, leverancier), plant indien gewenst een afspraak in uw agenda en stuurt u een samenvatting per WhatsApp of e-mail. U belt terug wanneer het uitkomt.',
+  },
+  {
+    q: 'Hoort de klant dat het AI is?',
+    a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketingkeuze maar een wettelijke verplichting onder artikel 50 van de Europese AI-wet. De disclosure blijft altijd aan staan.',
+    href: '/legal/ai-disclosure/',
+    linkLabel: 'Lees de volledige AI-disclosure',
+  },
+  {
+    q: 'Wat als de AI iets verkeerd zegt over mijn prijzen?',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief, spoedtoeslag, materiaalopslag. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbelverzoek. Wij testen elke configuratie voor u live gaat.',
+  },
+  {
+    q: 'Wat gebeurt er met de klantgegevens?',
+    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren chatgesprekken 30 dagen, tenzij u korter wenst. De volledige leverancierslijst staat openbaar in ons sub-processorregister.',
+    href: '/legal/dpa/',
+    linkLabel: 'Bekijk DPA en privacyverklaring',
+  },
+  {
+    q: 'Per maand opzegbaar, echt waar?',
+    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail, wanneer u wilt. De receptionist loopt tot het einde van de betaalde maand, daarna incasseren wij niets meer. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
+    href: '/legal/voorwaarden/',
+    linkLabel: 'Lees de algemene voorwaarden',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<Base
+  title="Loodgieter klanten werven: AI-receptionist voor spoed"
+  description="AI-receptionist voor loodgieters, per maand opzegbaar. Kent uw voorrijkosten en spoedtoeslag, plant afspraken en vangt leads via chat en WhatsApp, 24/7."
+  centered={false}
+>
+  <!-- 1. Hero -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-chalk">
+          De <span class="text-(--color-sodium)">Klantenmotor</span> voor loodgieters.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-dim">
+          Bent u onder een gootsteen bezig? Dan beantwoordt onze digitale receptionist de klantvraag
+          op uw website en via WhatsApp, met uw voorrijkosten en spoedtarief paraat. 's Avonds,
+          weekend, vakantie. Hetzelfde verhaal. Afspraken en terugbelverzoeken zitten in hetzelfde
+          abonnement.
+        </p>
+        <div class="mt-10 btn-row">
+          <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
+          <a href="/rekentool/" class="btn btn-ghost btn-lg">Bereken uw ROI</a>
+        </div>
+      </div>
+      <div class="hidden text-(--color-sodium) md:block">
+        <TapValve class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
+      <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">AVG + AI Act art. 50</p>
+            <p class="text-small text-dim">Disclosure standaard aan</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">Gehost in de EU</p>
+            <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">Vlot Nederlands</p>
+            <p class="text-small text-dim">Kent voorrijkosten + spoedtarief</p>
+          </div>
+        </li>
+      </ul>
+      <p class="mt-8 text-small text-dim">
+        Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="loodgieters"
+      alt="Loodgieter draait een koppeling vast onder de gootsteen"
+      caption="Onder de gootsteen. Uw receptionist antwoordt wél."
+    />
+  </section>
+
+  <!-- 1b. Risk-reversal -->
+  <RiskReversal />
+
+  <!-- 2. Pijn-stats trio (recessed band) -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Wat een gemiste oproep kost"
+  >
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
+    </div>
+  </section>
+
+  <!-- 3. Wat Klantkraan doet voor loodgieters -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Wat Klantkraan doet voor loodgieters.</h2>
+      <p class="mt-4 max-w-2xl text-body text-dim">
+        Drie modules. Eén maandprijs. Gebouwd voor de loodgieter die meer onder een gootsteen ligt
+        dan achter zijn telefoon.
+      </p>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          features.map((feature) => (
+            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
+              <div>
+                <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
+                <p class="mt-2 text-body text-dim">{feature.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ROI snippet (cream; inner white card) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Rekensom</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Reken het even na.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
+        <p class="text-h3 text-chalk">
+          Mist u 10 oproepen per week à €450? Dat is <strong class="text-(--color-sodium)"
+            >ruim €77.000 verloren omzet per jaar</strong
+          >.
+        </p>
+        <p class="mt-4 text-body text-dim">
+          Klantkraan Chat is €299 per maand. Eén extra spoedklus per maand en u staat quitte. Wat
+          erna binnenkomt is uw marge.
+        </p>
+        <div class="mt-6 btn-row">
+          <a href="/rekentool/" class="btn btn-primary btn-lg">Open de rekentool</a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg">Bekijk de tarieven</a>
+        </div>
+        <p class="mt-6 text-micro text-dim">
+          Bedragen excl. 21% BTW. Voorbeeld op basis van branche-gemiddelde €450 per oproep (bron:
+          Aira / Invoca missed-call benchmarks) en de aanname dat ongeveer 1 op 3 gemiste oproepen
+          een betalende klus had opgeleverd (33% conversiekans).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. FAQ (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Vragen</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          faqs.map((faq) => (
+            <details class="group py-4">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-chalk marker:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                  />
+                </span>
+              </summary>
+              <p class="mt-3 text-body text-dim">{faq.a}</p>
+              {faq.href && faq.linkLabel && (
+                <p class="mt-3 text-small">
+                  <a href={faq.href} class="underline">
+                    {faq.linkLabel}
+                  </a>
+                </p>
+              )}
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 7b. Wij werken ook in: programmatic city link block -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Loodgieters per stad"
+  >
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Per stad</p>
+      <h2 class="mt-3 font-display text-h2 text-chalk">Wij ondersteunen loodgieters in:</h2>
+      <ul class="mt-6 grid max-w-3xl grid-cols-2 gap-2 text-body sm:grid-cols-3 md:grid-cols-4">
+        <li>
+          <a href="/amsterdam/loodgieter/" class="block py-2 text-(--color-sodium) underline"
+            >Amsterdam</a
+          >
+        </li>
+        <li>
+          <a href="/rotterdam/loodgieter/" class="block py-2 text-(--color-sodium) underline"
+            >Rotterdam</a
+          >
+        </li>
+        <li>
+          <a href="/utrecht/loodgieter/" class="block py-2 text-(--color-sodium) underline"
+            >Utrecht</a
+          >
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Verder lezen: gids + blog voor deze branche -->
+  <VerderLezen vertical="loodgieter" />
+
+  <!-- 8. Eind-CTA band (recessed) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-chalk">Klaar om geen klus meer te missen?</h2>
+      <p class="mt-4 max-w-2xl text-body text-dim">
+        Probeer de live demo. In één gesprek ziet u hoe de receptionist een vraag over voorrijkosten
+        beantwoordt en een afspraak in de agenda zet.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
+        <a href="/prijzen/" class="btn btn-ghost btn-lg">Bekijk prijzen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm />
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

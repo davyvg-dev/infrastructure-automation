@@ -1,0 +1,62 @@
+{
+  "vak": "elektricien",
+  "queries": [
+    "meterkast groepenkast",
+    "electrical wiring hands installation",
+    "electrician tools multimeter workbench",
+    "wall socket installation screwdriver",
+    "laadpaal elektrische auto",
+    "zonnepanelen omvormer installatie",
+    "kabelgoot leidingen plafond",
+    "plafondlamp monteren ladder"
+  ],
+  "notitie": "De eerste vier queries leverden vrijwel alleen meterkasten op (Spanje, Kaapstad, Seattle, New Orleans) plus een stapel losse multimeters: veel detail, geen mens en geen afstand. De laatste vier zijn er daarom bij gezocht op wat een Nederlandse elektricien echt verkoopt -- laadpaal, omvormer, kabelgoot, verlichting -- en die leverden het buitenframe en de ruimte op. Afgevallen: elke Elite Power Group-foto (bedrijfslogo van een andere firma in beeld, en NSW Australie), 16 (Cyrillisch logo op de werkjas), 21/55/59/61 (herkenbaar gezicht, ook de man op de ladder die verder het beste werkframe was), 46 (logo op de hoodie).",
+  "fotos": [
+    {
+      "id": 4981794,
+      "fotograaf": "Adventure Studio",
+      "rollen": ["hero", "og"],
+      "alt": "Handen met werkhandschoenen schroeven een wandcontactdoos vast met een accuboormachine",
+      "notitie": "Het enige liggende frame met iemand aan het werk dat geen gezicht en geen bedrijfslogo meedraagt. Al 3:2, dus de hero-crop gooit niets weg; de witte muur laat de koptekst ernaast ademen."
+    },
+    {
+      "id": 5767595,
+      "fotograaf": "Ksenia Chernaya",
+      "rollen": ["tall"],
+      "alt": "Geopende groepenkast met aardlekschakelaars, automaten en bedrading",
+      "notitie": "Staand bronbeeld, en de groepenkast is het onderwerp waar een Nederlandse elektricien op gezocht wordt. De kast staat gecentreerd, dus de 2:3-crop houdt hem heel."
+    },
+    {
+      "id": 7937305,
+      "fotograaf": "Pavel Danilyuk",
+      "rollen": ["wide"],
+      "alt": "Vier groene inbouwdozen naast elkaar ingemetseld in een gestucte wand"
+    },
+    {
+      "id": 36344914,
+      "fotograaf": "Jan van der Wolf",
+      "rollen": ["wide"],
+      "alt": "Hoek van een lichte kamer met een geel biesje en een enkel stopcontact"
+    },
+    {
+      "id": 32472662,
+      "fotograaf": "Haberdoedas Photography",
+      "rollen": ["tall"],
+      "alt": "Laadpaal met twee aangesloten laadkabels op een klinkerbestrating voor een woning",
+      "notitie": "De set stond na zes frames volledig binnen en volledig dichtbij. Dit is het enige buitenbeeld: klinkers, bakstenen gevel, stalen kozijnen -- onmiskenbaar Nederlands -- en laadpalen zijn inmiddels een van de vaste opdrachten."
+    },
+    {
+      "id": 5691588,
+      "fotograaf": "Ksenia Chernaya",
+      "rollen": ["tall"],
+      "alt": "Handen strippen een draad met een tang bij een rij half gemonteerde schakelaars",
+      "notitie": "Tweede werkframe naast de hero, maar met een tang op een antracietkleurige muur in plaats van een boor op een witte: ander gereedschap, andere ondergrond, andere afstand."
+    },
+    {
+      "id": 6349399,
+      "fotograaf": "ERIC MUFASA",
+      "rollen": ["wide"],
+      "alt": "Multimeter, installatieautomaten en een striptang op een witte ondergrond"
+    }
+  ]
+}

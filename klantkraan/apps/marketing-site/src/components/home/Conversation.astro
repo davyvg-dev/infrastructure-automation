@@ -1,0 +1,325 @@
+---
+/*
+ * "What the receptionist does", told as one conversation instead of three icon
+ * cards (TODO §V2). On a desktop-sized screen the section pins and the thread
+ * plays out as you scroll through it: every message is tied to the scroll
+ * position, not to a timer, so scrolling back rewinds it. The duty list on the
+ * left lights up as the conversation reaches each one.
+ *
+ * Pure CSS (scroll-driven animation on a named view timeline), no JS. Anything
+ * that cannot or should not animate (no support, reduced motion, a phone, a short
+ * window) gets the finished thread as ordinary content. On phones each message
+ * settles in on its own as it enters the viewport instead.
+ */
+
+interface Message {
+  from: 'klant' | 'receptionist'
+  text: string
+  step: number
+}
+
+interface Slip {
+  strong: string
+  detail: string
+  step: number
+}
+
+interface Props {
+  t: {
+    heading: string
+    steps: { title: string; text: string }[]
+    threadName: string
+    threadSub: string
+    day: string
+    disclosure: string
+    threadLabel: string
+    messages: Message[]
+    slips: Slip[]
+  }
+}
+
+const { t } = Astro.props
+
+// Spread every item over the pinned stretch: first at 6%, last done by ~86%,
+// so the finished thread rests on screen for a moment before the pin lets go.
+const items = [
+  ...t.messages.map((m) => ({ kind: 'msg' as const, ...m })),
+  ...t.slips.map((s) => ({ kind: 'slip' as const, ...s })),
+]
+const at = (i: number) => 6 + (i * 74) / Math.max(items.length - 1, 1)
+const stepAt = t.steps.map((_, k) => {
+  const first = items.findIndex((it) => it.step === k)
+  return first <= 0 ? 0 : at(first)
+})
+---
+
+<section id="nachtdienst" class="kk-convo scroll-mt-24">
+  <div class="kk-convo-stage">
+    <div class="kk-convo-inner">
+      <div class="kk-convo-copy">
+        <h2 class="font-display text-h2 text-balance">{t.heading}</h2>
+        <ol class="kk-convo-steps" role="list">
+          {
+            t.steps.map((s, k) => (
+              <li style={`--at:${stepAt[k]}%`}>
+                <h3 class="font-display text-h3 text-(--color-chalk)">{s.title}</h3>
+                <p class="mt-1.5 text-body text-(--color-dim)">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="kk-convo-phone">
+        <div class="kk-convo-top">
+          <strong>{t.threadName}</strong>
+          <span>{t.threadSub}</span>
+        </div>
+        <div class="kk-convo-body">
+          <span class="kk-convo-day">{t.day}</span>
+          <ol class="kk-convo-thread" role="list" aria-label={t.threadLabel}>
+            <li class="kk-convo-note">{t.disclosure}</li>
+            {
+              items.map((it, i) =>
+                it.kind === 'msg' ? (
+                  <li class:list={['kk-convo-item', it.from === 'klant' ? 'is-in' : 'is-out']} style={`--at:${at(i)}%`}>
+                    <p>{it.text}</p>
+                  </li>
+                ) : (
+                  <li class="kk-convo-item is-slip" style={`--at:${at(i)}%`}>
+                    <p>
+                      <strong>{it.strong}</strong>
+                      <span>{it.detail}</span>
+                    </p>
+                  </li>
+                ),
+              )
+            }
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .kk-convo {
+    position: relative;
+  }
+  .kk-convo-inner {
+    display: grid;
+    gap: 2.5rem;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .kk-convo-inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+      align-items: center;
+      gap: 4rem;
+      padding: 5rem 1.5rem;
+    }
+  }
+
+  /* ---- the duty list ---- */
+  .kk-convo-steps {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .kk-convo-steps li {
+    padding-left: 1.125rem;
+    border-left: 2px solid var(--color-line);
+  }
+
+  /* ---- the phone ---- */
+  .kk-convo-phone {
+    background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
+    border: 1px solid var(--color-line);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 34px 80px -34px rgba(0, 0, 0, 0.85);
+  }
+  .kk-convo-top {
+    display: grid;
+    gap: 0.125rem;
+    padding: 0.875rem 1.125rem;
+    border-bottom: 1px solid var(--color-line);
+    background: rgba(0, 0, 0, 0.16);
+  }
+  .kk-convo-top strong {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--color-chalk);
+  }
+  .kk-convo-top span {
+    font-size: 0.8125rem;
+    color: var(--color-dim);
+  }
+  .kk-convo-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1rem 1.25rem;
+  }
+  .kk-convo-day {
+    align-self: center;
+    margin-bottom: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.22);
+    font-size: 0.75rem;
+    color: var(--color-dim);
+  }
+  .kk-convo-thread {
+    display: flex;
+    flex-direction: column;
+  }
+  /* EU AI Act art. 50: the conversation opens by saying what it is. Never remove. */
+  .kk-convo-note {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--color-dim);
+    margin-bottom: 0.875rem;
+  }
+  .kk-convo-item {
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+  .kk-convo-item p {
+    max-width: 85%;
+    width: fit-content;
+    padding: 0.625rem 0.875rem;
+    border-radius: 1.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+  .is-in p {
+    background: var(--color-panel-2);
+    border: 1px solid var(--color-line);
+    color: var(--color-chalk);
+    border-bottom-left-radius: 0.375rem;
+  }
+  .is-out p {
+    margin-left: auto;
+    background: rgba(255, 184, 77, 0.13);
+    border: 1px solid rgba(255, 184, 77, 0.3);
+    color: #ffe9c7;
+    border-bottom-right-radius: 0.375rem;
+  }
+  /* The docket a job lands on: mono as punctuation, mint because it is booked. */
+  .is-slip p {
+    max-width: none;
+    width: auto;
+    border-radius: 0.75rem;
+    background: rgba(99, 211, 171, 0.1);
+    border: 1px solid rgba(99, 211, 171, 0.32);
+  }
+  .is-slip strong {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    color: var(--color-confirm);
+  }
+  .is-slip span {
+    display: block;
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    color: #bfe7d7;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* Phones: no pin, each message settles in as it enters the viewport. */
+      .kk-convo-item {
+        animation: kk-convo-settle cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 100%;
+      }
+
+      /* Desktop with room to spare: pin the stage and let the scroll write the
+       * thread. The section is the timeline; `contain` is exactly the stretch
+       * during which the stage is pinned. */
+      @media (min-width: 768px) and (min-height: 640px) {
+        .kk-convo {
+          height: 300vh;
+          view-timeline: --kk-convo block;
+        }
+        .kk-convo-stage {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          display: grid;
+          align-items: center;
+          /* clear the sticky site header */
+          padding-top: 4rem;
+        }
+        .kk-convo-inner {
+          width: 100%;
+          padding-block: 1.5rem;
+        }
+        /* A fixed-height screen: new messages grow at the bottom and push the
+         * older ones up and out, the way a phone does. */
+        .kk-convo-body {
+          height: min(31rem, calc(100vh - 12.5rem));
+        }
+        .kk-convo-thread {
+          flex: 1;
+          min-height: 0;
+          justify-content: flex-end;
+          overflow: hidden;
+          mask-image: linear-gradient(to bottom, transparent, #000 2.5rem);
+        }
+        .kk-convo-note,
+        .kk-convo-item {
+          flex-shrink: 0;
+        }
+        .kk-convo-item {
+          animation: kk-convo-arrive linear both;
+          animation-timeline: --kk-convo;
+          animation-range: contain var(--at) contain calc(var(--at) + 6%);
+        }
+        .kk-convo-steps li {
+          animation: kk-convo-light linear both;
+          animation-timeline: --kk-convo;
+          animation-range: contain var(--at) contain calc(var(--at) + 4%);
+        }
+      }
+    }
+  }
+
+  @keyframes kk-convo-settle {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes kk-convo-arrive {
+    from {
+      max-height: 0;
+      margin-bottom: 0;
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      max-height: 10rem;
+      margin-bottom: 0.5rem;
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes kk-convo-light {
+    from {
+      opacity: 0.35;
+    }
+    to {
+      opacity: 1;
+      border-left-color: var(--color-sodium);
+    }
+  }
+</style>

@@ -1,0 +1,33 @@
+# OPTIONAL headless generation, for when you don't run the always-on bot.
+#
+# To activate: copy this file to  .github/workflows/growth-engine.yml  at the repo root,
+# then add these repository secrets (Settings → Secrets and variables → Actions):
+#   ANTHROPIC_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+#
+# This only GENERATES and pushes drafts to Telegram for manual posting. It does NOT
+# auto-post to X (that needs the long-running bot in src/run.py). Adjust the cron below.
+
+name: growth-engine
+
+on:
+  schedule:
+    - cron: "0 9 * * *"      # 09:00 UTC daily — change to taste
+  workflow_dispatch: {}       # lets you run it manually from the Actions tab
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: growth-engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m src.push
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

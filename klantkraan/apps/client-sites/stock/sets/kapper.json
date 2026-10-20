@@ -1,0 +1,58 @@
+{
+  "vak": "kapper",
+  "queries": [
+    "kapper schaar haar knippen",
+    "barbershop interieur stoel",
+    "kappersgereedschap tondeuse kam",
+    "barber scheermes nek"
+  ],
+  "notitie": "Het vak waar de gezichtsregel het meest kost: een kappersfoto gaat bijna altijd over een gezicht in een spiegel. Van 24 kandidaten vielen er zeven af op herkenbare gezichten (klant en kapper) en een op een Route 66-patch, hetzelfde verkeerde-werelddeel-signaal waar de dakdekkerset voor gewaarschuwd is. Wat overblijft toont het werk van achteren, over de schouder of via het gereedschap -- vandaar dat de zoektermen op handen, gereedschap en interieur mikken en niet op 'kapper'.",
+  "fotos": [
+    {
+      "id": 10593034,
+      "fotograaf": "Krzysztof Chrostowski",
+      "rollen": ["hero", "og"],
+      "alt": "Hand met schaar knipt een lok blond haar boven een zwarte kappersjas",
+      "notitie": "Handen, schaar en haar, verder niets: geen gezicht in beeld terwijl het werk onmiskenbaar gebeurt. Al 3:2 en licht, dus de hero-crop houdt alles en de kop blijft leesbaar."
+    },
+    {
+      "id": 8834072,
+      "fotograaf": "Kampus Production",
+      "rollen": ["tall"],
+      "alt": "Kam en schaar knippen het haar in de nek, van achteren gezien",
+      "notitie": "Het tweede werkframe, en staand aangeleverd dus de 2:3-tegel snijdt niets weg. Klant van achteren, kapper onscherp en aangesneden: het werk zonder een gezicht."
+    },
+    {
+      "id": 7697200,
+      "fotograaf": "RDNE Stock project",
+      "rollen": ["wide"],
+      "alt": "Tondeuse, waterspuit en scheerkwast op een kappersmeubel"
+    },
+    {
+      "id": 36361320,
+      "fotograaf": "Th2city Santana",
+      "rollen": ["wide"],
+      "alt": "Kappersscharen en een kam op een zwarte mat"
+    },
+    {
+      "id": 17665771,
+      "fotograaf": "Ragucci",
+      "rollen": ["tall"],
+      "alt": "Kappersstoelen en spiegels boven een zwart-wit geblokte vloer",
+      "notitie": "De establishing shot, en het enige frame zonder mens erin. Zes close- en midshots zonder een opname die de zaak zelf laat zien is precies de eentonigheid waar de dakdekkerset op stukliep. Pexels zet deze in Istanbul, wat strikt genomen buiten de noord-Europese regel valt: bewust gehouden, omdat de regel bestaat tegen wat ZICHTBAAR niet hier is (mediterrane mulden op een dak) en groen stucwerk, houten spiegels en een geblokte vloer een Rotterdamse zaak net zo goed beschrijven. Wie daar anders over denkt: vervang hem, de set staat of valt er niet mee."
+    },
+    {
+      "id": 13450757,
+      "fotograaf": "RAFAEL QUATY",
+      "rollen": ["tall"],
+      "alt": "Getatoeëerde hand houdt een professionele tondeuse vast"
+    },
+    {
+      "id": 9146943,
+      "fotograaf": "Лена Gromakova",
+      "rollen": ["wide"],
+      "alt": "Ruime kapsalon met lege stoelen, spiegels en warme wandverlichting",
+      "notitie": "Hier stond eerst een tweede gereedschapsplaat op dezelfde zwarte mat als tegel 4: bij het nakijken van de renders lazen die twee als vulling. Een tweede zoekronde op interieurtermen leverde dit op. De mooiere kandidaat (8834071, groene stoelen op ruitvloer) viel af omdat die ruitvloer die van tegel 5 herhaalt en beide onderaan dezelfde rij zouden landen; deze heeft een houten vloer en is lichter, wat de laatste kolom optilt naast de donkere tondeuse-tegel."
+    }
+  ]
+}

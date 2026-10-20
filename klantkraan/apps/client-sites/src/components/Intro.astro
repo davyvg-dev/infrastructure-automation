@@ -1,0 +1,19 @@
+---
+import { loadClient } from '../lib/client'
+import { toon } from '../lib/toon'
+
+// Intro: the PainStats slot from the dakdekkers kit, deliberately WITHOUT
+// statistics. Calm reassurance copy, no numeric claims of any kind.
+const { config } = loadClient()
+const t = toon(config)
+---
+
+<section
+  class="mx-auto max-w-(--maat-kolom) px-(--maat-gutter) py-(--ritme-y) md:py-(--ritme-y-md)"
+>
+  <h2 class="max-w-(--maat-kop) text-h2">{t.introKop}</h2>
+  <div class="mt-5 grid max-w-(--maat-tekst) gap-4 text-(--color-mist)">
+    <p>{t.werkwijze}</p>
+    <p>{t.bereik}</p>
+  </div>
+</section>

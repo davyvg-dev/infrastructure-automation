@@ -1,0 +1,72 @@
+---
+import Icon from '../Icon.astro'
+
+// FAQ — 6 vragen specifiek voor dakdekkers.
+// HTML <details>/<summary> — geen JS, accessibility ok by default.
+
+const faqs = [
+  {
+    q: 'Werkt het tijdens een storm met veel gelijktijdige meldingen?',
+    a: 'Ja. De receptionist handelt gesprekken parallel af. Geen wachtrij. Tien klanten kunnen tegelijk chatten of appen, alle tien krijgen direct antwoord. Spoed-lekkages worden herkend en gescheiden van offerte-aanvragen.',
+  },
+  {
+    q: 'Kent de AI mijn vaste tarieven voor inspectie en noodreparatie?',
+    a: "Ja. Bij onboarding configureren wij uw inspectie-tarief, noodreparatie-toeslag, voorrijkosten en eventueel weekend-toeslag. De AI noemt die nummers exact zoals u ze noemt. Geen verkeerde bedragen, geen „we komen er nog op terug voor de prijs'.",
+  },
+  {
+    q: 'Hoort de klant dat het AI is?',
+    a: 'Ja, vanaf de eerste zin. De assistent meldt expliciet dat uw klant met een digitale assistent chat, conform artikel 50 van de Europese AI-wet. De ervaring blijft professioneel en vlot in het Nederlands. Volledige toelichting: <a href="/legal/ai-disclosure/">/legal/ai-disclosure</a>.',
+  },
+  {
+    q: 'Wat als ik op het dak sta en niet kan reageren?',
+    a: 'Bij een spoed-lekkage krijgt u direct een melding op uw telefoon met naam, nummer en adres van de klant. De klant krijgt in het gesprek bevestiging dat de melding is doorgezet en wanneer hij reactie kan verwachten. U belt terug zodra u van het dak bent.',
+  },
+  {
+    q: 'Werkt het naast mijn bestaande telefoonnummer of antwoordservice?',
+    a: 'Ja. De receptionist draait op uw website en WhatsApp en staat los van uw telefoonlijn. U houdt uw huidige nummer, er wordt niets geport of doorgeschakeld. Aan- en uitzetten kan binnen één werkdag.',
+  },
+  {
+    q: 'Is Klantkraan per maand opzegbaar?',
+    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail, wanneer u wilt. De receptionist loopt tot het einde van de betaalde maand, daarna incasseren wij niets meer. Volledige voorwaarden: <a href="/legal/voorwaarden/">/legal/voorwaarden</a>.',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<section class="py-10 md:py-16">
+  <div class="mx-auto max-w-5xl px-6">
+    <p class="eyebrow">Vragen</p>
+    <h2 class="mt-3 font-display text-h1 text-chalk">Vragen die dakdekkers vaak stellen.</h2>
+
+    <div class="mt-10 space-y-3">
+      {
+        faqs.map((faq) => (
+          <details class="group rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+            <summary class="flex min-h-[2.75rem] cursor-pointer items-center justify-between gap-4 font-display text-h3 text-chalk marker:content-none">
+              <span>{faq.q}</span>
+              <Icon
+                name="chevron-down"
+                class="h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+              />
+            </summary>
+            <p class="mt-4 text-body text-dim" set:html={faq.a} />
+          </details>
+        ))
+      }
+    </div>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</section>

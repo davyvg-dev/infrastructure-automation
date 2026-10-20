@@ -1,0 +1,58 @@
+---
+import Icon from '../Icon.astro'
+import StormCloud from '../illustrations/StormCloud.astro'
+
+// Hero — H1 + storm-protocol subhead + dual CTA + trust line.
+// Voice: voice-and-tone.md (u-form, declarative, one promise per sentence).
+// v2 2026-05-21: 2-column grid on desktop with storm-cloud illustration on
+// the right; vertical stack on mobile (illustration hidden under md).
+---
+
+<section class="py-10 md:py-16">
+  <div class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
+    <div>
+      <h1 class="font-display text-hero text-chalk">
+        De <span class="text-(--color-sodium)">Klantenmotor</span> voor dakdekkers.
+      </h1>
+      <p class="mt-6 max-w-2xl text-h3 text-dim">
+        Storm-protocol dat spoed-lekkages direct naar uw mobiel escaleert. 24/7 storingsdienst in
+        vlot Nederlands. Inspectie- en offerte-afspraken rechtstreeks in uw agenda.
+      </p>
+      <div class="mt-10 btn-row">
+        <a href="/demo/" class="btn btn-primary btn-lg">Probeer de demo</a>
+        <a href="/rekentool/" class="btn btn-ghost btn-lg">Bereken uw ROI</a>
+      </div>
+    </div>
+    <div class="hidden text-(--color-sodium) md:block">
+      <StormCloud class="h-64 w-64 lg:h-72 lg:w-72" />
+    </div>
+  </div>
+  <div class="mx-auto max-w-5xl px-6">
+    <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+      <li class="flex items-start gap-3">
+        <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+        <div>
+          <p class="text-small font-medium text-chalk">AVG + AI Act art. 50</p>
+          <p class="text-small text-dim">Disclosure standaard aan</p>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+        <div>
+          <p class="text-small font-medium text-chalk">Gehost in de EU</p>
+          <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
+        </div>
+      </li>
+      <li class="flex items-start gap-3">
+        <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+        <div>
+          <p class="text-small font-medium text-chalk">Vlot Nederlands</p>
+          <p class="text-small text-dim">Kent storm-protocol + spoedtarief</p>
+        </div>
+      </li>
+    </ul>
+    <p class="mt-8 text-small text-dim">
+      Done-for-you setup · Per maand opzegbaar · Eerste maand 50% korting
+    </p>
+  </div>
+</section>

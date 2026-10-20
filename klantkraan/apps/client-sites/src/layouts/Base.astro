@@ -1,0 +1,151 @@
+---
+import '../styles/global.css'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
+import PreviewBanner from '../components/PreviewBanner.astro'
+import StickyCallBar from '../components/StickyCallBar.astro'
+import { heroToontFoto, loadClient } from '../lib/client'
+import { openingHoursSpecification } from '../lib/format'
+import { toon } from '../lib/toon'
+import { stijlStyle } from '../lib/stijl'
+
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+const { config, stijl, siteUrl, logoUrl, isPreview, beeld } = loadClient()
+const t = toon(config)
+const { bedrijf } = config
+
+// The two brand hooks and the resolved skin travel together as one inline style on
+// <html>: same element as :root, so these outrank global.css for every utility that
+// reads them. The brand colours come first so a skin token may reference them
+// (kleuring: royaal mixes the band tint out of --brand-primary).
+const rootStyle = stijlStyle(stijl, {
+  '--brand-primary': config.branding.kleur_primair,
+  '--brand-accent': config.branding.kleur_accent,
+})
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString()
+// Share card. A link to a client site used to unfurl as a bare grey box on WhatsApp,
+// which is where these links actually get passed around: the site had no photograph to
+// cut one from. Prefer the vak's 1200x630 crop; a client with their own photos gets
+// their first one, at whatever ratio it happens to be, which still beats nothing.
+const ogImage = beeld.set.og?.src ?? beeld.set.hero?.src ?? null
+const ogUrl = ogImage ? `${siteUrl}${ogImage}` : null
+
+// Preload the hero photo, which is the LCP element on the one page that has it. The
+// preload scanner would find the <img> on its own, but it sits behind the stylesheet in
+// the discovery order and this is the largest byte on the page; the hint moves it ahead.
+// Homepage only -- Hero.astro renders nowhere else, and preloading an image a page never
+// draws is a wasted round trip on every other page.
+// `heroToontFoto` is read here too: a `typografisch` hero draws no photograph at all, and
+// preloading the vak's hero crop for a page that never references it is a wasted round trip
+// on the one request that is meant to be fastest.
+const heroPreload =
+  Astro.url.pathname === '/' && heroToontFoto(config.indeling.hero) && beeld.set.hero
+    ? {
+        href: beeld.set.hero.src,
+        srcset: `${beeld.set.hero.src.replace(/\.webp$/, '-sm.webp')} 750w, ${beeld.set.hero.src} 1500w`,
+      }
+    : null
+// A proposal says so in the tab title too: screenshots and shared links travel
+// further than the page itself.
+const paginaTitel = isPreview ? `${title} | voorbeeld van Klantkraan` : title
+
+// LocalBusiness JSON-LD: name, address, area, phone, hours, url. Deliberately
+// NO review/aggregateRating markup: self-serving review schema is a Google
+// manual-action risk, reviews stay plain text on the page.
+// Never emitted on a proposal: structured data about a business we do not
+// represent, on a URL they do not own, is exactly the entity confusion that
+// noindex alone would not prevent.
+const schema = isPreview
+  ? null
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      '@id': `${siteUrl}/#bedrijf`,
+      name: bedrijf.naam,
+      url: `${siteUrl}/`,
+      telephone: bedrijf.telefoon.replace(/ /g, ''),
+      email: bedrijf.email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: bedrijf.adres.straat,
+        postalCode: bedrijf.adres.postcode,
+        addressLocality: bedrijf.adres.plaats,
+        addressCountry: 'NL',
+      },
+      // A mobiel bedrijf serves towns it drives to; a locatie bedrijf's werkgebied is the
+      // neighbourhoods its customers travel from, which are not Cities and must not say
+      // they are (see lib/toon.ts gebiedType).
+      areaServed: bedrijf.werkgebied.map((plaats) => ({ '@type': t.gebiedType, name: plaats })),
+      openingHoursSpecification: openingHoursSpecification(config.openingstijden),
+      ...(logoUrl ? { image: `${siteUrl}${logoUrl}` } : {}),
+    }
+---
+
+<!doctype html>
+<html lang="nl" style={rootStyle}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      heroPreload && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroPreload.href}
+          imagesrcset={heroPreload.srcset}
+          imagesizes="(min-width: 768px) 46vw, 100vw"
+          fetchpriority="high"
+        />
+      )
+    }
+    {isPreview && <meta name="robots" content="noindex, nofollow" />}
+    <title>{paginaTitel}</title>
+    <meta name="description" content={description} />
+    <meta property="og:site_name" content={bedrijf.naam} />
+    <meta property="og:title" content={paginaTitel} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="nl_NL" />
+    {
+      ogUrl && (
+        <>
+          <meta property="og:image" content={ogUrl} />
+          <meta name="twitter:card" content="summary_large_image" />
+          {beeld.set.og && (
+            <>
+              <meta property="og:image:width" content={String(beeld.set.og.width)} />
+              <meta property="og:image:height" content={String(beeld.set.og.height)} />
+            </>
+          )}
+        </>
+      )
+    }
+    <meta name="theme-color" content={config.branding.kleur_primair} />
+    {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+  <body class="pb-[calc(4.75rem+env(safe-area-inset-bottom))] md:pb-0">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--brand-primary) focus:px-4 focus:py-2 focus:text-white focus:no-underline"
+    >
+      Ga naar hoofdinhoud
+    </a>
+    {isPreview && <PreviewBanner />}
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <StickyCallBar />
+  </body>
+</html>

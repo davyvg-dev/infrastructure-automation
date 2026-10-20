@@ -1,0 +1,110 @@
+---
+/*
+ * A photo the width of the phone.
+ *
+ * The trade pages used to inset their photo inside the 24px page gutter and give
+ * it a rounded border. On a desktop column that reads as a framed plate; on a
+ * 390px screen it reads as a widget — a small grey rectangle with air around it.
+ * So the frame is a desktop-only idea here: on mobile the photo goes edge to
+ * edge, gets a taller crop (4:3 instead of a 2.5:1 letterbox) and carries its own
+ * caption on a scrim, which is what makes it a scene instead of decoration.
+ *
+ * `caption` is optional. When it is set the photo becomes a figure with a real
+ * figcaption; the scrim exists to keep that line readable over any crop.
+ */
+
+interface Props {
+  slug: string
+  alt: string
+  caption?: string
+  /* object-position, for crops whose subject is not in the middle */
+  focus?: string
+  class?: string
+}
+
+const { slug, alt, caption, focus = '50% 45%', class: extra = '' } = Astro.props
+---
+
+<figure class:list={['kk-band', extra]}>
+  <div class="kk-band-frame">
+    <img
+      src={`/photos/${slug}.jpg`}
+      srcset={`/photos/${slug}-sm.jpg 700w, /photos/${slug}.jpg 1400w`}
+      sizes="(min-width: 1024px) 960px, 100vw"
+      width="1400"
+      height="900"
+      loading="lazy"
+      decoding="async"
+      alt={alt}
+      style={`object-position:${focus}`}
+    />
+    {caption && <figcaption>{caption}</figcaption>}
+  </div>
+</figure>
+
+<style>
+  .kk-band {
+    margin: 0;
+  }
+
+  .kk-band-frame {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    /* Portrait phones hold a 4:3 far better than the 2.5:1 strip the inset
+     * version produced; the subject is actually legible at this height. */
+    aspect-ratio: 4 / 3;
+    border-block: 1px solid var(--color-line);
+  }
+
+  .kk-band-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.88) saturate(0.9);
+  }
+
+  /* Bottom scrim: the photo has to die into the page, and the caption has to
+   * stay readable no matter how bright that corner of the crop is. */
+  .kk-band-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(15, 28, 30, 0.2) 0%,
+      transparent 30%,
+      rgba(15, 28, 30, 0.55) 72%,
+      rgba(15, 28, 30, 0.94) 100%
+    );
+  }
+
+  .kk-band-frame figcaption {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    padding: 0 1.5rem 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.45;
+    color: var(--color-chalk);
+    text-wrap: balance;
+  }
+
+  @media (min-width: 768px) {
+    .kk-band {
+      margin-inline: auto;
+      max-width: 64rem;
+      padding-inline: 1.5rem;
+    }
+    .kk-band-frame {
+      aspect-ratio: 5 / 2;
+      border: 1px solid var(--color-line);
+      border-radius: var(--radius-card);
+    }
+    .kk-band-frame figcaption {
+      padding: 0 1.75rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+</style>

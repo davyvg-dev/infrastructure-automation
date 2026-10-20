@@ -1,0 +1,352 @@
+{
+  "name": "review-request",
+  "nodes": [
+    {
+      "id": "22222222-2222-4222-8222-222222222221",
+      "name": "Webhook - Job Done",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "job-done",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "name": "Parse Job Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Expected payload: { client_id, customer_e164, customer_email, voornaam, bedrijfsnaam, google_review_short, trustpilot_link, kort_klus_omschrijving, owner_voornaam, job_id }\nconst body = items[0].json.body || items[0].json;\nif (!body.client_id || !body.customer_e164 || !body.job_id) {\n  throw new Error('Missing required fields: client_id, customer_e164, job_id');\n}\nreturn [{ json: body }];"
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222223",
+      "name": "Wait 2 Hours",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [640, 300],
+      "parameters": {
+        "amount": 2,
+        "unit": "hours"
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222224",
+      "name": "Lookup Client Tier + Suppression",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [860, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT c.tier, c.bedrijfsnaam, EXISTS(SELECT 1 FROM suppression_list WHERE e164_hash = encode(digest($2, 'sha256'), 'hex')) AS suppressed FROM clients c WHERE c.id = $1::uuid;",
+        "options": {
+          "queryReplacement": "={{ $('Parse Job Payload').item.json.client_id }},={{ $('Parse Job Payload').item.json.customer_e164 }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222225",
+      "name": "If Lite or Suppressed - Skip",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1080, 300],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "or",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.tier }}",
+              "rightValue": "Lite",
+              "operator": { "type": "string", "operation": "equals" }
+            },
+            {
+              "leftValue": "={{ $json.suppressed }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222226",
+      "name": "End - Skipped",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1300, 180],
+      "parameters": {}
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222227",
+      "name": "CM.com SMS - Review Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"={{ $('Lookup Client Tier + Suppression').item.json.bedrijfsnaam }}\",\n      \"to\": [{ \"number\": \"={{ $('Parse Job Payload').item.json.customer_e164 }}\" }],\n      \"body\": { \"content\": \"Bedankt dat u koos voor {{ $('Lookup Client Tier + Suppression').item.json.bedrijfsnaam }}, {{ $('Parse Job Payload').item.json.voornaam }}!\\nEen korte review op Google helpt ons enorm: {{ $('Parse Job Payload').item.json.google_review_short }}\\nDuurt 20 sec. STOP = afmelden.\" },\n      \"reference\": \"review-{{ $('Parse Job Payload').item.json.job_id }}\"\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222228",
+      "name": "Log Review Request",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1520, 420],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO review_requests (client_id, job_id, customer_e164, channel, status, sent_at) VALUES ($1::uuid, $2, $3, 'sms', 'pending', NOW()) ON CONFLICT (job_id) DO UPDATE SET status='pending', sent_at=NOW();",
+        "options": {
+          "queryReplacement": "={{ $('Parse Job Payload').item.json.client_id }},={{ $('Parse Job Payload').item.json.job_id }},={{ $('Parse Job Payload').item.json.customer_e164 }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "22222222-2222-4222-8222-222222222229",
+      "name": "Wait 5 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1740, 420],
+      "parameters": {
+        "amount": 5,
+        "unit": "days"
+      }
+    },
+    {
+      "id": "2222222a-2222-4222-8222-22222222222a",
+      "name": "Check Review Status",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1960, 420],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT status FROM review_requests WHERE job_id = $1 LIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $('Parse Job Payload').item.json.job_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "2222222b-2222-4222-8222-22222222222b",
+      "name": "If Still Pending",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2180, 420],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "pending",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "2222222c-2222-4222-8222-22222222222c",
+      "name": "Email Suppression Check",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2400, 520],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT EXISTS(SELECT 1 FROM suppression_list WHERE email_hash = encode(digest(lower($1), 'sha256'), 'hex')) AS email_suppressed;",
+        "options": {
+          "queryReplacement": "={{ $('Parse Job Payload').item.json.customer_email }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "2222222d-2222-4222-8222-22222222222d",
+      "name": "If Email Allowed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2620, 520],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.email_suppressed }}",
+              "rightValue": false,
+              "operator": { "type": "boolean", "operation": "false", "singleValue": true }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "2222222e-2222-4222-8222-22222222222e",
+      "name": "Resend - Review Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2840, 600],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"{{ $('Lookup Client Tier + Suppression').item.json.bedrijfsnaam }} <no-reply@klantkraan.nl>\",\n  \"to\": [\"{{ $('Parse Job Payload').item.json.customer_email }}\"],\n  \"subject\": \"Heeft u nog een momentje, {{ $('Parse Job Payload').item.json.voornaam }}?\",\n  \"text\": \"Beste {{ $('Parse Job Payload').item.json.voornaam }},\\n\\nVorige week hebben we {{ $('Parse Job Payload').item.json.kort_klus_omschrijving }} bij u uitgevoerd. We hopen dat alles naar wens is.\\n\\nMocht u tevreden zijn, dan zouden we het waarderen als u een korte review achterlaat:\\n\\nGoogle: {{ $('Parse Job Payload').item.json.google_review_short }}\\nTrustpilot: {{ $('Parse Job Payload').item.json.trustpilot_link }}\\n\\nHeeft u opmerkingen of klachten? Antwoord dan gerust op deze mail — die komen rechtstreeks bij {{ $('Parse Job Payload').item.json.owner_voornaam }} terecht.\\n\\nMet vriendelijke groet,\\n{{ $('Lookup Client Tier + Suppression').item.json.bedrijfsnaam }}\"\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Resend - API Key"
+        }
+      }
+    },
+    {
+      "id": "2222222f-2222-4222-8222-22222222222f",
+      "name": "Healthchecks Ping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3060, 600],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_REVIEW_REQUEST }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "22222230-2222-4222-8222-222222222230",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [420, 480],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"queued\" }"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Job Done": {
+      "main": [[
+        { "node": "Parse Job Payload", "type": "main", "index": 0 },
+        { "node": "Respond OK", "type": "main", "index": 0 }
+      ]]
+    },
+    "Parse Job Payload": {
+      "main": [[{ "node": "Wait 2 Hours", "type": "main", "index": 0 }]]
+    },
+    "Wait 2 Hours": {
+      "main": [[{ "node": "Lookup Client Tier + Suppression", "type": "main", "index": 0 }]]
+    },
+    "Lookup Client Tier + Suppression": {
+      "main": [[{ "node": "If Lite or Suppressed - Skip", "type": "main", "index": 0 }]]
+    },
+    "If Lite or Suppressed - Skip": {
+      "main": [
+        [{ "node": "End - Skipped", "type": "main", "index": 0 }],
+        [{ "node": "CM.com SMS - Review Request", "type": "main", "index": 0 }]
+      ]
+    },
+    "CM.com SMS - Review Request": {
+      "main": [[{ "node": "Log Review Request", "type": "main", "index": 0 }]]
+    },
+    "Log Review Request": {
+      "main": [[{ "node": "Wait 5 Days", "type": "main", "index": 0 }]]
+    },
+    "Wait 5 Days": {
+      "main": [[{ "node": "Check Review Status", "type": "main", "index": 0 }]]
+    },
+    "Check Review Status": {
+      "main": [[{ "node": "If Still Pending", "type": "main", "index": 0 }]]
+    },
+    "If Still Pending": {
+      "main": [
+        [{ "node": "Healthchecks Ping", "type": "main", "index": 0 }],
+        [{ "node": "Email Suppression Check", "type": "main", "index": 0 }]
+      ]
+    },
+    "Email Suppression Check": {
+      "main": [[{ "node": "If Email Allowed", "type": "main", "index": 0 }]]
+    },
+    "If Email Allowed": {
+      "main": [
+        [{ "node": "Healthchecks Ping", "type": "main", "index": 0 }],
+        [{ "node": "Resend - Review Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "Resend - Review Email": {
+      "main": [[{ "node": "Healthchecks Ping", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20"
+  }
+}

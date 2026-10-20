@@ -1,0 +1,25 @@
+id:        conv_3501kz78f5znee7vtn5casjapvr0
+caller:    +31634608938  ->  +3197006530002
+status:    done  |  ended: Call ended by remote party
+duration:  119s  |  verdict: failure
+
+summary:   De gebruiker meldde dat hun sleutel vastzat in het slot en de deur op het nachtslot zat. De AI-assistent van Slotenmaker DRS gaf aan dat de cilinder waarschijnlijk gebroken en vervangen moest worden. Na een initiële miscommunicatie over de postcode, waarbij de gebruiker "1760, Dirk Anton" zei en de agent om verduidelijking vroeg, gaf de gebruiker de correcte postcode "1074 DA".
+
+collected:
+  caller_name: Dirk Anton
+  phone: None
+  address: None
+  job_type: sleutel afgebroken
+  is_emergency: True
+
+transcript:
+  agent: Hallo, u spreekt met Sam, de AI-assistent van Slotenmaker DRS. Waarmee kan ik u helpen?
+   user: M'n sleutel is in het slot vast blijven zitten en gaat er niet meer uit.
+  agent: Dat is vervelend, maar we kunnen dat oplossen. Zit de deur op het nachtslot, of is hij alleen dichtgevallen met de sleutel nog aan de binnenkant?
+   user: Nee, ik heb hem doorgedraaid, dus hij is op het nachtslot.
+  agent: Oké, genoteerd. Omdat de deur op het nachtslot zit, zal de cilinder waarschijnlijk gebroken en vervangen moeten worden.
+
+Wat is uw postcode en huisnummer?
+   user: 1760, Dirk Anton.
+  agent: Ik hoorde "zeventien zestig, Dirk Anton". Bedoelt u postcode één...
+   user: Nee.

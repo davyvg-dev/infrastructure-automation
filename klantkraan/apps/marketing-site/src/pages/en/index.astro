@@ -1,0 +1,173 @@
+---
+import Base from '../../layouts/Base.astro'
+import CostReceipt from '../../components/home/CostReceipt.astro'
+import Duties from '../../components/home/Duties.astro'
+import FinalCta from '../../components/home/FinalCta.astro'
+import Hero from '../../components/home/Hero.astro'
+import HowItWorks from '../../components/home/HowItWorks.astro'
+import Roadmap from '../../components/home/Roadmap.astro'
+import Transparency from '../../components/home/Transparency.astro'
+import { waLink } from '../../data/contact'
+
+const hero = {
+  status: 'Answering now on site and WhatsApp',
+  h1a: 'The light stays',
+  h1on: 'on.',
+  sub:
+    "You're up a ladder, on a roof, or asleep. Your best customer has a question right now. " +
+    "Klantkraan's digital receptionist answers it on your site and WhatsApp, books the " +
+    'appointment and captures every callback request. Day and night.',
+  ctaPrimary: 'Start today',
+  ctaPrimaryHref: '/en/aanmelden/',
+  ctaGhost: 'Try the demo',
+  ctaGhostHref: '/en/demo/',
+  proof: [
+    { icon: 'message-circle' as const, label: 'Done-for-you setup' },
+    { icon: 'calendar-check' as const, label: 'Cancel monthly' },
+    { icon: 'shield-check' as const, label: 'GDPR-compliant, EU-hosted' },
+  ],
+  panelAria:
+    'Conversation at 23:47: a customer with a leak asks a question, the digital receptionist books an appointment for Tuesday 09:00 and prepares a callback request for the owner.',
+  threadName: 'Klantkraan',
+  threadSub: 'Replies instantly',
+  liveTs: 'Tonight 23:47',
+  disclosure: "You're chatting with a digital assistant.",
+  customerMsg: "I've got a leak under the kitchen sink, can someone come tomorrow?",
+  recepMsg:
+    "Sorry to hear that, we'll sort it. Tomorrow 09:00 is free. Shall I lock that in for you?",
+  stampStrong: 'BOOKED',
+  stampDetail: 'Tue 09:00 · callback ready for the owner',
+}
+
+const duties = {
+  eyebrow: 'The night shift',
+  heading: 'What the receptionist takes over while you work.',
+  photoAlt: 'Heating engineer checking an outdoor unit by torchlight',
+  items: [
+    {
+      icon: 'message-square' as const,
+      title: 'Answers every question',
+      text: 'Knows your rates, services and service area. No invented prices, only what you have set.',
+    },
+    {
+      icon: 'calendar-check' as const,
+      title: 'Books the appointment',
+      text: 'Straight into your calendar, only in slots that are genuinely free. The customer picks a slot, you see it at once.',
+    },
+    {
+      icon: 'phone-call' as const,
+      title: 'Captures the callback',
+      text: "Can't take it right now? The receptionist notes the name, number and job. You call back the ones that matter.",
+    },
+  ],
+}
+
+const cost = {
+  eyebrow: 'The bill for a dark evening',
+  heading: 'Every unanswered question is a job walking to your competitor.',
+  sub:
+    "This is an example. Run it on your own numbers and you'll see exactly what a month of " +
+    'missed calls costs you.',
+  ariaLabel: 'Example calculation of lost revenue',
+  cap: 'Example · 40 calls a week',
+  lines: [
+    { k: 'Calls per month', v: '173' },
+    { k: 'Missed (industry estimate: 28%)', v: '48' },
+    { k: 'Would have become jobs (1 in 3)', v: '16' },
+    { k: '× value per job', v: '€450' },
+  ],
+  resultK: 'Lost revenue',
+  resultV: '± €7,200/mo',
+  ctaLabel: 'Run it on your own numbers',
+  ctaHref: '/en/rekentool/',
+}
+
+const honest = {
+  eyebrow: 'Honest about AI',
+  heading: "The light is on. There's nothing to hide.",
+  quote: "You're chatting with a digital assistant.",
+  bullets: [
+    "That's how every conversation starts, before anything else happens.",
+    'From 2 August 2026 that notice is required under Article 50 of the EU AI Act. We already do it.',
+    'Where a voicebot is sold on "nobody can tell the difference", our receptionist simply says what it is. Your customer knows where they stand, and you risk no fine.',
+  ],
+  linkLabel: 'Read the full disclosure',
+  linkHref: '/legal/ai-disclosure/',
+}
+
+const start = {
+  eyebrow: 'Getting started',
+  heading: 'Sign up today, live this week.',
+  steps: [
+    {
+      title: 'Sign up',
+      text: 'Five minutes. You pay straight away through Mollie: first month €149.50, then €299 a month, excl. VAT.',
+    },
+    {
+      title: 'We build your receptionist',
+      text: 'Within one working day we call to go through your services, rates and calendar. You build nothing.',
+    },
+    {
+      title: 'Live on your site and WhatsApp',
+      text: 'You test it yourself and give the go-ahead. From that moment it answers every enquiry, day and night.',
+    },
+  ],
+  note: 'Cancel monthly. No annual contract, no hidden renewal; cancel by email, no notice period.',
+}
+
+const roadmap = {
+  eyebrow: 'Where this is going',
+  heading: 'The front desk today. The office next.',
+  sub:
+    'The receptionist is the start, not the finish. It takes the front door: everything that ' +
+    'arrives while you are working. Behind that sits the paperwork you currently do at the ' +
+    'kitchen table at night. That is where we are heading, with the first clients.',
+  nowLabel: 'What it does now',
+  now: [
+    'Answers questions on your site and WhatsApp, day and night',
+    'Books appointments straight into your own calendar',
+    'Takes callback requests with name, number and job',
+    'Says it is a digital assistant, in every conversation',
+  ],
+  laterLabel: 'What we are building',
+  laterNote:
+    'Not available yet. It is not part of your subscription and you are not paying for it.',
+  later: [
+    'Quotes that follow themselves up when the customer goes quiet',
+    'Appointment reminders, so nobody drives out for nothing',
+    'Review requests at the moment the job is finished',
+    'Invoice reminders for whatever stays unpaid',
+  ],
+  footnote:
+    'Which of these lands first is decided by the clients who are here at the time, not by us. ' +
+    'Ask for something that is not in there and we will say so, and say when it will be.',
+}
+
+const finalCta = {
+  h2a: 'Turn the light',
+  h2on: 'on.',
+  sub:
+    'Try the demo and ask the receptionist a question as if you were a customer. Like it? Sign ' +
+    'up and we take care of the rest, you build nothing.',
+  primary: { label: 'Start today', href: '/en/aanmelden/' },
+  ghosts: [
+    { label: 'Try the demo', href: '/en/demo/' },
+    { label: 'Book an intro chat', href: waLink, external: true },
+  ],
+}
+---
+
+<Base
+  lang="en"
+  title="AI receptionist for your business: website chat & WhatsApp | Klantkraan"
+  description="An AI receptionist on your website and WhatsApp: answers questions, books appointments and captures leads, day and night. Done-for-you setup. Cancel monthly."
+  centered={false}
+>
+  <Hero t={hero} />
+  <Duties t={duties} />
+  <CostReceipt t={cost} />
+  <Transparency t={honest} />
+  <Roadmap t={roadmap} />
+  <HowItWorks t={start} />
+  <FinalCta t={finalCta} />
+</Base>

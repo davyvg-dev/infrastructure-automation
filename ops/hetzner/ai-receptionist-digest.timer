@@ -1,0 +1,11 @@
+[Unit]
+Description=Send the receptionist oversight digest every morning
+
+[Timer]
+# 07:30 in the server's local timezone; covers the whole of the previous day.
+OnCalendar=*-*-* 07:30:00
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

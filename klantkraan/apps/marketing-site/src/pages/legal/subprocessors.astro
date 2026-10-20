@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro'
+
+const lastUpdated = '11 augustus 2026'
+
+type Subprocessor = {
+  name: string
+  purpose: string
+  location: string
+  transfer: string
+  dpa: string
+}
+
+const subprocessors: Subprocessor[] = [
+  {
+    name: 'Hetzner',
+    purpose: 'Hosting van de VPS (applicatie-server, monitoring).',
+    location: 'EU (Falkenstein DE, Helsinki FI)',
+    transfer: 'Geen doorgifte buiten de EER.',
+    dpa: 'https://www.hetzner.com/AV/DPA_en.pdf',
+  },
+  {
+    name: 'Neon',
+    purpose: 'Managed Postgres database.',
+    location: 'EU (Frankfurt)',
+    transfer: 'Geen doorgifte buiten de EER.',
+    dpa: 'https://neon.com/dpa',
+  },
+  {
+    name: 'Cloudflare',
+    purpose: 'CDN, edge-workers, DNS, R2 object storage.',
+    location: 'Global, EU-pinned (Workers + R2 EU)',
+    transfer: 'SCC 2021/914 module 3 plus EU-data-only configuratie.',
+    dpa: 'https://www.cloudflare.com/cloudflare-customer-dpa/',
+  },
+  {
+    name: 'Anthropic',
+    purpose: 'AI-antwoorden van de receptionist (Claude API).',
+    location: 'VS; verwerking van EU-data via API',
+    transfer: 'SCC 2021/914 plus aanvullende technische maatregelen.',
+    dpa: 'https://www.anthropic.com/legal/commercial-terms',
+  },
+  {
+    name: 'Twilio',
+    purpose: 'WhatsApp-kanaal van de AI-receptionist.',
+    location: 'VS, EU-regio waar beschikbaar',
+    transfer: 'SCC 2021/914.',
+    dpa: 'https://www.twilio.com/en-us/legal/data-protection-addendum',
+  },
+  {
+    name: 'Mollie',
+    purpose: 'Betalingen (iDEAL, SEPA-incasso).',
+    location: 'NL',
+    transfer: 'Geen doorgifte buiten de EER.',
+    dpa: 'https://www.mollie.com/legal/data-processing-agreement',
+  },
+  {
+    name: 'Resend',
+    purpose: 'Transactionele e-mail.',
+    location: 'EU (Ierland), leverancier VS',
+    transfer: 'SCC 2021/914; verzending geconfigureerd op EU-regio.',
+    dpa: 'https://resend.com/legal/dpa',
+  },
+]
+---
+
+<Base
+  title="Sub-processors register | Klantkraan"
+  description="De actuele lijst van sub-processors die Klantkraan inschakelt, hun verwerkingsdoel, datalocatie en doorgifte-mechanisme conform AVG art. 28 en SCC 2021/914."
+>
+  <article class="prose-legal">
+    <header class="border-b border-(--color-line) pb-8">
+      <p class="text-micro uppercase tracking-wider text-(--color-dim)">
+        Juridisch &middot; Annex III bij de DPA
+      </p>
+      <h1 class="mt-2 font-display text-h1 text-(--color-chalk)">Sub-processors</h1>
+      <p class="mt-4 text-small text-(--color-dim)">
+        Laatste wijziging: {lastUpdated}. Onderstaande partijen verwerken persoonsgegevens in
+        opdracht van Klantkraan ten behoeve van de dienstverlening. Wijzigingen worden minimaal 30
+        dagen vooraf aangekondigd aan klanten met een actief contract.
+      </p>
+    </header>
+
+    <section class="mt-10 space-y-4">
+      <h2 class="font-display text-h2 text-(--color-chalk)">Lijst</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-small">
+          <thead>
+            <tr class="border-b border-(--color-line) text-left align-bottom">
+              <th class="py-2 pr-4 font-semibold">Sub-processor</th>
+              <th class="py-2 pr-4 font-semibold">Doel</th>
+              <th class="py-2 pr-4 font-semibold">Locatie</th>
+              <th class="py-2 pr-4 font-semibold">Doorgifte</th>
+              <th class="py-2 font-semibold">DPA</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-(--color-line)">
+            {
+              subprocessors.map((sp) => (
+                <tr>
+                  <td class="py-2 pr-4 align-top font-semibold">{sp.name}</td>
+                  <td class="py-2 pr-4 align-top">{sp.purpose}</td>
+                  <td class="py-2 pr-4 align-top">{sp.location}</td>
+                  <td class="py-2 pr-4 align-top">{sp.transfer}</td>
+                  <td class="py-2 align-top">
+                    <a href={sp.dpa} rel="external" aria-label={`DPA van ${sp.name}`}>
+                      DPA
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="text-small text-(--color-dim)">
+        Sub-processors voor het AI-telefonie-kanaal (voice) worden aangekondigd zodra die dienst
+        live gaat, met de gebruikelijke aankondigingstermijn van 30 dagen.
+      </p>
+    </section>
+
+    <section class="mt-10 space-y-4">
+      <h2 class="font-display text-h2 text-(--color-chalk)">Bezwaar tegen een sub-processor</h2>
+      <p class="text-body">
+        Klanten kunnen binnen 30 dagen na aankondiging van een nieuwe sub-processor schriftelijk
+        bezwaar maken. Indien er geen alternatieve oplossing mogelijk is, heeft de klant in dat
+        geval een opzeggingsrecht zonder kosten. Bezwaren naar
+        <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a>.
+      </p>
+    </section>
+
+    <section class="mt-10 space-y-4">
+      <h2 class="font-display text-h2 text-(--color-chalk)">Doorgifte buiten de EER</h2>
+      <p class="text-body">
+        Voor sub-processors in de Verenigde Staten passen wij de EU Standard Contractual Clauses
+        2021/914 (module 3) toe, aangevuld met een Transfer Impact Assessment en aanvullende
+        technische maatregelen (versleuteling, EU-region-only waar beschikbaar, dataminimalisatie).
+      </p>
+    </section>
+  </article>
+</Base>

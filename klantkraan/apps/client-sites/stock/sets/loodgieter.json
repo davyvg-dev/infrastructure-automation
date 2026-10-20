@@ -1,0 +1,51 @@
+{
+  "vak": "loodgieter",
+  "queries": ["loodgieter leiding", "plumber pipe wrench", "cv installatie", "kraan spoelbak"],
+  "fotos": [
+    {
+      "id": 6419128,
+      "fotograaf": "Anil Karakaya",
+      "rollen": ["tall"],
+      "alt": "Handen monteren een stalen leiding onder een wastafel"
+    },
+    {
+      "id": 29226620,
+      "fotograaf": "Sergei Starostin",
+      "rollen": ["hero", "og"],
+      "alt": "Loodgieter monteert een koppeling op een waterleiding",
+      "notitie": "Handschoenen op een blauwe buis: werkkleding en een gezichtsloze persoon, het dichtst dat deze set bij een crewfoto komt."
+    },
+    {
+      "id": 5414383,
+      "fotograaf": "Roger Brown",
+      "rollen": ["wide"],
+      "alt": "Moersleutels en waterpomptang op een werkblad"
+    },
+    {
+      "id": 5534767,
+      "fotograaf": "Roger Brown",
+      "rollen": ["wide"],
+      "alt": "Hand met werkhandschoen en een verstelbare moersleutel"
+    },
+    {
+      "id": 14953886,
+      "fotograaf": "AS Photography",
+      "rollen": ["tall"],
+      "alt": "Fittingen en flexibele slangen op een bouwtekening"
+    },
+    {
+      "id": 34295401,
+      "fotograaf": "Zulfugar Karimov",
+      "rollen": ["tall"],
+      "alt": "Kraan met stromend water boven een rvs spoelbak",
+      "notitie": "Chromen kraan met stromend water: het eindresultaat, en het lichtste frame van de set, wat de tall-plek naast donkere gereedschapsclose-ups nodig heeft."
+    },
+    {
+      "id": 7937299,
+      "fotograaf": "Erik Mclean",
+      "rollen": ["wide"],
+      "alt": "Verdeler van een cv-installatie met pomp en leidingen",
+      "notitie": "Zes frames handen en gereedschap en geen installatie: deze set had elk vak kunnen zijn. Een cv-verdeler is het ene object dat een Nederlandse huiseigenaar direct als loodgieterswerk herkent."
+    }
+  ]
+}

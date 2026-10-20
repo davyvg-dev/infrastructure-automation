@@ -1,0 +1,293 @@
+---
+import Base from '../../layouts/Base.astro'
+import Icon from '../../components/Icon.astro'
+import Stat from '../../components/Stat.astro'
+import Radiator from '../../components/illustrations/Radiator.astro'
+import RiskReversal from '../../components/RiskReversal.astro'
+import PhotoBand from '../../components/PhotoBand.astro'
+
+// Heating-engineer landing page. Follows the /loodgieters template structure.
+// Trade-specific copy: boiler breakdown, servicing, water heater, cold-snap peak.
+
+interface PainStat {
+  value: string
+  caption: string
+}
+
+const painStats: PainStat[] = [
+  { value: '62%', caption: 'of your boiler breakdowns come in during January and February.' },
+  { value: '€340', caption: 'average value of a boiler breakdown visit.' },
+  { value: '4×', caption: 'more servicing requests in September and October.' },
+]
+
+interface Feature {
+  icon: 'phone' | 'message-square' | 'calendar-check'
+  title: string
+  body: string
+}
+
+const features: Feature[] = [
+  {
+    icon: 'message-square',
+    title: 'Spots a boiler breakdown in January',
+    body: "Answers customer questions on your website and via WhatsApp, in natural English, in the evenings and at weekends too. Quotes your own boiler servicing rate, call-out charge and cold-snap emergency surcharge. It won't mistake a breakdown for a scheduling question about the annual service.",
+  },
+  {
+    icon: 'calendar-check',
+    title: 'Appointments straight into your calendar',
+    body: "Servicing and breakdown appointments are booked straight into your calendar, only in the slots you've opened up yourself. Emergencies are kept separate from the annual service, so you know what needs doing first.",
+  },
+  {
+    icon: 'phone',
+    title: 'Leads and callback requests on your phone',
+    body: "Boiler breakdown during a cold snap? The receptionist takes the message and sends it straight to your phone, with the name, number and the question. No customer goes to a competitor while you're out on another emergency repair.",
+  },
+]
+
+interface Faq {
+  q: string
+  a: string
+  href?: string
+  linkLabel?: string
+}
+
+const faqs: Faq[] = [
+  {
+    q: 'How does the receptionist get onto my website?',
+    a: "With one small script that we install for you. You don't need to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
+  },
+  {
+    q: "And if I'm on site and can't reply?",
+    a: "That's exactly what this is built for. The receptionist answers the question (boiler emergency, annual service, new job, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back between jobs.",
+  },
+  {
+    q: 'How does the AI cope with the January peaks?',
+    a: 'The receptionist handles conversations in parallel. No queue. Ten customers can chat or message about a boiler breakdown at the same time and all ten get an answer right away. Emergency breakdowns are recognised and kept separate from routine servicing, so you know which one to call first.',
+  },
+  {
+    q: "Can the customer tell it's AI?",
+    a: "Yes. Every conversation opens by telling your customer they're chatting with a digital assistant, on behalf of your business. That's not a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
+    href: '/legal/ai-disclosure/',
+    linkLabel: 'Read the full AI disclosure',
+  },
+  {
+    q: 'What if the AI says something wrong about my rates?',
+    a: "That can't happen. The assistant only quotes rates you've entered into your system yourself: call-out charge, boiler servicing rate, emergency boiler call, water-heater rate. It never invents prices it doesn't know; the customer gets a callback instead. We test every configuration before you go live.",
+  },
+  {
+    q: 'What happens to the customer data?',
+    a: "We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you'd prefer less. The full supplier list is published openly in our sub-processor register.",
+    href: '/legal/dpa/',
+    linkLabel: 'View the DPA and privacy statement',
+  },
+  {
+    q: 'Cancel monthly, really?',
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively).",
+    href: '/legal/voorwaarden/',
+    linkLabel: 'Read the terms and conditions',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a.replace(/<[^>]+>/g, ''),
+    },
+  })),
+}
+---
+
+<Base
+  lang="en"
+  title="Win more heating jobs: AI receptionist for boiler work | Klantkraan"
+  description="AI receptionist for heating engineers, cancel monthly. Knows your boiler rates and emergency surcharge, books appointments via chat and WhatsApp."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+    >
+      <div>
+        <h1 class="font-display text-hero text-chalk">
+          The <span class="text-(--color-sodium)">customer engine</span> for heating engineers.
+        </h1>
+        <p class="mt-6 max-w-2xl text-h3 text-dim">
+          A digital receptionist on your website and WhatsApp that spots a boiler breakdown and
+          won't mistake it for a scheduling question about the annual service. Catches the January
+          peak and the October servicing rush. Evenings and weekends included.
+        </p>
+        <div class="mt-10 btn-row">
+          <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+          <a href="/en/rekentool/" class="btn btn-ghost btn-lg"> Work out your ROI </a>
+        </div>
+      </div>
+      <div class="hidden text-(--color-sodium) md:block">
+        <Radiator class="h-64 w-64 lg:h-72 lg:w-72" />
+      </div>
+    </div>
+    <div class="mx-auto max-w-5xl px-6">
+      <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">GDPR + AI Act art. 50</p>
+            <p class="text-small text-dim">Disclosure on by default</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">Hosted in the EU</p>
+            <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-chalk">Natural conversation</p>
+            <p class="text-small text-dim">Knows your boiler rate + surcharge</p>
+          </div>
+        </li>
+      </ul>
+      <p class="mt-8 text-small text-dim">
+        Cancel monthly · Done-for-you setup · 50% off the first month
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-10 md:pb-16">
+    <PhotoBand
+      slug="installateurs"
+      alt="Technician checking the outdoor unit of a heat pump"
+      caption="Out at the unit. Your receptionist still answers."
+    />
+  </section>
+
+  <!-- 1b. Risk-reversal -->
+  <RiskReversal lang="en" />
+
+  <!-- 2. Pain-stats trio (stone-100) -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="What seasonal peaks cost a heating engineer"
+  >
+    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+      {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
+    </div>
+  </section>
+
+  <!-- 3. Modules (cream, hairline rows) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Modules</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">
+        What Klantkraan does for heating engineers.
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-dim">
+        Three modules. One monthly price. Built for the heating engineer who no longer wants to
+        leave the January peak to their partner.
+      </p>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          features.map((feature) => (
+            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
+              <div>
+                <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
+                <p class="mt-2 text-body text-dim">{feature.body}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ROI snippet (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">The maths</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Do the maths.</h2>
+      <div
+        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+      >
+        <p class="text-h3 text-chalk">
+          Miss 7 calls a week at €340? That's <strong class="text-(--color-sodium)"
+            >around €41,000 in lost revenue a year</strong
+          >.
+        </p>
+        <p class="mt-4 text-body text-dim">
+          Klantkraan Chat is €299 a month. One extra emergency boiler call from the January peak
+          covers the subscription. Everything that comes in after that is revenue. And the customer
+          isn't sat in a cold house for three hours.
+        </p>
+        <div class="mt-6 btn-row">
+          <a href="/en/rekentool/" class="btn btn-primary btn-lg"> Open the calculator </a>
+          <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
+        </div>
+        <p class="mt-6 text-micro text-dim">
+          Amounts exclude 21% VAT. Example based on an industry average of €340 per call for boiler
+          breakdowns and water-heater failures (source: Aira / Invoca missed-call benchmarks) and
+          the assumption that roughly 1 in 3 missed calls would have produced a paying job (33%
+          conversion rate).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FAQ (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Questions</p>
+      <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
+      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
+        {
+          faqs.map((faq) => (
+            <details class="group py-4">
+              <summary class="block min-h-[2.75rem] cursor-pointer list-none py-1 font-display text-h3 text-chalk marker:hidden">
+                <span class="flex items-start justify-between gap-4">
+                  <span>{faq.q}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                  />
+                </span>
+              </summary>
+              <p class="mt-3 text-body text-dim">{faq.a}</p>
+              {faq.href && faq.linkLabel && (
+                <p class="mt-3 text-small">
+                  <a href={faq.href} class="underline">
+                    {faq.linkLabel}
+                  </a>
+                </p>
+              )}
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Final CTA (blue) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h2 class="font-display text-h1 text-chalk">Ready for the next heating season?</h2>
+      <p class="mt-4 max-w-2xl text-body text-dim">
+        Try the live demo. After that you'll know whether it spots a boiler breakdown and how it
+        separates one from a question about the annual service.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
+        <a href="/en/prijzen/" class="btn btn-ghost btn-lg"> See pricing </a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+</Base>

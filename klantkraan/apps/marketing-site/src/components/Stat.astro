@@ -1,0 +1,27 @@
+---
+/*
+ * Stat — single numeric callout for the stat band pattern.
+ * Brief 09-brand/visual-identity-brief.md § 7: "Numeric statistics get their
+ * own visual block — large weight, accent colour." Small rust marker bar
+ * above each value is the "single accent block per page" allowance from § 3.
+ *
+ * v2 (2026-05-21): card treatment per website-aesthetics.md §1 — the flat
+ * stat row read as decorative bullet-points. White card + 1px border + bigger
+ * type gives each number its own visual weight without breaking the no-shadow
+ * rule.
+ */
+interface Props {
+  value: string
+  label: string
+}
+
+const { value, label } = Astro.props
+---
+
+<div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8">
+  <div class="h-1 w-12 bg-(--color-sodium)" aria-hidden="true"></div>
+  <p class="mt-5 font-display text-hero leading-none text-(--color-sodium) tracking-tight">
+    {value}
+  </p>
+  <p class="mt-4 text-body text-dim">{label}</p>
+</div>

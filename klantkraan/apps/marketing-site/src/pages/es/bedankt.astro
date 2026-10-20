@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro'
+---
+
+<Base
+  title="Gracias | Klantkraan"
+  description="Gracias por su pago. Nos pondremos en contacto en un día laborable para configurar su recepcionista con IA."
+  centered={false}
+  noindex
+>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">Gracias</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Su pago se ha procesado a través de Mollie. En cuanto se confirme, su suscripción se activa
+        automáticamente y nos ponemos manos a la obra.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div
+      class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start"
+    >
+      <div
+        class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Qué pasa ahora</h2>
+        <ol class="mt-4 space-y-3 text-body text-(--color-dim)">
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">1.</span>
+            Le llamamos en un día laborable para repasar sus servicios, tarifas y agenda.
+          </li>
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">2.</span>
+            Montamos y conectamos su recepcionista. Todo lo hacemos nosotros; usted solo aporta el conocimiento.
+          </li>
+          <li>
+            <span class="font-mono text-small text-(--color-sodium)">3.</span>
+            Usted lo prueba, da el visto bueno y entra en funcionamiento en su web y WhatsApp.
+          </li>
+        </ol>
+        <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+          Cancelación mensual; se cancela por correo, sin preaviso.
+        </p>
+      </div>
+
+      <aside
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">¿Pago cancelado o fallido?</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          No pasa nada: su enlace de pago sigue siendo válido y puede intentarlo más tarde. Si no
+          funciona, escriba a
+          <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>
+          y lo resolvemos juntos.
+        </p>
+        <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
+          ¿Dudas sobre su suscripción o factura? Escríbanos; respondemos en un día laborable.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>

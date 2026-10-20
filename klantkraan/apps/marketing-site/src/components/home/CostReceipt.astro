@@ -1,0 +1,129 @@
+---
+/*
+ * The missed-revenue sum, laid out as one full-width line of arithmetic instead
+ * of a receipt card beside the copy: the page already has enough head-left,
+ * panel-right sections, and a sum read left to right is the shape of the
+ * argument. Numbers must match /rekentool's model. Display face, not mono: this
+ * is money, not console output.
+ */
+
+interface Line {
+  k: string
+  v: string
+}
+
+interface Props {
+  t: {
+    eyebrow?: string
+    heading: string
+    sub: string
+    ariaLabel: string
+    cap: string
+    lines: Line[]
+    resultK: string
+    resultV: string
+    ctaLabel: string
+    ctaHref: string
+  }
+}
+
+const { t } = Astro.props
+---
+
+<section id="kosten" class="scroll-mt-24 py-12 md:py-18">
+  <div class="mx-auto max-w-5xl px-6">
+    {t.eyebrow && <span class="eyebrow">{t.eyebrow}</span>}
+    <h2 class:list={['max-w-[20em] font-display text-h2 text-balance', t.eyebrow && 'mt-3.5']}>{t.heading}</h2>
+    <p class="mt-4 max-w-[38em] text-[1.05rem] text-[#cdd8d5]">{t.sub}</p>
+
+    <div class="kk-sum" aria-label={t.ariaLabel}>
+      <p class="kk-sum-cap">{t.cap}</p>
+      <dl class="kk-sum-row">
+        {
+          t.lines.map((line) => (
+            <div class="cell">
+              <dt class="k">{line.k}</dt>
+              <dd class="v">{line.v}</dd>
+            </div>
+          ))
+        }
+        <div class="cell result">
+          <dt class="k">{t.resultK}</dt>
+          <dd class="v">{t.resultV}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <a class="btn btn-ghost mt-8" href={t.ctaHref}>
+      {t.ctaLabel}
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .kk-sum {
+    margin-top: 2.5rem;
+    border-block: 1px solid var(--color-line);
+    padding: 1.25rem 0 1.75rem;
+  }
+  .kk-sum-cap {
+    margin: 0 0 1.25rem;
+    font-size: 0.8125rem;
+    color: var(--color-dim);
+  }
+  .kk-sum-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 1rem;
+    margin: 0;
+  }
+  .kk-sum-row .cell {
+    display: flex;
+    flex-direction: column;
+  }
+  /* dt must precede dd in the markup; the figure is shown above its label. */
+  .kk-sum-row dd {
+    margin: 0;
+    order: -1;
+  }
+  .kk-sum .v {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-chalk);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .kk-sum .k {
+    margin-top: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--color-dim);
+  }
+  .kk-sum .result {
+    grid-column: 1 / -1;
+  }
+  .kk-sum .result .v {
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-sodium);
+  }
+  .kk-sum .result .k {
+    color: var(--color-chalk);
+    font-weight: 600;
+  }
+  @media (min-width: 900px) {
+    .kk-sum-row {
+      grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.7fr);
+      align-items: end;
+      gap: 2.5rem;
+    }
+    .kk-sum .result {
+      grid-column: auto;
+      justify-self: end;
+      text-align: right;
+    }
+  }
+</style>

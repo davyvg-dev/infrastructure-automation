@@ -1,0 +1,88 @@
+# Fixture-klant voor de pilot-kit. ALLE gegevens zijn fictief:
+# - KvK en btw-id zijn 0-placeholders
+# - telefoonnummer en adres zijn voorbeelden
+# - reviews zijn voorbeeldteksten, geen echte klanten
+# Kopieer deze map naar clients/<slug>/ voor een echte klant en vul alles in.
+# Deze fixture heeft bewust GEEN fotos/ map: zo test de build de foto-loze
+# fallback (kleurvlak in plaats van fotoband).
+
+modus: live # live = echte klant, alle wettelijke velden verplicht (preview = voorstel)
+
+bedrijf:
+  naam: 'Voorbeeld Dakwerken'
+  vak: 'dakdekker'
+  kvk: '00000000' # placeholder, invullen bij echte klant
+  btw_id: 'NL000000000B00' # placeholder, invullen bij echte klant
+  telefoon: '+31 6 12 34 56 78' # voorbeeldnummer (copy-lint-ok)
+  whatsapp: '31612345678' # voorbeeldnummer (copy-lint-ok)
+  email: 'info@voorbeeld-dakwerken.nl'
+  adres:
+    straat: 'Voorbeeldstraat 1'
+    postcode: '3439 AB'
+    plaats: 'Nieuwegein'
+  werkgebied:
+    - 'Nieuwegein'
+    - 'Utrecht'
+    - 'IJsselstein'
+    - 'Houten'
+
+branding:
+  # kleur_primair moet donker genoeg zijn voor witte tekst (schema checkt dit).
+  kleur_primair: '#24435c'
+  kleur_accent: '#e0862f'
+
+# De zinnen die van dit bedrijf zijn in plaats van van het sjabloon. Elke sleutel is
+# optioneel en valt terug op src/lib/toon.ts; wat hier staat is wat twee sites van elkaar
+# laat verschillen. Alles hieronder is te herleiden tot de diensten en het werkgebied
+# hierboven: geen jaartallen, geen keurmerken, geen garanties die nergens vandaan komen.
+teksten:
+  kop: 'Plat dak, pannen of zink: wij houden het dicht'
+  belofte: 'Wij komen kijken, u hoort wat er aan de hand is, en pas daarna gaat er iemand het dak op.'
+  intro_kop: 'Eerst het dak op, dan pas een prijs'
+  werkwijze: 'Een dak beoordeel je niet vanaf de stoep. Wij klimmen erop, zoeken uit waar het water vandaan komt en leggen uit wat er moet gebeuren. Daarna krijgt u een offerte waar alles in staat.'
+  bereik: 'Wij werken in Nieuwegein, Utrecht, IJsselstein en Houten. Uw dak wordt gedaan door onze eigen dakdekkers, en wat wij naar boven meenemen halen wij ook weer op.'
+  diensten_tekst: 'Van een enkele lekkage tot een compleet nieuw dak. Twijfelt u wat uw dak nodig heeft? Laat ons even kijken.'
+  slot_kop: 'Laat ons even op het dak kijken'
+  slot_tekst: 'Bel ons en beschrijf wat u ziet. Wij plannen een inspectie en u weet daarna waar u aan toe bent.'
+
+diensten:
+  - naam: 'Daklekkage verhelpen'
+    omschrijving: 'Wij sporen de lek op en dichten hem duurzaam, ook bij een plat dak.'
+  - naam: 'Dakrenovatie'
+    omschrijving: 'Complete vernieuwing van uw dakbedekking, van pannen tot bitumen.'
+  - naam: 'Dakgoten en regenafvoer'
+    omschrijving: 'Reinigen, repareren of vervangen van goten en hemelwaterafvoer.'
+  - naam: 'Dakinspectie'
+    omschrijving: 'Periodieke controle van uw dak met een duidelijk verslag en advies.'
+  - naam: 'Zink- en loodwerk'
+    omschrijving: 'Vakkundig zetwerk rond schoorstenen, dakkapellen en dakranden.'
+
+openingstijden:
+  maandag: ['07:30', '17:00']
+  dinsdag: ['07:30', '17:00']
+  woensdag: ['07:30', '17:00']
+  donderdag: ['07:30', '17:00']
+  vrijdag: ['07:30', '16:00']
+  zaterdag: ['08:00', '12:00']
+  # zondag weggelaten = gesloten
+
+spoed:
+  beschikbaar: true
+  tekst: 'Lekkage of stormschade? Bel ons direct. Wij overleggen meteen met u wat er nodig is en maken het dak zo snel mogelijk weer dicht.'
+
+usps:
+  - 'Eigen dakdekkers, geen onderaannemers'
+  - 'Heldere offerte voordat het werk begint'
+  - 'Nette afwerking en een opgeruimde werkplek'
+  - 'Ook bereikbaar voor spoed'
+
+reviews:
+  - tekst: 'Voorbeeldreview: snel geholpen bij een lekkage en netjes opgeleverd. Dit is een fictieve tekst ter illustratie.'
+    naam: 'Voorbeeldklant'
+    plaats: 'Nieuwegein'
+  - tekst: 'Voorbeeldreview: duidelijke offerte en de planning werd gewoon nagekomen. Dit is een fictieve tekst ter illustratie.'
+    naam: 'Voorbeeldklant'
+    plaats: 'Utrecht'
+
+domein: 'voorbeeld-dakwerken.nl'
+receptionist: true

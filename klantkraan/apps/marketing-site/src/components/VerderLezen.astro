@@ -1,0 +1,48 @@
+---
+// "Verder lezen" block for the six cornerstone niche pages: links the niche's
+// gids plus any blog posts with the same vertical. Renders nothing when the
+// vertical has no content yet.
+import { getCollection } from 'astro:content'
+
+interface Props {
+  vertical: 'loodgieter' | 'dakdekker' | 'schilder' | 'installateur' | 'elektricien' | 'aannemer'
+}
+
+const { vertical } = Astro.props
+
+const gidsen = (await getCollection('gidsen')).filter((g) => g.data.vertical === vertical)
+const posts = (await getCollection('blog')).filter((p) => p.data.vertical === vertical)
+
+const links = [
+  ...gidsen.map((g) => ({
+    href: `/gidsen/${g.id.replace(/\.md$/, '')}/`,
+    title: `Gids: ${g.data.title}`,
+  })),
+  ...posts.map((p) => ({
+    href: `/blog/${p.id.replace(/\.md$/, '')}/`,
+    title: p.data.title,
+  })),
+].slice(0, 3)
+---
+
+{
+  links.length > 0 && (
+    <section class="py-10 md:py-16">
+      <div class="mx-auto max-w-5xl px-6">
+        <h2 class="font-display text-h2 text-chalk">Verder lezen</h2>
+        <ul class="mt-4 space-y-2 text-body">
+          {links.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                class="text-(--color-sodium) underline hover:text-(--color-sodium-soft)"
+              >
+                {l.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}

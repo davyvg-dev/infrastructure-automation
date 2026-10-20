@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/scripts/claude-hooks/stop-dispatch.sh",
+            "timeout": 30,
+            "statusMessage": "Running repo verification gates"
+          }
+        ]
+      }
+    ]
+  }
+}

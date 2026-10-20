@@ -1,0 +1,204 @@
+---
+/*
+ * LeadForm — vanilla TS form that POSTs to the public Worker /api/lead.
+ * Contract: see klantkraan/apps/api/src/routes/lead.ts (zod schema).
+ * 409 'suppressed' is rendered as a neutral success to avoid leaking
+ * list-membership (see klantkraan/docs/06-outbound/gdpr-compliance.md).
+ * Field names never change across locales — only the display strings do.
+ *
+ * NB: currently unimported (the home lead form was removed in favour of
+ * the WhatsApp-first capture); kept wired to the live /api/lead Worker and
+ * styled in the "light stays on" dark palette should it return.
+ */
+interface Props {
+  lang?: 'nl' | 'en' | 'es'
+}
+const { lang = 'nl' } = Astro.props
+const apiBase = import.meta.env.PUBLIC_API_BASE ?? 'https://api.klantkraan.nl'
+
+const T = {
+  nl: {
+    nameLabel: 'Uw naam',
+    nameError: 'Vul uw naam in (minimaal 2 tekens).',
+    emailLabel: 'E-mailadres',
+    emailError: 'Vul een geldig e-mailadres in.',
+    phoneLabel: 'Telefoonnummer',
+    phoneOptional: '(optioneel)',
+    phoneError: 'Vul een geldig telefoonnummer in (cijfers, spaties, haakjes of streepjes).',
+    messageLabel: 'Waar kunnen wij u mee helpen?',
+    messagePlaceholder: "Bijv. 'Wij missen veel oproepen tijdens spoedklussen'",
+    messageError: 'Laat ons weten waar wij u mee kunnen helpen.',
+    formError: 'Er ging iets mis. Probeer het opnieuw of mail ons direct.',
+    submit: 'Vraag een demo aan',
+    submitting: 'Versturen…',
+    privacyPre: 'Door dit formulier te versturen gaat u akkoord met onze',
+    privacyLink: 'privacyverklaring',
+    successTitle: 'Bedankt. Wij nemen binnen 1 werkdag contact op.',
+  },
+  en: {
+    nameLabel: 'Your name',
+    nameError: 'Enter your name (at least 2 characters).',
+    emailLabel: 'Email address',
+    emailError: 'Enter a valid email address.',
+    phoneLabel: 'Phone number',
+    phoneOptional: '(optional)',
+    phoneError: 'Enter a valid phone number (digits, spaces, brackets or dashes).',
+    messageLabel: 'How can we help?',
+    messagePlaceholder: "e.g. 'We miss a lot of calls while we're on a job'",
+    messageError: 'Let us know how we can help.',
+    formError: 'Something went wrong. Please try again or email us directly.',
+    submit: 'Request a demo',
+    submitting: 'Submitting…',
+    privacyPre: 'By submitting this form you agree to our',
+    privacyLink: 'privacy policy',
+    successTitle: "Thanks. We'll be in touch within 1 working day.",
+  },
+  es: {
+    nameLabel: 'Su nombre',
+    nameError: 'Introduzca su nombre (mínimo 2 caracteres).',
+    emailLabel: 'Correo electrónico',
+    emailError: 'Introduzca un correo electrónico válido.',
+    phoneLabel: 'Teléfono',
+    phoneOptional: '(opcional)',
+    phoneError: 'Introduzca un teléfono válido (cifras, espacios, paréntesis o guiones).',
+    messageLabel: '¿En qué podemos ayudarle?',
+    messagePlaceholder: "P. ej. 'Perdemos muchas llamadas cuando estamos en una obra'",
+    messageError: 'Díganos en qué podemos ayudarle.',
+    formError: 'Algo ha salido mal. Vuelva a intentarlo o escríbanos directamente.',
+    submit: 'Solicitar una demo',
+    submitting: 'Enviando…',
+    privacyPre: 'Al enviar este formulario acepta nuestra',
+    privacyLink: 'política de privacidad',
+    successTitle: 'Gracias. Le responderemos en un día laborable.',
+  },
+} as const
+const t = T[lang]
+const privacyHref = '/legal/privacy/'
+---
+
+<form
+  id="lead-form"
+  class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
+  data-api-base={apiBase}
+  novalidate
+>
+  <div class="space-y-5">
+    <div>
+      <label for="lead-name" class="block text-body font-medium text-(--color-chalk)">
+        {t.nameLabel}
+      </label>
+      <input
+        id="lead-name"
+        name="name"
+        type="text"
+        autocomplete="name"
+        required
+        minlength="2"
+        maxlength="200"
+        class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] p-3 text-body text-(--color-chalk) focus:border-(--color-sodium) focus:outline-none focus:ring-2 focus:ring-(--color-sodium)"
+      />
+      <p
+        id="lead-name-error"
+        class="mt-1 hidden text-small text-(--color-sodium)"
+        aria-live="polite"
+      >
+        {t.nameError}
+      </p>
+    </div>
+
+    <div>
+      <label for="lead-email" class="block text-body font-medium text-(--color-chalk)">
+        {t.emailLabel}
+      </label>
+      <input
+        id="lead-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        required
+        class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] p-3 text-body text-(--color-chalk) focus:border-(--color-sodium) focus:outline-none focus:ring-2 focus:ring-(--color-sodium)"
+      />
+      <p
+        id="lead-email-error"
+        class="mt-1 hidden text-small text-(--color-sodium)"
+        aria-live="polite"
+      >
+        {t.emailError}
+      </p>
+    </div>
+
+    <div>
+      <label for="lead-phone" class="block text-body font-medium text-(--color-chalk)">
+        {t.phoneLabel}
+        <span class="text-(--color-dim)">{t.phoneOptional}</span>
+      </label>
+      <input
+        id="lead-phone"
+        name="phone"
+        type="tel"
+        autocomplete="tel"
+        class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] p-3 text-body text-(--color-chalk) focus:border-(--color-sodium) focus:outline-none focus:ring-2 focus:ring-(--color-sodium)"
+      />
+      <p
+        id="lead-phone-error"
+        class="mt-1 hidden text-small text-(--color-sodium)"
+        aria-live="polite"
+      >
+        {t.phoneError}
+      </p>
+    </div>
+
+    <div>
+      <label for="lead-message" class="block text-body font-medium text-(--color-chalk)">
+        {t.messageLabel}
+      </label>
+      <textarea
+        id="lead-message"
+        name="message"
+        rows="4"
+        required
+        maxlength="4000"
+        placeholder={t.messagePlaceholder}
+        class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] p-3 text-body text-(--color-chalk) focus:border-(--color-sodium) focus:outline-none focus:ring-2 focus:ring-(--color-sodium)"
+      ></textarea>
+      <p
+        id="lead-message-error"
+        class="mt-1 hidden text-small text-(--color-sodium)"
+        aria-live="polite"
+      >
+        {t.messageError}
+      </p>
+    </div>
+
+    <p id="lead-form-error" class="hidden text-body text-(--color-sodium)" role="alert">
+      {t.formError}
+    </p>
+
+    <div>
+      <button
+        id="lead-submit"
+        type="submit"
+        data-submitting={t.submitting}
+        class="btn btn-primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+      >
+        {t.submit}
+      </button>
+      <p class="mt-3 text-small text-(--color-dim)">
+        {t.privacyPre}
+        <a href={privacyHref}>{t.privacyLink}</a>.
+      </p>
+    </div>
+  </div>
+</form>
+
+<div
+  id="lead-success"
+  class="hidden rounded-(--radius-card) border-2 border-(--color-confirm) bg-(--color-panel) p-6 md:p-8"
+  role="status"
+  aria-live="polite"
+>
+  <p class="font-display text-h2 text-(--color-chalk)">{t.successTitle}</p>
+</div>
+
+<!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+<script src="/js/lead-form.js" type="module" is:inline></script>

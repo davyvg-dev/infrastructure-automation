@@ -1,0 +1,5 @@
+# Files copied into every new Claude Code worktree (gitignore syntax)
+# so parallel sessions can run the apps immediately.
+growth-engine/.env
+growth-engine/.env.fitness
+ai-receptionist/.env

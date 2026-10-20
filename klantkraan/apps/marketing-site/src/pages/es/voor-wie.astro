@@ -1,0 +1,124 @@
+---
+import Base from '../../layouts/Base.astro'
+import { branches } from '../../data/branches'
+import TapValve from '../../components/illustrations/TapValve.astro'
+import StormCloud from '../../components/illustrations/StormCloud.astro'
+import PaintRoller from '../../components/illustrations/PaintRoller.astro'
+import HardHat from '../../components/illustrations/HardHat.astro'
+import Dumbbell from '../../components/illustrations/Dumbbell.astro'
+import Icon from '../../components/Icon.astro'
+
+// Map illustration name to component for branches that have one.
+const illustrations = {
+  TapValve,
+  StormCloud,
+  PaintRoller,
+  HardHat,
+  Dumbbell,
+  RingingPhone: null, // Reserved for the homepage; not used on cards.
+}
+---
+
+<Base
+  lang="es"
+  title="Para quién es | Klantkraan para cada oficio"
+  description="Klantkraan funciona para fontaneros, techadores, pintores, electricistas, contratistas y gimnasios. Elija su oficio y tendrá una recepcionista a su medida."
+  centered={false}
+>
+  <!-- Hero -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">¿Qué tipo de negocio tiene?</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Klantkraan habla el idioma de su oficio. Clases de prueba y cuotas para el gimnasio. Gastos
+        de desplazamiento y tarifas de urgencia para el fontanero. Precios por metro cuadrado y
+        muestras de color para el pintor.
+      </p>
+    </div>
+  </section>
+
+  <!-- Branches grid -->
+  <section
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Sectores"
+  >
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          branches.map((b) => {
+            const Illustration = b.illustration ? illustrations[b.illustration] : null
+            return (
+              <a
+                href={`/en/${b.slug}/`}
+                class="group flex flex-col rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6 no-underline transition-colors hover:border-(--color-sodium)"
+              >
+                <div class="flex items-start justify-between gap-3">
+                  <h2 class="font-display text-h2 text-(--color-chalk)">{b.labelPluralEs}</h2>
+                  {Illustration && (
+                    <div class="hidden text-(--color-sodium) sm:block" aria-hidden="true">
+                      <Illustration class="h-20 w-20" />
+                    </div>
+                  )}
+                </div>
+                <p class="mt-3 text-body text-(--color-dim)">{b.hubLineEs}</p>
+                <p class="mt-5 inline-flex items-center gap-1 text-small font-medium text-(--color-sodium) group-hover:underline">
+                  <span>Ver la solución para {b.labelPluralEs.toLowerCase()}</span>
+                  <span aria-hidden="true">→</span>
+                </p>
+              </a>
+            )
+          })
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- "My trade isn't listed" -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">¿Otro oficio?</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">¿No ve su oficio?</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Klantkraan funciona para cualquier negocio que reciba preguntas y citas de clientes, desde
+        carpinteros, jardineros y cristaleros hasta peluquerías, fisioterapeutas y autoescuelas. En
+        una breve toma de datos recogemos sus servicios, tarifas y normas internas. A partir de ahí
+        la recepcionista responde como lo haría usted mismo.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href="/es/demo/" class="btn btn-primary btn-lg"> Pruebe la demo </a>
+        <a href="/es/rekentool/" class="btn btn-ghost btn-lg"> Calcule su retorno </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust micro-line -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <ul role="list" class="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-(--color-chalk)">
+              RGPD + Reglamento de IA art. 50
+            </p>
+            <p class="text-small text-(--color-dim)">Declaración activada por defecto</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-(--color-chalk)">Alojado en la UE</p>
+            <p class="text-small text-(--color-dim)">Cloudflare · Neon · Hetzner</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3">
+          <Icon name="clock" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <div>
+            <p class="text-small font-medium text-(--color-chalk)">Cancelación mensual</p>
+            <p class="text-small text-(--color-dim)">Sin permanencia ni costes ocultos</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>

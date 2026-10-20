@@ -1,0 +1,52 @@
+{
+  "vak": "dakdekker",
+  "queries": ["dakgoot", "steiger gevel", "dakpannen", "roof tiles brick house"],
+  "notitie": "De platte \"roofer\"-queries leveren vrijwel alleen mediterrane mulden en Amerikaanse shingles op; deze set komt daarom uit dakgoot-, steiger- en bakstenengevel-queries.",
+  "fotos": [
+    {
+      "id": 31762405,
+      "fotograaf": "Gundula Vogel",
+      "rollen": ["hero", "og"],
+      "alt": "Dakdekker werkt vanuit een hoogwerker aan een pannendak",
+      "notitie": "Dakdekker in een hoogwerker tegen rode baksteen: het enige frame met iemand die daadwerkelijk werkt, en al 3:2, dus de hero-crop houdt alles."
+    },
+    {
+      "id": 12484142,
+      "fotograaf": "Jan van der Wolf",
+      "rollen": ["tall"],
+      "alt": "Puntgevel met oranje dakpannen en een strakke daklijst",
+      "notitie": "Bakstenen puntgevel, oranje pannen, diepblauwe lucht: de driehoek staat gecentreerd, een van de weinige liggende frames die een 2:3-crop overleeft."
+    },
+    {
+      "id": 31745718,
+      "fotograaf": "Jef KoeleWijn",
+      "rollen": ["wide"],
+      "alt": "Steigerwerk langs een dak in aanbouw tegen een blauwe lucht"
+    },
+    {
+      "id": 6195500,
+      "fotograaf": "A.",
+      "rollen": ["wide"],
+      "alt": "Woning met pannendak en dakgoot, herfstboom ernaast"
+    },
+    {
+      "id": 37165058,
+      "fotograaf": "Priyanshi Garg",
+      "rollen": ["tall"],
+      "alt": "Rijen verweerde dakpannen op een hellend dak"
+    },
+    {
+      "id": 4446029,
+      "fotograaf": "Francesco Ungaro",
+      "rollen": ["tall"],
+      "alt": "Loodslabben rond dakpannen, van dichtbij gezien"
+    },
+    {
+      "id": 14493179,
+      "fotograaf": "Kelly",
+      "rollen": ["wide"],
+      "alt": "Rijtjeshuizen van bovenaf met pannendaken en dakkapellen",
+      "notitie": "De set had vijf close- en midshots en geen establishing frame: alles stond op dezelfde afstand. Een luchtfoto van Nederlandse rijtjesdaken is de wijdste opname die er is en onmiskenbaar niet buitenlands."
+    }
+  ]
+}

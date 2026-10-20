@@ -1,0 +1,119 @@
+---
+import { loadClient } from '../lib/client'
+
+// The work section, in order of preference:
+//   1. the client's own work photos (clients/<slug>/fotos/) -- always best, and what
+//      the intake checklist asks for;
+//   2. the stock set for their vak (stock/<vak>/, fetched by scripts/stock-photos.py)
+//      when they supplied none, which is always the case on a voorstel because we do
+//      not take a prospect's own images;
+//   3. nothing: the section drops out and the page still reads.
+// Still never AI images. Stock is a backdrop while we wait for real photos, never a
+// claim that this is the client's work: only the client's own photos get the "Werk van
+// <naam>" alt text and the "ons werk" heading, stock is described by trade instead.
+//
+// This used to be six equal squares in one flat row -- a contact sheet, and the loudest
+// "built from a template" signal a trade site can send. Surveying award-level trade and
+// construction sites (Koto, Harold Leidner, Adriaans, Zecc, Van Wijnen, Land Morphology)
+// turned up no square content photos at all and one repeated structure: two ratios, a
+// portrait and a landscape, staggered so the columns never level off. That is what this
+// renders. Three things carry it:
+//   - mixed 2:3 and 3:2 crops in a masonry, so no row lines up with the next;
+//   - an eyebrow and a heading, because a bare grid of photos with no framing is the
+//     cheapest tell there is (the Dutch template farms all ship exactly that);
+//   - a tinted full-bleed band and a wider column than the rest of the page, so the
+//     section boundary is a colour change rather than another hairline rule.
+// Deliberately no captions: with generic stock the only honest caption would be the
+// trade name repeated five times, and the sites that do this best (Van Wijnen, Zecc)
+// caption nothing and let the heading carry the meaning. Synthesising "Pannendak
+// Utrecht" under a stock photo would read as a case study we never did.
+const { config, beeld } = loadClient()
+const { bedrijf } = config
+
+// Both sources now arrive in one shape. Client photographs used to be raw uploads with no
+// rendition pipeline, so their ratios were unknown at build time and this component had to
+// force them into an assumed tall/wide cycle with width/height of 0 -- which meant every
+// client who supplied their own photos got a page that reflowed as it loaded, and the tile
+// shape was a guess that the CSS then cropped to. scripts/client-fotos.py cuts them to the
+// same four renditions the stock sets use, so the crop is real and the box is honest.
+const own = beeld.eigen
+const tiles = beeld.set.tiles.map((t) => ({
+  src: t.src,
+  shape: t.height > t.width ? ('tall' as const) : ('wide' as const),
+  width: t.width,
+  height: t.height,
+  alt: t.alt,
+}))
+
+// Every stock tile carries its own Dutch description of what is in the frame (from
+// stock/<vak>/alt.json), never a claim about who did the work. One shared sentence would
+// be six identical announcements to a screen reader, and alt="" fails the audit's
+// images/alt-text rule -- these are content photographs on a trade site, not decoration.
+// A client's own photos are their work and say so.
+//
+// Tiles are drawn ~357px wide on a three-column desktop and ~342px in the single-column
+// phone layout, so the -sm rendition covers a 1x phone and the full file covers 2x. Both
+// sources have one: client photographs are cut to the same renditions as the stock sets.
+const srcset = (src: string, w: number) =>
+  `${src.replace(/\.webp$/, '-sm.webp')} ${w / 2}w, ${src} ${w}w`
+---
+
+{
+  tiles.length > 0 && (
+    <section aria-labelledby="werk-titel" class="border-y border-(--band-line) bg-(--band-foto-bg)">
+      <div class="py-(--ritme-band-y) md:py-(--ritme-band-y-md)">
+        <div class="mx-auto max-w-(--maat-band) px-(--maat-gutter)">
+          <p class="text-small font-semibold tracking-[0.18em] text-(--brand-primary) uppercase">
+            {own ? 'Ons werk' : 'Sfeerbeeld'}
+          </p>
+          <h2 id="werk-titel" class="mt-4 max-w-(--maat-kop) text-h2">
+            {own ? 'Een greep uit ons werk.' : `Zo ziet het werk van een ${bedrijf.vak} eruit.`}
+          </h2>
+        </div>
+
+        {/*
+         * One column on a phone, not two. Two columns inside the page gutter draws a
+         * 163px photo, which is the size the marketing-site band already learned reads
+         * as a widget rather than a photograph -- and "the photos are too small" is the
+         * complaint this rewrite exists to answer. A phone gets one 340px-wide frame
+         * instead; the set costs more scroll there, which is the right trade for the one
+         * viewport most of these visitors actually use.
+         */}
+        {/*
+         * Only the photographs escape the text column: the eyebrow and the H2 above stay
+         * in it, which is the shape the Q9 reference set uses and the reason a bleeding
+         * band reads as a portfolio rather than as a section that lost its margins.
+         *
+         * Done by widening this wrapper rather than by giving the grid a negative margin.
+         * The margin version has to say `calc(50% - 50vw)`, and 50vw counts the scrollbar
+         * that the layout width does not: the grid lands ~15px wider than the space it
+         * has, and with `overflow-x: clip` on <html> that silently shaves a slice off the
+         * outer photographs instead of showing a scrollbar. A max-width the skin sets is
+         * the same look with no arithmetic against the viewport.
+         */}
+        <div class="mx-auto mt-10 max-w-(--foto-kolom) px-(--foto-gutter) md:mt-14">
+          <ul role="list" class="gap-4 columns-1 sm:columns-2 md:columns-3">
+            {tiles.map(({ src, shape, width, height, alt }) => (
+              <li class="mb-4 break-inside-avoid">
+                <img
+                  src={src}
+                  srcset={srcset(src, width)}
+                  sizes="(min-width: 768px) 357px, (min-width: 640px) 45vw, 90vw"
+                  width={width}
+                  height={height}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                  class:list={[
+                    'w-full rounded-(--foto-tegel-radius) object-cover',
+                    shape === 'tall' ? 'aspect-[2/3]' : 'aspect-[3/2]',
+                  ]}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )
+}

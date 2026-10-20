@@ -1,0 +1,171 @@
+---
+import Base from '../../layouts/Base.astro'
+import CostReceipt from '../../components/home/CostReceipt.astro'
+import Duties from '../../components/home/Duties.astro'
+import FinalCta from '../../components/home/FinalCta.astro'
+import Hero from '../../components/home/Hero.astro'
+import HowItWorks from '../../components/home/HowItWorks.astro'
+import Roadmap from '../../components/home/Roadmap.astro'
+import Transparency from '../../components/home/Transparency.astro'
+import { waLink } from '../../data/contact'
+
+const hero = {
+  status: 'Responde ahora en su web y WhatsApp',
+  h1a: 'La luz sigue',
+  h1on: 'encendida.',
+  sub:
+    'Está en lo alto de una escalera, en un tejado, o durmiendo. Su mejor cliente tiene una ' +
+    'pregunta ahora mismo. La recepcionista digital de Klantkraan la responde en su web y por ' +
+    'WhatsApp, agenda la cita y anota cada solicitud de llamada. De día y de noche.',
+  ctaPrimary: 'Empiece hoy',
+  ctaPrimaryHref: '/es/aanmelden/',
+  ctaGhost: 'Pruebe la demo',
+  ctaGhostHref: '/es/demo/',
+  proof: [
+    { icon: 'message-circle' as const, label: 'Instalación llave en mano' },
+    { icon: 'calendar-check' as const, label: 'Cancelación mensual' },
+    { icon: 'shield-check' as const, label: 'Conforme al RGPD, alojado en la UE' },
+  ],
+  panelAria:
+    'Conversación a las 23:47: un cliente con una fuga hace una pregunta, la recepcionista digital agenda una cita para el martes a las 09:00 y deja preparada una solicitud de llamada para el propietario.',
+  threadName: 'Klantkraan',
+  threadSub: 'Responde al instante',
+  liveTs: 'Esta noche 23:47',
+  disclosure: 'Está hablando con un asistente digital.',
+  customerMsg: 'Tengo una fuga bajo el fregadero, ¿puede venir alguien mañana?',
+  recepMsg: 'Lamento oírlo, nos encargamos. Mañana a las 09:00 está libre. ¿Se lo reservo?',
+  stampStrong: 'AGENDADA',
+  stampDetail: 'mar 09:00 · llamada preparada para el propietario',
+}
+
+const duties = {
+  eyebrow: 'El turno de noche',
+  heading: 'Lo que la recepcionista asume mientras usted trabaja.',
+  photoAlt: 'Instalador revisando una unidad exterior con una linterna',
+  items: [
+    {
+      icon: 'message-square' as const,
+      title: 'Responde cada pregunta',
+      text: 'Conoce sus tarifas, servicios y zona de trabajo. Sin precios inventados, solo lo que usted ha configurado.',
+    },
+    {
+      icon: 'calendar-check' as const,
+      title: 'Agenda la cita',
+      text: 'Directo en su calendario, solo en horas que están realmente libres. El cliente elige un hueco y usted lo ve al instante.',
+    },
+    {
+      icon: 'phone-call' as const,
+      title: 'Anota la solicitud de llamada',
+      text: '¿No puede atender ahora? La recepcionista anota el nombre, el número y el trabajo. Usted devuelve la llamada a quien de verdad importa.',
+    },
+  ],
+}
+
+const kosten = {
+  eyebrow: 'La factura de una noche a oscuras',
+  heading: 'Cada pregunta sin responder es un trabajo que se va a la competencia.',
+  sub:
+    'Esto es un ejemplo. Hágalo con sus propios números y verá exactamente lo que le cuesta un ' +
+    'mes de llamadas perdidas.',
+  ariaLabel: 'Cálculo de ejemplo de ingresos perdidos',
+  cap: 'Ejemplo · 40 llamadas por semana',
+  lines: [
+    { k: 'Llamadas al mes', v: '173' },
+    { k: 'Perdidas (estimación del sector: 28%)', v: '48' },
+    { k: 'Habrían sido trabajos (1 de cada 3)', v: '16' },
+    { k: '× valor por trabajo', v: '450 €' },
+  ],
+  resultK: 'Ingresos perdidos',
+  resultV: '± 7.200 €/mes',
+  ctaLabel: 'Hágalo con sus propios números',
+  ctaHref: '/es/rekentool/',
+}
+
+const eerlijk = {
+  eyebrow: 'Honestos con la IA',
+  heading: 'La luz está encendida. No hay nada que ocultar.',
+  quote: 'Está hablando con un asistente digital.',
+  bullets: [
+    'Así empieza cada conversación, antes de cualquier otra cosa.',
+    'Desde el 2 de agosto de 2026 ese aviso es obligatorio según el artículo 50 del Reglamento de IA de la UE. Nosotros ya lo hacemos.',
+    'Donde un robot de voz se vende con "nadie nota la diferencia", nuestra recepcionista dice sin rodeos lo que es. Su cliente sabe con quién habla y usted no se arriesga a una multa.',
+  ],
+  linkLabel: 'Lea la declaración completa',
+  linkHref: '/legal/ai-disclosure/',
+}
+
+const starten = {
+  eyebrow: 'Así se empieza',
+  heading: 'Alta hoy, en marcha esta misma semana.',
+  steps: [
+    {
+      title: 'Dese de alta',
+      text: 'Cinco minutos. Paga directamente a través de Mollie: primer mes 149,50 €, después 299 € al mes, IVA no incluido.',
+    },
+    {
+      title: 'Montamos su recepcionista',
+      text: 'En un día laborable le llamamos para repasar sus servicios, tarifas y calendario. Usted no construye nada.',
+    },
+    {
+      title: 'En marcha en su web y WhatsApp',
+      text: 'Usted la prueba y da el visto bueno. Desde ese momento atiende todas las consultas, día y noche.',
+    },
+  ],
+  note: 'Cancelación mensual. Sin contrato anual ni renovación oculta; se cancela por correo, sin preaviso.',
+}
+
+const roadmap = {
+  eyebrow: 'Hacia dónde va',
+  heading: 'Hoy la puerta. Mañana la oficina.',
+  sub:
+    'La recepcionista es el principio, no el final. Se ocupa de la puerta: todo lo que entra ' +
+    'mientras usted trabaja. Detrás está el papeleo que ahora hace de noche en la mesa de la ' +
+    'cocina. Hacia ahí vamos, junto con los primeros clientes.',
+  nowLabel: 'Lo que hace ahora',
+  now: [
+    'Responde preguntas en su web y en WhatsApp, de día y de noche',
+    'Agenda citas directamente en su propio calendario',
+    'Recoge solicitudes de devolución de llamada con nombre, número y trabajo',
+    'Dice que es un asistente digital, en cada conversación',
+  ],
+  laterLabel: 'Lo que estamos construyendo',
+  laterNote: 'Todavía no está disponible. No forma parte de su suscripción y no lo está pagando.',
+  later: [
+    'Presupuestos que se recuerdan solos cuando el cliente no responde',
+    'Recordatorios de cita, para que nadie se desplace en balde',
+    'Peticiones de reseña justo cuando el trabajo acaba de terminar',
+    'Recordatorios de factura para lo que sigue pendiente',
+  ],
+  footnote:
+    'Cuál de estas llega primero lo deciden los clientes que haya entonces, no nosotros. ¿Pide ' +
+    'algo que no está incluido? Se lo decimos, y le decimos cuándo lo estará.',
+}
+
+const finalCta = {
+  h2a: 'Encienda la',
+  h2on: 'luz.',
+  sub:
+    'Pruebe la demo y hágale una pregunta a la recepcionista como si fuera un cliente. ¿Le ' +
+    'convence? Dese de alta y nosotros nos encargamos del resto, usted no construye nada.',
+  primary: { label: 'Empiece hoy', href: '/es/aanmelden/' },
+  ghosts: [
+    { label: 'Pruebe la demo', href: '/es/demo/' },
+    { label: 'Agende una charla inicial', href: waLink, external: true },
+  ],
+}
+---
+
+<Base
+  lang="es"
+  title="Recepcionista con IA para su negocio: chat web y WhatsApp | Klantkraan"
+  description="Una recepcionista con IA en su web y WhatsApp: responde preguntas, agenda citas y capta clientes, día y noche. Instalación llave en mano. Cancelación mensual."
+  centered={false}
+>
+  <Hero t={hero} />
+  <Duties t={duties} />
+  <CostReceipt t={kosten} />
+  <Transparency t={eerlijk} />
+  <Roadmap t={roadmap} />
+  <HowItWorks t={starten} />
+  <FinalCta t={finalCta} />
+</Base>

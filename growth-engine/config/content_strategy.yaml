@@ -1,0 +1,371 @@
+# The single knob-board for the engine. Edit this, not the code.
+# One engine process per vertical: this file is the trades vertical (the default);
+# another vertical = another YAML selected via GROWTH_CONFIG (e.g. config/fitness.yaml).
+
+vertical: trades
+
+brand:
+  name: "Klantkraan"                 # the business; posts go out from the founder's accounts
+  website: "klantkraan.nl"
+  offer: "AI receptionists for Dutch trade businesses — an assistant that answers every
+    call and WhatsApp instantly 24/7, qualifies the customer, and books the job into the
+    calendar."
+  one_liner: "Je bedrijf krijgt een AI die elke klant direct antwoordt, 24/7, en de
+    afspraak meteen inplant — zodat je geen klussen meer verliest aan gemiste telefoontjes."
+  # Niche is DECIDED: Dutch trades (see klantkraan/research/). Don't broaden until it works.
+  audience: "Owners of Dutch trade businesses — installateurs, loodgieters, elektriciens,
+    schilders. They lose real money to missed calls and slow replies: an unanswered
+    after-hours call is usually a job that walks to a competitor. They are vakmensen and
+    business owners, not tech people."
+  # 'build-in-public': you have no past client work yet, so content is shipped live.
+  proof_mode: "build_in_public"
+
+voice:
+  # How the drafts should sound. Keep it concrete and human.
+  tone: "Direct, concrete, a little opinionated. Builder-to-builder honesty. No hype,
+    no emoji spam, no 'in today's fast-paced world' filler. Short sentences."
+  avoid: "Corporate buzzwords, engagement-bait questions with no substance, hashtag walls,
+    fake urgency, 'game-changer', 'unlock', 'in this thread I'll'."
+  # Injected verbatim into the system prompt under "Rules that matter" — the
+  # per-vertical part of the voice (who the reader is, what to lead with).
+  audience_rules: |-
+    - Write FOR THE BUYER — a busy Dutch trade-business owner (an installateur, loodgieter,
+      elektricien) — not for other developers or the tech crowd. Lead with their money and their
+      pain, not the tech.
+    - Never lead with "AI" or jargon. Say what it does for them ("answers every call 24/7 and
+      books the job") — not how it's built. Anchor value in their numbers (missed calls = lost
+      jobs/bookings).
+    - Write like a real builder talking to prospects, not a marketer.
+
+languages:
+  primary: "Dutch"        # the buyer's language — customer-facing posts are Dutch
+  secondary: "English"    # allowed for build-log posts aimed at the builder crowd
+
+# Content pillars, weighted toward the BUYER (a business owner), not other builders. The
+# mix is ~40% proof, 30% problem, 20% teardown/hot-take, 10% build log — proof + problem
+# convert; a dev-facing build/teardown/hot-take rotation grows the wrong audience.
+pillars:
+  - key: proof_demo
+    weight: 4
+    brief: "Show the receptionist actually working — a booking made, a call answered, a
+      reschedule handled, an uptime/latency number, 'it booked an appointment while I slept'.
+      Lead with the concrete result. Written to pair with a screenshot, call recording, or
+      short clip the user attaches."
+  - key: problem
+    weight: 3
+    brief: "Speak to the buyer's pain in money terms. Quantify what missed calls / slow
+      replies cost a specific local business type (e.g. 'a plumber who misses 12 calls a week
+      is leaking ~EUR X/month'), or a sharp before/after. End with a light, non-pushy
+      takeaway. This is the highest-converting angle: educate the problem, don't hard-sell."
+  - key: teardown
+    weight: 2
+    brief: "Tear down a bad customer experience the buyer's own clients hit — a call that
+      rang out, a booking form nobody answers — and show how it should work. OR plainly
+      explain how an AI receptionist actually works. Buyer-relevant, never developer bait."
+  - key: hot_take
+    weight: 2
+    brief: "A sharp, industry-facing opinion aimed at business owners (e.g. 'phone trees are
+      dead', 'your front desk shouldn't cost EUR 3k/month to still miss calls'). Defensible
+      and useful, not an AI/tech debate."
+  - key: build_log
+    weight: 1
+    brief: "An honest behind-the-scenes note on building the receptionist — a decision, a
+      bug, a small win — but tie it back to the customer benefit so it lands with buyers,
+      not just other builders."
+
+# The platform registry (read by src/platforms.py) — everything per-platform lives HERE.
+# LinkedIn is your HOME platform (B2B buyers live there); X is DISTRIBUTION + personality.
+# The engine drafts native variants for each — never the same string on both.
+# Per platform: enabled, delivery (auto|assisted), label (shown in Telegram), char_limit
+# (optional), media (none|image|video|both), media_required, writing (drafting guidance).
+platforms:
+  x:
+    enabled: true
+    delivery: auto          # auto-post via API on approval
+    label: "𝕏 (auto-post)"
+    char_limit: 280
+    media: none
+    media_required: false
+    note: "Distribution/personality. Links OK in-body. Punchier than LinkedIn."
+    writing: "X post: max 280 characters, punchy, personality-forward, no hashtags unless
+      natural. A strong first line that stands alone."
+  linkedin:
+    enabled: true
+    delivery: buffer        # queued via Buffer (an official LinkedIn partner) on approval
+    label: "in LinkedIn (Buffer queue)"
+    media: none
+    media_required: false
+    # The target: post on 5 days a week, at most once a day. A second LinkedIn post
+    # inside 24h cannibalises the first, and weekends are dead for Dutch B2B. Both
+    # numbers are enforced by the channel's posting schedule in Buffer — this repo has
+    # no scheduling code on purpose — and `selftest buffer` warns when Buffer's schedule
+    # drifts from them. 5 slots/week is also the approval budget: approve more LinkedIn
+    # drafts than that and the queue backs up, so posts go out days after they were written.
+    max_per_day: 1
+    days_per_week: 5
+    note: "Primary B2B channel. No links in the post body (put them in comment 1 / Featured)."
+    writing: "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are
+      a scroll-stopping hook that stands alone above the fold. Generous line breaks (1-2
+      sentences each), one idea, end with a genuine question to spark comments. NO links
+      in the body. No hashtag walls."
+  reddit:
+    enabled: true
+    delivery: assisted
+    label: "🔶 Reddit (paste)"
+    media: none
+    media_required: false
+    note: "Value-first only. 1-2 high-effort posts/week, posted manually."
+    writing: "Reddit: value-first, zero self-promotion in the body. Written to genuinely
+      help in a relevant subreddit (e.g. r/smallbusiness, r/Klussers, r/ondernemers).
+      Sound like a helpful practitioner, not an ad."
+  # Meta/TikTok ToS forbid auto-posting — these three are assisted-only, permanently.
+  facebook:
+    enabled: true
+    delivery: assisted
+    label: "📘 Facebook (paste)"
+    media: image
+    media_required: false
+    note: "Local-business reach (trades owners are on FB). Image cards lift it, text works."
+    writing: "Facebook post: conversational local-business tone, 50-150 words. Open with
+      the customer's pain in plain words, close with one clear next step. No hashtag
+      walls, at most one link."
+  instagram:
+    enabled: true
+    delivery: assisted
+    label: "📸 Instagram (paste)"
+    media: both
+    media_required: true
+    note: "Fitness-vertical home turf. Needs an image or reel — caption alone can't post."
+    writing: "Instagram caption: the first line is the hook (shown before 'more'). Short
+      lines, concrete benefit, end with a simple CTA. 3-5 relevant hashtags at the end,
+      no more."
+  tiktok:
+    enabled: true
+    delivery: assisted
+    label: "🎵 TikTok (paste)"
+    media: video
+    media_required: true
+    note: "Reels-only channel for the fitness vertical. The caption rides along the video."
+    writing: "TikTok caption: one punchy line that frames the video's payoff, under 150
+      characters, plus 2-3 niche hashtags. No sales speak."
+
+# Generated media: each draft gets a branded image card (square + story) rendered from
+# its sharpest claim, previewed in Telegram. Colors/fonts per docs/09-brand (klantkraan).
+media:
+  cards: true
+  brand:
+    bg: "#0F4C81"        # kraan-blue
+    text: "#FAF6EE"      # kraan-cream
+    accent: "#C75A2B"    # kraan-rust
+    muted: "#4D80AD"     # kraan-blue-300
+    footer: "klantkraan.nl"
+    font_bold: "assets/fonts/Inter-Bold.ttf"
+    font_regular: "assets/fonts/Inter-Regular.ttf"
+    # Rotated per draft (deterministic) so the feed isn't one repeated template.
+    schemes:
+      - { bg: "#0F4C81", text: "#FAF6EE", muted: "#4D80AD" }   # blue
+      - { bg: "#FAF6EE", text: "#0F4C81", muted: "#8C8474" }   # cream
+      - { bg: "#F1ECDF", text: "#1A1A1A", muted: "#8C8474" }   # stone
+  # Every Nth card becomes a stock photo (Pexels, dark scrim + text) when the draft has
+  # a photo_query and PEXELS_API_KEY is set. Pexels: free commercial use, no attribution.
+  stock:
+    enabled: true
+    every: 1           # every card is a photo card (founder preference 2026-07-14)
+    theme: "plumber"    # appended to every photo search to keep results in-industry
+  # Carousels: when a draft's angle is a list/step sequence, the engine renders a
+  # multi-slide swipe post (square, brand slides) INSTEAD of a single card. LinkedIn +
+  # Instagram reward carousels most. The model decides per draft; these are the bounds.
+  carousel:
+    enabled: true
+    min_slides: 3       # fewer than this -> fall back to a single card
+    max_slides: 6       # extra slides beyond this are dropped
+  # Reels: a raw screen recording (uploaded via the bot's 🎬 button) becomes a branded
+  # 9:16 video — status bar cropped, dead time pop-cut away, brand stage, Pillow
+  # title/end cards. Only attached to drafts that target a video platform.
+  reel:
+    enabled: true
+    crop_top: 0.055     # fraction of source height to crop (iOS status bar) — tune
+                        # once after the first reel; device-specific
+    crop_bottom: 0.0
+    # Short-form: typing stays visible but fast; AI replies land instantly (the wait
+    # is cut, not sped up); each message holds just long enough to read.
+    pop_cuts: true
+    scene_threshold: 0.08     # CEILING for "a message appeared" — the working
+                              # threshold adapts per clip (6% of its biggest change)
+    typing_threshold: 0.0006  # keystroke floor, measured in the keyboard band
+    keys_band: 0.45           # bottom fraction of the frame where typing happens;
+                              # changes above it (typing indicator) are cut, not ticked
+    typing_speed: 3.0         # typing playback speed
+    dwell_seconds: 1.8        # max hold per message; shrinks to fit the cap
+    target_seconds: 15      # hard cap for the finished reel
+    max_speed: 4.0
+    cold_open: true         # open on the payoff message, then replay the chat
+    suspense_seconds: 0.6   # one "..." beat of real waiting before the payoff
+    hook_seconds: 3.0       # hook text rides the opening footage — no title card
+    cta_seconds: 1.0        # CTA rides a freeze of the last frame — no end card
+    cta_headline: "Zien hoe het werkt?"   # end card (Dutch, buyer-facing)
+    cta_sub: "klantkraan.nl"
+    # Baked-in sound design: synthesized SFX from assets/sfx (pop per message, ticks
+    # while typing, ding on the payoff). NEVER commercial music — trending audio is
+    # added in-app when posting (copyright; see docs/REELS.md).
+    audio:
+      enabled: true
+      sfx: true
+      bed: ""             # optional licensed/CC0 ambient file (path); empty = no bed
+      bed_gain_db: -24    # bed level under the SFX
+    # Scripted chat-demo reels: drawn frame-by-frame from a scenario below, so every
+    # video draft ships with a reel automatically — sound perfectly synced by
+    # construction. The 🎬 upload replaces it with real footage when preferred.
+    # Each scenario carries its OWN fictional business + greeting, so the feed shows a
+    # different company every time instead of one repeated header. The greeting is the
+    # standing digital-assistant disclosure (EU AI Act art. 50); the chat header shows
+    # it too. A scenario with no greeting gets one synthesized from its business name.
+    demo:
+      enabled: true
+      # Fallbacks only — used if a scenario below omits its own business/greeting.
+      business: "Installatiebedrijf Jansen"
+      greeting: "Goedendag! U chat met de digitale assistent. Waarmee kan ik u helpen?"
+      scenarios:
+        - business: "Van der Meer Loodgieters"
+          greeting: "Goedendag! U chat met de digitale assistent van Van der Meer Loodgieters. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Mijn cv-ketel valt steeds uit. Kunnen jullie langskomen?" }
+            - { from: ai, text: "Vervelend. Ik plan direct een monteur voor u in. Wanneer komt het u uit?" }
+            - { from: klant, text: "Morgen rond 10:00 graag." }
+            - { from: ai, text: "Gelukt. Morgen 10:00 staat genoteerd. U krijgt zo de bevestiging per mail." }
+        - business: "Elektro De Groot"
+          greeting: "Goedendag! U chat met de digitale assistent van Elektro De Groot. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "De groepenkast slaat steeds af, ik zit zonder stroom in de keuken." }
+            - { from: ai, text: "Dat pakken we op. Wilt u vandaag nog een elektricien langs?" }
+            - { from: klant, text: "Ja graag, zo snel mogelijk." }
+            - { from: ai, text: "Geregeld. Vandaag tussen 14:00 en 15:00 komt de elektricien. Tot straks." }
+        - business: "Schildersbedrijf Willemsen"
+          greeting: "Goedendag! U chat met de digitale assistent van Schildersbedrijf Willemsen. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil een offerte voor het buitenschilderwerk van mijn woning." }
+            - { from: ai, text: "Prima. Ik plan een vrijblijvende opname in. Welke dag schikt u?" }
+            - { from: klant, text: "Donderdagmiddag kan ik." }
+            - { from: ai, text: "Genoteerd: donderdag 13:30 voor de opname. Daarna ontvangt u de offerte." }
+        - business: "Installatiebedrijf Hoekstra"
+          greeting: "Goedendag! U chat met de digitale assistent van Installatiebedrijf Hoekstra. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Er lekt water onder de gootsteen, het loopt op de vloer!" }
+            - { from: ai, text: "Naar. Zet de kraan even dicht. Een spoedmonteur kan vandaag nog komen." }
+            - { from: klant, text: "Graag, hoe snel kan hij er zijn?" }
+            - { from: ai, text: "Spoedafspraak staat: vandaag 15:30. De monteur belt als hij onderweg is." }
+        - business: "Dakdekkers Smit"
+          greeting: "Goedendag! U chat met de digitale assistent van Dakdekkers Smit. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Na de storm lekt mijn dak. Kunnen jullie komen kijken?" }
+            - { from: ai, text: "Dat regelen we. Ik plan een dakinspectie in. Wanneer bent u thuis?" }
+            - { from: klant, text: "Morgenochtend ben ik er." }
+            - { from: ai, text: "Genoteerd: morgen 09:00 dakinspectie. U krijgt de bevestiging per mail." }
+        - business: "Loodgieter Van den Berg"
+          greeting: "Goedendag! U chat met de digitale assistent van Loodgieter Van den Berg. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik heb geen warm water meer. Zijn jullie nog open?" }
+            - { from: ai, text: "We zijn gesloten, maar ik plan u gewoon in voor morgenvroeg." }
+            - { from: klant, text: "Fijn, wat is de eerste mogelijkheid?" }
+            - { from: ai, text: "Ingepland: morgen 08:30. De monteur komt langs, u hoeft niets te doen." }
+        - business: "CV Service Peters"
+          greeting: "Goedendag! U chat met de digitale assistent van CV Service Peters. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil mijn cv-ketel dit jaar laten onderhouden." }
+            - { from: ai, text: "Goed idee. Ik plan het jaarlijkse onderhoud in. Welke dag komt uit?" }
+            - { from: klant, text: "Volgende week dinsdag?" }
+            - { from: ai, text: "Genoteerd: dinsdag 11:00 ketelonderhoud. U ontvangt de bevestiging." }
+        - business: "Elektricien Nieuwhuis"
+          greeting: "Goedendag! U chat met de digitale assistent van Elektricien Nieuwhuis. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil een laadpaal voor mijn auto laten plaatsen." }
+            - { from: ai, text: "Dat kan. Ik plan een opname in om de situatie te bekijken. Wanneer schikt het?" }
+            - { from: klant, text: "Vrijdag na 15:00." }
+            - { from: ai, text: "Genoteerd: vrijdag 15:30 voor de opname. Daarna krijgt u de offerte." }
+        - business: "Hoveniersbedrijf Groenendaal"
+          greeting: "Goedendag! U chat met de digitale assistent van Hoveniersbedrijf Groenendaal. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Mijn tuin is een wildernis. Kunnen jullie het onderhoud doen?" }
+            - { from: ai, text: "Zeker. Ik plan een hovenier in om langs te komen. Welke dag past u?" }
+            - { from: klant, text: "Woensdag graag." }
+            - { from: ai, text: "Genoteerd: woensdag 10:00. De hovenier bekijkt de tuin en maakt een plan." }
+        - business: "Timmerbedrijf Vermeer"
+          greeting: "Goedendag! U chat met de digitale assistent van Timmerbedrijf Vermeer. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Een kozijn is rot, ik wil het laten vervangen." }
+            - { from: ai, text: "Dat maken we in orde. Ik plan een opmeetafspraak in. Wanneer bent u thuis?" }
+            - { from: klant, text: "Maandagochtend." }
+            - { from: ai, text: "Genoteerd: maandag 09:30 opmeten. Daarna ontvangt u een offerte op maat." }
+        - business: "Ontstoppingsdienst De Wit"
+          greeting: "Goedendag! U chat met de digitale assistent van Ontstoppingsdienst De Wit. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Mijn afvoer zit verstopt, het water loopt niet weg." }
+            - { from: ai, text: "Vervelend. Een monteur kan vandaag nog langskomen om te ontstoppen." }
+            - { from: klant, text: "Graag, hoe laat kan dat?" }
+            - { from: ai, text: "Spoedafspraak staat: vandaag 16:00. De monteur belt voor hij komt." }
+        - business: "Schildersbedrijf Bakker"
+          greeting: "Goedendag! U chat met de digitale assistent van Schildersbedrijf Bakker. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik heb donderdag een afspraak, maar die red ik niet." }
+            - { from: ai, text: "Geen probleem, ik zet hem voor u om. Welke dag komt beter uit?" }
+            - { from: klant, text: "Kan het maandag?" }
+            - { from: ai, text: "Gedaan. Uw afspraak staat nu maandag 13:00. U krijgt de nieuwe bevestiging." }
+        - business: "Klusbedrijf Van Leeuwen"
+          greeting: "Goedendag! U chat met de digitale assistent van Klusbedrijf Van Leeuwen. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Ik wil mijn badkamer laten verbouwen, waar begin ik?" }
+            - { from: ai, text: "Leuk project. We starten met een vrijblijvend intakegesprek. Wanneer schikt het?" }
+            - { from: klant, text: "Volgende week donderdag?" }
+            - { from: ai, text: "Genoteerd: donderdag 14:00 intake. We bespreken uw wensen en het budget." }
+        - business: "Installatiebedrijf Kuiper"
+          greeting: "Goedendag! U chat met de digitale assistent van Installatiebedrijf Kuiper. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "Een radiator wordt niet warm, de rest wel." }
+            - { from: ai, text: "Dat kijken we na, waarschijnlijk moet hij ontlucht worden. Zal ik iemand inplannen?" }
+            - { from: klant, text: "Ja graag, wanneer kan dat?" }
+            - { from: ai, text: "Ingepland: morgen 13:00. De monteur verhelpt het ter plekke." }
+        - business: "Elektro Mulder"
+          greeting: "Goedendag! U chat met de digitale assistent van Elektro Mulder. Waarmee kan ik u helpen?"
+          chat:
+            - { from: klant, text: "De verlichting in de woonkamer valt steeds uit." }
+            - { from: ai, text: "Dat zoeken we uit. Ik plan een elektricien in om de storing te vinden. Welke dag?" }
+            - { from: klant, text: "Donderdag na de lunch." }
+            - { from: ai, text: "Genoteerd: donderdag 13:30. De elektricien lost de storing op." }
+
+# Cadence: how many generation runs per day and how many drafts each run makes.
+# Start conservative; raise once you trust the quality.
+# NOTE: the engine drafts ORIGINAL posts only. The real growth lever — replies/comments
+# (5-10/day on LinkedIn, 20-40/day on X) and DMs — must stay HUMAN; automating them kills
+# reach and trust. See docs/STRATEGY.md.
+cadence:
+  # 'starter' while you warm up; switch to 'growth' or 'aggressive' when ready.
+  active: starter
+  profiles:
+    starter:
+      runs_per_day: 1
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin", "facebook"]
+    growth:
+      runs_per_day: 2
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin", "facebook"]
+    aggressive:
+      runs_per_day: 3
+      drafts_per_run: 2
+      platforms_per_draft: ["x", "linkedin", "facebook"]
+  # Reddit is drafted separately, at most this often (days between reddit drafts).
+  reddit_every_days: 3
+  # Local-hour window (24h) to send drafts for approval, so you're not pinged at 3am.
+  quiet_hours_start: 22
+  quiet_hours_end: 8
+  timezone: "Europe/Amsterdam"
+
+# Build-in-public: turn your real git commits into 'build log' posts (/buildlog in the bot).
+buildlog:
+  enabled: true
+  repo_path: ".."           # relative to growth-engine/ — points at the git repo root
+  max_commits: 25           # how many recent commits to consider on the first run
+
+model:
+  id: "claude-opus-4-8"
+  effort: "medium"          # low | medium | high — medium is a good balance for short posts

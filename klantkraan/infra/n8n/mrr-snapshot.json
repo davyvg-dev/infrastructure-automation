@@ -1,0 +1,154 @@
+{
+  "name": "mrr-snapshot",
+  "nodes": [
+    {
+      "id": "88888888-8888-4888-8888-888888888881",
+      "name": "Cron Daily 23:50 CET",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "50 23 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888882",
+      "name": "Mollie - List Active Subscriptions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [420, 300],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.mollie.com/v2/subscriptions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "limit", "value": "250" },
+            { "name": "status", "value": "active" }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Mollie - API Key"
+        }
+      }
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888883",
+      "name": "Compute MRR",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Mollie embeds subscriptions under _embedded.subscriptions\nconst payload = items[0].json;\nconst subs = (payload._embedded && payload._embedded.subscriptions) || [];\nlet mrr_eur = 0;\nlet active_count = 0;\nconst byTier = { Lite: 0, Pro: 0, Max: 0 };\nfor (const s of subs) {\n  if (s.status !== 'active') continue;\n  const amt = parseFloat(s.amount?.value || '0');\n  const interval = (s.interval || '').toLowerCase();\n  let monthlyValue = 0;\n  if (interval.includes('1 month')) monthlyValue = amt;\n  else if (interval.includes('3 month')) monthlyValue = amt / 3;\n  else if (interval.includes('6 month')) monthlyValue = amt / 6;\n  else if (interval.includes('12 month') || interval.includes('1 year')) monthlyValue = amt / 12;\n  else monthlyValue = amt; // unknown -> treat monthly\n  mrr_eur += monthlyValue;\n  active_count += 1;\n  const tier = (s.metadata && s.metadata.tier) || 'Pro';\n  if (byTier[tier] !== undefined) byTier[tier] += monthlyValue;\n}\nreturn [{\n  json: {\n    snapshot_date: new Date().toISOString().slice(0, 10),\n    mrr_eur: Math.round(mrr_eur * 100) / 100,\n    active_subscriptions: active_count,\n    mrr_lite: Math.round(byTier.Lite * 100) / 100,\n    mrr_pro: Math.round(byTier.Pro * 100) / 100,\n    mrr_max: Math.round(byTier.Max * 100) / 100\n  }\n}];"
+      }
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888884",
+      "name": "Postgres - Upsert MRR Snapshot",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [860, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO mrr_snapshots (snapshot_date, mrr_eur, active_subscriptions, mrr_lite, mrr_pro, mrr_max, captured_at) VALUES ($1::date, $2::numeric, $3::int, $4::numeric, $5::numeric, $6::numeric, NOW()) ON CONFLICT (snapshot_date) DO UPDATE SET mrr_eur = EXCLUDED.mrr_eur, active_subscriptions = EXCLUDED.active_subscriptions, mrr_lite = EXCLUDED.mrr_lite, mrr_pro = EXCLUDED.mrr_pro, mrr_max = EXCLUDED.mrr_max, captured_at = NOW() RETURNING id;",
+        "options": {
+          "queryReplacement": "={{ $json.snapshot_date }},={{ $json.mrr_eur }},={{ $json.active_subscriptions }},={{ $json.mrr_lite }},={{ $json.mrr_pro }},={{ $json.mrr_max }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888885",
+      "name": "Notion - Create MRR Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1080, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/pages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Notion-Version", "value": "2022-06-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"parent\": { \"database_id\": \"{{ $env.NOTION_MRR_DB_ID }}\" },\n  \"properties\": {\n    \"Date\": { \"date\": { \"start\": \"{{ $('Compute MRR').item.json.snapshot_date }}\" } },\n    \"MRR (EUR)\": { \"number\": {{ $('Compute MRR').item.json.mrr_eur }} },\n    \"Active Subscriptions\": { \"number\": {{ $('Compute MRR').item.json.active_subscriptions }} },\n    \"MRR Lite\": { \"number\": {{ $('Compute MRR').item.json.mrr_lite }} },\n    \"MRR Pro\": { \"number\": {{ $('Compute MRR').item.json.mrr_pro }} },\n    \"MRR Max\": { \"number\": {{ $('Compute MRR').item.json.mrr_max }} }\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Notion - Integration Token"
+        }
+      }
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888886",
+      "name": "Healthchecks Ping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_MRR_SNAPSHOT }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Cron Daily 23:50 CET": {
+      "main": [[{ "node": "Mollie - List Active Subscriptions", "type": "main", "index": 0 }]]
+    },
+    "Mollie - List Active Subscriptions": {
+      "main": [[{ "node": "Compute MRR", "type": "main", "index": 0 }]]
+    },
+    "Compute MRR": {
+      "main": [[{ "node": "Postgres - Upsert MRR Snapshot", "type": "main", "index": 0 }]]
+    },
+    "Postgres - Upsert MRR Snapshot": {
+      "main": [[{ "node": "Notion - Create MRR Page", "type": "main", "index": 0 }]]
+    },
+    "Notion - Create MRR Page": {
+      "main": [[{ "node": "Healthchecks Ping", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20",
+    "notes": "No outbound to customers — no suppression check needed. Mollie subscription listing assumes single page; for >250 subs add a pagination loop in the n8n UI."
+  }
+}

@@ -1,0 +1,57 @@
+---
+/*
+ * Sticky bottom CTA bar — mobile only (< md = 768px).
+ * Reference: Digital Applied 2026 study, +11% conversion lift from sticky
+ * CTAs on B2B SaaS mobile. Hidden on tablet/desktop where the nav buttons
+ * already serve.
+ *
+ * Implementation notes:
+ * - `position: fixed` at bottom, full width, safe-area-aware via
+ *   `env(safe-area-inset-bottom)` for iPhone home-indicator clearance.
+ * - Body gets `pb-[5.5rem] md:pb-0` so the bar never overlaps content.
+ *   That bottom-padding is added in Base.astro on the <body>.
+ * - No JS. Pure CSS sticky bar.
+ */
+import Icon from './Icon.astro'
+import { waLink, telLink } from '../data/contact'
+
+interface Props {
+  lang?: 'nl' | 'en' | 'es'
+}
+const { lang = 'nl' } = Astro.props as Props
+const T = {
+  nl: { actions: 'Snelle acties', call: 'Bel Klantkraan', whatsapp: 'WhatsApp ons' },
+  en: { actions: 'Quick actions', call: 'Call Klantkraan', whatsapp: 'WhatsApp us' },
+  es: {
+    actions: 'Acciones rápidas',
+    call: 'Llame a Klantkraan',
+    whatsapp: 'Escríbanos por WhatsApp',
+  },
+} as const
+const t = T[lang]
+---
+
+<aside
+  aria-label={t.actions}
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_88%,transparent)] px-4 py-3 backdrop-blur-md md:hidden"
+  style="padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem)"
+>
+  <div class="mx-auto flex max-w-5xl items-center gap-3">
+    <a
+      href={telLink}
+      class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-(--radius-button) border border-(--color-line) text-(--color-sodium) no-underline hover:border-(--color-dim)"
+      aria-label={t.call}
+    >
+      <Icon name="phone" class="h-5 w-5" />
+    </a>
+    <a
+      href={waLink}
+      target="_blank"
+      rel="noopener"
+      class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-(--radius-button) bg-(--color-sodium) px-5 text-body font-semibold text-(--color-night) no-underline hover:bg-(--color-sodium-soft)"
+    >
+      <Icon name="message-circle" class="h-5 w-5" />
+      <span>{t.whatsapp}</span>
+    </a>
+  </div>
+</aside>

@@ -1,0 +1,21 @@
+[Unit]
+Description=Klantkraan ai-receptionist demo (web chat + WhatsApp webhook)
+After=network-online.target
+Wants=network-online.target
+# Restart=always + no start limit means this unit practically never enters failed state;
+# the watchdog timer owns its health (deep probe + self-heal + alert). OnFailure is the
+# backstop for the remaining paths (e.g. a start limit added later, ExecStartPre failure).
+OnFailure=kk-alert@%n.service
+
+[Service]
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.server
+# always (not on-failure): also recover a wedged process or an unexpected clean exit.
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

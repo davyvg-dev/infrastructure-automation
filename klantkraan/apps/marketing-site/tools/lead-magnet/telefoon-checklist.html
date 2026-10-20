@@ -1,0 +1,119 @@
+<!doctype html>
+<!-- Source of public/downloads/nooit-meer-een-klus-missen.pdf (les 1 welkomstcadeau).
+     Render: chrome headless print-to-pdf, see tools/lead-magnet/build.sh.
+     One A4, print-first: black on white, sodium amber as the only accent. -->
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Nooit meer een klus missen</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 210mm; height: 296mm; }
+  body {
+    font: 10.5pt/1.5 "Helvetica Neue", Arial, sans-serif;
+    color: #1a1a1a;
+    padding: 14mm 16mm 10mm;
+    display: flex; flex-direction: column;
+  }
+  header { border-bottom: 3px solid #ffb84d; padding-bottom: 5mm; margin-bottom: 6mm; }
+  .brand { font-size: 9pt; letter-spacing: .08em; text-transform: uppercase; color: #6b6b6b; }
+  h1 { font-size: 21pt; line-height: 1.15; margin-top: 2mm; font-weight: 800; color: #0f1c1e; }
+  .sub { margin-top: 2mm; color: #444; }
+  h2 {
+    font-size: 11pt; font-weight: 700; color: #0f1c1e;
+    margin: 5mm 0 2.5mm; display: flex; align-items: baseline; gap: 2.5mm;
+  }
+  h2 .nr {
+    color: #b45309; font-size: 10pt; font-variant-numeric: tabular-nums;
+  }
+  ul { list-style: none; }
+  li.check { padding-left: 7mm; position: relative; margin-bottom: 1.6mm; }
+  li.check::before {
+    content: ""; position: absolute; left: 0; top: 1.2mm;
+    width: 3.4mm; height: 3.4mm; border: 1.5px solid #0f1c1e; border-radius: 0.8mm;
+  }
+  .hint { color: #666; }
+  .cols { display: flex; gap: 8mm; }
+  .cols > div { flex: 1; }
+  .panel { border: 1.5px solid #e3ded3; border-radius: 2.5mm; padding: 4mm 5mm; }
+  .panel.wel { border-color: #cfe7dc; }
+  .panel h3 { font-size: 9.5pt; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2mm; }
+  .panel.wel h3 { color: #1a6b4f; }
+  .panel.niet h3 { color: #a33f2b; }
+  .panel li { margin-bottom: 1.4mm; padding-left: 4.5mm; position: relative; }
+  .panel.wel li::before { content: "✓"; position: absolute; left: 0; color: #1a6b4f; }
+  .panel.niet li::before { content: "✕"; position: absolute; left: 0; color: #a33f2b; }
+  .noteer { margin-top: 2mm; }
+  .noteer .regel {
+    display: flex; gap: 3mm; margin-bottom: 3.2mm; align-items: baseline;
+  }
+  .noteer .label { width: 34mm; color: #444; flex: none; }
+  .noteer .lijn { flex: 1; border-bottom: 1px solid #b9b2a4; height: 5mm; }
+  footer {
+    margin-top: auto; border-top: 1px solid #e3ded3; padding-top: 3mm;
+    display: flex; justify-content: space-between; color: #6b6b6b; font-size: 9pt;
+  }
+  footer strong { color: #0f1c1e; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">Klantkraan · telefoonchecklist</div>
+    <h1>Nooit meer een klus missen</h1>
+    <p class="sub">Leg dit A4 naast de telefoon. Dan stelt iedereen die opneemt dezelfde
+    vragen, en gaat er geen klus verloren aan een half genoteerd nummer.</p>
+  </header>
+
+  <h2><span class="nr">1</span>Als u opneemt: vraag dit altijd</h2>
+  <ul>
+    <li class="check">Naam, en belt u namens een bedrijf?</li>
+    <li class="check">Telefoonnummer. <span class="hint">Herhaal het hardop terwijl u het opschrijft.</span></li>
+    <li class="check">Postcode en huisnummer van het adres waar het speelt.</li>
+    <li class="check">Wat is er precies aan de hand, en sinds wanneer?</li>
+    <li class="check">Is het spoed, of kan het een paar dagen wachten?</li>
+    <li class="check">Kunt u een foto appen? <span class="hint">Scheelt vaak een voorrit.</span></li>
+  </ul>
+
+  <h2><span class="nr">2</span>Wat u wel en niet toezegt</h2>
+  <div class="cols">
+    <div class="panel wel">
+      <h3>Wel</h3>
+      <ul>
+        <li>Een concreet terugbelmoment: "vandaag voor 17:00 hoort u van ons".</li>
+        <li>Wie er langskomt, zodra dat vaststaat.</li>
+        <li>Dat u de melding heeft genoteerd, en waar de klant op kan rekenen.</li>
+      </ul>
+    </div>
+    <div class="panel niet">
+      <h3>Niet</h3>
+      <ul>
+        <li>Een prijs ter plekke. Eerst zien of horen wat het is.</li>
+        <li>Een exacte aankomsttijd die u niet zeker weet.</li>
+        <li>"Ik bel u zo terug" zonder het op te schrijven.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span class="nr">3</span>Oproep gemist?</h2>
+  <ul>
+    <li class="check">Bel terug zodra het kan, ook als er geen voicemail is ingesproken.</li>
+    <li class="check">Lukt bellen niet: stuur direct een berichtje. "Ik zag uw oproep, waarmee kan ik u helpen?"</li>
+    <li class="check">Noteer elke gemiste oproep op een vaste plek, met datum en tijd.</li>
+  </ul>
+
+  <h2><span class="nr">4</span>Noteer het hier</h2>
+  <div class="noteer">
+    <div class="regel"><span class="label">Naam</span><span class="lijn"></span></div>
+    <div class="regel"><span class="label">Telefoonnummer</span><span class="lijn"></span></div>
+    <div class="regel"><span class="label">Adres</span><span class="lijn"></span></div>
+    <div class="regel"><span class="label">Klus / melding</span><span class="lijn"></span></div>
+    <div class="regel"><span class="label">Afgesproken</span><span class="lijn"></span></div>
+  </div>
+
+  <footer>
+    <span>Een uitgave van <strong>Klantkraan</strong> · klantkraan.nl</span>
+    <span>Reken uw eigen gemiste omzet uit: <strong>klantkraan.nl/rekentool</strong></span>
+  </footer>
+</body>
+</html>

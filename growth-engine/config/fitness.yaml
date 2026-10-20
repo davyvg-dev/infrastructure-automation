@@ -1,0 +1,265 @@
+# The single knob-board for the FITNESS vertical. Edit this, not the code.
+# Run the engine against it with: GROWTH_CONFIG=config/fitness.yaml
+
+vertical: fitness
+
+brand:
+  name: "Klantkraan"                 # the business; posts go out from the founder's accounts
+  website: "klantkraan.nl"
+  # The fitness social handle / positioning name is an OPEN founder decision — copy must
+  # not invent one; the company stays Klantkraan for now.
+  offer: "AI-ledenassistent voor sportclubs — an assistant that instantly answers every
+    member and prospect message 24/7, qualifies the lead, and books the proefles into
+    the calendar."
+  one_liner: "Je sportschool krijgt een AI die elk bericht direct beantwoordt, 24/7, en de
+    proefles meteen inplant — zodat je geen nieuwe leden meer verliest aan onbeantwoorde
+    berichten."
+  audience: "Owners of Dutch gyms, sportscholen, and boutique studios — crossfit, yoga,
+    vechtsport, tennis. They lose trial-lesson leads to unanswered messages: evenings and
+    weekends are peak interest time, exactly when the desk is unstaffed or busy. Their #1
+    metric is new members, and that funnel starts with a proefles. They are ondernemers,
+    not tech people."
+  # 'build-in-public': you have no past client work yet, so content is shipped live.
+  proof_mode: "build_in_public"
+
+voice:
+  # How the drafts should sound. Keep it concrete and human.
+  tone: "Direct, concrete, a little opinionated. Energetic but no fitness-bro hype.
+    Owner-to-owner honesty. No hype, no emoji spam, no 'in today's fast-paced world'
+    filler. Short sentences."
+  avoid: "Corporate buzzwords, engagement-bait questions with no substance, hashtag walls,
+    fake urgency, 'game-changer', 'unlock', 'in this thread I'll', geen fitness-clichés
+    ('zomerbody', 'beast mode')."
+  # Injected verbatim into the system prompt under "Rules that matter" — the
+  # per-vertical part of the voice (who the reader is, what to lead with).
+  audience_rules: |-
+    - Write FOR THE BUYER — a busy Dutch gym, sportschool, or studio owner — not for other
+      developers or the tech crowd. Lead with their money and their pain, not the tech.
+    - Never lead with "AI" or jargon. Say what it does for them ("answers every message 24/7
+      and books the proefles") — not how it's built. Anchor value in their numbers (a missed
+      evening lead = a lost yearly membership, not one visit).
+    - Write like a real builder talking to prospects, not a marketer.
+
+languages:
+  primary: "Dutch"        # the buyer's language — customer-facing posts are Dutch
+  secondary: "English"    # allowed for build-log posts aimed at the builder crowd
+
+# Content pillars, weighted toward the BUYER (a gym owner), not other builders. The
+# mix is ~40% proof, 30% problem, 20% teardown/hot-take, 10% build log — proof + problem
+# convert; a dev-facing build/teardown/hot-take rotation grows the wrong audience.
+pillars:
+  - key: proof_demo
+    weight: 4
+    brief: "Show the ledenassistent actually working — a proefles booked at 22:00, an
+      abonnement question answered instantly, a lead qualified while the desk was closed.
+      Lead with the concrete result. Written to pair with a screenshot or short reel the
+      user attaches."
+  - key: problem
+    weight: 3
+    brief: "Speak to the owner's pain in money terms. A gym that misses evening/weekend
+      DMs loses X proefles-leads a month — and each proefles-lead is worth a yearly
+      membership (LTV), not one visit. Quantify it, or show a sharp before/after. End with
+      a light, non-pushy takeaway. This is the highest-converting angle: educate the
+      problem, don't hard-sell."
+  - key: teardown
+    weight: 2
+    brief: "Tear down a bad lead experience gyms create — a DM answered two days later, a
+      dead contact form, a proefles request that goes nowhere — and show how it should
+      work. OR plainly explain how an AI ledenassistent actually works. Buyer-relevant,
+      never developer bait."
+  - key: hot_take
+    weight: 2
+    brief: "A sharp, industry-facing opinion aimed at gym owners (e.g. 'je front desk
+      sluit om 22:00, je leads niet', 'a lead who messages three gyms joins the one that
+      answers first'). Defensible and useful, not an AI/tech debate."
+  - key: build_log
+    weight: 1
+    brief: "An honest behind-the-scenes note on building the ledenassistent — a decision,
+      a bug, a small win — but tie it back to the gym-owner benefit so it lands with
+      buyers, not just other builders."
+
+# The platform registry (read by src/platforms.py) — everything per-platform lives HERE.
+# Fitness buyers live on Instagram/Facebook/TikTok; the trades B2B channels are off here.
+# The engine drafts native variants for each — never the same string on both.
+# Per platform: enabled, delivery (auto|assisted), label (shown in Telegram), char_limit
+# (optional), media (none|image|video|both), media_required, writing (drafting guidance).
+platforms:
+  x:
+    enabled: false          # trades channel — off for fitness
+    delivery: auto          # auto-post via API on approval
+    label: "𝕏 (auto-post)"
+    char_limit: 280
+    media: none
+    media_required: false
+    note: "Distribution/personality. Links OK in-body. Punchier than LinkedIn."
+    writing: "X post: max 280 characters, punchy, personality-forward, no hashtags unless
+      natural. A strong first line that stands alone."
+  linkedin:
+    enabled: false          # trades channel — off for fitness
+    delivery: assisted      # formatted + pushed to you to paste (native posts perform best)
+    label: "in LinkedIn (paste)"
+    media: none
+    media_required: false
+    note: "Primary B2B channel. No links in the post body (put them in comment 1 / Featured)."
+    writing: "LinkedIn post (primary B2B channel): 150-400 words. The first 1-3 lines are
+      a scroll-stopping hook that stands alone above the fold. Generous line breaks (1-2
+      sentences each), one idea, end with a genuine question to spark comments. NO links
+      in the body. No hashtag walls."
+  reddit:
+    enabled: false          # trades channel — off for fitness
+    delivery: assisted
+    label: "🔶 Reddit (paste)"
+    media: none
+    media_required: false
+    note: "Value-first only. 1-2 high-effort posts/week, posted manually."
+    writing: "Reddit: value-first, zero self-promotion in the body. Written to genuinely
+      help in a relevant subreddit (e.g. r/smallbusiness, r/Klussers, r/ondernemers).
+      Sound like a helpful practitioner, not an ad."
+  # Meta (IG/FB) auto-posts via the official Graph API and TikTok takes inbox-draft
+  # uploads via its Content Posting API — publishers are wired; flip facebook/
+  # instagram to `delivery: auto` and tiktok to `delivery: draft` once the META_*/
+  # TIKTOK_* creds from docs/AUTOPUBLISH.md are in .env (until then: assisted).
+  facebook:
+    enabled: true
+    delivery: assisted
+    label: "📘 Facebook (paste)"
+    media: image
+    media_required: false
+    note: "Local-business reach (gym owners and their members are on FB). Image cards lift
+      it, text works."
+    writing: "Facebook post: conversational local-business tone, 50-150 words. Open with
+      the gym owner's pain in plain words, close with one clear next step. No hashtag
+      walls, at most one link."
+  instagram:
+    enabled: true
+    delivery: assisted
+    label: "📸 Instagram (paste)"
+    media: both
+    media_required: true
+    note: "Fitness-vertical home turf. Needs an image or reel — caption alone can't post."
+    writing: "Instagram caption: the first line is the hook (shown before 'more'). Short
+      lines, concrete benefit, end with a simple CTA. 3-5 relevant hashtags at the end
+      (niche fitness/local, e.g. sportschool + city, not generic #fitness), no more."
+  tiktok:
+    enabled: true
+    delivery: assisted
+    label: "🎵 TikTok (paste)"
+    media: video
+    media_required: true
+    note: "Reels-only channel for the fitness vertical. The caption rides along the video."
+    writing: "TikTok caption: one punchy line that frames the video's payoff, under 150
+      characters, plus 2-3 niche fitness/local hashtags. No sales speak."
+
+# Generated media: each draft gets an image card (square + story) rendered from its
+# sharpest claim, previewed in Telegram. Neutral dark scheme until the fitness
+# handle/branding is decided (open founder decision) — then update colors + footer here.
+media:
+  cards: true
+  brand:
+    bg: "#1A1A1A"        # neutral ink — no vertical branding yet
+    text: "#FAF6EE"
+    accent: "#3F7F4A"    # leaf — fits the health/fitness register
+    muted: "#8C8474"
+    footer: "klantkraan.nl/sportscholen"   # the fitness landing page (handle still open)
+    font_bold: "assets/fonts/Inter-Bold.ttf"
+    font_regular: "assets/fonts/Inter-Regular.ttf"
+    # Rotated per draft (deterministic) so the feed isn't one repeated template.
+    schemes:
+      - { bg: "#1A1A1A", text: "#FAF6EE", muted: "#8C8474" }   # ink
+      - { bg: "#3F7F4A", text: "#FAF6EE", muted: "#CFE3D4", accent: "#FAF6EE" }   # leaf
+        # accent overridden: the inherited brand accent equals this bg — invisible bar
+      - { bg: "#FAF6EE", text: "#1A1A1A", muted: "#8C8474" }   # cream
+  # Every Nth card becomes a stock photo (Pexels, dark scrim + text) when the draft has
+  # a photo_query and PEXELS_API_KEY is set. Pexels: free commercial use, no attribution.
+  stock:
+    enabled: true
+    every: 1           # every card is a photo card (founder preference 2026-07-14)
+    theme: "gym"    # appended to every photo search to keep results in-industry
+  # Reels: a raw screen recording (uploaded via the bot's 🎬 button) becomes a branded
+  # 9:16 video — status bar cropped, dead time pop-cut away, brand stage, Pillow
+  # title/end cards. IG/TikTok are this vertical's home turf, so every draft carries
+  # a reel task; unfulfilled tasks never block approval.
+  reel:
+    enabled: true
+    crop_top: 0.055     # fraction of source height to crop (iOS status bar) — tune
+                        # once after the first reel; device-specific
+    crop_bottom: 0.0
+    # Short-form: typing stays visible but fast; AI replies land instantly (the wait
+    # is cut, not sped up); each message holds just long enough to read.
+    pop_cuts: true
+    scene_threshold: 0.08     # CEILING for "a message appeared" — the working
+                              # threshold adapts per clip (6% of its biggest change)
+    typing_threshold: 0.0006  # keystroke floor, measured in the keyboard band
+    keys_band: 0.45           # bottom fraction of the frame where typing happens;
+                              # changes above it (typing indicator) are cut, not ticked
+    typing_speed: 3.0         # typing playback speed
+    dwell_seconds: 1.4        # max hold per message; shrinks to fit the cap
+    target_seconds: 15      # hard cap for the finished reel
+    max_speed: 4.0
+    cold_open: true         # open on the payoff message, then replay the chat
+    suspense_seconds: 0.6   # one "..." beat of real waiting before the payoff
+    hook_seconds: 2.5       # hook text rides the opening footage — no title card
+    cta_seconds: 1.0        # CTA rides a freeze of the last frame — no end card
+    cta_headline: "Nooit meer een proefles-lead missen."   # end card (Dutch)
+    cta_sub: "klantkraan.nl/sportscholen"                  # the fitness landing page
+    # Baked-in sound design: synthesized SFX from assets/sfx (pop per message, ticks
+    # while typing, ding on the payoff). NEVER commercial music — trending audio is
+    # added in-app when posting (copyright; see docs/REELS.md).
+    audio:
+      enabled: true
+      sfx: true
+      bed: ""             # optional licensed/CC0 ambient file (path); empty = no bed
+      bed_gain_db: -24    # bed level under the SFX
+    # Scripted chat-demo reels: drawn frame-by-frame from a scenario below, so every
+    # video draft ships with a reel automatically — sound perfectly synced by
+    # construction. The 🎬 upload replaces it with real footage when preferred.
+    # Fictional business, digital-assistant disclosure in the chat header.
+    demo:
+      enabled: true
+      business: "Sportschool Vitaal"
+      # On screen from the start — the widget's own greeting, with the disclosure.
+      greeting: "Hi! Je chat met de digitale assistent van Sportschool Vitaal. Waar kan ik je mee helpen?"
+      scenarios:
+        - - { from: klant, text: "Hoi! Kan ik deze week een proefles komen doen?" }
+          - { from: ai, text: "Leuk! Er is plek op donderdag 19:00 of zaterdag 10:00. Wat past?" }
+          - { from: klant, text: "Zaterdag 10:00 graag" }
+          - { from: ai, text: "Genoteerd: proefles zaterdag 10:00. Neem sportkleding mee — tot dan!" }
+        - - { from: klant, text: "Wat kost een abonnement per maand?" }
+          - { from: ai, text: "Vanaf 29,95 per maand, zonder inschrijfkosten. Zal ik een rondleiding inplannen?" }
+          - { from: klant, text: "Ja, morgen na 17:00?" }
+          - { from: ai, text: "Rondleiding staat: morgen 17:30. Je krijgt zo een bevestiging per mail!" }
+
+# Cadence: how many generation runs per day and how many drafts each run makes.
+# Start conservative; raise once you trust the quality.
+# NOTE: the engine drafts ORIGINAL posts only. The real growth lever — replies/comments
+# and DMs — must stay HUMAN; automating them kills reach and trust. See docs/STRATEGY.md.
+cadence:
+  # 'starter' while you warm up; switch to 'growth' or 'aggressive' when ready.
+  active: starter
+  profiles:
+    starter:
+      runs_per_day: 1
+      drafts_per_run: 2
+      platforms_per_draft: ["instagram", "facebook", "tiktok"]
+    growth:
+      runs_per_day: 2
+      drafts_per_run: 2
+      platforms_per_draft: ["instagram", "facebook", "tiktok"]
+    aggressive:
+      runs_per_day: 3
+      drafts_per_run: 2
+      platforms_per_draft: ["instagram", "facebook", "tiktok"]
+  # Local-hour window (24h) to send drafts for approval, so you're not pinged at 3am.
+  quiet_hours_start: 22
+  quiet_hours_end: 8
+  timezone: "Europe/Amsterdam"
+
+# Build-in-public: turn your real git commits into 'build log' posts (/buildlog in the bot).
+buildlog:
+  enabled: true
+  repo_path: ".."           # relative to growth-engine/ — points at the git repo root
+  max_commits: 25           # how many recent commits to consider on the first run
+
+model:
+  id: "claude-opus-4-8"
+  effort: "medium"          # low | medium | high — medium is a good balance for short posts

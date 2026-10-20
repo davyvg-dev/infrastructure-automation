@@ -1,0 +1,20 @@
+# Real client dirs carry PII (names, numbers, photos) and stay out of git, same rule as
+# ai-receptionist/config/clients/. Only the fake fixture is tracked.
+clients/*
+!clients/voorbeeld-dakdekker/
+!clients/voorbeeld-preview/
+# The locatie counterpart to the dakdekker fixture, and equally fictional. Tracked so the
+# register has a worked example in the repo and not only in someone's working copy.
+!clients/voorbeeld-kapper-rotterdam/
+dist/
+.astro/
+# Fleet fingerprints (scripts/vloot.mjs) hold a site's rendered copy, so they follow the
+# clients/ rule exactly: a real client's text never enters git, and the tracked fixtures
+# are kept so a fresh checkout has something to measure a new site against.
+vloot/*
+!vloot/voorbeeld-dakdekker.json
+!vloot/voorbeeld-preview.json
+!vloot/voorbeeld-kapper-rotterdam.json
+# Search scratch for `stock-photos.py zoek`: two dozen unpicked frames per vak, worth
+# nothing once the seven are pinned in stock/sets/. The recipe is the artefact, not this.
+stock/kandidaten/

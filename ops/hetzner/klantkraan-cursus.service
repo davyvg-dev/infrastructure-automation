@@ -1,0 +1,15 @@
+[Unit]
+Description=Klantkraan e-mailcursus sender (due lessons -> subscribers via Resend)
+After=network-online.target
+Wants=network-online.target
+OnFailure=kk-alert@%n.service
+
+[Service]
+Type=oneshot
+# app user: reads/writes data/cursus/ and the app .env. `send` delivers at most ONE
+# lesson per subscriber per run, so a slipped timer catches up one day at a time.
+# It exits 1 when lessons are due but RESEND_API_KEY is missing (or any send failed),
+# so a dry-standing sender fails visibly instead of looking green every morning.
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/ai-receptionist
+ExecStart=/opt/klantkraan/ai-receptionist/.venv/bin/python -m app.cursus send

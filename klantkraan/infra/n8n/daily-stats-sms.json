@@ -1,0 +1,156 @@
+{
+  "name": "daily-stats-sms",
+  "nodes": [
+    {
+      "id": "55555555-5555-4555-8555-555555555551",
+      "name": "Cron 18:00 CET",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 18 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555552",
+      "name": "Aggregate Daily Stats Per Client",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [420, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT c.id AS client_id, c.bedrijfsnaam, c.owner_voornaam, c.owner_e164, c.slug, COALESCE(SUM(CASE WHEN ca.started_at::date = CURRENT_DATE THEN 1 ELSE 0 END), 0) AS calls_taken, COALESCE(SUM(CASE WHEN ev.event_type = 'call.missed' AND ev.occurred_at::date = CURRENT_DATE THEN 1 ELSE 0 END), 0) AS missed_recovered, COALESCE(SUM(CASE WHEN b.created_at::date = CURRENT_DATE THEN 1 ELSE 0 END), 0) AS bookings, COALESCE(SUM(CASE WHEN r.received_at::date = CURRENT_DATE THEN 1 ELSE 0 END), 0) AS reviews FROM clients c LEFT JOIN calls ca ON ca.client_id = c.id LEFT JOIN events ev ON ev.client_id = c.id LEFT JOIN bookings b ON b.client_id = c.id LEFT JOIN reviews r ON r.client_id = c.id WHERE c.status = 'active' AND c.daily_stats_sms_enabled = true AND c.onboarding_completed_at IS NOT NULL AND c.onboarding_completed_at > NOW() - INTERVAL '14 days' GROUP BY c.id, c.bedrijfsnaam, c.owner_voornaam, c.owner_e164, c.slug;",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555553",
+      "name": "Suppression Check",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [640, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT $1::uuid AS client_id, $2 AS bedrijfsnaam, $3 AS owner_voornaam, $4 AS owner_e164, $5 AS slug, $6::int AS calls_taken, $7::int AS missed_recovered, $8::int AS bookings, $9::int AS reviews, EXISTS(SELECT 1 FROM suppression_list WHERE e164_hash = encode(digest($4, 'sha256'), 'hex')) AS suppressed;",
+        "options": {
+          "queryReplacement": "={{ $json.client_id }},={{ $json.bedrijfsnaam }},={{ $json.owner_voornaam }},={{ $json.owner_e164 }},={{ $json.slug }},={{ $json.calls_taken }},={{ $json.missed_recovered }},={{ $json.bookings }},={{ $json.reviews }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555554",
+      "name": "If Not Suppressed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [860, 300],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.suppressed }}",
+              "rightValue": false,
+              "operator": { "type": "boolean", "operation": "false", "singleValue": true }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555555",
+      "name": "CM.com SMS - Daily Stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1080, 380],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"={{ $json.bedrijfsnaam }}\",\n      \"to\": [{ \"number\": \"={{ $json.owner_e164 }}\" }],\n      \"body\": { \"content\": \"{{ $json.owner_voornaam }}, vandaag bij {{ $json.bedrijfsnaam }}:\\n{{ $json.calls_taken }} calls door AI, {{ $json.missed_recovered }} gemist teruggewonnen, {{ $json.bookings }} boekingen, {{ $json.reviews }} reviews.\\nDashboard: https://klantkraan.nl/r/{{ $json.slug }}\" },\n      \"reference\": \"daily-{{ $json.client_id }}-{{ $now.toFormat('yyyy-LL-dd') }}\"\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555556",
+      "name": "Healthchecks Ping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_DAILY_STATS_SMS }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Cron 18:00 CET": {
+      "main": [[{ "node": "Aggregate Daily Stats Per Client", "type": "main", "index": 0 }]]
+    },
+    "Aggregate Daily Stats Per Client": {
+      "main": [[{ "node": "Suppression Check", "type": "main", "index": 0 }]]
+    },
+    "Suppression Check": {
+      "main": [[{ "node": "If Not Suppressed", "type": "main", "index": 0 }]]
+    },
+    "If Not Suppressed": {
+      "main": [
+        [{ "node": "Healthchecks Ping", "type": "main", "index": 0 }],
+        [{ "node": "CM.com SMS - Daily Stats", "type": "main", "index": 0 }]
+      ]
+    },
+    "CM.com SMS - Daily Stats": {
+      "main": [[{ "node": "Healthchecks Ping", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20",
+    "notes": "Daily stats SMS only for clients in first 14 days post-go-live (per onboarding playbook). After D14 weekly email takes over."
+  }
+}

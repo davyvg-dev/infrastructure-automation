@@ -1,0 +1,44 @@
+---
+/*
+ * Single-line illustration — kitchen mixer tap (the literal "klantkraan"
+ * metaphor: customer-tap). Used on /loodgieters hero.
+ */
+interface Props {
+  class?: string
+  'aria-label'?: string
+}
+const { class: className = 'h-56 w-56', 'aria-label': ariaLabel = 'Waterkraan' } = Astro.props
+---
+
+<svg
+  viewBox="0 0 240 240"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="3"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={ariaLabel}
+  class={className}
+>
+  <!-- Wall mount -->
+  <line x1="35" y1="60" x2="35" y2="120"></line>
+  <line x1="35" y1="60" x2="55" y2="60"></line>
+  <!-- Horizontal pipe to tap body -->
+  <line x1="55" y1="60" x2="120" y2="60"></line>
+  <!-- Tap body (curved spout descending) -->
+  <path d="M120 60 Q160 60 160 95 L160 130 Q160 140 150 140 L130 140"></path>
+  <!-- Spout opening -->
+  <line x1="130" y1="132" x2="130" y2="148"></line>
+  <line x1="120" y1="140" x2="140" y2="140"></line>
+  <!-- Valve handle (top) -->
+  <line x1="135" y1="45" x2="135" y2="20"></line>
+  <circle cx="135" cy="14" r="6"></circle>
+  <line x1="125" y1="45" x2="145" y2="45"></line>
+  <!-- Water drop falling -->
+  <path d="M130 165 Q124 178 130 188 Q136 178 130 165 Z"></path>
+  <!-- Splash ring at bottom -->
+  <path d="M105 215 Q130 210 155 215"></path>
+  <line x1="100" y1="220" x2="95" y2="222"></line>
+  <line x1="160" y1="220" x2="165" y2="222"></line>
+</svg>

@@ -1,0 +1,490 @@
+// The design vocabulary: the bounded set of looks this factory can build.
+//
+// The template used to have exactly one appearance, and the only thing a client
+// could change about it were two hex colours. Two voorstellen sent in the same
+// week were recognisably the same site, which is the one thing an unsolicited
+// proposal cannot afford to be.
+//
+// So the skin is parameterised and the silhouette is not. Every axis below is a
+// closed set of named values that resolve to CSS custom properties, injected on
+// <html> by Base.astro next to --brand-primary. Section order, markup and the
+// components themselves are identical for every client: what varies is type,
+// colour, rhythm, radius and how photographs are set.
+//
+// Why a closed vocabulary rather than generated CSS: every value here has been
+// looked at once, on a real build, and can be trusted forever after. A model
+// choosing among them cannot produce an inaccessible contrast, a broken mobile
+// reflow, or a layout the fact gate cannot assert. It can only choose a look.
+//
+// Grounded in the twelve award-level trade/architecture sites read for TODO Q9
+// (Koto, Leidner, Adriaans, Zecc, Van Wijnen, Hobbs, Land Morphology): what
+// separates those from a template is the type scale, the amount of air, and
+// whether photographs are framed or allowed to bleed. Not the section order --
+// they all say the same things in the same sequence.
+
+export const LETTERONTWERPEN = ['systeem', 'grotesk', 'industrieel', 'redactioneel'] as const
+export const SCHALEN = ['compact', 'normaal', 'groot', 'royaal'] as const
+export const VORMEN = ['scherp', 'zacht', 'rond'] as const
+export const RITMES = ['dicht', 'normaal', 'ruim'] as const
+export const PALETTEN = ['warm', 'koel', 'neutraal', 'zand'] as const
+export const KLEURINGEN = ['spaarzaam', 'royaal'] as const
+export const FOTOZETTINGEN = ['ingekaderd', 'randloos'] as const
+export const MATEN = ['smal', 'normaal', 'breed'] as const
+
+export type Letterontwerp = (typeof LETTERONTWERPEN)[number]
+export type Schaal = (typeof SCHALEN)[number]
+export type Vorm = (typeof VORMEN)[number]
+export type Ritme = (typeof RITMES)[number]
+export type Palet = (typeof PALETTEN)[number]
+export type Kleuring = (typeof KLEURINGEN)[number]
+export type Fotozetting = (typeof FOTOZETTINGEN)[number]
+export type Maat = (typeof MATEN)[number]
+
+export interface Stijl {
+  letterontwerp: Letterontwerp
+  schaal: Schaal
+  vorm: Vorm
+  ritme: Ritme
+  palet: Palet
+  kleuring: Kleuring
+  foto: Fotozetting
+  maat: Maat
+}
+
+/**
+ * The look every client site had before the vocabulary existed. Kept as the
+ * default so an existing client.yaml with no `stijl:` block builds the same
+ * bytes it did yesterday, and so there is one known-good reference to diff a
+ * new combination against.
+ */
+export const STANDAARD_STIJL: Stijl = {
+  letterontwerp: 'systeem',
+  schaal: 'normaal',
+  vorm: 'zacht',
+  ritme: 'normaal',
+  palet: 'warm',
+  kleuring: 'spaarzaam',
+  foto: 'ingekaderd',
+  maat: 'normaal',
+}
+
+type Tokens = Record<string, string>
+
+// --- typefaces --------------------------------------------------------------------------
+//
+// The single biggest tell that a site came out of a template is that it is set in
+// system-ui: it is what a page looks like when nobody chose anything. So the vocabulary
+// gets real faces, self-hosted (see scripts/fonts.mjs) rather than linked, because a
+// client site making zero external requests is what lets it ship without a cookie banner.
+//
+// Which files each pairing needs lives in fonts/manifest.json, read here and by
+// astro.config.mjs, so the stack the CSS names and the bytes the build copies cannot
+// drift apart. A stack naming a family that was never copied does not fail anything --
+// it silently falls back to Arial on a client's live site, which is exactly the class of
+// bug a shared manifest removes.
+// The `with` attribute is what lets this module be imported by plain Node as well as by
+// Vite -- the resolver tests run it outside the bundler, and Vite is happy either way.
+import manifest from '../../fonts/manifest.json' with { type: 'json' }
+
+// Trailing fallbacks. The webfont is prepended; on the systeem pairing this stack is all
+// there is. Kept identical to what the template shipped before webfonts existed, so
+// `letterontwerp: systeem` really is the old look and not an approximation of it.
+const SYSTEEM_STACK =
+  "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+const SERIF_FALLBACK = "Georgia, 'Times New Roman', serif"
+
+interface Pairing {
+  dirs: string[]
+  display: string | null
+  body: string | null
+}
+
+/**
+ * Per-pairing display treatment: the weight and tracking of h1/h2.
+ *
+ * Sizes come from `schaal`, but weight and tracking belong to the face -- the same
+ * numbers do not suit a 400-weight serif and an 800-weight grotesk, and a display serif
+ * forced to 800 with -0.015em tracking looks like a rendering fault rather than a choice.
+ *
+ * h3 is deliberately not here. It is a card and panel title at ~1.15rem, and at that size
+ * a display face is either invisible (a high-contrast serif loses its thin strokes) or
+ * shouty (a wide grotesk). Every pairing sets h3 in the body face, which is the ordinary
+ * convention: display for the two headings that carry the page, text face for the rest.
+ */
+const LETTER_TOKENS: Record<Letterontwerp, Tokens> = {
+  systeem: {
+    '--text-h1--font-weight': '800',
+    '--text-h2--font-weight': '700',
+    '--display-tracking': '-0.015em',
+  },
+  // Figtree carries its own weight at 700; 800 is heavier than the face wants.
+  grotesk: {
+    '--text-h1--font-weight': '700',
+    '--text-h2--font-weight': '700',
+    '--display-tracking': '-0.02em',
+  },
+  // Archivo is wide and sturdy, which is why it suits construction, and it needs tighter
+  // tracking at display sizes or a Dutch company name sprawls across three lines.
+  industrieel: {
+    '--text-h1--font-weight': '700',
+    '--text-h2--font-weight': '700',
+    '--display-tracking': '-0.03em',
+  },
+  // Instrument Serif ships one weight and is high contrast: let the size do the work.
+  // Negative tracking collides its thin strokes, so this is the one pairing at 0.
+  redactioneel: {
+    '--text-h1--font-weight': '400',
+    '--text-h2--font-weight': '400',
+    '--display-tracking': '0em',
+  },
+}
+
+const PAIRINGEN = manifest as unknown as Record<string, Pairing>
+
+/** Font-family stacks for a pairing: the webfont first, then the system fallbacks. */
+function fontTokens(naam: Letterontwerp): Tokens {
+  const pairing = PAIRINGEN[naam]
+  const isSerif = naam === 'redactioneel'
+  return {
+    '--font-sans': pairing.body ? `'${pairing.body}', ${SYSTEEM_STACK}` : SYSTEEM_STACK,
+    '--font-display': pairing.display
+      ? `'${pairing.display}', ${isSerif ? SERIF_FALLBACK : SYSTEEM_STACK}`
+      : SYSTEEM_STACK,
+    ...LETTER_TOKENS[naam],
+  }
+}
+
+/** Font directories a client on this pairing has to ship. Used by astro.config.mjs. */
+export function fontDirs(naam: Letterontwerp): string[] {
+  return PAIRINGEN[naam]?.dirs ?? []
+}
+
+// --- type scale -----------------------------------------------------------------------
+//
+// Sizes only. Weight and tracking belong to the typeface, not to the scale, and are set
+// by the letterontwerp axis. Every step is a clamp() so the scale is fluid rather than
+// stepped: a trade site is read on a phone in a van as often as on a desktop.
+//
+// Every preferred term is `<rem> + <vw>`, never a bare `vw`. A clamp whose middle term is
+// pure viewport width does not respond to browser zoom at all -- the glyphs stay the same
+// physical size while the page around them grows -- which is a WCAG 2.2 SC 1.4.4 (Resize
+// Text) failure, and the audience for these sites is the half of it least likely to be
+// reading at 100%. The rem carries the zoom, the vw carries the fluidity. Each pair is
+// solved to hold the old endpoints: the minimum at a 375px phone and the maximum at a
+// 1440px desktop, so the scale looks the same on both and only the middle of the range
+// (and the zoom behaviour) moves.
+const SCHAAL_TOKENS: Record<Schaal, Tokens> = {
+  // Dense and businesslike. Suits a client with many diensten, where the page is long
+  // and a huge H1 would push the first real information below the fold.
+  compact: {
+    '--text-h1': 'clamp(1.65rem, 1.4rem + 1.05vw, 2.35rem)',
+    '--text-h2': 'clamp(1.3rem, 1.18rem + 0.53vw, 1.65rem)',
+    '--text-h3': '1.05rem',
+    '--text-body': '1rem',
+    '--text-small': '0.8125rem',
+  },
+  normaal: {
+    '--text-h1': 'clamp(1.9rem, 1.51rem + 1.65vw, 3rem)',
+    '--text-h2': 'clamp(1.45rem, 1.26rem + 0.83vw, 2rem)',
+    '--text-h3': '1.15rem',
+    '--text-body': '1.0625rem',
+    '--text-small': '0.875rem',
+  },
+  // The editorial end: a headline big enough to carry the first screen on its own.
+  //
+  // Capped at 3.5rem rather than the 4.25rem this started at. The H1 is
+  // "<bedrijf.naam>: vakwerk waar u op kunt rekenen." in a half-width hero column, and
+  // Dutch trade names are long ("Voorbeeld Loodgietersbedrijf" is 28 characters): at
+  // 68px that ran to five lines and pushed the call button off a 1000px screen. A trade
+  // site that hides its phone number below the fold has lost the only conversion it has.
+  groot: {
+    '--text-h1': 'clamp(2.1rem, 1.61rem + 2.1vw, 3.5rem)',
+    '--text-h2': 'clamp(1.7rem, 1.38rem + 1.35vw, 2.6rem)',
+    '--text-h3': '1.25rem',
+    '--text-body': '1.125rem',
+    '--text-small': '0.9375rem',
+  },
+  // The editorial end, and the answer to the one number where this factory was furthest
+  // from the reference set: display type on the sixteen award sites measured at 1440px runs
+  // 96px to 320px with a median around 130px, against a ceiling of 56px here. `groot` was
+  // capped at 3.5rem for a real reason -- a five-line headline in the split hero's
+  // half-width column pushed the call button off a 1000px screen, which is the one thing a
+  // trade site cannot afford -- but that reason is a property of the ARRANGEMENT, not of the
+  // typeface. Given the whole column (`hero: gestapeld` or `typografisch`) the same headline
+  // sets in two lines at 88px.
+  //
+  // So this value exists and the checked schema refuses it next to `hero: gesplitst`. It is
+  // the one cross-axis rule in the vocabulary, and it is here rather than in a comment
+  // because the combination it forbids is exactly the one a model would reach for.
+  //
+  // 5.5rem/88px is short of the 130px median on purpose: those are architecture studios
+  // whose headline is two words, and a Dutch trade headline is "Plat dak, pannen of zink:
+  // wij houden het dicht". Line-height stays 1.08 rather than dropping under 1, for the
+  // same reason -- descenders in a three-line Dutch sentence collide below 1.0.
+  royaal: {
+    '--text-h1': 'clamp(2.4rem, 1.31rem + 4.66vw, 5.5rem)',
+    '--text-h2': 'clamp(1.9rem, 1.48rem + 1.8vw, 3.1rem)',
+    '--text-h3': '1.35rem',
+    // 19px. The award set runs body at 14-20px and several of the strongest sit at 18;
+    // this is the editorial end of the vocabulary, so it takes the top of that band.
+    '--text-body': '1.1875rem',
+    '--text-small': '1rem',
+  },
+}
+
+// --- measure --------------------------------------------------------------------------
+//
+// How wide the page is allowed to be, and how wide the words inside it are allowed to run.
+//
+// This was the last hardcoded dimension in the template: `max-w-5xl` appeared as a literal
+// nineteen times, `max-w-2xl` eight, `max-w-3xl` three, and no axis could move any of them.
+// Every site the factory built was therefore the same 64rem column down the middle of
+// whatever screen it landed on -- which is the silhouette a visitor reads before they read
+// a word, and the one the reference sites differ on most.
+//
+// Three tokens because a page has three different measures and conflating them is how a
+// wide site ends up with 110-character lines:
+//   --maat-kolom  the page container: header, sections, footer
+//   --maat-band   the photo band, deliberately wider than the page it interrupts
+//   --maat-kop    headings and the lead line under them, which want a shorter measure
+//   --maat-tekst  running body text
+// Widening the container therefore does NOT widen the prose in step with it. `breed` buys
+// air in the margins and a longer photo band, not a longer line.
+//
+// The reading measures are DELIBERATELY narrower than the literals they replaced, and this
+// is the one place the "an old client.yaml builds the same bytes" promise is broken on
+// purpose. The container widths are unchanged; `--maat-kop` went 42rem -> 26rem and
+// `--maat-tekst` 48rem -> 34rem.
+//
+// Why: 48rem of Dutch body text at 1.0625rem is about NINETY characters a line, and the
+// sixteen award-winning sites measured for research/award-craft-2026-08-16.md run 44-64ch,
+// with the only site authoring it explicitly (schyns.de) capping prose at 44-48ch and
+// display lines at 12-25ch. Ninety is not a stylistic preference away from that, it is
+// past the point where the eye reliably finds the start of the next line. 34rem lands
+// around 64ch and 26rem around 49ch, which is the top of the measured band rather than the
+// middle -- a trade site is read by people who want the fact, not by typographers.
+//
+// The cost of breaking the promise is zero today (no client.yaml in the fleet is a paying
+// client's) and the benefit is the single most-cited difference between the two groups.
+// Container widths still hold the old values at `normaal`, so nothing about the page's
+// silhouette moved.
+const MAAT_TOKENS: Record<Maat, Tokens> = {
+  // A tight editorial column. Suits a site with little to say and one good photograph:
+  // the narrower the column, the more the whitespace reads as confidence rather than as a
+  // section someone forgot to fill.
+  smal: {
+    '--maat-kolom': '56rem',
+    '--maat-band': '64rem',
+    '--maat-kop': '22rem',
+    '--maat-tekst': '30rem',
+    '--maat-gutter': '1.5rem',
+  },
+  normaal: {
+    '--maat-kolom': '64rem',
+    '--maat-band': '72rem',
+    '--maat-kop': '26rem',
+    '--maat-tekst': '34rem',
+    '--maat-gutter': '1.5rem',
+  },
+  // The gallery end. The container grows 12rem and the prose grows 2, so the extra width
+  // lands in the margins and on the photographs, which is where the reference sites put it.
+  // The gutter grows with it: a 76rem column with a 1.5rem gutter has its text nearly
+  // touching the edge of a 1280px laptop screen.
+  // The gallery end. The container grows 20rem across the axis and the prose grows 8, so
+  // the extra width lands in the margins and on the photographs, which is where the
+  // reference sites put it.
+  //
+  // `--maat-tekst` deliberately does NOT grow past `normaal`: 48rem is about 90 characters
+  // of Dutch body text at 1.0625rem, which is already past the 45-75 a typographer would
+  // ask for. The widest page in the vocabulary is therefore the one with the most margin,
+  // not the one with the longest line. The gutter grows instead -- a 76rem column with a
+  // 1.5rem gutter has its text nearly touching the edge of a 1280px laptop screen.
+  breed: {
+    '--maat-kolom': '76rem',
+    '--maat-band': '84rem',
+    '--maat-kop': '28rem',
+    '--maat-tekst': '36rem',
+    '--maat-gutter': '2rem',
+  },
+}
+
+// --- radius ---------------------------------------------------------------------------
+//
+// One axis drives cards, buttons and the hero photo together: a site with sharp cards
+// and pill buttons reads as two designs stapled together, which is precisely the tell
+// this vocabulary exists to remove.
+const VORM_TOKENS: Record<Vorm, Tokens> = {
+  scherp: {
+    '--radius-card': '0px',
+    '--radius-button': '0px',
+    '--radius-foto': '0px',
+  },
+  zacht: {
+    '--radius-card': '0.75rem',
+    '--radius-button': '0.625rem',
+    '--radius-foto': '1.25rem',
+  },
+  rond: {
+    '--radius-card': '1.25rem',
+    '--radius-button': '9999px',
+    '--radius-foto': '1.5rem',
+  },
+}
+
+// --- vertical rhythm ------------------------------------------------------------------
+//
+// Two pairs: the ordinary text sections, and the photo band, which has always carried
+// more air than the rest and has to keep that relationship at every density.
+const RITME_TOKENS: Record<Ritme, Tokens> = {
+  dicht: {
+    '--ritme-y': '1.75rem',
+    '--ritme-y-md': '2.25rem',
+    '--ritme-band-y': '2.5rem',
+    '--ritme-band-y-md': '3.5rem',
+  },
+  normaal: {
+    '--ritme-y': '2.25rem',
+    '--ritme-y-md': '3rem',
+    '--ritme-band-y': '3.5rem',
+    '--ritme-band-y-md': '5rem',
+  },
+  // Gallery air. The single cheapest way to stop a page reading as a brochure, and the
+  // one thing every site in the Q9 reference set had in common.
+  ruim: {
+    '--ritme-y': '3.25rem',
+    '--ritme-y-md': '5rem',
+    '--ritme-band-y': '4.5rem',
+    '--ritme-band-y-md': '7rem',
+  },
+}
+
+// --- surfaces -------------------------------------------------------------------------
+//
+// Paper, card, ink, muted text and hairline. Brand colour is deliberately NOT here: it
+// comes from client.yaml and has to survive on top of any of these. Every ink/paper pair
+// below clears WCAG AA for body text, and every mist/paper pair clears 4.5:1 as well --
+// muted text is still text.
+const PALET_TOKENS: Record<Palet, Tokens> = {
+  warm: {
+    '--color-paper': '#faf9f7',
+    '--color-card': '#ffffff',
+    '--color-ink': '#20262c',
+    '--color-mist': '#5a646e',
+    '--color-line': '#e5e1da',
+  },
+  koel: {
+    '--color-paper': '#f6f7f9',
+    '--color-card': '#ffffff',
+    '--color-ink': '#1b2027',
+    '--color-mist': '#565f6a',
+    '--color-line': '#dfe3e8',
+  },
+  neutraal: {
+    '--color-paper': '#f7f7f7',
+    '--color-card': '#ffffff',
+    '--color-ink': '#1f1f1f',
+    '--color-mist': '#5b5b5b',
+    '--color-line': '#e2e2e2',
+  },
+  // The editorial warm-grey the reference set kept reaching for: paper with a little
+  // yellow in it, card slightly warmer than white, hairlines the colour of card stock.
+  zand: {
+    '--color-paper': '#f5f1ea',
+    '--color-card': '#fffdf9',
+    '--color-ink': '#23201c',
+    '--color-mist': '#5f584e',
+    '--color-line': '#e0d8ca',
+  },
+}
+
+// --- how much brand colour the page carries -------------------------------------------
+//
+// The alternating bands (Usps, Werk, Werkgebied) read --band-* rather than --color-card
+// directly, so this axis moves them without touching the components' structure. The
+// tinted variant is mixed from the client's own primary, so it cannot clash with it, and
+// stays at a low enough percentage that --color-ink keeps its contrast on top.
+//
+// Every tint is mixed over --color-card, never --color-paper. Paper is already the darkest
+// surface a palet has, and tinting it compounds: the tint is mixed OUT of the brand colour,
+// so the darker the client's primary, the darker the band it lands on -- which is the one
+// direction a contrast floor on the brand colour cannot help with. Mixed over card instead,
+// the band starts from the lightest surface and the whole vocabulary clears AA (verified by
+// sweep over every #rrggbb the schema accepts; see TODO R6b).
+const KLEURING_TOKENS: Record<Kleuring, Tokens> = {
+  spaarzaam: {
+    '--band-bg': 'var(--color-card)',
+    '--band-line': 'var(--color-line)',
+    '--band-foto-bg': 'color-mix(in oklab, var(--brand-primary) 5%, var(--color-card))',
+  },
+  royaal: {
+    '--band-bg': 'color-mix(in oklab, var(--brand-primary) 6%, var(--color-card))',
+    '--band-line': 'color-mix(in oklab, var(--brand-primary) 18%, var(--color-line))',
+    // 8%, not 13%: the photo band is the only surface that carries brand-coloured text
+    // (Werk's eyebrow) on top of a brand-coloured tint, so it is where the two meet.
+    '--band-foto-bg': 'color-mix(in oklab, var(--brand-primary) 8%, var(--color-card))',
+  },
+}
+
+// --- photography ----------------------------------------------------------------------
+//
+// Framed keeps every photograph inside the max-w-5xl column with a radius on it. Bleeding
+// lets the work band run to both edges of the viewport with square corners, which is what
+// the reference sites do and what makes a stock set look like a portfolio rather than a
+// contact sheet. The radius token is what the framed variant spends and the bleeding one
+// zeroes, so `vorm` and `foto` cannot disagree about the corner of the same photo.
+const FOTO_TOKENS: Record<Fotozetting, Tokens> = {
+  // The photo grid sits in its own wrapper, and these two set how wide that wrapper is
+  // allowed to be. Framed keeps it in the 72rem text column with the page gutter; bleeding
+  // lets it fill the section and keeps only a hairline gutter so the outer photographs
+  // reach the edge of the screen without touching it.
+  // Two radii, not one: the hero photograph is a single large plate and carries a bigger
+  // corner than the work tiles, which sit next to the dienst cards and match them. Folding
+  // them into one value looks tidier in this file and visibly re-rounds the tiles on every
+  // existing site, so they stay separate and only `randloos` squares both at once.
+  // Spends the page's own band width rather than a pinned number, so `maat` moves the
+  // photo column with the rest of the page and the two axes cannot disagree about how wide
+  // the site is. At `maat: normaal` --maat-band is the 72rem this token was pinned at
+  // before the axis existed, which is what keeps an older client.yaml building the same
+  // bytes. Werk's eyebrow and H2 read --maat-band directly, so when `randloos` sends the
+  // photographs to the edges below, the heading above them stays on the framed line.
+  ingekaderd: {
+    '--foto-kolom': 'var(--maat-band)',
+    '--foto-gutter': 'var(--maat-gutter)',
+    '--foto-radius': 'var(--radius-foto)',
+    '--foto-tegel-radius': 'var(--radius-card)',
+  },
+  randloos: {
+    '--foto-kolom': '100%',
+    '--foto-gutter': '0.5rem',
+    '--foto-radius': '0px',
+    '--foto-tegel-radius': '0px',
+  },
+}
+
+/**
+ * Resolve a stijl into the CSS custom properties Base.astro writes onto <html>.
+ *
+ * Only properties that differ from the stylesheet's own @theme defaults would strictly
+ * need emitting, but all of them are written unconditionally: a partial override is the
+ * kind of thing that works until someone edits global.css, and the bytes are noise next
+ * to one photograph.
+ */
+export function resolveStijl(stijl: Stijl): Tokens {
+  return {
+    ...fontTokens(stijl.letterontwerp),
+    ...SCHAAL_TOKENS[stijl.schaal],
+    ...MAAT_TOKENS[stijl.maat],
+    ...VORM_TOKENS[stijl.vorm],
+    ...RITME_TOKENS[stijl.ritme],
+    ...PALET_TOKENS[stijl.palet],
+    ...KLEURING_TOKENS[stijl.kleuring],
+    ...FOTO_TOKENS[stijl.foto],
+  }
+}
+
+/** The resolved stijl as an inline `style` attribute value. */
+export function stijlStyle(stijl: Stijl, extra: Tokens = {}): string {
+  return Object.entries({ ...extra, ...resolveStijl(stijl) })
+    .map(([prop, value]) => `${prop}: ${value}`)
+    .join('; ')
+}

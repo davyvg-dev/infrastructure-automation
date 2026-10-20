@@ -1,0 +1,25 @@
+---
+import { loadClient } from '../lib/client'
+
+// Shown on every page of a proposal build (modus: preview) and on no other
+// build. Deliberately NOT in the client's brand colors: it must read as a
+// message from Klantkraan wrapped around the proposal, not as part of the site.
+// No dismiss button on purpose, the template ships zero executable JavaScript.
+const { config } = loadClient()
+const { bedrijf } = config
+---
+
+<aside
+  class="border-b border-slate-700 bg-slate-900 px-(--maat-gutter) py-3 text-white"
+  aria-label="Melding over dit voorstel"
+>
+  <p class="mx-auto max-w-(--maat-kolom) text-small leading-snug">
+    <strong class="font-semibold">Voorbeeld, nog niet online.</strong>
+    Klantkraan maakte deze website als voorstel voor {bedrijf.naam}, op basis van openbare gegevens.
+    Kloppen de gegevens niet, of wilt u iets anders? Laat het ons weten, dan passen wij het aan.
+    Wilt u de site niet, dan halen wij hem weg.
+    <a class="text-white underline underline-offset-2" href="https://klantkraan.nl/"
+      >klantkraan.nl</a
+    >
+  </p>
+</aside>

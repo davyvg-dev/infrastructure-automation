@@ -1,0 +1,74 @@
+# What the list machine looks for. scripts/sourcing.py reads this and nothing else;
+# widening the search is an edit here, never a code change.
+#
+# The KVK Zoeken API cannot filter by SBI code -- it searches names, cities and streets.
+# That is workable for trades because a Dutch loodgieter almost always puts the trade in
+# the company name (Loodgietersbedrijf Meijer, VDP Dakbedekking, AJ Dakwerken), so the
+# keywords below are the net and the SBI whitelist further down is what throws back the
+# namesakes the net picks up.
+
+trades:
+  loodgieter:
+    keywords:
+      - loodgieter
+      - loodgietersbedrijf
+      - loodgieters
+      - sanitair
+      - installatietechniek
+      - installatiebedrijf
+      - cv-techniek
+      - rioolservice
+    # Matched as prefixes, so 4322 covers 43221 (loodgieters- en fitterswerk) and
+    # 43222 (verwarming en luchtbehandeling) without pinning sub-codes that move.
+    sbi_prefixes: ["4322", "4329"]
+
+  dakdekker:
+    keywords:
+      - dakdekker
+      - dakdekkersbedrijf
+      - dakbedekking
+      - dakwerken
+      - dakspecialist
+      - daktechniek
+    sbi_prefixes: ["4391"]
+
+# Where. The Randstad first, because a founder who has to drive to an install should not
+# be driving two hours. Add cities as coverage runs dry, not before -- every city is a
+# separate Zoeken call per keyword.
+cities:
+  - Amsterdam
+  - Rotterdam
+  - Den Haag
+  - Utrecht
+  - Almere
+  - Haarlem
+  - Zaanstad
+  - Amersfoort
+  - Leiden
+  - Dordrecht
+  - Zoetermeer
+  - Delft
+  - Alphen aan den Rijn
+  - Hilversum
+  - Gouda
+
+filters:
+  # Non-negotiable. Cold mail to an eenmanszaak or VOF without opt-in is not allowed;
+  # a BV is. rechtsvorm comes from the register, so this is the authoritative check
+  # rather than a guess off the name.
+  rechtsvorm_contains:
+    - Besloten vennootschap
+    - Naamloze vennootschap
+
+  # The KVK non-mailing indicator. Legally it covers postal advertising and door-to-door
+  # only, not e-mail -- so skipping these is a choice, not a requirement. We skip anyway:
+  # someone who walked into the register to say "no advertising" is a bad prospect at any
+  # conversion rate, and their complaint is what costs us the sending domain.
+  skip_non_mailing: true
+
+  # Solo operators cannot afford it and do not have the call volume to feel the pain;
+  # above ~25 there is usually already someone answering the phone. Zero means the
+  # register has no headcount on file, which is common and not a reason to drop them.
+  staff_min: 2
+  staff_max: 25
+  keep_unknown_staff: true

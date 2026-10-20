@@ -1,0 +1,209 @@
+{
+  "name": "weekly-stats-email",
+  "nodes": [
+    {
+      "id": "66666666-6666-4666-8666-666666666661",
+      "name": "Cron Monday 08:00 CET",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666662",
+      "name": "Aggregate Weekly Stats",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [420, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH last_week AS (SELECT date_trunc('week', CURRENT_DATE) - INTERVAL '7 days' AS wk_start, date_trunc('week', CURRENT_DATE) AS wk_end) SELECT c.id AS client_id, c.bedrijfsnaam, c.owner_voornaam, c.owner_email, c.slug, c.founder_voornaam, c.founder_whatsapp, EXTRACT(week FROM CURRENT_DATE - INTERVAL '7 days')::int AS weeknr, COALESCE(COUNT(DISTINCT ca.id) FILTER (WHERE ca.started_at >= (SELECT wk_start FROM last_week) AND ca.started_at < (SELECT wk_end FROM last_week)), 0) AS calls_taken, COALESCE(COUNT(DISTINCT ev.id) FILTER (WHERE ev.event_type = 'call.missed' AND ev.occurred_at >= (SELECT wk_start FROM last_week) AND ev.occurred_at < (SELECT wk_end FROM last_week)), 0) AS missed_recovered, COALESCE(COUNT(DISTINCT b.id) FILTER (WHERE b.created_at >= (SELECT wk_start FROM last_week) AND b.created_at < (SELECT wk_end FROM last_week)), 0) AS bookings, COALESCE(COUNT(DISTINCT r.id) FILTER (WHERE r.received_at >= (SELECT wk_start FROM last_week) AND r.received_at < (SELECT wk_end FROM last_week)), 0) AS reviews, ROUND(AVG(r.rating) FILTER (WHERE r.received_at >= (SELECT wk_start FROM last_week) AND r.received_at < (SELECT wk_end FROM last_week))::numeric, 1) AS avg_rating FROM clients c LEFT JOIN calls ca ON ca.client_id = c.id LEFT JOIN events ev ON ev.client_id = c.id LEFT JOIN bookings b ON b.client_id = c.id LEFT JOIN reviews r ON r.client_id = c.id WHERE c.status = 'active' AND c.onboarding_completed_at IS NOT NULL GROUP BY c.id;",
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666663",
+      "name": "Top 3 Call Summaries",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [640, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT summary FROM calls WHERE client_id = $1::uuid AND started_at >= date_trunc('week', CURRENT_DATE) - INTERVAL '7 days' AND started_at < date_trunc('week', CURRENT_DATE) ORDER BY duration_s DESC LIMIT 3;",
+        "options": {
+          "queryReplacement": "={{ $json.client_id }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666664",
+      "name": "Email Suppression Check",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [860, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT EXISTS(SELECT 1 FROM suppression_list WHERE email_hash = encode(digest(lower($1), 'sha256'), 'hex')) AS email_suppressed;",
+        "options": {
+          "queryReplacement": "={{ $('Aggregate Weekly Stats').item.json.owner_email }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666665",
+      "name": "If Email Allowed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1080, 300],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.email_suppressed }}",
+              "rightValue": false,
+              "operator": { "type": "boolean", "operation": "false", "singleValue": true }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666666",
+      "name": "Browserless Screenshot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 380],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://chrome.browserless.io/screenshot?token={{ $env.BROWSERLESS_TOKEN }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": \"https://klantkraan.nl/r/{{ $('Aggregate Weekly Stats').item.json.slug }}\",\n  \"options\": { \"fullPage\": true, \"type\": \"png\" },\n  \"viewport\": { \"width\": 1200, \"height\": 800, \"deviceScaleFactor\": 2 }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666667",
+      "name": "Resend - Weekly Stats Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1520, 380],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"{{ $('Aggregate Weekly Stats').item.json.bedrijfsnaam }} <stats@klantkraan.nl>\",\n  \"to\": [\"{{ $('Aggregate Weekly Stats').item.json.owner_email }}\"],\n  \"subject\": \"{{ $('Aggregate Weekly Stats').item.json.bedrijfsnaam }} — week {{ $('Aggregate Weekly Stats').item.json.weeknr }}\",\n  \"html\": \"<p>Hoi {{ $('Aggregate Weekly Stats').item.json.owner_voornaam }},</p><p>Vorige week op een rij:</p><ul><li>{{ $('Aggregate Weekly Stats').item.json.calls_taken }} calls beantwoord door AI</li><li>{{ $('Aggregate Weekly Stats').item.json.missed_recovered }} gemiste klanten teruggewonnen</li><li>{{ $('Aggregate Weekly Stats').item.json.bookings }} nieuwe boekingen</li><li>{{ $('Aggregate Weekly Stats').item.json.reviews }} nieuwe Google-reviews ({{ $('Aggregate Weekly Stats').item.json.avg_rating }}/5)</li></ul><p><img src='cid:dashboard.png' alt='dashboard' /></p><p>Volledig dashboard: https://klantkraan.nl/r/{{ $('Aggregate Weekly Stats').item.json.slug }}</p><p>Vragen? App me op {{ $('Aggregate Weekly Stats').item.json.founder_whatsapp }}.</p><p>— {{ $('Aggregate Weekly Stats').item.json.founder_voornaam }}</p>\",\n  \"attachments\": [{ \"filename\": \"dashboard.png\", \"content\": \"{{ $binary.data.toString('base64') }}\" }]\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "Resend - API Key"
+        }
+      }
+    },
+    {
+      "id": "66666666-6666-4666-8666-666666666668",
+      "name": "Healthchecks Ping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1740, 380],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_WEEKLY_STATS_EMAIL }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Cron Monday 08:00 CET": {
+      "main": [[{ "node": "Aggregate Weekly Stats", "type": "main", "index": 0 }]]
+    },
+    "Aggregate Weekly Stats": {
+      "main": [[{ "node": "Top 3 Call Summaries", "type": "main", "index": 0 }]]
+    },
+    "Top 3 Call Summaries": {
+      "main": [[{ "node": "Email Suppression Check", "type": "main", "index": 0 }]]
+    },
+    "Email Suppression Check": {
+      "main": [[{ "node": "If Email Allowed", "type": "main", "index": 0 }]]
+    },
+    "If Email Allowed": {
+      "main": [
+        [{ "node": "Healthchecks Ping", "type": "main", "index": 0 }],
+        [{ "node": "Browserless Screenshot", "type": "main", "index": 0 }]
+      ]
+    },
+    "Browserless Screenshot": {
+      "main": [[{ "node": "Resend - Weekly Stats Email", "type": "main", "index": 0 }]]
+    },
+    "Resend - Weekly Stats Email": {
+      "main": [[{ "node": "Healthchecks Ping", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20",
+    "notes": "Top-3 call summary node returns up to 3 rows; operator should add a Code node in n8n UI to merge those into the email body if a per-row HTML render is desired. Best-effort export."
+  }
+}

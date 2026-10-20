@@ -1,0 +1,112 @@
+name: CI
+
+# Runs the offline test suites for the two Python apps on every push and PR. Nothing here
+# needs a secret or the network: the receptionist tests are the no-network layers ported from
+# app/selftest.py, and the growth-engine checks are config/registry reads only. The live
+# checks that cost money (Claude drafting, X/Telegram auth) stay in `selftest`, run by hand.
+
+on: [push, pull_request]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: ruff (lint + format check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install ruff
+        run: pip install ruff==0.16.0   # keep in lockstep with requirements-dev.txt
+      - name: Lint
+        run: |
+          ruff check ai-receptionist/app ai-receptionist/tests
+          ruff check growth-engine/src
+      - name: Format check
+        run: |
+          ruff format --check ai-receptionist/app ai-receptionist/tests
+          ruff format --check growth-engine/src
+
+  compliance:
+    name: compliance gate (art. 50 + BV-only outreach)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Run compliance check
+        run: bash scripts/compliance-check.sh
+
+  receptionist:
+    name: ai-receptionist (pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ai-receptionist
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ai-receptionist/requirements-dev.txt
+      - name: Install deps
+        run: pip install -r requirements-dev.txt
+      - name: Compile-check every module
+        run: python -m py_compile app/*.py app/channels/*.py
+      - name: Run offline test suite
+        run: python -m pytest
+
+  client-sites:
+    name: client-sites (design vocabulary tests)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: klantkraan
+    steps:
+      - uses: actions/checkout@v7
+      # Before setup-node, and pointed at the workspace root: there is no package.json at
+      # the repo root, and setup-node's pnpm cache needs pnpm on PATH already.
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: klantkraan/package.json
+      - uses: actions/setup-node@v7
+        with:
+          # 22.18 is where TypeScript type stripping stopped needing a flag, which is what
+          # lets `node --test` run the .ts tests without a bundler or a test framework.
+          node-version: "22.18"
+          cache: pnpm
+          cache-dependency-path: klantkraan/pnpm-lock.yaml
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+      # The resolver tests only. Building a site needs a CLIENT and its yaml, and the
+      # client dirs are per-client data that never enters git -- so the fact gate stays
+      # a local step, run before a voorstel goes out.
+      - name: Run the design vocabulary tests
+        run: pnpm test
+
+  growth-engine:
+    name: growth-engine (compile + offline selftest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: growth-engine
+    env:
+      GROWTH_ENGINE_DRY_RUN: "1"   # belt-and-braces: never touch a live platform from CI
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: growth-engine/requirements.txt
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Compile-check every module
+        run: python -m py_compile src/*.py
+      - name: Offline selftest (config + platform registry)
+        run: |
+          python -m src.selftest config
+          python -m src.selftest platforms

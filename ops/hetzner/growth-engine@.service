@@ -1,0 +1,27 @@
+# Per-vertical growth-engine instance: %i is the vertical, config/%i.yaml its strategy.
+# The trades vertical keeps the plain growth-engine.service (default config).
+# Before enabling an instance, create /opt/klantkraan/growth-engine/.env.%i with that
+# vertical's OWN TELEGRAM_BOT_TOKEN (two pollers on one token conflict). Then:
+#   systemctl enable --now growth-engine@fitness
+[Unit]
+Description=Klantkraan growth-engine — %i vertical (Telegram approval bot + scheduler)
+After=network-online.target
+Wants=network-online.target
+OnFailure=kk-alert@%n.service
+# Same rationale as growth-engine.service: let a crash loop fail loudly instead of
+# restarting silently forever.
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+User=klantkraan
+WorkingDirectory=/opt/klantkraan/growth-engine
+Environment=GROWTH_CONFIG=config/%i.yaml
+ExecStart=/opt/klantkraan/growth-engine/.venv/bin/python -m src.run
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

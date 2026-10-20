@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro'
+import { getCollection } from 'astro:content'
+import { niches, type NicheSlug } from '../../data/niches'
+
+const gidsen = await getCollection('gidsen')
+// Sort by niche order in niches.ts (which matches branches.ts priority).
+const nicheOrder: NicheSlug[] = ['loodgieter', 'dakdekker', 'schilder', 'aannemer']
+// Plus installateur and elektricien which aren't in niches.ts yet — render at end.
+const fullOrder = [...nicheOrder, 'installateur', 'elektricien']
+
+const sorted = gidsen.sort(
+  (a, b) => fullOrder.indexOf(a.data.vertical) - fullOrder.indexOf(b.data.vertical),
+)
+
+const nicheLabelPlural = (v: string): string =>
+  v in niches ? niches[v as NicheSlug].labelPlural : `${v}s`
+---
+
+<Base
+  title="Gidsen: praktische tips per branche | Klantkraan"
+  description="Korte, concrete gidsen over klanten werven, storm-protocol, m²-tarief, ISDE-subsidie en meer. Per branche geschreven voor Nederlandse ondernemers."
+  centered={false}
+>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">Gidsen voor ondernemers</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Concrete Nederlandse praktijkadviezen per branche: uurtarieven, seizoenspieken, juridische
+        verplichtingen. Geen sales-praatje, alleen werk dat u direct kunt toepassen.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <div class="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          sorted.map((g) => (
+            <a
+              href={`/gidsen/${g.id.replace(/\.md$/, '')}/`}
+              class="group flex flex-col rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6 no-underline transition-colors hover:border-(--color-sodium)"
+            >
+              <p class="font-mono text-micro uppercase tracking-widest text-(--color-dim)">
+                {nicheLabelPlural(g.data.vertical)}
+              </p>
+              <h2 class="mt-3 font-display text-h3 text-(--color-chalk)">{g.data.title}</h2>
+              <p class="mt-3 text-body text-(--color-dim)">{g.data.description}</p>
+              <p class="mt-5 inline-flex items-center gap-1 text-small font-medium text-(--color-sodium) group-hover:underline">
+                <span>{g.data.readingTime} min lezen</span>
+                <span aria-hidden="true">→</span>
+              </p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

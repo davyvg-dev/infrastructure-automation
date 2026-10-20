@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro'
+import CursusForm from '../../components/CursusForm.astro'
+import { getCollection, render } from 'astro:content'
+import { niches, type NicheSlug } from '../../data/niches'
+
+export async function getStaticPaths() {
+  const gidsen = await getCollection('gidsen')
+  return gidsen.map((g) => ({
+    params: { slug: g.id.replace(/\.md$/, '') },
+    props: { gids: g },
+  }))
+}
+
+const { gids } = Astro.props
+const { Content } = await render(gids)
+
+const nicheLabelPlural = (v: string): string =>
+  v in niches ? niches[v as NicheSlug].labelPlural : `${v}s`
+
+const dateFmt = new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' })
+const cornerstone: Record<string, string> = {
+  loodgieter: '/loodgieters/',
+  dakdekker: '/dakdekkers/',
+  schilder: '/schilder/',
+  installateur: '/installateur/',
+  elektricien: '/elektricien/',
+  aannemer: '/aannemer/',
+}
+const cornerstonePath = cornerstone[gids.data.vertical] ?? '/voor-wie/'
+
+// Only append the brand suffix when the title stays within ~65 chars.
+const pageTitle = gids.data.title.length <= 52 ? `${gids.data.title} | Klantkraan` : gids.data.title
+---
+
+<Base title={pageTitle} description={gids.data.description} centered={false}>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <nav class="text-small text-(--color-dim)" aria-label="Kruimelpad">
+        <a href="/" class="hover:underline">Home</a>
+        <span aria-hidden="true"> › </span>
+        <a href="/gidsen/" class="hover:underline">Gidsen</a>
+        <span aria-hidden="true"> › </span>
+        <span>{nicheLabelPlural(gids.data.vertical)}</span>
+      </nav>
+      <p class="mt-4 font-mono text-micro uppercase tracking-widest text-(--color-dim)">
+        Gids · {nicheLabelPlural(gids.data.vertical)} · {gids.data.readingTime} min lezen
+      </p>
+      <h1 class="mt-3 font-display text-hero text-(--color-chalk)">{gids.data.title}</h1>
+      <p class="mt-6 text-h3 text-(--color-dim)">{gids.data.description}</p>
+      <p class="mt-4 text-small text-(--color-dim)">
+        Gepubliceerd {dateFmt.format(gids.data.pubDate)}
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] px-4 py-10 sm:px-6 md:py-16">
+    <article
+      class="mx-auto max-w-3xl rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10 text-body text-(--color-dim) [&_h2]:font-display [&_h2]:text-h2 [&_h2]:text-(--color-chalk) [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:font-display [&_h3]:text-h3 [&_h3]:text-(--color-chalk) [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_strong]:text-(--color-chalk) [&_a]:text-(--color-sodium) [&_a]:underline [&_a]:[overflow-wrap:break-word] [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:my-6 [&_table]:text-small [&_th]:border [&_th]:border-(--color-line) [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-(--color-line) [&_td]:p-2 [&_td]:align-top [&_pre]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto"
+    >
+      <Content />
+    </article>
+  </section>
+
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-3xl px-6">
+      <p class="font-mono text-micro uppercase tracking-widest text-(--color-dim)">Verder lezen</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        Klantkraan voor {nicheLabelPlural(gids.data.vertical).toLowerCase()}
+      </h2>
+      <p class="mt-4 text-body text-(--color-dim)">
+        Bekijk de complete oplossing voor uw vak: een digitale receptionist via websitechat en
+        WhatsApp die vragen beantwoordt, afspraken inplant en leads vangt, in één abonnement.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href={cornerstonePath} class="btn btn-primary btn-lg"> Bekijk de oplossing </a>
+        <a href="/demo/" class="btn btn-ghost btn-lg"> Probeer de demo </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
+  <CursusForm recessed />
+</Base>

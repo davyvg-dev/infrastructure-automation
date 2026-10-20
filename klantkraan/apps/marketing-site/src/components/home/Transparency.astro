@@ -1,0 +1,70 @@
+---
+/*
+ * Honest-about-AI. Deliberately NOT a card: every other section on the page is
+ * head + panel, and the one sentence the product opens with reads louder as a
+ * big pull quote on bare night than boxed in like a feature. The points sit
+ * below it as plain columns over a hairline, no check icons.
+ */
+interface Props {
+  t: {
+    eyebrow?: string
+    heading: string
+    quote: string
+    bullets: string[]
+    linkLabel: string
+    linkHref: string
+  }
+}
+
+const { t } = Astro.props
+---
+
+<section
+  id="eerlijk"
+  class="scroll-mt-24 border-y border-(--color-line) bg-[rgba(0,0,0,0.26)] py-12 md:py-18"
+>
+  <div class="mx-auto max-w-5xl px-6">
+    {t.eyebrow && <span class="eyebrow">{t.eyebrow}</span>}
+    <h2 class:list={['max-w-[18em] font-display text-h2 text-balance', t.eyebrow && 'mt-3.5']}>{t.heading}</h2>
+
+    <p class="kk-quote">&ldquo;{t.quote}&rdquo;</p>
+    <div class="kk-points">
+      {t.bullets.map((bullet) => <p>{bullet}</p>)}
+    </div>
+    <p class="mt-6 text-small">
+      <a href={t.linkHref} class="text-(--color-sodium) underline underline-offset-2">
+        {t.linkLabel}
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .kk-quote {
+    margin: 2rem 0 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 3.75rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-sodium-soft);
+    text-wrap: balance;
+  }
+  .kk-points {
+    display: grid;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-line);
+    color: #cdd8d5;
+  }
+  .kk-points p {
+    margin: 0;
+  }
+  @media (min-width: 768px) {
+    .kk-points {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.5rem;
+    }
+  }
+</style>

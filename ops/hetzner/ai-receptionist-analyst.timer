@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the receptionist analyst nightly (before the morning digest reads its insights)
+
+[Timer]
+# 03:00 local: settled conversations get analysed well before the 07:30 digest.
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+AccuracySec=5min
+
+[Install]
+WantedBy=timers.target

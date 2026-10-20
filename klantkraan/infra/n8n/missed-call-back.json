@@ -1,0 +1,197 @@
+{
+  "name": "missed-call-back",
+  "nodes": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "name": "Webhook - CM Missed Call",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cm/missed-call",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": false
+        }
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111112",
+      "name": "Parse CM Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Parse CM.com missed-call payload\n// Expected shape: { event: 'call.missed', from: '+31612345678', to: '+31201234567', client_id: 'uuid', call_id: 'uuid', occurred_at: 'ISO8601' }\nconst body = items[0].json.body || items[0].json;\nconst e164 = (body.from || '').replace(/\\s+/g, '');\nif (!e164 || !e164.startsWith('+')) {\n  throw new Error('Invalid E.164 caller number: ' + e164);\n}\nreturn [{\n  json: {\n    e164,\n    to: body.to,\n    client_id: body.client_id,\n    call_id: body.call_id,\n    occurred_at: body.occurred_at || new Date().toISOString(),\n    bedrijfsnaam: body.bedrijfsnaam || '',\n    calcom_short_url: body.calcom_short_url || ''\n  }\n}];"
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111113",
+      "name": "Suppression Check",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [640, 300],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT 1 AS suppressed FROM suppression_list WHERE e164_hash = encode(digest($1, 'sha256'), 'hex') LIMIT 1;",
+        "options": {
+          "queryReplacement": "={{ $json.e164 }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111114",
+      "name": "If Suppressed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [860, 300],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "leftValue": "={{ $json.suppressed }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111115",
+      "name": "Insert Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [1080, 420],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO events (client_id, event_type, e164, payload, occurred_at) VALUES ($1, 'call.missed', $2, $3::jsonb, $4) RETURNING id;",
+        "options": {
+          "queryReplacement": "={{ $('Parse CM Payload').item.json.client_id }},={{ $('Parse CM Payload').item.json.e164 }},={{ JSON.stringify($('Parse CM Payload').item.json) }},={{ $('Parse CM Payload').item.json.occurred_at }}"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "PLACEHOLDER",
+          "name": "Neon - klantkraan_app"
+        }
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111116",
+      "name": "CM.com SMS - Missed Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "https://gw.cmtelecom.com/v1.0/message",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messages\": {\n    \"authentication\": { \"producttoken\": \"{{$credentials.cmProductToken}}\" },\n    \"msg\": [{\n      \"from\": \"={{ $('Parse CM Payload').item.json.bedrijfsnaam }}\",\n      \"to\": [{ \"number\": \"={{ $('Parse CM Payload').item.json.e164 }}\" }],\n      \"body\": { \"content\": \"Hoi, u belde net met {{ $('Parse CM Payload').item.json.bedrijfsnaam }}. We konden niet opnemen.\\nPlan direct online: {{ $('Parse CM Payload').item.json.calcom_short_url }}\\nOf bel terug. STOP = afmelden.\" },\n      \"reference\": \"={{ $('Parse CM Payload').item.json.call_id }}\"\n    }]\n  }\n}",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "PLACEHOLDER",
+          "name": "CM.com - producttoken"
+        }
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111117",
+      "name": "Healthchecks Ping",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1520, 420],
+      "parameters": {
+        "method": "POST",
+        "url": "=https://hc-ping.com/{{ $env.HC_PING_MISSED_CALL_BACK }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111118",
+      "name": "End - Suppressed",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [1080, 180],
+      "parameters": {}
+    },
+    {
+      "id": "11111111-1111-4111-8111-111111111119",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1740, 420],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"status\": \"ok\" }"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - CM Missed Call": {
+      "main": [[{ "node": "Parse CM Payload", "type": "main", "index": 0 }]]
+    },
+    "Parse CM Payload": {
+      "main": [[{ "node": "Suppression Check", "type": "main", "index": 0 }]]
+    },
+    "Suppression Check": {
+      "main": [[{ "node": "If Suppressed", "type": "main", "index": 0 }]]
+    },
+    "If Suppressed": {
+      "main": [
+        [{ "node": "End - Suppressed", "type": "main", "index": 0 }],
+        [{ "node": "Insert Event", "type": "main", "index": 0 }]
+      ]
+    },
+    "Insert Event": {
+      "main": [[{ "node": "CM.com SMS - Missed Call", "type": "main", "index": 0 }]]
+    },
+    "CM.com SMS - Missed Call": {
+      "main": [[{ "node": "Healthchecks Ping", "type": "main", "index": 0 }]]
+    },
+    "Healthchecks Ping": {
+      "main": [[{ "node": "Respond OK", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Amsterdam",
+    "saveExecutionProgress": true,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all"
+  },
+  "staticData": null,
+  "meta": {
+    "author": "klantkraan",
+    "version": "v1",
+    "created": "2026-05-20"
+  }
+}

@@ -1,0 +1,208 @@
+---
+import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
+---
+
+<Base
+  title="ROI-rekentool: bereken uw gemiste omzet | Klantkraan"
+  description="Bereken in 10 seconden hoeveel omzet u laat liggen aan gemiste oproepen, en zie meteen hoe snel een AI-receptionist van Klantkraan zichzelf terugverdient."
+  centered={false}
+>
+  <!-- 1. Hero (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <h1 class="font-display text-hero text-(--color-chalk)">
+        Wat kost u een <span class="text-(--color-sodium)">gemiste oproep</span>?
+      </h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Vul uw cijfers in. De rekentool laat direct zien hoeveel klussen u jaarlijks misloopt en hoe
+        snel elk Klantkraan-abonnement zichzelf terugverdient.
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. Form + results (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
+      <form
+        id="roi-form"
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+        onsubmit="return false"
+      >
+        <div class="space-y-6">
+          <div>
+            <label for="calls" class="block text-body font-medium text-(--color-chalk)">
+              Hoeveel oproepen krijgt u per week?
+            </label>
+            <input
+              id="calls"
+              name="calls"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              min="0"
+              step="1"
+              value="40"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+          </div>
+          <div>
+            <label for="missed" class="block text-body font-medium text-(--color-chalk)">
+              % oproepen dat u nu mist
+            </label>
+            <input
+              id="missed"
+              name="missed"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              min="0"
+              max="100"
+              step="1"
+              value="28"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              Brancheschatting: 28% voor installatie- en dak-vakmensen.
+            </p>
+          </div>
+          <div>
+            <label for="value" class="block text-body font-medium text-(--color-chalk)">
+              Gemiddelde klantwaarde per klus (€)
+            </label>
+            <input
+              id="value"
+              name="value"
+              type="number"
+              inputmode="numeric"
+              autocomplete="off"
+              min="0"
+              step="10"
+              value="450"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+            <p class="mt-1 text-small text-(--color-dim)">
+              Default €450, gemiddelde loodgietersklus in Nederland.
+            </p>
+          </div>
+        </div>
+      </form>
+
+      <aside
+        class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Uw verlies in cijfers</h2>
+        <div class="mt-4 space-y-4">
+          <div>
+            <p class="text-small text-(--color-dim)">Gemiste oproepen per jaar</p>
+            <p
+              id="out-missed-year"
+              class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
+            >
+              0
+            </p>
+          </div>
+          <div>
+            <p class="text-small text-(--color-dim)">Verloren omzet per jaar</p>
+            <p
+              id="out-lost-revenue"
+              class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
+            >
+              €0
+            </p>
+            <p class="mt-1 text-small text-(--color-dim)">
+              Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
+            </p>
+          </div>
+        </div>
+
+        <hr class="my-6 border-(--color-line)" />
+
+        <h3 class="font-display text-h3 text-(--color-chalk)">Terugverdientijd Klantkraan</h3>
+        <ul class="mt-3 space-y-2 text-body text-(--color-dim)">
+          <li>
+            Chat (€299/mnd): <span id="out-payback-chat" class="font-mono">–</span>
+          </li>
+          <li>
+            Compleet (€499/mnd): <span id="out-payback-compleet" class="font-mono">–</span>
+          </li>
+        </ul>
+        <p class="mt-4 text-small text-(--color-dim)">
+          "Terugverdientijd" = aantal maanden tot het abonnement betaald is door teruggewonnen
+          omzet.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 3. Hoe wij rekenen (cream) -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Methode</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">Hoe wij rekenen</h2>
+      <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
+        <li>Gemiste oproepen per jaar = oproepen per week × 52 × (% gemist / 100).</li>
+        <li>
+          Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans. We tellen
+          dus maar 1 op de 3 gemiste oproepen als verloren klus; zonder terugbel-automatisering
+          haakt het gros af.
+        </li>
+        <li>
+          Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12). Hoe groter de bak
+          gemiste klussen, hoe sneller Klantkraan zichzelf terugverdient.
+        </li>
+      </ul>
+      <a href="/demo/" class="mt-8 btn btn-primary btn-lg">
+        Laat het ons live op uw cijfers nakijken
+      </a>
+    </div>
+  </section>
+
+  <!-- 4. Werkspot math (stone-100) -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Leadplatforms</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        En wat kost een klus via Werkspot?
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Op leadplatforms betaalt u per lead, en dezelfde lead gaat ook naar uw concurrenten. Wie het
+        eerst reageert wint de klus; de rest heeft ook betaald. Zet dat eens naast een vaste prijs
+        voor uw eigen kanaal, waar elke beller gewoon wordt aangenomen.
+      </p>
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">€3&ndash;75</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            kost één lead op Werkspot, ook als de klus naar een ander gaat.
+          </p>
+        </div>
+        <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">&plusmn;€208</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            aan leadkosten per gewonnen klus, becijferd door
+            <a href="https://adaptoo.nl/blog/werkspot-kosten" class="underline">Adaptoo</a>.
+          </p>
+        </div>
+        <div class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5">
+          <p class="font-display text-h1 tabular-nums text-(--color-chalk)">€0 per lead</p>
+          <p class="mt-2 text-small text-(--color-dim)">
+            via uw eigen nummer en website. Klantkraan kost een vast bedrag per maand, hoeveel
+            klussen u ook aanneemt.
+          </p>
+        </div>
+      </div>
+      <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
+        Uw eigen kanaal groeit bovendien in waarde: elke review, elke terugkerende klant en elke
+        doorverwijzing is van ú, niet van het platform.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5. E-mailcursus opt-in (cream). The calculator above stays e-mail-free: the form is
+       a separate, optional offer. Markup + fallback contract live in CursusForm.astro. -->
+  <CursusForm />
+
+  <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+  <script src="/js/rekentool.js" type="module" is:inline></script>
+</Base>
