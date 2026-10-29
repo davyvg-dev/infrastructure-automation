@@ -149,22 +149,27 @@ def run_turn(
     history: list[dict[str, Any]],
     user_message: str,
     telemetry: dict[str, Any] | None = None,
+    model: str | None = None,
 ) -> tuple[str, list[dict[str, Any]]]:
     """Append the user's message, run the tool-use loop to completion, return (reply, history).
 
     If `telemetry` is passed (a dict with 'input_tokens'/'output_tokens'/'tools'/'model'),
     it's filled in-place with token usage and the tool calls made this turn — the durable
     capture in sessions.respond reads it. Passing None keeps the loop untouched.
+    `model` overrides the client config's model id (the eval bake-off uses it).
     """
     cfg = business()
     model_cfg = cfg["model"]
+    model_id = model or model_cfg["id"]
     client = _client()
     history = history + [{"role": "user", "content": user_message}]
 
     for _ in range(8):  # generous cap; a booking is 1-2 tool calls
         response = client.messages.create(
-            model=model_cfg["id"],
+            model=model_id,
             max_tokens=1024,
+            # Caches the growing prefix (tools, system, history) turn over turn.
+            cache_control={"type": "ephemeral"},
             thinking={"type": "adaptive"},
             output_config={"effort": model_cfg.get("effort", "low")},
             system=build_system_prompt(),
@@ -175,7 +180,9 @@ def run_turn(
             usage = getattr(response, "usage", None)
             telemetry["input_tokens"] += int(getattr(usage, "input_tokens", 0) or 0)
             telemetry["output_tokens"] += int(getattr(usage, "output_tokens", 0) or 0)
-            telemetry["model"] = model_cfg["id"]
+            for key in ("cache_read_input_tokens", "cache_creation_input_tokens"):
+                telemetry[key] = telemetry.get(key, 0) + int(getattr(usage, key, 0) or 0)
+            telemetry["model"] = model_id
         history = history + [{"role": "assistant", "content": response.content}]
 
         if response.stop_reason == "tool_use":

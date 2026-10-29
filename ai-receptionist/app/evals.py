@@ -7,6 +7,9 @@ against per-scenario criteria.
     ./.venv/bin/python -m app.evals run buyer          # one scenario, print transcript + verdicts
     ./.venv/bin/python -m app.evals run hallucination  # one pack (scenarios tagged pack=...)
     ./.venv/bin/python -m app.evals run all            # everything; exit 1 if any criterion fails
+    ./.venv/bin/python -m app.evals run all --model claude-haiku-5-5   # receptionist on another model
+
+Set EVAL_LOG=<path.jsonl> to append one record per scenario (model, verdicts, tokens, cost).
 
 Online (Anthropic API); leads and bookings land in a throwaway DATA_DIR, never data/.
 """
@@ -14,6 +17,7 @@ Online (Anthropic API); leads and bookings land in a throwaway DATA_DIR, never d
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -24,10 +28,31 @@ import anthropic
 from . import settings
 
 # The receptionist runs on its config model; the simulated customer and the judge run on
-# the current Opus. Low effort for the role-play, full effort for judging.
-SIM_MODEL = "claude-opus-5"
-JUDGE_MODEL = "claude-opus-5"
+# the current Opus. Low effort for the role-play, high effort for judging.
+SIM_MODEL = "claude-opus-5-5"
+JUDGE_MODEL = "claude-opus-5-5"
 MAX_TURNS = 12
+
+# USD per million tokens: input, output, cache read. Cache writes bill at 1.25x input.
+# Haiku 5.5's cache-read rate is assumed at 0.1x input; check the pricing page.
+PRICES = {
+    "claude-opus-4-8": (5.00, 25.00, 0.50),
+    "claude-opus-5-5": (4.00, 20.00, 0.20),
+    "claude-sonnet-5-5": (2.00, 10.00, 0.20),
+    "claude-haiku-5-5": (0.10, 0.50, 0.01),
+}
+
+
+def _cost(model: str, usage: dict[str, int]) -> float | None:
+    if model not in PRICES:
+        return None
+    inp, out, read = PRICES[model]
+    return (
+        usage["input_tokens"] * inp
+        + usage["output_tokens"] * out
+        + usage.get("cache_read_input_tokens", 0) * read
+        + usage.get("cache_creation_input_tokens", 0) * inp * 1.25
+    ) / 1_000_000
 
 PERSONA_BASE = (
     "You are role-playing a CUSTOMER texting with a real-estate agency's chat "
@@ -502,8 +527,8 @@ def _judge(
     criteria_text = "\n".join(f"- {cid}: {text}" for cid, text in criteria.items())
     response = client.messages.create(
         model=JUDGE_MODEL,
-        max_tokens=2000,
-        output_config={"format": {"type": "json_schema", "schema": schema}},
+        max_tokens=4000,
+        output_config={"effort": "high", "format": {"type": "json_schema", "schema": schema}},
         messages=[
             {
                 "role": "user",
@@ -523,7 +548,7 @@ def _judge(
     return json.loads(text)
 
 
-def run_scenario(scenario: dict[str, Any]) -> bool:
+def run_scenario(scenario: dict[str, Any], model: str | None = None) -> bool:
     from . import calendar_store, receptionist
 
     print(f"\n=== {scenario['name']} — {scenario['about']}")
@@ -531,6 +556,13 @@ def run_scenario(scenario: dict[str, Any]) -> bool:
     token = settings.use_slug(scenario["client"])
     orig_dir, orig_cal = settings.DATA_DIR, calendar_store.DATA_DIR
     transcript: list[tuple[str, str]] = []
+    usage = {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+    }
+    used_model = model or ""
 
     def say(speaker: str, text: str) -> None:
         transcript.append((speaker, text))
@@ -548,7 +580,10 @@ def run_scenario(scenario: dict[str, Any]) -> bool:
                     break
                 say("you", msg)
                 telemetry = {"input_tokens": 0, "output_tokens": 0, "tools": [], "model": ""}
-                reply, history = receptionist.run_turn(history, msg, telemetry)
+                reply, history = receptionist.run_turn(history, msg, telemetry, model=model)
+                for key in usage:
+                    usage[key] += telemetry.get(key, 0)
+                used_model = telemetry["model"]
                 for call in telemetry["tools"]:
                     say(
                         "tool",
@@ -571,6 +606,21 @@ def run_scenario(scenario: dict[str, Any]) -> bool:
             ok = False
         mark = "PASS" if verdict["passed"] else "FAIL"
         print(f"  [{mark}] {cid}: {verdict['rationale'].strip()}")
+    cost = _cost(used_model, usage)
+    print(f"  receptionist {used_model}: {usage}" + (f" ~${cost:.4f}" if cost is not None else ""))
+    if log_path := os.environ.get("EVAL_LOG"):
+        record = {
+            "scenario": scenario["name"],
+            "model": used_model,
+            "ok": ok,
+            "verdicts": verdicts,
+            "usage": usage,
+            "cost_usd": cost,
+            "customer_turns": sum(1 for speaker, _ in transcript if speaker == "you"),
+            "transcript": transcript_text,
+        }
+        with open(log_path, "a") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
     return ok
 
 
@@ -582,12 +632,16 @@ def main() -> None:
             print(f"  {s['name']:<20} {s['about']}")
         print("\nrun with: python -m app.evals run <name|all>")
         return
+    model = None
+    if len(args) == 4 and args[2] == "--model":
+        model = args[3]
+        args = args[:2]
     if args[0] != "run" or len(args) != 2:
         sys.exit(__doc__)
     which = [s for s in SCENARIOS if args[1] in ("all", s["name"], s.get("pack"))]
     if not which:
         sys.exit(f"unknown scenario or pack '{args[1]}'")
-    failed = [s["name"] for s in which if not run_scenario(s)]
+    failed = [s["name"] for s in which if not run_scenario(s, model)]
     if failed:
         sys.exit(f"\nFAILED: {', '.join(failed)}")
     print(f"\nall criteria passed ({len(which)} scenario{'s' if len(which) > 1 else ''})")
