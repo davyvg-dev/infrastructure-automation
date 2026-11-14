@@ -1,0 +1,35 @@
+---
+/**
+ * /scan/bevestigd/: where the button in the confirmation mail lands, once this
+ * URL is set as the redirect after confirmation in the Brevo form's settings.
+ * Until then Brevo shows its own English "Thank you for subscribing" page.
+ */
+import ScanShell from '../../components/scan/ScanShell.astro'
+---
+
+<ScanShell
+  title="Je aanvraag is bevestigd | Klantkraan"
+  description="Je aanvraag voor de gratis scan is bevestigd. Je krijgt je scan binnen 1 werkdag in je mail."
+  noindex
+>
+  <section class="scan-card scan-done">
+    <span class="scan-tick" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+        <path
+          d="M5 12.5l4.5 4.5L19 7.5"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <h1>Gelukt, ik ga aan de slag</h1>
+    <p>
+      Je aanvraag is bevestigd. Ik lees je antwoorden zelf en je hebt je scan binnen 1 werkdag in je
+      mail.
+    </p>
+    <p class="scan-done-hint">
+      Wil je nog iets toevoegen? Antwoord gewoon op de mail die je net van me kreeg.
+    </p>
+  </section>
+</ScanShell>

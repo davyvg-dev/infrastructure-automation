@@ -28,6 +28,14 @@ interface Props {
    * viewport (e.g. /demo, where the fixed bar overlaps the live chat).
    */
   stickyCta?: boolean
+  /**
+   * When true: no Header, Footer, sticky CTA or <main> wrapper. The page owns the
+   * whole viewport and must render its own <main id="main"> (used by /scan, a
+   * single-purpose landing page in the light "Daglicht" style).
+   */
+  bare?: boolean
+  /** Browser chrome colour; light pages pass their own background. */
+  themeColor?: string
 }
 
 const {
@@ -38,6 +46,8 @@ const {
   centered = true,
   noindex = false,
   stickyCta = true,
+  bare = false,
+  themeColor = '#0f1c1e',
 } = Astro.props
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
@@ -144,7 +154,7 @@ const siteSchema = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="theme-color" content="#0f1c1e" />
+    <meta name="theme-color" content={themeColor} />
     {
       /* Structured data describes a page to search engines, so emitting it on a page we
         told them not to index is a contradiction they flag rather than resolve. */
@@ -155,26 +165,32 @@ const siteSchema = {
       import '../scripts/smooth-scroll'
     </script>
   </head>
-  <body class={stickyCta ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
+  <body class={stickyCta && !bare ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-(--radius-button) focus:bg-(--color-sodium) focus:px-4 focus:py-2 focus:text-(--color-night) focus:no-underline"
     >
       {skipLabel}
     </a>
-    <Header lang={lang} />
     {
-      centered ? (
-        <main id="main" class="mx-auto max-w-5xl px-6 py-10 md:py-16">
-          <slot />
-        </main>
+      bare ? (
+        <slot />
       ) : (
-        <main id="main">
-          <slot />
-        </main>
+        <>
+          <Header lang={lang} />
+          {centered ? (
+            <main id="main" class="mx-auto max-w-5xl px-6 py-10 md:py-16">
+              <slot />
+            </main>
+          ) : (
+            <main id="main">
+              <slot />
+            </main>
+          )}
+          <Footer lang={lang} />
+          {stickyCta && <StickyMobileCta lang={lang} />}
+        </>
       )
     }
-    <Footer lang={lang} />
-    {stickyCta && <StickyMobileCta lang={lang} />}
   </body>
 </html>

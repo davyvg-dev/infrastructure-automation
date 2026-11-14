@@ -26,7 +26,7 @@ export default defineConfig({
       // "noindex page in sitemap" alert.
       filter: (page) =>
         !page.includes('/r/') &&
-        !['/demo/cool-global', '/demo/dhz', '/demo/solvista', '/bedankt'].some(
+        !['/demo/cool-global', '/demo/dhz', '/demo/solvista', '/bedankt', '/scan/bevestigd'].some(
           (p) => page.includes(p),
         ),
       // Stamp every entry with the build date so crawlers see fresh lastmod

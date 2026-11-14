@@ -1,0 +1,133 @@
+---
+/**
+ * /scan: the free written scan, in the light "Daglicht" style.
+ *
+ * The form posts into the Brevo form "Gratis scan aanvragen" (same action URL
+ * and field names as Brevo's own embed), so Brevo keeps doing the work: the
+ * confirmation mail (template #10), the click, list #6 with the three answers,
+ * and the notification. /js/scan-form.js upgrades the post to fetch() and shows
+ * the "Bijna klaar" state in place; without JS the browser posts to Brevo's
+ * own page, which still works.
+ *
+ * Field names and the two hidden inputs must stay exactly as Brevo serves them.
+ * The CSP in public/_headers lists the sibforms host under connect-src and
+ * form-action; a new Brevo form means a new action URL here.
+ */
+import ScanShell from '../../components/scan/ScanShell.astro'
+
+const BREVO_ACTION =
+  'https://27efbcf4.sibforms.com/serve/MUIFAHNw_Un10JbKvyldJfQiph0ogKUHmFDSWq1XwZNPtf6iuLAQmowIgmnBXITDxHYUIof5S9hHgGLO-7nPUkxtsqvgRl7e8493av8gXjnceijYfcllQhiK0ts9OebUOJaaxZVgDCmDM6ND0yvhblVY6N9DThq-BeqPfCToX9xQbysgHGO7poxDkxSKwDb3gEjF-yeIVUA-m_DA6g=='
+---
+
+<ScanShell
+  title="Gratis scan: waar verliest je bedrijf kostbare tijd? | Klantkraan"
+  description="Vertel in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je een korte mail terug met waar je tijd verliest en wat je er zelf aan kunt doen. Geen gesprek, geen kosten."
+>
+  <form id="scan-form" class="scan-card" method="POST" action={BREVO_ACTION} data-astro-reload>
+    <h1>Gratis scan: waar verliest je bedrijf kostbare tijd?</h1>
+    <p class="scan-lead">
+      Vertel me in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je van mij
+      een korte mail terug: de plekken waar je tijd verliest, wat je daar vandaag zelf aan kunt
+      doen, en de ene klus die je het best kunt automatiseren.
+    </p>
+    <ul class="scan-promises">
+      <li>Geen gesprek</li>
+      <li>Geen kosten</li>
+      <li>Vijf per week</li>
+    </ul>
+
+    <div class="scan-field">
+      <label for="SCAN_KLUS">Welke klus kost je de meeste tijd of ergernis?</label>
+      <textarea
+        id="SCAN_KLUS"
+        name="SCAN_KLUS"
+        rows="3"
+        maxlength="500"
+        required
+        placeholder="Bijvoorbeeld: elke dag een half uur bonnetjes overtypen"></textarea>
+    </div>
+    <div class="scan-field">
+      <label for="SCAN_PROGRAMMAS">
+        Welke programma's gebruik je? <small>mag je overslaan</small>
+      </label>
+      <input
+        id="SCAN_PROGRAMMAS"
+        name="SCAN_PROGRAMMAS"
+        type="text"
+        maxlength="200"
+        placeholder="Bijvoorbeeld: Moneybird, Excel, WhatsApp, Outlook"
+      />
+    </div>
+    <div class="scan-field">
+      <label for="SCAN_BEDRIJF">Wat voor bedrijf heb je?</label>
+      <input
+        id="SCAN_BEDRIJF"
+        name="SCAN_BEDRIJF"
+        type="text"
+        maxlength="200"
+        required
+        autocomplete="organization-title"
+        placeholder="Bijvoorbeeld: loodgietersbedrijf, 3 man"
+      />
+    </div>
+    <div class="scan-field">
+      <label for="EMAIL">Je e-mailadres</label>
+      <input
+        id="EMAIL"
+        name="EMAIL"
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+        placeholder="naam@jouwbedrijf.nl"
+      />
+    </div>
+    <p class="scan-consent">
+      Hier stuur ik je scan naartoe. Daarna stuur ik je af en toe een tip of aanbod over tijd
+      besparen met AI. Afmelden kan in elke mail.
+    </p>
+
+    {/* Brevo's own two hidden inputs: its bot trap (must stay empty) and the form locale. */}
+    <input
+      type="text"
+      name="email_address_check"
+      value=""
+      class="scan-trap"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+    />
+    <input type="hidden" name="locale" value="en" />
+
+    <p id="scan-error" class="scan-error" role="alert" hidden>
+      Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail je antwoorden dan naar
+      <a href="mailto:davy@klantkraan.nl">davy@klantkraan.nl</a>.
+    </p>
+    <button id="scan-submit" class="scan-btn" type="submit">Vraag mijn gratis scan aan</button>
+    <p class="scan-sign">Davy, ontwikkelaar en maker van Klantkraan</p>
+  </form>
+
+  <section id="scan-done" class="scan-card scan-done" tabindex="-1" hidden>
+    <span class="scan-tick" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+        <path
+          d="M5 12.5l4.5 4.5L19 7.5"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <h2>Bijna klaar</h2>
+    <p>
+      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna ga ik aan de slag en
+      heb je je scan binnen 1 werkdag.
+    </p>
+    <p class="scan-done-hint">
+      Geen mail gezien? Kijk dan even bij ongewenste mail. De afzender is Davy van Klantkraan.
+    </p>
+  </section>
+</ScanShell>
+
+<!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+<script src="/js/scan-form.js" type="module" is:inline></script>
