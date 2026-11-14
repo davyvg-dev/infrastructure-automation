@@ -1,0 +1,263 @@
+---
+/**
+ * /websitecheck: type your address, see in about ten seconds what your
+ * homepage says about itself. Light "Daglicht" style, same shell as /scan.
+ *
+ * Step 1 (the check) asks nothing but the address. /js/websitecheck.js calls
+ * /api/websitecheck/ and fills the result list.
+ * Step 2 (optional) posts into the same Brevo form as /scan, so Brevo keeps
+ * doing the confirmation mail (template #10), the click and list #6. The
+ * domain and the points found travel in the scan's own fields:
+ * SCAN_BEDRIJF = the domain, SCAN_PROGRAMMAS = "websitecheck",
+ * SCAN_KLUS = the points that need attention. Field names and the two hidden
+ * inputs must stay exactly as Brevo serves them; the action URL is the one in
+ * src/pages/scan/index.astro and has to change together with it.
+ */
+import ScanShell from '../components/scan/ScanShell.astro'
+
+const BREVO_ACTION =
+  'https://27efbcf4.sibforms.com/serve/MUIFAHNw_Un10JbKvyldJfQiph0ogKUHmFDSWq1XwZNPtf6iuLAQmowIgmnBXITDxHYUIof5S9hHgGLO-7nPUkxtsqvgRl7e8493av8gXjnceijYfcllQhiK0ts9OebUOJaaxZVgDCmDM6ND0yvhblVY6N9DThq-BeqPfCToX9xQbysgHGO7poxDkxSKwDb3gEjF-yeIVUA-m_DA6g=='
+---
+
+<ScanShell
+  title="Gratis websitecheck: wat zegt je homepage over zichzelf? | Klantkraan"
+  description="Typ je webadres en zie binnen tien seconden of je site bij is, of je nummer aantikbaar is, hoe je in Google staat en of je foto's te zwaar zijn. Gratis, zonder e-mailadres."
+>
+  <form id="wc-form" class="scan-card" novalidate>
+    <h1>Hoe staat je website ervoor?</h1>
+    <p class="scan-lead">
+      Typ je webadres. Ik lees je homepage zoals een bezoeker dat doet en laat je in gewoon
+      Nederlands zien wat goed staat en wat aandacht vraagt. Bij elk punt staat hoe je het zelf
+      nakijkt.
+    </p>
+    <ul class="scan-promises">
+      <li>Tien seconden</li>
+      <li>Geen e-mailadres nodig</li>
+      <li>Geen kosten</li>
+    </ul>
+
+    <div class="scan-field">
+      <label for="wc-url">Je webadres</label>
+      <input
+        id="wc-url"
+        name="url"
+        type="text"
+        inputmode="url"
+        autocomplete="url"
+        autocapitalize="none"
+        spellcheck="false"
+        maxlength="200"
+        required
+        placeholder="jouwbedrijf.nl"
+      />
+    </div>
+    <p id="wc-error" class="scan-error" role="alert" hidden></p>
+    <button id="wc-submit" class="scan-btn" type="submit">Check mijn website</button>
+    <noscript>
+      <p class="scan-consent">
+        Deze check heeft JavaScript nodig. Staat dat uit, mail je webadres dan naar
+        davy@klantkraan.nl.
+      </p>
+    </noscript>
+    <p class="scan-sign">
+      Ik lees alleen wat je homepage openbaar toont. Ik log nergens in.
+    </p>
+  </form>
+
+  <section id="wc-result" class="scan-card wc-result" tabindex="-1" aria-live="polite" hidden>
+    <h2 id="wc-head"></h2>
+    <p id="wc-sum" class="scan-lead"></p>
+    <ul id="wc-list" class="wc-list"></ul>
+    <p class="wc-note">
+      Dit is alleen je homepage, van buitenaf gelezen. Plugins, je andere pagina's en hoe snel de
+      site bij echte bezoekers laadt, zie ik zo niet.
+    </p>
+    <button id="wc-again" class="wc-again" type="button">Een ander adres checken</button>
+  </section>
+
+  <form
+    id="wc-lead"
+    class="scan-card wc-lead"
+    method="POST"
+    action={BREVO_ACTION}
+    data-astro-reload
+    hidden
+  >
+    <h2>Zal ik er zelf naar kijken?</h2>
+    <p class="scan-lead">
+      Dan krijg je binnen 1 werkdag een korte mail van mij: per punt wat ik zou doen, wat je zelf
+      kunt oplossen en wat ik verder zie als ik je site op een telefoon open.
+    </p>
+    <ul class="scan-promises">
+      <li>Geen gesprek</li>
+      <li>Geen kosten</li>
+      <li>Vijf per week</li>
+    </ul>
+    <div class="scan-field">
+      <label for="EMAIL">Je e-mailadres</label>
+      <input
+        id="EMAIL"
+        name="EMAIL"
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+        placeholder="naam@jouwbedrijf.nl"
+      />
+    </div>
+    <p class="scan-consent">
+      Hier stuur ik mijn bevindingen naartoe. Daarna stuur ik je af en toe een tip of aanbod over
+      je website of over tijd besparen met AI. Afmelden kan in elke mail.
+    </p>
+
+    <input type="hidden" id="SCAN_KLUS" name="SCAN_KLUS" value="" />
+    <input type="hidden" id="SCAN_PROGRAMMAS" name="SCAN_PROGRAMMAS" value="websitecheck" />
+    <input type="hidden" id="SCAN_BEDRIJF" name="SCAN_BEDRIJF" value="" />
+    {/* Brevo's own two hidden inputs: its bot trap (must stay empty) and the form locale. */}
+    <input
+      type="text"
+      name="email_address_check"
+      value=""
+      class="scan-trap"
+      tabindex="-1"
+      autocomplete="off"
+      aria-hidden="true"
+    />
+    <input type="hidden" name="locale" value="en" />
+
+    <p id="wc-lead-error" class="scan-error" role="alert" hidden>
+      Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail je webadres dan naar
+      <a href="mailto:davy@klantkraan.nl">davy@klantkraan.nl</a>.
+    </p>
+    <button id="wc-lead-submit" class="scan-btn" type="submit">Kijk naar mijn website</button>
+    <p class="scan-sign">Davy, ontwikkelaar en maker van Klantkraan</p>
+  </form>
+
+  <section id="wc-done" class="scan-card scan-done" tabindex="-1" hidden>
+    <span class="scan-tick" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+        <path
+          d="M5 12.5l4.5 4.5L19 7.5"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <h2>Bijna klaar</h2>
+    <p>
+      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna kijk ik naar je site
+      en heb je mijn mail binnen 1 werkdag.
+    </p>
+    <p class="scan-done-hint">
+      Geen mail gezien? Kijk dan even bij ongewenste mail. De afzender is Davy van Klantkraan.
+    </p>
+  </section>
+</ScanShell>
+
+<!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
+<script src="/js/websitecheck.js" type="module" is:inline></script>
+
+<style is:global>
+  .scan-main:has(.wc-result) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .wc-result:focus {
+    outline: none;
+  }
+  .wc-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .wc-item {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 4px 12px;
+    padding: 16px 0;
+    border-top: 1px solid var(--d-line);
+  }
+  .wc-mark {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    margin-top: 1px;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .wc-item[data-status='goed'] .wc-mark {
+    color: var(--d-ok);
+    border: 2px solid var(--d-ok);
+  }
+  .wc-item[data-status='let-op'] .wc-mark {
+    color: var(--d-amber-ink);
+    background: var(--d-amber);
+  }
+  .wc-item[data-status='onbekend'] .wc-mark {
+    color: var(--d-dim);
+    border: 2px solid var(--d-line);
+  }
+  .wc-item h3 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--d-ink);
+    overflow-wrap: anywhere;
+  }
+  .wc-item p {
+    grid-column: 2;
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--d-dim);
+    overflow-wrap: anywhere;
+  }
+  .wc-item .wc-zelf {
+    color: var(--d-ink);
+    font-size: 0.9rem;
+  }
+  .wc-item .wc-zelf b {
+    font-weight: 700;
+  }
+  .wc-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .wc-note {
+    margin: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--d-line);
+    font-size: 0.85rem;
+    color: var(--d-dim);
+  }
+  .wc-again {
+    align-self: flex-start;
+    min-height: 44px;
+    padding: 0;
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--d-ink);
+    background: none;
+    border: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .wc-again:focus-visible {
+    outline: 2px solid var(--d-ink);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+</style>
