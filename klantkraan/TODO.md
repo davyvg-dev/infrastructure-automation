@@ -945,11 +945,11 @@ CSP is script-src 'self': bundle everything, no GSAP, no CDN.
 - [x] V6: absorbed by V7 (EN and ES homepages have the NL section order; deploy is still FOUNDER).
 - [ ] V7: precise, diagram-led redesign (plan `plans/2026-11-15-klantkraan-site-redesign.md`),
       references linear/raycast/attio/zed. Built on branch `claude/site-redesign` in worktree
-      `marketing/kk-site-redesign` (371f436, 0523451, 8eccb1f): neutral black + amber, Inter +
+      `marketing/kk-site-redesign` (371f436..b7996d5): neutral black + amber, Inter +
       Geist Mono, hairline grids, product window hero, live demo second, flow schematic with the
       lamp, cost ledger bars, scroll-in reveals of V1 removed (smooth scroll kept). Tests:
-      `test-redesign` 88/88, `test-magnets` 94/94. FOUNDER: review, merge, deploy from a clean
-      worktree.
+      `test-redesign` 113/113, `test-magnets` 94/94; fix-verifier Goal PASS after 4 rounds,
+      mobile-qa no FAIL. FOUNDER: review, merge, deploy from a clean worktree.
 
 ## Phase 0 — Planning docs
 
