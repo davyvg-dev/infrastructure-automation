@@ -116,9 +116,9 @@ const serviceSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">Pricing</h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+      <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
         Cancel monthly, first month 50% off. One-time setup from €249 (waived for pilot customers).
         All amounts exclude 21% VAT.
       </p>
@@ -126,33 +126,34 @@ const serviceSchema = {
   </section>
 
   <!-- 2. Tier cards (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 md:grid-cols-2">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
+      <div class="grid-rule md:grid-cols-2">
       {
         tiers.map((tier) => (
           <article
-            class={`rounded-(--radius-card) border p-5 md:p-6 ${tier.highlight ? 'border-(--color-sodium) bg-(--color-panel)' : 'border-(--color-line) bg-(--color-panel)'}`}
+            class={`flex flex-col p-6 md:p-9 ${tier.highlight ? 'shadow-[inset_0_2px_0_0_var(--color-sodium)]' : ''}`}
           >
             <header class="flex items-baseline justify-between">
               <h2 class="font-display text-h2 text-(--color-chalk)">{tier.name}</h2>
               {tier.highlight && (
-                <span class="rounded-(--radius-button) bg-(--color-sodium) px-2 py-1 text-micro text-(--color-night)">
+                <span class="rounded-[4px] border border-(--color-sodium) px-1.5 py-0.5 font-mono text-[0.6875rem] text-(--color-sodium)">
                   recommended
                 </span>
               )}
             </header>
             <p
-              class={`mt-4 font-display text-h1 ${tier.highlight ? 'text-(--color-sodium)' : 'text-(--color-dim)'}`}
+              class="mt-5 font-display text-h1 tabular-nums text-(--color-chalk)"
             >
               €{tier.price}
               <span class="text-body text-(--color-dim)">/mo</span>
             </p>
             <p class="mt-1 font-mono text-small text-(--color-dim)">≈ €{tier.dayPrice} per day</p>
             {tier.priceNote && <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>}
-            <p class="mt-3 text-body text-(--color-dim)">{tier.blurb}</p>
+            <p class="mt-3 mb-7 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
               href={tier.ctaHref}
-              class={`mt-6 btn btn-lg ${tier.highlight ? 'btn-primary' : 'btn-ghost'}`}
+              class={`mt-auto self-start btn btn-lg ${tier.highlight ? 'btn-primary' : 'btn-ghost'}`}
             >
               {tier.cta}
             </a>
@@ -166,36 +167,37 @@ const serviceSchema = {
           </article>
         ))
       }
+      </div>
     </div>
   </section>
 
   <!-- 3. Done-for-you (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">What you do yourself</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Nothing. We set it up.</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         Buying a chatbot is one thing. Turning it into a receptionist that knows your rates and
         fills your calendar is work. That work is ours.
       </p>
-      <ul class="mt-6 grid gap-4 md:gap-6 text-body text-(--color-dim) sm:grid-cols-2">
-        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+      <ul class="grid-rule mt-8 text-body text-(--color-dim) sm:grid-cols-2">
+        <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Your services and rates loaded</p>
           <p class="mt-2">
             You send them over or we pull them from your site. You review, we type.
           </p>
         </li>
-        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+        <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Your calendar connected</p>
           <p class="mt-2">
             So an appointment lands in it directly, instead of as a note in an inbox.
           </p>
         </li>
-        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+        <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">WhatsApp applied for</p>
           <p class="mt-2">We handle the application with Meta. You never see that process.</p>
         </li>
-        <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+        <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Updated when things change</p>
           <p class="mt-2">
             New rates or a new service? One email and we adjust it. For as long as you stay.
@@ -210,8 +212,8 @@ const serviceSchema = {
   </section>
 
   <!-- 4. Feature comparison (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">What's included</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">What's included in each plan</h2>
 
@@ -238,10 +240,10 @@ const serviceSchema = {
         </table>
       </div>
 
-      <ul class="mt-6 space-y-4 md:hidden">
+      <ul class="grid-rule mt-6 md:hidden">
         {
           features.map((row) => (
-            <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
+            <li class="p-5">
               <p class="font-display text-h3 text-(--color-chalk)">{row.feature}</p>
               <div class="mt-3 grid grid-cols-2 gap-2 text-small">
                 <div>
@@ -262,7 +264,7 @@ const serviceSchema = {
 
   <!-- 5. Every plan + discount (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-2">
+    <div class="mx-auto grid max-w-page gap-4 md:gap-6 px-gutter sm:grid-cols-2">
       <div>
         <h2 class="font-display text-h2 text-(--color-chalk)">Every plan includes</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
@@ -284,8 +286,8 @@ const serviceSchema = {
   </section>
 
   <!-- 6. Final CTA (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Ready?</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Ready to get started?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">

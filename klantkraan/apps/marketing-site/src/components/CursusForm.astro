@@ -106,14 +106,14 @@ const t = strings[lang]
     embedded
       ? 'mt-12 border-t border-(--color-line) pt-10'
       : recessed
-        ? 'border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16'
+        ? 'border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16'
         : 'py-10 md:py-16',
   ]}
 >
   <div
     class:list={[
       'grid gap-6 md:gap-8 md:items-start',
-      embedded ? 'max-w-2xl' : 'mx-auto max-w-5xl px-6 md:grid-cols-[1fr_.9fr]',
+      embedded ? 'max-w-2xl' : 'mx-auto max-w-page px-gutter md:grid-cols-[1fr_.9fr]',
     ]}
   >
     <div>

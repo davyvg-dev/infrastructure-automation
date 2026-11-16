@@ -35,8 +35,9 @@ CSS-first via `src/styles/global.css` `@theme {}` block. Tokens follow the brand
 | Typography       | `visual-identity-brief.md` § 4 |
 | Layout / spacing | `visual-identity-brief.md` § 6 |
 
-Fonts are not yet self-hosted; the current setup falls back to system sans. WOFF2 subsets for
-Inter, Inter Tight, and JetBrains Mono land with the next iteration per the brief.
+Fonts are self-hosted in `public/fonts/` (`src/styles/fonts.css`): Inter variable with the
+weight and optical-size axes for headings and text, and Geist Mono for times, labels and figures.
+Both OFL 1.1, from the Fontsource packages (see `public/fonts/OFL-NOTICE.txt`).
 
 ## Deployment
 

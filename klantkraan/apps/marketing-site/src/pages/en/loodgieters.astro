@@ -114,7 +114,7 @@ const faqSchema = {
         <h1 class="font-display text-hero text-chalk">
           The <span class="text-(--color-sodium)">customer engine</span> for plumbers.
         </h1>
-        <p class="mt-6 max-w-2xl text-h3 text-dim">
+        <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
           Under a sink right now? Our digital receptionist answers the customer's question on your
           website and via WhatsApp, with your call-out charge and emergency rate ready to hand.
           Evenings, weekends, holidays. Same story. Appointments and callback requests come with the
@@ -125,28 +125,28 @@ const faqSchema = {
           <a href="/en/rekentool/" class="btn btn-ghost btn-lg"> Work out your ROI </a>
         </div>
       </div>
-      <div class="hidden text-(--color-sodium) md:block">
+      <div class="hidden text-(--color-dim) md:block">
         <TapValve class="h-64 w-64 lg:h-72 lg:w-72" />
       </div>
     </div>
-    <div class="mx-auto max-w-5xl px-6">
-      <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
-        <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+    <div class="mx-auto max-w-page px-gutter">
+      <ul role="list" class="grid-rule mt-12 sm:grid-cols-3">
+        <li class="flex items-start gap-3 p-5">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
           <div>
             <p class="text-small font-medium text-chalk">GDPR + AI Act art. 50</p>
             <p class="text-small text-dim">Disclosure on by default</p>
           </div>
         </li>
-        <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+        <li class="flex items-start gap-3 p-5">
+          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
           <div>
             <p class="text-small font-medium text-chalk">Hosted in the EU</p>
             <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
           </div>
         </li>
-        <li class="flex items-start gap-3">
-          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+        <li class="flex items-start gap-3 p-5">
+          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
           <div>
             <p class="text-small font-medium text-chalk">Natural conversation</p>
             <p class="text-small text-dim">Knows call-out + emergency rates</p>
@@ -172,17 +172,19 @@ const faqSchema = {
 
   <!-- 2. Pain-stats trio (stone-100) -->
   <section
-    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16"
     aria-label="What a missed call costs"
   >
-    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+    <div class="mx-auto max-w-page px-gutter">
+      <div class="grid-rule sm:grid-cols-3">
       {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
+      </div>
     </div>
   </section>
 
   <!-- 3. What Klantkraan does for plumbers (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Modules</p>
       <h2 class="mt-3 font-display text-h1 text-chalk">What Klantkraan does for plumbers.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
@@ -193,7 +195,7 @@ const faqSchema = {
         {
           features.map((feature) => (
             <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
+              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-dim)" />
               <div>
                 <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
                 <p class="mt-2 text-body text-dim">{feature.body}</p>
@@ -207,11 +209,11 @@ const faqSchema = {
 
   <!-- 5. ROI snippet (cream; inner white card) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">The maths</p>
       <h2 class="mt-3 font-display text-h1 text-chalk">Do the maths.</h2>
       <div
-        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+        class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
           Miss 10 calls a week at €450 each? That's <strong class="text-(--color-sodium)"
@@ -237,7 +239,7 @@ const faqSchema = {
 
   <!-- 6. FAQ (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Questions</p>
       <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
@@ -249,7 +251,7 @@ const faqSchema = {
                   <span>{faq.q}</span>
                   <Icon
                     name="chevron-down"
-                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-dim) transition-transform group-open:rotate-180"
                   />
                 </span>
               </summary>
@@ -269,8 +271,8 @@ const faqSchema = {
   </section>
 
   <!-- 8. Final CTA band (blue) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-chalk">Ready to stop missing jobs?</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Try the live demo. In one conversation you'll see how the receptionist answers a question

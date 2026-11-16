@@ -4,7 +4,7 @@
 // Checks: no horizontal overflow and no text past the screen edge at 1440, 390
 // and 320 on the main pages; one h1; the art. 50 line on /; the flow diagram and
 // cost ledger exist with an accessible name; NL homepage section order; no glow,
-// no radial gradient and no pill badge on /; with reduced motion the hero thread
+// no radial gradient and no pill badge on the main pages; with reduced motion the hero thread
 // and both diagrams show their finished state; h1 is set in Inter; body::before
 // paints nothing; the old fonts are never requested.
 //
@@ -36,8 +36,32 @@ async function newPage(opts = {}) {
   return { ctx, page }
 }
 
-const PAGES = ['/', '/loodgieters/', '/prijzen/', '/en/', '/es/']
-const WIDTHS = [1440, 390, 320]
+const findOffenders = (page) =>
+  page.evaluate(() => {
+    const out = []
+    for (const el of document.querySelectorAll('main *')) {
+      const cs = getComputedStyle(el)
+      const r = el.getBoundingClientRect()
+      if (r.width === 0 || r.height === 0) continue
+      if (/radial-gradient/.test(cs.backgroundImage)) out.push(`radial-gradient on ${el.className}`)
+      // A glow: a shadow with a wide blur in a warm or coloured tone.
+      for (const m of cs.boxShadow.matchAll(/rgba?\(([^)]+)\)[^,]*?(\d+(?:\.\d+)?)px (\d+(?:\.\d+)?)px (\d+(?:\.\d+)?)px/g)) {
+        const [rr, gg, bb] = m[1].split(',').map((x) => parseFloat(x))
+        const blur = parseFloat(m[4])
+        const coloured = Math.max(rr, gg, bb) - Math.min(rr, gg, bb) > 40
+        if (coloured && blur >= 12) out.push(`glow on ${el.className}`)
+      }
+      if (cs.textShadow !== 'none') out.push(`text-shadow on ${el.className}`)
+      // A pill: fully rounded, much wider than tall, carrying text.
+      const radius = parseFloat(cs.borderTopLeftRadius)
+      const text = (el.textContent ?? '').trim()
+      if (text && r.width > r.height * 2 && radius >= r.height / 2 - 1 && r.height < 48) out.push(`pill: "${text.slice(0, 30)}"`)
+    }
+    return [...new Set(out)].slice(0, 6)
+  })
+
+const PAGES = ['/', '/loodgieters/', '/prijzen/', '/demo/', '/en/', '/es/']
+const WIDTHS = [1440, 768, 390, 320]
 
 // ------------------------------------------------------------------ layout
 console.log(`\n=== Layout @ ${BASE} ===`)
@@ -102,6 +126,8 @@ for (const width of WIDTHS) {
         return { bg: s.backgroundImage, content: s.content }
       })
       check(`${path}: body::before paints no background`, before.bg === 'none', before.bg)
+      const offenders = await findOffenders(page)
+      check(`${path}: no glow, radial gradient, text shadow or pill badge`, offenders.length === 0, offenders.join('; '))
     }
   }
   await ctx.close()
@@ -140,29 +166,6 @@ console.log('\n=== NL homepage ===')
   const windowLink = await page.locator('[data-hero-window] a[href="#demo"]').count()
   check('hero window links straight to the live demo', windowLink > 0)
 
-  const offenders = await page.evaluate(() => {
-    const out = []
-    for (const el of document.querySelectorAll('main *')) {
-      const cs = getComputedStyle(el)
-      const r = el.getBoundingClientRect()
-      if (r.width === 0 || r.height === 0) continue
-      if (/radial-gradient/.test(cs.backgroundImage)) out.push(`radial-gradient on ${el.className}`)
-      // A glow: a shadow with a wide blur in a warm or coloured tone.
-      for (const m of cs.boxShadow.matchAll(/rgba?\(([^)]+)\)[^,]*?(\d+(?:\.\d+)?)px (\d+(?:\.\d+)?)px (\d+(?:\.\d+)?)px/g)) {
-        const [rr, gg, bb] = m[1].split(',').map((x) => parseFloat(x))
-        const blur = parseFloat(m[4])
-        const coloured = Math.max(rr, gg, bb) - Math.min(rr, gg, bb) > 40
-        if (coloured && blur >= 12) out.push(`glow on ${el.className}`)
-      }
-      if (cs.textShadow !== 'none') out.push(`text-shadow on ${el.className}`)
-      // A pill: fully rounded, much wider than tall, carrying text.
-      const radius = parseFloat(cs.borderTopLeftRadius)
-      const text = (el.textContent ?? '').trim()
-      if (text && r.width > r.height * 2 && radius >= r.height / 2 - 1 && r.height < 48) out.push(`pill: "${text.slice(0, 30)}"`)
-    }
-    return [...new Set(out)].slice(0, 6)
-  })
-  check('no glow, radial gradient, text shadow or pill badge on /', offenders.length === 0, offenders.join('; '))
   await ctx.close()
 }
 

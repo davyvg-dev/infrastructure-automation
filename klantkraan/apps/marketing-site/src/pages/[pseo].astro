@@ -112,7 +112,7 @@ const schemas = [
         {typeLabel} · {branch.labelPlural}
       </p>
       <h1 class="mt-3 font-display text-hero text-(--color-chalk)">{page.data.title}</h1>
-      <p class="mt-6 text-h3 text-(--color-dim)">{page.data.description}</p>
+      <p class="mt-6 text-[1.125rem] text-(--color-dim) leading-relaxed">{page.data.description}</p>
       <p class="mt-4 text-small text-(--color-dim)">
         Laatst bijgewerkt {dateFmt.format(page.data.laatstBijgewerkt)} · door Klantkraan
       </p>
@@ -120,9 +120,9 @@ const schemas = [
   </section>
 
   <!-- 2. Body (markdown owns the answer-first H2 structure) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] px-4 py-10 sm:px-6 md:py-16">
+  <section class="border-y border-(--color-line) bg-(--color-panel) px-4 py-10 sm:px-6 md:py-16">
     <article
-      class="mx-auto max-w-3xl rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10 text-body text-(--color-dim) [&_h2]:font-display [&_h2]:text-h2 [&_h2]:text-(--color-chalk) [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:font-display [&_h3]:text-h3 [&_h3]:text-(--color-chalk) [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_strong]:text-(--color-chalk) [&_a]:text-(--color-sodium) [&_a]:underline [&_a]:[overflow-wrap:break-word] [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:my-6 [&_table]:text-small [&_th]:border [&_th]:border-(--color-line) [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-(--color-line) [&_td]:p-2 [&_td]:align-top [&_pre]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto"
+      class="mx-auto max-w-3xl frame bg-(--color-panel) p-6 md:p-10 text-body text-(--color-dim) [&_h2]:font-display [&_h2]:text-h2 [&_h2]:text-(--color-chalk) [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:font-display [&_h3]:text-h3 [&_h3]:text-(--color-chalk) [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_strong]:text-(--color-chalk) [&_a]:text-(--color-sodium) [&_a]:underline [&_a]:[overflow-wrap:break-word] [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:my-6 [&_table]:text-small [&_th]:border [&_th]:border-(--color-line) [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-(--color-line) [&_td]:p-2 [&_td]:align-top [&_pre]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto"
     >
       <Content />
     </article>
@@ -156,7 +156,7 @@ const schemas = [
   </section>
 
   <!-- 4. FAQ -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-3xl px-6">
       <p class="eyebrow">Vragen</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Veelgestelde vragen.</h2>
@@ -169,7 +169,7 @@ const schemas = [
                   <span>{faq.q}</span>
                   <Icon
                     name="chevron-down"
-                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-dim) transition-transform group-open:rotate-180"
                   />
                 </span>
               </summary>
@@ -208,7 +208,7 @@ const schemas = [
   </section>
 
   <!-- 6. CTA -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-3xl px-6">
       <h2 class="font-display text-h1 text-(--color-chalk)">Zien wat Klantkraan voor u opneemt?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">

@@ -90,7 +90,7 @@ const pageTitle = post.data.title.length <= 52 ? `${post.data.title} | Klantkraa
       } · {dateFmt.format(post.data.pubDate)}
     </p>
     <h1 class="mt-4 font-display text-hero text-(--color-chalk)">{post.data.title}</h1>
-    <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">{post.data.description}</p>
+    <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">{post.data.description}</p>
 
     <div class="prose-blog mt-10 max-w-2xl text-body text-(--color-chalk)">
       <Content />

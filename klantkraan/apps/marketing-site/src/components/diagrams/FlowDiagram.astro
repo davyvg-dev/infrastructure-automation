@@ -22,6 +22,7 @@ interface Props {
   t: {
     label?: string
     heading: string
+    sub?: string
     steps: Duty[]
   }
   labels?: {
@@ -68,6 +69,7 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
       <h2 id={`${id}-h`} class:list={['text-h2 text-balance text-(--color-chalk)', t.label && 'mt-3']}>
         {t.heading}
       </h2>
+      {t.sub && <p class="mt-4 max-w-[38rem] text-body text-(--color-chalk-2)">{t.sub}</p>}
     </header>
 
     <figure class="frame kk-flow mt-10 md:mt-14" data-diagram="flow" role="img" aria-label={L.aria}>

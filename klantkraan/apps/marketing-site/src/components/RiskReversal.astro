@@ -79,15 +79,15 @@ const sectionAria =
 ---
 
 <section
-  class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-8 md:py-10"
+  class="border-y border-(--color-line) bg-(--color-panel) py-8 md:py-10"
   aria-label={sectionAria}
 >
-  <div class="mx-auto max-w-5xl px-6">
-    <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">
+  <div class="mx-auto max-w-page px-gutter">
+    <ul role="list" class="grid-rule sm:grid-cols-3">
       {
         promises.map((p) => (
-          <li class="flex items-start gap-3">
-            <Icon name={p.icon} class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+          <li class="flex items-start gap-3 p-5">
+            <Icon name={p.icon} class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
             <div>
               <p class="text-body font-medium text-chalk">{p.title}</p>
               <p class="mt-1 text-small text-dim">{p.body}</p>

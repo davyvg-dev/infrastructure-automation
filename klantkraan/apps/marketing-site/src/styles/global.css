@@ -26,6 +26,9 @@
   --color-sodium-soft: #ffd089; /* accent hover */
   --color-sodium-ink: #1a1206; /* text on sodium, 10.8:1 */
   --color-confirm: #63d3ab; /* rationed: "booked" stamp only */
+  /* The demo chat (ai-receptionist web UI) still has its own teal background; the
+   * full-screen overlay behind it on phones must match it, not the site. */
+  --color-demo-chat: #0f1c1e;
 
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
