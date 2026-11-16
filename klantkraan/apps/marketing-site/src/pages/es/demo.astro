@@ -24,13 +24,11 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
         <h1 class="font-display text-h1 md:text-hero text-(--color-chalk)">
           Pruebe la <span class="text-(--color-sodium)">recepcionista digital</span>.
         </h1>
-        <span
-          class="inline-flex shrink-0 items-center gap-2 rounded-full bg-(--color-panel) px-3 py-1 eyebrow"
-        >
-          <span class="h-2 w-2 rounded-full bg-(--color-sodium)"></span> Demo en vivo
+        <span class="eyebrow shrink-0">
+          <span class="lamp" aria-hidden="true"></span> Demo en vivo
         </span>
       </div>
-      <p class="mt-4 text-body md:text-h3 text-(--color-dim)">
+      <p class="mt-4 text-body md:text-[1.1875rem] text-(--color-dim) leading-relaxed">
         Una recepcionista de ejemplo, real y en vivo, aquí mismo en su navegador. Haga una pregunta
         o pida una cita. Sin compromiso.
       </p>
@@ -63,7 +61,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
           </div>
         </div>
         <p
-          class="mt-4 rounded-(--radius-button) bg-[rgba(0,0,0,0.22)] p-3 text-body text-(--color-dim)"
+          class="mt-4 rounded-(--radius-button) bg-(--color-panel) p-3 text-body text-(--color-dim)"
         >
           Chatee como un cliente: haga una pregunta o pida una cita. Se abre a pantalla completa.
         </p>
@@ -85,13 +83,13 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
   </section>
 
   <!-- 2. What you see in the demo (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">La demo</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Lo que ve en la demo.</h2>
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
+      
+      <h2 class="font-display text-h1 text-(--color-chalk)">Lo que ve en la demo.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-          <Icon name="message-square" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <Icon name="message-square" class="mt-1 h-7 w-7 text-(--color-dim)" />
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">Chat en su propia web</h3>
             <p class="mt-2 text-body text-(--color-dim)">
@@ -102,7 +100,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
           </div>
         </article>
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-          <Icon name="message-circle" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <Icon name="message-circle" class="mt-1 h-7 w-7 text-(--color-dim)" />
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">El canal de WhatsApp</h3>
             <p class="mt-2 text-body text-(--color-dim)">
@@ -112,7 +110,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
           </div>
         </article>
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <Icon name="calendar-check" class="mt-1 h-7 w-7 text-(--color-dim)" />
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">Una cita en el calendario</h3>
             <p class="mt-2 text-body text-(--color-dim)">
@@ -122,7 +120,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
           </div>
         </article>
         <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-          <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-sodium)" />
+          <Icon name="phone" class="mt-1 h-7 w-7 text-(--color-dim)" />
           <div>
             <h3 class="font-display text-h3 text-(--color-chalk)">Aviso de cliente en su móvil</h3>
             <p class="mt-2 text-body text-(--color-dim)">
@@ -137,7 +135,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
 
   <!-- 3. Prefer a personal demo? (cream). Secondary path -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <div
         class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-8"
       >
@@ -162,10 +160,10 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
 
   <!-- 4. AI-disclosure (stone-100, with rust-bordered card) -->
   <section
-    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16"
     aria-labelledby="ai-act"
   >
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <div
         class="rounded-(--radius-card) border border-(--color-line) border-l-[3px] border-l-(--color-sodium) bg-(--color-panel) p-6 md:p-8"
       >
@@ -177,7 +175,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
           frase de cada conversación, palabra por palabra:
         </p>
         <blockquote
-          class="mt-4 rounded-(--radius-button) border border-dashed border-(--color-line) bg-[rgba(0,0,0,0.22)] p-3 md:p-4 font-mono text-small text-(--color-sodium-soft)"
+          class="mt-4 rounded-(--radius-button) border border-dashed border-(--color-line) bg-(--color-panel) p-3 md:p-4 font-mono text-small text-(--color-sodium-soft)"
         >
           "Hola, está hablando con {`{{agent_name}}`}, el asistente digital de {
             `{{business_name}}`
@@ -201,8 +199,8 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
   </section>
 
   <!-- 5. End CTA band (blue) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-(--color-chalk)">¿Prefiere ver antes los números?</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         Eche un vistazo a los dos planes. La demo sigue a un clic de distancia.
@@ -226,7 +224,7 @@ const DEMO_SRC = 'https://demo-168-119-173-25.sslip.io/?client=airco-mallorca&em
 
   <style>
     #demo-overlay {
-      background: #0f1c1e;
+      background: var(--color-demo-chat);
       overscroll-behavior: contain;
     }
   </style>

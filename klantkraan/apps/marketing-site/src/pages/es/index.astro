@@ -1,12 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro'
+import FlowDiagram from '../../components/diagrams/FlowDiagram.astro'
 import CostReceipt from '../../components/home/CostReceipt.astro'
-import Duties from '../../components/home/Duties.astro'
 import FinalCta from '../../components/home/FinalCta.astro'
 import Hero from '../../components/home/Hero.astro'
+import Honest from '../../components/home/Honest.astro'
 import HowItWorks from '../../components/home/HowItWorks.astro'
-import Roadmap from '../../components/home/Roadmap.astro'
-import Transparency from '../../components/home/Transparency.astro'
 import { waLink } from '../../data/contact'
 
 const hero = {
@@ -22,9 +21,9 @@ const hero = {
   ctaGhost: 'Pruebe la demo',
   ctaGhostHref: '/es/demo/',
   proof: [
-    { icon: 'message-circle' as const, label: 'Instalación llave en mano' },
-    { icon: 'calendar-check' as const, label: 'Cancelación mensual' },
-    { icon: 'shield-check' as const, label: 'Conforme al RGPD, alojado en la UE' },
+    { label: 'Instalación llave en mano' },
+    { label: 'Cancelación mensual' },
+    { label: 'Conforme al RGPD, alojado en la UE' },
   ],
   panelAria:
     'Conversación a las 23:47: un cliente con una fuga hace una pregunta, la recepcionista digital agenda una cita para el martes a las 09:00 y deja preparada una solicitud de llamada para el propietario.',
@@ -36,29 +35,45 @@ const hero = {
   recepMsg: 'Lamento oírlo, nos encargamos. Mañana a las 09:00 está libre. ¿Se lo reservo?',
   stampStrong: 'AGENDADA',
   stampDetail: 'mar 09:00 · llamada preparada para el propietario',
+  window: {
+    title: 'klantkraan',
+    meta: 'Ejemplo',
+    listLabel: 'Conversaciones',
+    rows: [
+      { channel: 'WhatsApp', time: '23:47', text: 'Fuga bajo el fregadero', status: 'Agendada', active: true },
+      { channel: 'Chat web', time: '22:14', text: 'La caldera no funciona', status: 'Llamar' },
+      { channel: 'WhatsApp', time: '20:31', text: '¿Trabajan también en Haarlem?', status: 'Respondida' },
+      { channel: 'Chat web', time: '18:05', text: '¿Cuánto cuesta cambiar un grifo?', status: 'Respondida' },
+    ],
+    resultLabel: 'Cita',
+    fields: [
+      { k: 'Trabajo', v: 'Fuga bajo el fregadero' },
+      { k: 'Cuándo', v: 'mar 09:00' },
+      { k: 'Vía', v: 'WhatsApp, 23:47' },
+      { k: 'Después', v: 'Llamada preparada para el propietario' },
+    ],
+  },
 }
 
-const duties = {
-  eyebrow: 'El turno de noche',
+const flow = {
+  label: 'El turno de noche',
   heading: 'Lo que la recepcionista asume mientras usted trabaja.',
-  photoAlt: 'Instalador revisando una unidad exterior con una linterna',
-  items: [
-    {
-      icon: 'message-square' as const,
-      title: 'Responde cada pregunta',
-      text: 'Conoce sus tarifas, servicios y zona de trabajo. Sin precios inventados, solo lo que usted ha configurado.',
-    },
-    {
-      icon: 'calendar-check' as const,
-      title: 'Agenda la cita',
-      text: 'Directo en su calendario, solo en horas que están realmente libres. El cliente elige un hueco y usted lo ve al instante.',
-    },
-    {
-      icon: 'phone-call' as const,
-      title: 'Anota la solicitud de llamada',
-      text: '¿No puede atender ahora? La recepcionista anota el nombre, el número y el trabajo. Usted devuelve la llamada a quien de verdad importa.',
-    },
+  steps: [
+    { title: 'Responde cada pregunta', text: 'Conoce sus tarifas, servicios y zona de trabajo. Sin precios inventados, solo lo que usted ha configurado.' },
+    { title: 'Agenda la cita', text: 'Directo en su calendario, solo en horas que están realmente libres. El cliente elige un hueco y usted lo ve al instante.' },
+    { title: 'Anota la solicitud de llamada', text: '¿No puede atender ahora? La recepcionista anota el nombre, el número y el trabajo. Usted devuelve la llamada a quien de verdad importa.' },
   ],
+}
+const flowLabels = {
+  inSite: 'Chat web',
+  inWa: 'WhatsApp',
+  node: 'Klantkraan',
+  nodeSub: 'recepcionista digital',
+  outAnswer: 'Respuesta',
+  outBooking: 'Cita en agenda',
+  outCallback: 'Devolver llamada',
+  aria:
+    'Esquema: las preguntas por chat web y WhatsApp llegan a Klantkraan, que las responde, agenda una cita en su calendario o le deja preparada una solicitud de llamada.',
 }
 
 const kosten = {
@@ -162,10 +177,9 @@ const finalCta = {
   centered={false}
 >
   <Hero t={hero} />
-  <Duties t={duties} />
+  <FlowDiagram t={flow} labels={flowLabels} />
   <CostReceipt t={kosten} />
-  <Transparency t={eerlijk} />
-  <Roadmap t={roadmap} />
+  <Honest eerlijk={eerlijk} roadmap={roadmap} />
   <HowItWorks t={starten} />
   <FinalCta t={finalCta} />
 </Base>

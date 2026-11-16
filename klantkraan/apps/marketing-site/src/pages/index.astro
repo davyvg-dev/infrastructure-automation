@@ -1,13 +1,12 @@
 ---
 import Base from '../layouts/Base.astro'
-import Conversation from '../components/home/Conversation.astro'
+import FlowDiagram from '../components/diagrams/FlowDiagram.astro'
 import CostReceipt from '../components/home/CostReceipt.astro'
 import DemoSection from '../components/home/DemoSection.astro'
 import FinalCta from '../components/home/FinalCta.astro'
 import Hero from '../components/home/Hero.astro'
+import Honest from '../components/home/Honest.astro'
 import HowItWorks from '../components/home/HowItWorks.astro'
-import Roadmap from '../components/home/Roadmap.astro'
-import Transparency from '../components/home/Transparency.astro'
 import { waLink } from '../data/contact'
 
 const hero = {
@@ -23,9 +22,9 @@ const hero = {
   ctaGhost: 'Probeer de demo',
   ctaGhostHref: '#demo',
   proof: [
-    { icon: 'message-circle' as const, label: 'Direct te proberen, geen account' },
-    { icon: 'calendar-check' as const, label: 'Per maand opzegbaar' },
-    { icon: 'shield-check' as const, label: 'AVG-proof, EU-gehost' },
+    { label: 'Direct te proberen, geen account' },
+    { label: 'Per maand opzegbaar' },
+    { label: 'AVG-proof, EU-gehost' },
   ],
   panelAria:
     'Gesprek om 23:47: een klant met een lekkage stelt een vraag, de digitale receptionist plant een afspraak op dinsdag 09:00 en zet een terugbelverzoek klaar voor de eigenaar.',
@@ -37,6 +36,26 @@ const hero = {
   recepMsg: 'Vervelend, dat pakken we op. Morgen 09:00 is vrij. Zal ik dat voor u vastzetten?',
   stampStrong: 'INGEPLAND',
   stampDetail: 'di 09:00 · terugbelverzoek klaar voor de eigenaar',
+  // The product window around the thread: the owner's view of the same evening.
+  // Rows reuse conversations and questions from this page (gesprek, demo.asks).
+  window: {
+    title: 'klantkraan',
+    meta: 'Voorbeeld',
+    listLabel: 'Gesprekken',
+    rows: [
+      { channel: 'WhatsApp', time: '23:47', text: 'Lekkage onder de gootsteen', status: 'Ingepland', active: true },
+      { channel: 'Websitechat', time: '22:14', text: 'Cv-ketel doet het niet meer', status: 'Terugbellen' },
+      { channel: 'WhatsApp', time: '20:31', text: 'Werken jullie ook in Haarlem?', status: 'Beantwoord' },
+      { channel: 'Websitechat', time: '18:05', text: 'Wat kost het vervangen van een kraan?', status: 'Beantwoord' },
+    ],
+    resultLabel: 'Afspraak',
+    fields: [
+      { k: 'Klus', v: 'Lekkage onder de gootsteen' },
+      { k: 'Wanneer', v: 'di 09:00' },
+      { k: 'Via', v: 'WhatsApp, 23:47' },
+      { k: 'Daarna', v: 'Terugbelverzoek klaar voor de eigenaar' },
+    ],
+  },
 }
 
 const gesprek = {
@@ -54,43 +73,6 @@ const gesprek = {
       title: 'Noteert wat niet meteen kan',
       text: 'Naam, nummer en klus. U kiest zelf wie u terugbelt.',
     },
-  ],
-  threadName: 'Uw installatiebedrijf',
-  threadSub: 'Voorbeeldgesprek',
-  day: 'Dinsdag 22:14',
-  disclosure: 'U chat met een digitale assistent.',
-  threadLabel: 'Voorbeeldgesprek tussen een klant en de digitale receptionist',
-  messages: [
-    {
-      from: 'klant' as const,
-      step: 0,
-      text: 'Goedenavond, mijn cv-ketel doet het niet meer en de druk staat op 0,6. Komen jullie ook in Zoetermeer?',
-    },
-    {
-      from: 'receptionist' as const,
-      step: 0,
-      text: 'Ja, Zoetermeer valt binnen ons werkgebied. Een druk onder de 1 bar kan de oorzaak zijn. Zal ik een monteur voor u inplannen?',
-    },
-    { from: 'klant' as const, step: 1, text: 'Graag, zo vroeg mogelijk.' },
-    {
-      from: 'receptionist' as const,
-      step: 1,
-      text: 'Morgen kan het om 08:00 of om 13:30. Wat past u?',
-    },
-    {
-      from: 'klant' as const,
-      step: 2,
-      text: '8 uur. En kan iemand me een keer bellen over een nieuwe ketel?',
-    },
-    {
-      from: 'receptionist' as const,
-      step: 2,
-      text: 'Staat erin. Ik geef het terugbelverzoek door, dan neemt het bedrijf contact met u op.',
-    },
-  ],
-  slips: [
-    { strong: 'INGEPLAND', detail: 'wo 08:00 · cv-ketel, druk 0,6 bar · Zoetermeer', step: 2 },
-    { strong: 'TERUGBELLEN', detail: 'offerte nieuwe ketel', step: 2 },
   ],
 }
 
@@ -201,6 +183,13 @@ const finalCta = {
     { label: 'Probeer de demo', href: '/demo/' },
     { label: 'Plan een kennismaking', href: waLink, external: true },
   ],
+  photo: {
+    src: '/photos/home-van.jpg',
+    srcSm: '/photos/home-van-sm.jpg',
+    alt: 'Vanuit de cabine van een werkbus in een Nederlandse straat: werkbonnen, een rolmaat en werkhandschoenen op de stoel.',
+    width: 928,
+    height: 1152,
+  },
 }
 ---
 
@@ -210,11 +199,10 @@ const finalCta = {
   centered={false}
 >
   <Hero t={hero} />
-  <Conversation t={gesprek} />
   <DemoSection t={demo} />
+  <FlowDiagram t={gesprek} />
   <CostReceipt t={kosten} />
-  <Transparency t={eerlijk} />
-  <Roadmap t={roadmap} />
+  <Honest eerlijk={eerlijk} roadmap={roadmap} />
   <HowItWorks t={starten} />
   <FinalCta t={finalCta} />
 </Base>

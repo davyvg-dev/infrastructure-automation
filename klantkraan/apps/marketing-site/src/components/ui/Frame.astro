@@ -1,0 +1,16 @@
+---
+/**
+ * Hairline box with corner ticks (see `.frame` in components.css). Pass `as` to
+ * render a figure, aside or div.
+ */
+interface Props {
+  as?: 'div' | 'figure' | 'aside'
+  class?: string
+  [key: string]: unknown
+}
+const { as: Tag = "div", class: className, ...rest } = Astro.props as Props
+---
+
+<Tag class:list={['frame', className]} {...rest}>
+  <slot />
+</Tag>

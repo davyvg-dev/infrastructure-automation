@@ -99,6 +99,25 @@ Type: `--font-display` Inter Tight → **Bricolage Grotesque**; `--font-sans` In
 Grotesk**; `--font-mono` JetBrains Mono → **Space Mono**. Radii align to the concept
 (`--r: 11px` cards, 10–12px buttons).
 
+**2026-11-16 (V7, plan `plans/2026-11-15-klantkraan-site-redesign.md`): same token names, new
+values.** Neutral near-black instead of petrol, no glow, Inter + Geist Mono:
+
+| Token                 | Value                 | Role                                             |
+| --------------------- | --------------------- | ------------------------------------------------ |
+| `night`               | `#0b0c0d`             | page base                                        |
+| `panel` / `panel-2`   | `#111315` / `#16181b` | raised surfaces, window chrome                   |
+| `line` / `line-strong`| `#23262a` / `#33373c` | hairlines; hover borders and diagram wires       |
+| `chalk` / `chalk-2`   | `#ededed` / `#c5c8cc` | primary text; softer body copy                   |
+| `dim`                 | `#8b9096`             | muted text (6.1:1 on night, 5.1:1 on panel-2)    |
+| `sodium` / `-soft` / `-ink` | `#ffb84d` / `#ffd089` / `#1a1206` | the one accent: CTAs, links, the lamp; text on it |
+| `confirm`             | `#63d3ab`             | rationed: the "booked" stamp                     |
+| `demo-chat`           | `#0f1c1e`             | the demo chat app's own background (overlay only) |
+
+Type: `--font-sans` and `--font-display` Inter (variable, optical size), `--font-mono` Geist Mono.
+Headings 600 with tight tracking, hero max 4rem. Radii 12px cards and windows, 8px buttons.
+Layout tokens: `max-w-page` 1200px, `py-section`, `px-gutter`; one `shadow-window`, one
+`shadow-highlight`. Primitives in `components.css`: `.frame`, `.grid-rule`, `.window`, `.lamp`.
+
 **Styling approach:** keep Tailwind v4 as the utility engine (redefine `@theme` values only).
 The concept's signature pieces — dispatch panel/log, clock-time ledger, receipt tally — go in a
 scoped `@layer components` block (reused) or the owning component's `<style>` (one-offs like the

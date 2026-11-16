@@ -46,16 +46,16 @@ const pageTitle = gids.data.title.length <= 52 ? `${gids.data.title} | Klantkraa
         Gids · {nicheLabelPlural(gids.data.vertical)} · {gids.data.readingTime} min lezen
       </p>
       <h1 class="mt-3 font-display text-hero text-(--color-chalk)">{gids.data.title}</h1>
-      <p class="mt-6 text-h3 text-(--color-dim)">{gids.data.description}</p>
+      <p class="mt-6 text-[1.125rem] text-(--color-dim) leading-relaxed">{gids.data.description}</p>
       <p class="mt-4 text-small text-(--color-dim)">
         Gepubliceerd {dateFmt.format(gids.data.pubDate)}
       </p>
     </div>
   </section>
 
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] px-4 py-10 sm:px-6 md:py-16">
+  <section class="border-y border-(--color-line) bg-(--color-panel) px-4 py-10 sm:px-6 md:py-16">
     <article
-      class="mx-auto max-w-3xl rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10 text-body text-(--color-dim) [&_h2]:font-display [&_h2]:text-h2 [&_h2]:text-(--color-chalk) [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:font-display [&_h3]:text-h3 [&_h3]:text-(--color-chalk) [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_strong]:text-(--color-chalk) [&_a]:text-(--color-sodium) [&_a]:underline [&_a]:[overflow-wrap:break-word] [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:my-6 [&_table]:text-small [&_th]:border [&_th]:border-(--color-line) [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-(--color-line) [&_td]:p-2 [&_td]:align-top [&_pre]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto"
+      class="mx-auto max-w-3xl frame bg-(--color-panel) p-6 md:p-10 text-body text-(--color-dim) [&_h2]:font-display [&_h2]:text-h2 [&_h2]:text-(--color-chalk) [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:font-display [&_h3]:text-h3 [&_h3]:text-(--color-chalk) [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:mt-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mt-2 [&_strong]:text-(--color-chalk) [&_a]:text-(--color-sodium) [&_a]:underline [&_a]:[overflow-wrap:break-word] [&_table]:block [&_table]:w-max [&_table]:max-w-full [&_table]:overflow-x-auto [&_table]:my-6 [&_table]:text-small [&_th]:border [&_th]:border-(--color-line) [&_th]:p-2 [&_th]:text-left [&_td]:border [&_td]:border-(--color-line) [&_td]:p-2 [&_td]:align-top [&_pre]:overflow-x-auto [&_img]:max-w-full [&_img]:h-auto"
     >
       <Content />
     </article>

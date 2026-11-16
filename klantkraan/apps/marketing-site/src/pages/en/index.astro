@@ -1,12 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro'
+import FlowDiagram from '../../components/diagrams/FlowDiagram.astro'
 import CostReceipt from '../../components/home/CostReceipt.astro'
-import Duties from '../../components/home/Duties.astro'
 import FinalCta from '../../components/home/FinalCta.astro'
 import Hero from '../../components/home/Hero.astro'
+import Honest from '../../components/home/Honest.astro'
 import HowItWorks from '../../components/home/HowItWorks.astro'
-import Roadmap from '../../components/home/Roadmap.astro'
-import Transparency from '../../components/home/Transparency.astro'
 import { waLink } from '../../data/contact'
 
 const hero = {
@@ -22,9 +21,9 @@ const hero = {
   ctaGhost: 'Try the demo',
   ctaGhostHref: '/en/demo/',
   proof: [
-    { icon: 'message-circle' as const, label: 'Done-for-you setup' },
-    { icon: 'calendar-check' as const, label: 'Cancel monthly' },
-    { icon: 'shield-check' as const, label: 'GDPR-compliant, EU-hosted' },
+    { label: 'Done-for-you setup' },
+    { label: 'Cancel monthly' },
+    { label: 'GDPR-compliant, EU-hosted' },
   ],
   panelAria:
     'Conversation at 23:47: a customer with a leak asks a question, the digital receptionist books an appointment for Tuesday 09:00 and prepares a callback request for the owner.',
@@ -37,29 +36,45 @@ const hero = {
     "Sorry to hear that, we'll sort it. Tomorrow 09:00 is free. Shall I lock that in for you?",
   stampStrong: 'BOOKED',
   stampDetail: 'Tue 09:00 · callback ready for the owner',
+  window: {
+    title: 'klantkraan',
+    meta: 'Example',
+    listLabel: 'Conversations',
+    rows: [
+      { channel: 'WhatsApp', time: '23:47', text: 'Leak under the kitchen sink', status: 'Booked', active: true },
+      { channel: 'Website chat', time: '22:14', text: 'Boiler stopped working', status: 'Call back' },
+      { channel: 'WhatsApp', time: '20:31', text: 'Do you also work in Haarlem?', status: 'Answered' },
+      { channel: 'Website chat', time: '18:05', text: 'What does replacing a tap cost?', status: 'Answered' },
+    ],
+    resultLabel: 'Appointment',
+    fields: [
+      { k: 'Job', v: 'Leak under the kitchen sink' },
+      { k: 'When', v: 'Tue 09:00' },
+      { k: 'Via', v: 'WhatsApp, 23:47' },
+      { k: 'Next', v: 'Callback ready for the owner' },
+    ],
+  },
 }
 
-const duties = {
-  eyebrow: 'The night shift',
+const flow = {
+  label: 'The night shift',
   heading: 'What the receptionist takes over while you work.',
-  photoAlt: 'Heating engineer checking an outdoor unit by torchlight',
-  items: [
-    {
-      icon: 'message-square' as const,
-      title: 'Answers every question',
-      text: 'Knows your rates, services and service area. No invented prices, only what you have set.',
-    },
-    {
-      icon: 'calendar-check' as const,
-      title: 'Books the appointment',
-      text: 'Straight into your calendar, only in slots that are genuinely free. The customer picks a slot, you see it at once.',
-    },
-    {
-      icon: 'phone-call' as const,
-      title: 'Captures the callback',
-      text: "Can't take it right now? The receptionist notes the name, number and job. You call back the ones that matter.",
-    },
+  steps: [
+    { title: 'Answers every question', text: 'Knows your rates, services and service area. No invented prices, only what you have set.' },
+    { title: 'Books the appointment', text: 'Straight into your calendar, only in slots that are genuinely free. The customer picks a slot, you see it at once.' },
+    { title: 'Captures the callback', text: "Can't take it right now? The receptionist notes the name, number and job. You call back the ones that matter." },
   ],
+}
+const flowLabels = {
+  inSite: 'Website chat',
+  inWa: 'WhatsApp',
+  node: 'Klantkraan',
+  nodeSub: 'digital receptionist',
+  outAnswer: 'Answer',
+  outBooking: 'Appointment booked',
+  outCallback: 'Callback request',
+  aria:
+    'Diagram: questions via website chat and WhatsApp come in at Klantkraan, which answers them, books an appointment in your calendar or prepares a callback request for you.',
 }
 
 const cost = {
@@ -164,10 +179,9 @@ const finalCta = {
   centered={false}
 >
   <Hero t={hero} />
-  <Duties t={duties} />
+  <FlowDiagram t={flow} labels={flowLabels} />
   <CostReceipt t={cost} />
-  <Transparency t={honest} />
-  <Roadmap t={roadmap} />
+  <Honest eerlijk={honest} roadmap={roadmap} />
   <HowItWorks t={start} />
   <FinalCta t={finalCta} />
 </Base>

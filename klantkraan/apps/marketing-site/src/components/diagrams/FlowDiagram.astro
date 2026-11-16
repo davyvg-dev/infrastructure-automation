@@ -1,0 +1,402 @@
+---
+/*
+ * What the receptionist does, drawn as an installation schematic: two inputs
+ * (website chat, WhatsApp) wired into one Klantkraan node, three outputs that
+ * each end in a lamp. A pulse of current runs from WhatsApp through the node to
+ * the appointment and that lamp switches on and stays on ("Het licht blijft
+ * aan"). The three duties sit under the drawing as text, one cell per output.
+ *
+ * Shows only what the copy claims: site and WhatsApp in, answer / appointment /
+ * callback out. No phone line.
+ *
+ * Two drawings: a wide one, and a tall one for phones where the wide one's labels
+ * would shrink below reading size. CSS swaps them at 640px.
+ * Motion: a small script arms the drawing (lamp off) and starts it when it
+ * scrolls into view. No JS or reduced motion: the finished state, lamp on.
+ */
+interface Duty {
+  title: string
+  text: string
+}
+interface Props {
+  t: {
+    label?: string
+    heading: string
+    sub?: string
+    steps: Duty[]
+  }
+  labels?: {
+    inSite: string
+    inWa: string
+    node: string
+    nodeSub: string
+    outAnswer: string
+    outBooking: string
+    outCallback: string
+    aria: string
+  }
+  /** Overrides the node's sub-label, e.g. the trade on a trade page. */
+  nodeSub?: string
+  id?: string
+  sunk?: boolean
+}
+
+const nl = {
+  inSite: 'Websitechat',
+  inWa: 'WhatsApp',
+  node: 'Klantkraan',
+  nodeSub: 'digitale receptionist',
+  outAnswer: 'Antwoord',
+  outBooking: 'Afspraak in agenda',
+  outCallback: 'Terugbelverzoek',
+  aria:
+    'Schema: vragen via websitechat en WhatsApp komen binnen bij Klantkraan. Die geeft antwoord, zet een afspraak in uw agenda of zet een terugbelverzoek voor u klaar.',
+}
+const { t, labels = nl, nodeSub, id = 'werking', sunk = false } = Astro.props
+const L = nodeSub ? { ...labels, nodeSub } : labels
+const outs = [L.outAnswer, L.outBooking, L.outCallback]
+---
+
+<section
+  id={id}
+  data-section="flow"
+  aria-labelledby={`${id}-h`}
+  class:list={['scroll-mt-24', sunk && 'border-y border-(--color-line) bg-(--color-panel)']}
+>
+  <div class="mx-auto max-w-page px-gutter py-section">
+    <header class="max-w-[46rem]">
+      {t.label && <p class="eyebrow">{t.label}</p>}
+      <h2 id={`${id}-h`} class:list={['text-h2 text-balance text-(--color-chalk)', t.label && 'mt-3']}>
+        {t.heading}
+      </h2>
+      {t.sub && <p class="mt-4 max-w-[38rem] text-body text-(--color-chalk-2)">{t.sub}</p>}
+    </header>
+
+    <figure class="frame kk-flow mt-10 md:mt-14" data-diagram="flow" role="img" aria-label={L.aria}>
+      <!-- wide drawing -->
+      <svg class="kk-flow-wide" viewBox="0 0 800 340" aria-hidden="true" focusable="false">
+        <g class="wire">
+          <path d="M126 100 H226 V150 H270" />
+          <path d="M126 240 H226 V190 H270" />
+          <path d="M470 150 H520 V70 H606" />
+          <path d="M470 170 H606" />
+          <path d="M470 190 H520 V270 H606" />
+        </g>
+        <path class="pulse" pathLength="100" d="M126 240 H226 V190 H400 V170 H606" />
+
+        <g class="term">
+          <circle cx="120" cy="100" r="6" />
+          <circle cx="120" cy="240" r="6" />
+        </g>
+        <text class="mono" x="100" y="104" text-anchor="end">{L.inSite}</text>
+        <text class="mono" x="100" y="244" text-anchor="end">{L.inWa}</text>
+
+        <rect class="node" x="270" y="120" width="200" height="100" rx="6" />
+        <text class="node-name" x="370" y="166" text-anchor="middle">{L.node}</text>
+        <text class="mono dim" x="370" y="190" text-anchor="middle">{L.nodeSub}</text>
+
+        <g class="lamp-sym">
+          <circle cx="618" cy="70" r="12" />
+          <path d="M609.5 61.5 L626.5 78.5 M626.5 61.5 L609.5 78.5" />
+        </g>
+        <g class="lamp-sym is-active" data-lamp="on">
+          <circle cx="618" cy="170" r="12" />
+          <path d="M609.5 161.5 L626.5 178.5 M626.5 161.5 L609.5 178.5" />
+        </g>
+        <g class="lamp-sym">
+          <circle cx="618" cy="270" r="12" />
+          <path d="M609.5 261.5 L626.5 278.5 M626.5 261.5 L609.5 278.5" />
+        </g>
+        <text class="mono" x="644" y="74">{outs[0]}</text>
+        <text class="mono out-active" x="644" y="174">{outs[1]}</text>
+        <text class="mono" x="644" y="274">{outs[2]}</text>
+      </svg>
+
+      <!-- tall drawing (phones) -->
+      <svg class="kk-flow-tall" viewBox="0 0 340 472" aria-hidden="true" focusable="false">
+        <g class="wire">
+          <path d="M90 58 V110 H150 V150" />
+          <path d="M250 58 V110 H190 V150" />
+          <path d="M70 230 V440 H108" />
+          <path d="M70 300 H108" />
+          <path d="M70 370 H108" />
+        </g>
+        <path class="pulse" pathLength="100" d="M250 58 V110 H190 V190 H70 V370 H108" />
+
+        <g class="term">
+          <circle cx="90" cy="52" r="6" />
+          <circle cx="250" cy="52" r="6" />
+        </g>
+        <text class="mono" x="90" y="30" text-anchor="middle">{L.inSite}</text>
+        <text class="mono" x="250" y="30" text-anchor="middle">{L.inWa}</text>
+
+        <rect class="node" x="40" y="150" width="260" height="80" rx="6" />
+        <text class="node-name" x="170" y="186" text-anchor="middle">{L.node}</text>
+        <text class="mono dim" x="170" y="209" text-anchor="middle">{L.nodeSub}</text>
+
+        <g class="lamp-sym">
+          <circle cx="120" cy="300" r="12" />
+          <path d="M111.5 291.5 L128.5 308.5 M128.5 291.5 L111.5 308.5" />
+        </g>
+        <g class="lamp-sym is-active" data-lamp="on">
+          <circle cx="120" cy="370" r="12" />
+          <path d="M111.5 361.5 L128.5 378.5 M128.5 361.5 L111.5 378.5" />
+        </g>
+        <g class="lamp-sym">
+          <circle cx="120" cy="440" r="12" />
+          <path d="M111.5 431.5 L128.5 448.5 M128.5 431.5 L111.5 448.5" />
+        </g>
+        <text class="mono" x="146" y="304">{outs[0]}</text>
+        <text class="mono out-active" x="146" y="374">{outs[1]}</text>
+        <text class="mono" x="146" y="444">{outs[2]}</text>
+      </svg>
+    </figure>
+
+    <ol class="grid-rule kk-duties" role="list">
+      {
+        t.steps.map((s, i) => (
+          <li>
+            <p class="kk-duty-out">
+              <span class:list={['kk-duty-mark', i === 1 && 'is-active']} aria-hidden="true" />
+              {outs[i]}
+            </p>
+            <h3 class="mt-4 text-h3 text-(--color-chalk)">{s.title}</h3>
+            <p class="mt-2 text-small text-(--color-dim)">{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* Faint ruled lines like drawing paper: texture, not data, so very quiet. */
+  .kk-flow {
+    margin-inline: 0;
+    padding: 2rem 1rem;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) 2.5rem
+      ),
+      var(--color-night);
+  }
+  @media (min-width: 640px) {
+    .kk-flow {
+      padding: 3rem 2rem;
+    }
+  }
+  .kk-flow svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .kk-flow-wide {
+    max-width: 50rem;
+    margin-inline: auto;
+  }
+  .kk-flow-tall {
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+  @media (max-width: 639px) {
+    .kk-flow .kk-flow-wide {
+      display: none;
+    }
+  }
+  @media (min-width: 640px) {
+    .kk-flow .kk-flow-tall {
+      display: none;
+    }
+  }
+
+  .wire path {
+    fill: none;
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+  }
+  .pulse {
+    fill: none;
+    stroke: var(--color-sodium);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    /* Finished state: the whole active path carries current. */
+    stroke-dasharray: 100 0;
+    opacity: 0.9;
+  }
+  .term circle {
+    fill: var(--color-night);
+    stroke: var(--color-chalk-2);
+    stroke-width: 1.5;
+  }
+  .node {
+    fill: var(--color-panel);
+    stroke: var(--color-chalk-2);
+    stroke-width: 1.5;
+  }
+  .node-name {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    fill: var(--color-chalk);
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    fill: var(--color-chalk-2);
+  }
+  .mono.dim {
+    font-size: 12px;
+    fill: var(--color-dim);
+  }
+  .lamp-sym circle {
+    fill: var(--color-night);
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+  }
+  .lamp-sym path {
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+  }
+  /* The lamp that is on. */
+  .lamp-sym.is-active circle {
+    fill: var(--color-sodium);
+    stroke: var(--color-sodium);
+  }
+  .lamp-sym.is-active path {
+    stroke: var(--color-sodium-ink);
+  }
+  .out-active {
+    fill: var(--color-chalk);
+  }
+
+  /* Armed by the script (motion allowed): lamp off and no current until the
+   * drawing is in view, then one pulse runs the path and the lamp catches. The
+   * pulse keeps running, slowly, the lamp stays on. */
+  .kk-flow.is-armed .pulse {
+    stroke-dasharray: 9 91;
+    stroke-dashoffset: 9;
+    opacity: 0;
+  }
+  .kk-flow.is-armed .lamp-sym.is-active circle {
+    fill: var(--color-night);
+    stroke: var(--color-line-strong);
+  }
+  .kk-flow.is-armed .lamp-sym.is-active path {
+    stroke: var(--color-line-strong);
+  }
+  .kk-flow.is-live .pulse {
+    animation: kk-current 4.2s cubic-bezier(0.45, 0, 0.55, 1) 0.2s infinite;
+  }
+  .kk-flow.is-live .lamp-sym.is-active circle {
+    animation: kk-lamp-fill 1s linear 1.9s both;
+  }
+  .kk-flow.is-live .lamp-sym.is-active path {
+    animation: kk-lamp-x 1s linear 1.9s both;
+  }
+  @keyframes kk-current {
+    0% {
+      stroke-dashoffset: 9;
+      opacity: 1;
+    }
+    45% {
+      stroke-dashoffset: -91;
+      opacity: 1;
+    }
+    46%,
+    100% {
+      stroke-dashoffset: -91;
+      opacity: 0;
+    }
+  }
+  @keyframes kk-lamp-fill {
+    0%,
+    12%,
+    30% {
+      fill: var(--color-night);
+      stroke: var(--color-line-strong);
+    }
+    6%,
+    20%,
+    100% {
+      fill: var(--color-sodium);
+      stroke: var(--color-sodium);
+    }
+  }
+  @keyframes kk-lamp-x {
+    0%,
+    12%,
+    30% {
+      stroke: var(--color-line-strong);
+    }
+    6%,
+    20%,
+    100% {
+      stroke: var(--color-sodium-ink);
+    }
+  }
+
+  /* ---- the duties, one cell per output ---- */
+  .kk-duties {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 768px) {
+    .kk-duties {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .kk-duties > li {
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+  .kk-duty-out {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-dim);
+  }
+  .kk-duty-mark {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-line-strong);
+  }
+  .kk-duty-mark.is-active {
+    border-color: var(--color-sodium);
+    background: var(--color-sodium);
+  }
+</style>
+
+<script>
+  // Arm the drawing (lamp off, no current) and start it once it is in view.
+  // Reduced motion: leave it finished.
+  function initFlow() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    document.querySelectorAll<HTMLElement>('[data-diagram="flow"]').forEach((fig) => {
+      if (fig.classList.contains('is-live')) return
+      fig.classList.add('is-armed')
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            fig.classList.add('is-live')
+            io.disconnect()
+          }
+        },
+        { threshold: 0.4 },
+      )
+      io.observe(fig)
+    })
+  }
+  document.addEventListener('astro:page-load', initFlow)
+</script>

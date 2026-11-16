@@ -26,9 +26,9 @@ const inputClass =
 >
   <!-- 1. Hero -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">Manos a la obra</h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+      <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
         Deje sus datos abajo. Le llamamos en un día laborable para repasar sus servicios, tarifas y
         calendario. Nosotros montamos todo; usted no tiene que construir nada.
       </p>
@@ -36,9 +36,9 @@ const inputClass =
   </section>
 
   <!-- 2. Form + next steps -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div
-      class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-[1.15fr_.85fr] md:items-start"
+      class="mx-auto grid max-w-page gap-6 md:gap-8 px-gutter md:grid-cols-[1.15fr_.85fr] md:items-start"
     >
       <!-- method+action are the zero-JS fallback: if the page script can't run, the browser
            posts the form itself and the API answers with a 303 straight into Mollie. -->

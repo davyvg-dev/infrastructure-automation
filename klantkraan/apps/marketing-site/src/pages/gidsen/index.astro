@@ -23,17 +23,17 @@ const nicheLabelPlural = (v: string): string =>
   centered={false}
 >
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">Gidsen voor ondernemers</h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+      <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
         Concrete Nederlandse praktijkadviezen per branche: uurtarieven, seizoenspieken, juridische
         verplichtingen. Geen sales-praatje, alleen werk dat u direct kunt toepassen.
       </p>
     </div>
   </section>
 
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <div class="grid gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           sorted.map((g) => (

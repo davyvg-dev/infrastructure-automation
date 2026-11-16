@@ -1,0 +1,25 @@
+---
+/**
+ * Product window: a raised panel with a title bar (lamp, mono title, optional
+ * right-hand meta). The body is the default slot; `meta` is a named slot for the
+ * bar's right side.
+ */
+interface Props {
+  title: string
+  class?: string
+  bodyClass?: string
+  [key: string]: unknown
+}
+const { title, class: className, bodyClass, ...rest } = Astro.props
+---
+
+<div class:list={['window', className]} {...rest}>
+  <div class="window-bar">
+    <span class="lamp" aria-hidden="true"></span>
+    <span class="min-w-0 truncate">{title}</span>
+    {Astro.slots.has('meta') && <span class="ml-auto shrink-0"><slot name="meta" /></span>}
+  </div>
+  <div class={bodyClass}>
+    <slot />
+  </div>
+</div>

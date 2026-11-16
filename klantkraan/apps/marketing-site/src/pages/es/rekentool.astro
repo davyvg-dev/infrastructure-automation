@@ -11,11 +11,11 @@ import CursusForm from '../../components/CursusForm.astro'
 >
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+    <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">
         ¿Cuánto le cuesta una <span class="text-(--color-sodium)">llamada perdida</span>?
       </h1>
-      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+      <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
         Introduzca sus cifras. La calculadora le muestra al instante cuántos trabajos pierde en un
         año y en cuánto tiempo se amortiza cada plan de Klantkraan.
       </p>
@@ -23,8 +23,8 @@ import CursusForm from '../../components/CursusForm.astro'
   </section>
 
   <!-- 2. Form + results (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto grid max-w-5xl gap-6 md:gap-8 px-6 md:grid-cols-2">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto grid max-w-page gap-6 md:gap-8 px-gutter md:grid-cols-2">
       <form
         id="roi-form"
         class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
@@ -141,9 +141,9 @@ import CursusForm from '../../components/CursusForm.astro'
 
   <!-- 3. How we calculate (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">Método</p>
-      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">Cómo lo calculamos</h2>
+    <div class="mx-auto max-w-page px-gutter">
+      
+      <h2 class="font-display text-h2 text-(--color-chalk)">Cómo lo calculamos</h2>
       <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
         <li>Llamadas perdidas al año = llamadas por semana × 52 × (% perdido / 100).</li>
         <li>
@@ -163,8 +163,8 @@ import CursusForm from '../../components/CursusForm.astro'
   </section>
 
   <!-- 4. Werkspot math (stone-100) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Plataformas de leads</p>
       <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
         ¿Y cuánto cuesta un trabajo a través de Werkspot?

@@ -35,10 +35,10 @@
   }
 
   var ds = (script && script.dataset) || {};
-  // Brand default: Klantkraan sodium-amber bubble with petrol-dark icon. A client
+  // Brand default: Klantkraan sodium-amber bubble with sodium-ink icon. A client
   // can still override both via data-color / data-ink to match their own site.
   var color = ds.color || "#ffb84d";
-  var ink = ds.ink || "#0f1c1e";
+  var ink = ds.ink || "#1a1206";
   var label = ds.label || "Chat";
   var side = ds.position === "left" ? "left" : "right";
   var frameSrc = origin + "/?embed=1";
@@ -63,7 +63,7 @@
       "display:flex;align-items:center;justify-content:center;padding:0;transition:transform .15s ease}",
       ".kk-bubble:hover{transform:scale(1.06)}",
       ".kk-panel{bottom:92px;width:min(400px,calc(100vw - 40px));height:min(640px,calc(100vh - 120px));",
-      "border:0;border-radius:16px;overflow:hidden;background:#0f1c1e;",
+      "border:0;border-radius:12px;overflow:hidden;background:#111315;",
       "box-shadow:0 16px 48px rgba(0,0,0,.28);opacity:0;transform:translateY(12px) scale(.98);",
       "pointer-events:none;transition:opacity .18s ease,transform .18s ease}",
       ".kk-panel.kk-open{opacity:1;transform:none;pointer-events:auto}",

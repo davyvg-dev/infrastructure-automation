@@ -1,14 +1,13 @@
 ---
 /*
- * From signup to live in three numbered steps — the homepage's answer to "how do
- * I actually start?", pointing at /aanmelden now that the site can sell.
+ * From signup to live in three steps, on one rail. Numbering earns its place:
+ * signing up, the build call and going live happen in that order. A hairline
+ * runs through three small numbered marks; the text hangs under each.
  */
-
 interface Step {
   title: string
   text: string
 }
-
 interface Props {
   t: {
     eyebrow?: string
@@ -17,48 +16,92 @@ interface Props {
     note: string
   }
 }
-
 const { t } = Astro.props
 ---
 
-<section id="starten" class="scroll-mt-24 py-10 md:py-16">
-  <div class="mx-auto max-w-5xl px-6">
-    {t.eyebrow && <span class="eyebrow">{t.eyebrow}</span>}
-    <h2 class:list={['max-w-[18em] font-display text-h2 text-balance', t.eyebrow && 'mt-3.5']}>{t.heading}</h2>
+<section id="starten" data-section="start" aria-labelledby="starten-h" class="scroll-mt-24">
+  <div class="mx-auto max-w-page px-gutter py-section">
+    <header class="max-w-[46rem]">
+      {t.eyebrow && <p class="eyebrow">{t.eyebrow}</p>}
+      <h2 id="starten-h" class:list={['text-h2 text-balance text-(--color-chalk)', t.eyebrow && 'mt-3']}>
+        {t.heading}
+      </h2>
+    </header>
 
-    <ol class="kk-steps mt-10 grid gap-8 md:grid-cols-3 md:gap-10" role="list">
+    <ol class="kk-rail" role="list">
       {
         t.steps.map((step, i) => (
           <li>
-            <span class="kk-step-n" aria-hidden="true">
+            <span class="kk-mark" aria-hidden="true">
               {i + 1}
             </span>
-            <h3 class="mt-3 font-display text-h3 text-(--color-chalk)">{step.title}</h3>
-            <p class="mt-2 text-body text-(--color-dim)">{step.text}</p>
+            <h3 class="text-h3 text-(--color-chalk)">{step.title}</h3>
+            <p class="mt-2 text-small text-(--color-dim)">{step.text}</p>
           </li>
         ))
       }
     </ol>
-    <p class="mt-6 text-small text-(--color-dim)">{t.note}</p>
+    <p class="mt-10 max-w-[46rem] font-mono text-[0.75rem] leading-relaxed text-(--color-dim)">{t.note}</p>
   </div>
 </section>
 
 <style>
-  /* Numbering earns its place here: signing up, the build call and going live
-   * genuinely happen in that order. No cards and no badge circles (the stock
-   * three-card pattern); a hairline and a big quiet numeral carry the sequence. */
-  .kk-steps li {
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--color-line);
+  .kk-rail {
+    display: grid;
+    gap: 2.25rem;
+    margin: 3rem 0 0;
+    padding: 0 0 0 2.75rem;
+    list-style: none;
   }
-  .kk-step-n {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 3rem;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.04em;
+  .kk-rail li {
+    position: relative;
+  }
+  /* The rail: one hairline from each mark to the next, so it starts at 1 and
+   * ends at 3. Vertical on phones, horizontal from tablet up. */
+  .kk-rail li:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: -1.875rem;
+    top: 1.65rem;
+    bottom: -2.15rem;
+    border-left: 1px solid var(--color-line-strong);
+  }
+  .kk-mark {
+    position: absolute;
+    left: -2.75rem;
+    top: -0.1rem;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 4px;
+    background: var(--color-night);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-chalk-2);
+  }
+  .kk-rail li:last-child .kk-mark {
+    border-color: var(--color-sodium);
     color: var(--color-sodium);
-    opacity: 0.55;
+  }
+  @media (min-width: 768px) {
+    .kk-rail {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 3rem;
+      padding: 3.25rem 0 0;
+    }
+    .kk-rail li:not(:last-child)::before {
+      left: 1.75rem;
+      right: -3rem;
+      top: -2.375rem;
+      bottom: auto;
+      border-left: 0;
+      border-top: 1px solid var(--color-line-strong);
+    }
+    .kk-mark {
+      left: 0;
+      top: -3.25rem;
+    }
   }
 </style>

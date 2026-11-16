@@ -1,0 +1,257 @@
+---
+/*
+ * The missed-revenue sum as a measured drawing: each count is a bar on one
+ * shared scale with tick marks (calls, missed, would-have-been jobs), then the
+ * value per job, then the total on its own row (a fifth column ran the total
+ * over "€450" in Safari). Numbers come in as the page's strings and must match
+ * /rekentool's model; a line whose value is a plain count gets a bar, anything
+ * else (the money line) is shown as a multiplier.
+ * Bars grow in as they scroll into view where scroll-driven animation is
+ * supported and motion is allowed; otherwise they are simply full.
+ */
+interface Line {
+  k: string
+  v: string
+}
+interface Props {
+  ariaLabel: string
+  cap: string
+  lines: Line[]
+  resultK: string
+  resultV: string
+}
+const { ariaLabel, cap, lines, resultK, resultV } = Astro.props
+
+const counts = lines.filter((l) => /^\d+$/.test(l.v.trim()))
+const others = lines.filter((l) => !/^\d+$/.test(l.v.trim()))
+const max = Math.max(...counts.map((l) => Number(l.v)))
+const step = 50
+const top = Math.ceil(max / step) * step
+const ticks = Array.from({ length: top / step + 1 }, (_, i) => i * step)
+const pct = (n: number) => `${((n / top) * 100).toFixed(2)}%`
+---
+
+<figure class="kk-ledger" data-diagram="ledger" aria-label={ariaLabel}>
+  <figcaption class="kk-ledger-cap">{cap}</figcaption>
+
+  <div class="kk-ledger-grid">
+    <div class="kk-scale" aria-hidden="true">
+      {
+        ticks.map((n) => (
+          <span style={`left:${pct(n)}`}>{n}</span>
+        ))
+      }
+    </div>
+
+    <dl class="kk-rows">
+      {
+        counts.map((l, i) => (
+          <div class="kk-row">
+            <dt>{l.k}</dt>
+            <dd class="kk-track">
+              <span class="kk-ticks" aria-hidden="true">
+                {ticks.map((n) => (
+                  <i style={`left:${pct(n)}`} />
+                ))}
+              </span>
+              <span class={`kk-bar kk-bar-${i}`} data-reveal style={`width:${pct(Number(l.v))}`} />
+              <span class="kk-val">{l.v}</span>
+            </dd>
+          </div>
+        ))
+      }
+      {
+        others.map((l) => (
+          <div class="kk-row kk-row-mult">
+            <dt>{l.k}</dt>
+            <dd class="kk-mult">{l.v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <dl class="kk-total">
+    <dt>{resultK}</dt>
+    <dd>{resultV}</dd>
+  </dl>
+</figure>
+
+<style>
+  .kk-ledger {
+    margin: 0;
+    border: 1px solid var(--color-line);
+    background: var(--color-night);
+  }
+  .kk-ledger-cap {
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-dim);
+  }
+  .kk-ledger-grid {
+    --label: 0rem;
+    --val: 0rem;
+    padding: 1.5rem 1.25rem 0.5rem;
+  }
+  @media (min-width: 768px) {
+    .kk-ledger-grid {
+      --label: 17rem;
+      padding: 1.75rem 1.75rem 0.75rem;
+    }
+  }
+
+  /* tick labels sit over the track column only */
+  .kk-scale {
+    position: relative;
+    height: 1.25rem;
+    margin-left: var(--label);
+    margin-right: 3.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-dim);
+  }
+  .kk-scale span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+  }
+  .kk-scale span:first-child {
+    transform: none;
+  }
+
+  .kk-rows {
+    margin: 0;
+  }
+  .kk-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.375rem;
+    padding: 0.875rem 0;
+  }
+  @media (min-width: 768px) {
+    .kk-row {
+      grid-template-columns: var(--label) minmax(0, 1fr);
+      align-items: center;
+      gap: 0;
+    }
+  }
+  .kk-row dt {
+    font-size: 0.9375rem;
+    color: var(--color-chalk-2);
+  }
+
+  .kk-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 1.75rem;
+    margin: 0;
+    padding-right: 3.5rem;
+  }
+  .kk-ticks {
+    position: absolute;
+    inset: 0 3.5rem 0 0;
+  }
+  .kk-ticks i {
+    position: absolute;
+    top: -0.875rem;
+    bottom: -0.875rem;
+    width: 0;
+    border-left: 1px dashed color-mix(in oklab, var(--color-line) 80%, transparent);
+  }
+  .kk-bar {
+    position: relative;
+    display: block;
+    height: 0.875rem;
+    min-width: 2px;
+    transform-origin: left center;
+  }
+  .kk-bar-0 {
+    background: color-mix(in oklab, var(--color-chalk) 26%, var(--color-night));
+  }
+  /* Missed: hatched, the calls nobody picked up. */
+  .kk-bar-1 {
+    box-sizing: border-box;
+    border: 1px solid color-mix(in oklab, var(--color-sodium) 70%, var(--color-night));
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in oklab, var(--color-sodium) 55%, var(--color-night)) 0 1.5px,
+      transparent 1.5px 5px
+    );
+  }
+  .kk-bar-2 {
+    background: var(--color-sodium);
+  }
+  .kk-val {
+    position: absolute;
+    right: 0;
+    width: 3rem;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-chalk);
+  }
+
+  .kk-row-mult {
+    border-top: 1px dashed var(--color-line);
+    margin-top: 0.5rem;
+  }
+  .kk-mult {
+    margin: 0;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-chalk);
+  }
+
+  .kk-total {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+    padding: 1.25rem;
+    border-top: 1px solid var(--color-line);
+    background: var(--color-panel);
+  }
+  @media (min-width: 768px) {
+    .kk-total {
+      padding: 1.5rem 1.75rem;
+    }
+  }
+  .kk-total dt {
+    font-size: 0.9375rem;
+    color: var(--color-chalk-2);
+  }
+  .kk-total dd {
+    margin: 0;
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-sodium);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .kk-bar[data-reveal] {
+        animation: kk-grow linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 40%;
+      }
+    }
+  }
+  @keyframes kk-grow {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+</style>

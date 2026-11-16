@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import FlowDiagram from '../components/diagrams/FlowDiagram.astro'
 import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
 import Dumbbell from '../components/illustrations/Dumbbell.astro'
@@ -118,13 +119,13 @@ const faqSchema = {
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
     <div
-      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+      class="mx-auto grid max-w-page gap-10 px-gutter md:grid-cols-[1fr_auto] md:items-center md:gap-16"
     >
       <div>
         <h1 class="font-display text-hero text-chalk">
           De <span class="text-(--color-sodium)">Klantenmotor</span> voor sportscholen.
         </h1>
-        <p class="mt-6 max-w-2xl text-h3 text-dim">
+        <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
           Staat u les te geven? Dan beantwoordt onze digitale receptionist de vraag over
           abonnementen of de proefles, op uw website en via WhatsApp, met uw rooster en tarieven
           paraat. 's Avonds, weekend, feestdagen. De proefles staat direct in uw agenda.
@@ -134,33 +135,15 @@ const faqSchema = {
           <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
         </div>
       </div>
-      <div class="hidden text-(--color-sodium) md:block">
+      <div class="hidden text-(--color-dim) md:block">
         <Dumbbell class="h-64 w-64 lg:h-72 lg:w-72" />
       </div>
     </div>
-    <div class="mx-auto max-w-5xl px-6">
-      <ul role="list" class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-6">
-        <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
-          <div>
-            <p class="text-small font-medium text-chalk">AVG + AI Act art. 50</p>
-            <p class="text-small text-dim">Disclosure standaard aan</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
-          <div>
-            <p class="text-small font-medium text-chalk">Gehost in de EU</p>
-            <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3">
-          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
-          <div>
-            <p class="text-small font-medium text-chalk">Vlot Nederlands</p>
-            <p class="text-small text-dim">Kent uw rooster + abonnementen</p>
-          </div>
-        </li>
+    <div class="mx-auto max-w-page px-gutter">
+      <ul role="list" class="fact-row mt-10">
+        <li><span class="text-(--color-chalk)">AVG + AI Act art. 50</span> <span>Disclosure standaard aan</span></li>
+        <li><span class="text-(--color-chalk)">Gehost in de EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
+        <li><span class="text-(--color-chalk)">Vlot Nederlands</span> <span>Kent uw rooster + abonnementen</span></li>
       </ul>
       <p class="mt-8 text-small text-dim">
         Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
@@ -182,46 +165,35 @@ const faqSchema = {
 
   <!-- 2. Pijn-stats trio (stone-100) -->
   <section
-    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    class="border-y border-(--color-line) py-8 md:py-10"
     aria-label="Wat een gemiste lead kost"
   >
-    <div class="mx-auto grid max-w-5xl gap-4 md:gap-6 px-6 sm:grid-cols-3">
+    <div class="mx-auto max-w-page px-gutter">
+      <div class="stat-row">
       {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
-    </div>
-  </section>
-
-  <!-- 3. Wat Klantkraan doet voor sportscholen (cream) -->
-  <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">Modules</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">Wat Klantkraan doet voor sportscholen.</h2>
-      <p class="mt-4 max-w-2xl text-body text-dim">
-        Drie modules. Eén maandprijs. Gebouwd voor de eigenaar die vaker op de vloer staat dan
-        achter de balie.
-      </p>
-      <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
-        {
-          features.map((feature) => (
-            <article class="grid grid-cols-[auto_1fr] items-start gap-5 md:gap-6 py-6 md:py-8">
-              <Icon name={feature.icon} class="mt-1 h-7 w-7 text-(--color-sodium)" />
-              <div>
-                <h3 class="font-display text-h3 text-chalk">{feature.title}</h3>
-                <p class="mt-2 text-body text-dim">{feature.body}</p>
-              </div>
-            </article>
-          ))
-        }
       </div>
     </div>
   </section>
 
+  <!-- 3. Wat Klantkraan doet, als schema: de drie modules zijn de drie uitgangen -->
+  <FlowDiagram
+    id="modules"
+    nodeSub='voor sportscholen'
+    t={{
+      label: 'Modules',
+      heading: 'Wat Klantkraan doet voor sportscholen.',
+      sub: 'Drie modules. Eén maandprijs. Gebouwd voor de eigenaar die vaker op de vloer staat dan achter de balie.',
+      steps: features.map((f) => ({ title: f.title, text: f.body })),
+    }}
+  />
+
   <!-- 4. ROI snippet (cream; inner white card) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">Rekensom</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">Reken het even na.</h2>
+    <div class="mx-auto max-w-page px-gutter">
+      
+      <h2 class="font-display text-h1 text-chalk">Reken het even na.</h2>
       <div
-        class="mt-8 rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-6 md:p-10"
+        class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
           Blijven er 4 proefles-aanvragen per maand onbeantwoord, à €480 jaarwaarde? Dat is
@@ -246,9 +218,9 @@ const faqSchema = {
 
   <!-- 5. FAQ (cream) -->
   <section class="py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
-      <p class="eyebrow">Vragen</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
+    <div class="mx-auto max-w-page px-gutter">
+      
+      <h2 class="font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -258,7 +230,7 @@ const faqSchema = {
                   <span>{faq.q}</span>
                   <Icon
                     name="chevron-down"
-                    class="mt-1 h-5 w-5 shrink-0 text-(--color-sodium) transition-transform group-open:rotate-180"
+                    class="mt-1 h-5 w-5 shrink-0 text-(--color-dim) transition-transform group-open:rotate-180"
                   />
                 </span>
               </summary>
@@ -278,8 +250,8 @@ const faqSchema = {
   </section>
 
   <!-- 6. Eind-CTA band (blue) -->
-  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
-    <div class="mx-auto max-w-5xl px-6">
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
+    <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-chalk">Klaar om geen proefles meer te missen?</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
         Probeer de live demo van een sportschool-receptionist. In één gesprek ziet u hoe een vraag
