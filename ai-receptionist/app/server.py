@@ -124,6 +124,22 @@ def widget_js() -> FileResponse:
     )
 
 
+# Inter for the chat UI, self-hosted so a client's page never pulls a third-party font.
+# A fixed allowlist, not a static mount: nothing else under web/ becomes reachable.
+_FONTS = frozenset({"inter-latin-opsz.woff2", "inter-latinext-opsz.woff2"})
+
+
+@app.get("/fonts/{name}")
+def font(name: str) -> FileResponse:
+    if name not in _FONTS:
+        raise HTTPException(status_code=404)
+    return FileResponse(
+        _WEB / "fonts" / name,
+        media_type="font/woff2",
+        headers={"Cache-Control": "public, max-age=2592000"},
+    )
+
+
 @app.get("/health")
 def health(request: Request) -> dict[str, str]:
     # Liveness probe for Caddy/Uptime Kuma; also confirms the (routed) config loads.
