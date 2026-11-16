@@ -189,9 +189,20 @@ for (const width of [1440, 390]) {
       typingGone: !vis(document.getElementById('kk-typing')),
       revealTotal: reveal.length,
       revealHidden: reveal.filter((el) => !vis(el)).length,
-      lampOn: [...document.querySelectorAll('[data-diagram="flow"] [data-lamp]')].every(
-        (el) => el.getAttribute('data-lamp') === 'on' || getComputedStyle(el).getPropertyValue('--lit').trim() === '1',
-      ),
+      // The lamp is on when its circle is actually filled with the accent, not
+      // because the markup says so.
+      lampOn: (() => {
+        const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-sodium').trim()
+        const probe = document.createElement('i')
+        probe.style.color = accent
+        document.body.append(probe)
+        const want = getComputedStyle(probe).color
+        probe.remove()
+        const lamps = [...document.querySelectorAll('[data-diagram="flow"] [data-lamp] circle')].filter(
+          (c) => c.getBoundingClientRect().width > 0,
+        )
+        return lamps.length > 0 && lamps.every((c) => getComputedStyle(c).fill === want)
+      })(),
       running: document
         .getAnimations()
         .filter((a) => a.playState === 'running' && a.effect?.getComputedTiming().iterations === Infinity).length,

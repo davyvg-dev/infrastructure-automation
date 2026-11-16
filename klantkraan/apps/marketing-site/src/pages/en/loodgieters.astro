@@ -108,7 +108,7 @@ const faqSchema = {
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
     <div
-      class="mx-auto grid max-w-5xl gap-10 px-6 md:grid-cols-[1fr_auto] md:items-center md:gap-16"
+      class="mx-auto grid max-w-page gap-10 px-gutter md:grid-cols-[1fr_auto] md:items-center md:gap-16"
     >
       <div>
         <h1 class="font-display text-hero text-chalk">
@@ -130,28 +130,10 @@ const faqSchema = {
       </div>
     </div>
     <div class="mx-auto max-w-page px-gutter">
-      <ul role="list" class="grid-rule mt-12 sm:grid-cols-3">
-        <li class="flex items-start gap-3 p-5">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
-          <div>
-            <p class="text-small font-medium text-chalk">GDPR + AI Act art. 50</p>
-            <p class="text-small text-dim">Disclosure on by default</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3 p-5">
-          <Icon name="shield-check" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
-          <div>
-            <p class="text-small font-medium text-chalk">Hosted in the EU</p>
-            <p class="text-small text-dim">Cloudflare · Neon · Hetzner</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3 p-5">
-          <Icon name="phone-call" class="mt-0.5 h-5 w-5 shrink-0 text-(--color-dim)" />
-          <div>
-            <p class="text-small font-medium text-chalk">Natural conversation</p>
-            <p class="text-small text-dim">Knows call-out + emergency rates</p>
-          </div>
-        </li>
+      <ul role="list" class="fact-row mt-10">
+        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure on by default</span></li>
+        <li><span class="text-(--color-chalk)">Hosted in the EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
+        <li><span class="text-(--color-chalk)">Natural conversation</span> <span>Knows call-out + emergency rates</span></li>
       </ul>
       <p class="mt-8 text-small text-dim">
         Cancel monthly · Done-for-you setup · 50% off the first month
@@ -210,8 +192,8 @@ const faqSchema = {
   <!-- 5. ROI snippet (cream; inner white card) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
-      <p class="eyebrow">The maths</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">Do the maths.</h2>
+      
+      <h2 class="font-display text-h1 text-chalk">Do the maths.</h2>
       <div
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
@@ -240,8 +222,8 @@ const faqSchema = {
   <!-- 6. FAQ (cream) -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
-      <p class="eyebrow">Questions</p>
-      <h2 class="mt-3 font-display text-h1 text-chalk">Frequently asked questions.</h2>
+      
+      <h2 class="font-display text-h1 text-chalk">Frequently asked questions.</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (

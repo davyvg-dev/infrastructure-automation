@@ -135,6 +135,38 @@
     border-bottom: 1px solid var(--color-line);
   }
 
+  /* A line of plain facts, divided by hairlines: what an icon strip says,
+   * without the icons. Stacks on phones. */
+  .fact-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-dim);
+  }
+  .fact-row > li {
+    padding: 0 1rem;
+    border-left: 1px solid var(--color-line-strong);
+  }
+  .fact-row > li:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  @media (max-width: 639px) {
+    .fact-row {
+      flex-direction: column;
+    }
+    .fact-row > li {
+      padding: 0;
+      border-left: 0;
+    }
+  }
+
   /* Product window: one raised surface with a title bar. */
   .window {
     border: 1px solid var(--color-line);
