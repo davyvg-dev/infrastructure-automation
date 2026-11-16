@@ -51,6 +51,8 @@ function initRekentool() {
 
   const outMissed = document.getElementById('out-missed-year')
   const outLost = document.getElementById('out-lost-revenue')
+  const outMonth = document.getElementById('out-lost-month') // NL page only
+  const mailKlus = document.getElementById('rm-klus') // NL "Stuur mij deze berekening" form
   const outPaybackChat = document.getElementById('out-payback-chat')
   const outPaybackCompleet = document.getElementById('out-payback-compleet')
 
@@ -64,6 +66,13 @@ function initRekentool() {
 
     if (outMissed) outMissed.textContent = numFmt.format(missedPerYear)
     if (outLost) outLost.textContent = eurFmt.format(lostRevenue)
+    const lostMonth = Math.round(lostRevenue / 12)
+    if (outMonth) outMonth.textContent = eurFmt.format(lostMonth)
+    if (mailKlus) {
+      mailKlus.value =
+        `Rekentool: ${calls} oproepen per week, ${missedPct}% gemist, ${eurFmt.format(value)} per klus. ` +
+        `${numFmt.format(missedPerYear)} gemist per jaar, ${eurFmt.format(lostRevenue)} per jaar, ${eurFmt.format(lostMonth)} per maand.`
+    }
     if (outPaybackChat) outPaybackChat.textContent = formatPayback(TIERS.chat, lostRevenue)
     if (outPaybackCompleet)
       outPaybackCompleet.textContent = formatPayback(TIERS.compleet, lostRevenue)

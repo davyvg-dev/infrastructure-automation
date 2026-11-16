@@ -7,6 +7,8 @@
 //
 // astro:page-load aware so ClientRouter SPA transitions re-bind the form.
 
+import { tagSource } from '/js/bron.js'
+
 function initScanForm() {
   const form = document.getElementById('scan-form')
   if (!form || form.dataset.kkInit) return
@@ -18,6 +20,9 @@ function initScanForm() {
 
   function showDone() {
     form.hidden = true
+    // After the magnet: the matching mini offer under "Bijna klaar".
+    const offer = document.getElementById('scan-offer')
+    if (offer) offer.hidden = false
     if (!doneEl) return
     doneEl.hidden = false
     doneEl.focus({ preventScroll: true })
@@ -34,7 +39,7 @@ function initScanForm() {
     if (errorEl) errorEl.hidden = true
     if (submitBtn) submitBtn.disabled = true
 
-    void fetch(`${form.action}?isAjax=1`, { method: 'POST', body: new FormData(form) })
+    void fetch(`${form.action}?isAjax=1`, { method: 'POST', body: tagSource(new FormData(form), 'scan') })
       .then((res) => res.json())
       .then((body) => (body && body.success ? showDone() : showError()))
       .catch(showError)

@@ -5,11 +5,13 @@
  * Until then Brevo shows its own English "Thank you for subscribing" page.
  */
 import ScanShell from '../../components/scan/ScanShell.astro'
+import MiniOfferCard from '../../components/MiniOfferCard.astro'
+import { KLEIN_BEGINNEN } from '../../data/magnets'
 ---
 
 <ScanShell
   title="Je aanvraag is bevestigd | Klantkraan"
-  description="Je aanvraag voor de gratis scan is bevestigd. Je krijgt je scan binnen 1 werkdag in je mail."
+  description="Je aanvraag is bevestigd. Ons antwoord komt in je mail."
   noindex
 >
   <section class="scan-card scan-done">
@@ -23,13 +25,35 @@ import ScanShell from '../../components/scan/ScanShell.astro'
           stroke-linejoin="round"></path>
       </svg>
     </span>
-    <h1>Gelukt, ik ga aan de slag</h1>
+    <h1>Gelukt, we gaan aan de slag</h1>
     <p>
-      Je aanvraag is bevestigd. Ik lees je antwoorden zelf en je hebt je scan binnen 1 werkdag in je
-      mail.
+      Je aanvraag is bevestigd. We lezen hem zelf en ons antwoord komt in deze mailbox, van
+      Klantkraan.
     </p>
     <p class="scan-done-hint">
-      Wil je nog iets toevoegen? Antwoord gewoon op de mail die je net van me kreeg.
+      Wil je nog iets toevoegen? Antwoord gewoon op de mail die je net van ons kreeg.
     </p>
   </section>
+
+  {/* After the magnet. Every Brevo form lands here (one redirect setting), so this is the
+      scan's own offer; the other magnets already showed theirs in-page. */}
+  <div class="scan-after">
+    <MiniOfferCard area="automations" kicker="Liever meteen geregeld?" />
+    <p class="scan-sign">
+      Iets anders? <a href={KLEIN_BEGINNEN}>Alle vaste prijzen</a>
+    </p>
+  </div>
 </ScanShell>
+
+<style is:global>
+  .scan-after {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .scan-after .scan-sign a {
+    color: var(--d-ink);
+    font-weight: 600;
+  }
+</style>

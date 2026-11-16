@@ -4,6 +4,8 @@ import { ClientRouter } from 'astro:transitions'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import StickyMobileCta from '../components/StickyMobileCta.astro'
+import OfferCta from '../components/OfferCta.astro'
+import type { Area } from '../data/magnets'
 import { company } from '../data/company'
 import { contact } from '../data/contact'
 import { pairForPath } from '../data/i18n'
@@ -36,6 +38,12 @@ interface Props {
   bare?: boolean
   /** Browser chrome colour; light pages pass their own background. */
   themeColor?: string
+  /**
+   * Which lead magnet the call to action block above the footer offers (Dutch
+   * pages only; copy in src/data/magnets.ts). false = no block (signup, thanks,
+   * legal and private pages).
+   */
+  offerArea?: Area | false
 }
 
 const {
@@ -48,7 +56,13 @@ const {
   stickyCta = true,
   bare = false,
   themeColor = '#0f1c1e',
+  offerArea = 'receptionist',
 } = Astro.props
+// The call to action block stays off where it would interrupt or make no sense:
+// signup, thanks, legal text, private (noindex) pages such as client dashboards and
+// prospect demos, and every /en/ or /es/ path (some of those forget to pass lang).
+const NO_OFFER = /^\/(en|es|aanmelden|bedankt|legal|r)\//
+const showOffer = lang === 'nl' && offerArea && !noindex && !NO_OFFER.test(Astro.url.pathname)
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString()
 const ogImage = new URL('/og-default.png', Astro.site).toString()
 const ogLocale = lang === 'en' ? 'en_GB' : lang === 'es' ? 'es_ES' : 'nl_NL'
@@ -164,6 +178,8 @@ const siteSchema = {
     <script>
       import '../scripts/smooth-scroll'
     </script>
+    {/* Keeps ?bron= for the visit, so a sign-up after clicking through still carries its source. */}
+    <script src="/js/bron-keep.js" type="module" is:inline></script>
   </head>
   <body class={stickyCta && !bare ? 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0' : ''}>
     <a
@@ -187,6 +203,7 @@ const siteSchema = {
               <slot />
             </main>
           )}
+          {showOffer && offerArea && <OfferCta area={offerArea} />}
           <Footer lang={lang} />
           {stickyCta && <StickyMobileCta lang={lang} />}
         </>

@@ -1,12 +1,15 @@
 ---
 import Base from '../layouts/Base.astro'
-import CursusForm from '../components/CursusForm.astro'
+import MiniOfferLine from '../components/MiniOfferLine.astro'
+import MiniOfferCard from '../components/MiniOfferCard.astro'
+import { BREVO_ACTION } from '../data/brevo'
 ---
 
 <Base
   title="ROI-rekentool: bereken uw gemiste omzet | Klantkraan"
   description="Bereken in 10 seconden hoeveel omzet u laat liggen aan gemiste oproepen, en zie meteen hoe snel een AI-receptionist van Klantkraan zichzelf terugverdient."
   centered={false}
+  offerArea="automations"
 >
   <!-- 1. Hero (cream) -->
   <section class="py-10 md:py-16">
@@ -18,6 +21,7 @@ import CursusForm from '../components/CursusForm.astro'
         Vul uw cijfers in. De rekentool laat direct zien hoeveel klussen u jaarlijks misloopt en hoe
         snel elk Klantkraan-abonnement zichzelf terugverdient.
       </p>
+      <MiniOfferLine area="receptionist" where="before" class="mt-4 max-w-2xl" />
     </div>
   </section>
 
@@ -114,7 +118,22 @@ import CursusForm from '../components/CursusForm.astro'
               Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
             </p>
           </div>
+          <div>
+            <p class="text-small text-(--color-dim)">Verloren omzet per maand</p>
+            <p
+              id="out-lost-month"
+              class="font-display text-h2 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
+            >
+              €0
+            </p>
+          </div>
         </div>
+        <MiniOfferLine
+          area="receptionist"
+          where="within"
+          hook="Op vakantie loopt dit bedrag gewoon door."
+          class="mt-4"
+        />
 
         <hr class="my-6 border-(--color-line)" />
 
@@ -199,10 +218,75 @@ import CursusForm from '../components/CursusForm.astro'
     </div>
   </section>
 
-  <!-- 5. E-mailcursus opt-in (cream). The calculator above stays e-mail-free: the form is
-       a separate, optional offer. Markup + fallback contract live in CursusForm.astro. -->
-  <CursusForm />
+  <!-- 5. After the magnet: the calculation by mail (Brevo, source "rekentool"), then the
+       matching mini offer. The calculator above stays e-mail-free. -->
+  <section class="py-10 md:py-16" aria-label="Uw berekening per mail">
+    <div class="mx-auto grid max-w-5xl gap-6 px-6 md:grid-cols-2 md:gap-8">
+      <form
+        id="rekentool-mail"
+        data-magnet-form="rekentool"
+        method="POST"
+        action={BREVO_ACTION}
+        data-astro-reload
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Stuur mij deze berekening</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          U krijgt een mail om uw adres te bevestigen. Binnen 1 werkdag sturen we uw berekening, met
+          per maand wat er nu blijft liggen.
+        </p>
+        <label for="rm-email" class="mt-5 block text-body font-medium text-(--color-chalk)">
+          Uw e-mailadres
+        </label>
+        <input
+          id="rm-email"
+          name="EMAIL"
+          type="email"
+          required
+          autocomplete="email"
+          inputmode="email"
+          placeholder="naam@uwbedrijf.nl"
+          class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+        />
+        <p class="mt-2 text-small text-(--color-dim)">
+          Daarna sturen we u af en toe een tip of aanbod. Afmelden kan in elke mail.
+        </p>
+        <input type="hidden" id="rm-klus" name="SCAN_KLUS" value="" />
+        <input type="hidden" name="SCAN_PROGRAMMAS" value="rekentool" />
+        <input type="hidden" name="SCAN_BEDRIJF" value="rekentool" />
+        {/* Brevo's own two hidden inputs: its bot trap (must stay empty) and the form locale. */}
+        <input
+          type="text"
+          name="email_address_check"
+          value=""
+          class="sr-only"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
+        <input type="hidden" name="locale" value="en" />
+        <p data-form-error class="mt-3 text-small text-(--color-chalk)" role="alert" hidden>
+          Dat ging niet goed. Probeer het nog een keer.
+        </p>
+        <button type="submit" class="mt-5 btn btn-primary btn-lg w-full">Stuur mij de berekening</button>
+      </form>
+      <div
+        id="rekentool-mail-done"
+        tabindex="-1"
+        hidden
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Bijna klaar</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          Kijk in uw mail en klik op de knop om uw adres te bevestigen. Binnen 1 werkdag heeft u uw
+          berekening. Geen mail gezien? Kijk bij ongewenste mail en zoek op Klantkraan.
+        </p>
+      </div>
+      <MiniOfferCard area="receptionist" kicker="Liever meteen geregeld?" />
+    </div>
+  </section>
 
   <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
   <script src="/js/rekentool.js" type="module" is:inline></script>
+  <script src="/js/magnet-form.js" type="module" is:inline></script>
 </Base>

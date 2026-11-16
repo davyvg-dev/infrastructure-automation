@@ -1,0 +1,57 @@
+---
+/**
+ * /gratis/: the four lead magnets in one list (header item "Gratis"), plus the
+ * e-mail course, which lives here now that the call to action block above the
+ * footer replaced it on the other pages. Copy comes from src/data/magnets.ts.
+ */
+import Base from '../layouts/Base.astro'
+import CursusForm from '../components/CursusForm.astro'
+import { AREAS, KLEIN_BEGINNEN, magnets } from '../data/magnets'
+---
+
+<Base
+  title="Gratis: vier dingen die u vandaag weet | Klantkraan"
+  description="Zie in 1 minuut wat een klant op uw website mist, weet binnen 1 werkdag waar uw bedrijf tijd verliest, reken uit wat gemiste aanvragen kosten en krijg 3 gratis openingen voor uw advertentievideo."
+  centered={false}
+  offerArea={false}
+>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Gratis</p>
+      <h1 class="mt-3 font-display text-hero text-(--color-chalk)">Vier dingen die u vandaag weet</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Geen gesprek en geen kosten. Kies wat nu speelt.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-label="Gratis">
+    <div class="mx-auto max-w-5xl px-6">
+      <ul role="list" class="grid gap-6 md:grid-cols-2">
+        {
+          AREAS.map((area) => {
+            const m = magnets[area]
+            return (
+              <li
+                data-magnet={area}
+                class="flex flex-col rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+              >
+                <h2 class="font-display text-h3 text-(--color-chalk) [overflow-wrap:anywhere]">{m.name}</h2>
+                <p class="mt-3 text-body text-(--color-dim)">{m.next}</p>
+                <p class="mt-1 text-small text-(--color-dim)">{m.reason}</p>
+                <a href={m.href} class="mt-5 btn btn-primary self-stretch sm:self-start">
+                  {m.button}
+                </a>
+              </li>
+            )
+          })
+        }
+      </ul>
+      <p class="mt-8 text-body text-(--color-dim)">
+        Liever meteen iets laten regelen? <a href={KLEIN_BEGINNEN} class="underline">Bekijk de vaste prijzen</a>.
+      </p>
+    </div>
+  </section>
+
+  <CursusForm />
+</Base>

@@ -236,7 +236,7 @@ export function analyse(
         status: 'onbekend',
         titel: 'WordPress, versie niet zichtbaar',
         uitleg:
-          'Je site draait op WordPress. Het versienummer staat niet openbaar, dus van buitenaf zie ik niet of hij bij is.',
+          'Je site draait op WordPress. Het versienummer staat niet openbaar, dus van buitenaf zien we niet of hij bij is.',
         zelf: `Log in en kijk onder Dashboard, Updates. De nieuwste versie is ${latest.newest}.`,
       })
     } else if (!older(v, latest.newest)) {
@@ -244,7 +244,7 @@ export function analyse(
         id: 'wordpress',
         status: 'goed',
         titel: `WordPress ${v} is bij`,
-        uitleg: 'Plugins en thema zie ik van buitenaf niet; die staan in je dashboard onder Updates.',
+        uitleg: 'Plugins en thema zien we van buitenaf niet; die staan in je dashboard onder Updates.',
       })
     } else {
       const br = branchOf(v)
@@ -306,7 +306,7 @@ export function analyse(
       status: 'let-op',
       titel: 'Geen telefoonnummer gevonden',
       uitleg:
-        'Op je homepage vond ik geen telefoonnummer in de tekst. Staat het in een afbeelding, dan kan niemand erop tikken en leest Google het niet.',
+        'Op je homepage vonden we geen telefoonnummer in de tekst. Staat het in een afbeelding, dan kan niemand erop tikken en leest Google het niet.',
       zelf: 'Open je homepage op een telefoon. Zie je je nummer zonder te zoeken?',
     })
   }
@@ -458,7 +458,7 @@ export function analyse(
       id: 'foto',
       status: 'goed',
       titel: "Foto's zijn licht genoeg",
-      uitleg: `De zwaarste foto die ik op je homepage vond is ${kb(big.bytes)}.`,
+      uitleg: `De zwaarste foto die we op je homepage vonden is ${kb(big.bytes)}.`,
     })
   }
 

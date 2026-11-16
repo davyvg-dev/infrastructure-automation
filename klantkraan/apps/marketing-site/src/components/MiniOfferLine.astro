@@ -1,0 +1,39 @@
+---
+/**
+ * One line that names the matching mini offer, used before a magnet and inside
+ * its result: "<hook> <name>, <price> →". Links to /klein-beginnen/#slug.
+ */
+import { miniOffers, offerHref, type Area } from '../data/magnets'
+
+interface Props {
+  area: Area
+  where: 'before' | 'within'
+  /** Overrides the offer's own hook. */
+  hook?: string
+  class?: string
+}
+const { area, where, hook, class: className } = Astro.props
+const o = miniOffers[area]
+// A monthly part belongs in the line ("€ 195 + € 19 per maand"); "excl. btw" does not.
+const monthly = o.priceNote.startsWith('+') ? ` ${o.priceNote.replace(/, excl\. btw$/, '')}` : ''
+---
+
+<p data-cta-line={where} class:list={['mini-line', className]}>
+  {hook ?? o.hook}
+  <a href={offerHref(o)}>{o.name}, {o.price}{monthly}&nbsp;→</a>
+</p>
+
+<style>
+  .mini-line {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--d-dim, var(--color-dim));
+    overflow-wrap: anywhere;
+  }
+  .mini-line a {
+    font-weight: 600;
+    color: var(--d-ink, var(--color-sodium));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

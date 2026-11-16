@@ -14,19 +14,21 @@
  * form-action; a new Brevo form means a new action URL here.
  */
 import ScanShell from '../../components/scan/ScanShell.astro'
+import MiniOfferLine from '../../components/MiniOfferLine.astro'
+import MiniOfferCard from '../../components/MiniOfferCard.astro'
+import { contact } from '../../data/contact'
 
-const BREVO_ACTION =
-  'https://27efbcf4.sibforms.com/serve/MUIFAHNw_Un10JbKvyldJfQiph0ogKUHmFDSWq1XwZNPtf6iuLAQmowIgmnBXITDxHYUIof5S9hHgGLO-7nPUkxtsqvgRl7e8493av8gXjnceijYfcllQhiK0ts9OebUOJaaxZVgDCmDM6ND0yvhblVY6N9DThq-BeqPfCToX9xQbysgHGO7poxDkxSKwDb3gEjF-yeIVUA-m_DA6g=='
+import { BREVO_ACTION } from '../../data/brevo'
 ---
 
 <ScanShell
-  title="Gratis scan: waar verliest je bedrijf kostbare tijd? | Klantkraan"
+  title="Waar verliest je bedrijf elke week tijd? Antwoord binnen 1 werkdag | Klantkraan"
   description="Vertel in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je een korte mail terug met waar je tijd verliest en wat je er zelf aan kunt doen. Geen gesprek, geen kosten."
 >
   <form id="scan-form" class="scan-card" method="POST" action={BREVO_ACTION} data-astro-reload>
-    <h1>Gratis scan: waar verliest je bedrijf kostbare tijd?</h1>
+    <h1>Waar verliest je bedrijf elke week tijd? Antwoord binnen 1 werkdag</h1>
     <p class="scan-lead">
-      Vertel me in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je van mij
+      Vertel ons in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je van ons
       een korte mail terug: de plekken waar je tijd verliest, wat je daar vandaag zelf aan kunt
       doen, en de ene klus die je het best kunt automatiseren.
     </p>
@@ -83,7 +85,7 @@ const BREVO_ACTION =
       />
     </div>
     <p class="scan-consent">
-      Hier stuur ik je scan naartoe. Daarna stuur ik je af en toe een tip of aanbod over tijd
+      Hier sturen we je scan naartoe. Daarna sturen we je af en toe een tip of aanbod over tijd
       besparen met AI. Afmelden kan in elke mail.
     </p>
 
@@ -101,10 +103,10 @@ const BREVO_ACTION =
 
     <p id="scan-error" class="scan-error" role="alert" hidden>
       Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail je antwoorden dan naar
-      <a href="mailto:davy@klantkraan.nl">davy@klantkraan.nl</a>.
+      <a href={`mailto:${contact.email}`}>{contact.email}</a>.
     </p>
     <button id="scan-submit" class="scan-btn" type="submit">Vraag mijn gratis scan aan</button>
-    <p class="scan-sign">Davy, ontwikkelaar en maker van Klantkraan</p>
+    <MiniOfferLine area="automations" where="before" />
   </form>
 
   <section id="scan-done" class="scan-card scan-done" tabindex="-1" hidden>
@@ -120,14 +122,23 @@ const BREVO_ACTION =
     </span>
     <h2>Bijna klaar</h2>
     <p>
-      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna ga ik aan de slag en
+      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna gaan we aan de slag en
       heb je je scan binnen 1 werkdag.
     </p>
     <p class="scan-done-hint">
-      Geen mail gezien? Kijk dan even bij ongewenste mail. De afzender is Davy van Klantkraan.
+      Geen mail gezien? Kijk dan even bij ongewenste mail en zoek op Klantkraan.
     </p>
   </section>
+
+  {/* After the magnet: the matching mini offer, shown with "Bijna klaar" (scan-form.js). */}
+  <MiniOfferCard area="automations" id="scan-offer" kicker="Liever meteen geregeld?" hidden />
 </ScanShell>
 
 <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
 <script src="/js/scan-form.js" type="module" is:inline></script>
+
+<style is:global>
+  #scan-offer {
+    margin-top: 16px;
+  }
+</style>

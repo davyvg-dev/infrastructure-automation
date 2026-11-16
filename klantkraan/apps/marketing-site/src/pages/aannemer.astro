@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro'
-import CursusForm from '../components/CursusForm.astro'
 import VerderLezen from '../components/VerderLezen.astro'
 import Icon from '../components/Icon.astro'
 import Stat from '../components/Stat.astro'
@@ -291,8 +290,6 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
-  <CursusForm />
 
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
 </Base>

@@ -12,6 +12,7 @@ const { lang = 'nl' } = Astro.props
 // in these navs has an /en/ and /es/ twin.
 const navByLang = {
   nl: [
+    { href: '/gratis/', label: 'Gratis' },
     { href: '/prijzen/', label: 'Prijzen' },
     { href: '/rekentool/', label: 'Rekentool' },
     { href: '/gidsen/', label: 'Gidsen' },
@@ -237,10 +238,11 @@ const t = T[lang]
     </button>
   </div>
 
-  <!-- Mobile menu -->
+  <!-- Mobile menu. Scrolls inside the screen, with room at the bottom so the last row
+       (language switch) clears the fixed phone/WhatsApp bar on small phones. -->
   <nav
     id="mobile-menu"
-    class="hidden border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] backdrop-blur-md md:hidden"
+    class="hidden max-h-[calc(100dvh-4.8rem)] overflow-y-auto overscroll-contain border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] pb-[calc(5.5rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
     aria-label={t.mobileNav}
     hidden
   >

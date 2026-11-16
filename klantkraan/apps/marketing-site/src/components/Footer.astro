@@ -3,6 +3,7 @@ import Icon from './Icon.astro'
 import { branches } from '../data/branches'
 import { contact, waLink, telLink, mailLink } from '../data/contact'
 import { company } from '../data/company'
+import { AREAS, KLEIN_BEGINNEN, magnets } from '../data/magnets'
 
 interface Props {
   lang?: 'nl' | 'en' | 'es'
@@ -164,6 +165,28 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
       <div>
         <p class="font-display text-h3 text-(--color-chalk)">Klantkraan</p>
         <p class="mt-2">{t.tagline}</p>
+        {
+          lang === 'nl' && (
+            <>
+              <p class="mt-4 font-medium text-(--color-chalk)">Gratis</p>
+              <ul class="mt-1">
+                {AREAS.map((area) => (
+                  <li>
+                    <a
+                      href={magnets[area].href}
+                      class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+                    >
+                      {magnets[area].short}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a href={KLEIN_BEGINNEN} class="mt-1 block py-2 text-(--color-sodium) no-underline">
+                Klein beginnen, vaste prijzen →
+              </a>
+            </>
+          )
+        }
         <p class="mt-4 text-micro">
           {t.tradeNameNote}
           {company.legalName}.<br />

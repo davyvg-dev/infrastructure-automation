@@ -9,12 +9,12 @@ import { chromium } from 'playwright'
 const BASE = process.argv[2] ?? 'http://localhost:4321'
 
 const EXPECTED_BRANCHES = [
-  { label: 'Loodgieters', href: '/loodgieters' },
-  { label: 'Dakdekkers', href: '/dakdekkers' },
-  { label: 'Schilders', href: '/schilder' },
-  { label: 'Installateurs', href: '/installateur' },
-  { label: 'Elektriciens', href: '/elektricien' },
-  { label: 'Aannemers', href: '/aannemer' },
+  { label: 'Loodgieters', href: '/loodgieters/' },
+  { label: 'Dakdekkers', href: '/dakdekkers/' },
+  { label: 'Schilders', href: '/schilder/' },
+  { label: 'Installateurs', href: '/installateur/' },
+  { label: 'Elektriciens', href: '/elektricien/' },
+  { label: 'Aannemers', href: '/aannemer/' },
 ]
 
 const browser = await chromium.launch({ headless: true })
@@ -76,7 +76,7 @@ console.log(`\n=== Desktop dropdown @ ${BASE} ===`)
   }
 
   // "Alle branches →" link present
-  const alleLink = ul.locator('a[href="/voor-wie"]')
+  const alleLink = ul.locator('a[href="/voor-wie/"]')
   check('"Alle branches →" link present', (await alleLink.count()) === 1)
 
   // Escape closes
@@ -96,7 +96,7 @@ console.log(`\n=== Desktop dropdown @ ${BASE} ===`)
   // Navigation: click loodgieters from open dropdown lands on /loodgieters
   await summary.click()
   await page.waitForTimeout(100)
-  await ul.locator('a[href="/loodgieters"]').first().click()
+  await ul.locator('a[href="/loodgieters/"]').first().click()
   // ClientRouter does SPA pushState — waitForURL polls instead of relying on
   // networkidle / waitForNavigation which assume a full document load.
   await page.waitForURL(/\/loodgieters\/?$/, { timeout: 5000 }).catch(() => {})
@@ -157,12 +157,12 @@ console.log(`\n=== Mobile menu @ ${BASE} ===`)
     check(`mobile link to ${b.href} present`, (await link.count()) > 0)
   }
 
-  const mobileAlleLink = mobileDropdown.locator('a[href="/voor-wie"]')
+  const mobileAlleLink = mobileDropdown.locator('a[href="/voor-wie/"]')
   check('mobile "Alle branches →" link present', (await mobileAlleLink.count()) === 1)
 
   // Tap Loodgieters -> navigates AND hamburger closes (existing behaviour).
   // ClientRouter does SPA pushState; waitForURL is needed.
-  await mobileDropdown.locator('a[href="/loodgieters"]').first().click()
+  await mobileDropdown.locator('a[href="/loodgieters/"]').first().click()
   await page.waitForURL(/\/loodgieters\/?$/, { timeout: 5000 }).catch(() => {})
   check(
     'mobile tap navigates to /loodgieters',

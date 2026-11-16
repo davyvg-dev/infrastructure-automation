@@ -14,19 +14,22 @@
  * src/pages/scan/index.astro and has to change together with it.
  */
 import ScanShell from '../components/scan/ScanShell.astro'
+import MiniOfferCard from '../components/MiniOfferCard.astro'
+import MiniOfferLine from '../components/MiniOfferLine.astro'
+import { miniOffers } from '../data/magnets'
+import { contact } from '../data/contact'
 
-const BREVO_ACTION =
-  'https://27efbcf4.sibforms.com/serve/MUIFAHNw_Un10JbKvyldJfQiph0ogKUHmFDSWq1XwZNPtf6iuLAQmowIgmnBXITDxHYUIof5S9hHgGLO-7nPUkxtsqvgRl7e8493av8gXjnceijYfcllQhiK0ts9OebUOJaaxZVgDCmDM6ND0yvhblVY6N9DThq-BeqPfCToX9xQbysgHGO7poxDkxSKwDb3gEjF-yeIVUA-m_DA6g=='
+import { BREVO_ACTION } from '../data/brevo'
 ---
 
 <ScanShell
-  title="Gratis websitecheck: wat zegt je homepage over zichzelf? | Klantkraan"
+  title="Zie in 1 minuut wat een klant op je website mist | Klantkraan"
   description="Typ je webadres en zie binnen tien seconden of je site bij is, of je nummer aantikbaar is, hoe je in Google staat en of je foto's te zwaar zijn. Gratis, zonder e-mailadres."
 >
   <form id="wc-form" class="scan-card" novalidate>
-    <h1>Hoe staat je website ervoor?</h1>
+    <h1>Zie in 1 minuut wat een klant op je website mist</h1>
     <p class="scan-lead">
-      Typ je webadres. Ik lees je homepage zoals een bezoeker dat doet en laat je in gewoon
+      Typ je webadres. We lezen je homepage zoals een bezoeker dat doet en laten je in gewoon
       Nederlands zien wat goed staat en wat aandacht vraagt. Bij elk punt staat hoe je het zelf
       nakijkt.
     </p>
@@ -53,14 +56,15 @@ const BREVO_ACTION =
     </div>
     <p id="wc-error" class="scan-error" role="alert" hidden></p>
     <button id="wc-submit" class="scan-btn" type="submit">Check mijn website</button>
+    <MiniOfferLine area="websites" where="before" />
     <noscript>
       <p class="scan-consent">
         Deze check heeft JavaScript nodig. Staat dat uit, mail je webadres dan naar
-        davy@klantkraan.nl.
+        {contact.email}.
       </p>
     </noscript>
     <p class="scan-sign">
-      Ik lees alleen wat je homepage openbaar toont. Ik log nergens in.
+      We lezen alleen wat je homepage openbaar toont en loggen nergens in.
     </p>
   </form>
 
@@ -70,7 +74,7 @@ const BREVO_ACTION =
     <ul id="wc-list" class="wc-list"></ul>
     <p class="wc-note">
       Dit is alleen je homepage, van buitenaf gelezen. Plugins, je andere pagina's en hoe snel de
-      site bij echte bezoekers laadt, zie ik zo niet.
+      site bij echte bezoekers laadt, zien we zo niet.
     </p>
     <button id="wc-again" class="wc-again" type="button">Een ander adres checken</button>
   </section>
@@ -83,10 +87,10 @@ const BREVO_ACTION =
     data-astro-reload
     hidden
   >
-    <h2>Zal ik er zelf naar kijken?</h2>
+    <h2>Zullen we er zelf naar kijken?</h2>
     <p class="scan-lead">
-      Dan krijg je binnen 1 werkdag een korte mail van mij: per punt wat ik zou doen, wat je zelf
-      kunt oplossen en wat ik verder zie als ik je site op een telefoon open.
+      Dan krijg je binnen 1 werkdag een korte mail van ons: per punt wat wij zouden doen, wat je
+      zelf kunt oplossen en wat we verder zien als we je site op een telefoon openen.
     </p>
     <ul class="scan-promises">
       <li>Geen gesprek</li>
@@ -106,7 +110,7 @@ const BREVO_ACTION =
       />
     </div>
     <p class="scan-consent">
-      Hier stuur ik mijn bevindingen naartoe. Daarna stuur ik je af en toe een tip of aanbod over
+      Hier sturen we onze bevindingen naartoe. Daarna sturen we je af en toe een tip of aanbod over
       je website of over tijd besparen met AI. Afmelden kan in elke mail.
     </p>
 
@@ -127,10 +131,9 @@ const BREVO_ACTION =
 
     <p id="wc-lead-error" class="scan-error" role="alert" hidden>
       Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail je webadres dan naar
-      <a href="mailto:davy@klantkraan.nl">davy@klantkraan.nl</a>.
+      <a href={`mailto:${contact.email}`}>{contact.email}</a>.
     </p>
     <button id="wc-lead-submit" class="scan-btn" type="submit">Kijk naar mijn website</button>
-    <p class="scan-sign">Davy, ontwikkelaar en maker van Klantkraan</p>
   </form>
 
   <section id="wc-done" class="scan-card scan-done" tabindex="-1" hidden>
@@ -146,13 +149,21 @@ const BREVO_ACTION =
     </span>
     <h2>Bijna klaar</h2>
     <p>
-      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna kijk ik naar je site
-      en heb je mijn mail binnen 1 werkdag.
+      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna kijken we naar je site
+      en heb je onze mail binnen 1 werkdag.
     </p>
     <p class="scan-done-hint">
-      Geen mail gezien? Kijk dan even bij ongewenste mail. De afzender is Davy van Klantkraan.
+      Geen mail gezien? Kijk dan even bij ongewenste mail en zoek op Klantkraan.
     </p>
   </section>
+
+  {/* After the magnet: the matching mini offer, shown with the result (websitecheck.js). */}
+  <MiniOfferCard area="websites" id="wc-offer" kicker="Liever meteen geregeld?" hidden />
+
+  {/* Inside the result: websitecheck.js puts this line under each point the offer fixes. */}
+  <template id="wc-fix" data-fixes={(miniOffers.websites.fixes ?? []).join(',')}>
+    <MiniOfferLine area="websites" where="within" hook="Liever laten doen?" />
+  </template>
 </ScanShell>
 
 <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->

@@ -94,7 +94,7 @@ console.log(`\n=== View Transitions @ ${BASE} ===`)
   // Navigate via the Voor wie? dropdown
   await page.locator('[data-branches-dropdown="desktop"] summary').first().click()
   await page.waitForTimeout(120)
-  await page.locator('[data-branches-dropdown="desktop"] ul a[href="/dakdekkers"]').first().click()
+  await page.locator('[data-branches-dropdown="desktop"] ul a[href="/dakdekkers/"]').first().click()
   await page.waitForURL(/\/dakdekkers\/?$/, { timeout: 5000 }).catch(() => {})
 
   const sentinel = await page.evaluate(() => window.__kkSentinel)
@@ -114,7 +114,7 @@ console.log(`\n=== View Transitions @ ${BASE} ===`)
   // (astro:page-load is the trigger). We type into the calls input and
   // expect the missed-year output to update.
   await page.goto(BASE + '/', { waitUntil: 'networkidle' })
-  await page.locator('a[href="/rekentool"]').first().click()
+  await page.locator('a[href="/rekentool/"]').first().click()
   await page.waitForURL(/\/rekentool\/?$/, { timeout: 5000 }).catch(() => {})
   await page.waitForTimeout(300)
 
@@ -127,7 +127,7 @@ console.log(`\n=== View Transitions @ ${BASE} ===`)
 
   // Navigate to /demo and back to /rekentool to make sure repeated
   // navigation doesn't double-bind (output should still update).
-  await page.locator('a[href="/demo"]').first().click()
+  await page.locator('a[href="/demo/"]').first().click()
   await page.waitForURL(/\/demo\/?$/, { timeout: 5000 }).catch(() => {})
   await page.waitForTimeout(200)
   await page.goBack()
@@ -164,7 +164,7 @@ console.log(`\n=== Hamburger after SPA nav @ ${BASE} ===`)
   await page.waitForTimeout(150)
   await page.locator('[data-branches-dropdown="mobile"] summary').first().click()
   await page.waitForTimeout(150)
-  await page.locator('[data-branches-dropdown="mobile"] a[href="/aannemer"]').first().click()
+  await page.locator('[data-branches-dropdown="mobile"] a[href="/aannemer/"]').first().click()
   await page.waitForURL(/\/aannemer\/?$/, { timeout: 5000 }).catch(() => {})
   await page.waitForTimeout(300)
 
@@ -262,7 +262,7 @@ console.log(`\n=== Gidsen nav link @ ${BASE} ===`)
   const page = await ctx.newPage()
   await page.goto(BASE + '/', { waitUntil: 'networkidle' })
 
-  const gidsenLink = page.locator('header nav a[href="/gidsen"]')
+  const gidsenLink = page.locator('header nav a[href="/gidsen/"]')
   check('Gidsen link in desktop header', (await gidsenLink.count()) >= 1)
   await ctx.close()
 }

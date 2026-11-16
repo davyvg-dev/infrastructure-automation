@@ -1,6 +1,5 @@
 ---
 import Base from '../../layouts/Base.astro'
-import CursusForm from '../../components/CursusForm.astro'
 import { getCollection, render } from 'astro:content'
 import { niches, type NicheSlug } from '../../data/niches'
 
@@ -79,6 +78,4 @@ const pageTitle = gids.data.title.length <= 52 ? `${gids.data.title} | Klantkraa
     </div>
   </section>
 
-  <!-- E-mailcursus opt-in: gratis 4-lessencursus als zachte vervolgstap. -->
-  <CursusForm recessed />
 </Base>

@@ -1,0 +1,52 @@
+---
+/**
+ * /klein-beginnen/: the mini offers. Each one fixes one narrow problem completely,
+ * at a fixed price with a delivery time, and can be bought without a call.
+ * Cards, prices and pay links come from src/data/magnets.ts.
+ */
+import Base from '../layouts/Base.astro'
+import MiniOfferCard from '../components/MiniOfferCard.astro'
+import { AREAS } from '../data/magnets'
+import { contact } from '../data/contact'
+---
+
+<Base
+  title="Klein beginnen: één probleem, één vaste prijs | Klantkraan"
+  description="Vier klussen voor een vaste prijs: WordPress op slot, drie nieuwe openingen voor uw advertentievideo, een offerte-opvolger en een vakantiewacht. Prijs en levertijd vooraf, zonder gesprek."
+  centered={false}
+>
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Klein beginnen</p>
+      <h1 class="mt-3 font-display text-hero text-(--color-chalk)">Eén probleem, één vaste prijs</h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Vier klussen die we elke keer op dezelfde manier oplossen. U ziet vooraf wat het kost en
+        wanneer het klaar is. Een gesprek is niet nodig.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16" aria-label="Vaste prijzen">
+    <div class="mx-auto max-w-5xl px-6">
+      <ul role="list" class="grid gap-6 md:grid-cols-2">
+        {
+          AREAS.map((area) => (
+            <li class="flex">
+              <MiniOfferCard area={area} level="h2" />
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-8 max-w-2xl text-small text-(--color-dim)">
+        Alle bedragen zijn excl. 21% btw. Past geen van deze vier? Mail naar
+        <a href={`mailto:${contact.email}`} class="underline">{contact.email}</a> wat er speelt.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  li > :global(.mini-offer) {
+    flex: 1;
+  }
+</style>

@@ -1,0 +1,263 @@
+---
+import Base from '../layouts/Base.astro'
+import { contact } from '../data/contact'
+import { magnets } from '../data/magnets'
+import { BREVO_ACTION } from '../data/brevo'
+import MiniOfferLine from '../components/MiniOfferLine.astro'
+import MiniOfferCard from '../components/MiniOfferCard.astro'
+
+const magnet = magnets.ads
+
+// Standalone offer page for webshops that run video ads. Deliberately not in the
+// header menu (that serves trades buying the receptionist); linked from the footer.
+const mailHref = `mailto:${contact.email}?subject=${encodeURIComponent('Varianten van onze advertentievideo')}`
+const waHref = `https://wa.me/${contact.waNumberRaw}?text=${encodeURIComponent(
+  'Hoi, ik zag de pagina over advertentievideo’s en wil graag voorbeelden met onze eigen video zien.',
+)}`
+
+const variants = [
+  {
+    file: 'variant-1',
+    opening: '3 steps, 10 minutes',
+    note: 'Rustige muziek, beelden in de gewone volgorde.',
+  },
+  {
+    file: 'variant-2',
+    opening: 'Stop skipping this step',
+    note: 'Andere openingszin en snellere muziek.',
+  },
+  {
+    file: 'variant-3',
+    opening: 'Skin first, makeup second',
+    note: 'Het slotbeeld staat hier vooraan.',
+  },
+]
+
+const steps = [
+  {
+    title: 'U stuurt uw beeld',
+    body: 'De video die nu draait, of de losse opnames ervan. U hoeft niets nieuws te filmen.',
+  },
+  {
+    title: 'Wij maken zestien varianten',
+    body: 'Hetzelfde beeld met telkens een andere openingszin, andere muziek en een andere volgorde. Klaar voor Meta en TikTok, staand formaat.',
+  },
+  {
+    title: 'U ziet welke opening wint',
+    body: 'U zet de varianten naast elkaar in uw advertentieaccount. De cijfers laten zien welke eerste seconden het beste werken.',
+  },
+]
+---
+
+<Base
+  title="Advertentievideo's in zestien varianten | Klantkraan"
+  description="Van één bestaande advertentievideo maken wij zestien varianten met een andere opening, muziek en volgorde. Voor webshops die adverteren op Meta en TikTok."
+  centered={false}
+  stickyCta={false}
+  offerArea="ads"
+>
+  <!-- Hero -->
+  <section class="py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Voor webshops die adverteren met video</p>
+      <h1 class="mt-3 font-display text-hero text-(--color-chalk)">
+        Eén advertentie&shy;video, zestien varianten
+      </h1>
+      <p class="mt-6 max-w-2xl text-h3 text-(--color-dim)">
+        Een video die goed loopt, zakt weg zodra mensen de eerste seconden kennen. Wij maken van uw
+        bestaande beeld zestien nieuwe versies, zodat u kunt testen welke opening het beste werkt.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href={`#${magnet.anchor}`} class="btn btn-primary btn-lg">Vraag 3 gratis openingen aan</a>
+        <a href="#voorbeelden" class="btn btn-ghost btn-lg">Bekijk voorbeelden</a>
+      </div>
+      <MiniOfferLine area="ads" where="before" class="mt-4" />
+    </div>
+  </section>
+
+  <!-- Examples -->
+  <section
+    id="voorbeelden"
+    class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16"
+    aria-label="Voorbeelden"
+  >
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Voorbeelden</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
+        Drie van de zestien, uit hetzelfde beeld
+      </h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Deze drie komen uit één pakket en zijn gemaakt van drie stockopnames, niet van beeld van een
+        klant. Let op wat er verandert in de eerste seconden.
+      </p>
+      <ul role="list" class="mt-8 grid gap-6 sm:grid-cols-3">
+        {
+          variants.map((v) => (
+            <li class="flex flex-col rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-4">
+              <video
+                class="aspect-[9/16] w-full rounded-(--radius-card) bg-black"
+                controls
+                playsinline
+                preload="none"
+                poster={`/video/advertentievideos/${v.file}.jpg`}
+                aria-label={`Voorbeeldvariant met de opening ${v.opening}`}
+              >
+                <source src={`/video/advertentievideos/${v.file}.mp4`} type="video/mp4" />
+              </video>
+              <p class="mt-4 text-small font-medium text-(--color-chalk)">Opening: “{v.opening}”</p>
+              <p class="mt-1 text-small text-(--color-dim)">{v.note}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="py-10 md:py-16" aria-label="Zo werkt het">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Zo werkt het</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">In drie stappen</h2>
+      <ol role="list" class="mt-8 grid gap-6 sm:grid-cols-3">
+        {
+          steps.map((s, i) => (
+            <li class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+              <p class="font-mono text-micro uppercase tracking-widest text-(--color-sodium)">
+                Stap {i + 1}
+              </p>
+              <h3 class="mt-3 font-display text-h3 text-(--color-chalk)">{s.title}</h3>
+              <p class="mt-3 text-body text-(--color-dim)">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- The free magnet: three new openings, request form (Brevo, source "advertentievideos"),
+       then the matching mini offer. -->
+  <section id={magnet.anchor} class="scroll-mt-24 py-10 md:py-16" aria-labelledby="ad-form-head">
+    <div class="mx-auto grid max-w-5xl gap-6 px-6 md:grid-cols-2 md:gap-8">
+      <form
+        id="ad-form"
+        data-magnet-form="advertentievideos"
+        data-klus-prefix="Advertentievideo: "
+        method="POST"
+        action={BREVO_ACTION}
+        data-astro-reload
+        class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
+      >
+        <p class="eyebrow">Gratis</p>
+        <h2 id="ad-form-head" class="mt-3 font-display text-h2 text-(--color-chalk)">{magnet.name}</h2>
+        <p class="mt-3 text-body text-(--color-dim)">{magnet.next}</p>
+        <p class="mt-1 text-small text-(--color-dim)">{magnet.reason}</p>
+        <div class="mt-5 space-y-4">
+          <div>
+            <label for="ad-link" class="block text-body font-medium text-(--color-chalk)">
+              Link naar de advertentie die nu draait
+            </label>
+            <input
+              id="ad-link"
+              name="SCAN_KLUS"
+              type="text"
+              inputmode="url"
+              autocapitalize="none"
+              spellcheck="false"
+              required
+              minlength="8"
+              maxlength="400"
+              placeholder="Link naar uw advertentie"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+          </div>
+          <div>
+            <label for="ad-shop" class="block text-body font-medium text-(--color-chalk)">
+              Uw webshop
+            </label>
+            <input
+              id="ad-shop"
+              name="SCAN_BEDRIJF"
+              type="text"
+              required
+              maxlength="200"
+              autocomplete="url"
+              placeholder="uwwebshop.nl"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+          </div>
+          <div>
+            <label for="ad-email" class="block text-body font-medium text-(--color-chalk)">
+              Uw e-mailadres
+            </label>
+            <input
+              id="ad-email"
+              name="EMAIL"
+              type="email"
+              required
+              autocomplete="email"
+              inputmode="email"
+              placeholder="naam@uwwebshop.nl"
+              class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
+            />
+          </div>
+        </div>
+        <p class="mt-3 text-small text-(--color-dim)">
+          Hier sturen we de openingen naartoe. Daarna sturen we u af en toe een tip of aanbod.
+          Afmelden kan in elke mail.
+        </p>
+        <input type="hidden" name="SCAN_PROGRAMMAS" value="advertentievideos" />
+        {/* Brevo's own two hidden inputs: its bot trap (must stay empty) and the form locale. */}
+        <input
+          type="text"
+          name="email_address_check"
+          value=""
+          class="sr-only"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+        />
+        <input type="hidden" name="locale" value="en" />
+        <p data-form-error class="mt-3 text-small text-(--color-chalk)" role="alert" hidden>
+          Dat ging niet goed. Probeer het nog een keer, of mail de link naar {contact.email}.
+        </p>
+        <button type="submit" class="mt-5 btn btn-primary btn-lg w-full">Vraag mijn 3 openingen aan</button>
+      </form>
+      <div
+        id="ad-form-done"
+        tabindex="-1"
+        hidden
+        class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
+      >
+        <h2 class="font-display text-h2 text-(--color-chalk)">Bijna klaar</h2>
+        <p class="mt-3 text-body text-(--color-dim)">
+          Kijk in uw mail en klik op de knop om uw aanvraag te bevestigen. Daarna maken we drie
+          nieuwe openingen en heeft u ze binnen 5 werkdagen. Geen mail gezien? Kijk bij ongewenste
+          mail en zoek op Klantkraan.
+        </p>
+      </div>
+      <MiniOfferCard area="ads" kicker="Liever niet wachten?" />
+    </div>
+  </section>
+
+  <!-- Why Klantkraan + second choice: mail or WhatsApp -->
+  <section class="border-y border-(--color-line) bg-[rgba(0,0,0,0.14)] py-10 md:py-16">
+    <div class="mx-auto max-w-5xl px-6">
+      <p class="eyebrow">Waarom Klantkraan dit doet</p>
+      <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">Meer klanten uit wat u al heeft</h2>
+      <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
+        Klantkraan helpt ondernemers aan meer klanten. Onze AI-receptionist vangt de aanvragen op
+        die binnenkomen. Met deze varianten haalt u meer uit de advertenties die die aanvragen
+        opleveren. Wilt u zien hoe het er met uw eigen video uitziet? Stuur hem op, dan krijgt u
+        eerst drie nieuwe openingen terug, gratis. Liever mailen of appen kan ook.
+      </p>
+      <div class="mt-8 btn-row">
+        <a href={mailHref} class="btn btn-ghost btn-lg">Mail uw video</a>
+        <a href={waHref} target="_blank" rel="noopener" class="btn btn-ghost btn-lg">
+          Stuur een WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+  <!-- Externalised JS (same-origin, passes CSP script-src 'self'). -->
+  <script src="/js/magnet-form.js" type="module" is:inline></script>
+</Base>

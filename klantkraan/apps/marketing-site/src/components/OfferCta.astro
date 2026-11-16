@@ -1,0 +1,50 @@
+---
+/**
+ * The one call to action block: headline (the magnet's result), button, what
+ * happens next, and the true reason to do it now. Base.astro renders it above the
+ * footer on every Dutch page (per-page `offerArea`). All copy lives in
+ * src/data/magnets.ts. On the magnet's own page the button jumps to the tool.
+ */
+import { magnets, type Area } from '../data/magnets'
+
+interface Props {
+  area: Area
+  variant?: 'band' | 'inline'
+}
+const { area, variant = 'band' } = Astro.props
+const m = magnets[area]
+const ownPage = Astro.url.pathname === m.href
+const href = ownPage ? `#${m.anchor}` : m.href
+---
+
+<section
+  data-offer-cta
+  data-area={area}
+  class:list={[
+    'offer-cta',
+    variant === 'band' ? 'border-t border-(--color-line) bg-[rgba(0,0,0,0.14)]' : '',
+  ]}
+  aria-labelledby={`offer-cta-${area}`}
+>
+  <div
+    class:list={[
+      'mx-auto max-w-5xl px-6',
+      variant === 'band' ? 'py-10 md:py-14' : 'py-6',
+    ]}
+  >
+    <p class="eyebrow">Gratis</p>
+    <h2
+      id={`offer-cta-${area}`}
+      class="mt-3 max-w-3xl font-display text-h2 text-(--color-chalk) [overflow-wrap:anywhere]"
+    >
+      {m.name}
+    </h2>
+    <div class="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
+      <a href={href} class="btn btn-primary btn-lg self-stretch md:self-auto">{m.button}</a>
+      <div class="max-w-xl text-body">
+        <p data-next class="text-(--color-chalk)">{m.next}</p>
+        <p data-reason class="mt-1 text-small text-(--color-dim)">{m.reason}</p>
+      </div>
+    </div>
+  </div>
+</section>
