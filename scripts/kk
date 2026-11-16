@@ -41,6 +41,17 @@ EVAL_SURFACE = (
 # SHA of the tree the server last received, written after a successful deploy. Absent or
 # unreadable means "we cannot know what changed", which the gate reads as "run everything".
 DEPLOY_MARKER = ".kk/deployed-server"
+# The commit klantkraan.nl was last deployed from. Kept in the git common dir, so the
+# main tree and every worktree (each deploys from its own checkout) read the same file.
+SITE_LIVE_FILE = "kk-site-live"
+_SITE_LIVE = f'c="$(git rev-parse --git-common-dir)" || exit 1; m="$c/{SITE_LIVE_FILE}"; '
+SITE_BEHIND_CHECK = _SITE_LIVE + (
+    '[ -s "$m" ] || exit 0; live="$(cat "$m")"; '
+    'git merge-base --is-ancestor "$live" HEAD && exit 0; '
+    'echo "kk: klantkraan.nl runs $live and this tree does not contain it, so this '
+    'deploy would put an older site back. Deploy from a tree that has it, or merge it '
+    'in first. On purpose: kk deploy site --rollback" >&2; exit 1')
+SITE_RECORD = _SITE_LIVE + 'git rev-parse HEAD > "$m"'
 
 # kk health runs this on the server: OnFailure alerts (kk-alert@) deliver via Telegram or
 # e-mail, and with neither configured every unit failure lands only in the journal — the
@@ -117,6 +128,7 @@ kk — Klantkraan command center
   kk site deploy <slug> --live   ship a paying client's site to its own Pages project
   kk deploy site|server          site: typecheck+build+wrangler; server: gate (goldens when
                                  the agent surface changed, else config check) then deploy.sh
+  kk deploy site --rollback      deploy a tree that lacks the live commit (refused otherwise)
   kk help                        this text
 """
 
@@ -490,13 +502,20 @@ def plan(verb: str, args: list[str], root: Path) -> list[Step]:
     if verb == "deploy":
         target = args[0] if args else ""
         if target == "site":
+            if args[1:] not in ([], ["--rollback"]):
+                raise UsageError("kk deploy site [--rollback]")
             site = root / "klantkraan" / "apps" / "marketing-site"
-            return [
+            # 2026-11-16: a deploy from the main tree put the old design back over the
+            # redesign. Refuse a tree that lacks what production runs, unless on purpose.
+            guard = [] if args[1:] else [Step(root, ["sh", "-c", SITE_BEHIND_CHECK])]
+            return guard + [
                 Step(site, ["npm", "run", "typecheck"]),
                 Step(site, ["npm", "run", "build"]),
                 Step(site, ["pnpm", "dlx", "wrangler@4", "pages", "deploy",
                             "./dist", "--branch=production",
                             "--project-name=klantkraan-marketing"]),
+                # tolerant: the deploy landed; a missing marker only switches the guard off
+                Step(root, ["sh", "-c", SITE_RECORD], tolerant=True),
             ]
         if target == "server":
             marker = root / DEPLOY_MARKER
