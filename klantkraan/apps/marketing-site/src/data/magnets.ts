@@ -123,17 +123,21 @@ export const miniOffers: Record<Area, MiniOffer> = {
   },
   ads: {
     area: 'ads',
-    slug: 'drie-nieuwe-openingen',
-    name: 'Drie nieuwe openingen',
+    // 2026-11-16: replaces "Drie nieuwe openingen" (95 euro), which sold the same three
+    // openings the free magnet gives away. Price from research/pricing-2026-11-15 (middle
+    // band 650 to 950 euro). No Mollie link yet, so the button orders by mail.
+    slug: 'zestien-versies',
+    name: 'Zestien versies van één video',
     problem: 'De advertentievideo draait al een tijd en wordt steeds minder bekeken.',
-    delivers: 'Dezelfde video met drie nieuwe eerste seconden, klaar om te uploaden.',
-    price: '€\u00a095',
+    delivers:
+      'Van het bestaande beeld zestien versies, elk met een andere opening, klaar om naast elkaar te testen. Filmen is niet nodig.',
+    price: '€\u00a0795',
     priceNote: 'eenmalig, excl. btw',
-    days: 'Klaar binnen 2 werkdagen',
-    hook: 'Niet wachten op een gratis plek?',
+    days: 'Klaar binnen 5 werkdagen',
+    hook: 'Liever meteen het hele pakket?',
     send: 'de link naar de video',
-    payUrl: 'https://payment-links.mollie.com/payment/r7QFkSAkBKLo7qYRjdf3F',
-    payAmount: '€\u00a0114,95',
+    payUrl: '',
+    payAmount: '',
   },
   automations: {
     area: 'automations',

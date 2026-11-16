@@ -90,10 +90,14 @@ await open('/klein-beginnen/')
 
 {
   const pays = await page.locator('[data-mini-offer] [data-pay]').evaluateAll((as) => as.map((a) => [a.getAttribute('href'), a.textContent.trim()]))
-  check('every pay button opens a Mollie payment link and shows the amount incl. btw',
-    pays.length === 4 && pays.every(([h, t]) => h.startsWith('https://payment-links.mollie.com/payment/') && /incl\. btw/.test(t)),
+  // The ad-video pack has no Mollie link yet (2026-11-16) and orders by mail instead.
+  check('every pay button is a Mollie link with the amount incl. btw, or a mail order link',
+    pays.length === 4 && pays.every(([h, t]) =>
+      (h.startsWith('https://payment-links.mollie.com/payment/') && /incl\. btw/.test(t)) ||
+      (h.startsWith('mailto:') && t === 'Bestel per mail')),
     JSON.stringify(pays))
   check('the four pay links are all different', new Set(pays.map(([h]) => h)).size === 4)
+  check('the retired € 95 openings link is gone', pays.every(([h]) => !h.includes('r7QFkSAkBKLo7qYRjdf3F')))
 }
 
 // ------------------------------------------------------------------ before / within / after
