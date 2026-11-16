@@ -163,11 +163,11 @@ const faqSchema = {
 
   <!-- 2. Pain-stats trio (stone-100) -->
   <section
-    class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16"
+    class="border-y border-(--color-line) py-8 md:py-10"
     aria-label="What a missed lead costs"
   >
     <div class="mx-auto max-w-page px-gutter">
-      <div class="grid-rule sm:grid-cols-3">
+      <div class="stat-row">
       {painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
       </div>
     </div>

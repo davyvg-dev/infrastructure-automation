@@ -167,6 +167,27 @@
     }
   }
 
+  /* Figures on one ruled line: each number with its caption beside it,
+   * divided by hairlines. Used for the trade pages' three facts. */
+  .stat-row {
+    display: grid;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .stat-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+    }
+    .stat-row > * {
+      padding: 0 1.75rem;
+      border-left: 1px solid var(--color-line-strong);
+    }
+    .stat-row > :first-child {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+
   /* Product window: one raised surface with a title bar. */
   .window {
     border: 1px solid var(--color-line);

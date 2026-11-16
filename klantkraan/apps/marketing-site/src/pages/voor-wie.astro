@@ -6,6 +6,8 @@ import StormCloud from '../components/illustrations/StormCloud.astro'
 import PaintRoller from '../components/illustrations/PaintRoller.astro'
 import HardHat from '../components/illustrations/HardHat.astro'
 import Dumbbell from '../components/illustrations/Dumbbell.astro'
+import Plug from '../components/illustrations/Plug.astro'
+import Radiator from '../components/illustrations/Radiator.astro'
 
 // Map illustration name to component for branches that have one.
 const illustrations = {
@@ -14,6 +16,8 @@ const illustrations = {
   PaintRoller,
   HardHat,
   Dumbbell,
+  Plug,
+  Radiator,
   RingingPhone: null, // Reserved for the homepage; not used on cards.
 }
 ---
@@ -89,14 +93,5 @@ const illustrations = {
   </section>
 
   <!-- Trust micro-line -->
-  <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
-    <div class="mx-auto max-w-page px-gutter">
-      <ul role="list" class="fact-row">
-        <li><span class="text-(--color-chalk)">AVG + AI Act art. 50</span> <span>Disclosure standaard aan</span></li>
-        <li><span class="text-(--color-chalk)">Gehost in de EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
-        <li><span class="text-(--color-chalk)">Per maand opzegbaar</span> <span>Eén mail, geen opzegtermijn</span></li>
-      </ul>
-    </div>
-  </section>
 
 </Base>

@@ -50,10 +50,10 @@ const faqSchema = {
     
     <h2 class="font-display text-h1 text-chalk">Vragen die dakdekkers vaak stellen.</h2>
 
-    <div class="mt-10 space-y-3">
+    <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
       {
         faqs.map((faq) => (
-          <details class="group rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6">
+          <details class="group py-4">
             <summary class="flex min-h-[2.75rem] cursor-pointer items-center justify-between gap-4 font-display text-h3 text-chalk marker:content-none">
               <span>{faq.q}</span>
               <Icon

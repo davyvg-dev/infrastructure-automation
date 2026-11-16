@@ -1,8 +1,7 @@
 ---
 /*
- * Stat: one number and what it means, as a cell of a `.grid-rule` row (the
- * parent draws the hairlines). The figure is set large in the text face with
- * tabular digits; no accent bar, no card.
+ * Stat: one figure and what it means, set on one line (figure left, caption
+ * right) inside a `.stat-row`. Tabular digits, no card, no accent bar.
  */
 interface Props {
   value: string
@@ -12,9 +11,9 @@ interface Props {
 const { value, label } = Astro.props
 ---
 
-<div class="p-6 md:p-8">
-  <p class="text-h1 leading-none text-(--color-chalk) tabular-nums">
+<div class="flex items-baseline gap-4">
+  <p class="shrink-0 font-mono text-[1.75rem] leading-none tracking-[-0.02em] text-(--color-chalk) tabular-nums">
     {value}
   </p>
-  <p class="mt-4 text-small text-(--color-dim)">{label}</p>
+  <p class="text-small text-(--color-dim)">{label}</p>
 </div>

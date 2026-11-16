@@ -29,6 +29,8 @@ export interface Branch {
     | 'HardHat'
     | 'RingingPhone'
     | 'Dumbbell'
+    | 'Plug'
+    | 'Radiator'
     | null
 }
 
@@ -72,7 +74,7 @@ export const branches: Branch[] = [
       'Emergency call-outs, project quotes and property-management work handled separately.',
     hubLineEs:
       'Urgencias, presupuestos de obra y trabajos para comunidades, gestionados por separado.',
-    illustration: null,
+    illustration: 'Plug',
   },
   {
     slug: 'installateur',
@@ -85,7 +87,7 @@ export const branches: Branch[] = [
     hubLineEn: 'Boiler faults, heat-pump enquiries and emergency work given the right priority.',
     hubLineEs:
       'Averías de calderas, consultas de bombas de calor y urgencias, ordenadas por prioridad.',
-    illustration: null,
+    illustration: 'Radiator',
   },
   {
     slug: 'loodgieters',

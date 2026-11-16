@@ -142,11 +142,11 @@ const serviceSchema = {
 
   <!-- 2. Pijn-stats -->
   <section
-    class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16"
+    class="border-y border-(--color-line) py-8 md:py-10"
     aria-label={`Wat een gemiste ${niche.label.toLowerCase()}-oproep in ${city.name} kost`}
   >
     <div class="mx-auto max-w-page px-gutter">
-      <div class="grid-rule sm:grid-cols-3">
+      <div class="stat-row">
       {niche.painStats.map((stat) => <Stat value={stat.value} label={stat.caption} />)}
       </div>
     </div>
