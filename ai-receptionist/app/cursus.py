@@ -62,6 +62,21 @@ DEFAULT_BASE_URL = "https://demo.klantkraan.nl"
 # (public/downloads/), so the site deploy must precede the first les-1 send after this.
 CHECKLIST_URL = "https://klantkraan.nl/downloads/nooit-meer-een-klus-missen.pdf"
 
+# Mini offers on the site. Names and prices come from marketing-site/src/data/magnets.ts;
+# change them there first, then here. Each lesson ends with a PS for the offer that fits
+# it, and lesson 4 also links the overview next to its demo button. Full https URLs in a
+# plain Para, like the rekentool line in les 1: mail clients auto-link them, and the text
+# part carries the same address.
+KLEIN_BEGINNEN_URL = "https://klantkraan.nl/klein-beginnen/"
+VAKANTIEWACHT_URL = f"{KLEIN_BEGINNEN_URL}#vakantiewacht"
+OFFERTE_OPVOLGER_URL = f"{KLEIN_BEGINNEN_URL}#offerte-opvolger"
+LESSON_OFFER_URL = {
+    1: VAKANTIEWACHT_URL,
+    2: VAKANTIEWACHT_URL,
+    3: OFFERTE_OPVOLGER_URL,
+    4: OFFERTE_OPVOLGER_URL,
+}
+
 
 # --- time ---------------------------------------------------------------------------------
 
@@ -251,6 +266,12 @@ def _blocks_1(sub: dict) -> list[mail_layout.Block]:
             "terugkoopt."
         ),
         mail_layout.Signoff("Klantkraan", "hallo@klantkraan.nl"),
+        mail_layout.Para(
+            "PS Binnenkort met vakantie? Met de Vakantiewacht neemt de receptionist tot "
+            "4 weken lang uw aanvragen aan op website en WhatsApp, en bij terugkomst "
+            "krijgt u één lijst met alle aanvragen. € 149 eenmalig, excl. btw: "
+            f"{VAKANTIEWACHT_URL}"
+        ),
     ]
 
 
@@ -285,6 +306,12 @@ def _blocks_2(sub: dict) -> list[mail_layout.Block]:
             "ons en zonder abonnement."
         ),
         mail_layout.Signoff("Klantkraan", "hallo@klantkraan.nl"),
+        mail_layout.Para(
+            "PS Ook in de vakantie komen er aanvragen binnen, en die zijn net zo gratis "
+            "als de beller van vorige week. De Vakantiewacht neemt ze tot 4 weken lang "
+            "aan op website en WhatsApp. € 149 eenmalig, excl. btw: "
+            f"{VAKANTIEWACHT_URL}"
+        ),
     ]
 
 
@@ -313,6 +340,12 @@ def _blocks_3(sub: dict) -> list[mail_layout.Block]:
             "Daarover gaat de laatste les."
         ),
         mail_layout.Signoff("Klantkraan", "hallo@klantkraan.nl"),
+        mail_layout.Para(
+            "PS Nog iets dat vaak blijft liggen: offertes waar niemand achteraan belt. "
+            "De Offerte-opvolger stuurt de klant na 3 en na 7 dagen een nette "
+            "herinnering, en stopt zodra de klant antwoordt. € 195 + € 19 per maand, "
+            f"excl. btw: {OFFERTE_OPVOLGER_URL}"
+        ),
     ]
 
 
@@ -344,10 +377,20 @@ def _blocks_4(sub: dict) -> list[mail_layout.Block]:
         ),
         mail_layout.Button("Probeer de demo", "https://klantkraan.nl/demo/"),
         mail_layout.Para(
+            "Klein beginnen kan ook: losse oplossingen voor één probleem, met een vaste "
+            f"prijs. Bekijk ze op {KLEIN_BEGINNEN_URL}"
+        ),
+        mail_layout.Para(
             "Liever eerst iemand spreken? Antwoord op deze mail en u krijgt antwoord "
             "van een mens."
         ),
         mail_layout.Signoff("Klantkraan", "hallo@klantkraan.nl"),
+        mail_layout.Para(
+            "PS Wilt u eerst één ding automatiseren? Begin met de offertes. De "
+            "Offerte-opvolger herinnert de klant na 3 en na 7 dagen aan uw offerte en "
+            "draait binnen 5 werkdagen. € 195 + € 19 per maand, excl. btw: "
+            f"{OFFERTE_OPVOLGER_URL}"
+        ),
     ]
 
 

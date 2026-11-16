@@ -3,6 +3,7 @@ mailer.send is monkeypatched; the store and pipeline live in throwaway dirs."""
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -247,3 +248,24 @@ def test_lesson_1_links_the_checklist_download(data_dir):
     sub = {"email": "voorbeeld@bedrijf.nl", "name": "Jan"}
     _, text1, html1 = cursus.render(1, sub)
     assert cursus.CHECKLIST_URL in text1 and cursus.CHECKLIST_URL in html1
+
+
+def test_each_lesson_points_at_its_mini_offer(data_dir):
+    # The "after" of the course: every lesson carries one mini offer, in both parts.
+    sub = {"email": "voorbeeld@bedrijf.nl", "name": "Jan"}
+    expected = {
+        1: "https://klantkraan.nl/klein-beginnen/#vakantiewacht",
+        2: "https://klantkraan.nl/klein-beginnen/#vakantiewacht",
+        3: "https://klantkraan.nl/klein-beginnen/#offerte-opvolger",
+        4: "https://klantkraan.nl/klein-beginnen/#offerte-opvolger",
+    }
+    for n, url in expected.items():
+        _, text, html = cursus.render(n, sub)
+        assert url in text, f"les {n} text mist {url}"
+        assert url in html, f"les {n} html mist {url}"
+    # Lesson 4 links the overview next to its demo button, not as a second button.
+    _, text4, html4 = cursus.render(4, sub)
+    overview = re.compile(r"https://klantkraan\.nl/klein-beginnen/(?!#)")
+    assert overview.search(text4) and overview.search(html4)
+    blocks4 = cursus.LESSONS[4]["blocks"](sub)
+    assert sum(isinstance(b, cursus.mail_layout.Button) for b in blocks4) == 1
