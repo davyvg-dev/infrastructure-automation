@@ -296,9 +296,48 @@ def test_changed_since_deploy_is_unknown_when_the_marker_is_empty(tmp_path):
 def test_deploy_site_sequence():
     steps = kk.plan("deploy", ["site"], ROOT)
     site = ROOT / "klantkraan" / "apps" / "marketing-site"
-    assert [s.cwd for s in steps] == [site, site, site]
-    assert steps[0].argv == ["npm", "run", "typecheck"]
-    assert "--branch=production" in steps[2].argv
+    assert [s.cwd for s in steps] == [ROOT, site, site, site, ROOT]
+    assert steps[0].argv == ["sh", "-c", kk.SITE_BEHIND_CHECK]
+    assert not steps[0].tolerant  # a tree behind production must abort before building
+    assert steps[1].argv == ["npm", "run", "typecheck"]
+    assert "--branch=production" in steps[3].argv
+    assert steps[4].argv == ["sh", "-c", kk.SITE_RECORD] and steps[4].tolerant
+
+
+def test_deploy_site_rollback_skips_only_the_guard():
+    steps = kk.plan("deploy", ["site", "--rollback"], ROOT)
+    assert [s.argv[0] for s in steps] == ["npm", "npm", "pnpm", "sh"]
+    assert steps[-1].argv[2] == kk.SITE_RECORD
+    with pytest.raises(kk.UsageError):
+        kk.plan("deploy", ["site", "--force"], ROOT)
+
+
+def _git(cwd, *args):
+    import subprocess
+    return subprocess.run(["git", "-C", str(cwd), *args], check=True,
+                          capture_output=True, text=True).stdout.strip()
+
+
+def test_site_guard_refuses_a_tree_behind_production_in_any_worktree(tmp_path):
+    import subprocess
+    repo, wt = tmp_path / "repo", tmp_path / "wt"
+    repo.mkdir()
+    _git(repo, "init", "-q", "-b", "main")
+    ident = ["-c", "user.name=t", "-c", "user.email=t@t"]
+    _git(repo, *ident, "commit", "-q", "--allow-empty", "-m", "old site")
+    _git(repo, "worktree", "add", "-q", "-b", "redesign", str(wt))
+    _git(wt, *ident, "commit", "-q", "--allow-empty", "-m", "redesign")
+
+    def sh(cwd, script):
+        return subprocess.run(["sh", "-c", script], cwd=cwd, capture_output=True, text=True)
+
+    assert sh(repo, kk.SITE_BEHIND_CHECK).returncode == 0  # no marker yet: allowed
+    assert sh(wt, kk.SITE_RECORD).returncode == 0          # redesign goes live
+    refused = sh(repo, kk.SITE_BEHIND_CHECK)               # main tree lacks it
+    assert refused.returncode == 1 and "older site" in refused.stderr
+    assert sh(wt, kk.SITE_BEHIND_CHECK).returncode == 0
+    _git(repo, "merge", "-q", "redesign")                  # after the merge: allowed
+    assert sh(repo, kk.SITE_BEHIND_CHECK).returncode == 0
 
 
 def test_deploy_needs_valid_target():
