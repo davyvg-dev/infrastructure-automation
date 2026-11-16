@@ -1,0 +1,71 @@
+---
+/**
+ * One page section: page-width container, the section rhythm, and an optional
+ * head (mono label, h2, sub). Replaces the `mx-auto max-w-5xl px-6 py-10 md:py-16`
+ * class set that every section used to spell out.
+ *
+ * tone: 'plain' sits on the page; 'sunk' gets the panel colour between two
+ * hairlines, for the one or two sections a page wants to set apart.
+ */
+interface Props {
+  id?: string
+  /** Stable name for tests and anchors (data-section). */
+  name?: string
+  label?: string
+  heading?: string
+  headingId?: string
+  sub?: string
+  tone?: 'plain' | 'sunk'
+  pad?: 'section' | 'tight'
+  class?: string
+  innerClass?: string
+}
+
+const {
+  id,
+  name,
+  label,
+  heading,
+  headingId,
+  sub,
+  tone = 'plain',
+  pad = 'section',
+  class: className,
+  innerClass,
+} = Astro.props
+const hId = headingId ?? (id && heading ? `${id}-h` : undefined)
+---
+
+<section
+  id={id}
+  data-section={name}
+  aria-labelledby={heading ? hId : undefined}
+  class:list={[
+    'scroll-mt-24',
+    tone === 'sunk' && 'border-y border-(--color-line) bg-(--color-panel)',
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      'mx-auto max-w-page px-gutter',
+      pad === 'section' ? 'py-section' : 'py-12 md:py-16',
+      innerClass,
+    ]}
+  >
+    {
+      (label || heading) && (
+        <header class="max-w-[46rem]">
+          {label && <p class="eyebrow">{label}</p>}
+          {heading && (
+            <h2 id={hId} class:list={['text-h2 text-(--color-chalk) text-balance', label && 'mt-3']}>
+              {heading}
+            </h2>
+          )}
+          {sub && <p class="mt-4 max-w-[38rem] text-body text-(--color-chalk-2)">{sub}</p>}
+        </header>
+      )
+    }
+    <slot />
+  </div>
+</section>

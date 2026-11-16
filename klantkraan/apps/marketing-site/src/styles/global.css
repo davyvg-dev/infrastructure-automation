@@ -3,59 +3,78 @@
 @import './components.css';
 
 /*
- * Brand tokens — "Het licht blijft aan" / after-hours dispatch.
- * See docs/09-brand/redesign-execution-plan.md § 3 for the old→new map.
- * Palette: petrol-slate base, sodium-streetlight amber as the single accent,
- * warm chalk text, mint rationed to the "booked" stamp only.
- * Type: Bricolage Grotesque (display) / Hanken Grotesk (body) / Space Mono (ledger).
- * Self-hosted (fonts.css), no Google CDN.
+ * Brand tokens — "Het licht blijft aan".
+ * Neutral near-black surfaces, hairlines instead of glows, sodium amber as the one
+ * accent (CTAs, links, the lamp in the flow diagram), mint rationed to the
+ * "booked" stamp. See docs/09-brand/redesign-execution-plan.md § 3.
+ * Type: Inter variable with the optical-size axis (headings and text from one
+ * file) and Geist Mono for times, labels and figures. Self-hosted (fonts.css).
+ * Token names are older than these values on purpose: every page reads them, so
+ * one edit here reskins the whole site.
  */
 @theme {
-  /* --- dispatch palette --- */
-  --color-night: #0f1c1e; /* page base */
-  --color-panel: #16292b; /* raised surface */
-  --color-panel-2: #1c3335; /* raised surface, top of gradient */
-  --color-line: #26403f; /* hairline borders / dividers */
-  --color-chalk: #f4efe6; /* primary text */
-  --color-dim: #93a6a2; /* muted text */
-  --color-sodium: #ffb84d; /* the single accent — links, CTAs */
-  --color-sodium-soft: #ffd089; /* accent hover / warm highlight */
-  --color-confirm: #63d3ab; /* rationed — "booked" stamp only */
+  /* --- surfaces and ink --- */
+  --color-night: #0b0c0d; /* page base */
+  --color-panel: #111315; /* raised surface */
+  --color-panel-2: #16181b; /* raised surface, hover, window chrome */
+  --color-line: #23262a; /* hairline borders / dividers */
+  --color-line-strong: #33373c; /* hover borders, diagram wires at rest */
+  --color-chalk: #ededed; /* primary text */
+  --color-chalk-2: #c5c8cc; /* body copy that should read softer than headings */
+  --color-dim: #8b9096; /* muted text, 6.1:1 on night, 5.1:1 on panel-2 */
+  --color-sodium: #ffb84d; /* the single accent: links, CTAs, the lamp */
+  --color-sodium-soft: #ffd089; /* accent hover */
+  --color-sodium-ink: #1a1206; /* text on sodium, 10.8:1 */
+  --color-confirm: #63d3ab; /* rationed: "booked" stamp only */
 
-  --font-sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
-  --font-mono: 'Space Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
 
-  /* Type scale — clamp() carries the responsive range (matches the concept),
-   * so no separate mobile override is needed. */
-  --text-hero: clamp(2.5rem, 6.4vw, 4.7rem);
-  --text-hero--line-height: 0.98;
-  --text-hero--font-weight: 800;
+  /* Type scale. Headings are Inter at 600 with tight tracking; the optical-size
+   * axis switches to the display cut on its own at these sizes. */
+  --text-hero: clamp(2.5rem, 5.4vw, 4rem);
+  --text-hero--line-height: 1.02;
+  --text-hero--font-weight: 600;
+  --text-hero--letter-spacing: -0.035em;
 
-  --text-h1: clamp(2rem, 4vw, 3rem);
-  --text-h1--line-height: 1.03;
-  --text-h1--font-weight: 800;
+  --text-h1: clamp(2.125rem, 4vw, 3rem);
+  --text-h1--line-height: 1.06;
+  --text-h1--font-weight: 600;
+  --text-h1--letter-spacing: -0.03em;
 
-  --text-h2: clamp(1.7rem, 3.4vw, 2.5rem);
-  --text-h2--line-height: 1.08;
-  --text-h2--font-weight: 700;
+  --text-h2: clamp(1.75rem, 3.2vw, 2.375rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--font-weight: 600;
+  --text-h2--letter-spacing: -0.026em;
 
-  --text-h3: 1.22rem;
-  --text-h3--line-height: 1.3;
-  --text-h3--font-weight: 700;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.35;
+  --text-h3--font-weight: 600;
+  --text-h3--letter-spacing: -0.012em;
 
   --text-body: 1.0625rem;
-  --text-body--line-height: 1.55;
+  --text-body--line-height: 1.6;
 
   --text-small: 0.875rem;
-  --text-small--line-height: 1.45;
+  --text-small--line-height: 1.5;
 
   --text-micro: 0.75rem;
   --text-micro--line-height: 1.4;
   --text-micro--font-weight: 500;
 
-  --radius-card: 0.6875rem; /* 11px, matches concept --r */
-  --radius-button: 0.625rem; /* 10px */
+  --radius-card: 0.75rem; /* 12px: windows, cards */
+  --radius-button: 0.5rem; /* 8px */
+
+  /* Layout: one page width, one section rhythm. */
+  --container-page: 75rem; /* 1200px, max-w-page */
+  --spacing-section: clamp(4.5rem, 9vw, 8rem); /* py-section */
+  --spacing-gutter: 1.5rem; /* px-gutter */
+
+  /* One shadow (windows lifted off the page) and one inner top highlight
+   * (buttons, panels: light catching the top edge). */
+  --shadow-window: 0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 30px 60px -30px rgb(0 0 0 / 0.75);
+  --shadow-highlight: inset 0 1px 0 0 rgb(255 255 255 / 0.07);
 }
 
 /* Base styling lives inside @layer base so Tailwind utilities (text-chalk,
@@ -82,22 +101,10 @@
   body {
     margin: 0;
     min-height: 100dvh;
+    background-color: var(--color-night);
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
     overflow-x: clip;
-  }
-
-  /* Ambient light: one soft sodium glow top-right, a rationed mint hint bottom-left,
-   * matte everywhere else. Fixed pseudo-element so every page gets it without markup. */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background:
-      radial-gradient(60% 45% at 82% 8%, rgba(255, 184, 77, 0.16), transparent 60%),
-      radial-gradient(50% 40% at 10% 100%, rgba(99, 211, 171, 0.05), transparent 70%);
   }
 
   img,
@@ -116,7 +123,8 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    letter-spacing: -0.022em;
     /* Even out ragged headline line-breaks site-wide (Web Interface Guidelines
      * typography). Only affects semantic headings; display-styled <p> hero
      * lines that want manual breaks keep their own text-wrap. */
@@ -148,21 +156,6 @@
   }
 }
 
-/* Shared keyframe: the "light stays on" pulse — a soft sodium halo that
- * breathes outward. Used by the header lamp and the hero status/panel dots.
- * Neutralised by the reduced-motion block below (runs once, instantly). */
-@keyframes kk-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 184, 77, 0.55);
-  }
-  70% {
-    box-shadow: 0 0 0 9px rgba(255, 184, 77, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 184, 77, 0);
-  }
-}
-
 /* Lenis (src/scripts/smooth-scroll.ts): the two rules from its lenis.css that
  * apply here. Iframes stop eating the wheel mid-glide, so the page does not
  * stall when the demo chat passes under the cursor. */
@@ -174,33 +167,9 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Sections settle into place as they enter the viewport, tied to the scroll
- * itself rather than a timer, so it reads as the page moving, not as effects
- * firing. Progressive enhancement: without scroll-driven animation support
- * (or with reduced motion) everything is simply there, nothing is hidden
- * waiting for JS. The first section is the page hero and is never animated. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    main > section:not(:first-child) > .mx-auto > * {
-      /* A fixed distance, not a percentage of the element: a tall grid would
-       * otherwise still be half-faded while its top sits mid-screen. */
-      animation: kk-settle cubic-bezier(0.2, 0.7, 0.2, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 14rem;
-    }
-  }
-}
-
-@keyframes kk-settle {
-  from {
-    opacity: 0;
-    transform: translateY(1.75rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
+/* No site-wide fade-in on scroll: sections are simply there. Motion is kept for
+ * the few places where it tells something (the hero thread, the current in the
+ * flow diagram). */
 
 @media (prefers-reduced-motion: reduce) {
   *,
