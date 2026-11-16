@@ -109,19 +109,19 @@ const t = T[lang]
 ---
 
 <header
-  class="sticky top-0 z-30 border-b border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] backdrop-blur-md"
+  class="sticky top-0 z-30 border-b border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_88%,transparent)] backdrop-blur-md"
 >
-  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+  <div class="mx-auto flex h-16 max-w-page items-center justify-between px-gutter">
     <a
       href={homeHref}
-      class="flex items-center gap-2.5 font-display text-h3 font-extrabold text-(--color-chalk) no-underline"
+      class="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.02em] text-(--color-chalk) no-underline"
     >
-      <span class="kk-lamp" aria-hidden="true"></span>klantkraan
+      <span class="lamp" aria-hidden="true"></span>klantkraan
     </a>
 
     <!-- Desktop nav -->
     <nav class="hidden md:block" aria-label={t.mainNav}>
-      <ul class="flex items-center gap-4 md:gap-6 text-small">
+      <ul class="flex items-center gap-5 text-small">
         <li class="relative">
           <details class="group" data-branches-dropdown="desktop">
             <summary
@@ -163,9 +163,16 @@ const t = T[lang]
         {
           nav.map((item) => (
             <li>
+              {/* The demo is the one thing a visitor can do right now without
+                  talking to anyone, so it gets a button instead of a link. */}
               <a
                 href={item.href}
-                class="text-(--color-dim) no-underline transition-colors hover:text-(--color-chalk)"
+                class:list={[
+                  'no-underline transition-colors',
+                  item.href.endsWith('/demo/')
+                    ? 'inline-flex h-8 items-center rounded-(--radius-button) border border-(--color-line) bg-(--color-panel) px-3 text-(--color-chalk) shadow-(--shadow-highlight) hover:border-(--color-line-strong)'
+                    : 'text-(--color-dim) hover:text-(--color-chalk)',
+                ]}
               >
                 {item.label}
               </a>
@@ -184,7 +191,7 @@ const t = T[lang]
                   <span
                     aria-current="true"
                     class:list={[
-                      'px-2 py-1 bg-(--color-sodium) font-bold text-(--color-night)',
+                      'px-2 py-1 bg-(--color-panel-2) text-(--color-chalk)',
                       i > 0 && 'border-l border-(--color-line)',
                     ]}
                   >
@@ -242,11 +249,11 @@ const t = T[lang]
        (language switch) clears the fixed phone/WhatsApp bar on small phones. -->
   <nav
     id="mobile-menu"
-    class="hidden max-h-[calc(100dvh-4.8rem)] overflow-y-auto overscroll-contain border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] pb-[calc(5.5rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
+    class="hidden max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-(--color-line) bg-[color-mix(in_oklab,var(--color-night)_82%,transparent)] pb-[calc(5.5rem+env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
     aria-label={t.mobileNav}
     hidden
   >
-    <ul class="mx-auto flex max-w-5xl flex-col">
+    <ul class="mx-auto flex max-w-page flex-col">
       <li class="border-b border-(--color-line)">
         <details data-branches-dropdown="mobile" class="group">
           <summary
@@ -300,7 +307,7 @@ const t = T[lang]
                 <span
                   aria-current="true"
                   class:list={[
-                    'flex-1 py-2 text-center bg-(--color-sodium) font-bold text-(--color-night)',
+                    'flex-1 py-2 text-center bg-(--color-panel-2) text-(--color-chalk)',
                     i > 0 && 'border-l border-(--color-line)',
                   ]}
                 >
@@ -326,17 +333,6 @@ const t = T[lang]
   </nav>
 </header>
 
-<style>
-  /* The "light stays on" lamp: a small sodium dot that breathes. */
-  .kk-lamp {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--color-sodium);
-    flex: none;
-    animation: kk-pulse 2.6s ease-out infinite;
-  }
-</style>
 
 <!-- Externalised JS (loaded as same-origin to pass strict CSP script-src 'self'). -->
 <script src="/js/header-menu.js" type="module" is:inline></script>

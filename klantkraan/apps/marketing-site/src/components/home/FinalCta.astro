@@ -1,15 +1,23 @@
 ---
 /*
- * Closing band: one buy button first, demo and a human conversation as the
- * lower-commitment alternatives.
+ * Closing block: one buy button first, demo and a human conversation as the
+ * lower-commitment alternatives. A plain frame with corner ticks, no glow.
+ * With `photo`, the frame splits: the picture on the left (a van cab on a Dutch
+ * street, where the owner is while the receptionist works), the close on the
+ * right. The picture never sits behind the text.
  */
-
 interface Cta {
   label: string
   href: string
   external?: boolean
 }
-
+interface Photo {
+  src: string
+  srcSm: string
+  alt: string
+  width: number
+  height: number
+}
 interface Props {
   t: {
     h2a: string
@@ -17,84 +25,119 @@ interface Props {
     sub: string
     primary: Cta
     ghosts: Cta[]
+    photo?: Photo
   }
 }
-
 const { t } = Astro.props
+const p = t.photo
 ---
 
-<section class="kk-final-sec">
-  <div class="kk-final">
-    <h2 class="kk-final-h2">{t.h2a} <span class="on">{t.h2on}</span></h2>
-    <p class="mx-auto mt-[18px] max-w-[34em] text-(--color-dim)">{t.sub}</p>
-    <div class="mt-8 btn-row justify-center">
-      <a href={t.primary.href} class="btn btn-primary btn-lg">{t.primary.label}</a>
+<section data-section="final" aria-labelledby="final-h">
+  <div class="mx-auto max-w-page px-gutter pb-section">
+    <div class:list={['frame kk-final', p && 'has-photo']}>
       {
-        t.ghosts.map((cta) => (
-          <a
-            href={cta.href}
-            class="btn btn-ghost btn-lg"
-            target={cta.external ? '_blank' : undefined}
-            rel={cta.external ? 'noopener' : undefined}
-          >
-            {cta.label}
-          </a>
-        ))
+        p && (
+          <div class="kk-final-photo">
+            <img
+              src={p.src}
+              srcset={`${p.srcSm} 580w, ${p.src} 928w`}
+              sizes="(min-width: 768px) 30rem, 100vw"
+              width={p.width}
+              height={p.height}
+              alt={p.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        )
       }
+      <div class="kk-final-body">
+      <h2 id="final-h" class="kk-final-h2">{t.h2a} <span class="on">{t.h2on}</span></h2>
+      <p class="kk-final-sub mt-5 max-w-[34rem] text-body text-(--color-chalk-2)">{t.sub}</p>
+      <div class="kk-final-btns mt-9 btn-row">
+        <a href={t.primary.href} class="btn btn-primary btn-lg">{t.primary.label}</a>
+        {
+          t.ghosts.map((cta) => (
+            <a
+              href={cta.href}
+              class="btn btn-ghost btn-lg"
+              target={cta.external ? '_blank' : undefined}
+              rel={cta.external ? 'noopener' : undefined}
+            >
+              {cta.label}
+            </a>
+          ))
+        }
+      </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* Full-bleed on a phone, a framed panel from tablet up: at 390px a card inset
-   * inside the gutter turns the closing image into a thumbnail. */
-  .kk-final-sec {
-    padding: 3.5rem 0 4rem;
+  .kk-final {
+    background: var(--color-panel);
+  }
+  .kk-final-body {
+    padding: 3.5rem 1.5rem 3.75rem;
+    text-align: center;
+  }
+  .kk-final-sub {
+    margin-inline: auto;
+  }
+  .kk-final-btns {
+    justify-content: center;
   }
   @media (min-width: 768px) {
-    .kk-final-sec {
-      padding: 5rem 1.5rem;
+    .kk-final-body {
+      padding: 5.5rem 3rem 5.75rem;
     }
   }
 
-  /* The page closes on a lit panel rather than more flat night — the last thing
-   * on screen should look like the light it is selling. Deliberately photo-free:
-   * a picture behind centred copy drops the sub-line's contrast and the close is
-   * the one place nothing may compete with the button. */
-  .kk-final {
-    position: relative;
-    isolation: isolate;
+  /* split with a photo */
+  .kk-final-photo {
+    border-bottom: 1px solid var(--color-line);
+    aspect-ratio: 4 / 3;
     overflow: hidden;
-    margin: 0 auto;
-    max-width: 64rem;
-    padding: 3.5rem 1.5rem 4rem;
-    text-align: center;
-    border-block: 1px solid var(--color-line);
-    background: linear-gradient(180deg, var(--color-panel-2), var(--color-panel));
   }
-  .kk-final::before {
-    content: '';
-    position: absolute;
-    inset: -60% 20% auto;
-    height: 130%;
-    z-index: -1;
-    background: radial-gradient(closest-side, rgba(255, 184, 77, 0.22), transparent 70%);
+  .kk-final-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 62%;
+    filter: saturate(0.82) contrast(1.02);
   }
   @media (min-width: 768px) {
-    .kk-final {
-      padding: 4.5rem 3rem 5rem;
-      border: 1px solid var(--color-line);
-      border-radius: 1.5rem;
+    .kk-final.has-photo {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+    .kk-final-photo {
+      aspect-ratio: auto;
+      border-bottom: 0;
+      border-right: 1px solid var(--color-line);
+    }
+    .has-photo .kk-final-body {
+      align-self: center;
+      padding: 4rem 3.5rem;
+      text-align: left;
+    }
+    .has-photo .kk-final-sub {
+      margin-inline: 0;
+    }
+    .has-photo .kk-final-btns {
+      justify-content: flex-start;
     }
   }
 
   .kk-final-h2 {
-    font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    font-size: clamp(2.2rem, 5.6vw, 4rem);
-    line-height: 1;
     margin: 0;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--color-chalk);
     text-wrap: balance;
   }
   .kk-final-h2 .on {

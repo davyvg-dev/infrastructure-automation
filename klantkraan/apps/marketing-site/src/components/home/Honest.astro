@@ -1,0 +1,191 @@
+---
+/*
+ * Honest about what it is and what it does. One hairline grid: the sentence every
+ * conversation opens with on the left, what runs today and what is still being
+ * built on the right. Merges the old Transparency and Roadmap sections.
+ *
+ * The honesty is structural: a check only on what actually runs today, a clock
+ * on what does not, and "nog niet" in plain sight. If a future item ships, move
+ * it to the other list; never restyle the lists to blur the line.
+ */
+import Icon from '../Icon.astro'
+
+interface Props {
+  eerlijk: {
+    eyebrow?: string
+    heading: string
+    quote: string
+    bullets: string[]
+    linkLabel: string
+    linkHref: string
+  }
+  roadmap: {
+    heading: string
+    sub: string
+    nowLabel: string
+    now: string[]
+    laterLabel: string
+    laterNote: string
+    later: string[]
+    footnote: string
+  }
+}
+
+const { eerlijk: e, roadmap: r } = Astro.props
+---
+
+<section id="eerlijk" data-section="honest" aria-labelledby="eerlijk-h" class="scroll-mt-24">
+  <div class="mx-auto max-w-page px-gutter py-section">
+    <header class="max-w-[46rem]">
+      {e.eyebrow && <p class="eyebrow">{e.eyebrow}</p>}
+      <h2 id="eerlijk-h" class:list={['text-h2 text-balance text-(--color-chalk)', e.eyebrow && 'mt-3']}>
+        {e.heading}
+      </h2>
+    </header>
+
+    <div class="grid-rule kk-honest mt-10 md:mt-14">
+      <div class="kk-honest-quote">
+        <p class="kk-quote"><span aria-hidden="true">&ldquo;</span>{e.quote}<span aria-hidden="true">&rdquo;</span></p>
+        <ul class="kk-points" role="list">
+          {e.bullets.map((b) => <li>{b}</li>)}
+        </ul>
+        <p class="mt-6 text-small">
+          <a href={e.linkHref}>{e.linkLabel}</a>
+        </p>
+      </div>
+
+      <div id="roadmap" class="kk-honest-road">
+        <h3 class="text-h3 text-(--color-chalk)">{r.heading}</h3>
+        <p class="mt-2 max-w-[40rem] text-small text-(--color-dim)">{r.sub}</p>
+
+        <div class="kk-lists">
+          <div>
+            <p class="kk-list-label">{r.nowLabel}</p>
+            <ul role="list">
+              {
+                r.now.map((item) => (
+                  <li class="is-now">
+                    <Icon name="check" class="h-4 w-4 shrink-0 text-(--color-sodium)" />
+                    <span>{item}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+          <div>
+            <p class="kk-list-label">{r.laterLabel}</p>
+            <p class="mt-1 text-small text-(--color-dim)">{r.laterNote}</p>
+            <ul role="list">
+              {
+                r.later.map((item) => (
+                  <li class="is-later">
+                    <Icon name="clock" class="h-4 w-4 shrink-0 text-(--color-dim)" />
+                    <span>{item}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="mt-6 max-w-[46rem] text-small text-(--color-dim)">{r.footnote}</p>
+  </div>
+</section>
+
+<style>
+  .kk-honest {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 1024px) {
+    .kk-honest {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+  }
+  .kk-honest > div {
+    padding: 1.75rem 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .kk-honest > div {
+      padding: 2.25rem 2.25rem 2.5rem;
+    }
+  }
+  .kk-honest-quote {
+    background: var(--color-panel);
+  }
+  .kk-quote {
+    margin: 0;
+    font-size: clamp(1.625rem, 2.8vw, 2.125rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+    color: var(--color-chalk);
+    text-wrap: balance;
+  }
+  .kk-quote span {
+    color: var(--color-sodium);
+  }
+  .kk-points {
+    margin: 1.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-line);
+  }
+  .kk-points li {
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--color-line);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-chalk-2);
+  }
+
+  .kk-lists {
+    display: grid;
+    gap: 2rem;
+    margin-top: 1.75rem;
+  }
+  @media (min-width: 640px) {
+    .kk-lists {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+    .kk-lists > div + div {
+      padding-left: 1.75rem;
+      border-left: 1px solid var(--color-line);
+    }
+    .kk-lists > div:first-child {
+      padding-right: 1.75rem;
+    }
+  }
+  .kk-list-label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-dim);
+  }
+  .kk-lists ul {
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.875rem;
+  }
+  .kk-lists li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .kk-lists li :global(svg) {
+    margin-top: 0.2rem;
+  }
+  .is-now {
+    color: var(--color-chalk);
+  }
+  .is-later {
+    color: var(--color-dim);
+  }
+</style>

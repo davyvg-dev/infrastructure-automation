@@ -139,16 +139,14 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
 
 <footer class="border-t border-(--color-line)">
   <!-- Trust band — sits above the legal/branch grid. -->
-  <section class="border-b border-(--color-line) bg-[rgba(0,0,0,0.14)]" aria-label={t.trustAria}>
-    <div class="mx-auto max-w-5xl px-6 py-8 md:py-10">
-      <p class="font-mono text-micro uppercase tracking-widest text-(--color-sodium)">
-        {t.trustKicker}
-      </p>
-      <ul class="mt-5 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
+  <section class="border-b border-(--color-line)" aria-label={t.trustAria}>
+    <div class="mx-auto max-w-page px-gutter py-10 md:py-14">
+      <p class="eyebrow">{t.trustKicker}</p>
+      <ul class="grid-rule mt-5 sm:grid-cols-2 md:grid-cols-4" role="list">
         {
           trustBadges.map((b) => (
-            <li class="flex items-start gap-3">
-              <Icon name={b.icon} class="mt-0.5 h-5 w-5 shrink-0 text-(--color-sodium)" />
+            <li class="flex items-start gap-3 p-5">
+              <Icon name={b.icon} class="mt-0.5 h-4 w-4 shrink-0 text-(--color-dim)" />
               <div>
                 <p class="text-small font-medium text-(--color-chalk)">{b.label}</p>
                 <p class="text-small text-(--color-dim)">{b.sub}</p>
@@ -160,21 +158,21 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
     </div>
   </section>
 
-  <div class="mx-auto max-w-5xl px-6 py-8 md:py-12 text-small text-(--color-dim)">
-    <div class:list={['grid gap-6 md:gap-8', gridCols]}>
+  <div class="mx-auto max-w-page px-gutter py-12 md:py-16 text-small text-(--color-dim)">
+    <div class:list={['grid gap-10 md:gap-8', gridCols]}>
       <div>
-        <p class="font-display text-h3 text-(--color-chalk)">Klantkraan</p>
+        <p class="flex items-center gap-2.5 text-[1.0625rem] font-semibold tracking-[-0.02em] text-(--color-chalk)"><span class="lamp" aria-hidden="true"></span>klantkraan</p>
         <p class="mt-2">{t.tagline}</p>
         {
           lang === 'nl' && (
             <>
-              <p class="mt-4 font-medium text-(--color-chalk)">Gratis</p>
+              <p class="mt-6 font-mono text-[0.75rem] text-(--color-dim)">Gratis</p>
               <ul class="mt-1">
                 {AREAS.map((area) => (
                   <li>
                     <a
                       href={magnets[area].href}
-                      class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+                      class="block py-1.5 text-(--color-chalk-2) no-underline hover:text-(--color-chalk)"
                     >
                       {magnets[area].short}
                     </a>
@@ -201,14 +199,14 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         </p>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-chalk)">{t.branchesHead}</p>
-        <ul class="mt-2">
+        <p class="font-mono text-[0.75rem] text-(--color-dim)">{t.branchesHead}</p>
+        <ul class="mt-3">
           {
             branchLinks.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+                  class="block py-1.5 text-(--color-chalk-2) no-underline hover:text-(--color-chalk)"
                 >
                   {item.label}
                 </a>
@@ -223,14 +221,14 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         </ul>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-chalk)">{t.legalHead}</p>
-        <ul class="mt-2">
+        <p class="font-mono text-[0.75rem] text-(--color-dim)">{t.legalHead}</p>
+        <ul class="mt-3">
           {
             legal.map((item) => (
               <li>
                 <a
                   href={item.href}
-                  class="block py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+                  class="block py-1.5 text-(--color-chalk-2) no-underline hover:text-(--color-chalk)"
                 >
                   {item.label}
                 </a>
@@ -240,13 +238,13 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         </ul>
       </div>
       <div>
-        <p class="font-display text-h3 text-(--color-chalk)">{t.contactHead}</p>
+        <p class="font-mono text-[0.75rem] text-(--color-dim)">{t.contactHead}</p>
         <p>
           <a
             href={waLink}
             target="_blank"
             rel="noopener"
-            class="flex items-center gap-2 py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+            class="flex items-center gap-2 py-1.5 text-(--color-chalk-2) no-underline hover:text-(--color-chalk)"
           >
             <Icon name="message-circle" class="h-4 w-4 shrink-0" />
             <span>{t.whatsapp}</span>
@@ -255,7 +253,7 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         <p>
           <a
             href={mailLink}
-            class="flex items-center gap-2 py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+            class="flex items-center gap-2 py-1.5 text-(--color-chalk-2) no-underline hover:text-(--color-chalk)"
           >
             <Icon name="mail" class="h-4 w-4 shrink-0" />
             <span>{contact.email}</span>
@@ -264,7 +262,7 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         <p>
           <a
             href={telLink}
-            class="flex items-center gap-2 py-2 text-(--color-dim) no-underline hover:text-(--color-chalk)"
+            class="flex items-center gap-2 py-1.5 text-(--color-chalk-2) no-underline hover:text-(--color-chalk)"
           >
             <Icon name="phone" class="h-4 w-4 shrink-0" />
             <span>{contact.phoneDisplay}</span>
@@ -275,7 +273,7 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
           class="mt-4 flex items-center gap-3 py-2 no-underline hover:text-(--color-chalk)"
         >
           <span
-            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-line) bg-(--color-panel) font-display text-h3 text-(--color-sodium)"
+            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--color-line) bg-(--color-panel) text-[0.9375rem] font-semibold text-(--color-sodium)"
             aria-hidden="true"
           >
             K
@@ -287,6 +285,6 @@ const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' :
         </a>
       </div>
     </div>
-    <p class="mt-10 text-micro">&copy; {year} Klantkraan · {t.madeIn}</p>
+    <p class="mt-12 border-t border-(--color-line) pt-6 font-mono text-[0.75rem]">&copy; {year} Klantkraan · {t.madeIn}</p>
   </div>
 </footer>
