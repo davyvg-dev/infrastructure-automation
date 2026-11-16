@@ -1,7 +1,9 @@
 ---
 /*
- * Stat: one figure and what it means, set on one line (figure left, caption
- * right) inside a `.stat-row`. Tabular digits, no card, no accent bar.
+ * Stat: one figure and what it means, as an item of a `.stat-row` (the parent
+ * draws the hairlines). The figure sits above its caption so a wide figure
+ * ("4–6 weken", "'s Avonds") never squeezes the caption into a narrow column.
+ * Tabular digits, no card, no accent bar.
  */
 interface Props {
   value: string
@@ -11,9 +13,9 @@ interface Props {
 const { value, label } = Astro.props
 ---
 
-<div class="flex items-baseline gap-4">
-  <p class="shrink-0 font-mono text-[1.75rem] leading-none tracking-[-0.02em] text-(--color-chalk) tabular-nums">
+<div data-stat>
+  <p class="font-mono text-[1.75rem] leading-none tracking-[-0.02em] text-(--color-chalk) tabular-nums">
     {value}
   </p>
-  <p class="text-small text-(--color-dim)">{label}</p>
+  <p data-stat-caption class="mt-3 max-w-[22rem] text-small text-(--color-dim)">{label}</p>
 </div>

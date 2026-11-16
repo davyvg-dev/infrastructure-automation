@@ -134,6 +134,24 @@ for (const width of WIDTHS) {
 }
 check('old fonts (Bricolage, Hanken, Space Mono) never requested', oldFonts.length === 0, oldFonts[0])
 
+// ------------------------------------------------------------------ stat line
+// A figure must never squeeze its caption into a narrow column (round 3 of the
+// independent check: "4–6 weken" left its caption 67px wide at 768).
+console.log('\n=== Stat line captions ===')
+for (const width of [1440, 1024, 768, 390, 320]) {
+  const { ctx, page } = await newPage({ viewport: { width, height: 900 } })
+  for (const path of ['/loodgieters/', '/dakdekkers/', '/sportscholen/', '/en/dakdekkers/', '/en/sportscholen/']) {
+    await page.goto(`${BASE}${path}`, { waitUntil: 'load' })
+    const narrow = await page.evaluate(() =>
+      [...document.querySelectorAll('[data-stat-caption]')]
+        .map((el) => ({ w: Math.round(el.getBoundingClientRect().width), t: el.textContent.trim().slice(0, 30) }))
+        .filter((c) => c.w < 160),
+    )
+    check(`${path} @${width}: every stat caption is at least 160px wide`, narrow.length === 0, JSON.stringify(narrow))
+  }
+  await ctx.close()
+}
+
 // ------------------------------------------------------------------ NL homepage
 console.log('\n=== NL homepage ===')
 {
