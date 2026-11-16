@@ -475,7 +475,41 @@ SCENARIOS: list[dict[str, Any]] = [
             ),
         },
     },
+    # House style: customer-facing text never carries an em dash. The klantkraan.nl demo
+    # config's FAQ answers contain them, so this asks exactly those questions. `forbid` is
+    # checked in code on every bot line (the judge is not trusted to spot a character).
+    {
+        "name": "geen-gedachtestreep",
+        "about": "house style: no em dash in any reply, even where the FAQ answer has one",
+        "client": None,
+        "config": "config/klantkraan-demo.yaml",
+        "forbid": ["—"],
+        "persona": NL_PERSONA_BASE
+        + "Je doel: drie dingen weten, één vraag per bericht: doen jullie spoedklussen, "
+        "hoe snel kan er iemand komen, en rekenen jullie voorrijkosten. Wil de assistent "
+        "daarna een afspraak inplannen, zeg dan dat je eerst je agenda checkt en sluit af.",
+        "criteria": {
+            "faq_answered_from_config": (
+                "The assistant answered all three questions (emergency jobs, how soon "
+                "someone can come, call-out costs) in line with the business FAQ: "
+                "emergency slots are kept free every day; how soon depends on the day, "
+                "with an offer to check availability; spoedservice from €90, quotes and "
+                "inspections free. No invented prices, times, or promises."
+            ),
+        },
+    },
 ]
+
+
+def _forbidden_verdict(forbid: list[str], transcript: list[tuple[str, str]]) -> dict[str, Any]:
+    """Deterministic check: no bot line contains any of the forbidden strings."""
+    hits = [text for speaker, text in transcript if speaker == "bot" and any(s in text for s in forbid)]
+    if not hits:
+        return {"passed": True, "rationale": f"No bot line contains {forbid!r}."}
+    return {
+        "passed": False,
+        "rationale": f"{len(hits)} bot line(s) contain {forbid!r}, first: {hits[0][:160]!r}",
+    }
 
 
 def _client() -> anthropic.Anthropic:
@@ -554,6 +588,11 @@ def run_scenario(scenario: dict[str, Any], model: str | None = None) -> bool:
     print(f"\n=== {scenario['name']} — {scenario['about']}")
     client = _client()
     token = settings.use_slug(scenario["client"])
+    # A scenario may pin the default config (client None) to a file other than
+    # BUSINESS_CONFIG; restored in the finally below.
+    orig_config = os.environ.get("BUSINESS_CONFIG")
+    if scenario.get("config"):
+        os.environ["BUSINESS_CONFIG"] = scenario["config"]
     orig_dir, orig_cal = settings.DATA_DIR, calendar_store.DATA_DIR
     transcript: list[tuple[str, str]] = []
     usage = {
@@ -594,12 +633,19 @@ def run_scenario(scenario: dict[str, Any], model: str | None = None) -> bool:
     finally:
         settings.DATA_DIR, calendar_store.DATA_DIR = orig_dir, orig_cal
         settings.clear_slug(token)
+        if scenario.get("config"):
+            if orig_config is None:
+                os.environ.pop("BUSINESS_CONFIG", None)
+            else:
+                os.environ["BUSINESS_CONFIG"] = orig_config
 
     transcript_text = "\n".join(
         f"[tool] {text}" if speaker == "tool" else f"{speaker}: {text}"
         for speaker, text in transcript
     )
     verdicts = _judge(client, scenario["criteria"], transcript_text)
+    if scenario.get("forbid"):
+        verdicts["no_forbidden_text"] = _forbidden_verdict(scenario["forbid"], transcript)
     ok = True
     for cid, verdict in verdicts.items():
         if not verdict["passed"]:
