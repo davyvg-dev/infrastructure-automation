@@ -493,8 +493,10 @@ SCENARIOS: list[dict[str, Any]] = [
                 "The assistant answered all three questions (emergency jobs, how soon "
                 "someone can come, call-out costs) in line with the business FAQ: "
                 "emergency slots are kept free every day; how soon depends on the day, "
-                "with an offer to check availability; spoedservice from €90, quotes and "
-                "inspections free. No invented prices, times, or promises."
+                "with an offer to check availability; call-out costs get a clear no (geen "
+                "voorrijkosten), quotes and inspections free, spoedservice from €90. An "
+                "answer that names a price but never says whether voorrijkosten are "
+                "charged is a fail. No invented prices, times, or promises."
             ),
         },
     },
