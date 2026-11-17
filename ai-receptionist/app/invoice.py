@@ -59,7 +59,7 @@ PLACEHOLDER_BTW = "NL000000000B00"
 PLACEHOLDER_ADDRESS = "Adresgegevens volgen"
 
 SELLER = {
-    "name": "T4 Software Consulting BV",
+    "name": "T4 Software Consulting",
     "trade_name": "Klantkraan",
     "kvk": "90232135",
     "btw": os.getenv("BILLING_SELLER_BTW", "") or PLACEHOLDER_BTW,

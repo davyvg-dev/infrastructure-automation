@@ -44,7 +44,7 @@ LOGO = f"{SITE}/email/logo.png"
 # marketing -- but it does need to say who is writing and where the terms live. KvK from
 # marketing-site/src/data/company.ts; the BTW number is still pending, and the site hides
 # that field while it is empty, so this does too rather than print "BTW ".
-_COMPANY = "Klantkraan is een handelsnaam van T4 Software Consulting BV — KvK 90232135"
+_COMPANY = "Klantkraan is een handelsnaam van T4 Software Consulting · KvK 90232135"
 _FOOTER_LINKS = [
     ("Privacy", f"{SITE}/legal/privacy/"),
     ("Voorwaarden", f"{SITE}/legal/voorwaarden/"),

@@ -102,7 +102,10 @@ def test_the_factuur_carries_what_the_belastingdienst_requires(data_dir) -> None
 
     for required in ("2026-0001", "29-07-2026", "KvK 90232135", "BTW", "€ 299,00", "€ 62,79"):
         assert required in text, f"a legal factuur states {required}"
-    assert "T4 Software Consulting BV" in text, "the legal entity, not just the trade name"
+    assert "T4 Software Consulting" in text, "the legal entity, not just the trade name"
+    # An eenmanszaak, not a BV (Davy, 2026-10-19): a wrong legal form on a factuur is a
+    # wrong party on a legal document.
+    assert "Software Consulting BV" not in text and "B.V." not in text, "no BV on the factuur"
 
 
 def test_both_parts_are_rendered_from_one_description(data_dir) -> None:
