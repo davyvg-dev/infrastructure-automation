@@ -14,11 +14,11 @@ The copywriters fixed grammar, AI tells and cuts on every page (changelogs in th
 Below: the claims they found that may be untrue or contradict each other, and left for you. Ranked by risk.
 
 ## 1. Possibly untrue, legal or money risk
-1. **Data location.** /over/, the privacy policy and the DPA say "geen export naar de VS" / "opslag uitsluitend in de EU", but /legal/subprocessors/ lists Anthropic, Twilio and Resend in the US. Hosting is "Hetzner Frankfurt" in the DPA and trade FAQs, "FSN1" (Falkenstein) in the footer. Brevo is missing from the subprocessor list. Needs one true version.
+1. **DECIDED 17 Nov (tell it straight, commit d41916e; Telegram and Brevo rows still open).** **Data location.** /over/, the privacy policy and the DPA say "geen export naar de VS" / "opslag uitsluitend in de EU", but /legal/subprocessors/ lists Anthropic, Twilio and Resend in the US. Hosting is "Hetzner Frankfurt" in the DPA and trade FAQs, "FSN1" (Falkenstein) in the footer. Brevo is missing from the subprocessor list. Needs one true version.
 2. **/aanmelden/:** corrected in all three languages (see 0). Confirm the wording.
-3. **Legal name.** "T4 Software Consulting BV" on every page (footer, /over/, privacy, voorwaarden). It is an eenmanszaak.
+3. **DECIDED 17 Nov (drop BV everywhere live-facing, commits 764fbac, b272c17, a1cd2dd).** **Legal name.** "T4 Software Consulting BV" on every page (footer, /over/, privacy, voorwaarden). It is an eenmanszaak.
 4. **Phone claims.** The dakdekkers storm scenario and three FAQs say the receptionist answers calls, texts back within 60 seconds and sends review requests. Other pages say it "staat los van uw telefoonlijn", and review requests are listed as not built.
-5. **Results without clients.** City pages say "aangesloten dakdekkers/loodgieters"; blog posts and guides describe client results. If there are no such clients yet, these go.
+5. **DECIDED 17 Nov (rewrite to what the receptionist does; blog line is a rekenvoorbeeld; commit 3b86038).** **Results without clients.** City pages say "aangesloten dakdekkers/loodgieters"; blog posts and guides describe client results. If there are no such clients yet, these go.
 6. **Setup fee.** /prijzen/: "inrichting vanaf € 249, gratis voor pilotklanten". /ai-receptionist/ shows no setup fee; the blog says "geen opstartkosten".
 7. **Price FAQ** on the trade pages opens with "Dat kan niet gebeuren." (a guarantee).
 8. **Legal pages:** the AI Act art. 50 citations look wrong; the SLA promises a status page that is not live; liability says "per geval" in one line and "per gebeurtenis" in the next; "Btw verlegd voor klanten buiten Nederland" holds for business customers in other EU countries only.
