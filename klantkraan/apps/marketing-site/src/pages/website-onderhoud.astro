@@ -1,0 +1,176 @@
+---
+/**
+ * /website-onderhoud/: website care for WordPress sites, € 45 a month (plan
+ * 2026-11-16-homepage-four-services). Dark site, "u" voice.
+ * Claims stay inside what is decided: updates, daily back-up, uptime and security
+ * monitoring, a monthly speed check. No "small fixes" and no term (monthly,
+ * cancellable) until the founder confirms them. There is no recurring payment
+ * link yet, so signing up goes by mail.
+ */
+import Base from '../layouts/Base.astro'
+import CareDiagram from '../components/diagrams/CareDiagram.astro'
+import MiniOfferCard from '../components/MiniOfferCard.astro'
+import { contact } from '../data/contact'
+import { serviceByArea } from '../data/services'
+
+const s = serviceByArea.websites
+const orderHref = `mailto:${contact.email}?subject=${encodeURIComponent('Aanmelden: website-onderhoud')}`
+
+const included = [
+  {
+    title: 'Updates van WordPress, thema en plugins',
+    text: 'Wij werken alles bij, zodat er geen oude plugin als open deur blijft staan.',
+  },
+  {
+    title: 'Elke dag een back-up',
+    text: 'Elke dag een kopie van de hele site, zodat er altijd een versie van gisteren is.',
+  },
+  {
+    title: 'Bewaking: online en veilig',
+    text: 'Gaat de site uit de lucht of ziet de beveiliging iets vreemds, dan krijgen wij een melding.',
+  },
+  {
+    title: 'Elke maand een snelheidscheck',
+    text: 'Wij meten hoe snel de site laadt. De uitslag staat in uw mail.',
+  },
+]
+---
+
+<Base
+  title="Website-onderhoud voor WordPress, € 45 per maand | Klantkraan"
+  description="Updates van WordPress, thema en plugins, elke dag een back-up, bewaking en een snelheidscheck per maand. € 45 per maand, excl. btw. Begin met de gratis websitecheck."
+  centered={false}
+  offerArea="websites"
+>
+  <section class="pt-16 pb-12 md:pt-24 md:pb-16" aria-labelledby="wo-h">
+    <div class="mx-auto max-w-page px-gutter">
+      <p class="eyebrow">{s.label} voor WordPress</p>
+      <h1 id="wo-h" class="mt-3 max-w-[18em] font-display text-hero text-balance text-(--color-chalk)">
+        Een WordPress-site die snel, veilig en bijgewerkt blijft
+      </h1>
+      <p class="mt-6 max-w-2xl text-body text-(--color-chalk-2) md:text-[1.125rem]">
+        Wij houden uw site bij, zodat u er zelf niet naar hoeft te kijken. Updates, een dagelijkse
+        back-up, bewaking en elke maand een snelheidscheck.
+      </p>
+      <p class="wo-price mt-6" data-price>
+        <span class="wo-amount">{s.price}</span>
+        <span class="wo-note">{s.priceNote}</span>
+      </p>
+      <div class="mt-8 btn-row">
+        <a href={s.free.href} class="btn btn-primary btn-lg">Gratis websitecheck</a>
+        <a href={orderHref} class="btn btn-ghost btn-lg">Meld uw site aan</a>
+      </div>
+      <p class="mt-4 text-small text-(--color-dim)">
+        Aanmelden gaat per mail: stuur ons het webadres van uw site.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-y border-(--color-line) bg-(--color-panel) py-12 md:py-20" aria-labelledby="wo-schema-h">
+    <div class="svc-schema mx-auto max-w-page px-gutter">
+      <div>
+        <p class="eyebrow">Wat er gebeurt</p>
+        <h2 id="wo-schema-h" class="mt-3 text-h2 text-balance text-(--color-chalk)">
+          Uw site in het midden, vier dingen die blijven lopen.
+        </h2>
+        <p class="mt-4 text-body text-(--color-chalk-2)">
+          Updates, de dagelijkse back-up en de bewaking lopen op de achtergrond. De snelheidscheck
+          komt één keer per maand in uw mail.
+        </p>
+      </div>
+      <div class="svc-schema-drawing">
+        <CareDiagram />
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-20" aria-labelledby="wo-in-h">
+    <div class="mx-auto max-w-page px-gutter">
+      <h2 id="wo-in-h" class="text-h2 text-balance text-(--color-chalk)">
+        Wat zit erin voor {s.price}
+      </h2>
+      <ul role="list" class="grid-rule mt-8 md:grid-cols-2">
+        {
+          included.map((item) => (
+            <li class="p-6 md:p-8">
+              <h3 class="text-h3 text-(--color-chalk)">{item.title}</h3>
+              <p class="mt-2 text-body text-(--color-dim)">{item.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="wo-sum mt-8">
+        <p class="wo-price" data-price>
+          <span class="wo-amount">{s.price}</span>
+          <span class="wo-note">{s.priceNote}</span>
+        </p>
+        <a href={orderHref} class="btn btn-primary btn-lg">Meld uw site aan</a>
+      </div>
+      <p class="mt-6 text-small text-(--color-dim)">Website-onderhoud is er voor sites op WordPress.</p>
+    </div>
+  </section>
+
+  <section class="border-t border-(--color-line) bg-(--color-panel) py-12 md:py-20" aria-labelledby="wo-op-h">
+    <div class="mx-auto grid max-w-page gap-8 px-gutter md:grid-cols-2 md:items-start md:gap-14">
+      <div>
+        <p class="eyebrow">Eerst opruimen?</p>
+        <h2 id="wo-op-h" class="mt-3 text-h2 text-balance text-(--color-chalk)">
+          Loopt de site al een tijd achter?
+        </h2>
+        <p class="mt-4 text-body text-(--color-chalk-2)">
+          Dan zetten we hem eerst in één keer op orde. Daarna houdt het onderhoud hem zo.
+        </p>
+      </div>
+      <MiniOfferCard area="websites" level="h2" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .wo-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.625rem;
+    margin-bottom: 0;
+  }
+  .wo-amount {
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-chalk);
+  }
+  .wo-note {
+    font-size: var(--text-small);
+    color: var(--color-dim);
+  }
+  .wo-sum {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+  }
+  .wo-sum .wo-price {
+    margin: 0;
+  }
+  /* Copy beside the drawing from 1024; the frame stays close to the drawing's size. */
+  .svc-schema {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .svc-schema-drawing {
+    width: 100%;
+    max-width: 32rem;
+  }
+  @media (min-width: 1024px) {
+    .svc-schema {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 3.5rem;
+    }
+    .svc-schema-drawing {
+      justify-self: end;
+    }
+  }
+</style>

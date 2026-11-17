@@ -40,6 +40,9 @@ async function open(path, p = page) {
 console.log(`\n=== One call to action block per page @ ${BASE} ===`)
 const ctaPages = [
   '/',
+  '/ai-receptionist/',
+  '/website-onderhoud/',
+  '/automatiseringen/',
   '/prijzen/',
   '/loodgieters/',
   '/rekentool/',
@@ -255,7 +258,7 @@ for (const f of [
 console.log('\n=== No horizontal scroll at 390 and 320 ===')
 for (const width of [390, 320]) {
   const p = await browser.newPage({ viewport: { width, height: 800 } })
-  for (const path of ['/', '/gratis/', '/klein-beginnen/', '/rekentool/', '/advertentievideos/', '/websitecheck/', '/scan/', '/scan/bevestigd/']) {
+  for (const path of ['/', '/gratis/', '/klein-beginnen/', '/rekentool/', '/advertentievideos/', '/websitecheck/', '/scan/', '/scan/bevestigd/', '/website-onderhoud/', '/automatiseringen/']) {
     await open(path, p)
     const over = await p.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
     check(`${path} @${width}: no horizontal scroll`, over <= 0, `${over}px over`)
@@ -265,7 +268,7 @@ for (const width of [390, 320]) {
 
 // ------------------------------------------------------------------ Klantkraan, not the founder
 console.log('\n=== No founder name on the magnet pages ===')
-for (const path of ['/scan/', '/scan/bevestigd/', '/websitecheck/', '/rekentool/', '/advertentievideos/', '/gratis/', '/klein-beginnen/']) {
+for (const path of ['/scan/', '/scan/bevestigd/', '/websitecheck/', '/rekentool/', '/advertentievideos/', '/gratis/', '/klein-beginnen/', '/', '/ai-receptionist/', '/website-onderhoud/', '/automatiseringen/']) {
   await open(path)
   const html = await page.content()
   check(`${path} never says the founder's name`, !/davy/i.test(html)) // copy-lint-ok

@@ -1,0 +1,333 @@
+---
+/*
+ * One ad video into sixteen versions, drawn as a fan-out: the source clip feeds
+ * one rail that splits into four columns of four clips, beads on a wire. Every clip
+ * keeps the same body (the existing footage, the same frame marks as the source)
+ * and gets its own opening: a lit segment with a mark in a place no other version
+ * has (16 distinct). Only what magnets.ts promises: sixteen versions of one
+ * video, each with a different opening. Nothing about results.
+ *
+ * HTML boxes, so it reads the same in any slot from 280px to 620px. Snapped to
+ * the paper's 40px ruling: the source sits between two lines, the rail lies on
+ * one, and each row of clips runs down the middle of a lane. The current
+ * leaves the source, splits at the middle of the rail and runs down the columns;
+ * each opening lights as it passes. Motion is CSS only (transform, opacity), held
+ * off screen by scripts/play-in-view.ts. Reduced motion or no JS: finished.
+ */
+interface Props {
+  id?: string
+}
+const { id } = Astro.props
+
+const aria =
+  'Schema: één advertentievideo wordt zestien versies. Elke versie heeft hetzelfde beeld en een andere opening.'
+// Where each version's mark sits in its opening (column, height): all 16 pairs
+// differ, and no two neighbours share a column or a height.
+const marks = [
+  [0, 2], [2, 0], [1, 3], [3, 1],
+  [2, 3], [0, 1], [3, 2], [1, 0],
+  [1, 1], [3, 3], [0, 0], [2, 2],
+  [3, 0], [1, 2], [2, 1], [0, 3],
+]
+const cols = [0, 1, 2, 3]
+const rows = [0, 1, 2, 3]
+// When the current reaches each column: the two inner ones first (the rail is fed
+// in the middle), the outer two at the rail's ends.
+const reach = [1, 0, 0, 1]
+---
+
+<figure id={id} class="frame sheet" data-diagram="variants" data-kk-play role="img" aria-label={aria}>
+  <div class="plan">
+    <div class="src">
+      <span class="clip clip-src"><span class="op"></span><span class="bd"></span></span>
+      <span>Uw video</span>
+    </div>
+
+    <div class="fan">
+      <span class="w w-feed"></span>
+      <span class="w w-bus w-bus-l"></span>
+      <span class="w w-bus w-bus-r"></span>
+      <span class="j"></span>
+      {
+        cols.map((c) => (
+          <div class="col" style={`--far:${reach[c]};--c:${c}`}>
+            <span class="w w-drop" />
+            {rows.map((r) => {
+              const [mx, mh] = marks[r * 4 + c]
+              return (
+                <span class="clip" style={`--r:${r}`}>
+                  <span class="op">
+                    <i style={`--mx:${mx};--mh:${mh}`} />
+                  </span>
+                  <span class="bd" />
+                </span>
+              )
+            })}
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="cap">16 versies, elk met een andere opening</p>
+  </div>
+</figure>
+
+<style>
+  .sheet {
+    margin: 0;
+    padding: 40px 1.25rem 2.5rem;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) 2.5rem
+      ),
+      var(--color-night);
+  }
+  .plan {
+    max-width: 23rem;
+    margin-inline: auto;
+  }
+
+  /* ---- the source ---- */
+  .src {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: max-content;
+    margin: 0 auto 40px;
+    padding: 0 0.875rem;
+    height: 40px;
+    border: 1.5px solid var(--color-chalk-2);
+    border-radius: 6px;
+    background: var(--color-panel);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-chalk);
+  }
+  /* from the source's bottom edge (40px above the rail) down to the rail's bottom
+   * edge; placed on the fan, not inside the source, so it does not hang off the
+   * box's border */
+  .w-feed {
+    left: var(--xm);
+    top: -40px;
+    width: 1.5px;
+    height: 40.5px;
+    margin-left: -0.75px;
+  }
+
+  /* ---- a clip: an opening, then the footage ---- */
+  .clip {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 14px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 2px;
+    background: var(--color-night);
+    overflow: hidden;
+  }
+  .op {
+    position: relative;
+    width: 34%;
+    flex: none;
+    border-right: 1px solid var(--color-line-strong);
+    background: var(--color-panel-2);
+  }
+  .op::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-sodium);
+  }
+  .op i {
+    position: absolute;
+    z-index: 1;
+    left: calc(16% + var(--mx) * 20%);
+    bottom: 2px;
+    width: 2px;
+    height: calc(3px + var(--mh) * 2px);
+    background: var(--color-sodium-ink);
+  }
+  /* the footage: frame marks, the same in every version */
+  .bd {
+    flex: 1;
+    background: repeating-linear-gradient(
+      to right,
+      transparent 0 4px,
+      var(--color-line-strong) 4px 5px
+    );
+  }
+  .clip-src {
+    width: 3rem;
+    height: 12px;
+  }
+  /* the source's own opening: the one every version replaces */
+  .clip-src .op {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--color-line-strong) 0 1px,
+      transparent 1px 3.5px
+    );
+  }
+  .clip-src .op::before {
+    content: none;
+  }
+
+  /* ---- wires ---- */
+  .w {
+    position: absolute;
+    background: var(--color-line-strong);
+  }
+  .w::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-sodium);
+    opacity: 0.6;
+    transform-origin: 50% 0;
+  }
+  /* Wire centres, rounded so every 1.5px wire box starts on a whole px (a column
+   * centre at 12.5% of the width rarely is one): feed and junction in the middle,
+   * the drops at the column centres. */
+  .fan {
+    --xm: 50%;
+    --x0: 12.5%;
+    --x3: 87.5%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @supports (left: round(down, 1px, 1px)) {
+    .fan {
+      --xm: calc(round(down, 50% - 0.75px, 1px) + 0.75px);
+      --x0: calc(round(down, 12.5% - 0.75px, 1px) + 0.75px);
+      --x3: calc(round(down, 87.5% - 0.75px, 1px) + 0.75px);
+    }
+    .fan .w-drop {
+      left: round(down, (var(--c) * 2 + 1) * 12.5% - 0.75px, 1px);
+    }
+  }
+  /* The rail's top edge sits 1px above the ruled line, on a whole pixel (at 0.75px
+   * above it sat on .25 and drew thinner than the drops); its centre is 0.25px
+   * above the line and the junction hangs on it. Each half runs on to the outer
+   * edge of its end drop, so both corners are solid. */
+  .w-bus {
+    top: -1px;
+    height: 1.5px;
+  }
+  .w-bus-l {
+    left: calc(var(--x0) - 0.75px);
+    width: calc(var(--xm) - var(--x0) + 0.75px);
+  }
+  .w-bus-l::after {
+    transform-origin: 100% 50%;
+  }
+  .w-bus-r {
+    left: var(--xm);
+    width: calc(var(--x3) + 0.75px - var(--xm));
+  }
+  .w-bus-r::after {
+    transform-origin: 0 50%;
+  }
+  .j {
+    position: absolute;
+    left: var(--xm);
+    top: -0.25px;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: var(--color-chalk-2);
+  }
+  /* clip centres at 20, 60, 100 and 140px under the rail: mid-lane */
+  .col {
+    display: grid;
+    gap: 26px;
+    padding: 13px 6px 0;
+  }
+  .w-drop {
+    left: calc((var(--c) * 2 + 1) * 12.5% - 0.75px);
+    top: 0;
+    width: 1.5px;
+    height: 140px;
+  }
+
+  .cap {
+    margin: 1.5rem 0 0;
+    text-align: center;
+    text-wrap: balance;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--color-dim);
+  }
+
+  /* ---- motion ----
+   * Feed 0.4s, rail from the middle out (0.52 to 0.82s), then each column runs down
+   * from the moment the rail reaches it; an opening lights as the current passes. */
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .w-feed::after {
+      animation:
+        kk-wy 0.12s linear 0.4s backwards,
+        kk-settle 0.9s ease 1.3s backwards;
+    }
+    .w-bus::after {
+      animation:
+        kk-wx 0.3s linear 0.52s backwards,
+        kk-settle 0.9s ease 1.5s backwards;
+    }
+    .col {
+      --at: calc(0.62s + var(--far) * 0.2s);
+    }
+    .w-drop::after {
+      animation:
+        kk-wy 0.5s linear var(--at) backwards,
+        kk-settle 0.9s ease calc(var(--at) + 1s) backwards;
+    }
+    .op::before {
+      animation: kk-print 0.26s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--at) + 0.07s + var(--r) * 0.143s) backwards;
+    }
+    .op i {
+      animation: kk-on 0.26s linear calc(var(--at) + 0.07s + var(--r) * 0.143s) backwards;
+    }
+  }
+  @keyframes kk-wy {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes kk-wx {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes kk-settle {
+    from {
+      opacity: 1;
+    }
+  }
+  @keyframes kk-on {
+    from {
+      opacity: 0;
+    }
+  }
+  /* an opening written in from the left */
+  @keyframes kk-print {
+    from {
+      opacity: 0;
+      transform: scaleX(0.2);
+    }
+  }
+  .op::before {
+    transform-origin: 0 50%;
+  }
+</style>
+
+<script>
+  import '../../scripts/play-in-view'
+</script>

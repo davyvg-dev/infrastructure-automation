@@ -2,6 +2,7 @@
 import Icon from './Icon.astro'
 import { branches } from '../data/branches'
 import { localeUrls } from '../data/i18n'
+import { services } from '../data/services'
 
 interface Props {
   lang?: 'nl' | 'en' | 'es'
@@ -9,14 +10,19 @@ interface Props {
 const { lang = 'nl' } = Astro.props
 
 // Gidsen + blog are Dutch-only, so the EN/ES navs drop them; everything else
-// in these navs has an /en/ and /es/ twin.
+// in these navs has an /en/ and /es/ twin. The NL "Diensten" item is a dropdown
+// with the four services (plan 2026-11-16-homepage-four-services); it took the
+// place of "Rekentool", which stays reachable from /gratis/, the footer and the
+// receptionist band on /.
 const navByLang = {
   nl: [
     { href: '/gratis/', label: 'Gratis' },
     { href: '/prijzen/', label: 'Prijzen' },
-    { href: '/rekentool/', label: 'Rekentool' },
+    { href: '/#diensten', label: 'Diensten', services: true },
     { href: '/gidsen/', label: 'Gidsen' },
-    { href: '/blog/', label: 'Blog' },
+    // Mobile menu only: with the Diensten dropdown the desktop row ran out of room
+    // (plan 2026-11-16, Risks: header width).
+    { href: '/blog/', label: 'Blog', mobileOnly: true },
     { href: '/demo/', label: 'Demo' },
     { href: '/over/', label: 'Over' },
   ],
@@ -34,6 +40,7 @@ const navByLang = {
   ],
 } as const
 const nav = navByLang[lang]
+const desktopNav = nav.filter((item) => !('mobileOnly' in item))
 
 // Trades dropdown, resolved per language from the shared branch list. ES trade
 // cornerstones don't exist yet, so ES reuses the English cornerstones.
@@ -42,6 +49,9 @@ const branchLinks = branches.map((b) => ({
   label: lang === 'es' ? b.labelPluralEs : lang === 'en' ? b.labelPluralEn : b.labelPlural,
 }))
 const hubHref = lang === 'nl' ? '/voor-wie/' : lang === 'es' ? '/es/voor-wie/' : '/en/voor-wie/'
+// Services dropdown (NL only): the four service pages from src/data/services.ts.
+const serviceLinks = services.map((s) => ({ href: s.href, label: s.label }))
+const allServices = { href: '/#diensten', label: 'Alle diensten →' }
 const homeHref = lang === 'nl' ? '/' : lang === 'es' ? '/es/' : '/en/'
 
 // Language switcher: an inline NL | EN | ES segmented control. Targets come
@@ -161,7 +171,43 @@ const t = T[lang]
           </details>
         </li>
         {
-          nav.map((item) => (
+          desktopNav.map((item) => 'services' in item ? (
+            <li class="relative">
+              <details class="group" data-services-dropdown="desktop">
+                <summary class="flex cursor-pointer list-none items-center gap-1 text-(--color-dim) marker:hidden hover:text-(--color-chalk)">
+                  <span>{item.label}</span>
+                  <Icon
+                    name="chevron-down"
+                    class="h-4 w-4 transition-transform group-open:rotate-180"
+                  />
+                </summary>
+                <ul
+                  class="absolute top-full left-0 z-20 mt-2 min-w-[16rem] rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-2"
+                >
+                  {
+                    serviceLinks.map((l) => (
+                      <li>
+                        <a
+                          href={l.href}
+                          class="block rounded-(--radius-button) px-3 py-2 text-(--color-chalk) no-underline hover:bg-(--color-panel-2)"
+                        >
+                          {l.label}
+                        </a>
+                      </li>
+                    ))
+                  }
+                  <li class="mt-1 border-t border-(--color-line) pt-1">
+                    <a
+                      href={allServices.href}
+                      class="block rounded-(--radius-button) px-3 py-2 text-(--color-sodium) no-underline hover:bg-(--color-panel-2)"
+                    >
+                      {allServices.label}
+                    </a>
+                  </li>
+                </ul>
+              </details>
+            </li>
+          ) : (
             <li>
               {/* The demo is the one thing a visitor can do right now without
                   talking to anyone, so it gets a button instead of a link. */}
@@ -287,7 +333,32 @@ const t = T[lang]
         </details>
       </li>
       {
-        nav.map((item) => (
+        nav.map((item) => 'services' in item ? (
+          <li class="border-b border-(--color-line)">
+            <details data-services-dropdown="mobile" class="group">
+              <summary class="flex cursor-pointer list-none items-center justify-between px-6 py-4 text-body text-(--color-chalk) marker:hidden">
+                <span>{item.label}</span>
+                <Icon name="chevron-down" class="h-5 w-5 transition-transform group-open:rotate-180" />
+              </summary>
+              <ul class="bg-(--color-panel)">
+                {
+                  serviceLinks.map((l) => (
+                    <li class="border-t border-(--color-line)">
+                      <a href={l.href} class="block px-10 py-3 text-body text-(--color-chalk) no-underline">
+                        {l.label}
+                      </a>
+                    </li>
+                  ))
+                }
+                <li class="border-t border-(--color-line)">
+                  <a href={allServices.href} class="block px-10 py-3 text-body text-(--color-sodium) no-underline">
+                    {allServices.label}
+                  </a>
+                </li>
+              </ul>
+            </details>
+          </li>
+        ) : (
           <li class="border-b border-(--color-line)">
             <a href={item.href} class="block px-6 py-4 text-body text-(--color-chalk) no-underline">
               {item.label}

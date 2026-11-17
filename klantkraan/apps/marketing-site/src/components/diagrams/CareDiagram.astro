@@ -1,0 +1,369 @@
+---
+/*
+ * Website care as an installation drawing: the site ("Uw website", drawn as a
+ * small browser window) feeds one rail with four taps, each ending in a lamp.
+ * Current runs down the rail and the lamps catch one after another; the last
+ * state is all four on. Shows only what the monthly care covers on
+ * /website-onderhoud/: updates, a daily back-up, monitoring, a monthly speed check.
+ *
+ * Built from HTML boxes and small SVG lamps instead of one scaled SVG, so lines
+ * stay 1.5px and labels stay at reading size in any slot from 280px to 620px.
+ * Snapped to the paper's 40px ruling: the window sits between two lines, every
+ * tap runs down the middle of a lane (80px apart), so no wire near-misses a line.
+ * Motion is CSS only (transform and opacity) and plays when the drawing is on
+ * screen (scripts/play-in-view.ts). Reduced motion or no JS: the finished state.
+ */
+interface Props {
+  id?: string
+}
+const { id } = Astro.props
+
+const outs = ['Updates en plugins', 'Dagelijkse back-up', 'Bewaking online en veilig', 'Snelheidscheck per maand']
+const aria =
+  'Schema: uw website voedt vier taken die alle vier aan staan: updates van WordPress en plugins, een dagelijkse back-up, bewaking of de site online en veilig is, en een snelheidscheck per maand.'
+const x = 'M-8.5 -8.5 L8.5 8.5 M8.5 -8.5 L-8.5 8.5'
+---
+
+<figure id={id} class="frame sheet" data-diagram="care" data-kk-play role="img" aria-label={aria}>
+  <div class="plan">
+    <div class="src">
+      <span class="src-bar"><span class="src-dot"></span>Uw website</span>
+      <span class="src-body"><i></i><i></i><i></i></span>
+    </div>
+    <span class="w w-feed"></span>
+    <ul class="rows">
+      {
+        outs.map((o, i) => (
+          <li class="row" style={`--i:${i}`}>
+            <span class="cell">
+              <span class="w w-up" />
+              {i < outs.length - 1 && <span class="w w-dn" />}
+              {i < outs.length - 1 && <span class="j" />}
+              <span class="w w-br" />
+              <span class="lamp-at">
+                <span class="halo" />
+                <svg class="lamp-off" viewBox="-14 -14 28 28" focusable="false">
+                  <circle r="12" />
+                  <path d={x} />
+                </svg>
+                <svg class="lamp-on" viewBox="-14 -14 28 28" focusable="false">
+                  <g data-lamp>
+                    <circle r="12" />
+                    <path d={x} />
+                  </g>
+                </svg>
+              </span>
+            </span>
+            <span class="out">{o}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</figure>
+
+<style>
+  /* Drawing paper: the same faint ruling as the flow diagram. */
+  .sheet {
+    --bx: 28.75px; /* the rail's centre: its 1.5px box starts on a whole px (28) */
+    --lx: 4rem; /* lamp centre */
+    --feed: 20px;
+    margin: 0;
+    padding: 40px 1.25rem 20px;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) 2.5rem
+      ),
+      var(--color-night);
+  }
+  .plan {
+    position: relative;
+    max-width: 21rem;
+    margin-inline: auto;
+  }
+
+  /* ---- the site: a small window ---- */
+  .src {
+    position: relative;
+    display: grid;
+    grid-template-rows: 30px minmax(0, 1fr);
+    width: min(12.5rem, 100%);
+    height: 80px;
+    margin-bottom: var(--feed);
+    border: 1.5px solid var(--color-chalk-2);
+    border-radius: 6px;
+    background: var(--color-panel);
+  }
+  .src-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.75rem;
+    border-bottom: 1px solid var(--color-line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    color: var(--color-chalk);
+  }
+  .src-dot {
+    flex: none;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 50%;
+    background: var(--color-sodium);
+  }
+  .src-body {
+    display: grid;
+    align-content: center;
+    gap: 0.375rem;
+    padding: 0 0.75rem;
+  }
+  .src-body i {
+    display: block;
+    height: 0.25rem;
+    border-radius: 1px;
+    background: var(--color-line-strong);
+  }
+  .src-body i:nth-child(2) {
+    width: 76%;
+  }
+  .src-body i:nth-child(3) {
+    width: 48%;
+  }
+
+  /* ---- wires: a grey line with the current laid over it ---- */
+  .w {
+    position: absolute;
+    background: var(--color-line-strong);
+  }
+  .w::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-sodium);
+    opacity: 0.6;
+  }
+  .w-feed,
+  .w-up,
+  .w-dn {
+    left: var(--bx);
+    width: 1.5px;
+    margin-left: -0.75px;
+  }
+  .w-feed::after,
+  .w-up::after,
+  .w-dn::after {
+    transform-origin: 50% 0;
+  }
+  /* From the window's bottom edge down to the first tap. Placed on the plan, not
+   * inside the window, so it shares the rail's x exactly: inside, it hung off the
+   * window's 1.5px border, which a 1x screen draws as 1px (a 0.5px step). */
+  .w-feed {
+    top: 80px;
+    height: calc(var(--feed) + 0.5px);
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 5.25rem minmax(0, 1fr);
+    align-items: center;
+    height: 80px;
+  }
+  /* --yl is the tap's top edge on a whole pixel (39px down the 80px row; at 50%
+   * minus 0.75px it sat on .25 and drew thinner than the rail), --yc its centre;
+   * the junction and the lamp hang on --yc. */
+  .cell {
+    --yl: calc(50% - 1px);
+    --yc: calc(var(--yl) + 0.75px);
+    position: relative;
+    align-self: stretch;
+  }
+  .w-up {
+    top: 0;
+    height: 50%;
+  }
+  /* the last row: the rail runs on to the tap's bottom edge (solid corner) */
+  .row:last-child .w-up {
+    height: calc(var(--yl) + 1.5px);
+  }
+  .w-dn {
+    top: 50%;
+    height: 50%;
+  }
+  .j {
+    position: absolute;
+    left: var(--bx);
+    top: var(--yc);
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: var(--color-chalk-2);
+  }
+  .w-br {
+    left: var(--bx);
+    top: var(--yl);
+    width: calc(var(--lx) - 12px - var(--bx));
+    height: 1.5px;
+  }
+  .w-br::after {
+    transform-origin: 0 50%;
+  }
+
+  /* ---- lamps: the flow diagram's symbol; lit = filled with the accent ---- */
+  .lamp-at {
+    position: absolute;
+    left: var(--lx);
+    top: var(--yc);
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+  }
+  .lamp-at svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .lamp-off circle {
+    fill: var(--color-night);
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+  }
+  .lamp-off path,
+  .lamp-on path {
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .lamp-off path {
+    stroke: var(--color-line-strong);
+  }
+  .lamp-on g {
+    fill: var(--color-sodium);
+  }
+  .lamp-on circle {
+    stroke: var(--color-sodium);
+    stroke-width: 1.5;
+  }
+  .lamp-on path {
+    stroke: var(--color-sodium-ink);
+  }
+  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur */
+  .halo {
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 16%, transparent);
+  }
+
+  .out {
+    padding: 0.625rem 0 0.625rem 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-chalk-2);
+    text-wrap: balance;
+  }
+
+  /* ---- motion ----
+   * The finished state above is what reduced motion, no JS and every old browser
+   * see. With motion and scripting, each wire starts empty and the current fills it
+   * at one steady speed (linear, so the joins between halves do not show), then
+   * settles from full to calm. Times: the feed, then one tap per --dt. */
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .sheet {
+      --t0: 0.45s;
+      --fd: 0.085s;
+      --dt: 0.34s;
+    }
+    .row {
+      /* the moment the current reaches this row's tap */
+      --at: calc(var(--t0) + var(--fd) + var(--dt) / 2 + var(--i) * var(--dt));
+    }
+    .w-feed::after {
+      animation:
+        kk-wy var(--fd) linear var(--t0) backwards,
+        kk-settle 0.9s ease calc(var(--t0) + 0.9s) backwards;
+    }
+    .w-up::after {
+      animation:
+        kk-wy calc(var(--dt) / 2) linear calc(var(--at) - var(--dt) / 2) backwards,
+        kk-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
+    }
+    .w-dn::after {
+      animation:
+        kk-wy calc(var(--dt) / 2) linear var(--at) backwards,
+        kk-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
+    }
+    .w-br::after {
+      animation:
+        kk-wx 0.14s cubic-bezier(0.5, 0, 1, 1) var(--at) backwards,
+        kk-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
+    }
+    .lamp-on {
+      animation: kk-catch 0.7s linear calc(var(--at) + 0.14s) backwards;
+    }
+    .lamp-on g {
+      animation: kk-fill 0.01s linear calc(var(--at) + 0.14s) backwards;
+    }
+    .halo {
+      animation: kk-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--at) + 0.33s) backwards;
+    }
+  }
+  @keyframes kk-wy {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes kk-wx {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes kk-settle {
+    from {
+      opacity: 1;
+    }
+  }
+  /* A lamp catching: two short flickers, then steady (the hero's "aan."). */
+  @keyframes kk-catch {
+    0%,
+    11%,
+    25% {
+      opacity: 0;
+    }
+    5%,
+    18% {
+      opacity: 0.7;
+    }
+    42%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes kk-ring {
+    from {
+      opacity: 0;
+      transform: scale(0.55);
+    }
+  }
+  @keyframes kk-fill {
+    from {
+      fill: var(--color-night);
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/play-in-view'
+</script>

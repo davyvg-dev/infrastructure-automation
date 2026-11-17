@@ -1,0 +1,413 @@
+---
+/*
+ * The quote follow-up as a drawing to scale: a dimension line on the left counts
+ * the days (one tick per day), the circuit runs down beside it. "Offerte verstuurd"
+ * sits at day 0, the two reminders tap off at day 3 and day 7, and a break contact
+ * in the line, linked to "Stopt zodra de klant antwoordt", says when it stops.
+ * Only what magnets.ts promises for the Offerte-opvolger: reminders on day 3 and
+ * day 7 that stop when the client answers.
+ *
+ * Fixed px geometry, HTML boxes and small SVG lamps, so it reads the same in any
+ * slot from 280px to 620px. The paper's 40px ruling is the scale: every ruled line
+ * is a day, so the ticks, the quote and both reminders sit on lines. The current
+ * runs at one speed, one day (40px) per 0.2s, and every delay below is its arrival
+ * at that point; the day ticks light as it passes them. Motion is CSS only (transform, opacity),
+ * held off screen by scripts/play-in-view.ts. Reduced motion or no JS: finished.
+ */
+interface Props {
+  id?: string
+}
+const { id } = Astro.props
+
+const aria =
+  'Schema: een offerte is verstuurd op dag 0. Op dag 3 en op dag 7 krijgt de klant een herinnering. Zodra de klant antwoordt, stopt het.'
+const x = 'M-8.5 -8.5 L8.5 8.5 M8.5 -8.5 L-8.5 8.5'
+const days = [0, 1, 2, 3, 4, 5, 6, 7]
+const taps = [
+  { day: 3, label: 'Herinnering', end: false },
+  { day: 7, label: 'Herinnering', end: true },
+]
+---
+
+<figure id={id} class="frame sheet" data-diagram="followup" data-kk-play role="img" aria-label={aria}>
+  <div class="plan">
+    <!-- the dimension line: one tick per day -->
+    <span class="axis"></span>
+    {days.map((d) => <span class:list={['tick', (d === 0 || d === 3 || d === 7) && 'major']} style={`--d:${d}`} />)}
+    {[0, 3, 7].map((d) => <span class="day" style={`--d:${d}`}>dag {d}</span>)}
+
+    <span class="node">Offerte verstuurd</span>
+
+    <!-- line, break contact, line -->
+    <span class="w w-a"></span>
+    <span class="pivot"></span>
+    <span class="blade"></span>
+    <span class="hook"></span>
+    <span class="link"></span>
+    <span class="lbl lbl-stop">Stopt zodra de klant antwoordt</span>
+    <span class="w w-b"></span>
+    <span class="w w-c"></span>
+
+    {
+      taps.map((t) => (
+        <>
+          {!t.end && <span class="j" style={`--d:${t.day}`} />}
+          <span class="w w-br" style={`--d:${t.day}`} />
+          <span class="lamp-at" style={`--d:${t.day}`}>
+            <span class="halo" />
+            <svg class="lamp-off" viewBox="-14 -14 28 28" focusable="false">
+              <circle r="12" />
+              <path d={x} />
+            </svg>
+            <svg class="lamp-on" viewBox="-14 -14 28 28" focusable="false">
+              <g data-lamp>
+                <circle r="12" />
+                <path d={x} />
+              </g>
+            </svg>
+          </span>
+          <span class="lbl" style={`--d:${t.day}`}>
+            {t.label}
+          </span>
+        </>
+      ))
+    }
+  </div>
+</figure>
+
+<style>
+  .sheet {
+    margin: 0;
+    padding: 40px 1.25rem;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) 2.5rem
+      ),
+      var(--color-night);
+  }
+
+  /* All geometry in px: day k sits at y = 40 + 40k, on the paper's ruling. */
+  .plan {
+    --ax: 90.75px; /* the circuit line's centre: its 1.5px box starts on 90px */
+    --lx: 120px; /* lamp centres */
+    --tx: 140px; /* labels */
+    --y0: 40px;
+    --day: 40px;
+    position: relative;
+    height: 340px;
+    max-width: 24rem;
+    margin-inline: auto;
+  }
+  .plan > * {
+    position: absolute;
+  }
+
+  /* ---- dimension line ---- */
+  .axis {
+    left: 0;
+    top: var(--y0);
+    width: 1px;
+    height: calc(7 * var(--day));
+    background: var(--color-line-strong);
+  }
+  .tick {
+    left: 0;
+    top: calc(var(--y0) + var(--d) * var(--day));
+    width: 6px;
+    height: 1px;
+    background: var(--color-line-strong);
+  }
+  .tick.major {
+    width: 10px;
+  }
+  .tick::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-dim);
+  }
+  .day {
+    left: 15px;
+    top: calc(var(--y0) + var(--d) * var(--day));
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--color-dim);
+    white-space: nowrap;
+  }
+
+  /* ---- the quote: day 0 is the middle of the box ---- */
+  .node {
+    left: calc(var(--ax) - 28px);
+    top: calc(var(--y0) - 22px);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.875rem;
+    border: 1.5px solid var(--color-chalk-2);
+    border-radius: 6px;
+    background: var(--color-panel);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-chalk);
+    white-space: nowrap;
+  }
+
+  /* ---- wires ---- */
+  .w {
+    background: var(--color-line-strong);
+  }
+  .w::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-sodium);
+    opacity: 0.6;
+    transform-origin: 50% 0;
+  }
+  .w-a,
+  .w-b,
+  .w-c {
+    left: var(--ax);
+    width: 1.5px;
+    margin-left: -0.75px;
+  }
+  /* quote (bottom 62) to the pivot on day 1 (80); contact (104) to day 3 (160);
+   * day 3 to the bottom edge of day 7's tap (320.5), so that corner is solid */
+  .w-a {
+    top: 62px;
+    height: 18px;
+  }
+  .w-b {
+    top: 104px;
+    height: 56px;
+  }
+  .w-c {
+    top: 160px;
+    height: 160.5px;
+  }
+  /* A tap's top edge sits 1px above its day line, on a whole pixel (at 0.75px above
+   * it sat on .25 and drew thinner than the circuit line); its centre is 0.25px
+   * above the line, and the junction and the lamp hang on that centre. */
+  .j {
+    left: var(--ax);
+    top: calc(var(--y0) + var(--d) * var(--day) - 0.25px);
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: var(--color-chalk-2);
+  }
+  .w-br {
+    left: var(--ax);
+    top: calc(var(--y0) + var(--d) * var(--day) - 1px);
+    width: calc(var(--lx) - 12px - var(--ax));
+    height: 1.5px;
+  }
+  .w-br::after {
+    transform-origin: 0 50%;
+  }
+
+  /* ---- break contact: closed while the client has not answered ---- */
+  .pivot {
+    left: var(--ax);
+    top: 80px;
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--color-chalk-2);
+  }
+  .blade {
+    left: var(--ax);
+    top: 80px;
+    width: 1.5px;
+    height: 27px;
+    margin-left: -0.75px;
+    background: var(--color-chalk-2);
+    transform: rotate(-20deg);
+    transform-origin: 50% 0;
+  }
+  .blade::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-sodium);
+    opacity: 0.85;
+  }
+  /* the fixed contact: a short stub the blade rests against */
+  .hook {
+    left: var(--ax);
+    top: 104px;
+    width: 13px;
+    height: 1.5px;
+    margin-left: -0.75px;
+    background: var(--color-chalk-2);
+  }
+  /* mechanical link from the blade to what operates it */
+  .link {
+    left: calc(var(--ax) + 9px);
+    top: 100px;
+    width: calc(var(--tx) - var(--ax) - 17px);
+    height: 0;
+    border-top: 1px dashed var(--color-dim);
+  }
+
+  /* ---- lamps ---- */
+  .lamp-at {
+    left: var(--lx);
+    top: calc(var(--y0) + var(--d) * var(--day) - 0.25px);
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+  }
+  .lamp-at svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .lamp-off circle {
+    fill: var(--color-night);
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+  }
+  .lamp-off path,
+  .lamp-on path {
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .lamp-off path {
+    stroke: var(--color-line-strong);
+  }
+  .lamp-on g {
+    fill: var(--color-sodium);
+  }
+  .lamp-on circle {
+    stroke: var(--color-sodium);
+    stroke-width: 1.5;
+  }
+  .lamp-on path {
+    stroke: var(--color-sodium-ink);
+  }
+  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur */
+  .halo {
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 16%, transparent);
+  }
+
+  .lbl {
+    left: var(--tx);
+    right: 0;
+    top: calc(var(--y0) + var(--d) * var(--day));
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--color-chalk-2);
+  }
+  .lbl-stop {
+    top: 100px;
+    color: var(--color-dim);
+    text-wrap: balance;
+  }
+
+  /* ---- motion: t(y) = 0.4s + (y - 40px) / 200px per second ---- */
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .tick::after {
+      animation: kk-on 0.16s ease-out calc(0.4s + var(--d) * 0.2s) backwards;
+    }
+    .w-a::after {
+      animation:
+        kk-wy 0.09s linear 0.51s backwards,
+        kk-settle 0.9s ease 1.4s backwards;
+    }
+    .blade::after {
+      animation: kk-on 0.12s linear 0.6s backwards;
+    }
+    .w-b::after {
+      animation:
+        kk-wy 0.28s linear 0.72s backwards,
+        kk-settle 0.9s ease 1.6s backwards;
+    }
+    .w-c::after {
+      animation:
+        kk-wy 0.8s linear 1s backwards,
+        kk-settle 0.9s ease 2.4s backwards;
+    }
+    .w-br::after {
+      --at: calc(0.4s + var(--d) * 0.2s);
+      animation:
+        kk-wx 0.13s linear var(--at) backwards,
+        kk-settle 0.9s ease calc(var(--at) + 0.7s) backwards;
+    }
+    .lamp-on {
+      animation: kk-catch 0.7s linear calc(0.53s + var(--d) * 0.2s) backwards;
+    }
+    .lamp-on g {
+      animation: kk-fill 0.01s linear calc(0.53s + var(--d) * 0.2s) backwards;
+    }
+    .halo {
+      animation: kk-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(0.72s + var(--d) * 0.2s) backwards;
+    }
+  }
+  @keyframes kk-wy {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes kk-wx {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes kk-settle {
+    from {
+      opacity: 1;
+    }
+  }
+  @keyframes kk-on {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes kk-catch {
+    0%,
+    11%,
+    25% {
+      opacity: 0;
+    }
+    5%,
+    18% {
+      opacity: 0.7;
+    }
+    42%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes kk-ring {
+    from {
+      opacity: 0;
+      transform: scale(0.55);
+    }
+  }
+  @keyframes kk-fill {
+    from {
+      fill: var(--color-night);
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/play-in-view'
+</script>

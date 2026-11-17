@@ -303,7 +303,7 @@ export const eigenPrijzen = {
   chatPerMaand: 299,
   compleetPerMaand: 499,
   websiteEenmalig: 1000,
-  websiteOnderhoudPerMaand: 39,
+  websiteOnderhoudPerMaand: 45, // = WEBSITE_CARE_PER_MONTH in src/data/services.ts; change both
   websiteBundelEenmalig: 749,
 } as const
 

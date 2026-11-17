@@ -1,0 +1,130 @@
+---
+/*
+ * The small symbol on each service card, in the wire-and-lamp language of the
+ * big drawings (1.5px wires, terminal rings, the node box, a lit lamp), drawn at
+ * 1:1 so every line lands on the pixel grid. Decorative: the card's text says it.
+ *   receptionist  two inputs into a node into a lit lamp
+ *   websites      a node with three small lamps
+ *   automations   a wire with ticks at day 3 and day 7, ending in a lamp
+ *   ads           one input fanning out to a 4x4 grid
+ */
+import type { Area } from '../../data/magnets'
+interface Props {
+  area: Area
+}
+const { area } = Astro.props
+const grid = [0, 1, 2, 3]
+---
+
+<svg class="glyph" data-glyph={area} viewBox="0 0 96 48" width="96" height="48" aria-hidden="true" focusable="false">
+  {
+    area === 'receptionist' && (
+      <>
+        <path class="g-wire" d="M10 13 H24 V20 H34 M10 35 H24 V28 H34 M62 24 H73" />
+        <circle class="g-term" cx="7" cy="13" r="3" />
+        <circle class="g-term" cx="7" cy="35" r="3" />
+        <rect class="g-node" x="34" y="14" width="28" height="20" rx="3" />
+        <circle class="g-lamp" cx="82" cy="24" r="9" />
+        <path class="g-x" d="M77.5 19.5 L86.5 28.5 M86.5 19.5 L77.5 28.5" />
+      </>
+    )
+  }
+  {
+    area === 'websites' && (
+      <>
+        <rect class="g-node" x="6" y="12" width="34" height="24" rx="3" />
+        <path class="g-rule" d="M6 18.5 H40" />
+        <circle class="g-dot" cx="11" cy="15.25" r="1.25" />
+        <path class="g-wire" d="M40 24 H52 M52 9 V39 M52 9 H70 M52 24 H70 M52 39 H70" />
+        <circle class="g-j" cx="52" cy="24" r="2" />
+        <circle class="g-lamp" cx="76" cy="9" r="5.5" />
+        <circle class="g-lamp" cx="76" cy="24" r="5.5" />
+        <circle class="g-lamp" cx="76" cy="39" r="5.5" />
+      </>
+    )
+  }
+  {
+    area === 'automations' && (
+      <>
+        <path class="g-wire" d="M10 30 H73" />
+        <circle class="g-term" cx="7" cy="30" r="3" />
+        <path class="g-tick" d="M31 25 V35 M63 25 V35" />
+        <text class="g-txt" x="31" y="19" text-anchor="middle">3</text>
+        <text class="g-txt" x="63" y="19" text-anchor="middle">7</text>
+        <circle class="g-lamp" cx="82" cy="30" r="9" />
+        <path class="g-x" d="M77.5 25.5 L86.5 34.5 M86.5 25.5 L77.5 34.5" />
+      </>
+    )
+  }
+  {
+    area === 'ads' && (
+      <>
+        <circle class="g-term" cx="7" cy="24" r="3" />
+        <path class="g-wire" d="M10 24 H30 M30 6 V42" />
+        <circle class="g-j" cx="30" cy="24" r="2" />
+        {grid.map((r) => <path class="g-wire-thin" d={`M30 ${6 + r * 12} H86`} />)}
+        {grid.map((r) => grid.map((c) => <circle class="g-lamp" cx={44 + c * 13} cy={6 + r * 12} r="3.25" />))}
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .glyph {
+    display: block;
+    width: 96px;
+    height: 48px;
+    overflow: visible;
+  }
+  /* Live wire: the colour the big drawings settle to (the accent at 60% over the
+   * resting wire), since every glyph shows its lamp on. */
+  .g-wire,
+  .g-wire-thin,
+  .g-tick {
+    fill: none;
+    stroke: color-mix(in srgb, var(--color-sodium) 60%, var(--color-line-strong));
+    stroke-width: 1.5;
+  }
+  .g-wire-thin {
+    stroke-width: 1;
+  }
+  /* the window's title bar: structure, not wire */
+  .g-rule {
+    fill: none;
+    stroke: var(--color-line-strong);
+    stroke-width: 1;
+  }
+  .g-tick {
+    stroke: var(--color-dim);
+  }
+  .g-term {
+    fill: var(--color-night);
+    stroke: var(--color-chalk-2);
+    stroke-width: 1.5;
+  }
+  .g-node {
+    fill: var(--color-panel);
+    stroke: var(--color-chalk-2);
+    stroke-width: 1.5;
+  }
+  .g-j,
+  .g-dot {
+    fill: var(--color-chalk-2);
+  }
+  .g-dot {
+    fill: var(--color-sodium);
+  }
+  .g-lamp {
+    fill: var(--color-sodium);
+  }
+  .g-x {
+    fill: none;
+    stroke: var(--color-sodium-ink);
+    stroke-width: 1.5;
+  }
+  .g-txt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    fill: var(--color-dim);
+  }
+</style>

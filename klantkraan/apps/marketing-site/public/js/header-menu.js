@@ -1,10 +1,12 @@
-// Hamburger menu + Voor-wie? dropdown — vanilla JS, ES module.
+// Hamburger menu + the Voor-wie? and Diensten dropdowns. Vanilla JS, ES module.
 // Externalised so it loads under CSP `script-src 'self'` (no inline allowed).
 // See klantkraan/apps/marketing-site/public/_headers for the policy.
 //
 // astro:page-load aware: Astro 5 ClientRouter swaps the document body on
 // client-side navigation, so init must run on every page transition, not
 // just once at DOMContentLoaded.
+
+const DESKTOP_DROPDOWNS = '[data-branches-dropdown="desktop"], [data-services-dropdown="desktop"]'
 
 function initHeaderMenu() {
   const toggle = document.getElementById('mobile-menu-toggle')
@@ -41,19 +43,27 @@ function initHeaderMenu() {
     })
   }
 
-  // Desktop dropdown: outside-click + Escape close. Idempotent — guarded by
-  // the dropdown's own dataset flag so it doesn't double-listen.
-  const desktopDropdown = document.querySelector('[data-branches-dropdown="desktop"]')
-  if (desktopDropdown && !desktopDropdown.dataset.kkInit) {
-    desktopDropdown.dataset.kkInit = '1'
+  // Desktop dropdowns (Voor wie?, and Diensten on the NL nav): outside-click
+  // closes, and opening one closes the other. Idempotent: guarded by each
+  // dropdown's own dataset flag so it doesn't double-listen.
+  const desktopDropdowns = document.querySelectorAll(DESKTOP_DROPDOWNS)
+  desktopDropdowns.forEach((dd) => {
+    if (dd.dataset.kkInit) return
+    dd.dataset.kkInit = '1'
 
     document.addEventListener('click', (e) => {
-      if (!desktopDropdown.open) return
-      if (!desktopDropdown.contains(e.target)) {
-        desktopDropdown.open = false
+      if (!dd.open) return
+      if (!dd.contains(e.target)) {
+        dd.open = false
       }
     })
-  }
+    dd.addEventListener('toggle', () => {
+      if (!dd.open) return
+      document.querySelectorAll(DESKTOP_DROPDOWNS).forEach((other) => {
+        if (other !== dd) other.open = false
+      })
+    })
+  })
 }
 
 // Document-level Escape handler — attaches once for the page lifetime even
@@ -70,10 +80,11 @@ if (!window.__kkEscapeAttached) {
       return
     }
 
-    const dd = document.querySelector('[data-branches-dropdown="desktop"]')
-    if (dd && dd.open) {
-      dd.open = false
-      dd.querySelector('summary')?.focus()
+    for (const dd of document.querySelectorAll(DESKTOP_DROPDOWNS)) {
+      if (dd.open) {
+        dd.open = false
+        dd.querySelector('summary')?.focus()
+      }
     }
   })
 }

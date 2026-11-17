@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro'
+import FlowDiagram from '../components/diagrams/FlowDiagram.astro'
+import CostReceipt from '../components/home/CostReceipt.astro'
+import DemoSection from '../components/home/DemoSection.astro'
+import FinalCta from '../components/home/FinalCta.astro'
+import Hero from '../components/home/Hero.astro'
+import Honest from '../components/home/Honest.astro'
+import HowItWorks from '../components/home/HowItWorks.astro'
+import { waLink } from '../data/contact'
+
+const hero = {
+  status: 'Antwoordt nu op site en WhatsApp',
+  h1a: 'Het licht blijft',
+  h1on: 'aan.',
+  sub:
+    'U staat op een dak of u ligt al in bed, en net dan stelt een klant een vraag. De digitale ' +
+    'receptionist van Klantkraan beantwoordt hem op uw site en WhatsApp, plant de afspraak en ' +
+    'noteert wie teruggebeld wil worden. Ook om elf uur \'s avonds.',
+  ctaPrimary: 'Start vandaag',
+  ctaPrimaryHref: '/aanmelden/',
+  ctaGhost: 'Probeer de demo',
+  ctaGhostHref: '#demo',
+  proof: [
+    { label: 'Direct te proberen, geen account' },
+    { label: 'Per maand opzegbaar' },
+    { label: 'AVG-proof, EU-gehost' },
+  ],
+  panelAria:
+    'Gesprek om 23:47: een klant met een lekkage stelt een vraag, de digitale receptionist plant een afspraak op dinsdag 09:00 en zet een terugbelverzoek klaar voor de eigenaar.',
+  threadName: 'Klantkraan',
+  threadSub: 'Reageert direct',
+  liveTs: 'Vannacht 23:47',
+  disclosure: 'U chat met een digitale assistent.',
+  customerMsg: 'Ik heb een lekkage onder de gootsteen, kan er morgen iemand komen?',
+  recepMsg: 'Vervelend, dat pakken we op. Morgen 09:00 is vrij. Zal ik dat voor u vastzetten?',
+  stampStrong: 'INGEPLAND',
+  stampDetail: 'di 09:00 · terugbelverzoek klaar voor de eigenaar',
+  // The product window around the thread: the owner's view of the same evening.
+  // Rows reuse conversations and questions from this page (gesprek, demo.asks).
+  window: {
+    title: 'klantkraan',
+    meta: 'Voorbeeld',
+    listLabel: 'Gesprekken',
+    rows: [
+      { channel: 'WhatsApp', time: '23:47', text: 'Lekkage onder de gootsteen', status: 'Ingepland', active: true },
+      { channel: 'Websitechat', time: '22:14', text: 'Cv-ketel doet het niet meer', status: 'Terugbellen' },
+      { channel: 'WhatsApp', time: '20:31', text: 'Werken jullie ook in Haarlem?', status: 'Beantwoord' },
+      { channel: 'Websitechat', time: '18:05', text: 'Wat kost het vervangen van een kraan?', status: 'Beantwoord' },
+    ],
+    resultLabel: 'Afspraak',
+    fields: [
+      { k: 'Klus', v: 'Lekkage onder de gootsteen' },
+      { k: 'Wanneer', v: 'di 09:00' },
+      { k: 'Via', v: 'WhatsApp, 23:47' },
+      { k: 'Daarna', v: 'Terugbelverzoek klaar voor de eigenaar' },
+    ],
+  },
+}
+
+const gesprek = {
+  heading: 'Wat de receptionist doet terwijl u aan het werk bent.',
+  steps: [
+    {
+      title: 'Beantwoordt de vraag',
+      text: 'Met uw diensten, tarieven en werkgebied. Geen verzonnen prijzen, alleen wat u heeft ingesteld.',
+    },
+    {
+      title: 'Plant de afspraak',
+      text: 'Alleen op momenten die in uw agenda vrij zijn. U ziet het meteen.',
+    },
+    {
+      title: 'Noteert wat niet meteen kan',
+      text: 'Naam, nummer en klus. U kiest zelf wie u terugbelt.',
+    },
+  ],
+}
+
+const demo = {
+  eyebrow: 'Probeer het zelf',
+  heading: 'Stel hem een vraag zoals uw klant dat zou doen.',
+  sub:
+    'Dit is een voorbeeldbedrijf, een installateur. Typ een vraag of plan een afspraak. U ' +
+    'heeft er geen account voor nodig.',
+  asksLabel: 'Stel bijvoorbeeld:',
+  asks: [
+    'Wat kost het vervangen van een kraan?',
+    'Kan er morgenochtend iemand langskomen?',
+    'Werken jullie ook in Haarlem?',
+  ],
+  iframeTitle: 'Live chat met de digitale receptionist van Klantkraan',
+  mobileName: 'Van Dijk Installatietechniek',
+  mobileTag: 'Digitale assistent · reageert direct',
+  mobileHint: 'Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.',
+  mobileCta: 'Start de demo',
+  trust: 'Voorbeeldbedrijf · bij uw eigen receptionist staan uw diensten en tarieven ingesteld',
+}
+
+const kosten = {
+  heading: 'Wat gemiste oproepen u per maand kosten.',
+  sub:
+    'Wie geen antwoord krijgt, belt de volgende in de lijst. Hieronder een voorbeeld met 40 ' +
+    'oproepen per week. In de rekentool vult u uw eigen aantallen in.',
+  ariaLabel: 'Voorbeeldberekening van misgelopen omzet',
+  cap: 'Voorbeeld · 40 oproepen per week',
+  lines: [
+    { k: 'Oproepen per maand', v: '173' },
+    { k: 'Gemist (brancheschatting 28%)', v: '48' },
+    { k: 'Was een klus geworden (1 op 3)', v: '16' },
+    { k: '× waarde per klus', v: '€450' },
+  ],
+  resultK: 'Misgelopen omzet',
+  resultV: '± €7.200/mnd',
+  ctaLabel: 'Reken met uw eigen cijfers',
+  ctaHref: '/rekentool/',
+}
+
+const eerlijk = {
+  heading: 'Uw klant weet altijd dat hij met een assistent praat.',
+  quote: 'U chat met een digitale assistent.',
+  bullets: [
+    'Met deze zin begint elk gesprek. U kunt hem niet uitzetten.',
+    'Sinds 2 augustus 2026 is die melding verplicht onder artikel 50 van de EU AI Act.',
+    'Sommige belrobots worden verkocht met de belofte dat niemand het verschil hoort. Daar loopt u een boete mee op. Met Klantkraan niet.',
+  ],
+  linkLabel: 'Lees de volledige disclosure',
+  linkHref: '/legal/ai-disclosure/',
+}
+
+const starten = {
+  heading: 'Zo start u. Binnen een week staat hij live.',
+  steps: [
+    {
+      title: 'Meld u aan',
+      text: 'Vijf minuten werk. U rekent direct af via Mollie: eerste maand €149,50, daarna €299 per maand, excl. btw.',
+    },
+    {
+      title: 'Wij bouwen uw receptionist',
+      text: 'Binnen één werkdag bellen we om uw diensten, tarieven en agenda door te nemen. U hoeft niets te bouwen.',
+    },
+    {
+      title: 'Live op uw site en WhatsApp',
+      text: 'U test hem zelf en geeft akkoord. Vanaf dat moment neemt hij elke vraag aan, dag en nacht.',
+    },
+  ],
+  note: 'Per maand opzegbaar. Geen jaarcontract, geen verborgen verlenging; opzeggen per mail, geen opzegtermijn.',
+}
+
+const roadmap = {
+  heading: 'Wat hij nu doet, en wat er nog komt.',
+  sub:
+    'Nu vangt de receptionist alles op wat binnenkomt terwijl u werkt. Daarna willen we het ' +
+    'papierwerk aanpakken dat u nu ’s avonds aan de keukentafel doet. Dat bouwen we samen met ' +
+    'de eerste klanten.',
+  nowLabel: 'Wat hij nu doet',
+  now: [
+    'Beantwoordt vragen op uw site en WhatsApp, dag en nacht',
+    'Plant afspraken in uw eigen agenda',
+    'Vangt terugbelverzoeken met naam, nummer en klus',
+    'Meldt zichzelf als digitale assistent, in elk gesprek',
+  ],
+  laterLabel: 'Wat we bouwen',
+  // Plan 2026-11-16: these are sold today as separate automations (/automatiseringen/),
+  // so the list no longer says they are unavailable. Honest renders strings only,
+  // so the pointer sits in the footnote without a link (see the plan's Deviations).
+  laterNote: 'Nog niet in het abonnement. U betaalt er nu niet voor.',
+  later: [
+    'Offertes die zichzelf opvolgen als de klant niet reageert',
+    'Afspraakherinneringen, zodat er niemand voor niets uitrijdt',
+    'Reviewverzoeken op het moment dat de klus net klaar is',
+    'Factuurherinneringen voor wat blijft openstaan',
+  ],
+  footnote:
+    'Wilt u een van deze nu al? Dan bouwen we het als losse automatisering, met een vaste prijs ' +
+    'vooraf. Wat als eerste in het abonnement komt, hangt af van waar klanten om vragen.',
+}
+
+const finalCta = {
+  h2a: 'Probeer het eerst',
+  h2on: 'zelf.',
+  sub:
+    'Stel de receptionist in de demo een vraag alsof u een klant bent. Bevalt het? Meld u aan, ' +
+    'dan bellen we binnen één werkdag om hem voor uw bedrijf in te richten.',
+  primary: { label: 'Start vandaag', href: '/aanmelden/' },
+  ghosts: [
+    { label: 'Probeer de demo', href: '/demo/' },
+    { label: 'Plan een kennismaking', href: waLink, external: true },
+  ],
+  photo: {
+    src: '/photos/home-van.jpg',
+    srcSm: '/photos/home-van-sm.jpg',
+    alt: 'Vanuit de cabine van een werkbus in een Nederlandse straat: werkbonnen, een rolmaat en werkhandschoenen op de stoel.',
+    width: 928,
+    height: 1152,
+  },
+}
+---
+
+<Base
+  title="AI-receptionist voor uw bedrijf: websitechat & WhatsApp | Klantkraan"
+  description="AI-receptionist op uw website en WhatsApp: beantwoordt vragen, plant afspraken en vangt leads, dag en nacht. Done-for-you setup. Per maand opzegbaar."
+  centered={false}
+>
+  <Hero t={hero} />
+  <DemoSection t={demo} />
+  <FlowDiagram t={gesprek} />
+  <CostReceipt t={kosten} />
+  <Honest eerlijk={eerlijk} roadmap={roadmap} />
+  <HowItWorks t={starten} />
+  <FinalCta t={finalCta} />
+</Base>

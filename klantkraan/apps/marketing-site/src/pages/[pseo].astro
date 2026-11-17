@@ -17,6 +17,8 @@ export async function getStaticPaths() {
     ...Object.keys(cities),
     ...branches.map((b) => b.href.replaceAll('/', '')),
     'aanmelden',
+    'ai-receptionist',
+    'automatiseringen',
     'bedankt',
     'blog',
     'demo',
@@ -29,6 +31,7 @@ export async function getStaticPaths() {
     'r',
     'rekentool',
     'voor-wie',
+    'website-onderhoud',
   ])
   const pages = await getCollection('pseo')
   return pages.map((page) => {

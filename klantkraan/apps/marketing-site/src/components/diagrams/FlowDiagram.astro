@@ -166,6 +166,8 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
         ))
       }
     </ol>
+    {/* Optional line under the duties: the NL homepage puts the price and links here. */}
+    <slot />
   </div>
 </section>
 
@@ -379,24 +381,20 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
 </style>
 
 <script>
-  // Arm the drawing (lamp off, no current) and start it once it is in view.
+  // Arm the drawing (lamp off, no current) and start it once it is in view, by the
+  // rule the other drawings use: in the part the header and bottom bar leave free.
   // Reduced motion: leave it finished.
+  import { whenSeen } from '../../scripts/play-in-view'
+
   function initFlow() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     document.querySelectorAll<HTMLElement>('[data-diagram="flow"]').forEach((fig) => {
-      if (fig.classList.contains('is-live')) return
+      if (fig.classList.contains('is-armed')) return
       fig.classList.add('is-armed')
-      const io = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            fig.classList.add('is-live')
-            io.disconnect()
-          }
-        },
-        { threshold: 0.4 },
-      )
-      io.observe(fig)
+      whenSeen(fig, () => fig.classList.add('is-live'))
     })
   }
+  // Armed as soon as this runs too: the first astro:page-load waits for the window load event.
   document.addEventListener('astro:page-load', initFlow)
+  initFlow()
 </script>

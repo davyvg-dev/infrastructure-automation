@@ -952,6 +952,13 @@ CSP is script-src 'self': bundle everything, no GSAP, no CDN.
       mobile-qa no FAIL. Deployed 2026-11-16 (9bb8a181) from the clean worktree; branch pushed
       as origin/claude/site-redesign. Still open: merge into the main work branch together with
       the uncommitted self-install work (conflicts in Footer, DemoSection, demo pages).
+- [ ] V8: NL homepage shows all four services (plan `plans/2026-11-16-homepage-four-services.md`).
+      Built on branch `claude/site-services` in worktree `marketing/kk-site-redesign`, NOT
+      deployed: umbrella hero with four circuits, service cards, receptionist demo + flow, bands
+      for website care, automations and ad videos; old homepage at /ai-receptionist/; new pages
+      /website-onderhoud/ and /automatiseringen/; header "Diensten" dropdown; /prijzen/ "Andere
+      diensten". Prices in `src/data/services.ts`. Open: independent verification, Davy confirms
+      back-ups/monitoring tooling and the € 45 term (FOUNDER), deploy (FOUNDER).
 
 ## Phase 0 — Planning docs
 

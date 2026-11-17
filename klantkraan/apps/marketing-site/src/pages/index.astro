@@ -1,61 +1,49 @@
 ---
+/*
+ * NL homepage: the four services (plan 2026-11-16-homepage-four-services).
+ * Umbrella hero, one card per service, then the receptionist in full (live demo
+ * and flow diagram), one band per other service and the close. The old
+ * receptionist homepage lives on unchanged at /ai-receptionist/.
+ * Prices and links come from src/data/services.ts.
+ */
 import Base from '../layouts/Base.astro'
+import CareDiagram from '../components/diagrams/CareDiagram.astro'
 import FlowDiagram from '../components/diagrams/FlowDiagram.astro'
-import CostReceipt from '../components/home/CostReceipt.astro'
+import FollowUpDiagram from '../components/diagrams/FollowUpDiagram.astro'
+import VariantsDiagram from '../components/diagrams/VariantsDiagram.astro'
 import DemoSection from '../components/home/DemoSection.astro'
 import FinalCta from '../components/home/FinalCta.astro'
-import Hero from '../components/home/Hero.astro'
-import Honest from '../components/home/Honest.astro'
-import HowItWorks from '../components/home/HowItWorks.astro'
+import ServiceBand from '../components/home/ServiceBand.astro'
+import ServiceCards from '../components/home/ServiceCards.astro'
+import ServicesHero from '../components/home/ServicesHero.astro'
 import { waLink } from '../data/contact'
+import { serviceByArea } from '../data/services'
 
-const hero = {
-  status: 'Antwoordt nu op site en WhatsApp',
-  h1a: 'Het licht blijft',
-  h1on: 'aan.',
+const diensten = {
+  eyebrow: 'Diensten',
+  heading: 'Vier diensten, één aanspreekpunt.',
+  sub: 'Elke dienst heeft een vaste prijs vooraf en een gratis eerste stap. Begin met wat nu het meest knelt.',
+  freeLabel: 'Gratis eerste stap',
+}
+
+const demo = {
+  eyebrow: 'AI-receptionist: probeer het zelf',
+  heading: 'Stel de receptionist een vraag zoals uw klant dat zou doen.',
   sub:
-    'U staat op een dak of u ligt al in bed, en net dan stelt een klant een vraag. De digitale ' +
-    'receptionist van Klantkraan beantwoordt hem op uw site en WhatsApp, plant de afspraak en ' +
-    'noteert wie teruggebeld wil worden. Ook om elf uur \'s avonds.',
-  ctaPrimary: 'Start vandaag',
-  ctaPrimaryHref: '/aanmelden/',
-  ctaGhost: 'Probeer de demo',
-  ctaGhostHref: '#demo',
-  proof: [
-    { label: 'Direct te proberen, geen account' },
-    { label: 'Per maand opzegbaar' },
-    { label: 'AVG-proof, EU-gehost' },
+    'Dit is een voorbeeldbedrijf, een installateur. Typ een vraag of plan een afspraak. U ' +
+    'heeft er geen account voor nodig.',
+  asksLabel: 'Stel bijvoorbeeld:',
+  asks: [
+    'Wat kost het vervangen van een kraan?',
+    'Kan er morgenochtend iemand langskomen?',
+    'Werken jullie ook in Haarlem?',
   ],
-  panelAria:
-    'Gesprek om 23:47: een klant met een lekkage stelt een vraag, de digitale receptionist plant een afspraak op dinsdag 09:00 en zet een terugbelverzoek klaar voor de eigenaar.',
-  threadName: 'Klantkraan',
-  threadSub: 'Reageert direct',
-  liveTs: 'Vannacht 23:47',
-  disclosure: 'U chat met een digitale assistent.',
-  customerMsg: 'Ik heb een lekkage onder de gootsteen, kan er morgen iemand komen?',
-  recepMsg: 'Vervelend, dat pakken we op. Morgen 09:00 is vrij. Zal ik dat voor u vastzetten?',
-  stampStrong: 'INGEPLAND',
-  stampDetail: 'di 09:00 · terugbelverzoek klaar voor de eigenaar',
-  // The product window around the thread: the owner's view of the same evening.
-  // Rows reuse conversations and questions from this page (gesprek, demo.asks).
-  window: {
-    title: 'klantkraan',
-    meta: 'Voorbeeld',
-    listLabel: 'Gesprekken',
-    rows: [
-      { channel: 'WhatsApp', time: '23:47', text: 'Lekkage onder de gootsteen', status: 'Ingepland', active: true },
-      { channel: 'Websitechat', time: '22:14', text: 'Cv-ketel doet het niet meer', status: 'Terugbellen' },
-      { channel: 'WhatsApp', time: '20:31', text: 'Werken jullie ook in Haarlem?', status: 'Beantwoord' },
-      { channel: 'Websitechat', time: '18:05', text: 'Wat kost het vervangen van een kraan?', status: 'Beantwoord' },
-    ],
-    resultLabel: 'Afspraak',
-    fields: [
-      { k: 'Klus', v: 'Lekkage onder de gootsteen' },
-      { k: 'Wanneer', v: 'di 09:00' },
-      { k: 'Via', v: 'WhatsApp, 23:47' },
-      { k: 'Daarna', v: 'Terugbelverzoek klaar voor de eigenaar' },
-    ],
-  },
+  iframeTitle: 'Live chat met de digitale receptionist van Klantkraan',
+  mobileName: 'Van Dijk Installatietechniek',
+  mobileTag: 'Digitale assistent · reageert direct',
+  mobileHint: 'Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.',
+  mobileCta: 'Start de demo',
+  trust: 'Voorbeeldbedrijf · bij uw eigen receptionist staan uw diensten en tarieven ingesteld',
 }
 
 const gesprek = {
@@ -76,111 +64,55 @@ const gesprek = {
   ],
 }
 
-const demo = {
-  eyebrow: 'Probeer het zelf',
-  heading: 'Stel hem een vraag zoals uw klant dat zou doen.',
-  sub:
-    'Dit is een voorbeeldbedrijf, een installateur. Typ een vraag of plan een afspraak. U ' +
-    'heeft er geen account voor nodig.',
-  asksLabel: 'Stel bijvoorbeeld:',
-  asks: [
-    'Wat kost het vervangen van een kraan?',
-    'Kan er morgenochtend iemand langskomen?',
-    'Werken jullie ook in Haarlem?',
-  ],
-  iframeTitle: 'Live chat met de digitale receptionist van Klantkraan',
-  mobileName: 'Van Dijk Installatietechniek',
-  mobileTag: 'Digitale assistent · reageert direct',
-  mobileHint: 'Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.',
-  mobileCta: 'Start de demo',
-  trust: 'Voorbeeldbedrijf · bij uw eigen receptionist staan uw diensten en tarieven ingesteld',
+// The line under the flow diagram: price, the art. 50 sentence, and the way to the
+// full receptionist page and the calculator.
+const rec = serviceByArea.receptionist
+const receptionistLine = {
+  disclosureLead: 'Elk gesprek begint met dezelfde zin:',
+  disclosure: 'U chat met een digitale assistent.',
+  disclosureTail: 'Die melding is verplicht onder artikel 50 van de EU AI Act, en u kunt hem niet uitzetten.',
+  more: 'Alles over de receptionist',
+  calc: 'Reken uit wat gemiste aanvragen kosten',
 }
 
-const kosten = {
-  heading: 'Wat gemiste oproepen u per maand kosten.',
-  sub:
-    'Wie geen antwoord krijgt, belt de volgende in de lijst. Hieronder een voorbeeld met 40 ' +
-    'oproepen per week. In de rekentool vult u uw eigen aantallen in.',
-  ariaLabel: 'Voorbeeldberekening van misgelopen omzet',
-  cap: 'Voorbeeld · 40 oproepen per week',
-  lines: [
-    { k: 'Oproepen per maand', v: '173' },
-    { k: 'Gemist (brancheschatting 28%)', v: '48' },
-    { k: 'Was een klus geworden (1 op 3)', v: '16' },
-    { k: '× waarde per klus', v: '€450' },
-  ],
-  resultK: 'Misgelopen omzet',
-  resultV: '± €7.200/mnd',
-  ctaLabel: 'Reken met uw eigen cijfers',
-  ctaHref: '/rekentool/',
-}
-
-const eerlijk = {
-  heading: 'Uw klant weet altijd dat hij met een assistent praat.',
-  quote: 'U chat met een digitale assistent.',
-  bullets: [
-    'Met deze zin begint elk gesprek. U kunt hem niet uitzetten.',
-    'Sinds 2 augustus 2026 is die melding verplicht onder artikel 50 van de EU AI Act.',
-    'Sommige belrobots worden verkocht met de belofte dat niemand het verschil hoort. Daar loopt u een boete mee op. Met Klantkraan niet.',
-  ],
-  linkLabel: 'Lees de volledige disclosure',
-  linkHref: '/legal/ai-disclosure/',
-}
-
-const starten = {
-  heading: 'Zo start u. Binnen een week staat hij live.',
-  steps: [
-    {
-      title: 'Meld u aan',
-      text: 'Vijf minuten werk. U rekent direct af via Mollie: eerste maand €149,50, daarna €299 per maand, excl. btw.',
-    },
-    {
-      title: 'Wij bouwen uw receptionist',
-      text: 'Binnen één werkdag bellen we om uw diensten, tarieven en agenda door te nemen. U hoeft niets te bouwen.',
-    },
-    {
-      title: 'Live op uw site en WhatsApp',
-      text: 'U test hem zelf en geeft akkoord. Vanaf dat moment neemt hij elke vraag aan, dag en nacht.',
-    },
-  ],
-  note: 'Per maand opzegbaar. Geen jaarcontract, geen verborgen verlenging; opzeggen per mail, geen opzegtermijn.',
-}
-
-const roadmap = {
-  heading: 'Wat hij nu doet, en wat er nog komt.',
-  sub:
-    'Nu vangt de receptionist alles op wat binnenkomt terwijl u werkt. Daarna willen we het ' +
-    'papierwerk aanpakken dat u nu ’s avonds aan de keukentafel doet. Dat bouwen we samen met ' +
-    'de eerste klanten.',
-  nowLabel: 'Wat hij nu doet',
-  now: [
-    'Beantwoordt vragen op uw site en WhatsApp, dag en nacht',
-    'Plant afspraken in uw eigen agenda',
-    'Vangt terugbelverzoeken met naam, nummer en klus',
-    'Meldt zichzelf als digitale assistent, in elk gesprek',
-  ],
-  laterLabel: 'Wat we bouwen',
-  laterNote: 'Nog niet beschikbaar. Dit zit niet in uw abonnement en u betaalt er nu niet voor.',
-  later: [
-    'Offertes die zichzelf opvolgen als de klant niet reageert',
-    'Afspraakherinneringen, zodat er niemand voor niets uitrijdt',
-    'Reviewverzoeken op het moment dat de klus net klaar is',
-    'Factuurherinneringen voor wat blijft openstaan',
-  ],
-  footnote:
-    'Wat als eerste komt, hangt af van waar klanten om vragen. Vraagt u iets wat er nog niet in ' +
-    'zit? Dan zeggen we dat, en wanneer het er wel is.',
+const bands = {
+  websites: {
+    heading: 'Een website die snel, veilig en bijgewerkt blijft.',
+    sub:
+      'Wij houden uw WordPress-site bij, zodat u er zelf niet naar hoeft te kijken. Begin met de ' +
+      'gratis check: in 1 minuut ziet u wat er nu aandacht vraagt.',
+    more: 'Meer over website-onderhoud',
+    smallLabel: 'Eerst opruimen?',
+  },
+  automations: {
+    heading: 'Offertes en herinneringen die vanzelf de deur uit gaan.',
+    sub:
+      'Een offerte die niemand opvolgt, een factuur die blijft openstaan: dat werk kan zichzelf ' +
+      'doen. We beginnen met een gratis scan van waar u nu tijd verliest. Daarna krijgt u een ' +
+      'vaste prijs vooraf.',
+    more: 'Meer over automatiseringen',
+    smallLabel: 'Klein beginnen?',
+  },
+  ads: {
+    heading: 'Een advertentievideo die weer bekeken wordt.',
+    sub:
+      'Een video die goed liep, zakt weg zodra mensen de eerste seconden kennen. Van uw bestaande ' +
+      'beeld maken we zestien versies, elk met een andere opening, zodat u ziet welke het beste werkt.',
+    more: "Meer over advertentievideo's",
+    smallLabel: '',
+  },
 }
 
 const finalCta = {
-  h2a: 'Probeer het eerst',
-  h2on: 'zelf.',
+  h2a: 'Begin klein, of begin',
+  h2on: 'gratis.',
   sub:
-    'Stel de receptionist in de demo een vraag alsof u een klant bent. Bevalt het? Meld u aan, ' +
-    'dan bellen we binnen één werkdag om hem voor uw bedrijf in te richten.',
-  primary: { label: 'Start vandaag', href: '/aanmelden/' },
+    'Zie in 1 minuut wat uw website mist, laat uitzoeken waar uw bedrijf tijd verliest, reken uit ' +
+    'wat gemiste aanvragen kosten of krijg 3 gratis openingen voor uw advertentievideo. Liever ' +
+    'meteen iets geregeld? Begin klein, met een vaste prijs.',
+  primary: { label: 'Bekijk wat gratis is', href: '/gratis/' },
   ghosts: [
-    { label: 'Probeer de demo', href: '/demo/' },
+    { label: 'Klein beginnen', href: '/klein-beginnen/' },
     { label: 'Plan een kennismaking', href: waLink, external: true },
   ],
   photo: {
@@ -194,15 +126,102 @@ const finalCta = {
 ---
 
 <Base
-  title="AI-receptionist voor uw bedrijf: websitechat & WhatsApp | Klantkraan"
-  description="AI-receptionist op uw website en WhatsApp: beantwoordt vragen, plant afspraken en vangt leads, dag en nacht. Done-for-you setup. Per maand opzegbaar."
+  title="AI-receptionist, websites en automatisering | Klantkraan"
+  description="AI-receptionist voor site en WhatsApp, website-onderhoud, automatiseringen en advertentievideo's. Vaste prijzen vooraf en bij elke dienst een gratis eerste stap."
   centered={false}
 >
-  <Hero t={hero} />
+  <ServicesHero />
+  <ServiceCards t={diensten} />
   <DemoSection t={demo} />
-  <FlowDiagram t={gesprek} />
-  <CostReceipt t={kosten} />
-  <Honest eerlijk={eerlijk} roadmap={roadmap} />
-  <HowItWorks t={starten} />
+  <FlowDiagram t={gesprek}>
+    <div class="kk-rec-line" data-receptionist-line>
+      <p class="kk-rec-price" data-price>
+        <span class="kk-rec-amount">{rec.price}</span>
+        <span class="kk-rec-note">{rec.priceNote}</span>
+      </p>
+      <p class="kk-rec-art50">
+        {receptionistLine.disclosureLead} <q>{receptionistLine.disclosure}</q>
+        {receptionistLine.disclosureTail}
+      </p>
+      <p class="kk-rec-links">
+        <a href={rec.href}>{receptionistLine.more}{'\u00a0'}<span aria-hidden="true">→</span></a>
+        <a href={rec.free.href}>{receptionistLine.calc}{'\u00a0'}<span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </FlowDiagram>
+  <ServiceBand area="websites" t={bands.websites} sunk>
+    <CareDiagram />
+  </ServiceBand>
+  <ServiceBand area="automations" t={bands.automations}>
+    <FollowUpDiagram />
+  </ServiceBand>
+  <ServiceBand area="ads" t={bands.ads} sunk>
+    <VariantsDiagram />
+  </ServiceBand>
   <FinalCta t={finalCta} />
 </Base>
+
+<style>
+  .kk-rec-line {
+    display: grid;
+    gap: 1rem 2.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+  @media (min-width: 1024px) {
+    .kk-rec-line {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: baseline;
+    }
+  }
+  .kk-rec-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.5rem;
+    margin: 0;
+  }
+  .kk-rec-amount {
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-chalk);
+  }
+  .kk-rec-note,
+  .kk-rec-art50 {
+    margin: 0;
+    font-size: var(--text-small);
+    color: var(--color-dim);
+  }
+  .kk-rec-art50 q {
+    quotes: '“' '”';
+    color: var(--color-chalk);
+  }
+  .kk-rec-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 0;
+    font-size: var(--text-small);
+    font-weight: 550;
+  }
+  @media (min-width: 1024px) {
+    .kk-rec-links {
+      flex-direction: column;
+      align-items: flex-end;
+    }
+  }
+  /* 44px tap targets: padding grows the hit area, the negative margin keeps the
+   * text where it was. The 1.5rem row gap keeps two stacked targets apart. */
+  .kk-rec-links a {
+    padding: 0.75rem 0;
+    margin: -0.75rem 0;
+    color: var(--color-sodium);
+    text-decoration: none;
+  }
+  .kk-rec-links a:hover {
+    text-decoration: underline;
+  }
+</style>

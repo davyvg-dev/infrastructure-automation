@@ -1,0 +1,166 @@
+---
+/*
+ * The four services right under the hero, one ruled cell each: a small drawing
+ * in the wire-and-lamp language, the name, the result for the client, the price
+ * and two ways in (the service's own page, and its free first step).
+ * Everything comes from src/data/services.ts; only the link wording lives here.
+ * 1 column on phones, 2x2 from 768, 4 in a row from 1280.
+ */
+import ServiceGlyph from '../diagrams/ServiceGlyph.astro'
+import { services } from '../../data/services'
+import type { Area } from '../../data/magnets'
+
+interface Props {
+  t: {
+    eyebrow: string
+    heading: string
+    sub: string
+    freeLabel: string
+  }
+}
+const { t } = Astro.props
+
+const more: Record<Area, string> = {
+  receptionist: 'Meer over de receptionist',
+  websites: 'Meer over website-onderhoud',
+  automations: 'Meer over automatiseringen',
+  ads: "Meer over advertentievideo's",
+}
+---
+
+<section id="diensten" data-section="services" aria-labelledby="diensten-h" class="scroll-mt-24">
+  <div class="mx-auto max-w-page px-gutter py-section">
+    <header class="max-w-[46rem]">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h2 id="diensten-h" class="mt-3 text-h2 text-balance text-(--color-chalk)">{t.heading}</h2>
+      <p class="mt-4 max-w-[38rem] text-body text-(--color-chalk-2)">{t.sub}</p>
+    </header>
+
+    <ul role="list" class="grid-rule kk-svcs mt-10 md:mt-14">
+      {
+        services.map((s) => {
+          // The ads magnet lives on the service page itself: point at its form.
+          const freeHref = s.free.href === s.href ? `${s.free.href}#${s.free.anchor}` : s.free.href
+          return (
+            <li data-service={s.area} class="kk-svc">
+              <div class="kk-svc-glyph">
+                <ServiceGlyph area={s.area} />
+              </div>
+              <p class="eyebrow mt-5">{s.label}</p>
+              <h3 class="mt-2 text-h3 text-balance text-(--color-chalk)">{s.promise}</h3>
+              <p class="kk-svc-price" data-price>
+                <span class="kk-svc-amount">{s.price}</span>
+                <span class="kk-svc-note">{s.priceNote}</span>
+              </p>
+              <a href={s.href} class="kk-svc-more">
+                {more[s.area]}{'\u00a0'}<span aria-hidden="true">→</span>
+              </a>
+              <p class="kk-svc-free">
+                <span class="kk-svc-free-k">{t.freeLabel}</span>
+                <a href={freeHref}>{s.free.short}</a>
+              </p>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .kk-svcs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 768px) {
+    .kk-svcs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1280px) {
+    .kk-svcs {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .kk-svc {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    /* Each card's six parts share the row heights of its neighbours, so the
+     * prices and links line up across the row. */
+    .kk-svc {
+      display: grid;
+      grid-row: span 6;
+      grid-template-rows: subgrid;
+      row-gap: 0;
+      padding: 1.75rem;
+    }
+  }
+  .kk-svc-glyph {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    color: var(--color-line-strong);
+  }
+  /* Price on its own line, the note always under it, in every card. */
+  .kk-svc-price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding-top: 1.5rem;
+  }
+  .kk-svc-amount {
+    font-weight: 600;
+    font-size: 1.125rem;
+    letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-chalk);
+  }
+  .kk-svc-note {
+    font-size: var(--text-small);
+    color: var(--color-dim);
+  }
+  /* One line in every card. The padding makes a 44px tap target; the negative
+   * margin gives the space back, so the link sits where its text is. */
+  .kk-svc-more {
+    align-self: start;
+    justify-self: start;
+    margin: 0.5rem 0 -0.75rem;
+    padding: 0.75rem 0;
+    font-size: var(--text-small);
+    font-weight: 550;
+    white-space: nowrap;
+    color: var(--color-sodium);
+    text-decoration: none;
+  }
+  .kk-svc-more:hover {
+    color: var(--color-sodium-soft);
+    text-decoration: underline;
+  }
+  .kk-svc-free {
+    margin: 0.75rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-line);
+    font-size: var(--text-small);
+    line-height: 1.45;
+    color: var(--color-dim);
+  }
+  .kk-svc-free-k {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+  }
+  .kk-svc-free a {
+    /* Inline padding: a 44px tap target without moving any text. */
+    padding-block: 0.875rem;
+    color: var(--color-chalk-2);
+    text-decoration: underline;
+    text-decoration-color: var(--color-line-strong);
+    text-underline-offset: 3px;
+  }
+  .kk-svc-free a:hover {
+    color: var(--color-chalk);
+  }
+</style>

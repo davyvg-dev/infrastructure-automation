@@ -1,0 +1,883 @@
+---
+/*
+ * Homepage hero for the four services. The headline keeps the brand line ("Het
+ * licht blijft aan.", the same lit "aan." as home/Hero.astro, which stays as it is
+ * for /ai-receptionist/ and the EN/ES homepages). The visual is a meter box drawn
+ * the way an installer draws one: one main node, Klantkraan, feeds a rail with four
+ * groups, each with a switch and a lamp. The labels sit on a strip under the lamps,
+ * like the stickers under the breakers, and each one links to its band on /.
+ *
+ * The board is HTML boxes and small SVG lamps on a shared grid instead of one
+ * scaled SVG: lines stay 1.5px, labels stay at reading size, and every lamp sits
+ * exactly over its label at any width. From 640px the groups stand in four columns
+ * with the strip below; on phones they are rows with the label beside each lamp
+ * (subgrid keeps the rows of drawing and labels the same height).
+ *
+ * Motion (CSS only, transform and opacity): the node's lamp and "aan." catch, the
+ * current runs out along the rail, each group's switch snaps shut as it arrives,
+ * the current drops to the lamp and the lamp catches, one group after another. It
+ * ends calm: all four lit, the wires live. It plays when the board is on screen
+ * (scripts/play-in-view.ts). Reduced motion or no JS: that finished state.
+ */
+import { services } from '../../data/services'
+import { waLink } from '../../data/contact'
+
+const t = {
+  h1a: 'Het licht blijft',
+  h1on: 'aan.',
+  sub:
+    'Klantkraan houdt de techniek achter uw bedrijf aan de gang. Een receptionist die klanten ' +
+    'antwoordt op site en WhatsApp, een website die snel en bijgewerkt blijft, automatiseringen ' +
+    "die het nawerk doen en advertentievideo's die blijven werken. Eén aanspreekpunt, vaste prijzen vooraf.",
+  ctaPrimary: 'Plan een kennismaking',
+  ctaGhost: 'Begin gratis',
+  ctaGhostHref: '/gratis/',
+  // "AVG-proof, EU-gehost" holds for the receptionist only, so it stays on that band.
+  proof: ['Vaste prijs vooraf', 'Elke dienst heeft een gratis eerste stap', 'Eén aanspreekpunt'],
+  node: 'Klantkraan',
+}
+
+const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
+const aria =
+  `Schema van een meterkast: Klantkraan voedt vier groepen, elk met een schakelaar en een lamp, ` +
+  `en alle vier lampen branden: ${services.map((s) => lower(s.circuit)).join(', ')}.`
+const x = 'M-8.5 -8.5 L8.5 8.5 M8.5 -8.5 L-8.5 8.5'
+---
+
+<section class="sh" data-section="hero">
+  <div class="mx-auto max-w-page px-gutter">
+    <div class="sh-head">
+      <h1 class="sh-h1">{t.h1a} <span class="on">{t.h1on}</span></h1>
+      <div class="sh-side">
+        <p class="sh-sub">{t.sub}</p>
+        <div class="mt-7 btn-row">
+          <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary btn-lg">{t.ctaPrimary}</a>
+          <a href={t.ctaGhostHref} class="btn btn-ghost btn-lg">{t.ctaGhost}</a>
+        </div>
+      </div>
+    </div>
+
+    <ul class="sh-proof" role="list">
+      {t.proof.map((p) => <li>{p}</li>)}
+    </ul>
+
+    <div class="frame board">
+      <div class="fig" data-diagram="services" data-kk-play role="img" aria-label={aria}>
+        <div class="main">
+          <span class="main-box"><span class="lamp main-lamp"></span>{t.node}</span>
+        </div>
+        {
+          services.map((s, i) => (
+            <div class="c" style={`--i:${i}`} data-circuit={s.area}>
+              {i === 0 && <span class="w w-feed" />}
+              <span class="w w-bl" />
+              <span class="w w-br" />
+              <span class="j" />
+              <span class="w w-da" />
+              <span class="pivot" />
+              <span class="blade" />
+              <span class="ring" />
+              <span class="w w-db" />
+              <span class="lamp-at">
+                <span class="halo" />
+                <svg class="lamp-off" viewBox="-14 -14 28 28" focusable="false">
+                  <circle r="12" />
+                  <path d={x} />
+                </svg>
+                <svg class="lamp-on" viewBox="-14 -14 28 28" focusable="false">
+                  <g data-lamp>
+                    <circle r="12" />
+                    <path d={x} />
+                  </g>
+                </svg>
+              </span>
+            </div>
+          ))
+        }
+      </div>
+
+      <ul class="list" data-hero-circuits role="list">
+        {
+          services.map((s) => (
+            <li>
+              <a href={`#${s.anchor}`}>
+                <span class="l-svc">{s.label}</span>
+                <span class="l-cir">
+                  {s.circuit}
+                  <span class="l-arr" aria-hidden="true">
+                    ↓
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sh {
+    padding: 3.5rem 0 4.5rem;
+  }
+  @media (min-width: 768px) {
+    .sh {
+      padding: 6rem 0 6.5rem;
+    }
+  }
+
+  /* ---- headline row, as home/Hero.astro: H1 left, sub and buttons bottom-right ---- */
+  .sh-head {
+    display: grid;
+    gap: 1.75rem;
+  }
+  @media (min-width: 1024px) {
+    .sh-head {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: end;
+      gap: 4rem;
+    }
+  }
+  .sh-h1 {
+    margin: 0;
+    font-size: var(--text-hero);
+    line-height: var(--text-hero--line-height);
+    font-weight: var(--text-hero--font-weight);
+    letter-spacing: var(--text-hero--letter-spacing);
+    color: var(--color-chalk);
+    text-wrap: balance;
+  }
+  .sh-h1 .on {
+    color: var(--color-sodium);
+  }
+  .sh-sub {
+    margin: 0;
+    max-width: 34rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-chalk-2);
+  }
+
+  .sh-proof {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--color-dim);
+  }
+  .sh-proof li {
+    padding: 0 1rem;
+    border-left: 1px solid var(--color-line-strong);
+  }
+  .sh-proof li:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  @media (max-width: 479px) {
+    .sh-proof {
+      flex-direction: column;
+    }
+    .sh-proof li {
+      padding: 0;
+      border-left: 0;
+    }
+  }
+
+  /* ================================================================ the board */
+  .board {
+    /* Snapped to the 40px ruling: node top on a line, rail on a line (120px), the
+     * switch pivots on the next (160px), lamps between lines, the strip on 280px. */
+    --feed: 2rem; /* node to rail */
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) calc(2.5rem - 1px),
+        color-mix(in oklab, var(--color-line) 45%, transparent) 2.5rem
+      ),
+      var(--color-night);
+  }
+  @media (min-width: 768px) {
+    .board {
+      margin-top: 4rem;
+    }
+  }
+  .fig {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: subgrid;
+    padding-top: 2.5rem;
+  }
+
+  /* ---- the main node ---- */
+  .main {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    margin-bottom: var(--feed);
+  }
+  .main-box {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    height: 3rem;
+    padding: 0 1.125rem 0 1rem;
+    border: 1.5px solid var(--color-chalk-2);
+    border-radius: 6px;
+    background: var(--color-panel);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-chalk);
+    white-space: nowrap;
+  }
+
+  /* ---- wires: a grey line with the current laid over it ---- */
+  .w {
+    position: absolute;
+    background: var(--color-line-strong);
+  }
+  .w::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-sodium);
+    opacity: 0.6;
+  }
+  /* vertical wires */
+  .w-feed,
+  .w-da,
+  .w-db {
+    width: 1.5px;
+  }
+  .w-feed::after,
+  .w-da::after,
+  .w-db::after {
+    transform-origin: 50% 0;
+  }
+
+  /* ---- one group: rail, junction, switch, lamp ----
+   * From 640px every part is placed on the whole drawing (.fig), not on its own
+   * column: four equal columns are rarely whole pixels wide, so a column centre
+   * lands on .25 or .5 and a 1.5px wire there draws lighter on 1x and 3x screens.
+   * --xl is the drop's left edge rounded down to a whole pixel, --xc its centre;
+   * everything in the group hangs on --xc. --y is the rail, 120px down. */
+  .fig {
+    position: relative;
+  }
+  .c {
+    --x: calc((var(--i) * 2 + 1) * 12.5%);
+    --xl: calc(var(--x) - 0.75px);
+    --xc: calc(var(--xl) + 0.75px);
+    --y: 120px;
+    grid-row: 2;
+    height: 10rem;
+  }
+  @supports (left: round(down, 1px, 1px)) {
+    .c {
+      --xl: round(down, var(--x) - 0.75px, 1px);
+    }
+  }
+  .w-feed {
+    left: var(--xl);
+    top: calc(var(--y) - var(--feed));
+    height: calc(var(--feed) + 0.75px);
+  }
+  .w-bl,
+  .w-br {
+    top: var(--y);
+    height: 1.5px;
+    margin-top: -0.75px;
+  }
+  /* the rail halves meet at the column edges, so the rail is unbroken */
+  .w-bl {
+    left: calc(var(--i) * 25%);
+    width: calc(var(--xc) - var(--i) * 25%);
+  }
+  .w-br {
+    left: var(--xc);
+    width: calc((var(--i) + 1) * 25% - var(--xc));
+  }
+  .w-bl::after,
+  .w-br::after {
+    transform-origin: 0 50%;
+  }
+  .c:nth-child(2) .w-bl,
+  .c:last-child .w-br {
+    display: none;
+  }
+  /* the last group: the rail runs on to the drop's outer edge, so the corner is
+   * solid (stopping at the drop's centre left a 0.75px notch) */
+  .c:last-child .w-bl {
+    width: calc(var(--xc) + 0.75px - var(--i) * 25%);
+  }
+  .j {
+    position: absolute;
+    left: var(--xc);
+    top: var(--y);
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border-radius: 50%;
+    background: var(--color-chalk-2);
+  }
+  .c:last-child .j {
+    display: none;
+  }
+  .w-da {
+    left: var(--xl);
+    top: var(--y);
+    height: 40px;
+  }
+  .pivot {
+    position: absolute;
+    left: var(--xc);
+    top: calc(var(--y) + 40px);
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--color-chalk-2);
+  }
+  .blade {
+    position: absolute;
+    left: var(--xl);
+    top: calc(var(--y) + 40px);
+    width: 1.5px;
+    height: 29px;
+    background: var(--color-line-strong);
+    transform-origin: 50% 0;
+  }
+  /* Open, the blade is drawn in chalk like the pivot; shut and live, it is wire. */
+  .blade::before,
+  .blade::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .blade::before {
+    background: var(--color-chalk-2);
+    opacity: 0;
+  }
+  .blade::after {
+    background: var(--color-sodium);
+    opacity: 0.6;
+  }
+  .ring {
+    position: absolute;
+    left: var(--xc);
+    top: calc(var(--y) + 72px);
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    border: 1.5px solid var(--color-chalk-2);
+    border-radius: 50%;
+    background: var(--color-night);
+  }
+  .w-db {
+    left: var(--xl);
+    top: calc(var(--y) + 75.5px);
+    height: calc(88px - 75.5px);
+  }
+
+  /* ---- lamps: the flow diagram's symbol; lit = filled with the accent ---- */
+  .lamp-at {
+    position: absolute;
+    left: var(--xc);
+    top: calc(var(--y) + 100px);
+    width: 28px;
+    height: 28px;
+    margin: -14px 0 0 -14px;
+  }
+  .lamp-at svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .lamp-off circle {
+    fill: var(--color-night);
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+  }
+  .lamp-off path,
+  .lamp-on path {
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .lamp-off path {
+    stroke: var(--color-line-strong);
+  }
+  .lamp-on g {
+    fill: var(--color-sodium);
+  }
+  .lamp-on circle {
+    stroke: var(--color-sodium);
+    stroke-width: 1.5;
+  }
+  .lamp-on path {
+    stroke: var(--color-sodium-ink);
+  }
+  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur */
+  .halo {
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 16%, transparent);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* ---- the label strip ---- */
+  .list {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: subgrid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-line);
+    background: var(--color-panel);
+  }
+  .list li {
+    min-width: 0;
+  }
+  .list li + li {
+    border-left: 1px solid var(--color-line);
+  }
+  .list a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3125rem;
+    height: 100%;
+    padding: 1.0625rem 0.75rem 1.25rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+  .list a:hover {
+    background: var(--color-panel-2);
+  }
+  .l-svc {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: var(--color-dim);
+  }
+  .l-cir {
+    font-size: 0.9375rem;
+    font-weight: 550;
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    color: var(--color-chalk);
+    text-wrap: balance;
+    transition: color 0.15s ease;
+  }
+  .l-arr {
+    display: inline-block;
+    margin-left: 0.3em;
+    color: var(--color-dim);
+    transition:
+      transform 0.2s ease,
+      color 0.15s ease;
+  }
+  .list a:hover .l-cir,
+  .list a:hover .l-arr {
+    color: var(--color-sodium);
+  }
+  .list a:hover .l-arr {
+    transform: translateY(2px);
+  }
+  /* Pointing at a label lifts the ring of its lamp. */
+  .board:has(li:nth-child(1) a:is(:hover, :focus-visible)) .c:nth-child(2) .halo,
+  .board:has(li:nth-child(2) a:is(:hover, :focus-visible)) .c:nth-child(3) .halo,
+  .board:has(li:nth-child(3) a:is(:hover, :focus-visible)) .c:nth-child(4) .halo,
+  .board:has(li:nth-child(4) a:is(:hover, :focus-visible)) .c:nth-child(5) .halo {
+    transform: scale(1.3);
+  }
+  @media (max-width: 767px) {
+    .l-svc {
+      font-size: 0.6875rem;
+    }
+  }
+
+  /* ---- phones: groups as rows, the label beside each lamp ---- */
+  @media (max-width: 639px) {
+    .board {
+      --feed: 1.125rem;
+      --bx: 35.75px; /* the rail's centre: its 1.5px box starts on 35px */
+      grid-template-columns: 7.75rem minmax(0, 1fr);
+      grid-template-rows: auto repeat(4, minmax(4.5rem, auto));
+    }
+    .fig {
+      grid-row: 1 / span 5;
+      grid-template-columns: subgrid;
+      grid-template-rows: auto repeat(4, minmax(4.5rem, auto));
+      grid-template-rows: subgrid;
+      padding-top: 0;
+    }
+    .main {
+      grid-column: 1 / -1;
+      justify-self: start;
+      margin: 1.5rem 0 var(--feed) 0.75rem;
+    }
+    /* Rows: the rail runs down at --bx, each tap at the row's middle. --yl is the
+     * tap wire's top edge rounded to a whole pixel, --yc its centre; the label
+     * line-heights below are whole pixels too, so every row is. */
+    .c {
+      --yl: calc(50% - 0.75px);
+      --yc: calc(var(--yl) + 0.75px);
+      position: relative;
+      grid-column: 1;
+      height: auto;
+    }
+    @supports (top: round(down, 1px, 1px)) {
+      .c {
+        --yl: round(down, 50% - 0.75px, 1px);
+      }
+    }
+    .c:nth-child(2) {
+      grid-row: 2;
+    }
+    .c:nth-child(3) {
+      grid-row: 3;
+    }
+    .c:nth-child(4) {
+      grid-row: 4;
+    }
+    .c:nth-child(5) {
+      grid-row: 5;
+    }
+    /* from the node's bottom edge down to the first row */
+    .w-feed {
+      left: calc(var(--bx) - 0.75px);
+      top: calc(-1 * var(--feed));
+      height: calc(var(--feed) + 0.5px);
+    }
+    /* upper and lower half of the rail in each row, meeting at the tap */
+    .w-bl,
+    .w-br {
+      left: calc(var(--bx) - 0.75px);
+      width: 1.5px;
+      margin: 0;
+    }
+    .w-bl {
+      top: 0;
+      height: var(--yc);
+    }
+    .w-br {
+      top: var(--yc);
+      height: calc(100% - var(--yc));
+    }
+    .w-bl::after,
+    .w-br::after {
+      transform-origin: 50% 0;
+    }
+    .c:nth-child(2) .w-bl {
+      display: block;
+    }
+    /* the last row: the rail runs on to the tap's bottom edge (solid corner) */
+    .c:last-child .w-bl {
+      width: 1.5px;
+      height: calc(var(--yl) + 1.5px);
+    }
+    .j {
+      left: var(--bx);
+      top: var(--yc);
+    }
+    /* tap, switch and lamp lie on their side */
+    .w-da {
+      left: var(--bx);
+      top: var(--yl);
+      width: 18px;
+      height: 1.5px;
+    }
+    .w-da::after,
+    .w-db::after {
+      transform-origin: 0 50%;
+    }
+    .pivot {
+      left: calc(var(--bx) + 18px);
+      top: var(--yc);
+    }
+    .blade {
+      left: calc(var(--bx) + 18px);
+      top: var(--yl);
+      width: 20px;
+      height: 1.5px;
+      transform-origin: 0 50%;
+    }
+    .ring {
+      left: calc(var(--bx) + 41px);
+      top: var(--yc);
+    }
+    .w-db {
+      left: calc(var(--bx) + 44.5px);
+      top: var(--yl);
+      width: calc(52px - 44.5px);
+      height: 1.5px;
+    }
+    .lamp-at {
+      left: calc(var(--bx) + 64px);
+      top: var(--yc);
+    }
+    .l-svc {
+      line-height: 14px;
+    }
+    .l-cir {
+      line-height: 20px;
+    }
+
+    .list {
+      grid-column: 2;
+      grid-row: 2 / span 4;
+      grid-template-columns: none;
+      grid-template-rows: repeat(4, minmax(4.5rem, auto));
+      grid-template-rows: subgrid;
+      /* the label strip again, standing up: its rows vary in height with the
+       * labels, so it covers the ruling instead of near-missing it */
+      border-top: 1px solid var(--color-line);
+      border-left: 1px solid var(--color-line);
+    }
+    .list li + li {
+      border-left: 0;
+      border-top: 1px solid var(--color-line);
+    }
+    .list a {
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0.1875rem;
+      padding: 0.75rem 0.875rem;
+      text-align: left;
+    }
+  }
+
+  /* ================================================================ motion
+   * The finished state above is what reduced motion, no JS and old browsers see.
+   * With motion and scripting, every wire starts empty and the current fills it;
+   * on the rail it runs at one steady speed (linear, so the joins between halves
+   * do not show). Per group i the current reaches the junction at --T, then:
+   * drops to the switch, the switch snaps shut, drops on to the lamp, the lamp
+   * catches with two short flickers. Then every live wire settles from bright to
+   * calm. */
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .sh-h1 .on {
+      animation: sh-ignite 1.3s linear 0.4s backwards;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .board {
+      --t0: 0.4s; /* node lamp catches */
+      --tf: 0.55s; /* current leaves the node */
+      --fd: 0.2s; /* feed duration */
+      --dt: 0.36s; /* rail time from one group to the next */
+    }
+    .c {
+      --T: calc(var(--tf) + var(--fd) + var(--i) * var(--dt));
+    }
+    .main-lamp {
+      animation: sh-catch 1.3s linear var(--t0) backwards;
+    }
+    .w-feed::after {
+      animation:
+        sh-wy var(--fd) cubic-bezier(0.4, 0, 1, 1) var(--tf) backwards,
+        sh-settle 0.9s ease calc(var(--tf) + 1.1s) backwards;
+    }
+    .w-bl::after {
+      animation:
+        sh-wx calc(var(--dt) / 2) linear calc(var(--T) - var(--dt) / 2) backwards,
+        sh-settle 0.9s ease calc(var(--T) + 1s) backwards;
+    }
+    .w-br::after {
+      animation:
+        sh-wx calc(var(--dt) / 2) linear var(--T) backwards,
+        sh-settle 0.9s ease calc(var(--T) + 1s) backwards;
+    }
+    .w-da::after {
+      animation:
+        sh-wy 0.12s cubic-bezier(0.4, 0, 1, 1) var(--T) backwards,
+        sh-settle 0.9s ease calc(var(--T) + 1s) backwards;
+    }
+    .blade {
+      animation: sh-close 0.26s linear calc(var(--T) + 0.04s) backwards;
+    }
+    /* contact made at 78% of the swing (T + 0.24s): chalk goes, current flashes
+     * through and settles with the rest of the wire */
+    .blade::before {
+      animation: sh-unchalk 0.12s linear calc(var(--T) + 0.24s) backwards;
+    }
+    .blade::after {
+      animation: sh-blade-live 1.7s linear calc(var(--T) + 0.22s) backwards;
+    }
+    .w-db::after {
+      animation:
+        sh-wy 0.1s cubic-bezier(0, 0, 0.6, 1) calc(var(--T) + 0.26s) backwards,
+        sh-settle 0.9s ease calc(var(--T) + 1s) backwards;
+    }
+    .lamp-on {
+      animation: sh-catch 0.7s linear calc(var(--T) + 0.36s) backwards;
+    }
+    .lamp-on g {
+      animation: sh-fill 0.01s linear calc(var(--T) + 0.36s) backwards;
+    }
+    .halo {
+      animation: sh-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--T) + 0.55s) backwards;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) and (max-width: 639px) {
+    /* on phones the rail runs down; the first row's upper half carries the feed */
+    .w-bl::after,
+    .w-br::after,
+    .w-feed::after {
+      animation-name: sh-wy, sh-settle;
+    }
+    .w-da::after,
+    .w-db::after {
+      animation-name: sh-wx, sh-settle;
+    }
+    /* feed (18px) then the first half row (about 36px), at the rail's speed */
+    .board {
+      --fd: 0.27s;
+    }
+    .w-feed::after {
+      animation-duration: 0.09s, 0.9s;
+      animation-timing-function: cubic-bezier(0.4, 0, 1, 1), ease;
+    }
+    .c:nth-child(2) .w-bl::after {
+      animation-duration: 0.18s, 0.9s;
+      animation-delay: calc(var(--tf) + 0.09s), calc(var(--T) + 1s);
+    }
+    .blade {
+      animation-name: sh-close-side;
+    }
+  }
+
+  @keyframes sh-wy {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes sh-wx {
+    from {
+      transform: scaleX(0);
+    }
+  }
+  @keyframes sh-settle {
+    from {
+      opacity: 1;
+    }
+  }
+  @keyframes sh-unchalk {
+    from {
+      opacity: 1;
+    }
+  }
+  @keyframes sh-blade-live {
+    0% {
+      opacity: 0;
+    }
+    5%,
+    46% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.6;
+    }
+  }
+  /* The switch: open, swung shut with a small bounce off the contact. The swing
+   * accelerates into the contact; the rebound eases out and settles. */
+  @keyframes sh-close {
+    0% {
+      transform: rotate(-32deg);
+      animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.3);
+    }
+    78% {
+      transform: rotate(2.5deg);
+      animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+    }
+    90% {
+      transform: rotate(-0.8deg);
+      animation-timing-function: ease-in-out;
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  @keyframes sh-close-side {
+    0% {
+      transform: rotate(-34deg);
+      animation-timing-function: cubic-bezier(0.55, 0, 0.8, 0.3);
+    }
+    78% {
+      transform: rotate(2.5deg);
+      animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+    }
+    90% {
+      transform: rotate(-0.8deg);
+      animation-timing-function: ease-in-out;
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+  /* A lamp catching: two short flickers, then steady, as "aan." does. */
+  @keyframes sh-catch {
+    0%,
+    11%,
+    25% {
+      opacity: 0;
+    }
+    5%,
+    18% {
+      opacity: 0.7;
+    }
+    42%,
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes sh-fill {
+    from {
+      fill: var(--color-night);
+    }
+  }
+  @keyframes sh-ring {
+    from {
+      opacity: 0;
+      transform: scale(0.55);
+    }
+  }
+  /* "aan." as home/Hero.astro lights it (unlit, two flickers, then on), carried by
+   * opacity so it stays off the main thread. */
+  @keyframes sh-ignite {
+    0%,
+    9%,
+    22% {
+      opacity: 0.2;
+    }
+    5%,
+    15% {
+      opacity: 0.72;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/play-in-view'
+</script>
