@@ -9,11 +9,13 @@
      * sodium-ink, confirm from the marketing site tokens
      * (klantkraan/apps/marketing-site/src/styles/global.css @theme). One look,
      * no light/dark swap: the brand is the dark panel. If you change --panel, change
-     * --color-demo-chat there too (the /demo phone overlay sits behind this card). */
+     * --color-demo-chat there too (the /demo phone overlay sits behind this card).
+     * The header is the site's .window-bar (panel-2, hairline, Geist Mono subtitle)
+     * with its amber .lamp; the site keeps green for its "booked" stamp only. */
     :root {
       --bg: #0b0c0d; --panel: #111315; --ink: #ededed; --muted: #8b9096;
       --bot: #16181b; --me: #ffb84d; --me-ink: #1a1206; --line: #23262a;
-      --ok: #63d3ab;
+      --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
     }
     /* Inter, self-hosted (no third-party font request from a client's site), same
      * latin + latin-ext subsets as klantkraan.nl. OFL: web/fonts/OFL-NOTICE.txt. */
@@ -25,6 +27,11 @@
     @font-face {
       font-family: 'Inter'; font-style: normal; font-weight: 100 900; font-display: swap;
       src: url('/fonts/inter-latin-opsz.woff2') format('woff2-variations');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    @font-face {
+      font-family: 'Geist Mono'; font-style: normal; font-weight: 100 900; font-display: swap;
+      src: url('/fonts/geistmono-latin.woff2') format('woff2-variations');
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
     * { box-sizing: border-box; }
@@ -48,13 +55,16 @@
       max-width: none; height: 100%; border: 0; border-radius: 0; box-shadow: none;
     }
     header {
-      padding: 14px 16px; border-bottom: 1px solid var(--line);
-      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--bot);
+      display: flex; align-items: center; gap: 12px;
     }
-    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); flex: none; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--me); flex: none;
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--me) 18%, transparent);
+    }
     header .who { flex: 1; min-width: 0; }
-    header h1 { font-size: 15px; margin: 0; font-weight: 600; }
-    header span { color: var(--muted); font-size: 12px; }
+    header h1 { font-size: 15px; margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+    header span { display: block; color: var(--muted); font: 12px/1.4 var(--mono); }
     #close {
       display: none; flex: none; width: 30px; height: 30px; padding: 0; border: 0;
       border-radius: 8px; background: transparent; color: var(--muted);

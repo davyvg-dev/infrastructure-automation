@@ -11,7 +11,9 @@ from app import server
 client = TestClient(server.app)
 
 
-@pytest.mark.parametrize("name", ["inter-latin-opsz.woff2", "inter-latinext-opsz.woff2"])
+@pytest.mark.parametrize(
+    "name", ["inter-latin-opsz.woff2", "inter-latinext-opsz.woff2", "geistmono-latin.woff2"]
+)
 def test_allowlisted_font_is_served(name: str) -> None:
     res = client.get(f"/fonts/{name}")
     assert res.status_code == 200

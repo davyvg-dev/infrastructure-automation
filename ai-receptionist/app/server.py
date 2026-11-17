@@ -124,9 +124,12 @@ def widget_js() -> FileResponse:
     )
 
 
-# Inter for the chat UI, self-hosted so a client's page never pulls a third-party font.
+# Inter (text) and Geist Mono (the header's subtitle, as in the site's window bars) for
+# the chat UI, self-hosted so a client's page never pulls a third-party font.
 # A fixed allowlist, not a static mount: nothing else under web/ becomes reachable.
-_FONTS = frozenset({"inter-latin-opsz.woff2", "inter-latinext-opsz.woff2"})
+_FONTS = frozenset(
+    {"inter-latin-opsz.woff2", "inter-latinext-opsz.woff2", "geistmono-latin.woff2"}
+)
 
 
 @app.get("/fonts/{name}")
