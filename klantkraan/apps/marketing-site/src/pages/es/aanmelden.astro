@@ -20,17 +20,17 @@ const inputClass =
 <Base
   lang="es"
   title="Alta: empiece con su recepcionista con IA | Klantkraan"
-  description="Dé de alta su negocio en Klantkraan Chat (299 €) o Compleet con agente telefónico de IA (499 € al mes). Le contactamos en un día laborable y nos encargamos de toda la instalación."
+  description="Dé de alta su negocio en Klantkraan Chat (299 € al mes) o Compleet con agente telefónico de IA (499 € al mes), IVA no incluido. Le llamamos en un día laborable y nos encargamos de toda la instalación."
   centered={false}
   stickyCta={false}
 >
   <!-- 1. Hero -->
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
-      <h1 class="font-display text-hero text-(--color-chalk)">Manos a la obra</h1>
+      <h1 class="font-display text-hero text-(--color-chalk)">Dese de alta</h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-        Deje sus datos abajo. Le llamamos en un día laborable para repasar sus servicios, tarifas y
-        calendario. Nosotros montamos todo; usted no tiene que construir nada.
+        Rellene sus datos abajo. Le llamamos en un día laborable para repasar sus servicios, tarifas
+        y calendario, y nosotros nos encargamos de la instalación.
       </p>
     </div>
   </section>
@@ -85,7 +85,7 @@ const inputClass =
                 type="tel"
                 autocomplete="tel"
                 pattern={'\\+?[\\d \\-\\(\\)\\.]{8,20}'}
-                title="Al menos 8 cifras, se admiten espacios y guiones"
+                title="Al menos 8 cifras; se admiten espacios y guiones"
                 class={inputClass}
               />
             </div>
@@ -104,7 +104,7 @@ const inputClass =
             </div>
           </div>
           <p id="contact-hint" class="-mt-3 text-small text-(--color-dim)">
-            El correo es necesario para la confirmación del pago; el teléfono es bienvenido.
+            Necesitamos su correo para la confirmación del pago. El teléfono también ayuda.
           </p>
           <div>
             <label for="vak" class="block text-body font-medium text-(--color-chalk)">
@@ -196,7 +196,7 @@ const inputClass =
                 Acepto las
                 <a href="/legal/voorwaarden/" class="underline">condiciones generales</a>
                 y el
-                <a href="/legal/dpa/" class="underline">acuerdo de tratamiento de datos</a>
+                <a href="/legal/dpa/" class="underline">contrato de tratamiento de datos</a>
                 (en neerlandés).
               </span>
             </label>
@@ -214,7 +214,7 @@ const inputClass =
             Darme de alta y pagar
           </button>
           <p id="pay-note" class="text-small text-(--color-dim)">
-            El pago se realiza de forma segura a través de Mollie. Tras el pago le contactamos para
+            Pagará de forma segura a través de Mollie. Tras el pago le contactamos para
             la instalación.
           </p>
           <p class="text-small text-(--color-dim)">
@@ -237,7 +237,7 @@ const inputClass =
           id="lead-success"
           class="hidden rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5 md:p-6"
         >
-          <h2 class="font-display text-h2 text-(--color-chalk)">Solicitud recibida</h2>
+          <h2 class="font-display text-h2 text-(--color-chalk)">Alta recibida</h2>
           <p class="mt-3 text-body text-(--color-dim)">
             Gracias. Nos pondremos en contacto con usted en un día laborable para planificar el
             siguiente paso.
@@ -255,16 +255,15 @@ const inputClass =
             </li>
             <li>
               <span class="font-mono text-small text-(--color-sodium)">2.</span>
-              Montamos y conectamos su recepcionista. Llave en mano; usted solo aporta el conocimiento.
+              Montamos y conectamos su recepcionista. Usted solo aporta la información.
             </li>
             <li>
               <span class="font-mono text-small text-(--color-sodium)">3.</span>
-              Usted la prueba, da el visto bueno y la recepcionista entra en marcha en su web y WhatsApp.
+              Usted la prueba, da el visto bueno y la recepcionista se pone en marcha en su web y WhatsApp.
             </li>
           </ol>
           <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
-            Darse de alta no le compromete a nada. Primero hablamos con usted y lo repasamos todo.
-            Cancelación mensual, primer mes al 50%.
+            Puede cancelar cada mes con un correo, sin preaviso. Primer mes al 50%.
           </p>
         </aside>
       </div>
@@ -289,14 +288,14 @@ const inputClass =
   const COPY = {
     payButton: 'Darme de alta y pagar',
     leadButton: 'Enviar solicitud',
-    payHint: 'El correo es necesario para la confirmación del pago; el teléfono es bienvenido.',
-    leadHint: 'Con teléfono o correo basta; ambos también vale.',
+    payHint: 'Necesitamos su correo para la confirmación del pago. El teléfono también ayuda.',
+    leadHint: 'Basta con teléfono o correo.',
     redirecting: 'Le llevamos a la página de pago…',
     needName: 'Escriba su nombre.',
     needEmail: 'Escriba su dirección de correo. Ahí enviamos la confirmación del pago.',
     needContact: 'Escriba un número de teléfono o una dirección de correo.',
     needTerms:
-      'Marque la casilla para aceptar las condiciones y el acuerdo de tratamiento de datos.',
+      'Marque la casilla para aceptar las condiciones y el contrato de tratamiento de datos.',
     badEmail: 'Esa dirección de correo no parece correcta. Revísela, por favor.',
     badPhone: 'Ese número de teléfono no parece correcto. Revíselo, por favor.',
     invalid: 'Algo ha fallado con su alta. Revise sus datos e inténtelo de nuevo.',

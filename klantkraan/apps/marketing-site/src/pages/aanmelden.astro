@@ -19,7 +19,7 @@ const inputClass =
 
 <Base
   title="Aanmelden: start met uw AI-receptionist | Klantkraan"
-  description="Meld uw bedrijf aan voor Klantkraan Chat (€299) of Compleet met AI-telefonist (€499 per maand). Wij nemen binnen één werkdag contact op en verzorgen de volledige setup."
+  description="Meld uw bedrijf aan voor Chat (€ 299 per maand) of Compleet met AI-telefonist (€ 499 per maand), excl. btw. Binnen één werkdag nemen wij contact op en richten wij alles voor u in."
   centered={false}
   stickyCta={false}
 >
@@ -28,8 +28,7 @@ const inputClass =
     <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">Aan de slag</h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-        Laat hieronder uw gegevens achter. Wij bellen u binnen één werkdag om uw diensten, tarieven
-        en agenda door te nemen. De setup doen wij, u hoeft niets te bouwen.
+        Laat hieronder uw gegevens achter. Wij richten alles in; u hoeft zelf niets te bouwen.
       </p>
     </div>
   </section>
@@ -102,7 +101,7 @@ const inputClass =
             </div>
           </div>
           <p id="contact-hint" class="-mt-3 text-small text-(--color-dim)">
-            E-mail is nodig voor de betaalbevestiging, telefoon mag erbij.
+            E-mail is nodig voor de betaalbevestiging. Telefoon is optioneel.
           </p>
           <div>
             <label for="vak" class="block text-body font-medium text-(--color-chalk)">
@@ -128,7 +127,7 @@ const inputClass =
               class={inputClass}
             />
             <p class="mt-1 text-small text-(--color-dim)">
-              Dan kennen wij uw diensten en werkgebied voordat u iets hoeft uit te leggen.
+              Dan kennen wij uw diensten en werkgebied al voor het eerste gesprek.
             </p>
           </div>
           <fieldset>
@@ -147,8 +146,8 @@ const inputClass =
                 <span class="text-body text-(--color-chalk)">
                   Chat
                   <span class="block text-small text-(--color-dim)">
-                    eerste maand €149,50, daarna €299 per maand, excl. btw &middot; websitechat +
-                    WhatsApp &middot; maandelijks opzegbaar
+                    eerste maand € 149,50, daarna € 299 per maand, excl. btw &middot; websitechat en
+                    WhatsApp &middot; per maand opzegbaar
                   </span>
                 </span>
               </label>
@@ -164,9 +163,9 @@ const inputClass =
                 <span class="text-body text-(--color-chalk)">
                   Compleet
                   <span class="block text-small text-(--color-dim)">
-                    eerste maand €249,50, daarna €499 per maand, excl. btw &middot; chat + WhatsApp
-                    + AI-telefonist &middot; incl. 750 belminuten/mnd, daarna €0,40/min &middot;
-                    maandelijks opzegbaar
+                    eerste maand € 249,50, daarna € 499 per maand, excl. btw &middot; chat, WhatsApp en
+                    AI-telefonist &middot; 750 belminuten per maand inbegrepen, daarna € 0,40 per
+                    minuut &middot; per maand opzegbaar
                   </span>
                 </span>
               </label>
@@ -211,8 +210,7 @@ const inputClass =
             Aanmelden en betalen
           </button>
           <p id="pay-note" class="text-small text-(--color-dim)">
-            U betaalt veilig via Mollie, onder meer met iDEAL. Na de betaling nemen wij contact op
-            voor de setup.
+            U betaalt veilig via Mollie, onder meer met iDEAL.
           </p>
           <p class="text-small text-(--color-dim)">
             Wij gebruiken uw gegevens alleen om contact op te nemen. Zie ons
@@ -221,7 +219,7 @@ const inputClass =
           <!-- The escape hatch the sticky bar used to be, now inline and quiet: on this
                page a floating amber button sat next to an identical amber pay button. -->
           <p class="text-small text-(--color-dim)">
-            Liever eerst even overleggen?
+            Liever eerst overleggen?
             <a href={waLink} target="_blank" rel="noopener" class="underline">WhatsApp ons</a>.
           </p>
         </div>
@@ -250,7 +248,7 @@ const inputClass =
             </li>
             <li>
               <span class="font-mono text-small text-(--color-sodium)">2.</span>
-              Wij bouwen en koppelen uw receptionist. Done-for-you, u levert alleen de kennis.
+              Wij bouwen en koppelen uw receptionist. U levert alleen de kennis over uw bedrijf.
             </li>
             <li>
               <span class="font-mono text-small text-(--color-sodium)">3.</span>
@@ -258,8 +256,7 @@ const inputClass =
             </li>
           </ol>
           <p class="mt-5 border-t border-(--color-line) pt-4 text-small text-(--color-dim)">
-            Aanmelden verplicht u tot niets. Wij nemen eerst contact op om alles door te nemen.
-            Maandelijks opzegbaar, eerste maand 50% korting.
+            Per maand opzegbaar, per mail en zonder opzegtermijn. Eerste maand 50% korting.
           </p>
         </aside>
       </div>
@@ -284,15 +281,15 @@ const inputClass =
   const COPY = {
     payButton: 'Aanmelden en betalen',
     leadButton: 'Verstuur aanmelding',
-    payHint: 'E-mail is nodig voor de betaalbevestiging, telefoon mag erbij.',
-    leadHint: 'Telefoon of e-mail is genoeg, allebei mag ook.',
+    payHint: 'E-mail is nodig voor de betaalbevestiging. Telefoon is optioneel.',
+    leadHint: 'Telefoon of e-mail is genoeg.',
     redirecting: 'Doorsturen naar de betaalpagina…',
     needName: 'Vul uw naam in.',
     needEmail: 'Vul uw e-mailadres in. Daar sturen we de betaalbevestiging heen.',
     needContact: 'Vul een telefoonnummer of e-mailadres in.',
-    needTerms: 'Zet even een vinkje bij de voorwaarden en de verwerkersovereenkomst.',
-    badEmail: 'Dat e-mailadres lijkt niet te kloppen. Controleer het even.',
-    badPhone: 'Dat telefoonnummer lijkt niet te kloppen. Controleer het even.',
+    needTerms: 'Vink aan dat u akkoord gaat met de voorwaarden en de verwerkersovereenkomst.',
+    badEmail: 'Dat e-mailadres lijkt niet te kloppen.',
+    badPhone: 'Dat telefoonnummer lijkt niet te kloppen.',
     invalid: 'Er ging iets mis met uw aanmelding. Controleer uw gegevens en probeer het opnieuw.',
     sendFailed:
       'Versturen is niet gelukt. Mail ons op <a href="mailto:hallo@klantkraan.nl" class="underline">hallo@klantkraan.nl</a>, dan pakken wij het direct op.',

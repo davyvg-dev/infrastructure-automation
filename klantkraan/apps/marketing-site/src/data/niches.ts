@@ -45,13 +45,13 @@ const sharedFeatures = (kind: NicheSlug): Feature[] => {
   // per niche so the page reads as written for that trade.
   const leadLine = {
     loodgieter:
-      'Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam, nummer en de vraag van de klant. Geen klant raakt verloren in een voicemail.',
+      'Elke aanvraag en elk terugbelverzoek komt direct als bericht op uw telefoon binnen, met naam, nummer en de vraag van de klant. Geen klant blijft hangen in uw voicemail.',
     dakdekker:
-      'Meldt iemand een lekkage terwijl u op een dak staat? De receptionist vangt de melding op en zet hem direct als bericht op uw telefoon, met naam, nummer en adres. Geen lekkage-melding raakt verloren.',
+      'Meldt iemand een lekkage terwijl u op een dak staat, dan staat de melding direct als bericht op uw telefoon, met naam, nummer en adres. Geen lekkagemelding raakt zoek.',
     schilder:
-      'Vraagt een particulier na werktijd een offerte aan? De receptionist vangt de aanvraag op en zet hem direct als bericht op uw telefoon. Geen prospect raakt verloren terwijl u op de stelling staat.',
+      'Vraagt een particulier na werktijd een offerte aan, dan staat de aanvraag direct als bericht op uw telefoon. Geen aanvraag raakt zoek terwijl u op de stelling staat.',
     aannemer:
-      'Meldt een opdrachtgever zich tijdens een inmeet-bezoek? De receptionist vangt de aanvraag op en zet hem direct als bericht op uw telefoon. Geen prospect raakt verloren in een voicemail.',
+      'Meldt een opdrachtgever zich terwijl u aan het inmeten bent, dan staat de aanvraag direct als bericht op uw telefoon. Geen opdrachtgever blijft hangen in uw voicemail.',
   }[kind]
   return [
     {
@@ -59,13 +59,13 @@ const sharedFeatures = (kind: NicheSlug): Feature[] => {
       title: 'Digitale receptionist op uw site en WhatsApp',
       body: {
         loodgieter:
-          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, spoedtoeslag en materiaalopslag, en noemt alleen tarieven die u zelf heeft ingesteld.",
         dakdekker:
-          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw inspectietarief, spoedtoeslag bij lekkage en regio-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw inspectietarief, spoedtoeslag bij lekkage en regiotoeslag, en noemt alleen tarieven die u zelf heeft ingesteld.",
         schilder:
-          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, m²-tarief binnen en buiten, kleurproef-meerprijs en spuitwerk-toeslag — en noemt alleen tarieven die u zelf heeft ingesteld.",
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw voorrijkosten, m²-tarief binnen en buiten, meerprijs voor een kleurproef en toeslag voor spuitwerk, en noemt alleen tarieven die u zelf heeft ingesteld.",
         aannemer:
-          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw uurtarief, het verschil tussen advies-, inmeet- en regiebezoek, en uw regio — en noemt alleen tarieven die u zelf heeft ingesteld.",
+          "Beantwoordt klantvragen in vlot Nederlands, ook 's avonds en in het weekend. Kent uw uurtarief, uw regio en het verschil tussen een advies-, inmeet- en regiebezoek, en noemt alleen tarieven die u zelf heeft ingesteld.",
       }[kind],
     },
     {
@@ -73,18 +73,18 @@ const sharedFeatures = (kind: NicheSlug): Feature[] => {
       title: 'Afspraken direct in uw agenda',
       body: {
         loodgieter:
-          'De receptionist plant terugbel- en klusafspraken rechtstreeks in uw agenda — alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail.',
+          'De receptionist plant terugbel- en klusafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. U belt en mailt niet meer heen en weer.',
         dakdekker:
-          'Inspectie- en offerte-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. U ziet elke ochtend wat er op de planning staat.',
+          'De receptionist plant inspectie- en offerteafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. U ziet elke ochtend wat er op de planning staat.',
         schilder:
-          'Opname- en offerte-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail.',
+          'De receptionist plant opname- en offerteafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. U belt en mailt niet meer heen en weer.',
         aannemer:
-          'Advies- en inmeet-afspraken worden rechtstreeks in uw agenda gepland — alleen op momenten die u zelf heeft vrijgegeven. U ziet elke ochtend wat er op de planning staat.',
+          'De receptionist plant advies- en inmeetafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. U ziet elke ochtend wat er op de planning staat.',
       }[kind],
     },
     {
       icon: 'phone',
-      title: 'Leads en terugbelverzoeken op uw telefoon',
+      title: 'Aanvragen en terugbelverzoeken op uw telefoon',
       body: leadLine,
     },
   ]
@@ -93,21 +93,21 @@ const sharedFeatures = (kind: NicheSlug): Feature[] => {
 const baseFaqs: Faq[] = [
   {
     q: 'Hoe komt de receptionist op mijn website?',
-    a: 'Met één klein scriptje dat wij voor u installeren — u hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
+    a: 'Wij plaatsen één klein script op uw website en koppelen uw WhatsApp. U hoeft zelf niets te doen. U houdt uw eigen site, nummer en huisstijl.',
   },
   {
-    q: 'Hoort de klant dat het AI is?',
-    a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketing-keuze maar een wettelijke verplichting onder de Europese AI-wet (artikel 50). De disclosure blijft altijd aan staan.',
+    q: 'Weet de klant dat het AI is?',
+    a: 'Ja. Elk gesprek begint met de melding dat de klant met een digitale assistent van uw bedrijf chat. Dat is wettelijk verplicht (artikel 50 van de Europese AI-verordening), dus die melding staat altijd aan.',
     href: '/legal/ai-disclosure/',
     linkLabel: 'Lees de volledige AI-disclosure',
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn prijzen?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbel-afspraak. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf heeft ingesteld. Kent hij een prijs niet, dan verzint hij niets en krijgt de klant een terugbelafspraak. Wij testen elke instelling voordat u live gaat.',
   },
   {
-    q: 'Per maand opzegbaar — echt waar?',
-    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail, wanneer u wilt. De receptionist loopt tot het einde van de betaalde maand, daarna incasseren wij niets meer. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%), maar dat is een keuze, geen standaard.',
+    q: 'Is het echt per maand opzegbaar?',
+    a: 'Ja. U zegt op met één mail, wanneer u wilt. Er is geen jaarcontract en geen verborgen verlenging. De receptionist werkt tot het einde van de betaalde maand; daarna incasseren wij niets meer. Betaalt u liever 6 of 12 maanden vooruit, dan krijgt u 15% of 20% korting.',
     href: '/legal/voorwaarden/',
     linkLabel: 'Lees de algemene voorwaarden',
   },
@@ -124,9 +124,9 @@ export const niches: Record<NicheSlug, Niche> = {
     features: sharedFeatures('loodgieter'),
     baseFaqs,
     painStats: [
-      { value: '28%', caption: 'van uw oproepen wordt gemist tijdens spoed-en-avonddiensten.' },
-      { value: '€450', caption: 'gemiddelde waarde per gemiste loodgieters-klus.' },
-      { value: '0', caption: 'reviews per klus die u handmatig zou kunnen verzamelen.' },
+      { value: '28%', caption: 'van uw oproepen wordt gemist tijdens spoed- en avonddiensten.' },
+      { value: '€\u00a0450', caption: 'gemiddelde waarde van een gemiste loodgietersklus.' },
+      { value: '0', caption: 'reviews van een klus die u misloopt.' },
     ],
   },
   dakdekker: {
@@ -141,13 +141,13 @@ export const niches: Record<NicheSlug, Niche> = {
     painStats: [
       {
         value: '32%',
-        caption: 'van de spoed-meldingen komt na 17:00 uur (na zware regen of storm).',
+        caption: 'van de spoedmeldingen komt na 17:00 binnen, na zware regen of storm.',
       },
-      { value: '€600', caption: 'gemiddelde waarde per gemiste inspectie- of spoedklus.' },
+      { value: '€\u00a0600', caption: 'gemiddelde waarde van een gemiste inspectie- of spoedklus.' },
       {
-        value: '24u',
+        value: '24 uur',
         caption:
-          'is de gewenste reactietijd bij stormschade — moeilijk waar te maken met losse telefoon.',
+          'is de gewenste reactietijd bij stormschade. Met alleen uw eigen telefoon haalt u dat moeilijk.',
       },
     ],
   },
@@ -162,8 +162,8 @@ export const niches: Record<NicheSlug, Niche> = {
     baseFaqs,
     painStats: [
       { value: '37%', caption: 'van uw offerteaanvragen komt binnen na 17:00 uur.' },
-      { value: '€2.500', caption: 'gemiddelde waarde per binnen-schilderklus huis.' },
-      { value: '3×', caption: 'meer aanvragen in maart–mei (lente-piek).' },
+      { value: '€\u00a02.500', caption: 'gemiddelde waarde van een binnenschilderklus in een woning.' },
+      { value: '3×', caption: 'meer aanvragen van maart tot en met mei.' },
     ],
   },
   aannemer: {
@@ -178,12 +178,12 @@ export const niches: Record<NicheSlug, Niche> = {
     painStats: [
       {
         value: '41%',
-        caption: 'van offerte-aanvragen verdwijnt als u niet binnen 24 uur reageert.',
+        caption: 'van de offerteaanvragen verdwijnt als u niet binnen 24 uur reageert.',
       },
-      { value: '€5.000', caption: 'gemiddelde waarde per gemiste verbouwings- of dakkapel-klus.' },
+      { value: '€\u00a05.000', caption: 'gemiddelde waarde van een gemiste verbouwing of dakkapel.' },
       {
         value: '1 op 3',
-        caption: 'aanvragen wordt klant zodra u dezelfde dag een afspraak inboekt.',
+        caption: 'aanvragen wordt klant als u dezelfde dag een afspraak inplant.',
       },
     ],
   },

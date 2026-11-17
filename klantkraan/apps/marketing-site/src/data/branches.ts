@@ -44,7 +44,7 @@ export const branches: Branch[] = [
     labelPluralEs: 'Contratistas',
     href: '/aannemer/',
     hubLine:
-      'Offerteaanvragen, meerwerk en leveranciers uit elkaar terwijl u op de bouwplaats staat.',
+      'Houdt offerteaanvragen, meerwerk en leveranciers uit elkaar terwijl u op de bouwplaats staat.',
     hubLineEn: 'Quote requests, variations and suppliers kept apart while you are on site.',
     hubLineEs:
       'Presupuestos, trabajos adicionales y proveedores, separados mientras usted está en obra.',
@@ -55,10 +55,10 @@ export const branches: Branch[] = [
     labelSingular: 'Dakdekker',
     labelPlural: 'Dakdekkers',
     labelPluralEn: 'Roofers',
-    labelPluralEs: 'Techadores',
+    labelPluralEs: 'Tejadores',
     href: '/dakdekkers/',
-    hubLine: 'Storm-protocol dat lekkages direct naar uw mobiel escaleert.',
-    hubLineEn: 'A storm protocol that escalates leaks straight to your phone.',
+    hubLine: 'Een stormprotocol dat spoedlekkages direct op uw mobiel meldt.',
+    hubLineEn: 'A storm protocol that sends leaks straight to your phone.',
     hubLineEs: 'Un protocolo de tormentas que le avisa de las goteras directamente al móvil.',
     illustration: 'StormCloud',
   },
@@ -69,7 +69,7 @@ export const branches: Branch[] = [
     labelPluralEn: 'Electricians',
     labelPluralEs: 'Electricistas',
     href: '/elektricien/',
-    hubLine: 'Spoedklachten, projectofferte-aanvragen en VvE-werk gescheiden afgehandeld.',
+    hubLine: 'Houdt spoed, offerteaanvragen voor projecten en VvE-werk uit elkaar.',
     hubLineEn:
       'Emergency call-outs, project quotes and property-management work handled separately.',
     hubLineEs:
@@ -80,10 +80,10 @@ export const branches: Branch[] = [
     slug: 'installateur',
     labelSingular: 'Installateur',
     labelPlural: 'Installateurs',
-    labelPluralEn: 'Installers',
+    labelPluralEn: 'Heating engineers',
     labelPluralEs: 'Instaladores',
     href: '/installateur/',
-    hubLine: 'CV-storingen, warmtepomp-aanvragen en spoedwerk naar de juiste prioriteit.',
+    hubLine: 'Zet cv-storingen, vragen over warmtepompen en spoedwerk op volgorde van urgentie.',
     hubLineEn: 'Boiler faults, heat-pump enquiries and emergency work given the right priority.',
     hubLineEs:
       'Averías de calderas, consultas de bombas de calor y urgencias, ordenadas por prioridad.',
@@ -96,7 +96,7 @@ export const branches: Branch[] = [
     labelPluralEn: 'Plumbers',
     labelPluralEs: 'Fontaneros',
     href: '/loodgieters/',
-    hubLine: 'Spoed-oproepen, voorrijkosten en standleiding-werk uit elkaar gehouden.',
+    hubLine: 'Houdt spoedvragen, vragen over voorrijkosten en werk aan standleidingen uit elkaar.',
     hubLineEn: 'Emergency calls, call-out charges and drain work kept apart and prioritised.',
     hubLineEs:
       'Urgencias, gastos de desplazamiento y trabajos de desagüe, separados y priorizados.',
@@ -109,7 +109,7 @@ export const branches: Branch[] = [
     labelPluralEn: 'Painters',
     labelPluralEs: 'Pintores',
     href: '/schilder/',
-    hubLine: 'Offerteaanvragen, planning-vragen en leveranciers gescheiden in één agenda.',
+    hubLine: 'Houdt offerteaanvragen, vragen over de planning en leveranciers uit elkaar.',
     hubLineEn: 'Quote requests, scheduling questions and suppliers kept separate in one calendar.',
     hubLineEs: 'Presupuestos, dudas de planificación y proveedores, separados en una sola agenda.',
     illustration: 'PaintRoller',
@@ -121,7 +121,7 @@ export const branches: Branch[] = [
     labelPluralEn: 'Gyms',
     labelPluralEs: 'Gimnasios',
     href: '/sportscholen/',
-    hubLine: 'Proefles-aanvragen in de avond en het weekend direct beantwoord én ingepland.',
+    hubLine: 'Beantwoordt proeflesaanvragen in de avond en het weekend en plant ze direct in.',
     hubLineEn:
       'Trial-class requests in the evening and at weekends answered and booked on the spot.',
     hubLineEs:

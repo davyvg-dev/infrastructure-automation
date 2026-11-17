@@ -65,7 +65,7 @@ export const magnets: Record<Area, Magnet> = {
   websites: {
     area: 'websites',
     name: 'Zie in 1 minuut wat een klant op uw website mist',
-    short: 'Wat mist uw website? In 1 minuut',
+    short: 'Zie in 1 minuut wat uw website mist',
     href: '/websitecheck/',
     anchor: 'wc-form',
     button: 'Check mijn website',
@@ -74,8 +74,8 @@ export const magnets: Record<Area, Magnet> = {
   },
   automations: {
     area: 'automations',
-    name: 'Waar verliest uw bedrijf elke week tijd? Antwoord binnen 1 werkdag',
-    short: 'Waar verliest u tijd? Antwoord in 1 werkdag',
+    name: 'Laat uitzoeken waar uw bedrijf elke week tijd verliest',
+    short: 'Hoor binnen 1 werkdag waar u tijd verliest',
     href: '/scan/',
     anchor: 'scan-form',
     button: 'Vraag de gratis scan aan',
@@ -84,18 +84,18 @@ export const magnets: Record<Area, Magnet> = {
   },
   receptionist: {
     area: 'receptionist',
-    name: 'Reken uit wat onbeantwoorde aanvragen u per maand kosten',
-    short: 'Wat kosten gemiste aanvragen u?',
+    name: 'Reken uit wat gemiste aanvragen u per maand kosten',
+    short: 'Reken uit wat gemiste aanvragen kosten',
     href: '/rekentool/',
     anchor: 'roi-form',
     button: 'Reken het uit',
     next: 'U vult drie getallen in en ziet direct wat u per maand en per jaar misloopt.',
-    reason: 'Het rekent met uw eigen cijfers en kost u één minuut.',
+    reason: 'Het rekent met uw eigen cijfers en kost u 1 minuut.',
   },
   ads: {
     area: 'ads',
     name: '3 nieuwe openingen voor uw advertentievideo, gratis',
-    short: '3 gratis openingen voor uw advertentie',
+    short: 'Vraag 3 nieuwe openingen aan voor uw advertentie',
     href: '/advertentievideos/',
     anchor: 'aanvragen',
     button: 'Stuur uw video',
@@ -145,7 +145,7 @@ export const miniOffers: Record<Area, MiniOffer> = {
     name: 'Offerte-opvolger',
     problem: 'Offertes gaan de deur uit en niemand belt erachteraan.',
     delivers:
-      'Na 3 en na 7 dagen krijgt de klant een nette herinnering. Die stopt zodra de klant antwoordt.',
+      'Na 3 en na 7 dagen krijgt de klant een nette herinnering. De herinneringen stoppen zodra de klant antwoordt.',
     price: '€\u00a0195',
     priceNote: '+ €\u00a019 per maand, excl. btw',
     days: 'Draait binnen 5 werkdagen',
@@ -171,8 +171,8 @@ export const miniOffers: Record<Area, MiniOffer> = {
   },
 }
 
-/** Display order on /gratis/, /klein-beginnen/ and the footer. */
-export const AREAS: Area[] = ['websites', 'ads', 'automations', 'receptionist']
+/** Display order on /gratis/, /klein-beginnen/ and the footer: the service order (services.ts). */
+export const AREAS: Area[] = ['receptionist', 'automations', 'websites', 'ads']
 
 export const KLEIN_BEGINNEN = '/klein-beginnen/'
 

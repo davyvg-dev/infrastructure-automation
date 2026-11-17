@@ -18,8 +18,8 @@ interface PainStat {
 
 const painStats: PainStat[] = [
   { value: '41%', caption: 'van uw offerteaanvragen komt buiten kantoortijd binnen.' },
-  { value: '€12k', caption: 'gemiddelde omvang van een gemiste verbouwingsaanvraag.' },
-  { value: '5×', caption: 'meer aanvragen na een buurt-renovatieproject in de regio.' },
+  { value: '€\u00a012.000', caption: 'gemiddelde waarde van een gemiste verbouwingsaanvraag.' },
+  { value: '5×', caption: 'meer aanvragen na een renovatieproject in de buurt.' },
 ]
 
 interface Feature {
@@ -31,18 +31,18 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: 'message-square',
-    title: 'Splitst offerteaanvragen en meerwerk apart',
-    body: "Beantwoordt klantvragen op uw website en via WhatsApp, in vlot Nederlands, ook 's avonds en in het weekend. Splitst offerteaanvragen, meerwerk, leveranciers en spoed apart. 's Ochtends staat een kort lijstje in uw WhatsApp, voor u de bus instapt.",
+    title: 'Houdt offerteaanvragen en meerwerk apart',
+    body: "Beantwoordt klantvragen op uw website en in WhatsApp, in vlot Nederlands, ook 's avonds en in het weekend. Ook leveranciers en spoed houdt hij apart. 's Ochtends staat er een kort lijstje in uw WhatsApp, voordat u de bus instapt.",
   },
   {
     icon: 'calendar-check',
     title: 'Afspraken direct in uw agenda',
-    body: 'Advies- en inmeet-afspraken worden rechtstreeks in uw agenda gepland, alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail tussen twee renovaties door.',
+    body: 'De receptionist plant advies- en inmeetafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. U belt en mailt niet meer heen en weer tussen twee renovaties door.',
   },
   {
     icon: 'phone',
-    title: 'Leads en terugbelverzoeken op uw telefoon',
-    body: 'Meldt een opdrachtgever zich tijdens een werkbezoek? De receptionist vangt de aanvraag op en zet haar direct als bericht op uw telefoon, met naam, nummer en projecttype. Geen prospect raakt verloren in een voicemail.',
+    title: 'Aanvragen en terugbelverzoeken op uw telefoon',
+    body: 'Meldt een opdrachtgever zich tijdens een werkbezoek, dan staat de aanvraag direct als bericht op uw telefoon, met naam, nummer en soort project. Geen opdrachtgever blijft hangen in uw voicemail.',
   },
 ]
 
@@ -56,35 +56,35 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Hoe komt de receptionist op mijn website?',
-    a: 'Met één klein scriptje dat wij voor u installeren. U hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
+    a: 'Wij plaatsen één klein script op uw website en koppelen uw WhatsApp. U hoeft zelf niets te doen. U houdt uw eigen site, nummer en huisstijl.',
   },
   {
-    q: 'En als ik op de bouwplaats sta?',
-    a: 'Daar is dit voor gemaakt. De receptionist beantwoordt de vraag (offerteaanvraag, meerwerk-vraag, leverancier, klacht), kwalificeert nieuwe aanvragen op postcode en projecttype, en plant een afspraak in uw agenda. U krijgt een samenvatting per WhatsApp of e-mail. Terugbellen kan in de pauze.',
+    q: 'Wat als ik op de bouwplaats sta?',
+    a: 'Dan beantwoordt de receptionist de vraag (offerteaanvraag, meerwerk, leverancier, klacht), beoordeelt nieuwe aanvragen op postcode en soort project en plant een afspraak in uw agenda. U krijgt een samenvatting per WhatsApp of e-mail en belt terug in de pauze.',
   },
   {
     q: 'Wat als drie klanten tegelijk een offerteaanvraag doen?',
-    a: 'De receptionist handelt gesprekken parallel af. Geen wachtrij. Tien klanten kunnen tegelijk chatten of appen, alle tien krijgen direct antwoord. Spoed (lekkage, schade, verzekeringsclaim) wordt herkend en gescheiden van planning-aanvragen.',
+    a: 'De receptionist voert gesprekken tegelijk, zonder wachtrij. Chatten of appen tien klanten tegelijk, dan krijgen ze alle tien direct antwoord. Spoed (lekkage, schade, verzekeringsclaim) herkent hij en houdt hij apart van vragen over de planning.',
   },
   {
-    q: 'Hoort de klant dat het AI is?',
-    a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketingkeuze maar een wettelijke verplichting onder artikel 50 van de Europese AI-wet. De disclosure blijft altijd aan staan.',
+    q: 'Weet de klant dat het AI is?',
+    a: 'Ja. Elk gesprek begint met de melding dat de klant met een digitale assistent van uw bedrijf chat. Dat is wettelijk verplicht (artikel 50 van de Europese AI-verordening), dus die melding staat altijd aan.',
     href: '/legal/ai-disclosure/',
     linkLabel: 'Lees de volledige AI-disclosure',
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn tarieven of beschikbaarheid?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen wat u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief inspectie, doorlooptijd op uw planning, vakantieperioden. Onbekende vragen worden nooit verzonnen; de klant krijgt dan een terugbelverzoek. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen wat u zelf heeft ingesteld: voorrijkosten, uurtarief voor inspectie, doorlooptijd op uw planning, vakantieperioden. Weet hij het antwoord niet, dan verzint hij niets en krijgt de klant een terugbelverzoek. Wij testen elke instelling voordat u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
-    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren chatgesprekken 30 dagen, tenzij u korter wenst. De volledige leverancierslijst staat openbaar in ons sub-processorregister.',
+    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU en Cloudflare EU. Wij tekenen een verwerkersovereenkomst met u en bewaren chatgesprekken 30 dagen, of korter als u dat wilt. Al onze subverwerkers staan in een openbare lijst.',
     href: '/legal/dpa/',
-    linkLabel: 'Bekijk DPA en privacyverklaring',
+    linkLabel: 'Lees de verwerkersovereenkomst',
   },
   {
-    q: 'Per maand opzegbaar, echt waar?',
-    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail, wanneer u wilt. De receptionist loopt tot het einde van de betaalde maand, daarna incasseren wij niets meer. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%).',
+    q: 'Is het echt per maand opzegbaar?',
+    a: 'Ja. U zegt op met één mail, wanneer u wilt. Er is geen jaarcontract en geen verborgen verlenging. De receptionist werkt tot het einde van de betaalde maand; daarna incasseren wij niets meer. Betaalt u liever 6 of 12 maanden vooruit, dan krijgt u 15% of 20% korting.',
     href: '/legal/voorwaarden/',
     linkLabel: 'Lees de algemene voorwaarden',
   },
@@ -105,8 +105,8 @@ const faqSchema = {
 ---
 
 <Base
-  title="Aannemer klanten werven: AI-receptionist voor offertes"
-  description="AI-receptionist voor aannemers, per maand opzegbaar. Filtert offerteaanvragen en meerwerk, plant afspraken en vangt leads terwijl u op de bouwplaats staat."
+  title="Klanten werven als aannemer: AI-receptionist voor offertes"
+  description="AI-receptionist voor aannemers, per maand opzegbaar. Houdt offerteaanvragen en meerwerk apart en plant afspraken terwijl u op de bouwplaats staat."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -119,13 +119,13 @@ const faqSchema = {
           De <span class="text-(--color-sodium)">Klantenmotor</span> voor aannemers.
         </h1>
         <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
-          Houdt offerteaanvragen, meerwerk en leveranciers apart. Stelt iemand om 19:30 een vraag
-          over een verbouwing terwijl u nog op de bouwplaats staat? De digitale receptionist
-          beantwoordt hem op uw website en via WhatsApp. Geen gemiste aanvraag meer.
+          Stelt iemand om 19:30 een vraag over een verbouwing terwijl u nog op de bouwplaats staat, dan
+          beantwoordt de digitale receptionist die op uw website of in WhatsApp. Offerteaanvragen,
+          meerwerk en leveranciers houdt hij apart.
         </p>
         <div class="mt-10 btn-row">
           <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>
-          <a href="/rekentool/" class="btn btn-ghost btn-lg"> Bereken uw ROI </a>
+          <a href="/rekentool/" class="btn btn-ghost btn-lg"> Open de rekentool </a>
         </div>
       </div>
       <div class="hidden text-(--color-dim) md:block">
@@ -134,12 +134,12 @@ const faqSchema = {
     </div>
     <div class="mx-auto max-w-page px-gutter">
       <ul role="list" class="fact-row mt-10">
-        <li><span class="text-(--color-chalk)">AVG + AI Act art. 50</span> <span>Disclosure standaard aan</span></li>
+        <li><span class="text-(--color-chalk)">AVG + AI Act art. 50</span> <span>AI-melding altijd aan</span></li>
         <li><span class="text-(--color-chalk)">Gehost in de EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
-        <li><span class="text-(--color-chalk)">Vlot Nederlands</span> <span>Filtert offerteaanvragen</span></li>
+        <li><span class="text-(--color-chalk)">Vlot Nederlands</span> <span>Houdt offerteaanvragen apart</span></li>
       </ul>
       <p class="mt-8 text-small text-dim">
-        Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
+        Per maand opzegbaar · Wij richten alles in · 50% korting eerste maand
       </p>
     </div>
   </section>
@@ -173,8 +173,8 @@ const faqSchema = {
     nodeSub='voor aannemers'
     t={{
       label: 'Modules',
-      heading: 'Wat Klantkraan doet voor aannemers.',
-      sub: 'Drie modules. Eén maandprijs. Voor de aannemer die op de bouwplaats staat als zijn beste prospect belt.',
+      heading: 'Wat Klantkraan doet voor aannemers',
+      sub: 'Drie modules voor één maandprijs, voor de aannemer die op de bouwplaats staat als zijn beste opdrachtgever zich meldt.',
       steps: features.map((f) => ({ title: f.title, text: f.body })),
     }}
   />
@@ -183,27 +183,27 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-chalk">Reken het even na.</h2>
+      <h2 class="font-display text-h1 text-chalk">Reken het even na</h2>
       <div
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
-          Mist u 2 offerteaanvragen per maand à €12.000? Dat is <strong
-            class="text-(--color-sodium)">circa €95.000 verloren omzet per jaar</strong
+          Mist u 2 offerteaanvragen per maand à € 12.000? Dat is <strong
+            class="text-(--color-sodium)">circa € 95.000 verloren omzet per jaar</strong
           >.
         </p>
         <p class="mt-4 text-body text-dim">
-          Klantkraan Chat is €299 per maand. Eén extra renovatie per jaar dekt ruim drie jaar
-          abonnement. Daarna telt elke gemiste prospect die u terugwint puur door.
+          Klantkraan Chat kost € 299 per maand. Eén extra renovatie per jaar dekt ruim drie jaar
+          abonnement. Elke aanvraag die u daarna terugwint, is extra omzet.
         </p>
         <div class="mt-6 btn-row">
           <a href="/rekentool/" class="btn btn-primary btn-lg"> Open de rekentool </a>
-          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
         </div>
         <p class="mt-6 text-micro text-dim">
-          Bedragen excl. 21% BTW. Voorbeeld op basis van branche-gemiddelde €12k per
-          verbouwings-/renovatie-offerte (bron: BNA / Aedes 2024 benchmarks) en de aanname dat
-          ongeveer 1 op 3 gemiste aanvragen een betalende klus had opgeleverd (33% conversiekans).
+          Bedragen excl. 21% btw. Rekenvoorbeeld met een branchegemiddelde van € 12.000 per
+          offerte voor verbouwing of renovatie (bron: BNA / Aedes 2024 benchmarks) en de aanname dat
+          ongeveer 1 op 3 gemiste aanvragen een betaalde klus had opgeleverd.
         </p>
       </div>
     </div>
@@ -213,7 +213,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
+      <h2 class="font-display text-h1 text-chalk">Veelgestelde vragen</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -249,11 +249,11 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-chalk break-words hyphens-auto">
-        Klaar om geen verbouwingsaanvraag meer te missen?
+        Zie hoe hij aanvragen uit elkaar houdt
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Probeer de live demo. Daarna weet u hoe hij offerteaanvragen, meerwerk-vragen en
-        leveranciers uit elkaar houdt. En hoe dat in uw WhatsApp landt.
+        In de live demo ziet u hoe hij offerteaanvragen, vragen over meerwerk en leveranciers
+        scheidt, en hoe dat in uw WhatsApp binnenkomt.
       </p>
       <div class="mt-8 btn-row">
         <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>

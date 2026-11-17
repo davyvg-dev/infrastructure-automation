@@ -7,7 +7,7 @@ import { company } from '../data/company'
 
 <Base
   title="Over Klantkraan: wie het bouwt en waarom"
-  description="Klantkraan is een handelsnaam van T4 Software Consulting BV, gebouwd door één ICT-ondernemer. Nederlands gehost, AVG-compliant, geen externe investeerders."
+  description="Klantkraan is een handelsnaam van T4 Software Consulting BV, gebouwd door één ICT-ondernemer. Gehost in de EU, ingericht volgens de AVG, zonder externe investeerders."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -18,7 +18,7 @@ import { company } from '../data/company'
       </h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
         Een kant-en-klaar abonnement waarmee Nederlandse ondernemers geen klantvraag meer missen.
-        Gebouwd door één ICT-ondernemer, gehost in Nederland, zonder externe investeerders.
+        Gebouwd door één ICT-ondernemer, gehost in de EU, zonder externe investeerders.
       </p>
     </div>
   </section>
@@ -38,7 +38,7 @@ import { company } from '../data/company'
           {
             company.btw && (
               <Fragment>
-                <dt class="mt-3 text-small text-(--color-dim) first:mt-0">BTW-nummer</dt>
+                <dt class="mt-3 text-small text-(--color-dim) first:mt-0">Btw-nummer</dt>
                 <dd class="font-mono break-all">{company.btw}</dd>
               </Fragment>
             )
@@ -51,23 +51,22 @@ import { company } from '../data/company'
       </div>
 
       <div>
-        <h2 class="font-display text-h2 text-(--color-chalk)">Waar staan wij voor</h2>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Waar wij voor staan</h2>
         <ul class="mt-4 space-y-3 text-body text-(--color-dim)">
           <li>
-            <strong>Nederlands gehost.</strong> Klantdata staat bij Cloudflare EU + Neon EU + Hetzner
-            FSN1. Geen US-data-export.
+            <strong>Gehost in de EU.</strong> Klantgegevens staan bij Cloudflare (EU), Neon (EU) en
+            Hetzner (Falkenstein, Duitsland). Geen export van gegevens naar de VS.
           </li>
           <li>
-            <strong>AVG-compliant by default.</strong> Standaard verwerkersovereenkomst (DPA), Art. 30
-            register, sub-processor lijst openbaar.
+            <strong>Ingericht volgens de AVG.</strong> Een standaard verwerkersovereenkomst, een register
+            van verwerkingen (art. 30) en een openbare lijst van sub-processors.
           </li>
           <li>
-            <strong>EU AI Act art. 50.</strong> De AI-disclosure staat in elk gesprek en kan niet worden
-            uitgezet, ook niet op verzoek.
+            <strong>EU AI Act art. 50.</strong> In elk gesprek staat dat de klant met AI praat. Die
+            melding kan niet uit, ook niet op verzoek.
           </li>
           <li>
-            <strong>Maandelijks opzegbaar.</strong> Geen vendor lock-in, geen jaarcontract als standaard.
-            U blijft omdat het werkt, niet omdat het moet.
+            <strong>Per maand opzegbaar.</strong> Geen jaarcontract als standaard.
           </li>
         </ul>
       </div>
@@ -92,18 +91,18 @@ import { company } from '../data/company'
           <p>
             Klantkraan wordt gebouwd door één Nederlandse ICT-ondernemer onder de BV
             <strong>T4 Software Consulting</strong>, waaronder Klantkraan als handelsnaam is
-            geregistreerd. Geen externe investeerders, geen VC-druk, geen groeicijfers die boven
-            klantkwaliteit gaan.
+            geregistreerd. Er zijn geen externe investeerders, dus niemand die groeicijfers boven
+            de kwaliteit voor klanten zet.
           </p>
           <p>
-            De bouw is bewust solo: één persoon ontwerpt de AI-receptionist, bouwt de koppelingen en
-            stemt elke configuratie af op het bedrijf. Bij een vraag wordt u niet via support-tier
-            1, 2 en 3 geleid. U spreekt direct met de eigenaar.
+            Eén persoon ontwerpt de AI-receptionist, bouwt de koppelingen en stelt hem af op elk
+            bedrijf. Met een vraag komt u dus niet bij een helpdesk terecht: u spreekt direct met de
+            eigenaar.
           </p>
           <p>
-            Achtergrond: jarenlang software bouwen voor MKB-klanten via T4 Software Consulting.
-            Klantkraan neemt wat voor één klant goed werkt en maakt het herhaalbaar voor de
-            vakbranche: loodgieters, dakdekkers, elektriciens, installateurs, aannemers, schilders.
+            Eerder bouwde hij jarenlang software voor mkb-klanten via T4 Software Consulting.
+            Klantkraan maakt wat bij één klant goed werkt herhaalbaar voor vakmensen: loodgieters,
+            dakdekkers, elektriciens, installateurs, aannemers en schilders.
           </p>
           <p class="pt-2 text-small text-(--color-dim)">
             <a
@@ -124,23 +123,21 @@ import { company } from '../data/company'
       <h2 class="font-display text-h1 text-(--color-chalk)">Waarom Klantkraan bestaat</h2>
       <div class="mt-6 max-w-3xl space-y-4 text-body text-(--color-dim)">
         <p>
-          Klantkraan komt voort uit een simpele observatie: volgens brancheschattingen mist de
-          gemiddelde Nederlandse loodgieter, dakdekker of installateur zo'n 28% van zijn oproepen.
-          Niet uit onwil: hij staat op het dak, op de ladder, of bij een andere klant. En ongeveer 1
-          op de 3 van die gemiste oproepen was een betalende klus geworden, gemiddeld €450, die nu
-          naar de concurrent gaat.
+          Volgens brancheschattingen mist de gemiddelde Nederlandse loodgieter, dakdekker of
+          installateur zo'n 28% van zijn oproepen. Hij staat op het dak, op de ladder of bij een
+          andere klant. Ongeveer 1 op de 3 van die gemiste oproepen was een betalende klus
+          geworden, gemiddeld € 450, die nu naar de concurrent gaat.
         </p>
         <p>
-          De oplossingen die er waren, voelden niet kloppend. Te duur (€899 setup + €199/mnd),
-          twaalfmaandscontracten, of zo'n Amerikaans pakket dat geen voorrijkosten kent en niet weet
-          wat een spoedtarief is. Wij wilden iets bouwen dat klinkt alsof het bij de zaak hoort:
-          vlot Nederlands, weet wat een geiser is, beleefd maar to-the-point.
+          De bestaande oplossingen pasten niet: te duur (€ 899 opstartkosten plus € 199 per maand),
+          een contract van twaalf maanden, of een Amerikaans pakket dat geen voorrijkosten kent en
+          niet weet wat een spoedtarief is. Wij wilden een receptionist die klinkt alsof hij bij de
+          zaak hoort: vlot Nederlands, beleefd en zakelijk, en hij weet wat een geiser is.
         </p>
         <p>
-          Klantkraan is dat: een digitale receptionist via websitechat en WhatsApp die vragen
-          beantwoordt, afspraken inplant en leads vangt, met een AI-telefonist op een eigen nummer
-          erbovenop. Done-for-you opgezet, maandelijks opzegbaar. Gebouwd door iemand die zelf ICT
-          runt, gehost in Europa.
+          Klantkraan is een AI-receptionist in uw websitechat en WhatsApp die vragen beantwoordt,
+          afspraken inplant en aanvragen noteert, met een AI-telefonist op een eigen nummer erbij.
+          Wij richten alles voor u in.
         </p>
       </div>
     </div>
@@ -152,29 +149,29 @@ import { company } from '../data/company'
       <div>
         <h2 class="font-display text-h2 text-(--color-chalk)">Verwerkersovereenkomst</h2>
         <p class="mt-4 text-body text-(--color-dim)">
-          Onze standaard DPA, vóór ondertekening leesbaar. Juridisch getoetst, geen aparte
-          onderhandeling nodig.
+          Onze standaard verwerkersovereenkomst (DPA) kunt u vóór ondertekening lezen. Juridisch
+          getoetst; aparte onderhandeling is niet nodig.
         </p>
         <a href="/legal/dpa/" class="mt-4 btn btn-ghost"> Bekijk DPA </a>
       </div>
       <div>
         <h2 class="font-display text-h2 text-(--color-chalk)">KvK-uittreksel</h2>
         <p class="mt-4 text-body text-(--color-dim)">
-          Officieel uittreksel handelsregister voor Klantkraan onder T4 Software Consulting BV. Voor
-          uw eigen leveranciersdossier. Op aanvraag, dezelfde werkdag in uw inbox.
+          Een officieel uittreksel uit het handelsregister, voor uw leveranciersdossier. Op aanvraag,
+          dezelfde werkdag in uw inbox.
         </p>
         <a
           href="mailto:hallo@klantkraan.nl?subject=KvK-uittreksel%20opvragen"
           class="mt-4 btn btn-ghost"
         >
-          Vraag uittreksel op
+          Vraag het uittreksel op
         </a>
       </div>
       <div>
         <h2 class="font-display text-h2 text-(--color-chalk)">Spreek de oprichter</h2>
         <p class="mt-4 text-body text-(--color-dim)">
-          Vragen die geen demo nodig hebben? Stuur een WhatsApp of e-mail. Antwoord meestal binnen
-          één werkdag, direct van de eigenaar.
+          Een vraag die geen demo nodig heeft? Stuur een WhatsApp of e-mail. U krijgt meestal binnen
+          één werkdag antwoord van de eigenaar zelf.
         </p>
         <div class="mt-4 btn-row">
           <a href={waLink} target="_blank" rel="noopener" class="btn btn-primary">

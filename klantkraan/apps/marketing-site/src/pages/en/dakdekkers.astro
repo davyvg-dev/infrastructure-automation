@@ -21,7 +21,7 @@ const features: Feature[] = [
   {
     icon: 'zap',
     title: 'Storm protocol',
-    body: `On your website and WhatsApp, the receptionist tells the difference between a quote request and an emergency leak. For an emergency: an instant alert on your phone, evenings and weekends included. Simultaneous conversations run in parallel. No queue.`,
+    body: `On your website and WhatsApp, the receptionist tells a quote request from an emergency leak. An emergency means an instant alert on your phone, evenings and weekends included. Conversations run in parallel, so there is no queue.`,
   },
   {
     icon: 'calendar-check',
@@ -43,7 +43,7 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Does it work during a storm with lots of reports at once?',
-    a: `Yes. The receptionist handles conversations in parallel. No queue. Ten customers can chat or message at the same time and all ten get an answer straight away. Emergency leaks are recognised and separated from quote requests.`,
+    a: `Yes. The receptionist handles conversations in parallel, so there is no queue. Ten customers can chat or message at the same time and all ten get an answer straight away. Emergency leaks are recognised and separated from quote requests.`,
   },
   {
     q: 'Does the AI know my set rates for inspection and emergency repair?',
@@ -51,7 +51,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Does the customer know it's AI?",
-    a: `Yes, from the very first line. The assistant states clearly that your customer is chatting with a digital assistant, in line with article 50 of the EU AI Act. The experience stays professional and natural. Read the full <a href="/legal/ai-disclosure/">AI disclosure</a>.`,
+    a: `Yes, from the first line. The assistant tells your customer they're chatting with a digital assistant, as article 50 of the EU AI Act requires. Read the full <a href="/legal/ai-disclosure/">AI disclosure</a>.`,
   },
   {
     q: "What if I'm up on the roof and can't respond?",
@@ -59,7 +59,7 @@ const faqs: Faq[] = [
   },
   {
     q: 'Does it work alongside my existing phone number or answering service?',
-    a: `Yes. The receptionist runs on your website and WhatsApp, separate from your phone line. You keep your current number, nothing is ported or forwarded. It can be switched on or off within one working day.`,
+    a: `Yes. The receptionist runs on your website and WhatsApp, separate from your phone line. You keep your current number; nothing is ported or forwarded. It can be switched on or off within one working day.`,
   },
   {
     q: 'Can I cancel Klantkraan monthly?',
@@ -84,7 +84,7 @@ const faqSchema = {
 <Base
   lang="en"
   title="Win roofing customers: AI receptionist with storm protocol | Klantkraan"
-  description="AI receptionist for roofers, cancel monthly. The storm protocol escalates emergency leaks straight to your phone, books inspections and captures leads, 24/7."
+  description="AI receptionist for roofers, cancel monthly. The storm protocol escalates emergency leaks straight to your phone, books inspections and captures leads, day and night."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -97,9 +97,8 @@ const faqSchema = {
           The <span class="text-(--color-sodium)">customer engine</span> for roofers.
         </h1>
         <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
-          A storm protocol that escalates emergency leaks straight to your phone. A 24/7 emergency
-          channel that answers naturally. Inspection and quote appointments booked straight into
-          your calendar.
+          A storm protocol sends emergency leaks straight to your phone, day and night. Inspection
+          and quote appointments go straight into your calendar.
         </p>
         <div class="mt-10 btn-row">
           <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
@@ -112,7 +111,7 @@ const faqSchema = {
     </div>
     <div class="mx-auto max-w-page px-gutter">
       <ul role="list" class="fact-row mt-10">
-        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure on by default</span></li>
+        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure always on</span></li>
         <li><span class="text-(--color-chalk)">Hosted in the EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
         <li><span class="text-(--color-chalk)">Natural conversation</span> <span>Knows storm protocol + emergency rate</span></li>
       </ul>
@@ -154,8 +153,8 @@ const faqSchema = {
       <p class="eyebrow">Modules</p>
       <h2 class="mt-3 font-display text-h1 text-chalk">What Klantkraan does for roofers.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Three modules. One monthly price. Written after an evening spent listening in with a roofer
-        in Utrecht after storm Pia.
+        Three modules for one monthly price. We wrote them after storm Pia, having spent an evening
+        listening in with a roofer in Utrecht.
       </p>
 
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
@@ -182,8 +181,7 @@ const faqSchema = {
         Saturday night, 21:00. A <span class="text-(--color-sodium)">storm</span> rolls in.
       </h2>
       <p class="mt-4 max-w-3xl text-body text-dim">
-        Three customers call at once with a leak. You're at a birthday party, or you're already
-        asleep. What happens now? And with Klantkraan?
+        Three customers call at once with a leak. You're at a birthday party or already asleep.
       </p>
 
       <div class="mt-10 grid gap-4 md:gap-6 md:grid-cols-2">
@@ -206,10 +204,10 @@ const faqSchema = {
           <p class="font-mono text-micro uppercase tracking-wider text-(--color-confirm)">
             With Klantkraan
           </p>
-          <h3 class="mt-2 font-display text-h3 text-chalk">Three calls, three resolutions.</h3>
+          <h3 class="mt-2 font-display text-h3 text-chalk">Three calls, all three handled.</h3>
           <ul class="mt-4 space-y-3 text-body text-dim">
             <li>
-              The AI takes all three in parallel, in natural conversation, with AI disclosure.
+              The AI takes all three in parallel, each with the AI disclosure.
             </li>
             <li>
               The emergency leak is recognised. Your phone rings once, with the address and roof
@@ -218,7 +216,7 @@ const faqSchema = {
             <li>
               The other two get a callback booked for Monday morning at 08:00 in your calendar.
             </li>
-            <li>Monday: three review requests sent, three customers helped, zero missed jobs.</li>
+            <li>Monday: three customers helped, zero missed jobs.</li>
           </ul>
         </article>
       </div>
@@ -277,10 +275,10 @@ const faqSchema = {
   <!-- 7. Final CTA band (blue) -->
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
-      <h2 class="font-display text-h1 text-chalk">Ready for the next storm season?</h2>
+      <h2 class="font-display text-h1 text-chalk">Get set up before the next storm.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        One subscription that takes the storm peak. No annual contract. We set everything up for
-        you. First month half price.
+        One subscription handles the storm peak. We set everything up for you, with no annual
+        contract and the first month at half price.
       </p>
       <div class="mt-8 btn-row">
         <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>

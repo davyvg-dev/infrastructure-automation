@@ -20,7 +20,7 @@ const { slug } = Astro.params
 
 <Base
   title="Klantkraan dashboard"
-  description="Per-klant KPI-overzicht: gesprekken, boekingen, reviews en teruggewonnen klanten."
+  description="Uw cijfers op een rij: gesprekken, boekingen, reviews en teruggewonnen klanten."
   noindex
 >
   <section id="kk-dashboard" data-slug={slug} class="space-y-10" aria-busy="true">
@@ -38,22 +38,22 @@ const { slug } = Astro.params
         <article
           class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
         >
-          <p class="text-small text-(--color-dim)">Teruggewonnen klanten (30d)</p>
+          <p class="text-small text-(--color-dim)">Teruggewonnen klanten (30 dagen)</p>
           <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="recoveries">
-            &mdash;
+            &hellip;
           </p>
         </article>
         <article
           class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
         >
           <p class="text-small text-(--color-dim)">Totaal boekingen</p>
-          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="bookings">&mdash;</p>
+          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="bookings">&hellip;</p>
         </article>
         <article
           class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
         >
           <p class="text-small text-(--color-dim)">Gemiddelde review</p>
-          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="rating">&mdash;</p>
+          <p class="mt-2 font-display text-h2 text-(--color-sodium)" data-kpi="rating">&hellip;</p>
         </article>
       </div>
     </section>
@@ -204,10 +204,10 @@ const { slug } = Astro.params
   }
 
   function fmtDuration(s: number): string {
-    if (!Number.isFinite(s) || s < 0) return '—'
+    if (!Number.isFinite(s) || s < 0) return '?'
     const m = Math.floor(s / 60)
     const r = s % 60
-    return m > 0 ? `${m}m ${r}s` : `${r}s`
+    return m > 0 ? `${m} min ${r} s` : `${r} s`
   }
 
   function renderKpis(p: DashboardPayload): void {
@@ -220,7 +220,7 @@ const { slug } = Astro.params
 
     if (ratingEl) {
       if (p.reviews.length === 0) {
-        ratingEl.textContent = '—'
+        ratingEl.textContent = 'Nog geen'
       } else {
         const avg =
           p.reviews.reduce((acc, r) => acc + (Number.isFinite(r.rating) ? r.rating : 0), 0) /
@@ -296,7 +296,7 @@ const { slug } = Astro.params
     if (!SLUG_RE.test(slug)) {
       showError(
         'Onbekende klant',
-        'Deze dashboard-link is niet geldig. Controleer de URL of vraag uw contactpersoon om een nieuwe link.',
+        'Deze dashboardlink is niet geldig. Controleer de link of vraag Klantkraan om een nieuwe.',
       )
       return
     }
@@ -309,7 +309,7 @@ const { slug } = Astro.params
       if (res.status === 404) {
         showError(
           'Onbekende klant',
-          'We konden geen dashboard vinden voor deze link. Controleer de URL of neem contact op met Klantkraan.',
+          'Bij deze link hoort geen dashboard. Controleer de link of neem contact op met Klantkraan.',
         )
         return
       }

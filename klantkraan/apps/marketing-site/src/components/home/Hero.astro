@@ -8,7 +8,11 @@
  * in r/[slug].astro): the list of conversations, the conversation that is
  * happening now, and the appointment it produced. The thread plays out once
  * (customer, typing, reply, booking slip) and the appointment pane fills in when
- * the slip lands. "aan." switches on as the customer's message arrives.
+ * the slip lands. It waits until it is seen (scripts/play-in-view.ts): on a phone
+ * the window starts under the fold, and it used to finish there before anyone
+ * scrolled to it. Its two "lamps" (data-lamp) are the customer's message and the
+ * booked badge, so it starts once both are in the uncovered part of the screen.
+ * "aan." switches on at the top of the page, where it is seen at once.
  * Reduced motion, or no JS: everything is shown finished.
  */
 interface Row {
@@ -80,7 +84,7 @@ const w = t.window
       {t.proof.map((item) => <li>{item.label}</li>)}
     </ul>
 
-    <div class="window kk-window" data-hero-window>
+    <div class="window kk-window" data-hero-window data-kk-play>
       <div class="window-bar">
         <span class="lamp" aria-hidden="true"></span>
         <span class="min-w-0 truncate">{w.title}</span>
@@ -120,7 +124,7 @@ const w = t.window
           <div class="kk-thread-body" aria-hidden="true">
             <div class="kk-daychip" data-reveal style="--d:.2s">{t.liveTs}</div>
             <div class="kk-note" data-reveal style="--d:.5s">{t.disclosure}</div>
-            <div class="kk-bubble kk-in" data-reveal style="--d:.9s">{t.customerMsg}</div>
+            <div class="kk-bubble kk-in" data-reveal data-lamp style="--d:.9s">{t.customerMsg}</div>
             <div id="kk-typing" class="kk-bubble kk-out kk-typing" hidden>
               <i></i><i></i><i></i>
             </div>
@@ -136,7 +140,7 @@ const w = t.window
         <div id="kk-result" class="kk-result">
           <div class="kk-result-head" aria-hidden="true">
             <p class="kk-pane-label">{w.resultLabel}</p>
-            <span class="kk-booked">{t.stampStrong}</span>
+            <span class="kk-booked" data-lamp>{t.stampStrong}</span>
           </div>
           <dl class="kk-fields" aria-hidden="true">
             {
@@ -544,10 +548,12 @@ const w = t.window
     .kk-typing i:nth-child(3) {
       animation-delay: 0.3s;
     }
-    /* "aan." starts unlit and switches on as the customer's message lands:
-     * two short flickers, then steady, the way a street lamp catches. */
+    /* "aan." starts unlit and switches on: two short flickers, then steady, the
+     * way a street lamp catches. Carried by opacity, as on the services hero, so
+     * the compositor runs it: a colour animation needs the main thread, which is
+     * busiest in the second after load, and a flicker of 50ms can drop there. */
     .kk-h1 .on {
-      animation: kk-ignite 1.3s linear 1s both;
+      animation: kk-ignite 1.3s linear 1s backwards;
     }
   }
   @keyframes kk-rise {
@@ -573,14 +579,14 @@ const w = t.window
     0%,
     9%,
     22% {
-      color: var(--color-line-strong);
+      opacity: 0.2;
     }
     5%,
     15% {
-      color: color-mix(in oklab, var(--color-sodium) 70%, var(--color-night));
+      opacity: 0.72;
     }
     100% {
-      color: var(--color-sodium);
+      opacity: 1;
     }
   }
   .kk-bubble[hidden],
@@ -591,27 +597,62 @@ const w = t.window
 
 <script>
   // The thread plays out once: customer, typing, reply, booking slip, then the
-  // appointment pane fills in. Bound to astro:page-load so it replays after
-  // ClientRouter navigation. Reduced motion (or no JS) shows the finished state.
-  let timers: number[] = []
+  // appointment pane fills in. Reduced motion (or no JS) shows the finished state.
+  //
+  // It plays when the window is seen, by play-in-view's rule: the window carries
+  // data-kk-play, so its CSS entrances (time chip, note, customer's message) are
+  // held until then. This script's part (typing, reply, slip) runs on the same
+  // clock: it starts when the first entrance does (its animationstart), or, if
+  // that has already happened, catches up from that animation's time. (Not
+  // whenSeen() on the same window: play-in-view keeps one entry per element, so
+  // the two would not both hear that it is seen.) Runs as soon as this module
+  // does, after play-in-view has bound, so the reply and slip are hidden before
+  // the load event (until then they showed, and on a wide screen the slip could
+  // be seen landing, vanishing and landing again); and on astro:page-load, so it
+  // plays again after a ClientRouter navigation.
+  import '../../scripts/play-in-view'
 
-  function initDispatch() {
-    timers.forEach((id) => window.clearTimeout(id))
-    timers = []
+  let timers: number[] = []
+  let bound: HTMLElement | null = null
+
+  function parts() {
+    const win = document.querySelector<HTMLElement>('[data-hero-window]')
     const typing = document.getElementById('kk-typing')
     const reply = document.getElementById('kk-reply')
     const stamp = document.getElementById('kk-stamp')
     const result = document.getElementById('kk-result')
-    if (!typing || !reply || !stamp || !result) return
+    return win && typing && reply && stamp && result ? { win, typing, reply, stamp, result } : null
+  }
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      typing.hidden = true
-      reply.hidden = false
-      stamp.hidden = false
-      result.classList.remove('is-waiting')
-      return
+  /** The state before the thread plays: reply and slip not there yet, the appointment blank. */
+  function prepare() {
+    const p = parts()
+    if (!p) return null
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      p.typing.hidden = true
+      p.reply.hidden = false
+      p.stamp.hidden = false
+      p.result.classList.remove('is-waiting')
+      return null
     }
+    p.reply.hidden = true
+    p.stamp.hidden = true
+    p.typing.hidden = true
+    p.result.classList.add('is-waiting')
+    return p
+  }
+
+  function initDispatch() {
+    const p = prepare()
+    // One play per window: astro:page-load also fires on the first load, right
+    // after the module ran, and a page visited again gets a fresh window.
+    if (!p || p.win === bound) return
+    // After a ClientRouter navigation this module can run before play-in-view has
+    // bound the new window (it does so on astro:page-load, before us): wait for it.
+    if (!p.win.dataset.kkBound && 'IntersectionObserver' in window && 'getAnimations' in Element.prototype) return
+    bound = p.win
+    timers.forEach((id) => window.clearTimeout(id))
+    timers = []
 
     const reveal = (el: HTMLElement) => {
       el.hidden = false
@@ -619,21 +660,29 @@ const w = t.window
       void el.offsetWidth // restart the entrance animation
       el.classList.add('kk-rise')
     }
-
-    reply.hidden = true
-    stamp.hidden = true
-    typing.hidden = true
-    result.classList.add('is-waiting')
-    timers.push(window.setTimeout(() => reveal(typing), 1500))
-    timers.push(
-      window.setTimeout(() => {
+    const { typing, reply, stamp, result } = p
+    /** The rest of the thread, `ms` into the window's clock. */
+    const play = (ms: number) => {
+      const at = (t: number, fn: () => void) => timers.push(window.setTimeout(fn, Math.max(0, t - ms)))
+      at(1500, () => reveal(typing))
+      at(2700, () => {
         typing.hidden = true
         reveal(reply)
-      }, 2700),
-    )
-    timers.push(window.setTimeout(() => reveal(stamp), 3400))
-    timers.push(window.setTimeout(() => result.classList.remove('is-waiting'), 3700))
+      })
+      at(3400, () => reveal(stamp))
+      at(3700, () => result.classList.remove('is-waiting'))
+    }
+    const first = p.win.querySelector<HTMLElement>('[data-reveal]')
+    const a = first?.getAnimations()[0]
+    if (!first || !a) return play(0)
+    const delay = Number(a.effect?.getTiming().delay ?? 0)
+    const t = Number(a.currentTime ?? 0)
+    if (a.playState !== 'paused' && t >= delay) return play(t)
+    // Held until seen, or still in its delay. play-in-view may swap the animation
+    // for a fresh one; the event comes from whichever one plays.
+    first.addEventListener('animationstart', () => play(delay), { once: true })
   }
 
+  initDispatch()
   document.addEventListener('astro:page-load', initDispatch)
 </script>

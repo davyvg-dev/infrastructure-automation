@@ -27,7 +27,7 @@ const tiers: Tier[] = [
     price: RECEPTIONIST_PRICES.chat,
     dayPrice: '9,97',
     blurb:
-      'Plant afspraken direct in uw agenda en vangt elke lead op, via websitechat en WhatsApp, 24/7 in het Nederlands. Wij richten hem volledig voor u in. Onze aanrader.',
+      'Beantwoordt vragen via websitechat en WhatsApp, dag en nacht, in het Nederlands. Plant afspraken direct in uw agenda. Wij richten hem voor u in.',
     highlight: true,
     cta: 'Start met Chat',
     ctaHref: '/aanmelden/?plan=chat',
@@ -37,9 +37,9 @@ const tiers: Tier[] = [
     name: 'Compleet',
     price: RECEPTIONIST_PRICES.compleet,
     dayPrice: '16,63',
-    priceNote: 'incl. 750 belminuten/mnd, daarna €0,40/min',
+    priceNote: 'incl. 750 belminuten per maand, daarna €\u00a00,40 per minuut',
     blurb:
-      'Alles van Chat, plus een AI-telefonist die uw telefoon 24/7 opneemt op een eigen Nederlands nummer. Gemiste oproepen bestaan niet meer.',
+      'Alles van Chat, plus een AI-telefonist die dag en nacht uw telefoon opneemt, op een eigen Nederlands nummer.',
     highlight: false,
     cta: 'Start met Compleet',
     ctaHref: '/aanmelden/?plan=compleet',
@@ -54,30 +54,30 @@ interface FeatureRow {
 
 const features: FeatureRow[] = [
   { feature: 'Plant afspraken direct in uw agenda', chat: 'ja', compleet: 'ja' },
-  { feature: 'Websitechat op uw eigen site (Nederlands, 24/7)', chat: 'ja', compleet: 'ja' },
-  { feature: 'WhatsApp-kanaal', chat: 'ja', compleet: 'ja' },
+  { feature: 'Websitechat op uw eigen site, in het Nederlands, dag en nacht', chat: 'ja', compleet: 'ja' },
+  { feature: 'WhatsApp', chat: 'ja', compleet: 'ja' },
   {
-    feature: 'Beantwoordt vragen over diensten, tarieven en werkgebied',
+    feature: 'Beantwoordt vragen over uw diensten, tarieven en werkgebied',
     chat: 'ja',
     compleet: 'ja',
   },
-  { feature: 'Vangt leads en terugbelverzoeken op', chat: 'ja', compleet: 'ja' },
+  { feature: 'Vangt aanvragen en terugbelverzoeken op', chat: 'ja', compleet: 'ja' },
   { feature: 'Wij richten hem in en houden hem bij', chat: 'ja', compleet: 'ja' },
   { feature: 'Maandelijkse statistieken per e-mail', chat: 'ja', compleet: 'ja' },
   {
     feature: 'AI-telefonist op een eigen Nederlands nummer',
-    chat: '–',
+    chat: 'nee',
     compleet: 'ja',
   },
   {
-    feature: 'Inbegrepen belminuten per maand',
-    chat: '–',
-    compleet: '750, daarna €0,40/min',
+    feature: 'Belminuten inbegrepen',
+    chat: 'nee',
+    compleet: '750 per maand, daarna €\u00a00,40 per minuut',
   },
   {
-    feature: 'Gelijktijdige gesprekken',
-    chat: '–',
-    compleet: 'tot 5 tegelijk',
+    feature: 'Telefoongesprekken tegelijk',
+    chat: 'nee',
+    compleet: 'tot 5',
   },
 ]
 
@@ -112,8 +112,8 @@ const serviceSchema = {
 ---
 
 <Base
-  title="Prijzen AI-receptionist: Chat €299 of Compleet €499 | Klantkraan"
-  description="Chat €299 en Compleet €499 per maand. Plant afspraken direct in uw agenda. Wij richten hem volledig in, u bouwt zelf niets. Maandelijks opzegbaar."
+  title="Prijzen AI-receptionist: Chat € 299 of Compleet € 499 | Klantkraan"
+  description="Chat € 299 en Compleet € 499 per maand, excl. btw. Plant afspraken direct in uw agenda. Wij richten hem in, u bouwt zelf niets. Per maand opzegbaar."
   centered={false}
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -122,8 +122,8 @@ const serviceSchema = {
     <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">Prijzen</h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-        Maandelijks opzegbaar, eerste maand 50% korting. Eenmalige setup vanaf €249 (kwijtgescholden
-        voor pilotklanten). Alle bedragen excl. 21% BTW.
+        Per maand opzegbaar, eerste maand 50% korting. Eenmalige inrichting vanaf €&nbsp;249, gratis
+        voor pilotklanten. Alle bedragen zijn excl. 21% btw.
       </p>
     </div>
   </section>
@@ -148,10 +148,10 @@ const serviceSchema = {
             <p
               class="mt-5 font-display text-h1 tabular-nums text-(--color-chalk)"
             >
-              €{tier.price}
+              €&nbsp;{tier.price}
               <span class="text-body text-(--color-dim)">/mnd</span>
             </p>
-            <p class="mt-1 font-mono text-small text-(--color-dim)">≈ €{tier.dayPrice} per dag</p>
+            <p class="mt-1 font-mono text-small text-(--color-dim)">≈ €&nbsp;{tier.dayPrice} per dag</p>
             {tier.priceNote && <p class="mt-2 text-small text-(--color-dim)">{tier.priceNote}</p>}
             <p class="mt-3 mb-7 text-body text-(--color-dim)">{tier.blurb}</p>
             <a
@@ -163,7 +163,7 @@ const serviceSchema = {
             {tier.highlight && (
               <p class="mt-3 text-small">
                 <a href="/demo/" class="text-(--color-dim) underline">
-                  Liever eerst proberen? Bekijk de demo
+                  Of probeer eerst de demo
                 </a>
               </p>
             )}
@@ -205,10 +205,9 @@ const serviceSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Wat u zelf doet</p>
-      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Niets. Wij richten hem in.</h2>
+      <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Wij richten hem in, u kijkt mee</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Een chatbot kopen is één ding. Er een receptionist van maken die uw tarieven kent en uw
-        agenda vult, is werk. Dat werk is van ons.
+        Een receptionist die uw tarieven kent en uw agenda vult, vraagt werk. Dat werk doen wij.
       </p>
       <ul class="grid-rule mt-8 text-body text-(--color-dim) sm:grid-cols-2">
         <li class="p-6">
@@ -218,23 +217,22 @@ const serviceSchema = {
         <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Uw agenda gekoppeld</p>
           <p class="mt-2">
-            Zodat een afspraak er direct in staat, en niet als briefje in een inbox belandt.
+            Een afspraak komt direct in uw agenda, niet als briefje in een inbox.
           </p>
         </li>
         <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">WhatsApp aangevraagd</p>
-          <p class="mt-2">De aanvraag bij Meta regelen wij. U hoeft daar niet doorheen.</p>
+          <p class="mt-2">De aanvraag bij Meta regelen wij.</p>
         </li>
         <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Bijgewerkt als er iets verandert</p>
           <p class="mt-2">
-            Nieuwe tarieven of een nieuwe dienst? Eén mailtje en wij passen hem aan. Blijvend.
+            Stuur een mail bij nieuwe tarieven of een nieuwe dienst, dan passen wij hem aan.
           </p>
         </li>
       </ul>
       <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
-        Goedkopere chatbots bestaan. Daar bent u zelf de bouwer, en de meeste plannen geen afspraak
-        in. Dat is het verschil waar u voor betaalt.
+        Er zijn goedkopere chatbots. Die bouwt u zelf, en de meeste plannen geen afspraken in.
       </p>
     </div>
   </section>
@@ -294,10 +292,10 @@ const serviceSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto grid max-w-page gap-4 md:gap-6 px-gutter sm:grid-cols-2">
       <div>
-        <h2 class="font-display text-h2 text-(--color-chalk)">Alle abonnementen bevatten</h2>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Bij elk abonnement</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
-          <li>Volledige inrichting en onderhoud. U bouwt zelf niets.</li>
-          <li>Maandelijks opzegbaar; opzeggen per mail, geen opzegtermijn.</li>
+          <li>Inrichting en onderhoud door ons. U bouwt zelf niets.</li>
+          <li>Per maand opzegbaar. Opzeggen gaat per mail, zonder opzegtermijn.</li>
           <li>Eerste maand 50% korting.</li>
           <li>30 dagen tevredenheidsgarantie. Niet tevreden? Geld terug.</li>
         </ul>
@@ -307,7 +305,7 @@ const serviceSchema = {
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>6 maanden vooruit: 15% korting.</li>
           <li>12 maanden vooruit: 20% korting, prijs voor het hele jaar vastgezet.</li>
-          <li>BTW-tarief 21% (verlegd voor klanten buiten Nederland).</li>
+          <li>Btw-tarief 21%, verlegd voor klanten buiten Nederland.</li>
         </ul>
       </div>
     </div>
@@ -317,10 +315,10 @@ const serviceSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-(--color-chalk)">Klaar om te starten?</h2>
+      <h2 class="font-display text-h1 text-(--color-chalk)">Aanmelden kost vijf minuten</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Meld u aan en wij bellen binnen één werkdag om de setup in te plannen. Liever eerst zien hoe
-        het werkt? Probeer de demo, direct in uw browser.
+        Binnen één werkdag bellen wij om de inrichting in te plannen. U kunt ook eerst de demo
+        proberen, in uw browser.
       </p>
       <div class="mt-6 btn-row">
         <a href="/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start met Chat</a>

@@ -55,7 +55,7 @@ interface TrustBadge {
 const trustBadgesByLang: Record<'nl' | 'en' | 'es', TrustBadge[]> = {
   nl: [
     { icon: 'shield-check', label: 'AVG-conform', sub: 'Standaard verwerkersovereenkomst' },
-    { icon: 'shield-check', label: 'EU AI Act art. 50', sub: 'Disclosure niet uitschakelbaar' },
+    { icon: 'shield-check', label: 'EU AI Act art. 50', sub: 'AI-melding staat altijd aan' },
     { icon: 'check', label: 'EU-gehost', sub: 'Cloudflare · Neon · Hetzner FSN1' },
     { icon: 'clock', label: 'Per maand opzegbaar', sub: 'Eén mail, geen opzegtermijn' },
   ],
@@ -82,7 +82,7 @@ const btwLabel = lang === 'es' ? 'IVA' : lang === 'en' ? 'VAT' : 'BTW'
 const T = {
   nl: {
     trustKicker: 'Waarom u ons kunt vertrouwen',
-    trustAria: 'Vertrouwens-signalen',
+    trustAria: 'Vertrouwenssignalen',
     tagline: 'De Klantenmotor voor Nederlandse ondernemers.',
     tradeNameNote: 'Klantkraan is een handelsnaam van',
     branchesHead: 'Branches',

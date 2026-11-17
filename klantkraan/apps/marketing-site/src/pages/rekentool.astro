@@ -7,7 +7,7 @@ import { BREVO_ACTION } from '../data/brevo'
 
 <Base
   title="ROI-rekentool: bereken uw gemiste omzet | Klantkraan"
-  description="Bereken in 10 seconden hoeveel omzet u laat liggen aan gemiste oproepen, en zie meteen hoe snel een AI-receptionist van Klantkraan zichzelf terugverdient."
+  description="Bereken in 10 seconden hoeveel omzet u misloopt door gemiste oproepen en hoe snel een AI-receptionist van Klantkraan zichzelf terugverdient."
   centered={false}
   offerArea="automations"
 >
@@ -18,8 +18,8 @@ import { BREVO_ACTION } from '../data/brevo'
         Wat kost u een <span class="text-(--color-sodium)">gemiste oproep</span>?
       </h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-        Vul uw cijfers in. De rekentool laat direct zien hoeveel klussen u jaarlijks misloopt en hoe
-        snel elk Klantkraan-abonnement zichzelf terugverdient.
+        Vul uw cijfers in en zie direct wat gemiste oproepen u per jaar kosten en hoe snel elk
+        abonnement zichzelf terugverdient.
       </p>
       <MiniOfferLine area="receptionist" where="before" class="mt-4 max-w-2xl" />
     </div>
@@ -52,7 +52,7 @@ import { BREVO_ACTION } from '../data/brevo'
           </div>
           <div>
             <label for="missed" class="block text-body font-medium text-(--color-chalk)">
-              % oproepen dat u nu mist
+              Welk percentage daarvan mist u nu?
             </label>
             <input
               id="missed"
@@ -67,12 +67,12 @@ import { BREVO_ACTION } from '../data/brevo'
               class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
             />
             <p class="mt-1 text-small text-(--color-dim)">
-              Brancheschatting: 28% voor installatie- en dak-vakmensen.
+              Brancheschatting: 28% voor installateurs en dakdekkers.
             </p>
           </div>
           <div>
             <label for="value" class="block text-body font-medium text-(--color-chalk)">
-              Gemiddelde klantwaarde per klus (€)
+              Gemiddelde waarde per klus (€)
             </label>
             <input
               id="value"
@@ -86,7 +86,7 @@ import { BREVO_ACTION } from '../data/brevo'
               class="mt-2 w-full rounded-(--radius-button) border border-(--color-line) bg-[rgba(0,0,0,0.25)] px-3 py-3 text-body text-(--color-chalk)"
             />
             <p class="mt-1 text-small text-(--color-dim)">
-              Default €450, gemiddelde loodgietersklus in Nederland.
+              Standaard € 450: de gemiddelde loodgietersklus in Nederland.
             </p>
           </div>
         </div>
@@ -112,7 +112,7 @@ import { BREVO_ACTION } from '../data/brevo'
               id="out-lost-revenue"
               class="font-display text-h1 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
             >
-              €0
+              € 0
             </p>
             <p class="mt-1 text-small text-(--color-dim)">
               Aanname: ongeveer 1 op 3 gemiste oproepen had een betalende klus opgeleverd.
@@ -124,31 +124,30 @@ import { BREVO_ACTION } from '../data/brevo'
               id="out-lost-month"
               class="font-display text-h2 tabular-nums [overflow-wrap:anywhere] text-(--color-sodium)"
             >
-              €0
+              € 0
             </p>
           </div>
         </div>
         <MiniOfferLine
           area="receptionist"
           where="within"
-          hook="Op vakantie loopt dit bedrag gewoon door."
+          hook="Op vakantie loopt dit bedrag door."
           class="mt-4"
         />
 
         <hr class="my-6 border-(--color-line)" />
 
-        <h3 class="font-display text-h3 text-(--color-chalk)">Terugverdientijd Klantkraan</h3>
+        <h3 class="font-display text-h3 text-(--color-chalk)">Terugverdientijd</h3>
         <ul class="mt-3 space-y-2 text-body text-(--color-dim)">
           <li>
-            Chat (€299/mnd): <span id="out-payback-chat" class="font-mono">–</span>
+            Chat (€ 299 per maand): <span id="out-payback-chat" class="font-mono">…</span>
           </li>
           <li>
-            Compleet (€499/mnd): <span id="out-payback-compleet" class="font-mono">–</span>
+            Compleet (€ 499 per maand): <span id="out-payback-compleet" class="font-mono">…</span>
           </li>
         </ul>
         <p class="mt-4 text-small text-(--color-dim)">
-          "Terugverdientijd" = aantal maanden tot het abonnement betaald is door teruggewonnen
-          omzet.
+          Terugverdientijd: het aantal maanden tot teruggewonnen omzet het abonnement heeft betaald.
         </p>
       </aside>
     </div>
@@ -162,17 +161,15 @@ import { BREVO_ACTION } from '../data/brevo'
       <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
         <li>Gemiste oproepen per jaar = oproepen per week × 52 × (% gemist / 100).</li>
         <li>
-          Verloren omzet per jaar = gemiste oproepen × klantwaarde × 33% conversiekans. We tellen
-          dus maar 1 op de 3 gemiste oproepen als verloren klus; zonder terugbel-automatisering
-          haakt het gros af.
+          Verloren omzet per jaar = gemiste oproepen × waarde per klus × 33%. We tellen dus maar 1 op
+          de 3 gemiste oproepen als verloren klus; zonder automatisch terugbellen haakt het gros af.
         </li>
         <li>
-          Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12). Hoe groter de bak
-          gemiste klussen, hoe sneller Klantkraan zichzelf terugverdient.
+          Terugverdientijd = abonnementsprijs ÷ (verloren omzet per jaar ÷ 12).
         </li>
       </ul>
       <a href="/demo/" class="mt-8 btn btn-primary btn-lg">
-        Laat het ons live op uw cijfers nakijken
+        Laat ons uw cijfers live nakijken
       </a>
     </div>
   </section>
@@ -182,29 +179,29 @@ import { BREVO_ACTION } from '../data/brevo'
     <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Leadplatforms</p>
       <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
-        En wat kost een klus via Werkspot?
+        Wat kost een klus via Werkspot?
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
         Op leadplatforms betaalt u per lead, en dezelfde lead gaat ook naar uw concurrenten. Wie het
-        eerst reageert wint de klus; de rest heeft ook betaald. Zet dat eens naast een vaste prijs
-        voor uw eigen kanaal, waar elke beller gewoon wordt aangenomen.
+        eerst reageert, wint de klus; de rest heeft ook betaald. Zet daar een vaste prijs voor uw
+        eigen kanaal tegenover, waar elke beller wordt aangenomen.
       </p>
       <div class="mt-8 grid gap-4 sm:grid-cols-3">
         <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
-          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">€3&ndash;75</p>
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">€&nbsp;3 tot €&nbsp;75</p>
           <p class="mt-2 text-small text-(--color-dim)">
             kost één lead op Werkspot, ook als de klus naar een ander gaat.
           </p>
         </div>
         <div class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5">
-          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">&plusmn;€208</p>
+          <p class="font-display text-h1 tabular-nums text-(--color-sodium)">&plusmn;&nbsp;€&nbsp;208</p>
           <p class="mt-2 text-small text-(--color-dim)">
             aan leadkosten per gewonnen klus, becijferd door
             <a href="https://adaptoo.nl/blog/werkspot-kosten" class="underline">Adaptoo</a>.
           </p>
         </div>
         <div class="rounded-(--radius-card) border border-(--color-sodium) bg-(--color-panel) p-5">
-          <p class="font-display text-h1 tabular-nums text-(--color-chalk)">€0 per lead</p>
+          <p class="font-display text-h1 tabular-nums text-(--color-chalk)">€&nbsp;0 per lead</p>
           <p class="mt-2 text-small text-(--color-dim)">
             via uw eigen nummer en website. Klantkraan kost een vast bedrag per maand, hoeveel
             klussen u ook aanneemt.
@@ -212,8 +209,8 @@ import { BREVO_ACTION } from '../data/brevo'
         </div>
       </div>
       <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
-        Uw eigen kanaal groeit bovendien in waarde: elke review, elke terugkerende klant en elke
-        doorverwijzing is van ú, niet van het platform.
+        Elke review, elke terugkerende klant en elke doorverwijzing via uw eigen kanaal is van u,
+        niet van het platform.
       </p>
     </div>
   </section>
@@ -230,10 +227,10 @@ import { BREVO_ACTION } from '../data/brevo'
         data-astro-reload
         class="rounded-(--radius-card) border border-(--color-line) bg-(--color-panel) p-5 md:p-6"
       >
-        <h2 class="font-display text-h2 text-(--color-chalk)">Stuur mij deze berekening</h2>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Deze berekening per mail</h2>
         <p class="mt-3 text-body text-(--color-dim)">
           U krijgt een mail om uw adres te bevestigen. Binnen 1 werkdag sturen we uw berekening, met
-          per maand wat er nu blijft liggen.
+          per maand de omzet die nu blijft liggen.
         </p>
         <label for="rm-email" class="mt-5 block text-body font-medium text-(--color-chalk)">
           Uw e-mailadres

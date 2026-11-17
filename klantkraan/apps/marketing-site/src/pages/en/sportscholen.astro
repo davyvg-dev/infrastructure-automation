@@ -59,15 +59,15 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: "With one small script that we install for you. You don't have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
+    a: "With one small script that we install for you. We connect WhatsApp in the same setup. You keep your own site, number and branding.",
   },
   {
     q: 'We already have a front desk. What does this add?',
-    a: "The front desk isn't there during a class, at the weekend or at 10pm, and those are exactly the moments when people go looking for a gym. The receptionist catches everything that comes in outside desk hours, books the trial class and lets your team do what they're good at: the floor.",
+    a: "The front desk isn't there during a class, at the weekend or at 10pm, and those are exactly the moments when people go looking for a gym. The receptionist catches everything that comes in outside desk hours, books the trial class and leaves your team free for the gym floor.",
   },
   {
     q: "Does the visitor know it's AI?",
-    a: "Yes. Every conversation opens by stating that they're chatting with a digital assistant, on behalf of your gym. That isn't a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
+    a: "Yes. Every conversation opens by stating that they're chatting with a digital assistant, on behalf of your gym. Article 50 of the EU AI Act requires it, and the disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
@@ -77,17 +77,17 @@ const faqs: Faq[] = [
   },
   {
     q: 'Can it handle cancellations and membership freezes too?',
-    a: 'It catches them neatly: the assistant notes the request, books a call if needed and passes it straight to you. Decisions about memberships stay with your team. The assistant only makes sure the request never gets left.',
+    a: 'It notes the request, books a call if needed and passes it straight to you. Decisions about memberships stay with your team; the assistant only makes sure no request gets lost.',
   },
   {
     q: "What happens to my members' data?",
-    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you want shorter. The full supplier list is public in our sub-processor register.',
+    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, or shorter if you prefer. The full supplier list is public in our sub-processor register.',
     href: '/legal/dpa/',
     linkLabel: 'View the DPA and privacy statement',
   },
   {
     q: 'Cancel monthly, really?',
-    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who prefers to pay 6 or 12 months up front there's a discount (15% and 20% respectively), but that's a choice, not the default.",
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. If you pay 6 or 12 months up front, you get 15% or 20% off.",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -123,10 +123,10 @@ const faqSchema = {
           The <span class="text-(--color-sodium)">customer engine</span> for gyms.
         </h1>
         <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
-          On the floor teaching a class? Then our digital receptionist answers the question about
-          memberships or the trial class, on your website and via WhatsApp, with your schedule and
-          rates to hand. Evenings, weekends, public holidays. The trial class goes straight into
-          your calendar.
+          While you're on the floor teaching a class, our digital receptionist answers questions
+          about memberships and trial classes on your website and via WhatsApp, with your schedule
+          and rates to hand. Evenings, weekends and public holidays too. Trial classes go straight
+          into your calendar.
         </p>
         <div class="mt-10 btn-row">
           <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
@@ -139,7 +139,7 @@ const faqSchema = {
     </div>
     <div class="mx-auto max-w-page px-gutter">
       <ul role="list" class="fact-row mt-10">
-        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure on by default</span></li>
+        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure always on</span></li>
         <li><span class="text-(--color-chalk)">Hosted in the EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
         <li><span class="text-(--color-chalk)">Natural conversation</span> <span>Knows your schedule + memberships</span></li>
       </ul>
@@ -179,7 +179,7 @@ const faqSchema = {
       <p class="eyebrow">Modules</p>
       <h2 class="mt-3 font-display text-h1 text-chalk">What Klantkraan does for gyms.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Three modules. One monthly price. Built for the owner who's on the floor more often than
+        Three modules for one monthly price. Built for the owner who's on the floor more often than
         behind the desk.
       </p>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
@@ -207,8 +207,8 @@ const faqSchema = {
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
-          Leave 4 trial-class requests a month unanswered, at €480 yearly value each? That's
-          <strong class="text-(--color-sodium)">over €23,000 in lost revenue a year</strong>.
+          Leave 4 trial-class requests a month unanswered, at €480 a year each, and you lose
+          <strong class="text-(--color-sodium)">over €23,000 in revenue a year</strong>.
         </p>
         <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One extra member a month and you break even. Every member
@@ -263,10 +263,10 @@ const faqSchema = {
   <!-- 6. End CTA band (blue) -->
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
-      <h2 class="font-display text-h1 text-chalk">Ready to stop missing trial classes?</h2>
+      <h2 class="font-display text-h1 text-chalk">Try it as a new member would.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Try the live demo of a gym receptionist. In one conversation you'll see how a question about
-        a membership ends as a booked trial class in the calendar.
+        Ask the live demo a question and book an appointment. It runs on an example business; your
+        own receptionist is set up with your classes and memberships.
       </p>
       <div class="mt-8 btn-row">
         <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>

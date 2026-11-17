@@ -203,10 +203,10 @@ export function analyse(
     punten.push({
       id: 'https',
       status: 'let-op',
-      titel: 'Je site opent zonder slotje',
+      titel: 'Uw site opent zonder slotje',
       uitleg:
-        'Je homepage opent op een http-adres. Browsers zetten daar "Niet beveiligd" bij in de adresbalk.',
-      zelf: 'Open je site en kijk links van het adres of er een slotje staat.',
+        'Uw homepage opent op een http-adres. Browsers zetten daar "Niet beveiligd" bij in de adresbalk.',
+      zelf: 'Open uw site en kijk links van het adres of er een slotje staat.',
     })
   } else if (extra.httpForwards === false) {
     punten.push({
@@ -214,15 +214,15 @@ export function analyse(
       status: 'let-op',
       titel: 'Het oude http-adres stuurt niet door',
       uitleg:
-        'Je site heeft een slotje, maar wie het adres met http:// intypt of een oude link volgt, blijft op de versie zonder slotje.',
-      zelf: `Typ http://${new URL(finalUrl).hostname} in je browser en kijk of het adres vanzelf https wordt.`,
+        'Uw site heeft een slotje, maar wie het adres met http:// intypt of een oude link volgt, blijft op de versie zonder slotje.',
+      zelf: `Typ http://${new URL(finalUrl).hostname} in uw browser en kijk of het adres vanzelf https wordt.`,
     })
   } else {
     punten.push({
       id: 'https',
       status: 'goed',
       titel: 'Slotje in orde',
-      uitleg: 'Je site opent op https.',
+      uitleg: 'Uw site opent op https.',
     })
   }
 
@@ -236,7 +236,7 @@ export function analyse(
         status: 'onbekend',
         titel: 'WordPress, versie niet zichtbaar',
         uitleg:
-          'Je site draait op WordPress. Het versienummer staat niet openbaar, dus van buitenaf zien we niet of hij bij is.',
+          'Uw site draait op WordPress. Het versienummer staat niet openbaar, dus van buitenaf zien we niet of hij bij is.',
         zelf: `Log in en kijk onder Dashboard, Updates. De nieuwste versie is ${latest.newest}.`,
       })
     } else if (!older(v, latest.newest)) {
@@ -244,12 +244,12 @@ export function analyse(
         id: 'wordpress',
         status: 'goed',
         titel: `WordPress ${v} is bij`,
-        uitleg: 'Plugins en thema zien we van buitenaf niet; die staan in je dashboard onder Updates.',
+        uitleg: 'Plugins en thema zien we van buitenaf niet; die staan in uw dashboard onder Updates.',
       })
     } else {
       const br = branchOf(v)
       const brLatest = latest.perBranch[br]
-      let uitleg = `Je site meldt zelf WordPress ${v}. De nieuwste versie is ${latest.newest}.`
+      let uitleg = `Uw site meldt zelf WordPress ${v}. De nieuwste versie is ${latest.newest}.`
       if (brLatest && brLatest !== v) {
         uitleg += ` Ook binnen ${br} loopt hij achter: de laatste beveiligingsupdate daarvan is ${brLatest}.`
       } else if (!brLatest) {
@@ -276,8 +276,8 @@ export function analyse(
         id: 'php',
         status: 'let-op',
         titel: `PHP ${pm[1]} krijgt geen updates meer`,
-        uitleg: `Je server meldt PHP ${pm[1]}${pm[2] ?? ''}. Daarvoor zijn de beveiligingsupdates gestopt in ${eol}. Sommige hosters repareren het zelf nog; vraag het na.`,
-        zelf: 'Vraag je hoster welke PHP-versie je site gebruikt en of hij naar een nieuwere kan.',
+        uitleg: `Uw server meldt PHP ${pm[1]}${pm[2] ?? ''}. Daarvoor zijn de beveiligingsupdates gestopt in ${eol}. Sommige hosters repareren het zelf nog; vraag het na.`,
+        zelf: 'Vraag uw hoster welke PHP-versie uw site gebruikt en of hij naar een nieuwere kan.',
       })
     }
   }
@@ -290,15 +290,15 @@ export function analyse(
       id: 'telefoon',
       status: 'goed',
       titel: 'Telefoonnummer is aantikbaar',
-      uitleg: 'Wie op een telefoon op je nummer tikt, belt meteen.',
+      uitleg: 'Wie op een telefoon op uw nummer tikt, belt meteen.',
     })
   } else if (number) {
     punten.push({
       id: 'telefoon',
       status: 'let-op',
       titel: 'Telefoonnummer is geen link',
-      uitleg: `Je nummer (${number[0].trim()}) staat als gewone tekst op de pagina. Een iPhone maakt er vaak zelf een link van, maar daar kun je niet op rekenen.`,
-      zelf: 'Open je site op een telefoon en tik op het nummer. Belt hij meteen?',
+      uitleg: `Uw nummer (${number[0].trim()}) staat als gewone tekst op de pagina. Een iPhone maakt er vaak zelf een link van, maar daar kunt u niet op rekenen.`,
+      zelf: 'Open uw site op een telefoon en tik op het nummer. Belt hij meteen?',
     })
   } else {
     punten.push({
@@ -306,8 +306,8 @@ export function analyse(
       status: 'let-op',
       titel: 'Geen telefoonnummer gevonden',
       uitleg:
-        'Op je homepage vonden we geen telefoonnummer in de tekst. Staat het in een afbeelding, dan kan niemand erop tikken en leest Google het niet.',
-      zelf: 'Open je homepage op een telefoon. Zie je je nummer zonder te zoeken?',
+        'Op uw homepage vonden we geen telefoonnummer in de tekst. Staat het in een afbeelding, dan kan niemand erop tikken en leest Google het niet.',
+      zelf: 'Open uw homepage op een telefoon. Ziet u uw nummer zonder te zoeken?',
     })
   }
 
@@ -320,7 +320,7 @@ export function analyse(
       titel: 'Niet ingesteld voor telefoons',
       uitleg:
         'De regel die een pagina op telefoonbreedte zet ontbreekt. Meestal verschijnt de site dan piepklein, als een verkleinde computerpagina.',
-      zelf: 'Open je site op een telefoon. Moet je inzoomen om de tekst te lezen?',
+      zelf: 'Open uw site op een telefoon. Moet u inzoomen om de tekst te lezen?',
     })
   } else if (/user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?\b/i.test(viewport)) {
     punten.push({
@@ -328,8 +328,8 @@ export function analyse(
       status: 'let-op',
       titel: 'Inzoomen staat uit',
       uitleg:
-        'Je site past op een telefoon, maar bezoekers kunnen de tekst niet groter maken. Lastig voor wie minder goed ziet.',
-      zelf: 'Open je site op een telefoon en probeer met twee vingers in te zoomen.',
+        'Uw site past op een telefoon, maar bezoekers kunnen de tekst niet groter maken. Lastig voor wie minder goed ziet.',
+      zelf: 'Open uw site op een telefoon en probeer met twee vingers in te zoomen.',
     })
   } else {
     punten.push({
@@ -349,16 +349,16 @@ export function analyse(
       status: 'let-op',
       titel: 'Geen paginatitel',
       uitleg:
-        'De titel is de blauwe regel waarmee je in Google staat. Die ontbreekt, dus Google bedenkt er zelf een.',
-      zelf: 'Kijk wat er op het tabblad van je browser staat.',
+        'De titel is de blauwe regel waarmee u in Google staat. Die ontbreekt, dus Google bedenkt er zelf een.',
+      zelf: 'Kijk wat er op het tabblad van uw browser staat.',
     })
   } else if (/^(home|welkom|homepage|start|index)(\s*[-|–:·]|$)/i.test(title) || title.length < 15) {
     punten.push({
       id: 'titel',
       status: 'let-op',
       titel: 'Paginatitel zegt weinig',
-      uitleg: `Je titel is "${title}". Dat is de blauwe regel in Google. Een titel die zegt wat je doet en waar, vertelt een zoeker meteen of hij goed zit.`,
-      zelf: 'Kijk wat er op het tabblad van je browser staat.',
+      uitleg: `Uw titel is "${title}". Dat is de blauwe regel in Google. Een titel die zegt wat u doet en waar, vertelt een zoeker meteen of hij goed zit.`,
+      zelf: 'Kijk wat er op het tabblad van uw browser staat.',
     })
   } else {
     punten.push({
@@ -377,8 +377,8 @@ export function analyse(
       status: 'let-op',
       titel: 'Geen omschrijving voor Google',
       uitleg:
-        'Onder de blauwe titel toont Google twee regels tekst. Je hebt ze niet zelf geschreven, dus Google pakt een willekeurig stuk van je pagina.',
-      zelf: 'Zoek je bedrijfsnaam in Google en lees de twee regels onder je titel.',
+        'Onder de blauwe titel toont Google twee regels tekst. U heeft ze niet zelf geschreven, dus Google pakt een willekeurig stuk van uw pagina.',
+      zelf: 'Zoek uw bedrijfsnaam in Google en lees de twee regels onder uw titel.',
     })
   } else {
     punten.push({
@@ -411,7 +411,7 @@ export function analyse(
       id: 'kop',
       status: 'let-op',
       titel: 'Hoofdkop zegt weinig',
-      uitleg: `Je hoofdkop is "${h1s[0] || '(leeg)'}". Zet daar wat je doet en voor wie.`,
+      uitleg: `Uw hoofdkop is "${h1s[0] || '(leeg)'}". Zet daar wat u doet en voor wie.`,
     })
   } else {
     punten.push({
@@ -450,15 +450,15 @@ export function analyse(
       id: 'foto',
       status: 'let-op',
       titel: `Eén foto weegt ${kb(big.bytes)}`,
-      uitleg: `De zwaarste foto op je homepage${/\.(jpe?g|png|webp|gif|avif)$/i.test(name) ? ` (${name})` : ''} is ${kb(big.bytes)}. Voor een foto op een website is zo'n 300 kB meestal genoeg; de rest haalt een telefoon voor niets op.`,
-      zelf: 'Open je site op een telefoon zonder wifi en kijk hoe lang de foto\'s op zich laten wachten.',
+      uitleg: `De zwaarste foto op uw homepage${/\.(jpe?g|png|webp|gif|avif)$/i.test(name) ? ` (${name})` : ''} is ${kb(big.bytes)}. Voor een foto op een website is zo'n 300 kB meestal genoeg; de rest haalt een telefoon voor niets op.`,
+      zelf: 'Open uw site op een telefoon zonder wifi en kijk hoe lang de foto\'s op zich laten wachten.',
     })
   } else if (big) {
     punten.push({
       id: 'foto',
       status: 'goed',
       titel: "Foto's zijn licht genoeg",
-      uitleg: `De zwaarste foto die we op je homepage vonden is ${kb(big.bytes)}.`,
+      uitleg: `De zwaarste foto die we op uw homepage vonden, is ${kb(big.bytes)}.`,
     })
   }
 
@@ -473,8 +473,8 @@ export function analyse(
         id: 'jaartal',
         status: 'let-op',
         titel: `Onderaan staat nog ${y}`,
-        uitleg: `Bij het copyright onderaan je pagina staat ${y}. Een bezoeker vraagt zich dan af of de rest nog klopt.`,
-        zelf: 'Scrol naar de onderkant van je homepage.',
+        uitleg: `Bij het copyright onderaan uw pagina staat ${y}. Een bezoeker vraagt zich dan af of de rest nog klopt.`,
+        zelf: 'Scrol naar de onderkant van uw homepage.',
       })
     }
   }

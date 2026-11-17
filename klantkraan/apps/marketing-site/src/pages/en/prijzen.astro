@@ -23,7 +23,7 @@ const tiers: Tier[] = [
     price: 299,
     dayPrice: '9.97',
     blurb:
-      'Books appointments straight into your calendar and captures every lead, via website chat and WhatsApp, 24/7 in Dutch. We set the whole thing up for you. Our pick.',
+      'Answers on your website chat and WhatsApp in Dutch, day and night. Books appointments straight into your calendar and captures every lead. We set it all up for you.',
     highlight: true,
     cta: 'Start with Chat',
     ctaHref: '/en/aanmelden/?plan=chat',
@@ -35,7 +35,7 @@ const tiers: Tier[] = [
     dayPrice: '16.63',
     priceNote: 'incl. 750 call minutes/mo, then €0.40/min',
     blurb:
-      'Everything in Chat, plus an AI phone agent that answers your phone 24/7 on your own Dutch number. Missed calls no longer exist.',
+      'Everything in Chat, plus an AI phone agent that answers calls on your own Dutch number, day and night.',
     highlight: false,
     cta: 'Start with Compleet',
     ctaHref: '/en/aanmelden/?plan=compleet',
@@ -50,7 +50,7 @@ interface FeatureRow {
 
 const features: FeatureRow[] = [
   { feature: 'Books appointments straight into your calendar', chat: 'yes', compleet: 'yes' },
-  { feature: 'Website chat on your own site (Dutch, 24/7)', chat: 'yes', compleet: 'yes' },
+  { feature: 'Chat on your own website (Dutch, day and night)', chat: 'yes', compleet: 'yes' },
   { feature: 'WhatsApp channel', chat: 'yes', compleet: 'yes' },
   {
     feature: 'Answers questions about services, rates and service area',
@@ -62,18 +62,18 @@ const features: FeatureRow[] = [
   { feature: 'Monthly statistics by email', chat: 'yes', compleet: 'yes' },
   {
     feature: 'AI phone agent on your own Dutch number',
-    chat: '–',
+    chat: 'no',
     compleet: 'yes',
   },
   {
     feature: 'Included call minutes per month',
-    chat: '–',
+    chat: 'no',
     compleet: '750, then €0.40/min',
   },
   {
     feature: 'Simultaneous calls',
-    chat: '–',
-    compleet: 'up to 5 at once',
+    chat: 'no',
+    compleet: 'up to 5',
   },
 ]
 
@@ -110,7 +110,7 @@ const serviceSchema = {
 <Base
   lang="en"
   title="AI receptionist pricing: Chat €299 or Compleet €499 | Klantkraan"
-  description="Chat €299 and Compleet €499 per month. Books appointments straight into your calendar. We set the whole thing up, you build nothing. Cancel monthly."
+  description="Chat €299 or Compleet €499 a month, excl. VAT. Books appointments straight into your calendar. We do the setup. Cancel monthly."
   centered={false}
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -160,7 +160,7 @@ const serviceSchema = {
             {tier.highlight && (
               <p class="mt-3 text-small">
                 <a href="/en/demo/" class="text-(--color-dim) underline">
-                  Rather try it first? See the demo
+                  Prefer to try it first? See the demo
                 </a>
               </p>
             )}
@@ -194,8 +194,8 @@ const serviceSchema = {
           </p>
         </li>
         <li class="p-6">
-          <p class="font-display text-h3 text-(--color-chalk)">WhatsApp applied for</p>
-          <p class="mt-2">We handle the application with Meta. You never see that process.</p>
+          <p class="font-display text-h3 text-(--color-chalk)">WhatsApp approval arranged</p>
+          <p class="mt-2">We apply to Meta for you. You never have to deal with it.</p>
         </li>
         <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Updated when things change</p>
@@ -205,8 +205,8 @@ const serviceSchema = {
         </li>
       </ul>
       <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
-        Cheaper chatbots exist. On those you are the builder, and most of them book no appointments.
-        That difference is what you are paying for.
+        Cheaper chatbots exist. With those you build it yourself, and most of them can't book
+        appointments. That difference is what you pay for.
       </p>
     </div>
   </section>
@@ -269,9 +269,9 @@ const serviceSchema = {
         <h2 class="font-display text-h2 text-(--color-chalk)">Every plan includes</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>Full setup and upkeep. You build nothing yourself.</li>
-          <li>Cancel monthly; cancel by email, no notice period.</li>
+          <li>Cancel monthly by email, with no notice period.</li>
           <li>First month 50% off.</li>
-          <li>30-day satisfaction guarantee. Not happy? Money back.</li>
+          <li>30-day satisfaction guarantee. If you're not happy, you get your money back.</li>
         </ul>
       </div>
       <div>
@@ -289,10 +289,10 @@ const serviceSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-(--color-chalk)">Ready to get started?</h2>
+      <h2 class="font-display text-h1 text-(--color-chalk)">Start today.</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Sign up and we call within one working day to plan the setup. Rather see how it works first?
-        Try the demo, right in your browser.
+        Sign up and we call within one working day to plan the setup. To see how it works first,
+        try the demo in your browser.
       </p>
       <div class="mt-6 btn-row">
         <a href="/en/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Start with Chat</a>

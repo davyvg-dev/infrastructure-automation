@@ -30,7 +30,7 @@ const niche = niches[nicheSlug]
 const combo = wave1.find((c) => c.city === citySlug && c.niche === nicheSlug)!
 
 const pageTitle = `${niche.label} in ${city.name}: Klantkraan AI-receptionist`
-const pageDescription = `${niche.label} in ${city.name}? De AI-receptionist beantwoordt vragen via chat en WhatsApp, plant afspraken en vangt leads, 24/7. Per maand opzegbaar.`
+const pageDescription = `AI-receptionist voor ${niche.labelPlural} in ${city.name}: beantwoordt klantvragen via chat en WhatsApp en plant afspraken, dag en nacht. Per maand opzegbaar.`
 
 // Merge FAQs: 2 city-named first (per blueprint thin-content rule), then 4 base.
 const faqs: Faq[] = [...combo.cityFaqs, ...niche.baseFaqs]
@@ -127,15 +127,15 @@ const serviceSchema = {
         {niche.label} in <span class="text-(--color-sodium)">{city.name}</span>.
       </h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-        Een Nederlandstalige digitale receptionist op uw website en WhatsApp die uw tarieven kent en
-        klantvragen 24/7 beantwoordt. Ook wanneer u in {city.name} op locatie zit.
+        Een digitale receptionist op uw website en in WhatsApp die uw tarieven kent en klantvragen in
+        vlot Nederlands beantwoordt, dag en nacht. Ook als u in {city.name} op een klus staat.
       </p>
       <div class="mt-10 btn-row">
         <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>
-        <a href="/rekentool/" class="btn btn-ghost btn-lg"> Bereken uw ROI </a>
+        <a href="/rekentool/" class="btn btn-ghost btn-lg"> Open de rekentool </a>
       </div>
       <p class="mt-8 text-small text-(--color-dim)">
-        Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
+        Per maand opzegbaar · Wij richten alles in · 50% korting eerste maand
       </p>
     </div>
   </section>
@@ -143,7 +143,7 @@ const serviceSchema = {
   <!-- 2. Pijn-stats -->
   <section
     class="border-y border-(--color-line) py-8 md:py-10"
-    aria-label={`Wat een gemiste ${niche.label.toLowerCase()}-oproep in ${city.name} kost`}
+    aria-label={`Wat een gemiste oproep een ${niche.label.toLowerCase()} in ${city.name} kost`}
   >
     <div class="mx-auto max-w-page px-gutter">
       <div class="stat-row">
@@ -214,32 +214,32 @@ const serviceSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-(--color-chalk)">Reken het even na.</h2>
+      <h2 class="font-display text-h1 text-(--color-chalk)">Reken het even na</h2>
       <div
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-(--color-chalk)">
-          Mist u 10 oproepen per week à €{jobValueWithTier.toLocaleString('nl-NL')} in {city.name}?
+          Mist u 10 oproepen per week à € {jobValueWithTier.toLocaleString('nl-NL')} in {city.name}?
           Dat is
           <strong class="text-(--color-sodium)">
-            €{
+            € {
               (jobValueWithTier * 10 * 52 * 0.33).toLocaleString('nl-NL', {
                 maximumFractionDigits: 0,
               })
-            } verloren omzet per jaar
-          </strong>.
+            } verloren omzet per jaar</strong>.
         </p>
         <p class="mt-4 text-body text-(--color-dim)">
-          Klantkraan Chat is €299 per maand. Voor {niche.labelPlural} in {city.name} verdiend zodra u
-          één extra klus per maand herwint. Wat erna binnenkomt is marge.
+          Klantkraan Chat kost € 299 per maand. Eén extra klus per maand in {city.name} en u heeft het
+          terugverdiend. Wat daarna binnenkomt, is extra omzet.
         </p>
         <div class="mt-6 btn-row">
           <a href="/rekentool/" class="btn btn-primary btn-lg"> Open de rekentool </a>
-          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
         </div>
         <p class="mt-6 text-micro text-(--color-dim)">
-          Bedragen excl. 21% BTW. Tarief geïndexeerd op {city.name} ({city.priceTier}) bovenop het
-          landelijke gemiddelde van €{niche.jobValueEur} per gemiste klus.
+          Bedragen excl. 21% btw. Rekenvoorbeeld met een kluswaarde voor {city.name} (prijsniveau
+          {city.priceTier}) op basis van het landelijke gemiddelde van € {niche.jobValueEur} per gemiste
+          klus, en de aanname dat ongeveer 1 op 3 gemiste oproepen een betaalde klus had opgeleverd.
         </p>
       </div>
     </div>
@@ -285,7 +285,7 @@ const serviceSchema = {
     <div class="mx-auto max-w-page px-gutter">
       <p class="eyebrow">Verder lezen</p>
       <h2 class="mt-3 font-display text-h2 text-(--color-chalk)">
-        Andere {niche.labelPlural}-pagina's en diensten.
+        Meer voor {niche.labelPlural}.
       </h2>
       <div class="mt-8 grid gap-8 md:grid-cols-3">
         <div>
@@ -293,7 +293,7 @@ const serviceSchema = {
           <ul class="mt-3 space-y-1 text-body text-(--color-dim)">
             <li>
               <a href={niche.cornerstonePath} class="text-(--color-sodium) underline">
-                {niche.label}: landelijke pagina
+                Klantkraan voor {niche.labelPlural}
               </a>
             </li>
           </ul>
@@ -342,12 +342,11 @@ const serviceSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-(--color-chalk)">
-        Klaar om geen klus in {city.name} meer te missen?
+        Stel de demo een vraag.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Een live demo via WhatsApp is de snelste manier om te zien wat Klantkraan voor uw bedrijf in {
-          city.name
-        } doet.
+        In één gesprek ziet u hoe de receptionist een klantvraag beantwoordt en een afspraak in de
+        agenda zet.
       </p>
       <div class="mt-8 btn-row">
         <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>

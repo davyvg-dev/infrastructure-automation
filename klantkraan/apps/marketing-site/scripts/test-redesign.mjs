@@ -202,7 +202,7 @@ console.log('\n=== NL homepage: four services ===')
   check('art. 50 line "U chat met een digitale assistent." is on /', art50 > 0)
 
   const order = await sectionOrder(page)
-  const want = ['hero', 'services', 'demo', 'flow', 'websites', 'automations', 'ads', 'final']
+  const want = ['hero', 'services', 'demo', 'flow', 'automations', 'websites', 'ads', 'final']
   check('/ section order: ' + want.join(', '), JSON.stringify(order) === JSON.stringify(want), order.join(', '))
 
   await checkDiagrams(page, '/', ['services', 'flow', 'care', 'followup', 'variants'])
@@ -236,11 +236,11 @@ console.log('\n=== NL homepage: four services ===')
       check(`card ${area}: ${h} answers 200`, res.status() === 200, `status ${res.status()}`)
     }
   }
-  check('cards in order receptionist, websites, automations, ads',
-    JSON.stringify(areas) === JSON.stringify(['receptionist', 'websites', 'automations', 'ads']), areas.join(', '))
+  check('cards in order receptionist, automations, websites, ads',
+    JSON.stringify(areas) === JSON.stringify(['receptionist', 'automations', 'websites', 'ads']), areas.join(', '))
 
   // Each band on / names its price excl. btw.
-  for (const band of ['websites', 'automations', 'ads']) {
+  for (const band of ['automations', 'websites', 'ads']) {
     const text = await page.locator(`[data-section="${band}"]`).evaluate((el) => el.innerText).catch(() => '')
     check(`band ${band}: a € price and "excl. btw"`, /€\s?\d/.test(text) && /excl\.\sbtw/.test(text), text.slice(0, 120))
   }
@@ -279,7 +279,7 @@ console.log('\n=== /ai-receptionist/: the old homepage ===')
 
   // The roadmap no longer calls follow-ups unavailable while /automatiseringen/ sells them.
   const html = await page.content()
-  check('/ai-receptionist/ roadmap drops "Nog niet beschikbaar"', html.includes('Wat we bouwen') && !html.includes('Nog niet beschikbaar'))
+  check('/ai-receptionist/ roadmap drops "Nog niet beschikbaar"', html.includes('Nog niet in het abonnement') && !html.includes('Nog niet beschikbaar'))
 
   await ctx.close()
 }
@@ -335,7 +335,7 @@ console.log('\n=== Header: Diensten menu, one row from 900 ===')
   const { ctx, page } = await newPage({ viewport: { width: 1280, height: 900 } })
   await page.goto(`${BASE}/`, { waitUntil: 'load' })
   const links = await page.locator('header [data-services-dropdown="desktop"] a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-  const wantLinks = ['/ai-receptionist/', '/website-onderhoud/', '/automatiseringen/', '/advertentievideos/', '/#diensten']
+  const wantLinks = ['/ai-receptionist/', '/automatiseringen/', '/website-onderhoud/', '/advertentievideos/', '/#diensten']
   check('desktop Diensten menu: four services and "Alle diensten"', JSON.stringify(links) === JSON.stringify(wantLinks), JSON.stringify(links))
   const mobile = await page.locator('#mobile-menu [data-services-dropdown="mobile"] a').count()
   check('mobile Diensten menu has 5 links', mobile === 5, `found ${mobile}`)

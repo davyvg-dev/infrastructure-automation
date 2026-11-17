@@ -2,7 +2,9 @@
 /*
  * NL homepage: the four services (plan 2026-11-16-homepage-four-services).
  * Umbrella hero, one card per service, then the receptionist in full (live demo
- * and flow diagram), one band per other service and the close. The old
+ * and flow diagram), one band per other service and the close. Order (Davy, 17 Nov
+ * 2026): the two that save time first (receptionist, automations), then the two that
+ * bring in work (website, ads); services.ts holds it. The old
  * receptionist homepage lives on unchanged at /ai-receptionist/.
  * Prices and links come from src/data/services.ts.
  */
@@ -21,37 +23,37 @@ import { serviceByArea } from '../data/services'
 
 const diensten = {
   eyebrow: 'Diensten',
-  heading: 'Vier diensten, één aanspreekpunt.',
-  sub: 'Elke dienst heeft een vaste prijs vooraf en een gratis eerste stap. Begin met wat nu het meest knelt.',
+  heading: 'Vier diensten, één aanspreekpunt',
+  sub: 'Begin met wat nu het meest knelt.',
   freeLabel: 'Gratis eerste stap',
 }
 
 const demo = {
   eyebrow: 'AI-receptionist: probeer het zelf',
-  heading: 'Stel de receptionist een vraag zoals uw klant dat zou doen.',
+  heading: 'Stel de receptionist een vraag zoals uw klant dat zou doen',
   sub:
-    'Dit is een voorbeeldbedrijf, een installateur. Typ een vraag of plan een afspraak. U ' +
-    'heeft er geen account voor nodig.',
-  asksLabel: 'Stel bijvoorbeeld:',
+    'Dit is een voorbeeldbedrijf, een installateur. U kunt ook een afspraak plannen. Een ' +
+    'account is niet nodig.',
+  asksLabel: 'Vraag bijvoorbeeld:',
   asks: [
     'Wat kost het vervangen van een kraan?',
     'Kan er morgenochtend iemand langskomen?',
     'Werken jullie ook in Haarlem?',
   ],
-  iframeTitle: 'Live chat met de digitale receptionist van Klantkraan',
+  iframeTitle: 'Live demo: chat met de AI-receptionist van een voorbeeldbedrijf',
   mobileName: 'Van Dijk Installatietechniek',
   mobileTag: 'Digitale assistent · reageert direct',
-  mobileHint: 'Chat als een klant. Stel een vraag of plan een afspraak. Opent op volledig scherm.',
+  mobileHint: 'Chat als een klant. De demo opent op het hele scherm.',
   mobileCta: 'Start de demo',
   trust: 'Voorbeeldbedrijf · bij uw eigen receptionist staan uw diensten en tarieven ingesteld',
 }
 
 const gesprek = {
-  heading: 'Wat de receptionist doet terwijl u aan het werk bent.',
+  heading: 'Wat de receptionist doet terwijl u aan het werk bent',
   steps: [
     {
       title: 'Beantwoordt de vraag',
-      text: 'Met uw diensten, tarieven en werkgebied. Geen verzonnen prijzen, alleen wat u heeft ingesteld.',
+      text: 'Met uw diensten, tarieven en werkgebied. Hij verzint geen prijzen.',
     },
     {
       title: 'Plant de afspraak',
@@ -71,33 +73,29 @@ const receptionistLine = {
   disclosureLead: 'Elk gesprek begint met dezelfde zin:',
   disclosure: 'U chat met een digitale assistent.',
   disclosureTail: 'Die melding is verplicht onder artikel 50 van de EU AI Act, en u kunt hem niet uitzetten.',
-  more: 'Alles over de receptionist',
+  more: 'Meer over de receptionist',
   calc: 'Reken uit wat gemiste aanvragen kosten',
 }
 
 const bands = {
   websites: {
-    heading: 'Een website die snel, veilig en bijgewerkt blijft.',
+    heading: 'Wij houden uw WordPress-site bij',
     sub:
-      'Wij houden uw WordPress-site bij, zodat u er zelf niet naar hoeft te kijken. Begin met de ' +
-      'gratis check: in 1 minuut ziet u wat er nu aandacht vraagt.',
+      'U hoeft er zelf niet naar te kijken. Met de gratis check ziet u in 1 minuut wat er nu ' +
+      'aandacht vraagt.',
     more: 'Meer over website-onderhoud',
     smallLabel: 'Eerst opruimen?',
   },
   automations: {
-    heading: 'Offertes en herinneringen die vanzelf de deur uit gaan.',
+    heading: 'Offertes en facturen die zichzelf opvolgen',
     sub:
-      'Een offerte die niemand opvolgt, een factuur die blijft openstaan: dat werk kan zichzelf ' +
-      'doen. We beginnen met een gratis scan van waar u nu tijd verliest. Daarna krijgt u een ' +
-      'vaste prijs vooraf.',
+      'Eerst zoeken we gratis uit waar u nu tijd verliest. Daarna krijgt u een vaste prijs vooraf.',
     more: 'Meer over automatiseringen',
     smallLabel: 'Klein beginnen?',
   },
   ads: {
-    heading: 'Een advertentievideo die weer bekeken wordt.',
-    sub:
-      'Een video die goed liep, zakt weg zodra mensen de eerste seconden kennen. Van uw bestaande ' +
-      'beeld maken we zestien versies, elk met een andere opening, zodat u ziet welke het beste werkt.',
+    heading: 'Een advertentievideo die weer bekeken wordt',
+    sub: 'Een video die goed liep, zakt weg zodra mensen de eerste seconden kennen.',
     more: "Meer over advertentievideo's",
     smallLabel: '',
   },
@@ -106,10 +104,7 @@ const bands = {
 const finalCta = {
   h2a: 'Begin klein, of begin',
   h2on: 'gratis.',
-  sub:
-    'Zie in 1 minuut wat uw website mist, laat uitzoeken waar uw bedrijf tijd verliest, reken uit ' +
-    'wat gemiste aanvragen kosten of krijg 3 gratis openingen voor uw advertentievideo. Liever ' +
-    'meteen iets geregeld? Begin klein, met een vaste prijs.',
+  sub: 'Voor een gratis eerste stap en voor een klus met een vaste prijs is geen gesprek nodig.',
   primary: { label: 'Bekijk wat gratis is', href: '/gratis/' },
   ghosts: [
     { label: 'Klein beginnen', href: '/klein-beginnen/' },
@@ -126,8 +121,8 @@ const finalCta = {
 ---
 
 <Base
-  title="AI-receptionist, websites en automatisering | Klantkraan"
-  description="AI-receptionist voor site en WhatsApp, website-onderhoud, automatiseringen en advertentievideo's. Vaste prijzen vooraf en bij elke dienst een gratis eerste stap."
+  title="AI-receptionist, automatisering en websites | Klantkraan"
+  description="AI-receptionist voor site en WhatsApp, automatiseringen, website-onderhoud en advertentievideo's. Vaste prijzen vooraf en bij elke dienst een gratis eerste stap."
   centered={false}
 >
   <ServicesHero />
@@ -149,11 +144,11 @@ const finalCta = {
       </p>
     </div>
   </FlowDiagram>
-  <ServiceBand area="websites" t={bands.websites} sunk>
-    <CareDiagram />
-  </ServiceBand>
-  <ServiceBand area="automations" t={bands.automations}>
+  <ServiceBand area="automations" t={bands.automations} sunk>
     <FollowUpDiagram />
+  </ServiceBand>
+  <ServiceBand area="websites" t={bands.websites}>
+    <CareDiagram />
   </ServiceBand>
   <ServiceBand area="ads" t={bands.ads} sunk>
     <VariantsDiagram />

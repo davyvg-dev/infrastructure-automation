@@ -18,8 +18,8 @@ interface PainStat {
 
 const painStats: PainStat[] = [
   { value: '34%', caption: 'van uw oproepen na 17:00 wordt niet opgenomen.' },
-  { value: '€375', caption: 'gemiddelde waarde per stroomstoring-melding.' },
-  { value: '0', caption: 'reviews per klus die u nu niet vraagt.' },
+  { value: '€\u00a0375', caption: 'gemiddelde waarde van een melding van een stroomstoring.' },
+  { value: '0', caption: 'reviews van een klus waar u niet om een review vraagt.' },
 ]
 
 interface Feature {
@@ -32,17 +32,17 @@ const features: Feature[] = [
   {
     icon: 'message-square',
     title: 'Praat over kortsluiting in vakjargon',
-    body: 'Beantwoordt klantvragen op uw website en via WhatsApp, in vlot Nederlands, ook na 17:00 en in het weekend. Noemt alleen uw eigen kortsluitings-spoedtarief, uurtarief en weekendtoeslag. Geen prijs die u niet vooraf heeft ingesteld.',
+    body: 'Beantwoordt klantvragen op uw website en in WhatsApp, in vlot Nederlands, ook na 17:00 en in het weekend. Noemt alleen uw eigen spoedtarief bij kortsluiting, uurtarief en weekendtoeslag.',
   },
   {
     icon: 'calendar-check',
     title: 'Afspraken direct in uw agenda',
-    body: 'Storings- en installatie-afspraken worden rechtstreeks in uw agenda gepland, alleen op momenten die u zelf heeft vrijgegeven. Geen telefoontag, geen heen-en-weer-gemail.',
+    body: 'De receptionist plant storings- en installatieafspraken rechtstreeks in uw agenda, alleen op momenten die u zelf heeft vrijgegeven. U belt en mailt niet meer heen en weer.',
   },
   {
     icon: 'phone',
-    title: 'Leads en terugbelverzoeken op uw telefoon',
-    body: 'Stroomstoring na sluitingstijd? De receptionist vangt de melding op en zet haar direct als bericht op uw telefoon, met naam, nummer en de vraag. Geen klant gaat naar de concurrent terwijl u op een andere klus zit.',
+    title: 'Aanvragen en terugbelverzoeken op uw telefoon',
+    body: 'Meldt iemand na sluitingstijd een stroomstoring, dan staat de melding direct als bericht op uw telefoon, met naam, nummer en de vraag. Zo gaat geen klant naar de concurrent terwijl u op een andere klus bent.',
   },
 ]
 
@@ -56,31 +56,31 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'Hoe komt de receptionist op mijn website?',
-    a: 'Met één klein scriptje dat wij voor u installeren. U hoeft niets te doen. Het WhatsApp-kanaal koppelen wij in dezelfde done-for-you setup. U houdt uw eigen site, uw eigen nummer en uw eigen huisstijl.',
+    a: 'Wij plaatsen één klein script op uw website en koppelen uw WhatsApp. U hoeft zelf niets te doen. U houdt uw eigen site, nummer en huisstijl.',
   },
   {
-    q: 'En als ik op een installatie zit en niet kan reageren?',
-    a: 'Daar is dit voor gemaakt. De receptionist beantwoordt de vraag (kortsluitings-spoed, nieuwe klus, bestaande klant, leverancier), plant indien gewenst een afspraak in uw agenda en stuurt u een samenvatting per WhatsApp of e-mail. U belt terug wanneer de groepenkast weer dicht zit.',
+    q: 'Wat als ik aan een installatie werk en niet kan reageren?',
+    a: 'Dan beantwoordt de receptionist de vraag (spoed bij kortsluiting, nieuwe klus, bestaande klant, leverancier), plant zo nodig een afspraak in uw agenda en stuurt u een samenvatting per WhatsApp of e-mail. U belt terug als de groepenkast weer dicht is.',
   },
   {
-    q: 'Hoort de klant dat het AI is?',
-    a: 'Ja. Elk gesprek opent met de melding dat uw klant met een digitale assistent chat, namens uw bedrijf. Dat is geen marketingkeuze maar een wettelijke verplichting onder artikel 50 van de Europese AI-wet. De disclosure blijft altijd aan staan.',
+    q: 'Weet de klant dat het AI is?',
+    a: 'Ja. Elk gesprek begint met de melding dat de klant met een digitale assistent van uw bedrijf chat. Dat is wettelijk verplicht (artikel 50 van de Europese AI-verordening), dus die melding staat altijd aan.',
     href: '/legal/ai-disclosure/',
     linkLabel: 'Lees de volledige AI-disclosure',
   },
   {
     q: 'Wat als de AI iets verkeerd zegt over mijn tarieven?',
-    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf in uw systeem heeft gezet: voorrijkosten, uurtarief, spoedtoeslag, EV-laadpaal-meerprijs. Onbekende prijzen worden niet verzonnen; de klant krijgt dan een terugbelverzoek. Wij testen elke configuratie voor u live gaat.',
+    a: 'Dat kan niet gebeuren. De assistent noemt alleen tarieven die u zelf heeft ingesteld: voorrijkosten, uurtarief, spoedtoeslag, meerprijs voor een laadpaal. Kent hij een prijs niet, dan verzint hij niets en krijgt de klant een terugbelverzoek. Wij testen elke instelling voordat u live gaat.',
   },
   {
     q: 'Wat gebeurt er met de klantgegevens?',
-    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. Wij tekenen een verwerkersovereenkomst (DPA) met u en bewaren chatgesprekken 30 dagen, tenzij u korter wenst. De volledige leverancierslijst staat openbaar in ons sub-processorregister.',
+    a: 'Wij hosten in de EU: Hetzner Frankfurt, Neon EU en Cloudflare EU. Wij tekenen een verwerkersovereenkomst met u en bewaren chatgesprekken 30 dagen, of korter als u dat wilt. Al onze subverwerkers staan in een openbare lijst.',
     href: '/legal/dpa/',
-    linkLabel: 'Bekijk DPA en privacyverklaring',
+    linkLabel: 'Lees de verwerkersovereenkomst',
   },
   {
-    q: 'Per maand opzegbaar, echt waar?',
-    a: 'Ja. Geen jaarcontract, geen verborgen verlenging. U zegt op via een mail, wanneer u wilt. De receptionist loopt tot het einde van de betaalde maand, daarna incasseren wij niets meer. Voor wie liever 6 of 12 maanden vooruit betaalt is er korting (15% respectievelijk 20%).',
+    q: 'Is het echt per maand opzegbaar?',
+    a: 'Ja. U zegt op met één mail, wanneer u wilt. Er is geen jaarcontract en geen verborgen verlenging. De receptionist werkt tot het einde van de betaalde maand; daarna incasseren wij niets meer. Betaalt u liever 6 of 12 maanden vooruit, dan krijgt u 15% of 20% korting.',
     href: '/legal/voorwaarden/',
     linkLabel: 'Lees de algemene voorwaarden',
   },
@@ -101,8 +101,8 @@ const faqSchema = {
 ---
 
 <Base
-  title="Elektricien klanten werven: AI-receptionist voor spoed en EV"
-  description="AI-receptionist voor elektriciens, per maand opzegbaar. Kent uw spoedtarief en EV-laadpaal-meerprijs, plant afspraken en vangt leads, 24/7."
+  title="Klanten werven als elektricien: AI-receptionist voor spoed en laadpalen"
+  description="AI-receptionist voor elektriciens, per maand opzegbaar. Kent uw spoedtarief en uw meerprijs voor een laadpaal, plant afspraken en beantwoordt klantvragen, dag en nacht."
   centered={false}
 >
   <!-- 1. Hero (cream) -->
@@ -115,13 +115,13 @@ const faqSchema = {
           De <span class="text-(--color-sodium)">Klantenmotor</span> voor elektriciens.
         </h1>
         <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
-          Een digitale receptionist op uw website en WhatsApp die uw klant uitlegt wat een
-          kortsluitings-spoedtarief is. Of een EV-laadpaal-meerprijs. Beantwoordt vragen 24/7, zeven
-          dagen per week. Afspraken en terugbelverzoeken zitten in hetzelfde abonnement.
+          Een digitale receptionist op uw website en in WhatsApp die uw klant uitlegt wat uw spoedtarief
+          bij kortsluiting is, of wat een laadpaal extra kost. Hij beantwoordt vragen dag en nacht, ook in
+          het weekend. Afspraken en terugbelverzoeken zitten in hetzelfde abonnement.
         </p>
         <div class="mt-10 btn-row">
           <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>
-          <a href="/rekentool/" class="btn btn-ghost btn-lg"> Bereken uw ROI </a>
+          <a href="/rekentool/" class="btn btn-ghost btn-lg"> Open de rekentool </a>
         </div>
       </div>
       <div class="hidden text-(--color-dim) md:block">
@@ -130,12 +130,12 @@ const faqSchema = {
     </div>
     <div class="mx-auto max-w-page px-gutter">
       <ul role="list" class="fact-row mt-10">
-        <li><span class="text-(--color-chalk)">AVG + AI Act art. 50</span> <span>Disclosure standaard aan</span></li>
+        <li><span class="text-(--color-chalk)">AVG + AI Act art. 50</span> <span>AI-melding altijd aan</span></li>
         <li><span class="text-(--color-chalk)">Gehost in de EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
-        <li><span class="text-(--color-chalk)">Vlot Nederlands</span> <span>Kent uurtarief + spoedtoeslag</span></li>
+        <li><span class="text-(--color-chalk)">Vlot Nederlands</span> <span>Kent uurtarief en spoedtoeslag</span></li>
       </ul>
       <p class="mt-8 text-small text-dim">
-        Per maand opzegbaar · Done-for-you setup · 50% korting eerste maand
+        Per maand opzegbaar · Wij richten alles in · 50% korting eerste maand
       </p>
     </div>
   </section>
@@ -169,8 +169,8 @@ const faqSchema = {
     nodeSub='voor elektriciens'
     t={{
       label: 'Modules',
-      heading: 'Wat Klantkraan doet voor elektriciens.',
-      sub: 'Drie modules. Eén maandprijs. Niet voor de grote installatiebureaus. Voor de elektricien met twee tot acht monteurs.',
+      heading: 'Wat Klantkraan doet voor elektriciens',
+      sub: 'Drie modules voor één maandprijs, gebouwd voor de elektricien met twee tot acht monteurs.',
       steps: features.map((f) => ({ title: f.title, text: f.body })),
     }}
   />
@@ -179,28 +179,27 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-chalk">Reken het even na.</h2>
+      <h2 class="font-display text-h1 text-chalk">Reken het even na</h2>
       <div
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
-          Mist u 8 oproepen per week à €375? Dat is <strong class="text-(--color-sodium)"
-            >ruim €51.000 verloren omzet per jaar</strong
+          Mist u 8 oproepen per week à € 375? Dat is <strong class="text-(--color-sodium)"
+            >ruim € 51.000 verloren omzet per jaar</strong
           >.
         </p>
         <p class="mt-4 text-body text-dim">
-          Klantkraan Chat is €299 per maand. Eén kortsluitings-spoed per maand betaalt het
-          abonnement. Wat daarna binnenkomt gaat niet meer naar de concurrent verderop.
+          Klantkraan Chat kost € 299 per maand. Eén spoedklus bij kortsluiting per maand betaalt het
+          abonnement. Wat daarna binnenkomt, gaat niet meer naar de concurrent verderop.
         </p>
         <div class="mt-6 btn-row">
           <a href="/rekentool/" class="btn btn-primary btn-lg"> Open de rekentool </a>
-          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk de tarieven </a>
+          <a href="/prijzen/" class="btn btn-ghost btn-lg"> Bekijk prijzen </a>
         </div>
         <p class="mt-6 text-micro text-dim">
-          Bedragen excl. 21% BTW. Voorbeeld op basis van branche-gemiddelde €375 per oproep voor
+          Bedragen excl. 21% btw. Rekenvoorbeeld met een branchegemiddelde van € 375 per oproep voor
           installatie- en elektrotechnisch werk (bron: Aira / Invoca missed-call benchmarks) en de
-          aanname dat ongeveer 1 op 3 gemiste oproepen een betalende klus had opgeleverd (33%
-          conversiekans).
+          aanname dat ongeveer 1 op 3 gemiste oproepen een betaalde klus had opgeleverd.
         </p>
       </div>
     </div>
@@ -210,7 +209,7 @@ const faqSchema = {
   <section class="py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-chalk">Veelgestelde vragen.</h2>
+      <h2 class="font-display text-h1 text-chalk">Veelgestelde vragen</h2>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
           faqs.map((faq) => (
@@ -246,11 +245,11 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-chalk">
-        Klaar om geen kortsluitings-spoed meer te missen?
+        Test hem met een spoedvraag
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Probeer de live demo. U ziet hoe hij uw kortsluitings-spoedtarief noemt en wat hij doet als
-        iemand een vraag stelt over een EV-laadpaal.
+        In de live demo ziet u hoe hij een spoedtarief noemt en wat hij doet met een vraag over een
+        laadpaal.
       </p>
       <div class="mt-8 btn-row">
         <a href="/demo/" class="btn btn-primary btn-lg"> Probeer de demo </a>

@@ -33,7 +33,7 @@ function initRekentool() {
   })
   const numFmt = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 })
   const stringsByLang = {
-    nl: { na: 'n.v.t.', lt1: '< 1 maand', gt5: '> 5 jaar', unit: 'maand' },
+    nl: { na: 'n.v.t.', lt1: '< 1 maand', gt5: '> 5 jaar', unit: 'maanden' },
     en: { na: 'n/a', lt1: '< 1 month', gt5: '> 5 years', unit: 'months' },
     es: { na: 'n/d', lt1: '< 1 mes', gt5: '> 5 años', unit: 'meses' },
   }

@@ -2,17 +2,24 @@
 /*
  * What the receptionist does, drawn as an installation schematic: two inputs
  * (website chat, WhatsApp) wired into one Klantkraan node, three outputs that
- * each end in a lamp. A pulse of current runs from WhatsApp through the node to
- * the appointment and that lamp switches on and stays on ("Het licht blijft
- * aan"). The three duties sit under the drawing as text, one cell per output.
+ * each end in a lamp. The three outputs are the only ways a conversation ends:
+ * handled, booked, or handed to the owner. The duties sit under the drawing as
+ * text, one cell per output.
  *
  * Shows only what the copy claims: site and WhatsApp in, answer / appointment /
  * callback out. No phone line.
  *
  * Two drawings: a wide one, and a tall one for phones where the wide one's labels
- * would shrink below reading size. CSS swaps them at 640px.
- * Motion: a small script arms the drawing (lamp off) and starts it when it
- * scrolls into view. No JS or reduced motion: the finished state, lamp on.
+ * would shrink below reading size. CSS swaps them at 640px. Both are built from
+ * the `outs` list below, so dropping an output is one line.
+ *
+ * Motion (script below, Web Animations): once seen, a pulse of current traces
+ * every route once per cycle, inputs alternating, outputs top to bottom. It runs
+ * the input wire to the node, the node takes it (its outline lights), it leaves
+ * on the output wire and the lamp lights. Each lamp catches the first time it is
+ * reached and then stays on ("Het licht blijft aan"); a later pulse gives it one
+ * soft brighten. Paused while off screen. No JS or reduced motion: the finished
+ * state, every lamp on, nothing moving.
  */
 interface Duty {
   title: string
@@ -45,7 +52,7 @@ const nl = {
   inSite: 'Websitechat',
   inWa: 'WhatsApp',
   node: 'Klantkraan',
-  nodeSub: 'digitale receptionist',
+  nodeSub: 'AI-receptionist',
   outAnswer: 'Antwoord',
   outBooking: 'Afspraak in agenda',
   outCallback: 'Terugbelverzoek',
@@ -54,14 +61,62 @@ const nl = {
 }
 const { t, labels = nl, nodeSub, id = 'werking', sunk = false } = Astro.props
 const L = nodeSub ? { ...labels, nodeSub } : labels
+const ins = [L.inSite, L.inWa]
+// The outputs, top to bottom. Remove one here to draw two: wires, lamps and the
+// order of the routes follow.
 const outs = [L.outAnswer, L.outBooking, L.outCallback]
+
+// The pulse: three dashes whose fronts move together, so it fades from a bright
+// head into its tail without a gradient. Lengths in viewBox units (both drawings
+// render close to 1:1). Each dash pattern repeats only after the whole wire plus
+// the pulse, so there is never a second dash on the wire.
+const LAYERS = [
+  { cls: 'p-tail', len: 64 },
+  { cls: 'p-body', len: 30 },
+  { cls: 'p-head', len: 14 },
+]
+const PULSE = Math.max(...LAYERS.map((l) => l.len))
+type P = [number, number]
+const wire = (pts: P[]) => {
+  let len = 0
+  for (let i = 1; i < pts.length; i++) len += Math.abs(pts[i][0] - pts[i - 1][0]) + Math.abs(pts[i][1] - pts[i - 1][1])
+  return { d: 'M' + pts.map((p) => p.join(' ')).join(' L'), len, period: len + PULSE + 4 }
+}
+type W = ReturnType<typeof wire>
+
+const n = outs.length
+const mid = (n - 1) / 2
+// Wide: inputs enter the node's left side, outputs leave its right side.
+const wide = {
+  ins: [
+    { y: 100, w: wire([[126, 100], [226, 100], [226, 150], [270, 150]]) },
+    { y: 240, w: wire([[126, 240], [226, 240], [226, 190], [270, 190]]) },
+  ],
+  outs: outs.map((_, j) => {
+    const y = 170 + (j - mid) * 100
+    const ey = 170 + (j - mid) * 20
+    return { y, w: wire(ey === y ? [[470, ey], [606, ey]] : [[470, ey], [520, ey], [520, y], [606, y]]) }
+  }),
+}
+// Tall: inputs drop straight into the node's top, outputs hang off a spine on the left.
+const tallY = (j: number) => 300 + 70 * j
+const tall = {
+  ins: [90, 250].map((x) => ({ x, w: wire([[x, 58], [x, 150]]) })),
+  outs: outs.map((_, j) => ({ y: tallY(j), w: wire([[70, 230], [70, tallY(j)], [108, tallY(j)]]) })),
+  h: tallY(n - 1) + 32,
+}
+// One pulse per wire; data-in / data-out says which input or output it runs.
+const pulses = (d: { ins: { w: W }[]; outs: { w: W }[] }) => [
+  ...d.ins.map((i, k) => ({ attr: { 'data-in': k }, w: i.w })),
+  ...d.outs.map((o, j) => ({ attr: { 'data-out': j }, w: o.w })),
+]
 ---
 
 <section
   id={id}
   data-section="flow"
   aria-labelledby={`${id}-h`}
-  class:list={['scroll-mt-24', sunk && 'border-y border-(--color-line) bg-(--color-panel)']}
+  class:list={['kk-flowsec scroll-mt-24', sunk && 'border-y border-(--color-line) bg-(--color-panel)']}
 >
   <div class="mx-auto max-w-page px-gutter py-section">
     <header class="max-w-[46rem]">
@@ -76,79 +131,97 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
       <!-- wide drawing -->
       <svg class="kk-flow-wide" viewBox="0 0 800 340" aria-hidden="true" focusable="false">
         <g class="wire">
-          <path d="M126 100 H226 V150 H270" />
-          <path d="M126 240 H226 V190 H270" />
-          <path d="M470 150 H520 V70 H606" />
-          <path d="M470 170 H606" />
-          <path d="M470 190 H520 V270 H606" />
+          {wide.ins.map((i) => <path d={i.w.d} />)}
+          {wide.outs.map((o) => <path d={o.w.d} />)}
         </g>
-        <path class="pulse" pathLength="100" d="M126 240 H226 V190 H400 V170 H606" />
 
         <g class="term">
-          <circle cx="120" cy="100" r="6" />
-          <circle cx="120" cy="240" r="6" />
+          {wide.ins.map((i) => <circle cx="120" cy={i.y} r="6" />)}
         </g>
-        <text class="mono" x="100" y="104" text-anchor="end">{L.inSite}</text>
-        <text class="mono" x="100" y="244" text-anchor="end">{L.inWa}</text>
+        {wide.ins.map((i, k) => <circle class="term-hot" data-in={k} cx="120" cy={i.y} r="6" />)}
+        {ins.map((label, k) => <text class="mono" x="100" y={wide.ins[k].y + 4} text-anchor="end">{label}</text>)}
 
         <rect class="node" x="270" y="120" width="200" height="100" rx="6" />
+        <rect class="node-hot" x="270" y="120" width="200" height="100" rx="6" />
         <text class="node-name" x="370" y="166" text-anchor="middle">{L.node}</text>
         <text class="mono dim" x="370" y="190" text-anchor="middle">{L.nodeSub}</text>
 
-        <g class="lamp-sym">
-          <circle cx="618" cy="70" r="12" />
-          <path d="M609.5 61.5 L626.5 78.5 M626.5 61.5 L609.5 78.5" />
-        </g>
-        <g class="lamp-sym is-active" data-lamp="on">
-          <circle cx="618" cy="170" r="12" />
-          <path d="M609.5 161.5 L626.5 178.5 M626.5 161.5 L609.5 178.5" />
-        </g>
-        <g class="lamp-sym">
-          <circle cx="618" cy="270" r="12" />
-          <path d="M609.5 261.5 L626.5 278.5 M626.5 261.5 L609.5 278.5" />
-        </g>
-        <text class="mono" x="644" y="74">{outs[0]}</text>
-        <text class="mono out-active" x="644" y="174">{outs[1]}</text>
-        <text class="mono" x="644" y="274">{outs[2]}</text>
+        {
+          pulses(wide).map(({ attr, w }) => (
+            <g class="pulse" {...attr} data-len={w.len} data-period={w.period}>
+              {LAYERS.map((l) => (
+                <path class={l.cls} d={w.d} stroke-dasharray={`${l.len} ${w.period - l.len}`} stroke-dashoffset={l.len + 2} />
+              ))}
+            </g>
+          ))
+        }
+
+        {
+          wide.outs.map((o, j) => (
+            <g class="fl-lamp" data-out={j}>
+              <circle class="halo" cx="618" cy={o.y} r="15" />
+              <circle class="flare" cx="618" cy={o.y} r="15" />
+              <g class="lamp-off">
+                <circle cx="618" cy={o.y} r="12" />
+                <path d={`M609.5 ${o.y - 8.5} L626.5 ${o.y + 8.5} M626.5 ${o.y - 8.5} L609.5 ${o.y + 8.5}`} />
+              </g>
+              <g class="lamp-on" data-lamp>
+                <circle cx="618" cy={o.y} r="12" />
+                <path d={`M609.5 ${o.y - 8.5} L626.5 ${o.y + 8.5} M626.5 ${o.y - 8.5} L609.5 ${o.y + 8.5}`} />
+              </g>
+              <text class="mono out" x="644" y={o.y + 4}>{outs[j]}</text>
+            </g>
+          ))
+        }
       </svg>
 
       <!-- tall drawing (phones) -->
-      <svg class="kk-flow-tall" viewBox="0 0 340 472" aria-hidden="true" focusable="false">
+      <svg class="kk-flow-tall" viewBox={`0 0 340 ${tall.h}`} aria-hidden="true" focusable="false">
         <g class="wire">
-          <path d="M90 58 V110 H150 V150" />
-          <path d="M250 58 V110 H190 V150" />
-          <path d="M70 230 V440 H108" />
-          <path d="M70 300 H108" />
-          <path d="M70 370 H108" />
+          {tall.ins.map((i) => <path d={i.w.d} />)}
+          {/* the spine and its last tap as one path (a clean corner), the other taps on it */}
+          <path d={tall.outs[n - 1].w.d} />
+          {tall.outs.slice(0, -1).map((o) => <path d={`M70 ${o.y} H108`} />)}
         </g>
-        <path class="pulse" pathLength="100" d="M250 58 V110 H190 V190 H70 V370 H108" />
 
         <g class="term">
-          <circle cx="90" cy="52" r="6" />
-          <circle cx="250" cy="52" r="6" />
+          {tall.ins.map((i) => <circle cx={i.x} cy="52" r="6" />)}
         </g>
-        <text class="mono" x="90" y="30" text-anchor="middle">{L.inSite}</text>
-        <text class="mono" x="250" y="30" text-anchor="middle">{L.inWa}</text>
+        {tall.ins.map((i, k) => <circle class="term-hot" data-in={k} cx={i.x} cy="52" r="6" />)}
+        {ins.map((label, k) => <text class="mono" x={tall.ins[k].x} y="30" text-anchor="middle">{label}</text>)}
 
         <rect class="node" x="40" y="150" width="260" height="80" rx="6" />
+        <rect class="node-hot" x="40" y="150" width="260" height="80" rx="6" />
         <text class="node-name" x="170" y="186" text-anchor="middle">{L.node}</text>
         <text class="mono dim" x="170" y="209" text-anchor="middle">{L.nodeSub}</text>
 
-        <g class="lamp-sym">
-          <circle cx="120" cy="300" r="12" />
-          <path d="M111.5 291.5 L128.5 308.5 M128.5 291.5 L111.5 308.5" />
-        </g>
-        <g class="lamp-sym is-active" data-lamp="on">
-          <circle cx="120" cy="370" r="12" />
-          <path d="M111.5 361.5 L128.5 378.5 M128.5 361.5 L111.5 378.5" />
-        </g>
-        <g class="lamp-sym">
-          <circle cx="120" cy="440" r="12" />
-          <path d="M111.5 431.5 L128.5 448.5 M128.5 431.5 L111.5 448.5" />
-        </g>
-        <text class="mono" x="146" y="304">{outs[0]}</text>
-        <text class="mono out-active" x="146" y="374">{outs[1]}</text>
-        <text class="mono" x="146" y="444">{outs[2]}</text>
+        {
+          pulses(tall).map(({ attr, w }) => (
+            <g class="pulse" {...attr} data-len={w.len} data-period={w.period}>
+              {LAYERS.map((l) => (
+                <path class={l.cls} d={w.d} stroke-dasharray={`${l.len} ${w.period - l.len}`} stroke-dashoffset={l.len + 2} />
+              ))}
+            </g>
+          ))
+        }
+
+        {
+          tall.outs.map((o, j) => (
+            <g class="fl-lamp" data-out={j}>
+              <circle class="halo" cx="120" cy={o.y} r="15" />
+              <circle class="flare" cx="120" cy={o.y} r="15" />
+              <g class="lamp-off">
+                <circle cx="120" cy={o.y} r="12" />
+                <path d={`M111.5 ${o.y - 8.5} L128.5 ${o.y + 8.5} M128.5 ${o.y - 8.5} L111.5 ${o.y + 8.5}`} />
+              </g>
+              <g class="lamp-on" data-lamp>
+                <circle cx="120" cy={o.y} r="12" />
+                <path d={`M111.5 ${o.y - 8.5} L128.5 ${o.y + 8.5} M128.5 ${o.y - 8.5} L111.5 ${o.y + 8.5}`} />
+              </g>
+              <text class="mono out" x="146" y={o.y + 4}>{outs[j]}</text>
+            </g>
+          ))
+        }
       </svg>
     </figure>
 
@@ -157,7 +230,7 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
         t.steps.map((s, i) => (
           <li>
             <p class="kk-duty-out">
-              <span class:list={['kk-duty-mark', i === 1 && 'is-active']} aria-hidden="true" />
+              <span class="kk-duty-mark" data-out={i} aria-hidden="true" />
               {outs[i]}
             </p>
             <h3 class="mt-4 text-h3 text-(--color-chalk)">{s.title}</h3>
@@ -221,15 +294,6 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
     stroke: var(--color-line-strong);
     stroke-width: 1.5;
   }
-  .pulse {
-    fill: none;
-    stroke: var(--color-sodium);
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    /* Finished state: the whole active path carries current. */
-    stroke-dasharray: 100 0;
-    opacity: 0.9;
-  }
   .term circle {
     fill: var(--color-night);
     stroke: var(--color-chalk-2);
@@ -256,91 +320,91 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
     font-size: 12px;
     fill: var(--color-dim);
   }
-  .lamp-sym circle {
+
+  /* ---- the finished state: every lamp on, no current. What reduced motion, no
+   * JS and old browsers see, and where the motion ends up. ---- */
+  .lamp-off circle {
     fill: var(--color-night);
     stroke: var(--color-line-strong);
     stroke-width: 1.5;
   }
-  .lamp-sym path {
-    stroke: var(--color-line-strong);
+  .lamp-off path,
+  .lamp-on path {
+    fill: none;
     stroke-width: 1.5;
   }
-  /* The lamp that is on. */
-  .lamp-sym.is-active circle {
+  .lamp-off path {
+    stroke: var(--color-line-strong);
+  }
+  .lamp-on circle {
     fill: var(--color-sodium);
     stroke: var(--color-sodium);
+    stroke-width: 1.5;
   }
-  .lamp-sym.is-active path {
+  .lamp-on path {
     stroke: var(--color-sodium-ink);
   }
-  .out-active {
-    fill: var(--color-chalk);
+  /* the ring around a lit lamp, as on the hero's lamps: flat, no blur */
+  .halo,
+  .flare {
+    fill: none;
+    stroke: var(--color-sodium);
+    stroke-width: 4;
+    transform-box: fill-box;
+    transform-origin: center;
   }
-
-  /* Armed by the script (motion allowed): lamp off and no current until the
-   * drawing is in view, then one pulse runs the path and the lamp catches. The
-   * pulse keeps running, slowly, the lamp stays on. */
-  .kk-flow.is-armed .pulse {
-    stroke-dasharray: 9 91;
-    stroke-dashoffset: 9;
+  .halo {
+    stroke-opacity: 0.16;
+  }
+  .flare {
+    stroke-opacity: 0.3;
     opacity: 0;
   }
-  .kk-flow.is-armed .lamp-sym.is-active circle {
-    fill: var(--color-night);
-    stroke: var(--color-line-strong);
+  .fl-lamp .out {
+    fill: var(--color-chalk);
   }
-  .kk-flow.is-armed .lamp-sym.is-active path {
-    stroke: var(--color-line-strong);
+  /* What lights while the current passes: the input it comes from, the node. */
+  .term-hot,
+  .node-hot {
+    opacity: 0;
+    stroke: var(--color-sodium);
+    stroke-width: 1.5;
   }
-  .kk-flow.is-live .pulse {
-    animation: kk-current 4.2s cubic-bezier(0.45, 0, 0.55, 1) 0.2s infinite;
+  .term-hot {
+    fill: none;
   }
-  .kk-flow.is-live .lamp-sym.is-active circle {
-    animation: kk-lamp-fill 1s linear 1.9s both;
+  .node-hot {
+    fill: color-mix(in oklab, var(--color-sodium) 6%, transparent);
   }
-  .kk-flow.is-live .lamp-sym.is-active path {
-    animation: kk-lamp-x 1s linear 1.9s both;
+  .pulse path {
+    fill: none;
+    stroke: var(--color-sodium);
+    stroke-linecap: round;
   }
-  @keyframes kk-current {
-    0% {
-      stroke-dashoffset: 9;
-      opacity: 1;
-    }
-    45% {
-      stroke-dashoffset: -91;
-      opacity: 1;
-    }
-    46%,
-    100% {
-      stroke-dashoffset: -91;
-      opacity: 0;
-    }
+  .p-tail {
+    stroke-width: 1.5;
+    opacity: 0.18;
   }
-  @keyframes kk-lamp-fill {
-    0%,
-    12%,
-    30% {
-      fill: var(--color-night);
-      stroke: var(--color-line-strong);
-    }
-    6%,
-    20%,
-    100% {
-      fill: var(--color-sodium);
-      stroke: var(--color-sodium);
-    }
+  .p-body {
+    stroke-width: 1.75;
+    opacity: 0.45;
   }
-  @keyframes kk-lamp-x {
-    0%,
-    12%,
-    30% {
-      stroke: var(--color-line-strong);
-    }
-    6%,
-    20%,
-    100% {
-      stroke: var(--color-sodium-ink);
-    }
+  .p-head {
+    stroke-width: 2.25;
+  }
+  .kk-flowsec:not(.is-live) .pulse {
+    visibility: hidden;
+  }
+
+  /* ---- armed by the script (motion allowed): lamps off until the current first
+   * reaches them. A lamp that has caught carries .is-lit when its drawing is rebuilt
+   * (a resize across 640px). ---- */
+  .kk-flowsec.is-armed .fl-lamp:not(.is-lit) .lamp-on,
+  .kk-flowsec.is-armed .fl-lamp:not(.is-lit) .halo {
+    opacity: 0;
+  }
+  .kk-flowsec.is-armed .fl-lamp:not(.is-lit) .out {
+    fill: var(--color-chalk-2);
   }
 
   /* ---- the duties, one cell per output ---- */
@@ -368,32 +432,316 @@ const outs = [L.outAnswer, L.outBooking, L.outCallback]
     font-size: 0.75rem;
     color: var(--color-dim);
   }
+  /* lit, like its lamp; off while armed until its lamp catches */
   .kk-duty-mark {
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
-    border: 1.5px solid var(--color-line-strong);
-  }
-  .kk-duty-mark.is-active {
-    border-color: var(--color-sodium);
+    border: 1.5px solid var(--color-sodium);
     background: var(--color-sodium);
+  }
+  .kk-flowsec.is-armed .kk-duty-mark:not(.is-lit) {
+    border-color: var(--color-line-strong);
+    background: transparent;
   }
 </style>
 
 <script>
-  // Arm the drawing (lamp off, no current) and start it once it is in view, by the
-  // rule the other drawings use: in the part the header and bottom bar leave free.
-  // Reduced motion: leave it finished.
+  // Start the drawing once it is seen (by the rule the other drawings use, in the
+  // part the header and bottom bar leave free), then loop: one cycle traces every
+  // input-to-output route once. All of it is Web Animations on one clock, so pausing
+  // off screen and resuming keeps it in step. Reduced motion: leave it finished.
   import { whenSeen } from '../../scripts/play-in-view'
 
+  const DELAY = 0.35 // s from "seen" to the first pulse
+  const HOLD = 0.32 // s the node holds the message before it leaves on the output
+  const REST = 0.4 // s between the lamp and the next route
+  const CYCLE = 11.5 // s for one pass over every route; the speed follows from it
+  const LEAD = 0.1 // s into each cycle before its first route
+  const START = -2 // where the pulse head waits: just before the wire (round caps stay off it)
+
+  const phone = window.matchMedia('(max-width: 639px)')
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+  type Pt = [number, number] // [s from the event, value]
+  type Ctl = {
+    sec: HTMLElement
+    fig: HTMLElement
+    anims: Animation[]
+    ref?: Animation
+    first: number[] // s into the timeline at which each lamp is first reached
+    lit: boolean[] // lamps already on when the timeline was built
+    started: boolean
+    visible: boolean
+    io?: IntersectionObserver
+  }
+  const ctls: Ctl[] = []
+
+  /** Every input-to-output route once: inputs alternate, outputs top to bottom. */
+  function routes(nIn: number, nOut: number): [number, number][] {
+    const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a)
+    const lcm = (nIn * nOut) / gcd(nIn, nOut)
+    return Array.from({ length: nIn * nOut }, (_, k) => [k % nIn, (k + Math.floor(k / lcm)) % nOut])
+  }
+
+  /**
+   * Keyframes for one cycle of C s in which `shape` plays at each time in `at`. With
+   * `wrap`, a shape that runs past the end carries on at the start (for a looping
+   * animation); without, it is cut off there (for the first cycle alone).
+   */
+  function cycleFrames(at: number[], shape: Pt[], base: number, C: number, prop: string, fmt: (v: number) => string | number, wrap = true) {
+    const f = (t: number) => {
+      for (const e of at)
+        for (const w of wrap ? [e, e - C, e + C] : [e]) {
+          const x = t - w
+          if (x < shape[0][0] || x > shape[shape.length - 1][0]) continue
+          for (let i = 1; i < shape.length; i++)
+            if (x <= shape[i][0]) {
+              const [x0, y0] = shape[i - 1]
+              const [x1, y1] = shape[i]
+              return x1 === x0 ? y1 : y0 + ((y1 - y0) * (x - x0)) / (x1 - x0)
+            }
+        }
+      return base
+    }
+    const ts = new Set([0, C])
+    for (const e of at)
+      for (const [dt] of shape) {
+        const x = e + dt
+        if (wrap) ts.add(((x % C) + C) % C)
+        else if (x > 0 && x < C) ts.add(x)
+      }
+    return [...ts].sort((a, b) => a - b).map((t) => ({ offset: t / C, [prop]: fmt(f(t)) }))
+  }
+
+  /**
+   * One wire's pulse over a cycle: the head waits just before the wire, then runs
+   * the whole wire plus the pulse's length at speed v, once per start. Each run
+   * moves the pattern by exactly one period, so the jump at the end of the cycle
+   * changes nothing on screen.
+   */
+  function pulseFrames(starts: number[], period: number, v: number, dashLen: number, C: number) {
+    let h = START
+    const px = (head: number) => `${dashLen - head}px`
+    const k: Keyframe[] = [{ offset: 0, strokeDashoffset: px(h) }]
+    for (const a of starts) {
+      k.push({ offset: a / C, strokeDashoffset: px(h) })
+      h += period
+      k.push({ offset: (a + period / v) / C, strokeDashoffset: px(h) })
+    }
+    k.push({ offset: 1, strokeDashoffset: px(h) })
+    return k
+  }
+
+  const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  const num = (el: Element, a: string) => Number(el.getAttribute(a))
+  const byIndex = <T extends Element>(root: ParentNode, sel: string, attr: string) =>
+    Array.from(root.querySelectorAll<T>(sel)).sort((a, b) => num(a, attr) - num(b, attr))
+
+  // A lamp catching: two short flickers, then steady, as the hero's lamps do.
+  const CATCH: Keyframe[] = [
+    { offset: 0, opacity: 0 },
+    { offset: 0.05, opacity: 0.7 },
+    { offset: 0.11, opacity: 0 },
+    { offset: 0.18, opacity: 0.7 },
+    { offset: 0.25, opacity: 0 },
+    { offset: 0.42, opacity: 1 },
+    { offset: 1, opacity: 1 },
+  ]
+
+  function build(c: Ctl, lit: boolean[]) {
+    const svg = c.fig.querySelector<SVGSVGElement>(phone.matches ? '.kk-flow-tall' : '.kk-flow-wide')
+    if (!svg) return
+    const pIn = byIndex<SVGGElement>(svg, '.pulse[data-in]', 'data-in')
+    const pOut = byIndex<SVGGElement>(svg, '.pulse[data-out]', 'data-out')
+    const terms = byIndex<SVGElement>(svg, '.term-hot', 'data-in')
+    const lamps = byIndex<SVGGElement>(svg, '.fl-lamp', 'data-out')
+    const marks = byIndex<HTMLElement>(c.sec, '.kk-duty-mark', 'data-out')
+    const node = svg.querySelector<SVGElement>('.node-hot')
+    if (!pIn.length || !pOut.length || !node) return
+
+    // Schedule one cycle. The speed is set so the cycle takes about CYCLE seconds.
+    const R = routes(pIn.length, pOut.length)
+    const len = (g: Element) => num(g, 'data-len')
+    const period = (g: Element) => num(g, 'data-period')
+    const travel = R.reduce((s, [i, o]) => s + len(pIn[i]) + len(pOut[o]) + 4, 0)
+    const v = travel / (CYCLE - R.length * (HOLD + REST))
+    const runIn: number[][] = pIn.map(() => [])
+    const runOut: number[][] = pOut.map(() => [])
+    const atTerm: number[][] = pIn.map(() => [])
+    const atLamp: number[][] = pOut.map(() => [])
+    const atNode: number[] = []
+    // A short lead, so nothing that loops (pulses, inputs, node) straddles the cycle's start.
+    let t = LEAD
+    let drained = 0
+    for (const [i, o] of R) {
+      runIn[i].push(t)
+      atTerm[i].push(t)
+      const inNode = t + (len(pIn[i]) - START) / v
+      atNode.push(inNode)
+      const leave = inNode + HOLD + START / v
+      runOut[o].push(leave)
+      const atEnd = leave + (len(pOut[o]) - START) / v
+      atLamp[o].push(atEnd)
+      t = atEnd + REST
+      drained = Math.max(drained, leave + period(pOut[o]) / v)
+    }
+    // The next cycle's first route follows after the same REST, once the last tail has drained.
+    const C = Math.max(t - LEAD, drained)
+    c.first = atLamp.map((a) => a[0])
+    c.lit = lit
+
+    const ms = (s: number) => s * 1000
+    const loop: KeyframeAnimationOptions = { duration: ms(C), iterations: Infinity, delay: ms(DELAY), fill: 'both' }
+    const anims: Animation[] = []
+    const add = (el: Element, k: Keyframe[], o: KeyframeAnimationOptions) => anims.push(el.animate(k, o))
+    const op = (v: number) => v
+    const scale = (v: number) => `scale(${v})`
+
+    pIn.forEach((g, i) =>
+      g.querySelectorAll('path').forEach((p) => add(p, pulseFrames(runIn[i], period(g), v, parseFloat(p.getAttribute('stroke-dasharray') ?? '0'), C), loop)),
+    )
+    pOut.forEach((g, o) =>
+      g.querySelectorAll('path').forEach((p) => add(p, pulseFrames(runOut[o], period(g), v, parseFloat(p.getAttribute('stroke-dasharray') ?? '0'), C), loop)),
+    )
+    // a message comes in: its input lights as the pulse leaves it
+    terms.forEach((el, i) => add(el, cycleFrames(atTerm[i], [[-0.08, 0], [0.04, 1], [0.24, 0.75], [0.62, 0]], 0, C, 'opacity', op), loop))
+    // the node takes it: outline up as the head arrives, held, then easing back after it leaves
+    const nodeAnim = node.animate(
+      cycleFrames(atNode, [[-0.05, 0], [0.07, 1], [HOLD + 0.06, 0.95], [HOLD + 0.3, 0.42], [HOLD + 0.52, 0.14], [HOLD + 0.75, 0]], 0, C, 'opacity', op),
+      loop,
+    )
+    anims.push(nodeAnim)
+    c.ref = nodeAnim
+
+    // lamps: catch at the first arrival, one soft brighten at every later one
+    const chalk = css('--color-chalk')
+    const chalk2 = css('--color-chalk-2')
+    const sodium = css('--color-sodium')
+    const lineStrong = css('--color-line-strong')
+    const FLARE: Pt[] = [[-0.03, 0], [0.12, 1], [0.42, 0.55], [0.95, 0]]
+    const FLARE_S: Pt[] = [[-0.03, 1], [0.12, 1.1], [0.95, 1.3], [0.96, 1]]
+    const BUMP: Pt[] = [[-0.02, 1], [0.14, 1.45], [0.6, 1]]
+    lamps.forEach((lamp, o) => {
+      const flare = lamp.querySelector('.flare')
+      const mark = marks[o]
+      const all = atLamp[o]
+      // A brighten can run past the cycle's end, so the first cycle (cut off at its
+      // end, without the catch) and the loop after it (wrapping) are two animations.
+      const brighten = (first: number[]) => {
+        const once: KeyframeAnimationOptions = { duration: ms(C), delay: ms(DELAY), fill: 'none' }
+        const after: KeyframeAnimationOptions = { duration: ms(C), iterations: Infinity, delay: ms(DELAY + C), fill: 'none' }
+        for (const [at, opts, wrap] of [[first, once, false], [all, after, true]] as const) {
+          if (!at.length) continue
+          if (flare) {
+            add(flare, cycleFrames([...at], FLARE, 0, C, 'opacity', op, wrap), opts)
+            add(flare, cycleFrames([...at], FLARE_S, 1, C, 'transform', scale, wrap), opts)
+          }
+          if (mark) add(mark, cycleFrames([...at], BUMP, 1, C, 'transform', scale, wrap), opts)
+        }
+      }
+      if (lit[o]) {
+        brighten(all)
+        return
+      }
+      const at = ms(DELAY + all[0])
+      const on = lamp.querySelector('.lamp-on')
+      const halo = lamp.querySelector('.halo')
+      const label = lamp.querySelector('.out')
+      if (on) add(on, CATCH, { duration: 700, delay: at, fill: 'both' })
+      if (halo)
+        add(halo, [{ opacity: 0, transform: 'scale(0.55)' }, { opacity: 1, transform: 'scale(1)' }], {
+          duration: 700,
+          delay: at + 190,
+          easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+          fill: 'both',
+        })
+      if (label) add(label, [{ fill: chalk2 }, { fill: chalk }], { duration: 400, delay: at + 120, fill: 'both' })
+      if (mark)
+        add(
+          mark,
+          CATCH.map(({ offset, opacity }) => ({
+            offset,
+            backgroundColor: opacity ? sodium : 'transparent',
+            borderColor: opacity ? sodium : lineStrong,
+          })),
+          { duration: 700, delay: at, fill: 'both' },
+        )
+      brighten(all.slice(1)) // the first arrival is the catch
+    })
+
+    c.anims = anims
+    if (!c.visible) for (const a of anims) a.pause()
+  }
+
+  /** Which lamps have caught by now (on the timeline that runs). */
+  function caught(c: Ctl) {
+    const now = Number(c.ref?.currentTime ?? 0) / 1000 - DELAY
+    return c.first.map((f) => now >= f)
+  }
+
+  function teardown(c: Ctl) {
+    for (const a of c.anims) a.cancel()
+    c.anims = []
+    c.ref = undefined
+  }
+
+  /** The other drawing takes over (a resize across 640px): lamps that caught stay on. */
+  function rebuild(c: Ctl) {
+    if (!c.started) return
+    const lit = caught(c).map((on, j) => on || (c.lit[j] ?? false))
+    teardown(c)
+    const lamps = c.sec.querySelectorAll<HTMLElement | SVGElement>('.fl-lamp[data-out], .kk-duty-mark[data-out]')
+    lamps.forEach((el) => el.classList.toggle('is-lit', lit[num(el, 'data-out')] ?? false))
+    build(c, lit)
+  }
+
+  function setVisible(c: Ctl, on: boolean) {
+    c.visible = on
+    for (const a of c.anims) {
+      // Only resume what we paused: play() on a finished animation restarts it.
+      if (!on && a.playState === 'running') a.pause()
+      else if (on && a.playState === 'paused') a.play()
+    }
+  }
+
   function initFlow() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    for (const c of ctls.splice(0)) {
+      if (c.fig.isConnected) ctls.push(c)
+      else {
+        teardown(c)
+        c.io?.disconnect()
+      }
+    }
+    if (still.matches || !('animate' in Element.prototype)) return
     document.querySelectorAll<HTMLElement>('[data-diagram="flow"]').forEach((fig) => {
-      if (fig.classList.contains('is-armed')) return
-      fig.classList.add('is-armed')
-      whenSeen(fig, () => fig.classList.add('is-live'))
+      const sec = fig.closest<HTMLElement>('.kk-flowsec')
+      if (!sec || sec.classList.contains('is-armed')) return
+      sec.classList.add('is-armed')
+      const c: Ctl = { sec, fig, anims: [], first: [], lit: [], started: false, visible: true }
+      ctls.push(c)
+      if ('IntersectionObserver' in window) {
+        c.io = new IntersectionObserver((es) => setVisible(c, es[es.length - 1].isIntersecting))
+        c.io.observe(fig)
+      }
+      whenSeen(fig, () => {
+        if (c.started || !sec.classList.contains('is-armed')) return
+        c.started = true
+        sec.classList.add('is-live')
+        build(c, [])
+      })
     })
   }
+
+  phone.addEventListener('change', () => ctls.forEach(rebuild))
+  // Reduced motion switched on mid-visit: back to the finished state.
+  still.addEventListener('change', () => {
+    if (!still.matches) return
+    for (const c of ctls) {
+      teardown(c)
+      c.sec.classList.remove('is-armed', 'is-live')
+    }
+  })
   // Armed as soon as this runs too: the first astro:page-load waits for the window load event.
   document.addEventListener('astro:page-load', initFlow)
   initFlow()

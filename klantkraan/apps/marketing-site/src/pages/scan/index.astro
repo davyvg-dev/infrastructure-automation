@@ -22,15 +22,15 @@ import { BREVO_ACTION } from '../../data/brevo'
 ---
 
 <ScanShell
-  title="Waar verliest je bedrijf elke week tijd? Antwoord binnen 1 werkdag | Klantkraan"
-  description="Vertel in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je een korte mail terug met waar je tijd verliest en wat je er zelf aan kunt doen. Geen gesprek, geen kosten."
+  title="Waar verliest uw bedrijf elke week tijd? Antwoord binnen 1 werkdag | Klantkraan"
+  description="Vertel in twee minuten welke klus u de meeste tijd kost. Binnen 1 werkdag krijgt u een korte mail: waar u tijd verliest en wat u er zelf aan kunt doen. Geen gesprek, geen kosten."
 >
   <form id="scan-form" class="scan-card" method="POST" action={BREVO_ACTION} data-astro-reload>
-    <h1>Waar verliest je bedrijf elke week tijd? Antwoord binnen 1 werkdag</h1>
+    <h1>Waar verliest uw bedrijf elke week tijd? Antwoord binnen 1 werkdag</h1>
     <p class="scan-lead">
-      Vertel ons in twee minuten welke klus je de meeste tijd kost. Binnen 1 werkdag krijg je van ons
-      een korte mail terug: de plekken waar je tijd verliest, wat je daar vandaag zelf aan kunt
-      doen, en de ene klus die je het best kunt automatiseren.
+      Vertel in twee minuten welke klus u de meeste tijd kost. U krijgt een korte mail terug: waar u
+      tijd verliest, wat u daar vandaag zelf aan kunt doen en welke klus u het best kunt
+      automatiseren.
     </p>
     <ul class="scan-promises">
       <li>Geen gesprek</li>
@@ -39,7 +39,7 @@ import { BREVO_ACTION } from '../../data/brevo'
     </ul>
 
     <div class="scan-field">
-      <label for="SCAN_KLUS">Welke klus kost je de meeste tijd of ergernis?</label>
+      <label for="SCAN_KLUS">Welke klus kost u de meeste tijd of ergernis?</label>
       <textarea
         id="SCAN_KLUS"
         name="SCAN_KLUS"
@@ -50,7 +50,7 @@ import { BREVO_ACTION } from '../../data/brevo'
     </div>
     <div class="scan-field">
       <label for="SCAN_PROGRAMMAS">
-        Welke programma's gebruik je? <small>mag je overslaan</small>
+        Welke programma's gebruikt u? <small>(optioneel)</small>
       </label>
       <input
         id="SCAN_PROGRAMMAS"
@@ -61,7 +61,7 @@ import { BREVO_ACTION } from '../../data/brevo'
       />
     </div>
     <div class="scan-field">
-      <label for="SCAN_BEDRIJF">Wat voor bedrijf heb je?</label>
+      <label for="SCAN_BEDRIJF">Wat voor bedrijf heeft u?</label>
       <input
         id="SCAN_BEDRIJF"
         name="SCAN_BEDRIJF"
@@ -73,7 +73,7 @@ import { BREVO_ACTION } from '../../data/brevo'
       />
     </div>
     <div class="scan-field">
-      <label for="EMAIL">Je e-mailadres</label>
+      <label for="EMAIL">Uw e-mailadres</label>
       <input
         id="EMAIL"
         name="EMAIL"
@@ -81,11 +81,11 @@ import { BREVO_ACTION } from '../../data/brevo'
         required
         autocomplete="email"
         inputmode="email"
-        placeholder="naam@jouwbedrijf.nl"
+        placeholder="naam@uwbedrijf.nl"
       />
     </div>
     <p class="scan-consent">
-      Hier sturen we je scan naartoe. Daarna sturen we je af en toe een tip of aanbod over tijd
+      Hier sturen we uw scan naartoe. Daarna sturen we u af en toe een tip of aanbod over tijd
       besparen met AI. Afmelden kan in elke mail.
     </p>
 
@@ -102,7 +102,7 @@ import { BREVO_ACTION } from '../../data/brevo'
     <input type="hidden" name="locale" value="en" />
 
     <p id="scan-error" class="scan-error" role="alert" hidden>
-      Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail je antwoorden dan naar
+      Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail uw antwoorden dan naar
       <a href={`mailto:${contact.email}`}>{contact.email}</a>.
     </p>
     <button id="scan-submit" class="scan-btn" type="submit">Vraag mijn gratis scan aan</button>
@@ -122,11 +122,11 @@ import { BREVO_ACTION } from '../../data/brevo'
     </span>
     <h2>Bijna klaar</h2>
     <p>
-      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna gaan we aan de slag en
-      heb je je scan binnen 1 werkdag.
+      Kijk in uw mail en klik op de knop om uw aanvraag te bevestigen. Daarna heeft u uw scan binnen
+      1 werkdag.
     </p>
     <p class="scan-done-hint">
-      Geen mail gezien? Kijk dan even bij ongewenste mail en zoek op Klantkraan.
+      Geen mail gezien? Kijk bij ongewenste mail en zoek op Klantkraan.
     </p>
   </section>
 

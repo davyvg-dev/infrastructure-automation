@@ -1,6 +1,6 @@
 ---
-title: 'Dakdekkers en het storm-protocol: hoe u de oktoberpiek niet kwijtraakt aan de concurrent'
-description: Praktische gids voor dakdekkers over 24-uurs reactietijden, offertetemplates per dakvorm en de seizoenspiek tussen oktober en februari.
+title: 'Dakdekkers en het stormprotocol: hoe u de oktoberpiek niet kwijtraakt aan de concurrent'
+description: Binnen 24 uur reageren na een storm, een vaste offerte per dakvorm en een plan voor de piek van oktober tot februari.
 pubDate: 2026-05-21
 vertical: dakdekker
 keywords:
@@ -10,57 +10,57 @@ keywords:
 readingTime: 6
 ---
 
-Tussen 20 oktober en 15 februari beslist een dakdekkersbedrijf zijn jaarcijfers. In die zestien weken komt meer dan 55 procent van alle stormschade-aanvragen binnen, geconcentreerd in de drie tot vijf dagen na een windkracht-8-of-hoger melding van het KNMI. Wie in die dagen niet binnen 24 uur reageert, ziet de klus naar de buurman gaan.
+Tussen 20 oktober en 15 februari bepaalt een dakdekkersbedrijf zijn jaarcijfers. In die zestien weken komt meer dan 55 procent van alle aanvragen voor stormschade binnen, vooral in de drie tot vijf dagen nadat het KNMI windkracht 8 of hoger heeft gemeld. Wie dan niet binnen 24 uur reageert, ziet de klus naar de buurman gaan.
 
-## De storm-piek in cijfers
+## De stormpiek in cijfers
 
-Het Verbond van Verzekeraars registreerde in oktober 2025 ruim 38.000 stormschadeclaims voor woningdaken, met een gemiddelde schadepost van €2.150. In de week na storm Aiden (3 november 2025) belden dakdekkers in de Randstad gemiddeld 4 tot 7 keer zoveel als in een normale week. Bedrijven met drie of meer monteurs raakten binnen 48 uur volgeboekt; eenmansbedrijven raakten binnen 18 uur volgeboekt.
+Het Verbond van Verzekeraars registreerde in oktober 2025 ruim 38.000 stormschadeclaims voor woningdaken, met een gemiddelde schadepost van € 2.150. In de week na storm Aiden (3 november 2025) werden dakdekkers in de Randstad gemiddeld 4 tot 7 keer zo vaak gebeld als in een normale week. Bedrijven met drie of meer monteurs zaten binnen 48 uur vol, eenmanszaken binnen 18 uur.
 
-Het werkelijke probleem zit niet in de capaciteit, maar in de aanname-snelheid. Een steekproef van 25 dakdekkers in de regio Utrecht in november 2025 liet zien: 41 procent reageerde niet binnen 24 uur op een aanvraag via het contactformulier op de eigen website. Die aanvragen gingen vervolgens naar Werkspot, Trustoo of een concurrent met een snellere telefoonopname.
+Het probleem zit niet in de capaciteit, maar in hoe snel u aanvragen aanneemt. Uit een steekproef onder 25 dakdekkers in de regio Utrecht in november 2025 bleek dat 41 procent niet binnen 24 uur reageerde op een aanvraag via het contactformulier op de eigen website. Die aanvragen gingen naar Werkspot, Trustoo of een concurrent die de telefoon sneller opnam.
 
-## Het 24-uurs storm-protocol
+## Het 24-uursprotocol bij storm
 
-Een werkbaar protocol heeft vier stappen, in deze volgorde:
+Het protocol heeft vier stappen, in deze volgorde:
 
-1. **0 tot 60 minuten na binnenkomst aanvraag**: bevestiging dat de aanvraag ontvangen is, met indicatie wanneer u terugbelt. Dit is een SMS, niet een e-mail. SMS open rate ligt op 95 procent, e-mail tijdens een storm onder de 20 procent omdat klanten ook andere offertes aanvragen.
-2. **Binnen 4 uur**: korte triage telefonisch of via WhatsApp. Vijf vragen volstaan: postcode, dakvorm (plat, schuin, mansarde), schadebeeld (losse pannen, lekkage, dakgoot), oppervlakte indicatie, bouwjaar van het dak.
-3. **Binnen 24 uur**: fysieke inspectie of een gedetailleerde indicatieve offerte. Voor 60 procent van de stormschades volstaat een drone-inspectie van 20 minuten in plaats van een steiger.
-4. **Binnen 48 uur na inspectie**: schriftelijke offerte met foto-rapport. De foto's zijn niet decoratief. Verzekeraars eisen ze voor een schade-uitkering.
+1. **Binnen 60 minuten na de aanvraag**: een bevestiging dat de aanvraag binnen is, met wanneer u terugbelt. Stuur een sms, geen e-mail: een sms wordt in 95 procent van de gevallen geopend, een e-mail tijdens een storm in minder dan 20 procent, omdat klanten ook bij anderen offertes aanvragen.
+2. **Binnen 4 uur**: een korte triage per telefoon of WhatsApp. Vijf vragen zijn genoeg: postcode, dakvorm (plat, schuin, mansarde), soort schade (losse pannen, lekkage, dakgoot), geschatte oppervlakte en bouwjaar van het dak.
+3. **Binnen 24 uur**: een inspectie ter plaatse of een uitgewerkte indicatieve offerte. Bij 60 procent van de stormschades volstaat een drone-inspectie van 20 minuten en heeft u geen steiger nodig.
+4. **Binnen 48 uur na de inspectie**: een schriftelijke offerte met fotorapport. De foto's zijn geen versiering: verzekeraars eisen ze voor een schade-uitkering.
 
-Wat dit protocol op cijferniveau oplevert: dakdekkers die deze cyclus volgen, sluiten 38 tot 52 procent van de stormaanvragen, tegen 12 tot 18 procent voor bedrijven die binnen 72 uur reageren.
+Dakdekkers die dit protocol volgen, zetten 38 tot 52 procent van de stormaanvragen om in een opdracht, tegen 12 tot 18 procent bij bedrijven die binnen 72 uur reageren.
 
-## Offertetemplate per dakvorm
+## Offertesjabloon per dakvorm
 
-Standaardiseer de offerte op één A4 per dakvorm. Een aparte template voor:
+Maak per dakvorm een vaste offerte op één A4:
 
-- **Pannendak (Hollandse pan)**: prijs per losse pan vervangen (€18 tot €28 inclusief BTW per pan), prijs per m² vernieuwd (€95 tot €140), gemiddelde voorrijkosten plus inspectie €85.
-- **Plat dak (bitumen of EPDM)**: prijs per m² nieuwe dakbedekking (EPDM €75 tot €110, bitumen €60 tot €95), prijs per dakdoorvoer €145 tot €220, levensduurindicatie 25 tot 40 jaar voor EPDM.
-- **Schuin dak met leien**: hoger uurtarief (€68 tot €82 versus €55 tot €68 voor pannen), prijs per m² €185 tot €240, expliciete vermelding van werken in valbeveiliging.
-- **Rieten dak**: gespecialiseerde markt, prijs per m² €165 tot €220, levensduur 25 tot 40 jaar afhankelijk van helling.
+- **Pannendak (Hollandse pan)**: een losse pan vervangen € 18 tot € 28 per pan incl. btw, per m² vernieuwen € 95 tot € 140, voorrijkosten plus inspectie gemiddeld € 85.
+- **Plat dak (bitumen of EPDM)**: nieuwe dakbedekking per m² (EPDM € 75 tot € 110, bitumen € 60 tot € 95), per dakdoorvoer € 145 tot € 220, levensduur van EPDM 25 tot 40 jaar.
+- **Schuin dak met leien**: hoger uurtarief (€ 68 tot € 82, tegen € 55 tot € 68 voor pannen), € 185 tot € 240 per m², en vermeld uitdrukkelijk dat u met valbeveiliging werkt.
+- **Rieten dak**: een specialistische markt, € 165 tot € 220 per m², levensduur 25 tot 40 jaar, afhankelijk van de dakhelling.
 
-Een vaste template scheelt 35 tot 50 minuten per offerte. Vermenigvuldig met 4 tot 8 offertes per dag in piekperiode: dat is twee tot vijf uur per week extra capaciteit voor het werk zelf.
+Een vast sjabloon scheelt 35 tot 50 minuten per offerte. Bij 4 tot 8 offertes per dag in de piek is dat twee tot vijf uur per week extra voor het werk zelf.
 
-## Foto-rapport bij elke inspectie
+## Fotorapport bij elke inspectie
 
-Een fotorapport is geen extra service. Het is een commercieel instrument. Dakdekkers die bij elke inspectie 8 tot 12 foto's leveren met korte tekstuele toelichting, halen 22 tot 30 procent hogere conversie op offerte naar opdracht. Reden: de klant ziet wat er mis is en hoeft niet de aannemer te geloven op zijn woord.
+Een fotorapport is geen extra service maar een verkoopmiddel. Dakdekkers die bij elke inspectie 8 tot 12 foto's met een korte toelichting leveren, zetten 22 tot 30 procent meer offertes om in een opdracht. De klant ziet zelf wat er mis is en hoeft u niet op uw woord te geloven.
 
-Praktisch: maak foto's van het dak in overzicht, van elk schadepunt close-up, en (belangrijk) van één detail dat geen schade is, om vertrouwen te geven dat u het hele dak heeft bekeken. Sla foto's op met de adresgegevens en datum in de bestandsnaam. AVG-wise: bewaar geen herkenbare gevels van buren in het rapport.
+Fotografeer het hele dak, elk schadepunt van dichtbij en ook één plek zonder schade, zodat de klant ziet dat u het hele dak heeft bekeken. Zet adres en datum in de bestandsnaam. En voor de AVG: zet geen herkenbare gevels van buren in het rapport.
 
 ## Seizoensplanning: niet alleen in piekperiode rijden
 
-De drukste maanden zijn oktober tot februari. De rustigste: april tot juni. Dat is de verkeerde manier om naar het jaar te kijken. April tot juni is het ideale moment voor:
+De drukste maanden zijn oktober tot februari, de rustigste april tot juni. Juist die rustige maanden zijn het moment voor:
 
-- Onderhoudsabonnementen verkopen (jaarlijkse inspectie €145 tot €185, ideaal in mei)
-- Daken met einde-levensduur proactief offreren aan klanten uit de winterpiek
-- Trainingen NEN 3140 en valbeveiliging inplannen, niet in november
-- Drone-piloot certificering (verplicht boven 250 gram per EU drone-regels)
+- Onderhoudsabonnementen verkopen (jaarlijkse inspectie € 145 tot € 185, het liefst in mei)
+- Klanten uit de winterpiek met een dak aan het eind van zijn levensduur uit eigen beweging een offerte sturen
+- Trainingen NEN 3140 en valbeveiliging inplannen, in plaats van in november
+- Certificering als dronepiloot (volgens de EU-droneregels verplicht boven 250 gram)
 
-Dakdekkers die in het voorjaar gericht 30 tot 50 onderhoudsabonnementen verkopen, hebben in januari een gegarandeerde inspectie-omzet en een ingebouwde reden om bij die klanten als eerste te bellen na een storm.
+Dakdekkers die in het voorjaar 30 tot 50 onderhoudsabonnementen verkopen, hebben in januari vaste omzet uit inspecties en een reden om die klanten na een storm als eerste te bellen.
 
 ## Werkspot en Trustoo: nuttig, maar niet bepalend
 
-Stormpieken trekken een explosie aan leadmarktplaats-aanvragen, met leadprijzen die in november 2025 piekten op €40 tot €75 per gedeelde aanvraag voor daklekkages. Conversie van die leads ligt onder de 20 procent omdat ze met drie tot vijf concurrenten gedeeld worden. De echte winst zit in uw eigen Google-vermelding plus reviewstrategie: een dakdekker met 60+ Google-reviews en wekelijkse foto-updates op Google Business Profile staat in de Local Pack van Google en krijgt 4 tot 6 keer meer rechtstreekse telefoontjes dan een bedrijf zonder dat profiel.
+Na een storm stromen de aanvragen op klusplatforms binnen. In november 2025 liep de prijs voor een gedeelde aanvraag voor een daklekkage op tot € 40 à € 75. Minder dan 20 procent daarvan wordt een opdracht, omdat u de aanvraag met drie tot vijf concurrenten deelt. De winst zit in uw eigen Google-vermelding en reviews: een dakdekker met 60 of meer Google-reviews en elke week nieuwe foto's in zijn Google Bedrijfsprofiel staat in het Local Pack van Google en wordt 4 tot 6 keer vaker rechtstreeks gebeld dan een bedrijf zonder dat profiel.
 
 ## Wat Klantkraan voor uw dakdekkersbedrijf doet
 
-Klantkraan zorgt dat het storm-protocol vanzelf loopt: de Nederlandstalige AI-receptionist neemt 's avonds en in het weekend op, stelt de vijf triagevragen, plant binnen 24 uur een inspectie in via Cal.com en stuurt aan het einde van de klus automatisch een reviewverzoek. U houdt tijd over voor het dak. Per maand opzegbaar, geen opstartkosten.
+Met Klantkraan loopt het stormprotocol vanzelf. De Nederlandstalige AI-receptionist neemt ’s avonds en in het weekend op, stelt de vijf triagevragen, plant via Cal.com binnen 24 uur een inspectie in en stuurt na de klus automatisch een reviewverzoek. Zo houdt u tijd over voor het dak. Per maand opzegbaar, geen opstartkosten.

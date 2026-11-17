@@ -1,6 +1,6 @@
 ---
-title: 'CV-storing in januari: waarom 62% van uw klanten u niet bereikt'
-description: 'Wat een CV-monteur in januari verliest aan gemiste oproepen, en hoe een Nederlandstalige AI-telefoniste pieken vangt zonder voicemail-trap.'
+title: 'Cv-storing in januari: waarom 62% van uw klanten u niet bereikt'
+description: 'Wat een cv-monteur in januari verliest aan gemiste oproepen en hoe een Nederlandstalige AI-telefonist de piek opvangt, zonder voicemail.'
 pubDate: 2026-05-20
 author: 'Klantkraan'
 vertical: 'installateur'
@@ -12,102 +12,98 @@ keywords:
   - 'gemiste klanten cv-storing'
 ---
 
-Laatst belden in veertig minuten drie klanten met dezelfde storing. CV doet niets, acht graden binnen, kinderen die naar school moeten. Ik zat bij klant één onder de ketel. Klant twee hoorde de bezetkleur. Klant drie kreeg voicemail en belde mijn concurrent.
+Een vorstochtend in januari: binnen veertig minuten bellen drie klanten met dezelfde storing. De cv doet niets, het is acht graden binnen en de kinderen moeten naar school. U ligt bij klant één onder de ketel. Klant twee hoort de bezettoon. Klant drie krijgt de voicemail en belt uw concurrent.
 
-Welkom in januari.
+Dit artikel rekent uit wat dat een cv-monteur kost en wat een AI-telefonist eraan kan doen, inclusief wat hij niet kan.
 
-Dit artikel rekent door wat dat per CV-monteur per jaar kost, en wat een AI-telefoniste er in de praktijk aan doet. Geen verkooppraatje. Cijfers en grenzen.
+## De cijfers achter de januaripiek
 
-## De cijfers achter de januari-piek
+Drie getallen die elke cv-monteur kent, al staan ze nergens gepubliceerd:
 
-Drie getallen die elke CV-monteur kent zonder dat ze ergens gepubliceerd staan:
+- **62%** van alle cv-storingen in Nederland komt binnen in januari en februari. De rest van het jaar gaat het vooral om onderhoud, jaarbeurten en storingen aan geisers.
+- **€ 340** kost één spoedbezoek voor een cv-storing gemiddeld, inclusief voorrijkosten, spoedtoeslag, onderdeel en arbeidsloon. Bron: branchecijfers van Vakkrant Installatie en een eigen mkb-benchmark over 2024 en 2025.
+- In september en oktober krijgt u **4 keer** zoveel onderhoudsaanvragen als in juni. U heeft dus twee pieken per jaar. Daartussen zit de gemiddelde week, met ongeveer 20% van uw spoedomzet.
 
-- **62%** van alle CV-storingen in Nederland meldt zich in januari en februari. De rest van het jaar is regulier onderhoud, jaarbeurten en geiser-pannes.
-- **€340** is de gemiddelde omvang van één spoed-CV-bezoek inclusief voorrijkosten, spoedtoeslag, vervangen onderdeel en arbeidsloon. Bron: branche-cijfers van Vakkrant Installatie en eigen MKB-benchmark over 2024–2025.
-- **4×** zoveel onderhoudsaanvragen krijgt u in september en oktober dan in juni. Twee piekseizoenen per jaar. Daar tussenin: gemiddelde week, ongeveer 20% van uw spoed-omzet.
+Een rekenvoorbeeld: een installateur die alleen werkt, krijgt in een rustige maand 30 oproepen per week. In een piekweek worden dat er al snel 75. Mist u daarvan 20% (twee gesprekken tegelijk, een avondoproep, een lunchpauze), dan zijn dat 15 gemiste klanten. Wordt een derde daarvan een klus, dan loopt u € 1.700 omzet per week mis.
 
-Reken het door voor een eenmans-installateur die 30 oproepen per week binnenkrijgt in een rustige maand. Een gemiddelde piekweek levert al snel 75 oproepen op. Mist u er 20% van (bij twee gelijktijdige calls, een avondoproep, een lunchpauze) dan zijn dat 15 gemiste klanten. Bij 33% conversie was dat €1.700 aan omzet. Per week.
-
-Twee januari-weken kost u €3.400. Plus de schade aan uw naam. Een klant die u niet bereikt op een vorstochtend vertelt zijn buren over de monteur die wel opnam.
+Twee van zulke weken in januari kosten u € 3.400, plus de schade aan uw naam: een klant die u op een vorstochtend niet bereikt, vertelt zijn buren over de monteur die wel opnam.
 
 ## Wat er gebeurt als de klant u niet bereikt
 
-In 2017 keek de Aira CallTrack-benchmark naar wat klanten in service-industries doen bij een gemiste oproep:
+In 2017 onderzocht de Aira CallTrack-benchmark wat klanten van dienstverleners doen na een gemiste oproep:
 
-1. **48%** belt direct de volgende leverancier op de Google-pagina. Géén voicemail.
-2. **27%** spreekt een voicemail in, wacht 20 minuten, en belt dan alsnog door.
-3. **15%** stuurt later een WhatsApp of e-mail. Niet diezelfde dag opgelost.
-4. **10%** zoekt een uur later opnieuw, vaak via een andere zoekterm.
+1. **48%** belt meteen de volgende aanbieder in Google, zonder een bericht in te spreken.
+2. **27%** spreekt een bericht in, wacht 20 minuten en belt dan toch de volgende.
+3. **15%** stuurt later een WhatsApp-bericht of e-mail en is niet diezelfde dag geholpen.
+4. **10%** zoekt een uur later opnieuw, vaak met een andere zoekterm.
 
-Voor een spoed-CV-storing in januari is dat scenario (1) bijna gegarandeerd. Een huiseigenaar zonder warm water gaat niet wachten. Hij zoekt tien minuten verder. In een grote stad zijn er twintig CV-monteurs binnen vijf kilometer.
+Bij een cv-storing in januari gebeurt bijna altijd het eerste. Een huiseigenaar zonder warm water wacht niet, maar zoekt tien minuten verder. In een grote stad zitten twintig cv-monteurs binnen vijf kilometer.
 
-Voicemail is geen oplossing. Een antwoordservice (€2,50–€4 per gesprek, vaste lijn-prijs en commitment per maand) helpt iets, maar mist de spraakkwaliteit en kent uw tarieven niet. De klant hoort iemand zeggen "we noteren uw nummer en bellen u terug". De meeste klanten hebben dat al opgehangen voordat de zin af is.
+Voicemail lost dit niet op. Een antwoordservice (€ 2,50 tot € 4 per gesprek, plus een vast bedrag en een verplichting per maand) helpt iets, maar kent uw tarieven niet. De klant hoort "we noteren uw nummer en bellen u terug", en de meeste klanten hangen op voordat die zin af is.
 
-## Wat een AI-telefoniste in de praktijk doet
+## Wat een AI-telefonist in de praktijk doet
 
-Een Nederlandstalige AI-telefoniste neemt op alsof het uw eigen receptioniste is, alleen werkt hij 24/7 en is hij niet uniek aan één telefoon gebonden. Vier dingen die hij in januari constant doet:
+Een Nederlandstalige AI-telefonist neemt op zoals uw eigen receptioniste, maar dan dag en nacht en zonder vast te zitten aan één toestel. In januari doet hij steeds deze vier dingen:
 
 ### 1. Spoed onderscheiden van regulier onderhoud
 
-"Mijn CV doet niets" wordt anders behandeld dan "Ik wil graag de jaarbeurt inplannen". De eerste krijgt direct uw mobiele nummer (escalatie). De tweede krijgt een terugbel-afspraak in uw Cal.com-agenda voor de volgende werkdag.
+"Mijn cv doet niets" krijgt een andere behandeling dan "Ik wil de jaarbeurt inplannen". De eerste escaleert hij direct naar uw mobiele nummer. De tweede krijgt een terugbelafspraak in uw Cal.com-agenda voor de volgende werkdag.
 
-Klassificatie gebeurt op de inhoud van wat de klant zegt, niet op tijdstip. Een klant kan om 14:00 op een doordeweekse dag bellen met spoed. En een ander op zaterdagavond met een vraag over jaarcontract.
+Hij beoordeelt wat de klant zegt, niet hoe laat het is. Iemand kan op een doordeweekse dag om 14:00 met spoed bellen, een ander op zaterdagavond met een vraag over een jaarcontract.
 
 ### 2. Uw tarieven correct noemen
 
-De AI-telefoniste noemt alleen tarieven die u zelf bij onboarding heeft ingesteld: voorrijkosten, uurtarief, spoedtoeslag-vorst, weekend-toeslag, jaarbeurt-prijs. Onbekende prijzen worden niet verzonnen. Bij een afwijkende vraag krijgt de klant "daar bellen wij u zo over terug" in plaats van een verkeerd nummer.
+Hij noemt alleen tarieven die u bij de start zelf heeft opgegeven: voorrijkosten, uurtarief, vorsttoeslag, weekendtoeslag en de prijs van een jaarbeurt. Prijzen die hij niet kent, verzint hij niet. Bij een afwijkende vraag zegt hij "daar bellen wij u zo over terug" in plaats van een verkeerd bedrag te noemen.
 
-Praktisch: bij een spoed-CV in een vorstperiode noemt hij bijvoorbeeld "€85 voorrijkosten in de regio, €95 per uur, en in dit weer rekenen wij €40 spoedtoeslag bovenop". Exact zoals u zelf zou bellen.
+Bij een cv-storing tijdens vorst zegt hij bijvoorbeeld: "€ 85 voorrijkosten in de regio, € 95 per uur, en bij dit weer rekenen wij € 40 spoedtoeslag extra." Precies zoals u het zelf zou zeggen.
 
 ### 3. Tegelijk drie klanten te woord staan
 
-Een traditionele telefoon kan één gesprek tegelijk. Een antwoordservice meestal vijf parallel, mits ze niet bezet zijn. Een AI-telefoniste handelt onbeperkt parallel af: tien klanten kunnen om 09:15 tegelijk bellen na een vorstnacht, en alle tien krijgen direct iemand aan de lijn.
+Een gewone telefoon voert één gesprek tegelijk, een antwoordservice meestal vijf, als de medewerkers niet bezet zijn. Een AI-telefonist voert onbeperkt gesprekken tegelijk: bellen er na een vorstnacht om 09:15 tien klanten tegelijk, dan krijgen ze alle tien direct iemand aan de lijn.
 
-Voor een januari-piek is dit het verschil tussen "alle prospects vasthouden" en "voicemail van drie klanten die nu uw concurrent bellen".
+In de januaripiek is dat het verschil tussen alle klanten vasthouden en drie voicemails van klanten die intussen uw concurrent bellen.
 
-### 4. SMS in 60 seconden als hij toch niet uitkomt
+### 4. Sms in 60 seconden als hij er niet uitkomt
 
-In zeldzame gevallen wil de klant écht alleen een mens spreken. De AI biedt eerlijk de optie om door te schakelen ("Wilt u liever een medewerker? Zeg dan 'medewerker'"). Is die er niet, dan gaat de klant naar voicemail. Klantkraan stuurt dan binnen 60 seconden een Nederlandstalig SMS-bericht: "Bedankt voor het bellen van Installatiebedrijf Janssen, wij kunnen nu niet opnemen. Plan een terugbel-afspraak via deze link: [cal.com/janssen]".
+In zeldzame gevallen wil een klant per se een mens spreken. De AI biedt dan aan om door te verbinden ("Wilt u liever een medewerker? Zeg dan 'medewerker'"). Is er niemand beschikbaar, dan gaat de klant naar de voicemail en stuurt Klantkraan binnen 60 seconden een sms: "Bedankt voor het bellen van Installatiebedrijf Janssen, wij kunnen nu niet opnemen. Plan een terugbelafspraak via deze link: [cal.com/janssen]".
 
-Resultaat: een gemiste oproep wordt nog steeds een afspraak, niet een verlies.
+Zo wordt een gemiste oproep alsnog een afspraak.
 
-## Wat het niet doet
+## Wat een AI-telefonist niet doet
 
-Eerlijk over de grenzen:
-
-- **Hij installeert niet zelf.** Geen verrassing. Voor alle duidelijkheid: een AI-telefoniste vervangt geen monteur. Hij vangt de communicatie, niet het werk.
-- **Hij belt zelf geen klanten.** Geen cold call, geen leverancier-bellen. Inkomend verkeer alleen.
-- **Hij meldt aan elke beller dat het AI is.** Dat is een wettelijke verplichting onder de EU AI Act artikel 50. Geen marketingkeuze. De disclosure staat altijd aan. Wie liever discreet wil zijn over AI, moet niet voor Klantkraan kiezen. Wij vinden eerlijkheid een feature, geen probleem.
-- **Hij begrijpt geen accenten als Pools of Arabisch goed.** Spraakherkenning voor Nederlands met sterk niet-NL accent is wankel. Voor een grootstedelijke praktijk met veel internationale klanten is dit een serieuze beperking om mee te wegen.
-- **Hij vervangt geen 24/7-monteur.** Als uw spoed-protocol vereist dat iemand binnen 30 minuten ter plaatse is, dan moet die iemand óf u zijn óf een partner die u kunt opdragen. De AI plant en escaleert, maar hij rijdt niet.
+- **Hij installeert niets.** Een AI-telefonist vervangt geen monteur. Hij neemt de communicatie over, niet het werk.
+- **Hij belt zelf geen klanten.** Ook geen leveranciers en geen koude acquisitie: hij neemt alleen inkomende gesprekken aan.
+- **Hij meldt elke beller dat hij een AI is.** Dat is een wettelijke plicht onder artikel 50 van de EU AI Act, en deze melding staat altijd aan. Wilt u liever verbergen dat u AI gebruikt, kies dan niet voor Klantkraan.
+- **Hij verstaat een sterk Pools of Arabisch accent niet goed.** Spraakherkenning van Nederlands met een zwaar buitenlands accent is wankel. Heeft u in een grote stad veel internationale klanten, dan is dit een serieuze beperking.
+- **Hij vervangt geen monteur van dienst.** Moet er volgens uw spoedprotocol binnen 30 minuten iemand ter plaatse zijn, dan bent u dat zelf of een partner die u kunt inschakelen. De AI plant en escaleert, maar rijdt niet.
 
 ## Wat het kost en wanneer het zich terugverdient
 
-Twee abonnementen, alle excl. BTW, maandelijks opzegbaar. Eenmalige setup €249, kwijtgescholden voor pilotklanten:
+Twee abonnementen, excl. btw en per maand opzegbaar. Eenmalige setup € 249, kwijtgescholden voor pilotklanten.
 
-| Tier     | Per maand | Per dag  | Wat u krijgt                                                                                             |
-| -------- | --------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| Chat     | €299      | ≈ €9,97  | AI-receptionist via websitechat + WhatsApp: beantwoordt vragen, plant afspraken, vangt terugbelverzoeken |
-| Compleet | €499      | ≈ €16,63 | Alles van Chat + AI-telefonist op een eigen Nederlands nummer (binnenkort beschikbaar)                   |
+| Pakket   | Per maand | Per dag   | Wat u krijgt                                                                                                   |
+| -------- | --------- | --------- | -------------------------------------------------------------------------------------------------------------- |
+| Chat     | € 299     | ≈ € 9,97  | AI-receptionist via websitechat en WhatsApp: beantwoordt vragen, plant afspraken in, vangt terugbelverzoeken op |
+| Compleet | € 499     | ≈ € 16,63 | Alles van Chat, plus een AI-telefonist op een eigen Nederlands nummer (binnenkort beschikbaar)                  |
 
-Voor een eenmans-installateur die in januari 15 oproepen per week mist:
+Voor een zelfstandige installateur die in januari 15 oproepen per week mist:
 
-- **Verloren omzet zonder Klantkraan**: 15 × 33% conversie × €340 = €1.683 per piekweek
-- **Klantkraan Chat**: €299 / maand
-- **Terugverdientijd**: één extra spoed-CV per maand binnenhalen die u anders had gemist. Bij €340 per klus betaalt het abonnement zichzelf terug. Alles daarboven is winst.
+- **Verloren omzet zonder Klantkraan**: 15 × 33% conversie × € 340 = € 1.683 per piekweek
+- **Chat**: € 299 per maand
+- **Terugverdientijd**: één extra spoedklus per maand die u anders had gemist. Bij € 340 per klus heeft het abonnement zich daarmee terugverdiend.
 
-In de praktijk: een Klantkraan-klant in de installatie-branche heeft in januari minimaal 5–10 extra klussen die anders waren weggelekt. Dat is €1.700 tot €3.400 aan piekweek-omzet die binnenkomt zonder dat u één extra werknemer hoeft aan te nemen.
+In de praktijk haalt een Klantkraan-klant in de installatiebranche in januari minstens 5 tot 10 extra klussen binnen die anders waren weggelekt. Dat is € 1.700 tot € 3.400 extra omzet in de piekweken, zonder dat u iemand hoeft aan te nemen.
 
 ## Wanneer het géén zin heeft
 
-Eerlijk advies: zit u onder de 10 oproepen per week, neemt u alle inkomende oproepen al persoonlijk aan zonder pieken, of bestaat uw klantenkring uit één grote zorgaanbieder met vaste planning? Dan is Klantkraan overkill. Bij dat volume- en klantprofiel is een normale agenda met voicemail-routine voldoende.
+Krijgt u minder dan 10 oproepen per week, neemt u alle oproepen al zelf aan omdat u geen pieken heeft, of werkt u voor één grote zorgaanbieder met een vaste planning? Dan heeft u Klantkraan niet nodig: een gewone agenda en uw voicemail volstaan.
 
-Klantkraan is gemaakt voor de installateur die regelmatig de bezetkleur hoort terwijl hij bij een andere klant zit, of die om 21:00 nog steeds wakker ligt over de drie gemiste oproepen van die middag.
+Klantkraan is gemaakt voor de installateur wiens klanten regelmatig de bezettoon horen terwijl hij bij een andere klant zit, of die om 21:00 nog ligt te malen over drie gemiste oproepen van die middag.
 
 ## De demo zelf horen
 
-In plaats van uitleggen wat de stem klinkt: bel het demo-nummer en spreek de AI-telefoniste tien minuten zelf. Vraag naar een CV-storing in uw eigen postcode, vraag de voorrijkosten op, vraag een terugbel-afspraak voor de volgende ochtend. Hang op en kijk binnen 60 seconden of u de bevestigings-SMS hebt.
+Bel het demonummer en praat tien minuten met de AI-telefonist. Vraag naar een cv-storing in uw eigen postcode, naar de voorrijkosten en naar een terugbelafspraak voor de volgende ochtend. Hang op en kijk of de bevestiging per sms binnen 60 seconden binnenkomt.
 
-[Ga naar /demo](/demo/) voor het nummer en een testscript.
+Het nummer en een testscript staan op de [demopagina](/demo/).
 
-Of: [bereken op /rekentool](/rekentool/) wat een gemiste oproep voor uw eigen bedrijf kost en hoe snel een Klantkraan-abonnement zichzelf terugverdient op uw cijfers.
+Of [bereken met de rekentool](/rekentool/) wat een gemiste oproep uw bedrijf kost en hoe snel een abonnement zich terugverdient.

@@ -18,15 +18,15 @@ faq:
   - q: 'Wat is het verschil tussen een antwoordservice en een AI-receptionist?'
     a: 'Een antwoordservice noteert een bericht en belooft dat u terugbelt. Een AI-receptionist beantwoordt de vraag zelf, kent uw tarieven en plant de afspraak direct in, ook buiten kantooruren.'
   - q: 'Merkt de klant dat hij met een digitale receptionist praat?'
-    a: 'Ja, dat hoort de klant eerlijk te horen. De digitale receptionist van Klantkraan meldt aan het begin van het gesprek dat de klant met een digitale assistent praat, zoals de Europese AI-verordening ook voorschrijft.'
+    a: 'Ja. De digitale receptionist van Klantkraan meldt aan het begin van het gesprek dat de klant met een digitale assistent praat, zoals de Europese AI-verordening voorschrijft.'
   - q: 'Werkt een AI-receptionist ook voor telefoontjes?'
-    a: 'Klantkraan vangt klantvragen op via de chat op uw website en via WhatsApp, en vangt zo ook de bellers op die u doorverwijst wanneer u niet kunt opnemen. Zo krijgt de klant direct antwoord in plaats van een voicemail.'
+    a: 'Klantkraan werkt via de chat op uw website en via WhatsApp. Bellers die u daarnaar doorverwijst als u niet kunt opnemen, krijgen zo direct antwoord in plaats van een voicemail.'
 laatstBijgewerkt: 2026-08-13
 related:
   - gemiste-oproepen-loodgieter
 ---
 
-Het korte antwoord: een antwoordservice neemt een **bericht** aan, een AI-receptionist handelt het **gesprek** af. Wie alleen wil weten dat er gebeld is, is met een antwoordservice klaar. Wie wil dat de beller direct antwoord krijgt en een afspraak kan maken, heeft meer aan een digitale receptionist. Hieronder de drie opties naast elkaar, inclusief de situaties waarin de klassieke antwoordservice gewoon de betere keuze is.
+Het korte antwoord: een antwoordservice neemt een **bericht** aan, een AI-receptionist handelt het **gesprek** af. Wie alleen wil weten dat er gebeld is, is met een antwoordservice klaar. Wie wil dat de beller direct antwoord krijgt en een afspraak kan maken, heeft meer aan een digitale receptionist. Hieronder staan de drie opties naast elkaar, met de situaties waarin de klassieke antwoordservice de betere keuze is.
 
 ## Wat doet een klassieke antwoordservice?
 
@@ -38,7 +38,7 @@ Voor de beller met een lekkage is "u wordt teruggebeld" bovendien geen oplossing
 
 ## Wat doet een AI-receptionist?
 
-Een digitale receptionist voert het gesprek zelf, via de chat op uw website en via WhatsApp. Hij kent uw tarieven, uw werkgebied en uw agenda-regels, beantwoordt de vraag direct en plant de afspraak in. Om 07:00 uur en om 23:00 uur, ook op zondag. Hij meldt eerlijk dat de klant met een digitale assistent praat en geeft het gesprek door zodra het te complex wordt of de klant een mens wil.
+Een digitale receptionist voert het gesprek zelf, via de chat op uw website en via WhatsApp. Hij kent uw tarieven, uw werkgebied en uw agendaregels, beantwoordt de vraag direct en plant de afspraak in. Om 07:00 en om 23:00, ook op zondag. Hij meldt eerlijk dat de klant met een digitale assistent praat en geeft het gesprek door zodra het te complex wordt of de klant een mens wil.
 
 Het verschil zit in wat de beller overhoudt: bij een antwoordservice een belofte, bij een digitale receptionist een antwoord en vaak al een afspraak. Onderzoek van MIT en InsideSales via Harvard Business Review laat zien waarom dat telt: 78% van de klanten koopt bij het bedrijf dat als eerste reageert.
 
@@ -46,16 +46,16 @@ Het verschil zit in wat de beller overhoudt: bij een antwoordservice een belofte
 
 |                  | Zelf opnemen            | Antwoordservice                    | AI-receptionist                        |
 | ---------------- | ----------------------- | ---------------------------------- | -------------------------------------- |
-| Bereikbaar       | Als uw handen vrij zijn | Kantooruren, soms ruimer           | 24/7                                   |
+| Bereikbaar       | Als uw handen vrij zijn | Kantooruren, soms ruimer           | Dag en nacht                           |
 | De beller krijgt | Direct antwoord         | Een terugbelbelofte                | Direct antwoord plus afspraak          |
 | Kent uw tarieven | Ja                      | Nee, werkt met een belscript       | Ja, staat in de configuratie           |
 | Opvolging        | U belt zelf terug       | U belt zelf terug                  | Afspraak staat al in de agenda         |
-| Kosten           | Uw werktijd             | Abonnement plus tarief per gesprek | Vast maandbedrag, vanaf €299 per maand |
+| Kosten           | Uw werktijd             | Abonnement plus tarief per gesprek | Vast bedrag, vanaf € 299 per maand     |
 | Kanalen          | Telefoon                | Telefoon                           | Websitechat en WhatsApp                |
 
 ## Wanneer is een antwoordservice de betere keuze?
 
-Eerlijk is eerlijk: er zijn situaties waarin een mens aan de lijn wint.
+Er zijn situaties waarin een mens aan de lijn wint.
 
 - U krijgt veel gesprekken die om een echt luisterend oor vragen, zoals emotionele schadegevallen.
 - Uw intake is zo complex dat elk gesprek maatwerk is en een script of configuratie tekortschiet.
@@ -65,6 +65,6 @@ Kies dan wel een bureau dat afspraken direct in uw agenda zet in plaats van beri
 
 ## Wanneer een AI-receptionist?
 
-Voor de meeste loodgieters is het probleem niet dat er te weinig empathie aan de telefoon is, maar dat er niemand opneemt. 1 op de 12 bellers krijgt volgens hetzelfde KCM-onderzoek helemaal geen contact. Spoedklussen komen bovendien buiten kantooruren binnen, precies wanneer een antwoordservice ook naar huis is.
+Bij de meeste loodgieters is het probleem dat er niemand opneemt, niet dat er te weinig empathie aan de telefoon is. 1 op de 12 bellers krijgt volgens hetzelfde KCM-onderzoek helemaal geen contact. Spoedklussen komen bovendien buiten kantooruren binnen, precies wanneer een antwoordservice ook naar huis is.
 
-Draait uw omzet op spoed en beschikbaarheid, dan wint de optie die de klus direct vastlegt. Wat een gemiste oproep u werkelijk kost, rekent u na in [wat kost een gemiste oproep een loodgieter](/gemiste-oproepen-loodgieter/), of vul uw eigen cijfers in via de [rekentool](/rekentool/). Hoe Klantkraan dit voor loodgieters invult, staat op de [oplossingspagina](/loodgieters/).
+Draait uw omzet op spoed en beschikbaarheid, dan wint de optie die de klus direct vastlegt. Wat een gemiste oproep u werkelijk kost, rekent u na in [wat kost een gemiste oproep een loodgieter](/gemiste-oproepen-loodgieter/), of vul uw eigen cijfers in via de [rekentool](/rekentool/). Hoe Klantkraan dit voor loodgieters invult, staat op de [pagina voor loodgieters](/loodgieters/).

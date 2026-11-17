@@ -14,14 +14,14 @@ type Subprocessor = {
 const subprocessors: Subprocessor[] = [
   {
     name: 'Hetzner',
-    purpose: 'Hosting van de VPS (applicatie-server, monitoring).',
+    purpose: 'Hosting van de VPS (applicatieserver, monitoring).',
     location: 'EU (Falkenstein DE, Helsinki FI)',
     transfer: 'Geen doorgifte buiten de EER.',
     dpa: 'https://www.hetzner.com/AV/DPA_en.pdf',
   },
   {
     name: 'Neon',
-    purpose: 'Managed Postgres database.',
+    purpose: 'Beheerde Postgres-database.',
     location: 'EU (Frankfurt)',
     transfer: 'Geen doorgifte buiten de EER.',
     dpa: 'https://neon.com/dpa',
@@ -29,8 +29,8 @@ const subprocessors: Subprocessor[] = [
   {
     name: 'Cloudflare',
     purpose: 'CDN, edge-workers, DNS, R2 object storage.',
-    location: 'Global, EU-pinned (Workers + R2 EU)',
-    transfer: 'SCC 2021/914 module 3 plus EU-data-only configuratie.',
+    location: 'Wereldwijd, data vastgezet in de EU (Workers en R2 EU)',
+    transfer: 'SCC 2021/914 module 3 plus een configuratie die data alleen in de EU houdt.',
     dpa: 'https://www.cloudflare.com/cloudflare-customer-dpa/',
   },
   {
@@ -58,15 +58,15 @@ const subprocessors: Subprocessor[] = [
     name: 'Resend',
     purpose: 'Transactionele e-mail.',
     location: 'EU (Ierland), leverancier VS',
-    transfer: 'SCC 2021/914; verzending geconfigureerd op EU-regio.',
+    transfer: 'SCC 2021/914; verzending ingesteld op de EU-regio.',
     dpa: 'https://resend.com/legal/dpa',
   },
 ]
 ---
 
 <Base
-  title="Sub-processors register | Klantkraan"
-  description="De actuele lijst van sub-processors die Klantkraan inschakelt, hun verwerkingsdoel, datalocatie en doorgifte-mechanisme conform AVG art. 28 en SCC 2021/914."
+  title="Register van sub-processors | Klantkraan"
+  description="De actuele lijst van sub-processors die Klantkraan inschakelt, met hun verwerkingsdoel, datalocatie en doorgiftemechanisme conform AVG art. 28 en SCC 2021/914."
 >
   <article class="prose-legal">
     <header class="border-b border-(--color-line) pb-8">
@@ -76,7 +76,7 @@ const subprocessors: Subprocessor[] = [
       <h1 class="mt-2 font-display text-h1 text-(--color-chalk)">Sub-processors</h1>
       <p class="mt-4 text-small text-(--color-dim)">
         Laatste wijziging: {lastUpdated}. Onderstaande partijen verwerken persoonsgegevens in
-        opdracht van Klantkraan ten behoeve van de dienstverlening. Wijzigingen worden minimaal 30
+        opdracht van Klantkraan voor de dienstverlening. Wijzigingen worden minimaal 30
         dagen vooraf aangekondigd aan klanten met een actief contract.
       </p>
     </header>
@@ -114,8 +114,8 @@ const subprocessors: Subprocessor[] = [
         </table>
       </div>
       <p class="text-small text-(--color-dim)">
-        Sub-processors voor het AI-telefonie-kanaal (voice) worden aangekondigd zodra die dienst
-        live gaat, met de gebruikelijke aankondigingstermijn van 30 dagen.
+        Sub-processors voor het AI-telefoniekanaal (voice) worden aangekondigd zodra die dienst
+        beschikbaar komt, met de gebruikelijke aankondigingstermijn van 30 dagen.
       </p>
     </section>
 
@@ -123,8 +123,8 @@ const subprocessors: Subprocessor[] = [
       <h2 class="font-display text-h2 text-(--color-chalk)">Bezwaar tegen een sub-processor</h2>
       <p class="text-body">
         Klanten kunnen binnen 30 dagen na aankondiging van een nieuwe sub-processor schriftelijk
-        bezwaar maken. Indien er geen alternatieve oplossing mogelijk is, heeft de klant in dat
-        geval een opzeggingsrecht zonder kosten. Bezwaren naar
+        bezwaar maken. Als er geen alternatieve oplossing mogelijk is, heeft de klant een
+        opzeggingsrecht zonder kosten. Stuur uw bezwaar naar
         <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a>.
       </p>
     </section>
@@ -134,7 +134,7 @@ const subprocessors: Subprocessor[] = [
       <p class="text-body">
         Voor sub-processors in de Verenigde Staten passen wij de EU Standard Contractual Clauses
         2021/914 (module 3) toe, aangevuld met een Transfer Impact Assessment en aanvullende
-        technische maatregelen (versleuteling, EU-region-only waar beschikbaar, dataminimalisatie).
+        technische maatregelen (versleuteling, alleen de EU-regio waar beschikbaar, dataminimalisatie).
       </p>
     </section>
   </article>

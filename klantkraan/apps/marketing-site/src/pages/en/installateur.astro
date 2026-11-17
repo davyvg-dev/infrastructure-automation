@@ -40,7 +40,7 @@ const features: Feature[] = [
   {
     icon: 'phone',
     title: 'Leads and callback requests on your phone',
-    body: "Boiler breakdown during a cold snap? The receptionist takes the message and sends it straight to your phone, with the name, number and the question. No customer goes to a competitor while you're out on another emergency repair.",
+    body: "When a boiler breaks down in a cold snap, the receptionist takes the message and sends it straight to your phone, with the name, number and the question. No customer goes to a competitor while you're out on another emergency repair.",
   },
 ]
 
@@ -54,19 +54,19 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: "With one small script that we install for you. You don't need to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
+    a: "With one small script that we install for you. We connect WhatsApp in the same setup. You keep your own site, number and branding.",
   },
   {
     q: "And if I'm on site and can't reply?",
-    a: "That's exactly what this is built for. The receptionist answers the question (boiler emergency, annual service, new job, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back between jobs.",
+    a: "The receptionist answers the question (boiler emergency, annual service, new job, supplier), books an appointment in your calendar if wanted and sends you a summary by WhatsApp or email. You call back between jobs.",
   },
   {
     q: 'How does the AI cope with the January peaks?',
-    a: 'The receptionist handles conversations in parallel. No queue. Ten customers can chat or message about a boiler breakdown at the same time and all ten get an answer right away. Emergency breakdowns are recognised and kept separate from routine servicing, so you know which one to call first.',
+    a: 'The receptionist handles conversations in parallel, so there is no queue. Ten customers can chat or message about a boiler breakdown at the same time and all ten get an answer right away. Emergency breakdowns are recognised and kept separate from routine servicing, so you know which one to call first.',
   },
   {
     q: "Can the customer tell it's AI?",
-    a: "Yes. Every conversation opens by telling your customer they're chatting with a digital assistant, on behalf of your business. That's not a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
+    a: "Yes. Every conversation opens by telling your customer they're chatting with a digital assistant, on behalf of your business. Article 50 of the EU AI Act requires it, and the disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
@@ -76,13 +76,13 @@ const faqs: Faq[] = [
   },
   {
     q: 'What happens to the customer data?',
-    a: "We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you'd prefer less. The full supplier list is published openly in our sub-processor register.",
+    a: "We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, or shorter if you prefer. The full supplier list is public in our sub-processor register.",
     href: '/legal/dpa/',
     linkLabel: 'View the DPA and privacy statement',
   },
   {
     q: 'Cancel monthly, really?',
-    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. For anyone who'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively).",
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. If you pay 6 or 12 months up front, you get 15% or 20% off.",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -118,9 +118,9 @@ const faqSchema = {
           The <span class="text-(--color-sodium)">customer engine</span> for heating engineers.
         </h1>
         <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
-          A digital receptionist on your website and WhatsApp that spots a boiler breakdown and
-          won't mistake it for a scheduling question about the annual service. Catches the January
-          peak and the October servicing rush. Evenings and weekends included.
+          A digital receptionist on your website and WhatsApp that tells a boiler breakdown from a
+          question about the annual service. It catches the January peak and the October servicing
+          rush, evenings and weekends included.
         </p>
         <div class="mt-10 btn-row">
           <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
@@ -133,7 +133,7 @@ const faqSchema = {
     </div>
     <div class="mx-auto max-w-page px-gutter">
       <ul role="list" class="fact-row mt-10">
-        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure on by default</span></li>
+        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure always on</span></li>
         <li><span class="text-(--color-chalk)">Hosted in the EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
         <li><span class="text-(--color-chalk)">Natural conversation</span> <span>Knows your boiler rate + surcharge</span></li>
       </ul>
@@ -174,8 +174,8 @@ const faqSchema = {
         What Klantkraan does for heating engineers.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Three modules. One monthly price. Built for the heating engineer who no longer wants to
-        leave the January peak to their partner.
+        Three modules for one monthly price. Built for the heating engineer who no longer wants to
+        leave the phone to their partner in the January peak.
       </p>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
         {
@@ -202,14 +202,14 @@ const faqSchema = {
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
-          Miss 7 calls a week at €340? That's <strong class="text-(--color-sodium)"
-            >around €41,000 in lost revenue a year</strong
+          Miss 7 calls a week at €340 each and you lose <strong class="text-(--color-sodium)"
+            >around €41,000 in revenue a year</strong
           >.
         </p>
         <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One extra emergency boiler call from the January peak
-          covers the subscription. Everything that comes in after that is revenue. And the customer
-          isn't sat in a cold house for three hours.
+          covers the subscription. Everything after that is extra revenue, and your customer isn't
+          left in a cold house for three hours.
         </p>
         <div class="mt-6 btn-row">
           <a href="/en/rekentool/" class="btn btn-primary btn-lg"> Open the calculator </a>
@@ -261,10 +261,10 @@ const faqSchema = {
   <!-- 6. Final CTA (blue) -->
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
-      <h2 class="font-display text-h1 text-chalk">Ready for the next heating season?</h2>
+      <h2 class="font-display text-h1 text-chalk">Get set up before the next heating season.</h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Try the live demo. After that you'll know whether it spots a boiler breakdown and how it
-        separates one from a question about the annual service.
+        In the live demo, report a breakdown, then ask about a routine service. You'll see how it
+        tells the two apart.
       </p>
       <div class="mt-8 btn-row">
         <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>

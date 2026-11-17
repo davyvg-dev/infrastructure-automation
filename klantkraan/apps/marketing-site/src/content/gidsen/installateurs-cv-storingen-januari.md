@@ -1,6 +1,6 @@
 ---
-title: 'Installateurs en de CV-storingenpiek van januari: hoe u die maand niet kapot draait'
-description: Praktische gids voor installatiebedrijven over de januari-piek, ISDE-subsidie als gespreksopener en het filteren van warmtepomp-aanvragen.
+title: 'Installateurs en de cv-storingenpiek van januari: hoe u zich die maand niet kapotdraait'
+description: De januaripiek opvangen, ISDE-subsidie als gespreksopener en aanvragen voor warmtepompen filteren.
 pubDate: 2026-05-21
 vertical: installateur
 keywords:
@@ -10,63 +10,63 @@ keywords:
 readingTime: 6
 ---
 
-Tussen 28 december en 18 januari belt heel werkend Nederland de installateur. Drie tot vier keer het normale volume aan storingsmeldingen, geconcentreerd in de eerste vorstdagen na de kerstvakantie. Een doorsnee installatiebedrijf met twee monteurs ontvangt in die periode 80 tot 130 oproepen per week, tegenover 28 tot 45 in een gemiddelde week. Wie geen plan heeft, draait zichzelf kapot en mist de échte verdienpost: de warmtepomp-offertes die juist in januari binnenkomen.
+Tussen 28 december en 18 januari belt heel Nederland de installateur. Er komen dan drie tot vier keer zoveel storingsmeldingen binnen als normaal, vooral in de eerste vorstdagen na de kerstvakantie. Een gemiddeld installatiebedrijf met twee monteurs krijgt in die weken 80 tot 130 oproepen per week, tegen 28 tot 45 in een gewone week. Wie geen plan heeft, draait zichzelf kapot en mist de verdienpost waar het om draait: de offertes voor warmtepompen die juist in januari binnenkomen.
 
-## De januari-piek in cijfers
+## De januaripiek in cijfers
 
-Cijfers van branchekoepel Techniek Nederland over winter 2024-2025: in de week 6 tot 12 januari 2025 werden landelijk 21 procent meer CV-storingen geregistreerd dan in een normale week. In bedrijven met meer dan vier monteurs liep de gemiddelde wachttijd op tot 4,8 dagen voor een niet-spoed reparatie. Het gemiddelde storingsbedrag (voorrijkosten + arbeid + onderdelen) lag op €245 inclusief BTW voor een eenvoudige reparatie, €580 voor een vervangen expansievat plus pomp, €2.450 voor een nieuwe CV-ketel inclusief installatie.
+Cijfers van branchekoepel Techniek Nederland over de winter van 2024 op 2025: in de week van 6 tot 12 januari 2025 werden landelijk 21 procent meer cv-storingen geregistreerd dan in een normale week. Bij bedrijven met meer dan vier monteurs liep de wachttijd voor een reparatie zonder spoed op tot gemiddeld 4,8 dagen. Een storing kostte gemiddeld (voorrijkosten, arbeid en onderdelen) € 245 incl. btw voor een eenvoudige reparatie, € 580 voor een nieuw expansievat plus pomp en € 2.450 voor een nieuwe cv-ketel inclusief installatie.
 
-Het probleem is niet de werkdruk. Het probleem is dat 30 tot 40 procent van de januari-oproepen niet eens binnenkomt. Voicemails worden vol, telefoons worden niet opgenomen tijdens een klus, terugbelnotities raken zoek tussen werkbonnen. Verloren omzet: €1.800 tot €3.200 per monteur per week.
+Het probleem is niet de werkdruk, maar dat 30 tot 40 procent van de oproepen in januari niet eens aankomt. De voicemail loopt vol, tijdens een klus neemt niemand op en terugbelbriefjes raken zoek tussen de werkbonnen. Dat kost € 1.800 tot € 3.200 omzet per monteur per week.
 
 ## Spoed versus uitstel: een werkbare triage
 
-Niet elke CV-storing is spoed. Een werkbare triage:
+Niet elke cv-storing is spoed. Zo deelt u ze in:
 
-- **Geen warmte én geen warm water + kwetsbare bewoner (kind, oudere, baby)**: spoed binnen 4 uur
-- **Geen warmte én geen warm water, gezonde bewoners**: afspraak binnen 24 uur
-- **Lekkage zichtbaar maar afsluitbaar**: afspraak binnen 24 uur
+- **Geen warmte en geen warm water, plus een kwetsbare bewoner (kind, oudere, baby)**: spoed binnen 4 uur
+- **Geen warmte en geen warm water, gezonde bewoners**: afspraak binnen 24 uur
+- **Lekkage zichtbaar maar af te sluiten**: afspraak binnen 24 uur
 - **Foutcode op het display, ketel doet het deels**: afspraak binnen 48 tot 72 uur
-- **Onderhoudsbeurt of preventieve check**: inplannen na 1 februari
+- **Onderhoudsbeurt of preventieve controle**: inplannen na 1 februari
 
-Spoedtoeslag in 2026 ligt landelijk gemiddeld op €45 tot €85 inclusief BTW bovenop het normale tarief, tussen 17:00 en 08:00 of in het weekend. Vermeld dit vooraf bij elke spoedaanname. De Nederlandse consument accepteert spoedtoeslag wanneer hij vooraf is uitgelegd; klaagt erover wanneer hij hem alleen op de factuur ziet staan.
+De spoedtoeslag ligt in 2026 landelijk op gemiddeld € 45 tot € 85 incl. btw bovenop het normale tarief, tussen 17:00 en 08:00 of in het weekend. Noem hem vooraf bij elke spoedmelding. Nederlandse klanten accepteren een spoedtoeslag die vooraf is uitgelegd, maar klagen als ze hem pas op de factuur zien.
 
 ## ISDE-subsidie als gespreksopener
 
-De Investeringssubsidie Duurzame Energie en energiebesparing (ISDE) loopt door tot eind 2030 met jaarlijkse budgetten. Tarieven voor 2026:
+De Investeringssubsidie Duurzame Energie en energiebesparing (ISDE) loopt met jaarlijkse budgetten door tot eind 2030. De bedragen voor 2026:
 
-- Hybride warmtepomp: tot €3.000 subsidie afhankelijk van vermogen en SCOP
-- Lucht-water warmtepomp (all-electric): tot €6.000 afhankelijk van vermogen
-- Bodemwarmtepomp: tot €4.500
-- Warmtepompboiler: tot €825
+- Hybride warmtepomp: tot € 3.000, afhankelijk van vermogen en SCOP
+- Lucht-waterwarmtepomp (all-electric): tot € 6.000, afhankelijk van vermogen
+- Bodemwarmtepomp: tot € 4.500
+- Warmtepompboiler: tot € 825
 
-Veel particulieren weten niet dat installateurs de aanvraag mogen indienen, of denken dat de subsidie alleen geldt voor volledige all-electric vervanging. Een installateur die bij elke ketelstoring boven de tien jaar oud de hybride-optie noemt (inclusief actuele ISDE-bedragen voor het juiste model) heeft een conversielift van 8 tot 14 procent richting offerte voor een hybride installatie.
+Veel particulieren weten niet dat de installateur de aanvraag mag indienen, of denken dat de subsidie alleen geldt als ze helemaal overstappen op all-electric. Een installateur die bij elke storing aan een ketel van meer dan tien jaar oud de hybride optie noemt (met de actuele ISDE-bedragen voor het juiste model), ziet 8 tot 14 procent meer van die gesprekken uitlopen op een offerte voor een hybride installatie.
 
-Praktisch: hou een korte checklist bij de telefoon (twee zinnen, drie tarieven, één link naar rvo.nl). Geen verkooppraatje, alleen een feitelijke melding: "uw ketel is uit 2014, met een hybride warmtepomp komt u voor €2.400 tot €3.000 ISDE-subsidie in aanmerking. Wilt u dat ik daar een offerte voor maak?" Dit kost u 25 seconden in een gesprek dat toch al gevoerd wordt.
+Houd een kort lijstje bij de telefoon (twee zinnen, drie bedragen, één link naar rvo.nl) en noem het als feit, niet als verkooppraatje: "Uw ketel is uit 2014. Met een hybride warmtepomp komt u in aanmerking voor € 2.400 tot € 3.000 ISDE-subsidie. Zal ik daar een offerte voor maken?" Dat kost u 25 seconden in een gesprek dat u toch al voert.
 
-## Warmtepomp-aanvragen filteren
+## Warmtepompaanvragen filteren
 
-Met de energietransitie nemen warmtepomp-aanvragen sterk toe. Maar niet elke aanvraag is een goede aanvraag. De vijf vragen die u vooraf moet kunnen beantwoorden vóórdat u opmetingsbezoek inplant:
+Door de energietransitie komen er veel meer aanvragen voor warmtepompen binnen, maar niet elke aanvraag is een goede aanvraag. Zorg dat u deze vijf vragen kunt beantwoorden voordat u een opmetingsbezoek inplant:
 
-1. Bouwjaar woning en aanwezigheid spouwmuur- en dakisolatie (slechte isolatie = warmtepomp met groter vermogen of niet haalbaar)
-2. Type huidige verwarming (HR-ketel, gaskachel, blokverwarming bij VvE)
+1. Bouwjaar van de woning en of er spouwmuur- en dakisolatie is (bij slechte isolatie is een warmtepomp met meer vermogen nodig of is het niet haalbaar)
+2. Huidige verwarming (hr-ketel, gaskachel, blokverwarming bij een VvE)
 3. Beschikbaar elektrisch vermogen in de meterkast (3x25A is meestal het minimum voor all-electric)
-4. Plaatsingsmogelijkheid buitenunit (geluidsnormen, afstand tot perceelgrens, VvE-toestemming)
-5. Budget-indicatie van de klant
+4. Waar de buitenunit kan staan (geluidsnormen, afstand tot de perceelgrens, toestemming van de VvE)
+5. Het budget van de klant, bij benadering
 
-Zonder antwoorden op deze vijf vragen kost een opmetingsbezoek u 90 tot 150 minuten inclusief rijden, met een conversiekans onder de 20 procent. Mét antwoorden vooraf gaat die conversie naar 45 tot 60 procent en bespaart u 6 tot 10 verspilde bezoeken per maand in piekperiode.
+Zonder die antwoorden kost een opmetingsbezoek u 90 tot 150 minuten inclusief rijden, en wordt minder dan 20 procent een opdracht. Met de antwoorden vooraf stijgt dat naar 45 tot 60 procent en bespaart u in de piek 6 tot 10 verspilde bezoeken per maand.
 
 ## VvE-werk versus particulier
 
-Een installatiebedrijf dat naast particulier ook VvE-onderhoudscontracten heeft, vlakt de januaripiek af. VvE-contracten zijn meestal jaarcontracten met afgesproken responstijden (vaak 8 of 24 uur) en vaste tarieven. Marges zijn lager dan particulier (15 tot 22 procent versus 30 tot 40 procent), maar de omzet is voorspelbaar.
+Een installatiebedrijf dat naast particulieren ook onderhoudscontracten met VvE's heeft, vlakt de januaripiek af. Dat zijn meestal jaarcontracten met afgesproken reactietijden (vaak 8 of 24 uur) en vaste tarieven. De marges zijn lager dan bij particulieren (15 tot 22 procent tegen 30 tot 40 procent), maar de omzet is voorspelbaar.
 
-VvE-besturen vergaderen meestal in maart, april en oktober. Dat is het moment om offertes aan te bieden, niet midden in de januari-storingenpiek. Een gemiddeld VvE-onderhoudscontract voor 30 woningen levert €18.000 tot €32.000 per jaar op, met circa 80 tot 120 manuren.
+VvE-besturen vergaderen meestal in maart, april en oktober. Dan biedt u offertes aan, niet midden in de storingspiek van januari. Een gemiddeld onderhoudscontract voor 30 woningen levert € 18.000 tot € 32.000 per jaar op, voor zo'n 80 tot 120 manuren.
 
 ## Reviews binnenhalen direct na de piek
 
-In januari is geen vakman bezig met reviews. Iedereen is bezig met ketels. Juist daarom levert februari een gouden gelegenheid op. Een installateur die in de eerste week van februari structureel reviewverzoeken stuurt naar de 80 tot 130 klanten van januari, kan in één maand 25 tot 40 nieuwe Google-reviews binnenhalen. Dat is meer dan veel installateurs in een heel jaar verzamelen.
+In januari denkt geen vakman aan reviews; iedereen is met ketels bezig. Juist daarom is februari een gouden kans. Een installateur die in de eerste week van februari alle 80 tot 130 klanten van januari om een review vraagt, kan er in één maand 25 tot 40 Google-reviews bij krijgen. Dat is meer dan veel installateurs in een heel jaar verzamelen.
 
-Praktisch: SMS, niet e-mail. Open rate SMS rond 95 procent in Nederland, e-mail rond 22 procent. Verstuur 24 tot 72 uur na de klus, om 10:00 's ochtends, niet op vrijdag of zaterdag. Een korte tekst van twee zinnen plus een Google-reviewlink volstaat. Reviews vanuit de januaripiek zijn bovendien hoogwaardiger qua inhoud, want klanten herinneren zich het probleem en de oplossing nog levendig. Trefwoorden als "spoed", "CV-storing" en "warm water" in reviews verbeteren uw Google Local Pack-zichtbaarheid in de aanloop naar de volgende winter.
+Stuur een sms, geen e-mail: in Nederland wordt een sms in zo'n 95 procent van de gevallen geopend, een e-mail in zo'n 22 procent. Verstuur hem 24 tot 72 uur na de klus, om 10:00 ’s ochtends, niet op vrijdag of zaterdag. Twee zinnen en een link naar uw Google-reviews zijn genoeg. Reviews uit de januaripiek zijn ook inhoudelijk sterker, omdat klanten het probleem en de oplossing nog goed weten. Woorden als "spoed", "cv-storing" en "warm water" in reviews maken u beter zichtbaar in het Local Pack van Google, op tijd voor de volgende winter.
 
 ## Wat Klantkraan voor uw installatiebedrijf doet
 
-Klantkraan vangt de januari-piek op zonder dat u meer monteurs hoeft aan te nemen: de Nederlandstalige AI-receptionist neemt 's avonds en in het weekend op, voert de triagevragen uit (spoed of uitstel), noteert de bouwjaar- en ketelvragen automatisch in uw agenda en stuurt na elke klus een Google-reviewverzoek. ISDE-vermeldingen op aanvraag in het script. Per maand opzegbaar, geen opstartkosten.
+Klantkraan vangt de januaripiek op zonder dat u extra monteurs hoeft aan te nemen. De Nederlandstalige AI-receptionist neemt ’s avonds en in het weekend op, stelt de triagevragen (spoed of uitstel), zet de antwoorden over bouwjaar en ketel automatisch in uw agenda en stuurt na elke klus een verzoek om een Google-review. Op verzoek nemen we de ISDE-subsidie op in het script. Per maand opzegbaar, geen opstartkosten.

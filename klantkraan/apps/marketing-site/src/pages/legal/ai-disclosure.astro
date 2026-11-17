@@ -6,7 +6,7 @@ const lastUpdated = '20 mei 2026'
 
 <Base
   title="AI-disclosure (EU AI Act art. 50) | Klantkraan"
-  description="Hoe Klantkraan voldoet aan artikel 50 EU AI Act: verbatim disclosure aan het begin van elk chatgesprek, opt-out naar een mens, record-keeping."
+  description="Hoe Klantkraan voldoet aan artikel 50 EU AI Act: een vaste AI-melding aan het begin van elk chatgesprek, de keuze voor een medewerker en vastlegging per gesprek."
 >
   <article class="prose-legal">
     <header class="border-b border-(--color-line) pb-8">
@@ -15,17 +15,17 @@ const lastUpdated = '20 mei 2026'
       </p>
       <h1 class="mt-2 font-display text-h1 text-(--color-chalk)">AI-disclosure</h1>
       <p class="mt-4 text-small text-(--color-dim)">
-        Laatste wijziging: {lastUpdated}. De Klantkraan-receptionist is een AI-systeem met beperkt
-        risico in de zin van de EU AI Act. Artikel 50 verplicht ons om dat in elk gesprek kenbaar te
-        maken &mdash; vanaf 2 augustus 2026. Op deze pagina leggen we uit hoe.
+        Laatste wijziging: {lastUpdated}. De AI-receptionist van Klantkraan is een AI-systeem met beperkt
+        risico in de zin van de EU AI Act. Artikel 50 verplicht ons vanaf 2 augustus 2026 om dat in
+        elk gesprek kenbaar te maken. Op deze pagina leggen we uit hoe.
       </p>
     </header>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">1. De verbatim opening</h2>
+      <h2 class="font-display text-h2 text-(--color-chalk)">1. De letterlijke openingszin</h2>
       <p class="text-body">
-        Elk chatgesprek &mdash; op de website of via WhatsApp &mdash; opent met een niet aan te
-        passen begroeting waarin het AI-karakter direct wordt benoemd. De in de systeemconfiguratie
+        Elk chatgesprek (op de website of via WhatsApp) opent met een niet aan te passen
+        begroeting waarin het AI-karakter direct wordt benoemd. De in de systeemconfiguratie
         vastgelegde standaardvariant luidt:
       </p>
       <blockquote
@@ -37,7 +37,7 @@ const lastUpdated = '20 mei 2026'
       </blockquote>
       <p class="text-body">
         Hiermee zijn alle door art. 50 lid 1 vereiste elementen gedekt: AI-karakter, eerste
-        interactie, eenvoudige Nederlandse formulering en een directe opt-out richting een mens.
+        interactie, eenvoudige Nederlandse formulering en de directe keuze voor een medewerker.
         Zodra de telefonische receptionist (voice) beschikbaar komt, geldt daarvoor een
         gelijkwaardige gesproken openingszin.
       </p>
@@ -46,19 +46,18 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">2. Niet uit te schakelen</h2>
       <p class="text-body">
-        De disclosure is bindend voor Klantkraan als <em>provider</em> van het AI-systeem en kan contractueel
-        niet worden uitgeschakeld. Een verzoek van een klant om de openingszin weg te laten wordt schriftelijk
-        geweigerd. De
-        <a href="/legal/voorwaarden/">algemene voorwaarden</a> §12 leggen dit vast als niet-uitsluitbare
-        clausule.
+        De disclosure is bindend voor Klantkraan als <em>aanbieder</em> (provider) van het AI-systeem en
+        kan contractueel niet worden uitgeschakeld. Een verzoek van een klant om de openingszin weg te
+        laten, wordt schriftelijk geweigerd. De
+        <a href="/legal/voorwaarden/">algemene voorwaarden</a> leggen dit in artikel 12 vast als
+        niet-uitsluitbare clausule.
       </p>
     </section>
 
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">3. &ldquo;Bent u echt?&rdquo;</h2>
       <p class="text-body">
-        De AI mag nooit liegen over haar aard. De volgende regel staat hard in het systeem-prompt
-        verankerd:
+        De AI mag nooit liegen over haar aard. De volgende regel staat vast in de systeemprompt:
       </p>
       <blockquote
         class="my-2 rounded-(--radius-card) border-l-4 border-(--color-sodium) bg-(--color-panel) p-5 text-body italic"
@@ -69,44 +68,46 @@ const lastUpdated = '20 mei 2026'
     </section>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">4. Record-keeping (art. 50 lid 5)</h2>
+      <h2 class="font-display text-h2 text-(--color-chalk)">4. Vastlegging (art. 50 lid 5)</h2>
       <p class="text-body">Per gesprek bewaren wij:</p>
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>Het volledige chattranscript.</li>
         <li>De gebruikte AI-modelversie.</li>
-        <li>SHA-256 hash van het systeem-prompt.</li>
+        <li>De SHA-256-hash van de systeemprompt.</li>
         <li>Tijdstempel en duur.</li>
-        <li>Disclosure confirmation log (afzonderlijk bewijs dat de begroeting is getoond).</li>
+        <li>Een apart log als bewijs dat de begroeting is getoond.</li>
       </ul>
       <p class="text-body">
         Bewaartermijn: de duur van de overeenkomst plus minimaal 6 maanden na beëindiging (om een
-        eventueel AP-meldwindow af te dekken). Daarna automatisch verwijderd.
+        eventuele meldtermijn bij de Autoriteit Persoonsgegevens te dekken). Daarna worden de
+        gegevens automatisch verwijderd.
       </p>
     </section>
 
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">5. Wat we niet doen</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
-        <li>Geen voice-cloning van de eigenaar voor de AI-receptionist.</li>
-        <li>Geen synthetische video-testimonials.</li>
+        <li>Geen gekloonde stem van de eigenaar voor de AI-receptionist.</li>
+        <li>Geen synthetische videotestimonials.</li>
         <li>Geen automatische vertaling van klantstemmen naar andere talen.</li>
       </ul>
-      <p class="text-body">Dit is een bewuste brand-grens, niet alleen juridische hygiëne.</p>
+      <p class="text-body">Dit is een bewuste keuze van ons merk, niet alleen juridische voorzorg.</p>
     </section>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">6. Compliance-checks</h2>
+      <h2 class="font-display text-h2 text-(--color-chalk)">6. Controles</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>
-          <strong>Maandelijks:</strong> 10 willekeurige chattranscripten auditen op aanwezigheid van de
-          disclosure in het eerste bericht.
+          <strong>Maandelijks:</strong> 10 willekeurige chattranscripten controleren op de disclosure
+          in het eerste bericht.
         </li>
         <li>
-          <strong>Per kwartaal:</strong> review van de AI-modelversie en eventuele prompt-wijzigingen
-          die de disclosure zouden kunnen verzwakken.
+          <strong>Per kwartaal:</strong> controle van de AI-modelversie en van promptwijzigingen die de
+          disclosure zouden kunnen verzwakken.
         </li>
         <li>
-          <strong>Jaarlijks:</strong> herziening van art. 50 plus AP-richtsnoeren en update van deze pagina.
+          <strong>Jaarlijks:</strong> toetsing aan art. 50 en de richtsnoeren van de AP, en bijwerken
+          van deze pagina.
         </li>
       </ul>
     </section>
@@ -115,8 +116,8 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">7. Boetes en handhaving</h2>
       <p class="text-body">
         Niet-naleving van art. 50 kan op grond van art. 99 lid 4 sub g EU AI Act leiden tot een
-        boete van maximaal &euro;15 miljoen of 3% van de wereldwijde jaaromzet. Klantkraan beschouwt
-        de disclosure daarom als een harde, niet-onderhandelbare productvoorwaarde.
+        boete van maximaal &euro; 15 miljoen of 3% van de wereldwijde jaaromzet. Klantkraan beschouwt
+        de disclosure daarom als een niet-onderhandelbare productvoorwaarde.
       </p>
     </section>
 

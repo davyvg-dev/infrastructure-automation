@@ -40,7 +40,7 @@ const features: Feature[] = [
   {
     icon: 'phone',
     title: 'Leads and callback requests on your phone',
-    body: 'A client gets in touch during a site visit? The receptionist catches the enquiry and puts it straight on your phone as a message, with name, number and project type. No prospect gets lost in a voicemail.',
+    body: 'When a client gets in touch during a site visit, the receptionist catches the enquiry and puts it straight on your phone as a message, with name, number and project type. No prospect gets lost in a voicemail.',
   },
 ]
 
@@ -54,35 +54,35 @@ interface Faq {
 const faqs: Faq[] = [
   {
     q: 'How does the receptionist get onto my website?',
-    a: "With one small script that we install for you. You don't have to do a thing. We connect the WhatsApp channel in the same done-for-you setup. You keep your own site, your own number and your own branding.",
+    a: "With one small script that we install for you. We connect WhatsApp in the same setup. You keep your own site, number and branding.",
   },
   {
     q: "And when I'm on site?",
-    a: "That's exactly what this is built for. The receptionist answers the question (quote request, variation query, supplier, complaint), qualifies new enquiries by postcode and project type, and books an appointment in your calendar. You get a summary by WhatsApp or email. You can call back on your break.",
+    a: "The receptionist answers the question (quote request, variation query, supplier, complaint), qualifies new enquiries by postcode and project type, and books an appointment in your calendar. You get a summary by WhatsApp or email. You can call back on your break.",
   },
   {
     q: 'What if three customers ask for a quote at the same time?',
-    a: 'The receptionist handles conversations in parallel. No queue. Ten customers can chat or message at once, and all ten get an answer straight away. Emergencies (a leak, damage, an insurance claim) are recognised and separated from scheduling enquiries.',
+    a: 'The receptionist handles conversations in parallel, so there is no queue. Ten customers can chat or message at once, and all ten get an answer straight away. Emergencies (a leak, damage, an insurance claim) are recognised and separated from scheduling enquiries.',
   },
   {
     q: "Can the customer tell it's AI?",
-    a: "Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. That isn't a marketing choice but a legal requirement under article 50 of the EU AI Act. The disclosure always stays on.",
+    a: "Yes. Every conversation opens by stating that your customer is chatting with a digital assistant, on behalf of your business. Article 50 of the EU AI Act requires it, and the disclosure always stays on.",
     href: '/legal/ai-disclosure/',
     linkLabel: 'Read the full AI disclosure',
   },
   {
     q: 'What if the AI says something wrong about my rates or availability?',
-    a: "That can't happen. The assistant only states what you've put into your system yourself: call-out charges, the hourly inspection rate, lead times on your schedule, holiday periods. Unknown questions are never made up; instead the customer gets a callback request. We test every configuration before you go live.",
+    a: "That can't happen. The assistant only states what you've put into your system yourself: call-out charges, the hourly inspection rate, lead times on your schedule, holiday periods. Answers it doesn't have are never made up; instead the customer gets a callback request. We test every configuration before you go live.",
   },
   {
     q: 'What happens to the customer data?',
-    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, unless you want a shorter period. The full supplier list is public in our sub-processor register.',
+    a: 'We host in the EU: Hetzner Frankfurt, Neon EU, Cloudflare EU. We sign a data processing agreement (DPA) with you and keep chat conversations for 30 days, or shorter if you prefer. The full supplier list is public in our sub-processor register.',
     href: '/legal/dpa/',
     linkLabel: 'View the DPA and privacy statement',
   },
   {
     q: 'Cancel monthly, really?',
-    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. If you'd rather pay 6 or 12 months up front there's a discount (15% and 20% respectively).",
+    a: "Yes. No annual contract, no hidden renewal. You cancel by email, whenever you like. The service runs to the end of the month you paid for, and nothing is charged after that. If you pay 6 or 12 months up front, you get 15% or 20% off.",
     href: '/legal/voorwaarden/',
     linkLabel: 'Read the terms and conditions',
   },
@@ -118,9 +118,9 @@ const faqSchema = {
           The <span class="text-(--color-sodium)">customer engine</span> for building contractors.
         </h1>
         <p class="mt-6 max-w-2xl text-[1.125rem] text-dim leading-relaxed">
-          Keeps quote requests, variations and suppliers apart. Someone asks about a renovation at
-          19:30 while you're still on site? The digital receptionist answers them on your website
-          and via WhatsApp. No more missed enquiries.
+          A digital receptionist that keeps quote requests, variations and suppliers apart. When
+          someone asks about a renovation at 19:30 while you're still on site, it answers them on
+          your website and via WhatsApp.
         </p>
         <div class="mt-10 btn-row">
           <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>
@@ -133,7 +133,7 @@ const faqSchema = {
     </div>
     <div class="mx-auto max-w-page px-gutter">
       <ul role="list" class="fact-row mt-10">
-        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure on by default</span></li>
+        <li><span class="text-(--color-chalk)">GDPR + AI Act art. 50</span> <span>Disclosure always on</span></li>
         <li><span class="text-(--color-chalk)">Hosted in the EU</span> <span>Cloudflare · Neon · Hetzner</span></li>
         <li><span class="text-(--color-chalk)">Natural conversation</span> <span>Filters quote requests</span></li>
       </ul>
@@ -174,7 +174,7 @@ const faqSchema = {
         What Klantkraan does for building contractors.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Three modules. One monthly price. For the contractor who's on site when their best prospect
+        Three modules for one monthly price. Built for the contractor who's on site when the best prospect
         calls.
       </p>
       <div class="mt-10 divide-y divide-(--color-line) border-y border-(--color-line)">
@@ -202,13 +202,13 @@ const faqSchema = {
         class="mt-8 frame bg-(--color-panel) p-6 md:p-10"
       >
         <p class="text-h3 text-chalk">
-          Miss 2 quote requests a month at €12,000 each? That's <strong
-            class="text-(--color-sodium)">around €95,000 in lost revenue a year</strong
+          Miss 2 quote requests a month at €12,000 each and you lose <strong
+            class="text-(--color-sodium)">around €95,000 in revenue a year</strong
           >.
         </p>
         <p class="mt-4 text-body text-dim">
           Klantkraan Chat is €299 a month. One extra renovation a year covers well over three years
-          of subscription. After that, every missed prospect you win back is pure profit.
+          of subscription. After that, every prospect you win back is extra revenue.
         </p>
         <div class="mt-6 btn-row">
           <a href="/en/rekentool/" class="btn btn-primary btn-lg"> Open the calculator </a>
@@ -261,11 +261,11 @@ const faqSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       <h2 class="font-display text-h1 text-chalk break-words hyphens-auto">
-        Ready to stop missing renovation enquiries?
+        Try it as your client would.
       </h2>
       <p class="mt-4 max-w-2xl text-body text-dim">
-        Try the live demo. Then you'll know how it keeps quote requests, variation queries and
-        suppliers apart. And how that lands in your WhatsApp.
+        Ask the live demo what your clients ask. It runs on an example business; your own
+        receptionist is set up with your services and rates.
       </p>
       <div class="mt-8 btn-row">
         <a href="/en/demo/" class="btn btn-primary btn-lg"> Try the demo </a>

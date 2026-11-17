@@ -16,7 +16,7 @@ const posts = (await getCollection('blog')).filter((p) => p.data.vertical === ve
 const links = [
   ...gidsen.map((g) => ({
     href: `/gidsen/${g.id.replace(/\.md$/, '')}/`,
-    title: `Gids: ${g.data.title}`,
+    title: g.data.title,
   })),
   ...posts.map((p) => ({
     href: `/blog/${p.id.replace(/\.md$/, '')}/`,

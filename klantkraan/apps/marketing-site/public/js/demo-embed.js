@@ -106,7 +106,7 @@ function openDemo() {
   if (!frame()) {
     const f = document.createElement('iframe')
     f.src = demoSrc()
-    f.title = 'Live chat met de digitale receptionist van Klantkraan'
+    f.title = 'Livechat met de AI-receptionist van Klantkraan'
     // Absolutely positioned inside the fixed backdrop; sizeFrame sets w/h/top/left.
     f.setAttribute('style', 'position:absolute;top:0;left:0;border:0;display:block;')
     el.appendChild(f)

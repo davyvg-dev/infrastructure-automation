@@ -7,18 +7,18 @@ import FlowDiagram from '../diagrams/FlowDiagram.astro'
 const features = [
   {
     icon: 'zap' as const,
-    title: 'Storm-protocol',
-    body: "De receptionist herkent op uw website en WhatsApp het verschil tussen een offerte-aanvraag en een spoed-lekkage. Bij spoed: directe melding op uw mobiel, ook 's avonds en in het weekend. Gelijktijdige gesprekken worden parallel afgehandeld. Geen wachtrij.",
+    title: 'Stormprotocol',
+    body: "De receptionist herkent op uw website en in WhatsApp het verschil tussen een offerteaanvraag en een spoedlekkage. Bij spoed krijgt u direct een melding op uw mobiel, ook 's avonds en in het weekend. Hij voert gesprekken tegelijk, zonder wachtrij.",
   },
   {
     icon: 'calendar-check' as const,
-    title: 'Inspectie- en offerte-afspraken',
-    body: "Niet-spoed-aanvragen worden gekwalificeerd op postcode en daktype, en direct ingepland in uw agenda. 's Ochtends ziet u wat er op de planning staat. Geen telefoontag, geen heen-en-weer-mailen.",
+    title: 'Inspectie- en offerteafspraken',
+    body: "Aanvragen zonder spoed beoordeelt hij op postcode en daktype en plant hij direct in uw agenda. 's Ochtends ziet u wat er op de planning staat. U belt en mailt niet meer heen en weer.",
   },
   {
     icon: 'phone' as const,
-    title: 'Leads en terugbelverzoeken op uw telefoon',
-    body: 'Elke lead en elk terugbelverzoek landt direct als bericht op uw telefoon, met naam, nummer en de melding van de klant. Geen lekkage-melding raakt verloren terwijl u op een dak staat.',
+    title: 'Aanvragen en terugbelverzoeken op uw telefoon',
+    body: 'Elke aanvraag en elk terugbelverzoek komt direct als bericht op uw telefoon binnen, met naam, nummer en de melding van de klant. Geen lekkagemelding raakt zoek terwijl u op een dak staat.',
   },
 ]
 ---
@@ -28,8 +28,8 @@ const features = [
   nodeSub="voor dakdekkers"
   t={{
     label: 'Modules',
-    heading: 'Wat Klantkraan doet voor dakdekkers.',
-    sub: 'Drie modules. Eén maandprijs. Geschreven na een avond meeluisteren met een dakdekker in Utrecht na storm Pia.',
+    heading: 'Wat Klantkraan doet voor dakdekkers',
+    sub: 'Drie modules voor één maandprijs, geschreven na een avond meeluisteren met een dakdekker in Utrecht na storm Pia.',
     steps: features.map((f) => ({ title: f.title, text: f.body })),
   }}
 />

@@ -98,10 +98,9 @@ const pageTitle = post.data.title.length <= 52 ? `${post.data.title} | Klantkraa
 
     <aside class="mt-10 max-w-2xl text-body text-(--color-dim)">
       <p>
-        Meer voor {cornerstoneLabel}:
         <a href={cornerstonePath} class="text-(--color-sodium) underline">
-          zo werkt de Klantkraan AI-receptionist voor {cornerstoneLabel}
-        </a>.
+          Zo werkt de AI-receptionist voor {cornerstoneLabel}
+        </a>
       </p>
     </aside>
 
@@ -109,7 +108,7 @@ const pageTitle = post.data.title.length <= 52 ? `${post.data.title} | Klantkraa
     {
       related.length > 0 && (
         <section class="mt-10 max-w-2xl">
-          <h2 class="font-display text-h3 text-(--color-chalk)">Gerelateerde artikelen</h2>
+          <h2 class="font-display text-h3 text-(--color-chalk)">Lees ook</h2>
           <ul class="mt-3 space-y-2 text-body">
             {related.map((p) => (
               <li>
@@ -127,7 +126,7 @@ const pageTitle = post.data.title.length <= 52 ? `${post.data.title} | Klantkraa
     }
 
     <footer class="mt-12 border-t border-(--color-line) pt-8 text-small text-(--color-dim)">
-      Geschreven door {post.data.author}. Vragen of feedback?
+      Geschreven door {post.data.author}.
       <a href="/demo/" class="no-underline hover:underline">Probeer de demo</a> of bekijk de
       <a href="/prijzen/" class="no-underline hover:underline">prijzen</a>.
     </footer>

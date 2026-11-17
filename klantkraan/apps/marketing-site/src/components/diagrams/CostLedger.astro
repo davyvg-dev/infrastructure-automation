@@ -6,8 +6,12 @@
  * over "€450" in Safari). Numbers come in as the page's strings and must match
  * /rekentool's model; a line whose value is a plain count gets a bar, anything
  * else (the money line) is shown as a multiplier.
- * Bars grow in as they scroll into view where scroll-driven animation is
- * supported and motion is allowed; otherwise they are simply full.
+ * The bars grow in once, left to right and one after another, when all three are
+ * in the part of the screen nothing covers (scripts/play-in-view.ts; the bars are
+ * its "lamps"). They used to be scrubbed by the scroll position: on a phone the
+ * first quarter of that grew under the bottom bar, a visitor who stopped
+ * scrolling saw bars shorter than their numbers, and scrolling back shrank them.
+ * Reduced motion or no JS: simply full.
  */
 interface Line {
   k: string
@@ -31,7 +35,7 @@ const ticks = Array.from({ length: top / step + 1 }, (_, i) => i * step)
 const pct = (n: number) => `${((n / top) * 100).toFixed(2)}%`
 ---
 
-<figure class="kk-ledger" data-diagram="ledger" aria-label={ariaLabel}>
+<figure class="kk-ledger" data-diagram="ledger" data-kk-play aria-label={ariaLabel}>
   <figcaption class="kk-ledger-cap">{cap}</figcaption>
 
   <div class="kk-ledger-grid">
@@ -54,7 +58,7 @@ const pct = (n: number) => `${((n / top) * 100).toFixed(2)}%`
                   <i style={`left:${pct(n)}`} />
                 ))}
               </span>
-              <span class={`kk-bar kk-bar-${i}`} data-reveal style={`width:${pct(Number(l.v))}`} />
+              <span class={`kk-bar kk-bar-${i}`} data-reveal data-lamp style={`width:${pct(Number(l.v))};--i:${i}`} />
               <span class="kk-val">{l.v}</span>
             </dd>
           </div>
@@ -237,21 +241,19 @@ const pct = (n: number) => `${((n / top) * 100).toFixed(2)}%`
     color: var(--color-sodium);
   }
 
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .kk-bar[data-reveal] {
-        animation: kk-grow linear both;
-        animation-timeline: view();
-        animation-range: entry 20% cover 40%;
-      }
+  /* 0.7s each, 0.18s apart, easing out to the measured length; transform only */
+  @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .kk-bar[data-reveal] {
+      animation: ledger-grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(0.2s + var(--i) * 0.18s) backwards;
     }
   }
-  @keyframes kk-grow {
+  @keyframes ledger-grow {
     from {
       transform: scaleX(0);
     }
-    to {
-      transform: scaleX(1);
-    }
   }
 </style>
+
+<script>
+  import '../../scripts/play-in-view'
+</script>

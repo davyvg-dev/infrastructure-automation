@@ -23,9 +23,9 @@ const tiers: Tier[] = [
     price: 299,
     dayPrice: '9,97',
     blurb:
-      'Agenda citas directamente en su calendario y capta cada cliente, por chat web y WhatsApp, 24/7. Se lo dejamos montado entero. Nuestra recomendación.',
+      'Responde por chat web y WhatsApp, de día y de noche. Agenda citas directamente en su calendario y capta cada cliente. Lo dejamos todo montado.',
     highlight: true,
-    cta: 'Empezar con Chat',
+    cta: 'Empiece con Chat',
     ctaHref: '/es/aanmelden/?plan=chat',
   },
   {
@@ -35,9 +35,9 @@ const tiers: Tier[] = [
     dayPrice: '16,63',
     priceNote: 'incl. 750 minutos de llamada/mes, luego 0,40 €/min',
     blurb:
-      'Todo lo de Chat, más un agente telefónico con IA que atiende su teléfono 24/7 en su propio número. Las llamadas perdidas dejan de existir.',
+      'Todo lo de Chat, más un agente telefónico con IA que atiende las llamadas en su propio número, de día y de noche.',
     highlight: false,
-    cta: 'Empezar con Compleet',
+    cta: 'Empiece con Compleet',
     ctaHref: '/es/aanmelden/?plan=compleet',
   },
 ]
@@ -50,7 +50,7 @@ interface FeatureRow {
 
 const features: FeatureRow[] = [
   { feature: 'Agenda citas directamente en su calendario', chat: 'sí', compleet: 'sí' },
-  { feature: 'Chat en su propia web (24/7)', chat: 'sí', compleet: 'sí' },
+  { feature: 'Chat en su propia web (de día y de noche)', chat: 'sí', compleet: 'sí' },
   { feature: 'Canal de WhatsApp', chat: 'sí', compleet: 'sí' },
   {
     feature: 'Responde preguntas sobre servicios, tarifas y zona de cobertura',
@@ -62,18 +62,18 @@ const features: FeatureRow[] = [
   { feature: 'Estadísticas mensuales por correo', chat: 'sí', compleet: 'sí' },
   {
     feature: 'Agente telefónico con IA en su propio número',
-    chat: '–',
+    chat: 'no',
     compleet: 'sí',
   },
   {
     feature: 'Minutos de llamada incluidos al mes',
-    chat: '–',
+    chat: 'no',
     compleet: '750, luego 0,40 €/min',
   },
   {
     feature: 'Llamadas simultáneas',
-    chat: '–',
-    compleet: 'hasta 5 a la vez',
+    chat: 'no',
+    compleet: 'hasta 5',
   },
 ]
 
@@ -110,7 +110,7 @@ const serviceSchema = {
 <Base
   lang="es"
   title="Precios de la recepcionista con IA: Chat 299 € o Compleet 499 € | Klantkraan"
-  description="Chat 299 € y Compleet 499 € al mes. Agenda citas directamente en su calendario. Se lo dejamos montado entero, usted no monta nada. Cancelación mensual."
+  description="Chat 299 € o Compleet 499 € al mes, IVA no incluido. Agenda citas directamente en su calendario. Lo montamos nosotros. Cancelación mensual."
   centered={false}
 >
   <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
@@ -119,8 +119,8 @@ const serviceSchema = {
     <div class="mx-auto max-w-page px-gutter">
       <h1 class="font-display text-hero text-(--color-chalk)">Precios</h1>
       <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-        Cancelación mensual, primer mes al 50%. Instalación única desde 249 € (gratis para clientes
-        piloto). Los importes no incluyen el 21% de IVA.
+        Cancelación mensual, primer mes al 50%. Instalación desde 249 €, pago único (gratis para
+        clientes piloto). Los importes no incluyen el 21% de IVA.
       </p>
     </div>
   </section>
@@ -176,7 +176,7 @@ const serviceSchema = {
       <p class="eyebrow">Qué hace usted</p>
       <h2 class="mt-3 font-display text-h1 text-(--color-chalk)">Nada. Lo montamos nosotros.</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Comprar un chatbot es una cosa. Convertirlo en un recepcionista que conoce sus tarifas y le
+        Comprar un chatbot es una cosa. Convertirlo en una recepcionista que conoce sus tarifas y le
         llena la agenda es trabajo. Ese trabajo es nuestro.
       </p>
       <ul class="grid-rule mt-8 text-body text-(--color-dim) sm:grid-cols-2">
@@ -189,23 +189,23 @@ const serviceSchema = {
         <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Su calendario conectado</p>
           <p class="mt-2">
-            Para que la cita entre directamente, y no como una nota en un buzón de correo.
+            Para que la cita entre directamente en él, y no como una nota en su correo.
           </p>
         </li>
         <li class="p-6">
-          <p class="font-display text-h3 text-(--color-chalk)">WhatsApp solicitado</p>
-          <p class="mt-2">La solicitud ante Meta la gestionamos nosotros. Usted no la ve.</p>
+          <p class="font-display text-h3 text-(--color-chalk)">Alta de WhatsApp tramitada</p>
+          <p class="mt-2">Tramitamos la solicitud ante Meta. Usted no tiene que hacer nada.</p>
         </li>
         <li class="p-6">
           <p class="font-display text-h3 text-(--color-chalk)">Actualizado cuando algo cambia</p>
           <p class="mt-2">
-            ¿Tarifas nuevas o un servicio nuevo? Un correo y lo ajustamos. Siempre.
+            ¿Tarifas nuevas o un servicio nuevo? Un correo y lo ajustamos, mientras siga con nosotros.
           </p>
         </li>
       </ul>
       <p class="mt-6 max-w-2xl text-body text-(--color-dim)">
-        Hay chatbots más baratos. En esos el que monta es usted, y la mayoría no agenda ninguna
-        cita. Esa diferencia es lo que paga aquí.
+        Hay chatbots más baratos. En esos el montaje lo hace usted, y la mayoría no agenda
+        citas. Esa diferencia es lo que paga aquí.
       </p>
     </div>
   </section>
@@ -268,13 +268,13 @@ const serviceSchema = {
         <h2 class="font-display text-h2 text-(--color-chalk)">Todos los planes incluyen</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>Montaje completo y mantenimiento. Usted no monta nada.</li>
-          <li>Cancelación mensual; se cancela por correo, sin preaviso.</li>
+          <li>Puede cancelar cada mes con un correo, sin preaviso.</li>
           <li>Primer mes al 50%.</li>
-          <li>Garantía de satisfacción de 30 días. ¿No le convence? Le devolvemos el dinero.</li>
+          <li>Garantía de satisfacción de 30 días. Si no le convence, le devolvemos el dinero.</li>
         </ul>
       </div>
       <div>
-        <h2 class="font-display text-h2 text-(--color-chalk)">Descuento por pago por adelantado</h2>
+        <h2 class="font-display text-h2 text-(--color-chalk)">Descuento por pago anticipado</h2>
         <ul class="mt-4 space-y-2 text-body text-(--color-dim)">
           <li>6 meses por adelantado: 15% de descuento.</li>
           <li>12 meses por adelantado: 20% de descuento y precio fijo todo el año.</li>
@@ -290,14 +290,14 @@ const serviceSchema = {
   <section class="border-y border-(--color-line) bg-(--color-panel) py-10 md:py-16">
     <div class="mx-auto max-w-page px-gutter">
       
-      <h2 class="font-display text-h1 text-(--color-chalk)">¿Listo para empezar?</h2>
+      <h2 class="font-display text-h1 text-(--color-chalk)">Empiece hoy.</h2>
       <p class="mt-4 max-w-2xl text-body text-(--color-dim)">
-        Dese de alta y le llamamos en un día laborable para planificar la instalación. ¿Prefiere ver
-        antes cómo funciona? Pruebe la demo, directamente en su navegador.
+        Dese de alta y le llamamos en un día laborable para planificar la instalación. Si prefiere ver
+        antes cómo funciona, pruebe la demo en su navegador.
       </p>
       <div class="mt-6 btn-row">
-        <a href="/es/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Empezar con Chat</a>
-        <a href="/es/aanmelden/?plan=compleet" class="btn btn-ghost btn-lg">Empezar con Compleet</a>
+        <a href="/es/aanmelden/?plan=chat" class="btn btn-primary btn-lg">Empiece con Chat</a>
+        <a href="/es/aanmelden/?plan=compleet" class="btn btn-ghost btn-lg">Empiece con Compleet</a>
         <a href="/es/demo/" class="btn btn-ghost btn-lg">Pruebe la demo</a>
       </div>
     </div>

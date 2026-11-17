@@ -11,8 +11,11 @@
  * slot from 280px to 620px. The paper's 40px ruling is the scale: every ruled line
  * is a day, so the ticks, the quote and both reminders sit on lines. The current
  * runs at one speed, one day (40px) per 0.2s, and every delay below is its arrival
- * at that point; the day ticks light as it passes them. Motion is CSS only (transform, opacity),
- * held off screen by scripts/play-in-view.ts. Reduced motion or no JS: finished.
+ * at that point; the day ticks light as it passes them. Then, every 7s, one pulse of
+ * current runs the same way (quote, closed contact, day 3, day 7) and each lamp's
+ * ring swells as it arrives. Motion is CSS only (transform, opacity), held until
+ * seen and paused off screen by scripts/play-in-view.ts. Reduced motion or no JS:
+ * finished, nothing moving.
  */
 interface Props {
   id?: string
@@ -297,12 +300,13 @@ const taps = [
   .lamp-on path {
     stroke: var(--color-sodium-ink);
   }
-  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur */
+  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur. A
+   * disc behind the lamp (as in the hero), so it swells without a gap opening. */
   .halo {
     position: absolute;
-    inset: 1px;
+    inset: -3px;
     border-radius: 50%;
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 16%, transparent);
+    background: color-mix(in oklab, var(--color-sodium) 16%, transparent);
   }
 
   .lbl {
@@ -321,89 +325,204 @@ const taps = [
     text-wrap: balance;
   }
 
-  /* ---- motion: t(y) = 0.4s + (y - 40px) / 200px per second ---- */
+  /* ---- motion: t(y) = 0.4s + (y - 40px) / 200px per second ----
+   * Idle, from --idle on: every 7s one pulse at the same 200px/s from the quote's
+   * bottom edge (62px): 18px of line, the 27px blade, 56px to day 3, 160px to day 7,
+   * and 17.25px along each tap to its lamp, whose ring swells as it arrives. A pulse
+   * is a short bright dash inside its wire, which clips it; it moves 1400px (7s at
+   * 200px/s) per cycle, so it only shows in its own wire, going down or right, and
+   * the jump back to the start of a cycle happens out of sight. Keyframe names carry
+   * this drawing's prefix: keyframes are global. */
   @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+    .plan {
+      --idle: 6s;
+    }
     .tick::after {
-      animation: kk-on 0.16s ease-out calc(0.4s + var(--d) * 0.2s) backwards;
+      animation: fu-on 0.16s ease-out calc(0.4s + var(--d) * 0.2s) backwards;
     }
     .w-a::after {
       animation:
-        kk-wy 0.09s linear 0.51s backwards,
-        kk-settle 0.9s ease 1.4s backwards;
+        fu-wy 0.09s linear 0.51s backwards,
+        fu-settle 0.9s ease 1.4s backwards;
     }
     .blade::after {
-      animation: kk-on 0.12s linear 0.6s backwards;
+      animation: fu-on 0.12s linear 0.6s backwards;
     }
     .w-b::after {
       animation:
-        kk-wy 0.28s linear 0.72s backwards,
-        kk-settle 0.9s ease 1.6s backwards;
+        fu-wy 0.28s linear 0.72s backwards,
+        fu-settle 0.9s ease 1.6s backwards;
     }
     .w-c::after {
       animation:
-        kk-wy 0.8s linear 1s backwards,
-        kk-settle 0.9s ease 2.4s backwards;
+        fu-wy 0.8s linear 1s backwards,
+        fu-settle 0.9s ease 2.4s backwards;
     }
     .w-br::after {
       --at: calc(0.4s + var(--d) * 0.2s);
       animation:
-        kk-wx 0.13s linear var(--at) backwards,
-        kk-settle 0.9s ease calc(var(--at) + 0.7s) backwards;
+        fu-wx 0.13s linear var(--at) backwards,
+        fu-settle 0.9s ease calc(var(--at) + 0.7s) backwards;
     }
     .lamp-on {
-      animation: kk-catch 0.7s linear calc(0.53s + var(--d) * 0.2s) backwards;
+      animation: fu-catch 0.7s linear calc(0.53s + var(--d) * 0.2s) backwards;
     }
     .lamp-on g {
-      animation: kk-fill 0.01s linear calc(0.53s + var(--d) * 0.2s) backwards;
+      animation: fu-fill 0.01s linear calc(0.53s + var(--d) * 0.2s) backwards;
     }
+    /* the ring appears with the lamp; then, each cycle, it swells as the pulse
+     * reaches the lamp (scale, so the two do not fight over transform) */
     .halo {
-      animation: kk-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(0.72s + var(--d) * 0.2s) backwards;
+      --pt: calc(var(--idle) + 0.59s + (var(--d) - 3) * 0.2s);
+      animation:
+        fu-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(0.72s + var(--d) * 0.2s) backwards,
+        fu-swell 7s linear var(--pt) infinite;
+    }
+
+    /* ---- the idle pulse ---- */
+    .w,
+    .blade {
+      z-index: 0;
+      overflow: hidden;
+    }
+    .w::before,
+    .blade::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      top: -32px;
+      height: 32px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        color-mix(in oklab, var(--color-sodium) 30%, transparent) 55%,
+        var(--color-sodium) 88%
+      );
+    }
+    .w-br::before {
+      inset: 0 auto 0 -32px;
+      width: 32px;
+      height: auto;
+      background: linear-gradient(
+        to right,
+        transparent,
+        color-mix(in oklab, var(--color-sodium) 30%, transparent) 55%,
+        var(--color-sodium) 88%
+      );
+    }
+    .w-a::before {
+      animation: fu-run-y 7s linear var(--idle) infinite;
+    }
+    .blade::before {
+      animation: fu-run-y 7s linear calc(var(--idle) + 0.09s) infinite;
+    }
+    .w-b::before {
+      animation: fu-run-y 7s linear calc(var(--idle) + 0.225s) infinite;
+    }
+    .w-c::before {
+      animation: fu-run-y 7s linear calc(var(--idle) + 0.505s) infinite;
+    }
+    .w-br::before {
+      animation: fu-run-x 7s linear calc(var(--idle) + 0.505s + (var(--d) - 3) * 0.2s) infinite;
+    }
+    /* the ring's brighter twin, faded in as it swells */
+    .halo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 24%, transparent);
+      opacity: 0;
+      animation: fu-glint 7s linear var(--pt) infinite;
     }
   }
-  @keyframes kk-wy {
+  @keyframes fu-wy {
     from {
       transform: scaleY(0);
     }
   }
-  @keyframes kk-wx {
+  @keyframes fu-wx {
     from {
       transform: scaleX(0);
     }
   }
-  @keyframes kk-settle {
+  @keyframes fu-settle {
     from {
       opacity: 1;
     }
   }
-  @keyframes kk-on {
+  @keyframes fu-on {
     from {
       opacity: 0;
     }
   }
-  @keyframes kk-catch {
-    0%,
-    11%,
-    25% {
+  /* A lamp catching: one short flicker, then steady (one flash, not two). */
+  @keyframes fu-catch {
+    0% {
       opacity: 0;
     }
-    5%,
-    18% {
+    8% {
       opacity: 0.7;
     }
-    42%,
+    18% {
+      opacity: 0.1;
+    }
+    40%,
     100% {
       opacity: 1;
     }
   }
-  @keyframes kk-ring {
+  @keyframes fu-ring {
     from {
       opacity: 0;
       transform: scale(0.55);
     }
   }
-  @keyframes kk-fill {
+  @keyframes fu-fill {
     from {
       fill: var(--color-night);
+    }
+  }
+  @keyframes fu-run-y {
+    to {
+      transform: translateY(1400px);
+    }
+  }
+  @keyframes fu-run-x {
+    to {
+      transform: translateX(1400px);
+    }
+  }
+  /* One soft brighten per cycle, the hero's: the ring swells in 0.35s and eases
+   * back by 1.26s while its brighter twin fades in and out. */
+  @keyframes fu-swell {
+    0% {
+      scale: 1;
+      animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+    }
+    5% {
+      scale: 1.28;
+      animation-timing-function: cubic-bezier(0.45, 0, 0.35, 1);
+    }
+    18%,
+    100% {
+      scale: 1;
+    }
+  }
+  @keyframes fu-glint {
+    0% {
+      opacity: 0;
+      animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+    }
+    5% {
+      opacity: 1;
+      animation-timing-function: cubic-bezier(0.45, 0, 0.35, 1);
+    }
+    18%,
+    100% {
+      opacity: 0;
     }
   }
 </style>

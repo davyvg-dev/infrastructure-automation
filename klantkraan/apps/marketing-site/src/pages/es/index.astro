@@ -13,9 +13,9 @@ const hero = {
   h1a: 'La luz sigue',
   h1on: 'encendida.',
   sub:
-    'Está en lo alto de una escalera, en un tejado, o durmiendo. Su mejor cliente tiene una ' +
-    'pregunta ahora mismo. La recepcionista digital de Klantkraan la responde en su web y por ' +
-    'WhatsApp, agenda la cita y anota cada solicitud de llamada. De día y de noche.',
+    'Está en lo alto de una escalera, en un tejado o durmiendo, y un cliente tiene una pregunta ' +
+    'ahora mismo. La recepcionista digital de Klantkraan la responde en su web y por WhatsApp, ' +
+    'de día y de noche. Agenda la cita y anota cada solicitud de llamada.',
   ctaPrimary: 'Empiece hoy',
   ctaPrimaryHref: '/es/aanmelden/',
   ctaGhost: 'Pruebe la demo',
@@ -59,9 +59,9 @@ const flow = {
   label: 'El turno de noche',
   heading: 'Lo que la recepcionista asume mientras usted trabaja.',
   steps: [
-    { title: 'Responde cada pregunta', text: 'Conoce sus tarifas, servicios y zona de trabajo. Sin precios inventados, solo lo que usted ha configurado.' },
-    { title: 'Agenda la cita', text: 'Directo en su calendario, solo en horas que están realmente libres. El cliente elige un hueco y usted lo ve al instante.' },
-    { title: 'Anota la solicitud de llamada', text: '¿No puede atender ahora? La recepcionista anota el nombre, el número y el trabajo. Usted devuelve la llamada a quien de verdad importa.' },
+    { title: 'Responde cada pregunta', text: 'Conoce sus tarifas, servicios y zona de trabajo, y solo da los precios que usted ha fijado.' },
+    { title: 'Agenda la cita', text: 'Directo en su calendario, solo en huecos libres. El cliente elige uno y usted lo ve al instante.' },
+    { title: 'Anota la solicitud de llamada', text: 'Cuando usted no puede atender, la recepcionista anota el nombre, el número y el trabajo. Usted devuelve la llamada a quien de verdad importa.' },
   ],
 }
 const flowLabels = {
@@ -80,8 +80,8 @@ const kosten = {
   eyebrow: 'La factura de una noche a oscuras',
   heading: 'Cada pregunta sin responder es un trabajo que se va a la competencia.',
   sub:
-    'Esto es un ejemplo. Hágalo con sus propios números y verá exactamente lo que le cuesta un ' +
-    'mes de llamadas perdidas.',
+    'Esto es un ejemplo. Calcúlelo con sus propias cifras y verá lo que le cuesta un mes de ' +
+    'llamadas perdidas.',
   ariaLabel: 'Cálculo de ejemplo de ingresos perdidos',
   cap: 'Ejemplo · 40 llamadas por semana',
   lines: [
@@ -92,18 +92,18 @@ const kosten = {
   ],
   resultK: 'Ingresos perdidos',
   resultV: '± 7.200 €/mes',
-  ctaLabel: 'Hágalo con sus propios números',
+  ctaLabel: 'Calcúlelo con sus propias cifras',
   ctaHref: '/es/rekentool/',
 }
 
 const eerlijk = {
-  eyebrow: 'Honestos con la IA',
+  eyebrow: 'Honestos sobre la IA',
   heading: 'La luz está encendida. No hay nada que ocultar.',
   quote: 'Está hablando con un asistente digital.',
   bullets: [
-    'Así empieza cada conversación, antes de cualquier otra cosa.',
-    'Desde el 2 de agosto de 2026 ese aviso es obligatorio según el artículo 50 del Reglamento de IA de la UE. Nosotros ya lo hacemos.',
-    'Donde un robot de voz se vende con "nadie nota la diferencia", nuestra recepcionista dice sin rodeos lo que es. Su cliente sabe con quién habla y usted no se arriesga a una multa.',
+    'Cada conversación empieza con esa frase.',
+    'El artículo 50 del Reglamento de IA de la UE exige ese aviso desde el 2 de agosto de 2026.',
+    'Hay robots de voz que se venden con un "nadie nota la diferencia". Nuestra recepcionista dice lo que es. Su cliente sabe con quién habla y usted no se arriesga a una multa.',
   ],
   linkLabel: 'Lea la declaración completa',
   linkHref: '/legal/ai-disclosure/',
@@ -119,49 +119,49 @@ const starten = {
     },
     {
       title: 'Montamos su recepcionista',
-      text: 'En un día laborable le llamamos para repasar sus servicios, tarifas y calendario. Usted no construye nada.',
+      text: 'En un día laborable le llamamos para repasar sus servicios, tarifas y calendario. Usted no tiene que montar nada.',
     },
     {
       title: 'En marcha en su web y WhatsApp',
       text: 'Usted la prueba y da el visto bueno. Desde ese momento atiende todas las consultas, día y noche.',
     },
   ],
-  note: 'Cancelación mensual. Sin contrato anual ni renovación oculta; se cancela por correo, sin preaviso.',
+  note: 'Puede cancelar cada mes con un correo, sin preaviso. Sin contrato anual ni renovación oculta.',
 }
 
 const roadmap = {
   eyebrow: 'Hacia dónde va',
   heading: 'Hoy la puerta. Mañana la oficina.',
   sub:
-    'La recepcionista es el principio, no el final. Se ocupa de la puerta: todo lo que entra ' +
-    'mientras usted trabaja. Detrás está el papeleo que ahora hace de noche en la mesa de la ' +
-    'cocina. Hacia ahí vamos, junto con los primeros clientes.',
+    'La recepcionista se ocupa de la puerta: todo lo que entra mientras usted trabaja. Detrás ' +
+    'está el papeleo que ahora hace de noche en la mesa de la cocina. Hacia ahí vamos, junto ' +
+    'con nuestros primeros clientes.',
   nowLabel: 'Lo que hace ahora',
   now: [
     'Responde preguntas en su web y en WhatsApp, de día y de noche',
     'Agenda citas directamente en su propio calendario',
-    'Recoge solicitudes de devolución de llamada con nombre, número y trabajo',
+    'Anota solicitudes de llamada con nombre, número y trabajo',
     'Dice que es un asistente digital, en cada conversación',
   ],
   laterLabel: 'Lo que estamos construyendo',
   laterNote: 'Todavía no está disponible. No forma parte de su suscripción y no lo está pagando.',
   later: [
-    'Presupuestos que se recuerdan solos cuando el cliente no responde',
+    'Presupuestos que hacen su propio seguimiento cuando el cliente no responde',
     'Recordatorios de cita, para que nadie se desplace en balde',
-    'Peticiones de reseña justo cuando el trabajo acaba de terminar',
-    'Recordatorios de factura para lo que sigue pendiente',
+    'Peticiones de reseña en cuanto termina el trabajo',
+    'Recordatorios de facturas pendientes',
   ],
   footnote:
-    'Cuál de estas llega primero lo deciden los clientes que haya entonces, no nosotros. ¿Pide ' +
-    'algo que no está incluido? Se lo decimos, y le decimos cuándo lo estará.',
+    'Qué llega primero lo deciden los clientes que tengamos entonces, no nosotros. Si pide algo ' +
+    'que no está en la lista, se lo decimos, y también cuándo estará.',
 }
 
 const finalCta = {
   h2a: 'Encienda la',
   h2on: 'luz.',
   sub:
-    'Pruebe la demo y hágale una pregunta a la recepcionista como si fuera un cliente. ¿Le ' +
-    'convence? Dese de alta y nosotros nos encargamos del resto, usted no construye nada.',
+    'Pruebe la demo y hágale una pregunta a la recepcionista como si fuera un cliente. Si le ' +
+    'convence, dese de alta y nosotros nos encargamos del resto.',
   primary: { label: 'Empiece hoy', href: '/es/aanmelden/' },
   ghosts: [
     { label: 'Pruebe la demo', href: '/es/demo/' },

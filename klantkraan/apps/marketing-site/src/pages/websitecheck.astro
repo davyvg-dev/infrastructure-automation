@@ -23,15 +23,14 @@ import { BREVO_ACTION } from '../data/brevo'
 ---
 
 <ScanShell
-  title="Zie in 1 minuut wat een klant op je website mist | Klantkraan"
-  description="Typ je webadres en zie binnen tien seconden of je site bij is, of je nummer aantikbaar is, hoe je in Google staat en of je foto's te zwaar zijn. Gratis, zonder e-mailadres."
+  title="Zie in 1 minuut wat een klant op uw website mist | Klantkraan"
+  description="Typ uw webadres en zie binnen tien seconden of uw site bij is, of uw nummer aantikbaar is, hoe u in Google staat en of uw foto's te zwaar zijn. Gratis, zonder e-mailadres."
 >
   <form id="wc-form" class="scan-card" novalidate>
-    <h1>Zie in 1 minuut wat een klant op je website mist</h1>
+    <h1>Zie in 1 minuut wat een klant op uw website mist</h1>
     <p class="scan-lead">
-      Typ je webadres. We lezen je homepage zoals een bezoeker dat doet en laten je in gewoon
-      Nederlands zien wat goed staat en wat aandacht vraagt. Bij elk punt staat hoe je het zelf
-      nakijkt.
+      We lezen uw homepage zoals een bezoeker dat doet en laten in gewoon Nederlands zien wat goed
+      staat en wat aandacht vraagt. Bij elk punt staat hoe u het zelf nakijkt.
     </p>
     <ul class="scan-promises">
       <li>Tien seconden</li>
@@ -40,7 +39,7 @@ import { BREVO_ACTION } from '../data/brevo'
     </ul>
 
     <div class="scan-field">
-      <label for="wc-url">Je webadres</label>
+      <label for="wc-url">Uw webadres</label>
       <input
         id="wc-url"
         name="url"
@@ -51,7 +50,7 @@ import { BREVO_ACTION } from '../data/brevo'
         spellcheck="false"
         maxlength="200"
         required
-        placeholder="jouwbedrijf.nl"
+        placeholder="uwbedrijf.nl"
       />
     </div>
     <p id="wc-error" class="scan-error" role="alert" hidden></p>
@@ -59,12 +58,12 @@ import { BREVO_ACTION } from '../data/brevo'
     <MiniOfferLine area="websites" where="before" />
     <noscript>
       <p class="scan-consent">
-        Deze check heeft JavaScript nodig. Staat dat uit, mail je webadres dan naar
+        Deze check heeft JavaScript nodig. Staat dat uit, mail uw webadres dan naar
         {contact.email}.
       </p>
     </noscript>
     <p class="scan-sign">
-      We lezen alleen wat je homepage openbaar toont en loggen nergens in.
+      We lezen alleen wat uw homepage openbaar toont en loggen nergens in.
     </p>
   </form>
 
@@ -73,7 +72,7 @@ import { BREVO_ACTION } from '../data/brevo'
     <p id="wc-sum" class="scan-lead"></p>
     <ul id="wc-list" class="wc-list"></ul>
     <p class="wc-note">
-      Dit is alleen je homepage, van buitenaf gelezen. Plugins, je andere pagina's en hoe snel de
+      Dit is alleen uw homepage, van buitenaf gelezen. Plugins, uw andere pagina's en hoe snel de
       site bij echte bezoekers laadt, zien we zo niet.
     </p>
     <button id="wc-again" class="wc-again" type="button">Een ander adres checken</button>
@@ -89,8 +88,8 @@ import { BREVO_ACTION } from '../data/brevo'
   >
     <h2>Zullen we er zelf naar kijken?</h2>
     <p class="scan-lead">
-      Dan krijg je binnen 1 werkdag een korte mail van ons: per punt wat wij zouden doen, wat je
-      zelf kunt oplossen en wat we verder zien als we je site op een telefoon openen.
+      Dan krijgt u binnen 1 werkdag een korte mail van ons: per punt wat wij zouden doen, wat u
+      zelf kunt oplossen en wat we verder zien als we uw site op een telefoon openen.
     </p>
     <ul class="scan-promises">
       <li>Geen gesprek</li>
@@ -98,7 +97,7 @@ import { BREVO_ACTION } from '../data/brevo'
       <li>Vijf per week</li>
     </ul>
     <div class="scan-field">
-      <label for="EMAIL">Je e-mailadres</label>
+      <label for="EMAIL">Uw e-mailadres</label>
       <input
         id="EMAIL"
         name="EMAIL"
@@ -106,12 +105,12 @@ import { BREVO_ACTION } from '../data/brevo'
         required
         autocomplete="email"
         inputmode="email"
-        placeholder="naam@jouwbedrijf.nl"
+        placeholder="naam@uwbedrijf.nl"
       />
     </div>
     <p class="scan-consent">
-      Hier sturen we onze bevindingen naartoe. Daarna sturen we je af en toe een tip of aanbod over
-      je website of over tijd besparen met AI. Afmelden kan in elke mail.
+      Hier sturen we onze bevindingen naartoe. Daarna sturen we u af en toe een tip of aanbod over
+      uw website of over tijd besparen met AI. Afmelden kan in elke mail.
     </p>
 
     <input type="hidden" id="SCAN_KLUS" name="SCAN_KLUS" value="" />
@@ -130,7 +129,7 @@ import { BREVO_ACTION } from '../data/brevo'
     <input type="hidden" name="locale" value="en" />
 
     <p id="wc-lead-error" class="scan-error" role="alert" hidden>
-      Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail je webadres dan naar
+      Dat ging niet goed. Probeer het nog een keer. Lukt het niet, mail uw webadres dan naar
       <a href={`mailto:${contact.email}`}>{contact.email}</a>.
     </p>
     <button id="wc-lead-submit" class="scan-btn" type="submit">Kijk naar mijn website</button>
@@ -149,11 +148,11 @@ import { BREVO_ACTION } from '../data/brevo'
     </span>
     <h2>Bijna klaar</h2>
     <p>
-      Kijk in je mail en klik op de knop om je aanvraag te bevestigen. Daarna kijken we naar je site
-      en heb je onze mail binnen 1 werkdag.
+      Kijk in uw mail en klik op de knop om uw aanvraag te bevestigen. Daarna kijken we naar uw site
+      en heeft u onze mail binnen 1 werkdag.
     </p>
     <p class="scan-done-hint">
-      Geen mail gezien? Kijk dan even bij ongewenste mail en zoek op Klantkraan.
+      Geen mail gezien? Kijk bij ongewenste mail en zoek op Klantkraan.
     </p>
   </section>
 

@@ -10,9 +10,9 @@
 import { tagSource } from '/js/bron.js'
 
 const REDENEN = {
-  adres: 'Dat adres herkennen we niet. Typ het zoals het op je visitekaartje staat, bijvoorbeeld jouwbedrijf.nl.',
-  onbereikbaar: 'We kregen je site niet te zien. Klopt het adres? Zo ja, dan is hij op dit moment van buitenaf niet bereikbaar.',
-  geweigerd: 'Je site laat geautomatiseerde bezoekers niet toe, dus deze check kan hem niet lezen. Vul hieronder je e-mailadres in, dan kijken we er zelf naar.',
+  adres: 'Dat adres herkennen we niet. Typ het zoals het op uw visitekaartje staat, bijvoorbeeld uwbedrijf.nl.',
+  onbereikbaar: 'We kregen uw site niet te zien. Klopt het adres? Dan is de site nu van buitenaf niet bereikbaar.',
+  geweigerd: 'Uw site laat geautomatiseerde bezoekers niet toe, dus deze check kan hem niet lezen. Vul hieronder uw e-mailadres in, dan kijken we er zelf naar.',
   leeg: 'Op dat adres staat geen gewone webpagina die we kunnen lezen.',
   druk: 'Dat waren veel checks achter elkaar. Wacht een minuut en probeer het dan opnieuw.',
 }
@@ -66,7 +66,7 @@ function initWebsitecheck() {
     head.textContent = data.domein
     sum.textContent =
       n === 0
-        ? 'Op deze punten staat je homepage er goed voor.'
+        ? 'Op deze punten staat uw homepage er goed voor.'
         : n === 1
           ? 'Eén punt vraagt aandacht. De rest staat goed.'
           : `${n} punten vragen aandacht. Die staan bovenaan.`
@@ -111,7 +111,7 @@ function initWebsitecheck() {
       return
     }
     submitBtn.disabled = true
-    submitBtn.textContent = 'We lezen je homepage…'
+    submitBtn.textContent = 'We lezen uw homepage…'
     void fetch(`/api/websitecheck/?url=${encodeURIComponent(value)}`, { headers: { Accept: 'application/json' } })
       .then((res) => res.json())
       .then((data) => (data && data.ok ? show(data) : fail(data && data.reden, data && data.domein)))

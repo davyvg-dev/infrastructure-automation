@@ -11,7 +11,9 @@
  * Snapped to the paper's 40px ruling: the window sits between two lines, every
  * tap runs down the middle of a lane (80px apart), so no wire near-misses a line.
  * Motion is CSS only (transform and opacity) and plays when the drawing is on
- * screen (scripts/play-in-view.ts). Reduced motion or no JS: the finished state.
+ * screen (scripts/play-in-view.ts): the build-up once, then every 7s one pulse of
+ * current runs down the rail and out to each lamp, whose ring swells as it
+ * arrives. Reduced motion or no JS: the finished state, nothing moving.
  */
 interface Props {
   id?: string
@@ -20,7 +22,7 @@ const { id } = Astro.props
 
 const outs = ['Updates en plugins', 'Dagelijkse back-up', 'Bewaking online en veilig', 'Snelheidscheck per maand']
 const aria =
-  'Schema: uw website voedt vier taken die alle vier aan staan: updates van WordPress en plugins, een dagelijkse back-up, bewaking of de site online en veilig is, en een snelheidscheck per maand.'
+  'Schema: vier taken op uw website, alle vier aan: updates van WordPress en plugins, een dagelijkse back-up, bewaking of de site online en veilig is, en een snelheidscheck per maand.'
 const x = 'M-8.5 -8.5 L8.5 8.5 M8.5 -8.5 L-8.5 8.5'
 ---
 
@@ -258,12 +260,13 @@ const x = 'M-8.5 -8.5 L8.5 8.5 M8.5 -8.5 L-8.5 8.5'
   .lamp-on path {
     stroke: var(--color-sodium-ink);
   }
-  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur */
+  /* the ring around a lit lamp, as on the brand's small lamp: flat, no blur. A
+   * disc behind the lamp (as in the hero), so it swells without a gap opening. */
   .halo {
     position: absolute;
-    inset: 1px;
+    inset: -3px;
     border-radius: 50%;
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 16%, transparent);
+    background: color-mix(in oklab, var(--color-sodium) 16%, transparent);
   }
 
   .out {
@@ -279,87 +282,223 @@ const x = 'M-8.5 -8.5 L8.5 8.5 M8.5 -8.5 L-8.5 8.5'
    * The finished state above is what reduced motion, no JS and every old browser
    * see. With motion and scripting, each wire starts empty and the current fills it
    * at one steady speed (linear, so the joins between halves do not show), then
-   * settles from full to calm. Times: the feed, then one tap per --dt. */
+   * settles from full to calm. Times: the feed, then one tap per --dt.
+   *
+   * Then the idle: from --idle on, every 7s one pulse runs the circuit at 200px/s,
+   * from the window down the rail and out along each tap; each lamp's ring swells
+   * once as it arrives (lamps 0.4s apart, so under 3 a second). A pulse is a short
+   * bright dash inside its wire, which clips it; it moves 1400px (7s at 200px/s)
+   * per cycle, so it only ever shows in its own wire, going down or right, and the
+   * jump back to the start of a cycle happens out of sight. Its delay is the
+   * moment the pulse reaches the start of that wire. Keyframe names carry this
+   * drawing's prefix: keyframes are global, and the other drawings have their own. */
   @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
     .sheet {
       --t0: 0.45s;
       --fd: 0.085s;
       --dt: 0.34s;
+      --idle: 6s;
     }
     .row {
       /* the moment the current reaches this row's tap */
       --at: calc(var(--t0) + var(--fd) + var(--dt) / 2 + var(--i) * var(--dt));
+      /* the moment the idle pulse reaches it: feed 20px, then 80px per row */
+      --pt: calc(var(--idle) + 0.3s + var(--i) * 0.4s);
     }
     .w-feed::after {
       animation:
-        kk-wy var(--fd) linear var(--t0) backwards,
-        kk-settle 0.9s ease calc(var(--t0) + 0.9s) backwards;
+        cd-wy var(--fd) linear var(--t0) backwards,
+        cd-settle 0.9s ease calc(var(--t0) + 0.9s) backwards;
     }
     .w-up::after {
       animation:
-        kk-wy calc(var(--dt) / 2) linear calc(var(--at) - var(--dt) / 2) backwards,
-        kk-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
+        cd-wy calc(var(--dt) / 2) linear calc(var(--at) - var(--dt) / 2) backwards,
+        cd-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
     }
     .w-dn::after {
       animation:
-        kk-wy calc(var(--dt) / 2) linear var(--at) backwards,
-        kk-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
+        cd-wy calc(var(--dt) / 2) linear var(--at) backwards,
+        cd-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
     }
     .w-br::after {
       animation:
-        kk-wx 0.14s cubic-bezier(0.5, 0, 1, 1) var(--at) backwards,
-        kk-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
+        cd-wx 0.14s cubic-bezier(0.5, 0, 1, 1) var(--at) backwards,
+        cd-settle 0.9s ease calc(var(--at) + 0.6s) backwards;
     }
     .lamp-on {
-      animation: kk-catch 0.7s linear calc(var(--at) + 0.14s) backwards;
+      animation: cd-catch 0.7s linear calc(var(--at) + 0.14s) backwards;
     }
     .lamp-on g {
-      animation: kk-fill 0.01s linear calc(var(--at) + 0.14s) backwards;
+      animation: cd-fill 0.01s linear calc(var(--at) + 0.14s) backwards;
     }
+    /* the ring appears with the lamp; then, each cycle, it swells as the pulse
+     * reaches the lamp, 23.25px of tap after the rail (scale, so the two do not
+     * fight over transform) */
     .halo {
-      animation: kk-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--at) + 0.33s) backwards;
+      animation:
+        cd-ring 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--at) + 0.33s) backwards,
+        cd-swell 7s linear calc(var(--pt) + 0.115s) infinite;
+    }
+
+    /* ---- the idle pulse ---- */
+    .w {
+      z-index: 0;
+      overflow: hidden;
+    }
+    .w::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+    }
+    .w-feed::before,
+    .w-up::before,
+    .w-dn::before {
+      left: 0;
+      right: 0;
+      top: -32px;
+      height: 32px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        color-mix(in oklab, var(--color-sodium) 30%, transparent) 55%,
+        var(--color-sodium) 88%
+      );
+    }
+    .w-br::before {
+      top: 0;
+      bottom: 0;
+      left: -32px;
+      width: 32px;
+      background: linear-gradient(
+        to right,
+        transparent,
+        color-mix(in oklab, var(--color-sodium) 30%, transparent) 55%,
+        var(--color-sodium) 88%
+      );
+    }
+    .w-feed::before {
+      animation: cd-run-y 7s linear var(--idle) infinite;
+    }
+    .w-up::before {
+      animation: cd-run-y 7s linear calc(var(--pt) - 0.2s) infinite;
+    }
+    .w-dn::before {
+      animation: cd-run-y 7s linear var(--pt) infinite;
+    }
+    .w-br::before {
+      animation: cd-run-x 7s linear var(--pt) infinite;
+    }
+    /* the ring's brighter twin, faded in as it swells */
+    .halo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-sodium) 24%, transparent);
+      opacity: 0;
+      animation: cd-glint 7s linear calc(var(--pt) + 0.115s) infinite;
+    }
+    /* the window's lamp swells as the pulse leaves it, as the hero's node does */
+    .src-dot {
+      animation: cd-node 7s linear calc(var(--idle) - 0.1s) infinite;
     }
   }
-  @keyframes kk-wy {
+  @keyframes cd-wy {
     from {
       transform: scaleY(0);
     }
   }
-  @keyframes kk-wx {
+  @keyframes cd-wx {
     from {
       transform: scaleX(0);
     }
   }
-  @keyframes kk-settle {
+  @keyframes cd-settle {
     from {
       opacity: 1;
     }
   }
-  /* A lamp catching: two short flickers, then steady (the hero's "aan."). */
-  @keyframes kk-catch {
-    0%,
-    11%,
-    25% {
+  /* A lamp catching: one short flicker, then steady. One flicker, not the hero's
+   * two: lamps catch 0.34s apart, and two each would be over 3 flashes a second. */
+  @keyframes cd-catch {
+    0% {
       opacity: 0;
     }
-    5%,
-    18% {
+    8% {
       opacity: 0.7;
     }
-    42%,
+    18% {
+      opacity: 0.1;
+    }
+    40%,
     100% {
       opacity: 1;
     }
   }
-  @keyframes kk-ring {
+  @keyframes cd-ring {
     from {
       opacity: 0;
       transform: scale(0.55);
     }
   }
-  @keyframes kk-fill {
+  @keyframes cd-fill {
     from {
       fill: var(--color-night);
+    }
+  }
+  @keyframes cd-run-y {
+    to {
+      transform: translateY(1400px);
+    }
+  }
+  @keyframes cd-run-x {
+    to {
+      transform: translateX(1400px);
+    }
+  }
+  /* One soft brighten per cycle, the hero's: the ring swells in 0.35s and eases
+   * back by 1.26s while its brighter twin fades in and out. */
+  @keyframes cd-swell {
+    0% {
+      scale: 1;
+      animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+    }
+    5% {
+      scale: 1.28;
+      animation-timing-function: cubic-bezier(0.45, 0, 0.35, 1);
+    }
+    18%,
+    100% {
+      scale: 1;
+    }
+  }
+  @keyframes cd-glint {
+    0% {
+      opacity: 0;
+      animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+    }
+    5% {
+      opacity: 1;
+      animation-timing-function: cubic-bezier(0.45, 0, 0.35, 1);
+    }
+    18%,
+    100% {
+      opacity: 0;
+    }
+  }
+  /* the window's lamp as the pulse leaves (0.2s up, 0.8s back) */
+  @keyframes cd-node {
+    0% {
+      scale: 1;
+      animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
+    }
+    3% {
+      scale: 1.3;
+      animation-timing-function: cubic-bezier(0.45, 0, 0.35, 1);
+    }
+    14%,
+    100% {
+      scale: 1;
     }
   }
 </style>

@@ -6,7 +6,7 @@ const lastUpdated = '20 mei 2026'
 
 <Base
   title="Service Level Agreement (SLA) | Klantkraan"
-  description="Eerlijke uptime-belofte van 99,0% per maand met service credits, onderhoudsvensters en incident-response targets voor de Klantkraan-dienst."
+  description="Uptimedoel van 99,0% per maand, service credits, onderhoudsvensters en reactietijden bij storingen voor de Klantkraan-dienst."
 >
   <article class="prose-legal">
     <header class="border-b border-(--color-line) pb-8">
@@ -35,29 +35,29 @@ const lastUpdated = '20 mei 2026'
               <td class="py-2 pr-4 align-top">Beschikbaarheid</td>
               <td class="py-2"
                 >Het percentage van de tijd binnen een kalendermaand dat de Dienst beschikbaar is
-                voor normale operatie, gemeten van buitenaf via Uptime Kuma checks.</td
+                voor normaal gebruik, gemeten van buitenaf via Uptime Kuma-checks.</td
               >
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Geplande Downtime</td>
               <td class="py-2"
-                >Aangekondigd onderhoud, minimaal 7 dagen vooraf, maximaal 1x per maand, binnen het
-                onderhoudsvenster zondagavond 22:00&ndash;02:00 CET.</td
+                >Aangekondigd onderhoud, minimaal 7 dagen vooraf, maximaal eenmaal per maand, binnen
+                het onderhoudsvenster van zondagavond 22:00 tot maandag 02:00 CET.</td
               >
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Niet-toerekenbare Downtime</td>
               <td class="py-2"
-                >Uitval die niet aan Klantkraan is toe te rekenen: sub-processor outage (Anthropic,
-                Twilio, Cloudflare), internetstoring, overmacht, besluit van de toezichthouder of
-                door Klant veroorzaakte issues.</td
+                >Uitval die niet aan Klantkraan is toe te rekenen: uitval van een sub-processor
+                (Anthropic, Twilio, Cloudflare), internetstoring, overmacht, besluit van de
+                toezichthouder of door Klant veroorzaakte problemen.</td
               >
             </tr>
             <tr>
               <td class="py-2 pr-4 align-top">Service Credit</td>
               <td class="py-2"
-                >Een terugbetaling op de volgende maandfactuur, uitgedrukt als percentage van de
-                maandfee.</td
+                >Een terugbetaling op de volgende maandfactuur, uitgedrukt als percentage van het
+                maandbedrag.</td
               >
             </tr>
           </tbody>
@@ -68,8 +68,8 @@ const lastUpdated = '20 mei 2026'
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">2. Beschikbaarheidsdoel</h2>
       <p class="text-body">
-        Klantkraan streeft naar een <strong>maandelijkse uptime van 99,0%</strong>. Bij 99,0% komt
-        dat neer op een toegestane downtime van circa 7 uur en 18 minuten per maand. Geplande
+        Klantkraan streeft naar een <strong>maandelijkse uptime van 99,0%</strong>. Dat komt neer op
+        een toegestane downtime van circa 7 uur en 18 minuten per maand. Geplande
         Downtime en Niet-toerekenbare Downtime tellen niet mee in de berekening.
       </p>
     </section>
@@ -86,25 +86,25 @@ const lastUpdated = '20 mei 2026'
           </thead>
           <tbody class="divide-y divide-(--color-line)">
             <tr
-              ><td class="py-2 pr-4">98,0% &ndash; 98,99%</td><td class="py-2"
-                >5% van de maandfee</td
+              ><td class="py-2 pr-4">98,0% t/m 98,99%</td><td class="py-2"
+                >5% van het maandbedrag</td
               ></tr
             >
             <tr
-              ><td class="py-2 pr-4">95,0% &ndash; 97,99%</td><td class="py-2"
-                >10% van de maandfee</td
+              ><td class="py-2 pr-4">95,0% t/m 97,99%</td><td class="py-2"
+                >10% van het maandbedrag</td
               ></tr
             >
             <tr
               ><td class="py-2 pr-4">&lt; 95,0%</td><td class="py-2"
-                >10% van de maandfee plus het recht om kosteloos op te zeggen</td
+                >10% van het maandbedrag plus het recht om kosteloos op te zeggen</td
               ></tr
             >
           </tbody>
         </table>
       </div>
       <p class="text-body">
-        Het maximum credit per maand is 10% van de maandfee. Behoudens opzet of bewuste
+        Per maand is de credit maximaal 10% van het maandbedrag. Behoudens opzet of bewuste
         roekeloosheid is er geen verdere remedie, met name geen verdere schadevergoeding.
       </p>
     </section>
@@ -114,47 +114,47 @@ const lastUpdated = '20 mei 2026'
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>Zondagavond 22:00 CET tot maandagochtend 02:00 CET.</li>
         <li>Maximaal eenmaal per maand.</li>
-        <li>Minimaal 7 dagen vooraf aangekondigd per e-mail aan het primaire contact.</li>
+        <li>Minimaal 7 dagen vooraf aangekondigd per e-mail aan de primaire contactpersoon.</li>
         <li>Onderhoud binnen dit venster telt niet als downtime.</li>
       </ul>
     </section>
 
     <section class="mt-10 space-y-4">
-      <h2 class="font-display text-h2 text-(--color-chalk)">5. Incident response</h2>
+      <h2 class="font-display text-h2 text-(--color-chalk)">5. Reactie op incidenten</h2>
       <div class="overflow-x-auto">
-        <table class="w-full border-collapse text-small" aria-label="Incident response">
+        <table class="w-full border-collapse text-small" aria-label="Reactie op incidenten">
           <thead>
             <tr class="border-b border-(--color-line) text-left">
-              <th class="py-2 pr-4 font-semibold">Severity</th>
+              <th class="py-2 pr-4 font-semibold">Ernst</th>
               <th class="py-2 pr-4 font-semibold">Definitie</th>
               <th class="py-2 pr-4 font-semibold">Eerste reactie</th>
-              <th class="py-2 font-semibold">Resolution target</th>
+              <th class="py-2 font-semibold">Doel voor oplossing</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-(--color-line)">
             <tr>
-              <td class="py-2 pr-4">S1 &mdash; Critical</td>
-              <td class="py-2 pr-4">Volledige dienst-uitval, geen gesprekken worden afgehandeld.</td
+              <td class="py-2 pr-4">S1 (kritiek)</td>
+              <td class="py-2 pr-4">Volledige uitval van de dienst: er worden geen gesprekken afgehandeld.</td
               >
               <td class="py-2 pr-4">&le; 30 min</td>
               <td class="py-2">&le; 4 uur</td>
             </tr>
             <tr>
-              <td class="py-2 pr-4">S2 &mdash; High</td>
+              <td class="py-2 pr-4">S2 (hoog)</td>
               <td class="py-2 pr-4"
-                >Significant deel uitgevallen (bijvoorbeeld WhatsApp werkt niet).</td
+                >Aanzienlijk deel uitgevallen (bijvoorbeeld WhatsApp werkt niet).</td
               >
               <td class="py-2 pr-4">&le; 2 uur</td>
-              <td class="py-2">&le; 8 uur werkuren</td>
+              <td class="py-2">&le; 8 werkuren</td>
             </tr>
             <tr>
-              <td class="py-2 pr-4">S3 &mdash; Medium</td>
+              <td class="py-2 pr-4">S3 (gemiddeld)</td>
               <td class="py-2 pr-4">Beperkte impact (bijvoorbeeld dashboard niet bereikbaar).</td>
-              <td class="py-2 pr-4">&le; 8 uur werkuren</td>
+              <td class="py-2 pr-4">&le; 8 werkuren</td>
               <td class="py-2">&le; 2 werkdagen</td>
             </tr>
             <tr>
-              <td class="py-2 pr-4">S4 &mdash; Low</td>
+              <td class="py-2 pr-4">S4 (laag)</td>
               <td class="py-2 pr-4">Cosmetisch of niet-blokkerend.</td>
               <td class="py-2 pr-4">&le; 2 werkdagen</td>
               <td class="py-2">&le; 10 werkdagen</td>
@@ -163,8 +163,8 @@ const lastUpdated = '20 mei 2026'
         </table>
       </div>
       <p class="text-small text-(--color-dim)">
-        Werkuren zijn maandag t/m vrijdag 09:00&ndash;18:00 CET. S1-incidenten triggeren automatisch
-        een monitoring-alert en een statuspage-update binnen 30 minuten.
+        Werkuren zijn maandag t/m vrijdag van 09:00 tot 18:00 CET. S1-incidenten leiden automatisch
+        tot een monitoringmelding en een update op de statuspagina binnen 30 minuten.
       </p>
     </section>
 
@@ -172,8 +172,8 @@ const lastUpdated = '20 mei 2026'
       <h2 class="font-display text-h2 text-(--color-chalk)">6. Statuspagina</h2>
       <p class="text-body">
         Zodra de statuspagina live is op
-        <span class="font-mono">status.klantkraan.nl</span>, toont deze per dienst-component
-        (marketing-site, API, chat-kanalen, database) de actuele status. Tot die tijd melden wij
+        <span class="font-mono">status.klantkraan.nl</span>, toont deze per onderdeel van de dienst
+        (website, API, chatkanalen, database) de actuele status. Tot die tijd melden wij
         storingen per e-mail en WhatsApp.
       </p>
     </section>
@@ -183,19 +183,19 @@ const lastUpdated = '20 mei 2026'
       <ul class="ml-5 list-disc space-y-1 text-body">
         <li>
           Klant meldt het incident via <a href="mailto:hallo@klantkraan.nl">hallo@klantkraan.nl</a> of
-          WhatsApp om credit-recht in te roepen.
+          WhatsApp om aanspraak te maken op een credit.
         </li>
-        <li>Credit-aanvragen moeten binnen 30 dagen na het incident worden ingediend.</li>
-        <li>Geen credits voor downtime tijdens trial of de eerste 50%-korting-maand.</li>
+        <li>Creditaanvragen moeten binnen 30 dagen na het incident worden ingediend.</li>
+        <li>Geen credits voor downtime tijdens een proefperiode of de eerste maand met 50% korting.</li>
       </ul>
     </section>
 
     <section class="mt-10 space-y-4">
       <h2 class="font-display text-h2 text-(--color-chalk)">8. Wat de SLA niet dekt</h2>
       <ul class="ml-5 list-disc space-y-1 text-body">
-        <li>Inhoudelijke AI-gespreksfouten (worden opgelost via prompt-tuning, geen credit).</li>
-        <li>Door Klant veroorzaakte forwarding-problemen.</li>
-        <li>Carrier-storingen (KPN, Vodafone, Odido) buiten de macht van Klantkraan.</li>
+        <li>Inhoudelijke fouten in AI-gesprekken (wij lossen die op door de prompt bij te stellen; geen credit).</li>
+        <li>Door Klant veroorzaakte problemen met doorschakelen.</li>
+        <li>Storingen bij telecomproviders (KPN, Vodafone, Odido) buiten de macht van Klantkraan.</li>
         <li>DNS-wijzigingen door Klant zonder afstemming.</li>
       </ul>
     </section>

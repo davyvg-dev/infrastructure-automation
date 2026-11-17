@@ -27,13 +27,13 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
 
 <Base
   title="Blog over klantcontact voor vakmensen | Klantkraan"
-  description="Praktische artikelen voor Nederlandse ondernemers over AI-receptionist, gemiste oproepen, no-shows en klantenmotor-automatisering."
+  description="Artikelen voor vakmensen over gemiste oproepen, no-shows en wat een AI-receptionist wel en niet kan."
 >
   <section class="py-8">
     <h1 class="font-display text-hero text-(--color-chalk)">Blog</h1>
     <p class="mt-6 max-w-2xl text-[1.125rem] text-(--color-dim) leading-relaxed">
-      Eerlijke artikelen over gemiste oproepen, AI-telefoniste en automatisering voor Nederlandse
-      ondernemers. Geen marketing-praatjes, wel cijfers.
+      Artikelen voor vakmensen over gemiste oproepen, no-shows en wat een AI-receptionist wel en
+      niet kan, met cijfers.
     </p>
   </section>
 
@@ -57,7 +57,7 @@ const dateFmt = new Intl.DateTimeFormat('nl-NL', {
           <p class="mt-4 flex-1 text-body text-(--color-dim)">{post.data.description}</p>
           <a
             href={`/blog/${post.id.replace(/\.md$/, '')}/`}
-            aria-label={`Lees het artikel → ${post.data.title}`}
+            aria-label={`Lees het artikel: ${post.data.title}`}
             class="mt-6 inline-flex min-h-[2.75rem] items-center text-body font-medium text-(--color-sodium) no-underline hover:underline"
           >
             Lees het artikel →
