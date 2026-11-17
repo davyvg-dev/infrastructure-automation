@@ -116,7 +116,7 @@ Met vriendelijke groet,
 Klantkraan
 
 --
-Klantkraan, handelsnaam van T4 Software Consulting BV · KvK 90232135
+Klantkraan, handelsnaam van T4 Software Consulting · KvK 90232135
 klantkraan.nl · Geen interesse? Antwoord met "stop" en je hoort niets meer.
 ```
 

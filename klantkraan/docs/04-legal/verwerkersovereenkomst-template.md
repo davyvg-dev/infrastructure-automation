@@ -28,7 +28,7 @@ vertegenwoordigd door [naam], hierna: **"Verwerkingsverantwoordelijke"**;
 
 **en**
 
-**2. T4 Software Consulting B.V.**, handelend onder de naam **Klantkraan**, gevestigd te
+**2. T4 Software Consulting**, handelend onder de naam **Klantkraan**, gevestigd te
 [plaats], KvK-nummer 90232135, hierna: **"Verwerker"**;
 
 hierna gezamenlijk de "Partijen" en ieder afzonderlijk een "Partij";
@@ -185,7 +185,7 @@ bevoegde rechter te [Rechtbank, bv. Den Haag].
 
 **Aldus overeengekomen en in tweevoud ondertekend:**
 
-| Verwerkingsverantwoordelijke | Verwerker (T4 Software Consulting B.V. / Klantkraan) |
+| Verwerkingsverantwoordelijke | Verwerker (T4 Software Consulting / Klantkraan) |
 | ---------------------------- | ---------------------------------------------------- |
 | Naam: [ ]                    | Naam: [ ]                                            |
 | Functie: [ ]                 | Functie: [ ]                                         |

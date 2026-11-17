@@ -117,4 +117,4 @@ Tien plekken, tot 30 september. Daarna is het gewoon €299.
 
 ---
 
-_Klantkraan is een handelsnaam van T4 Software Consulting BV · KvK 90232135 · klantkraan.nl_
+_Klantkraan is een handelsnaam van T4 Software Consulting · KvK 90232135 · klantkraan.nl_

@@ -84,4 +84,4 @@ kunt hem meteen vragen stellen. Bevalt het? Dan zetten we de pilot in gang.
 
 ---
 
-_Klantkraan is een handelsnaam van T4 Software Consulting BV · KvK 90232135 · klantkraan.nl_
+_Klantkraan is een handelsnaam van T4 Software Consulting · KvK 90232135 · klantkraan.nl_

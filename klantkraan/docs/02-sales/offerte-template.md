@@ -13,7 +13,7 @@
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ [Klantkraan logo]   Klantkraan, handelsnaam van          │
-│                     T4 Software Consulting BV            │
+│                     T4 Software Consulting               │
 │                     KvK 90232135                         │
 │                     BTW: volgt                           │
 │                     klantkraan.nl                        │
