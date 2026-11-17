@@ -27,7 +27,7 @@ export const wave1: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe snel kan een dakdekker in Utrecht ter plaatse zijn bij een lekkage?',
-        a: 'Bij spoedmeldingen die vóór 16:00 binnenkomen, sturen aangesloten dakdekkers in Utrecht doorgaans nog dezelfde dag iemand voor een tijdelijke afdichting; bij meldingen na 16:00 is dat de volgende ochtend tussen 08:00 en 10:00. Klantkraan herkent een lekkage in het gesprek en plant de inspectie in uw agenda, zodat u niet eerst hoeft terug te bellen.',
+        a: 'Dat bepaalt u zelf. Bij een lekkage vraagt de receptionist meteen naar adres en schade en meldt die direct aan u. U beslist of u nog dezelfde dag iemand stuurt. Klantkraan herkent een lekkage in het gesprek en plant de inspectie in uw agenda, zodat u niet eerst hoeft terug te bellen.',
       },
       {
         q: 'Wat zijn gangbare tarieven voor dakdekkers in Utrecht?',
@@ -163,7 +163,7 @@ export const wave1: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe snel reageert een dakdekker in Amsterdam op stormschade?',
-        a: 'Klantkraan herkent een melding van stormschade zodra de beller "lekkage", "tegels eraf" of "noodreparatie" zegt, en markeert die direct als spoed. De dakdekker krijgt binnen 60 seconden een sms met een planningslink. Aangesloten Amsterdamse dakdekkers koppelen daar een noodprotocol aan: tijdelijke afdichting binnen 24 uur, definitieve reparatie binnen 5 werkdagen.',
+        a: 'Klantkraan herkent een melding van stormschade zodra de beller "lekkage", "tegels eraf" of "noodreparatie" zegt, en markeert die direct als spoed. De dakdekker krijgt binnen 60 seconden een sms met een planningslink. U kunt daar uw eigen noodprotocol aan koppelen, bijvoorbeeld tijdelijke afdichting binnen 24 uur en definitieve reparatie binnen 5 werkdagen.',
       },
       {
         q: 'Wat kost een dakinspectie in Amsterdam?',
@@ -180,7 +180,7 @@ export const wave1: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe lang gaat een bitumendak in Rotterdam mee?',
-        a: 'Door zoutbelasting vanuit de haven gaan bitumendaken in Rotterdam-Zuid en de havenwijken doorgaans 15 tot 20 jaar mee, in plaats van de gebruikelijke 20 tot 25 jaar in het binnenland. Aangesloten dakdekkers in Rotterdam adviseren tussentijdse inspectie elke vijf jaar. Klantkraan kan een herhaalinspectie inplannen op basis van uw eigen onderhoudscyclus.',
+        a: 'Door zoutbelasting vanuit de haven gaan bitumendaken in Rotterdam-Zuid en de havenwijken doorgaans 15 tot 20 jaar mee, in plaats van de gebruikelijke 20 tot 25 jaar in het binnenland. Een tussentijdse inspectie elke vijf jaar is daarom verstandig. Klantkraan kan een herhaalinspectie inplannen op basis van uw eigen onderhoudscyclus.',
       },
       {
         q: 'Wat zijn gangbare tarieven voor dakdekkers in Rotterdam?',

@@ -92,7 +92,7 @@ Voor een zelfstandige installateur die in januari 15 oproepen per week mist:
 - **Chat**: € 299 per maand
 - **Terugverdientijd**: één extra spoedklus per maand die u anders had gemist. Bij € 340 per klus heeft het abonnement zich daarmee terugverdiend.
 
-In de praktijk haalt een Klantkraan-klant in de installatiebranche in januari minstens 5 tot 10 extra klussen binnen die anders waren weggelekt. Dat is € 1.700 tot € 3.400 extra omzet in de piekweken, zonder dat u iemand hoeft aan te nemen.
+Rekenvoorbeeld: haalt u in januari 5 tot 10 klussen binnen die anders waren weggelekt, dan is dat bij € 340 per klus € 1.700 tot € 3.400 extra omzet in de piekweken, zonder dat u iemand hoeft aan te nemen.
 
 ## Wanneer het géén zin heeft
 

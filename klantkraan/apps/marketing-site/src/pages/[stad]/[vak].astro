@@ -197,9 +197,10 @@ const serviceSchema = {
         Wij ondersteunen {niche.labelPlural} in heel {city.name}.
       </h2>
       <p class="mt-4 max-w-3xl text-body text-(--color-dim)">
-        Aangesloten {niche.labelPlural} werken in alle wijken van {city.name}, met name in {
+        In alle wijken van {city.name}, zoals {
           city.neighbourhoods.slice(0, -1).join(', ')
-        } en {city.neighbourhoods[city.neighbourhoods.length - 1]}.
+        } en {city.neighbourhoods[city.neighbourhoods.length - 1]}. De receptionist vraagt bij
+        elke aanvraag naar het volledige adres, zodat u meteen ziet waar de klus zit.
       </p>
       <ul
         class="mt-6 grid max-w-3xl grid-cols-2 gap-2 text-body text-(--color-dim) sm:grid-cols-3 md:grid-cols-4"

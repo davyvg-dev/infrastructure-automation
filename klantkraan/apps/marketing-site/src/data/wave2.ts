@@ -21,7 +21,7 @@ export const wave2: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe snel kan een loodgieter in Eindhoven ter plaatse zijn bij een lekkage?',
-        a: 'Bij spoedmeldingen die vóór 16:00 binnenkomen sturen aangesloten loodgieters in Eindhoven doorgaans nog dezelfde dag iemand voor een tijdelijke afdichting; bij meldingen na 16:00 is dat de volgende ochtend tussen 8:00 en 10:00. Klantkraan herkent spoed (vorstschade, gaslucht, riool-overstroming) automatisch en stuurt direct een sms naar de dienstdoende loodgieter met een Cal.com-link voor inplanning.',
+        a: 'Dat bepaalt u zelf. Bij een lekkage vraagt de receptionist meteen naar adres en schade en meldt die direct aan u. U beslist of u nog dezelfde dag iemand stuurt. Klantkraan herkent spoed (vorstschade, gaslucht, riool-overstroming) automatisch en stuurt direct een sms naar de dienstdoende loodgieter met een Cal.com-link voor inplanning.',
       },
       {
         q: 'Wat zijn gangbare tarieven voor loodgieters in Eindhoven?',
@@ -38,7 +38,7 @@ export const wave2: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe lang gaat een bitumendak in Eindhoven gemiddeld mee?',
-        a: 'In Eindhoven gaan bitumendaken op naoorlogse rijwoningen in Woensel en Achtse Barrier doorgaans 20–25 jaar mee bij normaal onderhoud; tussentijdse inspectie elke vijf jaar voorkomt grote lekkages. Aangesloten dakdekkers in Eindhoven kunnen herhaalinspectie automatisch in uw Cal.com-agenda inplannen op basis van uw eigen onderhoudscyclus.',
+        a: 'In Eindhoven gaan bitumendaken op naoorlogse rijwoningen in Woensel en Achtse Barrier doorgaans 20–25 jaar mee bij normaal onderhoud; tussentijdse inspectie elke vijf jaar voorkomt grote lekkages. Klantkraan kan een herhaalinspectie inplannen op basis van uw eigen onderhoudscyclus.',
       },
       {
         q: 'Wat kost een dakinspectie in Eindhoven?',
@@ -72,7 +72,7 @@ export const wave2: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe snel reageert een dakdekker in Den Haag op stormschade?',
-        a: 'Met Klantkraan wordt een stormschade-melding herkend zodra de beller "lekkage", "tegels eraf" of "noodreparatie" zegt — en direct als spoed gemarkeerd. De dakdekker krijgt binnen 60 seconden een sms met een Cal.com-link. Aangesloten Haagse dakdekkers koppelen daar een 24-uurs noodprotocol aan: tijdelijke afdichting binnen 24 uur, definitieve reparatie binnen 5 werkdagen.',
+        a: 'Met Klantkraan wordt een stormschade-melding herkend zodra de beller "lekkage", "tegels eraf" of "noodreparatie" zegt — en direct als spoed gemarkeerd. De dakdekker krijgt binnen 60 seconden een sms met een Cal.com-link. U kunt daar uw eigen noodprotocol aan koppelen, bijvoorbeeld tijdelijke afdichting binnen 24 uur en definitieve reparatie binnen 5 werkdagen.',
       },
       {
         q: 'Wat kost een dakinspectie in Den Haag?',
@@ -174,7 +174,7 @@ export const wave2: Combo[] = [
     cityFaqs: [
       {
         q: 'Hoe snel kan een loodgieter in Haarlem ter plaatse zijn bij een lekkage?',
-        a: 'Bij spoedmeldingen die vóór 16:00 binnenkomen sturen aangesloten loodgieters in Haarlem doorgaans nog dezelfde dag iemand voor een tijdelijke afdichting; bij meldingen na 16:00 is dat de volgende ochtend tussen 8:00 en 10:00. Klantkraan herkent spoed (vorstschade, gaslucht, riool-overstroming) automatisch en stuurt direct een sms naar de dienstdoende loodgieter met een Cal.com-link voor inplanning.',
+        a: 'Dat bepaalt u zelf. Bij een lekkage vraagt de receptionist meteen naar adres en schade en meldt die direct aan u. U beslist of u nog dezelfde dag iemand stuurt. Klantkraan herkent spoed (vorstschade, gaslucht, riool-overstroming) automatisch en stuurt direct een sms naar de dienstdoende loodgieter met een Cal.com-link voor inplanning.',
       },
       {
         q: 'Wat zijn gangbare tarieven voor loodgieters in Haarlem?',
