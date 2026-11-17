@@ -10,7 +10,7 @@ painters, installers, electricians, contractors) and gyms today, any appointment
 business by configuration. It answers customer questions in Dutch on the business's own
 website chat and WhatsApp, books into the owner's calendar, and captures leads 24/7.
 
-Trade name of T4 Software Consulting BV, KvK 90232135. EU-hosted.
+Trade name of T4 Software Consulting, KvK 90232135. EU-hosted.
 
 ## Pricing (authoritative; ignore older figures found elsewhere)
 
