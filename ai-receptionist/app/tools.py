@@ -60,12 +60,12 @@ TOOLS: list[dict[str, Any]] = [
     {
         "name": "take_message",
         "description": (
-            "Capture a message for the human team when you can't fully help — a question "
+            "Capture a message for the human team when you can't fully help: a question "
             "you can't answer, a special request, a complaint, or a callback request. "
             "Always collect the customer's name and a contact first. This saves the "
             "message and notifies the owner so a human can follow up. If the result has "
-            "ok: false, apologize and give the customer the business phone number instead "
-            "— do not claim the message was passed on."
+            "ok: false, apologize and give the customer the business phone number instead. "
+            "Do not claim the message was passed on."
         ),
         "input_schema": {
             "type": "object",
@@ -87,11 +87,11 @@ VEHICLE_TOOLS: list[dict[str, Any]] = [
         "name": "lookup_kenteken",
         "description": (
             "Look up a Dutch license plate in the official RDW vehicle register. Call this "
-            "as soon as the customer gives a kenteken — pass it exactly as they wrote it "
+            "as soon as the customer gives a kenteken. Pass it exactly as they wrote it "
             "(dashes and spaces are fine). A hit returns the make, model, colour, build "
             "year and the APK expiry date; confirm the car back to the customer ('een "
             "grijze Suzuki Alto uit 2012, klopt dat?'). found: false means the plate does "
-            "not exist as written — ask the customer to re-check it once, then continue "
+            "not exist as written: ask the customer to re-check it once, then continue "
             "with make and model instead. Never invent a vehicle or an APK date."
         ),
         "input_schema": {
@@ -114,7 +114,7 @@ LISTINGS_TOOLS: list[dict[str, Any]] = [
         "name": "search_listings",
         "description": (
             "Search the property inventory for listings matching the buyer's criteria. "
-            "Call this once you know at least a budget or a location — refine as you "
+            "Call this once you know at least a budget or a location; refine as you "
             "learn more. Only ever present properties this tool returned; never invent "
             "listings, prices, or availability."
         ),
@@ -151,12 +151,12 @@ LISTINGS_TOOLS: list[dict[str, Any]] = [
     {
         "name": "register_buyer_lead",
         "description": (
-            "Register a qualified lead — buyer, seller, renter or existing client — so "
+            "Register a qualified lead (buyer, seller, renter or existing client) so "
             "the right human agent follows up. Call this once you have the customer's "
             "name, a contact (phone or email), their intent and their timeline; for "
             "buyers/renters typically after showing them matches (pass the references "
             "of listings they liked). If the result has ok: false, apologize and give "
-            "the customer the business phone number instead — do not claim the lead "
+            "the customer the business phone number instead. Do not claim the lead "
             "was passed on."
         ),
         "input_schema": {
